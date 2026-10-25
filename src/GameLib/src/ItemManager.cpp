@@ -400,6 +400,8 @@ void CItemManager::Destroy()
 		CItemData::Delete(i->second);
 
 	m_ItemMap.clear();
+
+	CItemData::DestroySystem();
 }
 
 CItemManager::CItemManager() : m_pSelectedItemData(NULL)

@@ -436,6 +436,9 @@ void CRaceManager::Destroy()
 {
 	__DestroyRaceDataMap();
 
+	CRaceData::DestroySystem();
+	CRaceMotionData::DestroySystem();
+
 	__Initialize();
 }
 

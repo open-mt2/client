@@ -5,7 +5,7 @@
 #include "RaceData.h"
 
 #include <EterLib/ResourceManager.h>
-#include <EterGrnLib/util.h>
+#include <EterGrnLib/Util.h>
 
 DWORD CActorInstance::GetVirtualID()
 {

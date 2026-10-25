@@ -1,5 +1,6 @@
 #include "StdAfx.h"
 #include "MapUtil.h"
+#include <cfloat>
 
 void Environment_Init(SEnvironmentData& envData)
 {
