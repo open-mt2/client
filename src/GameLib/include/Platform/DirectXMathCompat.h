@@ -690,6 +690,15 @@ struct D3DXCOLOR {
     bool operator != (const D3DXCOLOR& c) const { return !(*this == c); }
 };
 
+inline D3DXCOLOR* D3DXColorModulate(D3DXCOLOR* pOut, const D3DXCOLOR* pC1, const D3DXCOLOR* pC2) {
+    if (!pOut || !pC1 || !pC2) return pOut;
+    pOut->r = pC1->r * pC2->r;
+    pOut->g = pC1->g * pC2->g;
+    pOut->b = pC1->b * pC2->b;
+    pOut->a = pC1->a * pC2->a;
+    return pOut;
+}
+
 struct D3DXMATRIX : public D3DMATRIX {
     D3DXMATRIX() {
         _11 = 1.0f; _12 = 0.0f; _13 = 0.0f; _14 = 0.0f;
