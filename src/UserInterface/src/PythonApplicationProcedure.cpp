@@ -143,7 +143,7 @@ LRESULT CPythonApplication::WindowProcedure(HWND hWnd, UINT uiMsg, WPARAM wParam
 		case WM_LBUTTONUP:
 			m_dwLButtonUpTime = ELTimer_GetMSec();
 
-			if (hWnd == GetCapture())
+			if (hWnd == GetCapture() || !GetCapture())
 			{
 				SafeReleaseCapture();
 				OnMouseLeftButtonUp(short(LOWORD(lParam)), short(HIWORD(lParam)));
@@ -158,7 +158,7 @@ LRESULT CPythonApplication::WindowProcedure(HWND hWnd, UINT uiMsg, WPARAM wParam
 			break;
 
 		case WM_MBUTTONUP:
-			if (GetCapture() == hWnd)
+			if (GetCapture() == hWnd || !GetCapture())
 			{
 				SafeReleaseCapture();
 
@@ -173,7 +173,7 @@ LRESULT CPythonApplication::WindowProcedure(HWND hWnd, UINT uiMsg, WPARAM wParam
 			return 0;
 
 		case WM_RBUTTONUP:
-			if (hWnd == GetCapture()) 
+			if (hWnd == GetCapture() || !GetCapture()) 
 			{
 				SafeReleaseCapture();
 

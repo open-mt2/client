@@ -472,11 +472,8 @@ bool CPythonApplication::Process()
 #endif
 	// Mouse
 	POINT Point;
-	if (GetCursorPos(&Point))
-	{
-		ScreenToClient(m_hWnd, &Point);
-		OnMouseMove(Point.x, Point.y);		
-	}
+	GetMousePosition(&Point);
+	OnMouseMove(Point.x, Point.y);
 	//////////////////////
 #ifdef __PERFORMANCE_CHECK__
 	DWORD dwUpdateTime5=ELTimer_GetMSec();
