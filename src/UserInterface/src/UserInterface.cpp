@@ -378,16 +378,18 @@ bool Main(HINSTANCE hInstance, LPSTR lpCmdLine)
 #ifndef __VTUNE__
 	ilInit();
 #endif
+	Tracef("[UserInterface] Setting up environment...\n");
 	if (!Setup(lpCmdLine))
 		return false;
 
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(__LINUX__)
 	OpenConsoleWindow();
 	OpenLogFile(true); // true == uses syserr.txt and log.txt
 #else
 	OpenLogFile(false); // false == uses syserr.txt only
 #endif
 
+	Tracef("[UserInterface] Initializing pack system from 'pack'...\n");
 	static CLZO				lzo;
 	static CEterPackManager	EterPackManager;
 
@@ -396,28 +398,40 @@ bool Main(HINSTANCE hInstance, LPSTR lpCmdLine)
 		LogBox("Pack Initialization failed. Check log.txt file..");
 		return false;
 	}
+	Tracef("[UserInterface] Pack system initialized successfully.\n");
 
+	Tracef("[UserInterface] Loading global locale configuration...\n");
 	if(LocaleService_LoadGlobal(hInstance))
 		SetDefaultCodePage(LocaleService_GetCodePage());
 
+	Tracef("[UserInterface] Creating and initializing CPythonApplication...\n");
 	CPythonApplication * app = new CPythonApplication;
 
 	app->Initialize(hInstance);
+	Tracef("[UserInterface] CPythonApplication initialized.\n");
 
 	bool ret=false;
 	{
+		Tracef("[UserInterface] Creating CPythonLauncher...\n");
 		CPythonLauncher pyLauncher;
 		CPythonExceptionSender pyExceptionSender;
 		SetExceptionSender(&pyExceptionSender);
 
 		if (pyLauncher.Create())
 		{
+			Tracef("[UserInterface] Python runtime created. Launching main script (system.py)...\n");
 			ret=RunMainScript(pyLauncher, lpCmdLine);	//게임 실행중엔 함수가 끝나지 않는다.
+			Tracef("[UserInterface] RunMainScript exited with code %d.\n", ret);
+		}
+		else
+		{
+			TraceError("[UserInterface] Failed to initialize Python Launcher!");
 		}
 
 		//ProcessScanner_ReleaseQuitEvent();
 		
 		//게임 종료시.
+		Tracef("[UserInterface] Cleaning up application...\n");
 		app->Clear();
 
 		timeEndPeriod(1);
@@ -426,6 +440,7 @@ bool Main(HINSTANCE hInstance, LPSTR lpCmdLine)
 
 	app->Destroy();
 	delete app;
+	Tracef("[UserInterface] Application cleanly terminated.\n");
 	
 	return ret;
 }
@@ -658,12 +673,23 @@ Clean:
 #ifdef __LINUX__
 int main(int argc, char** argv)
 {
+	printf("====================================================\n");
+	printf("[Metin2 Linux Client] Starting client (PID: %d)...\n", getpid());
+	printf("====================================================\n");
+	fflush(stdout);
+
 	std::string cmdLine;
 	for (int i = 1; i < argc; ++i) {
 		if (i > 1) cmdLine += " ";
 		cmdLine += argv[i];
 	}
-	return WinMain(NULL, NULL, const_cast<char*>(cmdLine.c_str()), 1);
+	int ret = WinMain(NULL, NULL, const_cast<char*>(cmdLine.c_str()), 1);
+
+	printf("====================================================\n");
+	printf("[Metin2 Linux Client] Process terminated with code: %d\n", ret);
+	printf("====================================================\n");
+	fflush(stdout);
+	return ret;
 }
 #endif
 

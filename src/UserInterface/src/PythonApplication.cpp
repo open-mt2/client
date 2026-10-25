@@ -415,6 +415,14 @@ bool CPythonApplication::Process()
 
 		s_dwCheckTime		= ELTimer_GetMSec();
 
+		static DWORD s_dwLastLogTime = 0;
+		if (s_dwCheckTime - s_dwLastLogTime >= 5000)
+		{
+			s_dwLastLogTime = s_dwCheckTime;
+			Tracef("[PythonApplication::Process] Running... (FPS: %u, RenderFPS: %u, Load: %u%%)\n",
+				m_dwUpdateFPS, m_dwRenderFPS, m_dwLoad);
+		}
+
 		s_uiLoad = s_dwFaceCount = s_dwUpdateFrameCount = s_dwRenderFrameCount = 0;
 	}
 
@@ -958,6 +966,7 @@ bool CPythonApplication::CreateDevice(int width, int height, int Windowed, int b
 
 void CPythonApplication::Loop()
 {	
+	Tracef("[PythonApplication] Entering main engine loop...\n");
 	while (1)
 	{	
 		if (IsMessage())
@@ -973,6 +982,7 @@ void CPythonApplication::Loop()
 			m_dwLastIdleTime=ELTimer_GetMSec();
 		}
 	}
+	Tracef("[PythonApplication] Main engine loop terminated.\n");
 }
 
 // SUPPORT_NEW_KOREA_SERVER
@@ -1068,6 +1078,7 @@ unsigned __GetWindowMode(bool windowed)
 
 bool CPythonApplication::Create(PyObject * poSelf, const char * c_szName, int width, int height, int Windowed)
 {
+	Tracef("[PythonApplication] Create(name='%s', width=%d, height=%d, Windowed=%d)\n", c_szName, width, height, Windowed);
 	Windowed = CPythonSystem::Instance().IsWindowed() ? 1 : 0;
 
 	bool bAnotherWindow = false;
@@ -1239,6 +1250,7 @@ bool CPythonApplication::Create(PyObject * poSelf, const char * c_szName, int wi
 	// SphereMap
 	CGrannyMaterial::CreateSphereMap(0, "d:/ymir work/special/spheremap.jpg");
 	CGrannyMaterial::CreateSphereMap(1, "d:/ymir work/special/spheremap01.jpg");
+	Tracef("[PythonApplication] Application subsystems initialized successfully.\n");
 	return true;
 }
 
