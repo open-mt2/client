@@ -164,11 +164,22 @@ bool PackInitialize(const std::string& packFolder)
 	// Set Index file name to production value
 	stFileName = stFolder + "Index";
 #else
-	bPackFirst = false;
-	Tracef("Info: Pack search mode set to file-first.\n");
+	if (_access((stFolder + "Index.dev").c_str(), 0) == 0)
+	{
+		bPackFirst = false;
+		Tracef("Info: Pack search mode set to file-first.\n");
 
-	// Set Index file name to development value
-	stFileName = stFolder + "Index.dev";
+		// Set Index file name to development value
+		stFileName = stFolder + "Index.dev";
+	}
+	else
+	{
+		bPackFirst = true;
+		Tracef("Info: Pack search mode set to archive-first (fallback).\n");
+
+		// Set Index file name to production value
+		stFileName = stFolder + "Index";
+	}
 #endif
 
 	// Set up file reader

@@ -118,6 +118,11 @@ if(UNIX)
     target_compile_definitions(metin2client PRIVATE __LINUX__ _GNU_SOURCE)
 endif()
 
+if(CMAKE_BUILD_TYPE STREQUAL "Release" OR CMAKE_BUILD_TYPE STREQUAL "Distribute" OR NOT CMAKE_BUILD_TYPE)
+    target_compile_definitions(UserInterface PUBLIC _DISTRIBUTE)
+    target_compile_definitions(metin2client PRIVATE _DISTRIBUTE)
+endif()
+
 if((USERINTERFACE_STANDALONE AND BUILD_TESTING) OR (NOT USERINTERFACE_STANDALONE AND BUILD_TESTS))
     enable_testing()
     add_subdirectory(tests)
