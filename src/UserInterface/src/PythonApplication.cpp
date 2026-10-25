@@ -59,8 +59,13 @@ m_dwLastIdleTime(0)
 	m_iPort = 0;
 	m_iFPS = 60;
 
+#ifdef __LINUX__
+	m_isActivateWnd = true;
+	m_isMinimizedWnd = false;
+#else
 	m_isActivateWnd = false;
 	m_isMinimizedWnd = true;
+#endif
 
 	m_fRotationSpeed = 0.0f;
 	m_fPitchSpeed = 0.0f;
