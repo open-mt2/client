@@ -711,8 +711,8 @@ bool CPythonApplication::Process()
 
 				m_pyGraphic.ClearDepthBuffer();
 
-#ifdef _DEBUG
-				m_pyGraphic.SetClearColor(0.3f, 0.3f, 0.3f);
+#if defined(_DEBUG) || defined(__LINUX__)
+				m_pyGraphic.SetClearColor(0.1f, 0.1f, 0.15f);
 				m_pyGraphic.Clear();
 #endif
 
@@ -977,12 +977,18 @@ void CPythonApplication::Loop()
 		if (IsMessage())
 		{
 			if (!MessageProcess())
+			{
+				Tracef("[PythonApplication] MessageProcess() returned false. Exiting loop.\n");
 				break;
+			}
 		}
 		else
 		{
 			if (!Process())
+			{
+				Tracef("[PythonApplication] Process() returned false. Exiting loop.\n");
 				break;
+			}
 
 			m_dwLastIdleTime=ELTimer_GetMSec();
 		}
