@@ -88,15 +88,15 @@ static const char* sc_apszPythonLibraryFilenames[] =
 	"_abcoll.pyc",
 	"_weakrefset.pyc",
 	"__future__.pyc",
-	"encodings\\aliases.pyc",
-	"encodings\\ascii.pyc",
-	"encodings\\cp1250.pyc",
-	"encodings\\cp1251.pyc",
-	"encodings\\cp1252.pyc",
-	"encodings\\cp949.pyc",
-	"encodings\\utf_8.pyc",
-	"encodings\\cp850.pyc", //new
-	"encodings\\__init__.pyc",
+	"encodings/aliases.pyc",
+	"encodings/ascii.pyc",
+	"encodings/cp1250.pyc",
+	"encodings/cp1251.pyc",
+	"encodings/cp1252.pyc",
+	"encodings/cp949.pyc",
+	"encodings/utf_8.pyc",
+	"encodings/cp850.pyc", //new
+	"encodings/__init__.pyc",
 	// removed xml
 #else
 	"UserDict.pyc",
@@ -127,8 +127,11 @@ bool CheckPythonLibraryFilenames()
 {
 	for (int i = 0; *sc_apszPythonLibraryFilenames[i] != '\n'; ++i)
 	{
-		std::string stFilename = "lib\\";
+		std::string stFilename = "lib/";
 		stFilename += sc_apszPythonLibraryFilenames[i];
+		for (char& c : stFilename) {
+			if (c == '\\') c = '/';
+		}
 
 		if (_access(stFilename.c_str(), 0) != 0)
 		{
