@@ -1086,8 +1086,20 @@ unsigned __GetWindowMode(bool windowed)
 
 bool CPythonApplication::Create(PyObject * poSelf, const char * c_szName, int width, int height, int Windowed)
 {
+	int cfgWidth = m_pySystem.GetWidth();
+	int cfgHeight = m_pySystem.GetHeight();
+	if (cfgWidth > 0) width = cfgWidth;
+	if (cfgHeight > 0) height = cfgHeight;
+	if (width <= 0) width = 1024;
+	if (height <= 0) height = 768;
+
 	Tracef("[PythonApplication] Create(name='%s', width=%d, height=%d, Windowed=%d)\n", c_szName, width, height, Windowed);
+
+#if defined(__LINUX__)
+	Windowed = 1;
+#else
 	Windowed = CPythonSystem::Instance().IsWindowed() ? 1 : 0;
+#endif
 
 	bool bAnotherWindow = false;
 
@@ -1097,10 +1109,12 @@ bool CPythonApplication::Create(PyObject * poSelf, const char * c_szName, int wi
 	m_dwWidth = width;
 	m_dwHeight = height;
 
+	Platform_SetWindowResolution(width, height);
+
 	// Window
 	UINT WindowMode = __GetWindowMode(Windowed ? true : false);
 
-	if (!CMSWindow::Create(c_szName, 4, 0, WindowMode, ::LoadIcon( GetInstance(), MAKEINTRESOURCE( IDI_METIN2 ) ), IDC_CURSOR_NORMAL))
+	if (!CMSWindow::Create(c_szName, 4, 0, WindowMode, ::LoadIcon( GetInstance(), MAKEINTRESOURCE( IDI_METIN2 ) ), IDC_CURSOR_NORMAL, width, height))
 	{
 		//PyErr_SetString(PyExc_RuntimeError, "CMSWindow::Create failed");
 		TraceError("CMSWindow::Create failed");
@@ -1113,6 +1127,10 @@ bool CPythonApplication::Create(PyObject * poSelf, const char * c_szName, int wi
 		CPythonIME::Instance().UseDefaultIME();
 	}
 
+#if defined(__LINUX__)
+	m_isWindowed = true;
+	AdjustSize(width, height);
+#else
 	// 풀스크린 모드이고
 	// 디폴트 IME 를 사용하거나 유럽 버전이면
 	// 윈도우 풀스크린 모드를 사용한다
@@ -1150,6 +1168,7 @@ bool CPythonApplication::Create(PyObject * poSelf, const char * c_szName, int wi
 			SetPosition(0, 0);
 		}
 	}
+#endif
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
