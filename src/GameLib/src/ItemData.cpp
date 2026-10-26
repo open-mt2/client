@@ -356,7 +356,7 @@ BOOL CItemData::GetApply(BYTE byIndex, TItemApply * pItemApply) const
 	return TRUE;
 }
 
-long CItemData::GetValue(BYTE byIndex) const
+LONG CItemData::GetValue(BYTE byIndex) const
 {
 	if (byIndex >= ITEM_VALUES_MAX_NUM)
 	{
@@ -367,7 +367,7 @@ long CItemData::GetValue(BYTE byIndex) const
 	return m_ItemTable.alValues[byIndex];
 }
 
-long CItemData::SetSocket(BYTE byIndex,DWORD value)
+LONG CItemData::SetSocket(BYTE byIndex,DWORD value)
 {
 	if (byIndex >= ITEM_SOCKET_MAX_NUM)
 	{
@@ -378,7 +378,7 @@ long CItemData::SetSocket(BYTE byIndex,DWORD value)
 	return m_ItemTable.alSockets[byIndex] = value;
 }
 
-long CItemData::GetSocket(BYTE byIndex) const
+LONG CItemData::GetSocket(BYTE byIndex) const
 {
 	if (byIndex >= ITEM_SOCKET_MAX_NUM)
 	{
