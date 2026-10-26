@@ -398,6 +398,11 @@ void CPythonApplication::SkipRenderBuffering(DWORD dwSleepMSec)
 
 bool CPythonApplication::Process()
 {
+#if defined(__LINUX__)
+	if (Platform_IsQuitRequested())
+		return false;
+#endif
+
 	ELTimer_SetFrameMSec();
 
 	// 	m_Profiler.Clear();
