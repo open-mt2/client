@@ -369,13 +369,13 @@ class CItemData
 		typedef struct SItemLimit
 		{
 			BYTE        bType;
-			LONG        lValue;
+			long        lValue;
 		} TItemLimit;
 
 		typedef struct SItemApply
 		{
 			BYTE        bType;
-			LONG        lValue;
+			long        lValue;
 		} TItemApply;
 
 		typedef struct SItemTable
@@ -400,8 +400,8 @@ class CItemData
 			
 			TItemLimit  aLimits[ITEM_LIMIT_MAX_NUM];
 			TItemApply  aApplies[ITEM_APPLY_MAX_NUM];
-			LONG        alValues[ITEM_VALUES_MAX_NUM];
-			LONG        alSockets[ITEM_SOCKET_MAX_NUM];
+			long        alValues[ITEM_VALUES_MAX_NUM];
+			long        alSockets[ITEM_SOCKET_MAX_NUM];
 			DWORD       dwRefinedVnum;
 			WORD		wRefineSet;
 			BYTE        bAlterToMagicItemPct;
@@ -472,9 +472,9 @@ class CItemData
 		DWORD GetISellItemPrice() const;
 		BOOL GetLimit(BYTE byIndex, TItemLimit * pItemLimit) const;
 		BOOL GetApply(BYTE byIndex, TItemApply * pItemApply) const;
-		LONG GetValue(BYTE byIndex) const;
-		LONG GetSocket(BYTE byIndex) const;
-		LONG SetSocket(BYTE byIndex,DWORD value);
+		long GetValue(BYTE byIndex) const;
+		long GetSocket(BYTE byIndex) const;
+		long SetSocket(BYTE byIndex,DWORD value);
 		int GetSocketCount() const;
 		DWORD GetIconNumber() const;
 

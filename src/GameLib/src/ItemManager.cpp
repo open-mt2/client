@@ -280,7 +280,7 @@ bool CItemManager::LoadItemTable(const char* c_szFileName)
 		}
 		if (dwStride != sizeof(CItemData::TItemTable))
 		{
-			TraceError("CPythonItem::LoadItemTable: invalid item_proto[%s] STRIDE[%d] != sizeof(SItemTable) (%zu)", 
+			TraceError("CPythonItem::LoadItemTable: invalid item_proto[%s] STRIDE[%d] != sizeof(SItemTable)", 
 				c_szFileName, dwStride, sizeof(CItemData::TItemTable));
 			return false;
 		}
