@@ -14,6 +14,14 @@
 #include <CWebBrowser/CWebBrowser.h>
 #include <EterBase/CPostIt.h>
 
+// Force link ImageLoaderCompat.cpp from libEterBase.a
+extern bool Platform_GetImageInfo(const void* data, size_t size, uint32_t* outW, uint32_t* outH, uint32_t* outFormat);
+extern bool Platform_DecodeImage(const void* data, size_t size, uint32_t* outW, uint32_t* outH, std::vector<uint8_t>& outPixels);
+void* g_pForceLinkImageLoader[] = {
+    (void*)&Platform_GetImageInfo,
+    (void*)&Platform_DecodeImage
+};
+
 #ifndef __LINUX__
 extern "C" {  
 	extern int32_t _fltused;
