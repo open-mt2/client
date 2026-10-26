@@ -39,6 +39,10 @@ void test_game_math_and_util()
 
 void test_item_manager()
 {
+    static_assert(sizeof(CItemData::TItemTable) == 156, "TItemTable stride must match item_proto stride (156 bytes)");
+    static_assert(sizeof(CItemData::TItemLimit) == 5, "TItemLimit size must be 5 bytes");
+    static_assert(sizeof(CItemData::TItemApply) == 5, "TItemApply size must be 5 bytes");
+
     CItemManager itemMgr;
 
     CItemData* pItem1 = itemMgr.MakeItemData(1001);
