@@ -321,7 +321,7 @@ typedef struct packet_item
     BYTE        count;
 	DWORD		flags;
 	DWORD		anti_flags;
-	long		alSockets[ITEM_SOCKET_SLOT_MAX_NUM];
+	LONG		alSockets[ITEM_SOCKET_SLOT_MAX_NUM];
     TPlayerItemAttribute aAttr[ITEM_ATTRIBUTE_SLOT_MAX_NUM];
 } TItemData;
 
@@ -331,7 +331,7 @@ typedef struct packet_shop_item
     DWORD       price;
     BYTE        count;
 	BYTE		display_pos;
-	long		alSockets[ITEM_SOCKET_SLOT_MAX_NUM];
+	LONG		alSockets[ITEM_SOCKET_SLOT_MAX_NUM];
     TPlayerItemAttribute aAttr[ITEM_ATTRIBUTE_SLOT_MAX_NUM];
 } TShopItemData;
 

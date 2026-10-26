@@ -90,6 +90,10 @@ void test_python_system_config()
 
 void test_packet_structure_alignment()
 {
+    static_assert(sizeof(LONG) == 4, "LONG must be 4 bytes");
+    static_assert(sizeof(TItemData) == 4 + 1 + 4 + 4 + 4 * ITEM_SOCKET_SLOT_MAX_NUM + sizeof(TPlayerItemAttribute) * ITEM_ATTRIBUTE_SLOT_MAX_NUM, "TItemData size check");
+    static_assert(sizeof(TShopItemData) == 4 + 4 + 1 + 1 + 4 * ITEM_SOCKET_SLOT_MAX_NUM + sizeof(TPlayerItemAttribute) * ITEM_ATTRIBUTE_SLOT_MAX_NUM, "TShopItemData size check");
+
     // Verify packet header structures and alignment consistency
     assert(sizeof(TPacketHeader) == 1);
     assert(sizeof(TPacketCGAttack) > 0);
