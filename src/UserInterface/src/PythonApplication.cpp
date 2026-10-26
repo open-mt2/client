@@ -1195,6 +1195,11 @@ bool CPythonApplication::Create(PyObject * poSelf, const char * c_szName, int wi
 			// NOTE : 중국측의 요청으로 생략
 			//		LogBox(ApplicationStringTable_GetStringz(IDS_WARN_NO_SOUND_DEVICE));
 		}
+		else
+		{
+			m_SoundManager.SetMusicVolume(m_pySystem.GetMusicVolume());
+			m_SoundManager.SetSoundVolumeGrade(m_pySystem.GetSoundVolume());
+		}
 	}
 
 	extern bool GRAPHICS_CAPS_SOFTWARE_TILING;

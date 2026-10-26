@@ -414,14 +414,30 @@ bool CPythonSystem::LoadConfig()
 		else if (!stricmp(command, "VISIBILITY"))
 			m_Config.iDistance = atoi(value);
 		else if (!stricmp(command, "MUSIC_VOLUME")) {
-			if(strchr(value, '.') == 0) { // Old compatiability
-				m_Config.music_volume = pow(10.0f, (-1.0f + (((float) atoi(value)) / 5.0f)));
-				if(atoi(value) == 0)
+			if (strchr(value, '.') == 0) { // Old compatibility or integer grade 0-5 or 0-10
+				float val = (float) atof(value);
+				if (val > 5.0f)
+					val = val * 0.5f; // Scale 0-10 down to 0-5
+				if (val <= 0.0f)
 					m_Config.music_volume = 0.0f;
-			} else
-				m_Config.music_volume = atof(value);
-		} else if (!stricmp(command, "VOICE_VOLUME"))
-			m_Config.voice_volume = (char) atoi(value);
+				else
+					m_Config.music_volume = pow(10.0f, (-1.0f + (val / 5.0f)));
+			} else {
+				m_Config.music_volume = (float) atof(value);
+			}
+		} else if (!stricmp(command, "VOICE_VOLUME") || !stricmp(command, "SOUND_VOLUME")) {
+			if (strchr(value, '.') == 0) {
+				int val = atoi(value);
+				if (val > 5)
+					val = (val + 1) / 2; // Scale 0-10 to 0-5
+				m_Config.voice_volume = (char) val;
+			} else {
+				float fval = (float) atof(value);
+				m_Config.voice_volume = (char) (fval * 5.0f + 0.5f);
+				if (m_Config.voice_volume == 0 && fval > 0.0f)
+					m_Config.voice_volume = 1;
+			}
+		}
 		else if (!stricmp(command, "GAMMA"))
 			m_Config.gamma = atoi(value);
 		else if (!stricmp(command, "IS_SAVE_ID"))
