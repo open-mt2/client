@@ -206,9 +206,14 @@ bool CDungeonBlock::Load(const char * c_szFileName)
 	Destroy();
 
 	m_pThing = (CGraphicThing *)CResourceManager::Instance().GetResourcePointer(c_szFileName);
+	if (!m_pThing)
+	{
+		TraceError("CDungeonBlock::Load(filename=%s) - failed to get resource\n", c_szFileName);
+		return false;
+	}
 
 	m_pThing->AddReference();
-	if (m_pThing->GetModelCount() <= 0)
+	if (m_pThing->IsEmpty() || m_pThing->GetModelCount() <= 0)
 	{
 		TraceError("CDungeonBlock::Load(filename=%s) - model count is %d\n", c_szFileName, m_pThing->GetModelCount());
 		return false;

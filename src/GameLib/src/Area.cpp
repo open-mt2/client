@@ -599,6 +599,11 @@ void CArea::__SetObjectInstance_SetBuilding(TObjectInstance * pObjectInstance, c
 	CResourceManager& rkResMgr=CResourceManager::Instance();
 
 	CGraphicThing * pThing = (CGraphicThing *)rkResMgr.GetResourcePointer(Data.strFileName.c_str());
+	if (!pThing)
+	{
+		TraceError("CArea::SetBuilding: Failed to get resource: %s", Data.strFileName.c_str());
+		return;
+	}
 	pThing->AddReference();
 
 	if (pThing->IsEmpty())
@@ -610,6 +615,8 @@ void CArea::__SetObjectInstance_SetBuilding(TObjectInstance * pObjectInstance, c
 	}
 
 	int iModelCount = pThing->GetModelCount();
+	if (iModelCount <= 0)
+		return;
 	int iMotionCount = pThing->GetMotionCount();
 
 	pObjectInstance->dwType = prt::PROPERTY_TYPE_BUILDING;
@@ -697,9 +704,16 @@ void CArea::__SetObjectInstance_SetDungeonBlock(TObjectInstance * pObjectInstanc
 	if (!prt::PropertyDungeonBlockStringToData(pProperty, &Data))
 		return;
 
+	CDungeonBlock* pDungeonBlock = ms_DungeonBlockInstancePool.Alloc();
+	if (!pDungeonBlock->Load(Data.strFileName.c_str()))
+	{
+		pDungeonBlock->Destroy();
+		ms_DungeonBlockInstancePool.Free(pDungeonBlock);
+		return;
+	}
+
 	pObjectInstance->dwType = prt::PROPERTY_TYPE_DUNGEON_BLOCK;
-	pObjectInstance->pDungeonBlock = ms_DungeonBlockInstancePool.Alloc();
-	pObjectInstance->pDungeonBlock->Load(Data.strFileName.c_str());
+	pObjectInstance->pDungeonBlock = pDungeonBlock;
 	pObjectInstance->pDungeonBlock->SetPosition(c_pData->Position.x, c_pData->Position.y, c_pData->Position.z + c_pData->m_fHeightBias);
 	pObjectInstance->pDungeonBlock->SetRotation(
 		c_pData->m_fYaw,
@@ -718,10 +732,15 @@ void CArea::__SetObjectInstance_SetDungeonBlock(TObjectInstance * pObjectInstanc
 
 void CArea::__LoadAttribute(TObjectInstance * pObjectInstance, const char * c_szAttributeFileName)
 {
+	if (!c_szAttributeFileName || !*c_szAttributeFileName)
+		return;
+
 	// OBB를 사용한 충돌 정보 자동 생성.
 	const bool bFileExist = CResourceManager::Instance().IsFileExist(c_szAttributeFileName);
 	
 	CAttributeData * pAttributeData = (CAttributeData *) CResourceManager::Instance().GetResourcePointer(c_szAttributeFileName);
+	if (!pAttributeData)
+		return;
 
 	CAttributeInstance * pAttrInstance = ms_AttributeInstancePool.Alloc();
 	pAttrInstance->Clear();
