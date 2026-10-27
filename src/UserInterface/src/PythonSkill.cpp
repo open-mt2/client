@@ -2016,9 +2016,9 @@ PyObject * skillGetIconImage(PyObject * poSelf, PyObject * poArgs)
 
 	CPythonSkill::SSkillData * c_pSkillData;
 	if (!CPythonSkill::Instance().GetSkillData(iSkillIndex, &c_pSkillData))
-		return Py_BuildValue("i", 0);	// 익셉션을 내는 대신 0을 리턴한다.
+		return Py_BuildValue("l", (intptr_t)0);	// 익셉션을 내는 대신 0을 리턴한다.
 
-	return Py_BuildValue("i", c_pSkillData->pImage);
+	return Py_BuildValue("l", (intptr_t)c_pSkillData->pImage);
 }
 
 
@@ -2036,7 +2036,7 @@ PyObject * skillGetIconInstance(PyObject * poSelf, PyObject * poArgs)
 	CGraphicImageInstance * pImageInstance = CGraphicImageInstance::New();
 	pImageInstance->SetImagePointer(c_pSkillData->pImage);
 
-	return Py_BuildValue("i", pImageInstance);
+	return Py_BuildValue("l", (intptr_t)pImageInstance);
 }
 
 PyObject * skillGetIconImageNew(PyObject * poSelf, PyObject * poArgs)
@@ -2051,7 +2051,7 @@ PyObject * skillGetIconImageNew(PyObject * poSelf, PyObject * poArgs)
 
 	CPythonSkill::SSkillData * c_pSkillData;
 	if (!CPythonSkill::Instance().GetSkillData(iSkillIndex, &c_pSkillData))
-		return Py_BuildValue("i", 0);	// 익셉션을 내는 대신 0을 리턴한다.
+		return Py_BuildValue("l", (intptr_t)0);	// 익셉션을 내는 대신 0을 리턴한다.
 
 	if (iGradeIndex < 0)
 		iGradeIndex = 0;
@@ -2059,7 +2059,7 @@ PyObject * skillGetIconImageNew(PyObject * poSelf, PyObject * poArgs)
 	if (iGradeIndex >= CPythonSkill::SKILL_GRADE_COUNT)		
 		iGradeIndex = CPythonSkill::SKILL_GRADE_COUNT-1;
 
-	return Py_BuildValue("i", c_pSkillData->GradeData[iGradeIndex].pImage);
+	return Py_BuildValue("l", (intptr_t)c_pSkillData->GradeData[iGradeIndex].pImage);
 }
 
 PyObject * skillGetIconInstanceNew(PyObject * poSelf, PyObject * poArgs)
@@ -2087,13 +2087,13 @@ PyObject * skillGetIconInstanceNew(PyObject * poSelf, PyObject * poArgs)
 	CGraphicImageInstance * pImageInstance = CGraphicImageInstance::New();
 	pImageInstance->SetImagePointer(c_pSkillData->GradeData[iGradeIndex].pImage);
 
-	return Py_BuildValue("i", pImageInstance);
+	return Py_BuildValue("l", (intptr_t)pImageInstance);
 }
 
 PyObject * skillDeleteIconInstance(PyObject * poSelf, PyObject * poArgs)
 {
-	int iHandle;
-	if (!PyTuple_GetInteger(poArgs, 0, &iHandle))
+	long iHandle;
+	if (!PyTuple_GetLong(poArgs, 0, &iHandle))
 		return Py_BadArgument();
 
 	CGraphicImageInstance::Delete((CGraphicImageInstance *) iHandle);
