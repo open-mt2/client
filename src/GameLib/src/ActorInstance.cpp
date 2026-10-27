@@ -468,7 +468,38 @@ void CActorInstance::__AccumulationMovement(float fRot)
 	D3DXMatrixRotationZ(&s_matRotationZ, D3DXToRadian(fRot));
 	UpdateTransform(&s_matRotationZ, GetAverageSecondElapsed());
 
-	AddMovement(s_matRotationZ._41, s_matRotationZ._42, s_matRotationZ._43);
+	if (s_matRotationZ._41 != 0.0f || s_matRotationZ._42 != 0.0f || s_matRotationZ._43 != 0.0f)
+	{
+		AddMovement(s_matRotationZ._41, s_matRotationZ._42, s_matRotationZ._43);
+	}
+	else if (m_pkCurRaceMotionData && m_pkCurRaceMotionData->IsAccumulationMotion() && m_pkCurRaceMotionData->GetMotionDuration() > 0.0f)
+	{
+		float fSec = GetAverageSecondElapsed();
+		float dur = m_pkCurRaceMotionData->GetMotionDuration();
+		const TPixelPosition& accum = m_pkCurRaceMotionData->GetAccumulationPosition();
+		D3DXVECTOR3 localDelta(accum.x * (fSec / dur) * m_fMovSpd, accum.y * (fSec / dur) * m_fMovSpd, accum.z * (fSec / dur) * m_fMovSpd);
+		D3DXVECTOR3 worldDelta;
+		D3DXVec3TransformCoord(&worldDelta, &localDelta, &s_matRotationZ);
+		AddMovement(worldDelta.x, worldDelta.y, worldDelta.z);
+	}
+	else if (m_isWalking)
+	{
+		float fSec = GetAverageSecondElapsed();
+		float fSpeed = 220.0f * m_fMovSpd * fSec;
+		D3DXVECTOR3 localDelta(0.0f, -fSpeed, 0.0f);
+		D3DXVECTOR3 worldDelta;
+		D3DXVec3TransformCoord(&worldDelta, &localDelta, &s_matRotationZ);
+		AddMovement(worldDelta.x, worldDelta.y, worldDelta.z);
+	}
+	else
+	{
+		float fSec = GetAverageSecondElapsed();
+		float fSpeed = 450.0f * m_fMovSpd * fSec;
+		D3DXVECTOR3 localDelta(0.0f, -fSpeed, 0.0f);
+		D3DXVECTOR3 worldDelta;
+		D3DXVec3TransformCoord(&worldDelta, &localDelta, &s_matRotationZ);
+		AddMovement(worldDelta.x, worldDelta.y, worldDelta.z);
+	}
 }
 
 void CActorInstance::AccumulationMovement()

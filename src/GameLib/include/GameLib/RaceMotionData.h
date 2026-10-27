@@ -221,7 +221,7 @@ class CRaceMotionData
 		void			SetMotionDuration(float fDur);
 		float			GetMotionDuration();
 
-		bool			IsAccumulationMotion();
+		bool			IsAccumulationMotion() const { return m_isAccumulationMotion != FALSE; }
 		void			SetAccumulationPosition(const TPixelPosition & c_rPos);
 		const			TPixelPosition & GetAccumulationPosition() { return m_accumulationPosition; }
 
