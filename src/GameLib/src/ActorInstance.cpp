@@ -461,7 +461,11 @@ void CActorInstance::__AccumulationMovement(float fRot)
 {
 	// NOTE - 일단은 WAIT로 미끄러짐 방지
 	//        추후에는 RaceMotionData가 이동되는 모션인지에 대한 Flag를 갖고 있게끔 한다. - [levites]
-	if (CRaceMotionData::NAME_WAIT == __GetCurrentMotionIndex())
+	WORD motion = __GetCurrentMotionIndex();
+	if (CRaceMotionData::NAME_WAIT == motion ||
+	    CRaceMotionData::NAME_INTRO_WAIT == motion ||
+	    CRaceMotionData::NAME_INTRO_SELECTED == motion ||
+	    CRaceMotionData::NAME_INTRO_NOT_SELECTED == motion)
 		return;
 
 	D3DXMATRIX s_matRotationZ;
@@ -482,19 +486,10 @@ void CActorInstance::__AccumulationMovement(float fRot)
 		D3DXVec3TransformCoord(&worldDelta, &localDelta, &s_matRotationZ);
 		AddMovement(worldDelta.x, worldDelta.y, worldDelta.z);
 	}
-	else if (m_isWalking)
+	else if (IsMoving())
 	{
 		float fSec = GetAverageSecondElapsed();
-		float fSpeed = 220.0f * m_fMovSpd * fSec;
-		D3DXVECTOR3 localDelta(0.0f, -fSpeed, 0.0f);
-		D3DXVECTOR3 worldDelta;
-		D3DXVec3TransformCoord(&worldDelta, &localDelta, &s_matRotationZ);
-		AddMovement(worldDelta.x, worldDelta.y, worldDelta.z);
-	}
-	else
-	{
-		float fSec = GetAverageSecondElapsed();
-		float fSpeed = 450.0f * m_fMovSpd * fSec;
+		float fSpeed = (m_isWalking ? 220.0f : 450.0f) * m_fMovSpd * fSec;
 		D3DXVECTOR3 localDelta(0.0f, -fSpeed, 0.0f);
 		D3DXVECTOR3 worldDelta;
 		D3DXVec3TransformCoord(&worldDelta, &localDelta, &s_matRotationZ);
