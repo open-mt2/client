@@ -222,7 +222,7 @@ void CMapOutdoor::__SoftwareTransformPatch_RenderPatchSplat(SoftwareTransformPat
 	}	
 
 	// 그림자
-	if (m_bDrawShadow)
+	if (m_bDrawShadow && pTerrain->GetShadowTexture())
 	{	
 		__SoftwareTransformPatch_SetShadowStream(akTransVertex);
 		__SoftwareTransformPatch_ApplyStaticShadowRenderState();

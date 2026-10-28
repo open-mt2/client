@@ -603,7 +603,7 @@ void CMapOutdoor::__HardwareTransformPatch_RenderPatchSplat(long patchnum, WORD 
 #endif
 
 	// 그림자
-	if (m_bDrawShadow)
+	if (m_bDrawShadow && pTerrain->GetShadowTexture())
 	{
 		STATEMANAGER.SetRenderState(D3DRS_LIGHTING, TRUE);
 		
