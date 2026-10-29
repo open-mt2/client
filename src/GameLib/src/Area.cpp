@@ -1401,6 +1401,7 @@ void CArea::TAmbienceInstance::UpdateLoopSound(float fxCenter, float fyCenter, f
 		if (-1 != iPlaySoundIndex)
 		{
 //			Tracef("%d : %f\n", iPlaySoundIndex, __GetVolumeFromDistance(fDistance));
+			CSoundManager::Instance().UpdateAmbienceSound3D(iPlaySoundIndex, fx, fy, fz);
 			CSoundManager::Instance().SetSoundVolume3D(iPlaySoundIndex, __GetVolumeFromDistance(fDistance));
 		}
 	}
