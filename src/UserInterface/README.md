@@ -37,3 +37,12 @@ cmake -B build -G Ninja -DBUILD_TESTING=ON
 cmake --build build
 ctest --test-dir build --output-on-failure
 ```
+
+The full client Python 2.7 surface is pinned by `test_python_client_api`
+(`tests/data/python_api_client.txt`), which boots the interpreter headless and
+imports every module registered by `RunMainScript()`. After adding, removing or
+renaming a binding, regenerate the golden file deliberately:
+
+```bash
+OPENMT2_UPDATE_PYTHON_API=1 ctest --test-dir build -R python --output-on-failure
+```
