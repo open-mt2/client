@@ -24,8 +24,8 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake ninja-build liblzo2-dev libzip-dev libjpeg-dev libdevil-dev libpython2.7-dev \
-            libgl1-mesa-dev libglu1-mesa-dev libsdl2-dev libfreetype-dev
+          sudo apt-get install -y cmake ninja-build liblzo2-dev libzip-dev libjpeg-dev libdevil-dev libpython2.7-dev libgl1-mesa-dev libglu1-mesa-dev libegl-dev libgl1-mesa-dri libsdl2-dev libfreetype-dev zlib1g-dev
+>>>>>>> 8977f41 ([TA.6] ci: install GL/SDL headers for sibling dependencies)
 
       - name: Configure CMake
         env:
