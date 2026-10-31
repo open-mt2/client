@@ -13,9 +13,10 @@ struct SAffects
 	{
 		__SetAffects(c_rAffects);
 	}
-	int operator = (const DWORD & c_rAffects)
+	SAffects & operator = (const DWORD & c_rAffects)
 	{
 		__SetAffects(c_rAffects);
+		return *this;
 	}
 
 	BOOL IsAffect(BYTE byIndex)
