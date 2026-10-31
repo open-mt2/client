@@ -27,8 +27,11 @@ void* g_pForceLinkImageLoader[] = {
 // gone. The Windows libraries the client actually needs (opengl32, winmm,
 // imagehlp, ws2_32) are linked by CMake, not by #pragma.
 extern "C" {
+#if defined(_MSC_VER)
+	// _fltused is provided by the MSVC CRT; MinGW has no such symbol (T1.9).
 	extern int32_t _fltused;
 	volatile int32_t _AVOID_FLOATING_POINT_LIBRARY_BUG = _fltused;
+#endif
 	__declspec(dllexport) uint32_t NvOptimusEnablement = 0x00000001;
 	__declspec(dllexport) int32_t AmdPowerXpressRequestHighPerformance = 1;
 };

@@ -33,7 +33,8 @@ void CAccountConnector::__BuildClientKey_20050304Myevan()
 	for (DWORD i = 0; i < 4; ++i)
 		g_adwEncryptKey[i] = random();
 
-	tea_encrypt((DWORD *) g_adwDecryptKey, (const DWORD *) g_adwEncryptKey, (const DWORD *) (c_pszKey+37), 16);
+	// LLP64: DWORD is unsigned long on Windows x64, TEA takes uint32_t.
+	tea_encrypt(reinterpret_cast<uint32_t*>(g_adwDecryptKey), reinterpret_cast<const uint32_t*>(g_adwEncryptKey), reinterpret_cast<const uint32_t*>(c_pszKey+37), 16);
 //	TEA_Encrypt((DWORD *) g_adwDecryptKey, (const DWORD *) g_adwEncryptKey, (const DWORD *) (c_pszKey+37), 16);
 }
 // END_OF_CHINA_CRYPT_KEY

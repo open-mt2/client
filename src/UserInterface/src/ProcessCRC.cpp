@@ -74,7 +74,7 @@ DWORD GetProcessMemoryCRC(LPCVOID c_pvBaseAddress)
 {
 	HANDLE hProcess = GetCurrentProcess();
 	char * pBuf = new char[1024*1024];
-	DWORD dwBytesRead;
+	SIZE_T dwBytesRead;
 
 	BOOL bRet = ReadProcessMemory(hProcess, c_pvBaseAddress, pBuf, 1024*1024, &dwBytesRead);
 
