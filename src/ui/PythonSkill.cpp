@@ -2238,7 +2238,7 @@ void initskill()
 
 		{ "TEST",									skillTEST,									METH_VARARGS },
 
-		{ NULL,										NULL,										NULL },
+		{ NULL,										NULL,										0 },
 	};
 
 	PyObject * poModule = Py_InitModule("skill", s_methods);

@@ -169,7 +169,7 @@ void initsnd()
 		{ "SetSoundVolume",			sndSetSoundVolume,			METH_VARARGS },
 		{ "SetSoundScale",			sndSetSoundScale,			METH_VARARGS },
 		{ "SetAmbienceSoundScale",	sndSetAmbienceSoundScale,	METH_VARARGS },
-		{ NULL,						NULL,						NULL },
+		{ NULL,						NULL,						0 },
 	};
 
 	Py_InitModule("snd", s_methods);

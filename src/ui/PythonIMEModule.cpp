@@ -231,13 +231,13 @@ PyObject* imePasteString(PyObject * poSelf, PyObject * poArgs)
 
 PyObject* imePasteBackspace(PyObject * poSelf, PyObject * poArgs)
 {
-	CPythonIME::Instance().WMChar(NULL, WM_CHAR, 0x08, NULL);
+	CPythonIME::Instance().WMChar(NULL, WM_CHAR, 0x08, 0);
 	return Py_BuildNone();
 }
 
 PyObject* imePasteReturn(PyObject * poSelf, PyObject * poArgs)
 {
-	CPythonIME::Instance().WMChar(NULL, WM_CHAR, 0x0D, NULL);
+	CPythonIME::Instance().WMChar(NULL, WM_CHAR, 0x0D, 0);
 	return Py_BuildNone();
 }
 
@@ -282,7 +282,7 @@ void initime()
 		{ "PasteTextFromClipBoard",	imePasteTextFromClipBoard,	METH_VARARGS },
 		{ "EnablePaste",			imeEnablePaste,				METH_VARARGS },
 
-		{ NULL,						NULL,						NULL		 },
+		{ NULL,						NULL,						0		 },
 	};	
 
 	Py_InitModule("ime", s_methods);

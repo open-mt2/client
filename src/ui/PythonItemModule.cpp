@@ -545,7 +545,7 @@ void initItem()
 
 		{ "LoadItemTable",					itemLoadItemTable,						METH_VARARGS },
 
-		{ NULL,								NULL,									NULL		 },
+		{ NULL,								NULL,									0		 },
 	};
 
 	PyObject * poModule = Py_InitModule("item", s_methods);

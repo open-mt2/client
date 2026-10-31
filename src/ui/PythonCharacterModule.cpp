@@ -1319,7 +1319,7 @@ void initchr()
 		{ "testRestoreRenderMode",			chrtestRestoreRenderMode,			METH_VARARGS },
 		{ "testSetRideMan",					chrtestSetRideMan,					METH_VARARGS },
 
-		{ NULL,								NULL,								NULL		 },
+		{ NULL,								NULL,								0		 },
 	};
 
 	PyObject * poModule = Py_InitModule("chr", s_methods);

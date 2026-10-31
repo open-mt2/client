@@ -426,7 +426,7 @@ void initsystem()
 		{ "GetShadowLevel",				systemGetShadowLevel,			METH_VARARGS },
 		{ "SetShadowLevel",				systemSetShadowLevel,			METH_VARARGS },
 
-		{ NULL,							NULL,							NULL }
+		{ NULL,							NULL,							0 }
 	};
 
 	PyObject * poModule = Py_InitModule("systemSetting", s_methods);

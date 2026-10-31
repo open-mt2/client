@@ -242,7 +242,7 @@ void CPythonApplication::OnLogoClose()
 
 	if(m_pMediaEvent != NULL)
 	{
-		m_pMediaEvent->SetNotifyWindow(NULL, 0, 0);
+		m_pMediaEvent->SetNotifyWindow(0, 0, 0);
 		m_pMediaEvent->Release();
 		m_pMediaEvent = NULL;
 	}

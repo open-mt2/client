@@ -348,7 +348,7 @@ HRESULT CMovieMan::RenderStreamToSurface(IDirectDrawSurface *pSurface, IDirectDr
 		FillRect(lowerRect, 0);
 
 		pMMStream->SetState(STREAMSTATE_RUN);
-		while (pSample->Update(0, NULL, NULL, NULL) == S_OK)
+		while (pSample->Update(0, NULL, NULL, 0) == S_OK)
 		{
 			// 윈도우 중앙을 기준으로 꽉차게 그린다
 			CalcMovieRect(m_movieWidth, m_movieHeight, movieRect);

@@ -209,7 +209,7 @@ void CPythonApplication::OnMouseUpdate()
 		//assert(!" CPythonApplication::OnMouseUpdate - Mouse handler has not set!");
 		return;
 	}
-#endif _DEBUG
+#endif // _DEBUG
 
 	UI::CWindowManager& rkWndMgr=UI::CWindowManager::Instance();
 	long lx, ly;
@@ -225,7 +225,7 @@ void CPythonApplication::OnMouseRender()
 		//assert(!" CPythonApplication::OnMouseRender - Mouse handler has not set!");
 		return;
 	}
-#endif _DEBUG
+#endif // _DEBUG
 
 	PyCallClassMemberFunc(m_poMouseHandler, "Render", Py_BuildValue("()"));
 }
