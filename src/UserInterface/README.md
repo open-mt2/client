@@ -20,8 +20,9 @@
   - Fixed float-to-`LONG` narrowing in `PythonChat.cpp` `RECT` initialization.
   - Fixed `CPythonCharacterManager::CreateInstance` format argument passing `m_dwVID`.
   - Added space separators to hex constants in `PythonNetworkStreamPhaseGame.cpp` and `PythonNetworkStreamPhaseLoading.cpp` to prevent C++11 user-defined literal suffix misparsing.
-  - Normalized case-sensitive headers (`PythonCharacterManager.h`, `PythonItem.h`, `PythonNonPlayer.h`, `Packet.h`, `<IL/il.h>`).
+  - Normalized case-sensitive headers (`PythonCharacterManager.h`, `PythonItem.h`, `PythonNonPlayer.h`, `Packet.h`).
   - Extracted string table handling to `ApplicationStringTable.cpp` for clean linkage across library and test targets.
+  - Removed DevIL: guild marks use `stb_image`/`stb_image_write` through EterBase (`Platform_DecodeImage`/`Platform_SaveImageTGA`), and `Pixel` is `uint32_t` (T2.1).
 
 ## Directory Layout (Pitchfork Standard)
 
