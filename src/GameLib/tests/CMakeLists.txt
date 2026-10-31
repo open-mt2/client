@@ -31,7 +31,7 @@ if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../../../extern/include")
 endif()
 
 if(UNIX)
-    target_compile_definitions(test_gamelib PRIVATE __LINUX__ _GNU_SOURCE)
+    target_compile_definitions(test_gamelib PRIVATE OPENMT2_PLATFORM_LINUX=1 OPENMT2_RENDERER_GL=1 OPENMT2_SDL_WINDOW=1 _GNU_SOURCE)
 endif()
 
 add_test(NAME GameLib_SmokeTests COMMAND test_gamelib)
