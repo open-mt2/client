@@ -23,29 +23,15 @@ void* g_pForceLinkImageLoader[] = {
 };
 
 #ifndef OPENMT2_PLATFORM_LINUX
-extern "C" {  
+// T4.1: the DirectX SDK, Miles (mss32) and the SpeedTree import library are
+// gone. The Windows libraries the client actually needs (opengl32, winmm,
+// imagehlp, ws2_32) are linked by CMake, not by #pragma.
+extern "C" {
 	extern int32_t _fltused;
 	volatile int32_t _AVOID_FLOATING_POINT_LIBRARY_BUG = _fltused;
 	__declspec(dllexport) uint32_t NvOptimusEnablement = 0x00000001;
 	__declspec(dllexport) int32_t AmdPowerXpressRequestHighPerformance = 1;
-};  
-
-#pragma comment(linker, "/NODEFAULTLIB:libci.lib")
-
-#pragma comment( lib, "version.lib" )
-#pragma comment( lib, "imagehlp.lib" )
-#pragma comment( lib, "mss32.lib" )
-#pragma comment( lib, "winmm.lib" )
-#pragma comment( lib, "imm32.lib" )
-#pragma comment( lib, "oldnames.lib" )
-#pragma comment( lib, "SpeedTreeRT.lib" )
-#pragma comment( lib, "dinput8.lib" )
-#pragma comment( lib, "dxguid.lib" )
-#pragma comment( lib, "ws2_32.lib" )
-#pragma comment( lib, "strmiids.lib" )
-#pragma comment( lib, "ddraw.lib" )
-#pragma comment( lib, "dmoguids.lib" )
-//#pragma comment( lib, "wsock32.lib" )
+};
 #endif
 #include <stdlib.h>
 bool __IS_TEST_SERVER_MODE__=false;
