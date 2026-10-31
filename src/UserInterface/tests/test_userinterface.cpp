@@ -88,6 +88,32 @@ void test_python_system_config()
     std::printf("[PASS] test_python_system_config\n");
 }
 
+void test_show_cursor_counter()
+{
+    // The client hides the cursor with a Windows-style do/while loop:
+    //     do { i = ShowCursor(FALSE); } while (i >= 0);
+    // A platform stub that always returns 0 makes that loop infinite, which
+    // used to hang the logo-close path before the login window could open.
+    int guard = 0;
+    int count = 0;
+    do {
+        count = ShowCursor(FALSE);
+    } while (count >= 0 && ++guard < 16);
+    assert(count < 0);
+
+    guard = 0;
+    do {
+        count = ShowCursor(TRUE);
+    } while (count < 0 && ++guard < 16);
+    assert(count >= 0);
+
+    assert(ShowCursor(FALSE) < 0);
+    assert(ShowCursor(FALSE) < 0);
+    assert(ShowCursor(TRUE) >= 0);
+
+    std::printf("[PASS] test_show_cursor_counter\n");
+}
+
 void test_packet_structure_alignment()
 {
     static_assert(sizeof(LONG) == 4, "LONG must be 4 bytes");
@@ -113,6 +139,7 @@ int main()
     test_affect_flag_container();
     test_insult_checker();
     test_python_system_config();
+    test_show_cursor_counter();
     test_packet_structure_alignment();
     std::printf("All UserInterface smoke tests passed successfully!\n");
     return 0;
