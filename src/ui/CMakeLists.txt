@@ -73,8 +73,8 @@ target_include_directories(client_ui
         $<INSTALL_INTERFACE:include>
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}
-        ${PYTHON_INCLUDE_DIRS}
 )
+target_include_directories(client_ui SYSTEM PRIVATE ${PYTHON_INCLUDE_DIRS})
 
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../../extern/include")
     target_include_directories(client_ui PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../extern/include>)
@@ -119,8 +119,8 @@ target_link_libraries(metin2client PRIVATE client_ui)
 target_include_directories(metin2client PRIVATE
     ${CLIENT_INCLUDE_DIR}
     ${CLIENT_INCLUDE_DIR}
-    ${PYTHON_INCLUDE_DIRS}
 )
+target_include_directories(metin2client SYSTEM PRIVATE ${PYTHON_INCLUDE_DIRS})
 if(UNIX)
     target_compile_definitions(metin2client PRIVATE OPENMT2_PLATFORM_LINUX=1 OPENMT2_RENDERER_GL=1 OPENMT2_SDL_WINDOW=1 _GNU_SOURCE)
 endif()
