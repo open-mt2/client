@@ -24,11 +24,16 @@
     {
       packages = forAllSystems (system:
         let
-          client = import ./default.nix { inherit system neoeter neoeter-python; };
+          client = distribute:
+            import ./default.nix { inherit system neoeter neoeter-python distribute; };
+          rel = client true;
+          dev = client false;
         in
         {
-          metin2client = client;
-          default = client;
+          metin2client-rel = rel;
+          metin2client-dev = dev;
+          metin2client = rel;
+          default = rel;
         });
     };
 }

@@ -14,6 +14,10 @@
   # cloning them from GitHub. Default to sibling checkouts.
   neoeter ? ../neoeter,
   neoeter-python ? ../neoeter-python,
+  # Release build with _DISTRIBUTE: packs are read only as the ZIP archives
+  # listed in pack/Index. Set to false for a development build, which reads
+  # pack/Index.dev (FOLDER packs) when present.
+  distribute ? true,
 }:
 
 let
@@ -44,19 +48,31 @@ let
   src = cmakeSource ./.;
 
   # nixpkgs marks miniaudio Linux-only; on macOS drop the Linux audio
-  # backends (it uses CoreAudio there). Untested on darwin.
+  # backends and enable CoreAudio. The extra node dylibs don't link against
+  # libminiaudio (undefined symbols are fatal on macOS), so skip them along
+  # with the tests and examples. CoreAudio is dlopen'ed, as miniaudio's
+  # CMake never links the frameworks.
   miniaudio =
     if pkgs.stdenv.hostPlatform.isLinux then pkgs.miniaudio
     else (pkgs.miniaudio.override {
       alsaSupport = false;
       pulseSupport = false;
       sndioSupport = false;
+      jackSupport = false;
     }).overrideAttrs (old: {
+      cmakeFlags = old.cmakeFlags ++ [
+        (lib.cmakeBool "MINIAUDIO_ENABLE_COREAUDIO" true)
+        (lib.cmakeBool "MINIAUDIO_NO_EXTRA_NODES" true)
+        (lib.cmakeBool "MINIAUDIO_NO_RUNTIME_LINKING" false)
+        (lib.cmakeBool "MINIAUDIO_BUILD_TESTS" false)
+        (lib.cmakeBool "MINIAUDIO_BUILD_EXAMPLES" false)
+      ];
+      doCheck = false;
       meta = old.meta // { platforms = lib.platforms.unix; };
     });
 in
 pkgs.stdenv.mkDerivation {
-  pname = "metin2client";
+  pname = "metin2client" + lib.optionalString (!distribute) "-dev";
   version = "0.1.0";
 
   inherit src;
@@ -97,7 +113,8 @@ pkgs.stdenv.mkDerivation {
   PYTHON_INCLUDE_DIR = "${legacy.python27}/include/python2.7";
 
   cmakeFlags = [
-    "-DCMAKE_BUILD_TYPE=Release"
+    # src/ui defines _DISTRIBUTE for Release only.
+    "-DCMAKE_BUILD_TYPE=${if distribute then "Release" else "RelWithDebInfo"}"
     "-DBUILD_TESTING=OFF"
     "-DBUILD_TESTS=OFF"
     "-DNEOETER_BUILD_TESTS=OFF"
@@ -117,6 +134,9 @@ pkgs.stdenv.mkDerivation {
     install -Dm755 src/ui/metin2client $out/bin/metin2client
     runHook postInstall
   '';
+
+  # shell.nix builds its mkShell from the same pinned nixpkgs.
+  passthru = { inherit pkgs; };
 
   meta = {
     description = "OpenMT2 Metin2 client";
