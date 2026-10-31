@@ -36,24 +36,19 @@ struct RecordingGraphic
 
 int main()
 {
-	TEST_SECTION("a frame clears depth and colour");
+	TEST_SECTION("a GL frame clears colour and depth once");
 	{
 		RecordingGraphic graphic;
 		BeginFrameClear(graphic);
-		TEST_ASSERT(graphic.depthClears == 1);
 		TEST_ASSERT(graphic.fullClears == 1);
-		TEST_PASS("the colour buffer is cleared, not only the depth buffer");
-	}
+		TEST_ASSERT(graphic.depthClears == 0);
+		TEST_PASS("one full clear, not a depth-only clear");
 
-	TEST_SECTION("the clear colour is the Linux one on every GL target");
-	{
-		RecordingGraphic graphic;
-		BeginFrameClear(graphic);
 		TEST_ASSERT(graphic.r == 0.1f);
 		TEST_ASSERT(graphic.g == 0.1f);
 		TEST_ASSERT(graphic.b == 0.15f);
 		TEST_ASSERT(graphic.a == 1.0f);
-		TEST_PASS("0.1, 0.1, 0.15, opaque");
+		TEST_PASS("clears to 0.1, 0.1, 0.15, opaque");
 	}
 
 	return 0;

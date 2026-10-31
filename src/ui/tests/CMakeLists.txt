@@ -87,6 +87,10 @@ add_executable(test_frame_clear test_frame_clear.cpp)
 target_include_directories(test_frame_clear PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${CLIENT_INCLUDE_DIR})
 target_compile_options(test_frame_clear PRIVATE $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-UNDEBUG>)
 # The platform and renderer macros the client sees on this target, without linking it.
-target_compile_definitions(test_frame_clear PRIVATE
-    $<TARGET_PROPERTY:neoeter_platform_base,INTERFACE_COMPILE_DEFINITIONS>)
+if(TARGET neoeter_platform_base)
+    target_compile_definitions(test_frame_clear PRIVATE
+        $<TARGET_PROPERTY:neoeter_platform_base,INTERFACE_COMPILE_DEFINITIONS>)
+elseif(UNIX)
+    target_compile_definitions(test_frame_clear PRIVATE OPENMT2_PLATFORM_LINUX=1 OPENMT2_RENDERER_GL=1 OPENMT2_SDL_WINDOW=1 _GNU_SOURCE)
+endif()
 add_test(NAME test_frame_clear COMMAND test_frame_clear)

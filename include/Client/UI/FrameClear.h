@@ -12,10 +12,11 @@
 template <typename TGraphic>
 inline void BeginFrameClear(TGraphic& graphic)
 {
-	graphic.ClearDepthBuffer();
-
-#if defined(_DEBUG) || defined(OPENMT2_RENDERER_GL)
+#if defined(OPENMT2_RENDERER_GL)
+	// Clear() covers colour and depth, so one clear per frame.
 	graphic.SetClearColor(0.1f, 0.1f, 0.15f);
 	graphic.Clear();
+#else
+	graphic.ClearDepthBuffer();
 #endif
 }
