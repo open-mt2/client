@@ -11,7 +11,7 @@
 #include "PhysicsObject.h"
 #include "ActorInstanceInterface.h"
 #include "Interface.h"
-//#include <EterGrnLib/ThingInstance.h>
+//#include <Neoeter/Model/Grn/ThingInstance.h>
 
 class CItemData;
 class CWeaponTrace;

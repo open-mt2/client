@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 #include "PythonApplication.h"
-#include <EterLib/Camera.h>
+#include <Neoeter/Render/Camera.h>
 
 void CPythonApplication::OnCameraUpdate()
 {

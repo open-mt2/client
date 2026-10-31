@@ -2,7 +2,7 @@
 #include "PythonNetworkStream.h"
 #include "PythonApplication.h"
 #include "Packet.h"
-#include <EterPack/EterPackManager.h>
+#include <Neoeter/IO/EterPackManager.h>
 
 // HandShake ---------------------------------------------------------------------------
 void CPythonNetworkStream::HandShakePhase()

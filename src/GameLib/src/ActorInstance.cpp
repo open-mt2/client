@@ -2,8 +2,8 @@
 #include "ActorInstance.h"
 #include "AreaTerrain.h"
 #include "RaceData.h"
-#include <SpeedTreeLib/CSpeedTreeDirectX.h>
-#include <SpeedTreeLib/SpeedTreeWrapper.h>
+#include <Neoeter/Model/SpeedTree/CSpeedTreeDirectX.h>
+#include <Neoeter/Model/SpeedTree/SpeedTreeWrapper.h>
 
 enum
 {

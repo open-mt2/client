@@ -1,6 +1,6 @@
 #include "StdAfx.h"
-#include <EterPack/EterPackManager.h>
-#include <EterLib/ResourceManager.h>
+#include <Neoeter/IO/EterPackManager.h>
+#include <Neoeter/Render/ResourceManager.h>
 
 #include "ItemManager.h"
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <EterBase/FileDir.h>
+#include <Neoeter/Platform/Base/FileDir.h>
 
 class CPropertyManager;
 

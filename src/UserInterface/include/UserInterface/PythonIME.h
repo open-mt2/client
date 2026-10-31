@@ -1,7 +1,7 @@
 #pragma once
 
-#include <EterBase/Singleton.h>
-#include <EterLib/IME.h>
+#include <Neoeter/Platform/Base/Singleton.h>
+#include <Neoeter/Render/IME.h>
 
 class CPythonIME :
 	public IIMEEventSink,

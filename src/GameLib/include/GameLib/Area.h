@@ -1,7 +1,7 @@
 #pragma once
 
-#include <SpeedTreeLib/SpeedTreeWrapper.h>
-#include <EterGrnLib/ThingInstance.h>
+#include <Neoeter/Model/SpeedTree/SpeedTreeWrapper.h>
+#include <Neoeter/Model/Grn/ThingInstance.h>
 #include "MapType.h"
 #include "DungeonBlock.h"
 

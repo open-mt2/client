@@ -1,7 +1,7 @@
 #pragma once
 
 #include <GameLib/ItemData.h>
-#include <EterBase/Poly/Poly.h>
+#include <Neoeter/Platform/Base/Poly/Poly.h>
 
 class CInstanceBase;
 

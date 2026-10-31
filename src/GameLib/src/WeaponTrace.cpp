@@ -1,6 +1,6 @@
 #include "StdAfx.h"
-#include <EterLib/ResourceManager.h>
-#include <EterLib/StateManager.h>
+#include <Neoeter/Render/ResourceManager.h>
+#include <Neoeter/Render/StateManager.h>
 
 #include "WeaponTrace.h"
 

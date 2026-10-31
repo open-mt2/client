@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include <EterLib/ResourceManager.h>
+#include <Neoeter/Render/ResourceManager.h>
 
 #include "ItemData.h"
 

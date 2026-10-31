@@ -1,6 +1,6 @@
 #include "StdAfx.h"
-#include <EterLib/GrpMath.h>
-#include <EffectLib/EffectManager.h>
+#include <Neoeter/Render/GrpMath.h>
+#include <Neoeter/Effect/EffectManager.h>
 
 #include "MapManager.h"
 

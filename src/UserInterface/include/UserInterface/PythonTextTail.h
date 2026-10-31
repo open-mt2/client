@@ -1,6 +1,6 @@
 #pragma once
 
-#include <EterBase/Singleton.h>
+#include <Neoeter/Platform/Base/Singleton.h>
 
 /*
  *	따라다니는 텍스트 처리

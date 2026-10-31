@@ -17,7 +17,7 @@
 #include "PythonMessenger.h"
 #include "PythonApplication.h"
 
-#include <EterPack/EterPackManager.h>
+#include <Neoeter/IO/EterPackManager.h>
 #include <GameLib/ItemManager.h>
 
 #include "AbstractApplication.h"

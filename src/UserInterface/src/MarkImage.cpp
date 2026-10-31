@@ -4,10 +4,10 @@
 #include <algorithm>
 #include <cstring>
 
-#include <EterBase/ImageLoaderCompat.h>
+#include <Neoeter/Platform/Base/ImageLoaderCompat.h>
 #include "ImageFile.h"
-#include <EterBase/CRC32.h>
-#include <EterBase/lzo.h>
+#include <Neoeter/Platform/Base/CRC32.h>
+#include <Neoeter/Platform/Base/lzo.h>
 #define sys_err TraceError
 #define sys_log //(n, format, ...) Tracenf(format, __VA_ARGS__)
 #define thecore_memcpy memcpy

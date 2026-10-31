@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include <EterBase/Filename.h>
+#include <Neoeter/Platform/Base/Filename.h>
 #include "Property.h"
 
 float SEnvironmentData::GetFogNearDistance() const

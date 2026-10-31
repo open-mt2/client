@@ -4,7 +4,7 @@
 #include <UserInterface/PythonSystem.h>
 #include <UserInterface/Packet.h>
 #include <UserInterface/GameType.h>
-#include <MilesLib/SoundManager.h>
+#include <Neoeter/Audio/SoundManager.h>
 #include <cassert>
 #include <cstdio>
 #include <cstring>

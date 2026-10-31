@@ -84,18 +84,18 @@ target_link_libraries(UserInterface
         GameLib
         EterPythonLib
         ScriptLib
-        EffectLib
-        PRTerrainLib
-        SpeedTreeLib
-        EterGrnLib
-        MilesLib
-        EterLib
+        neoeter_effect
+        neoeter_terrain
+        neoeter_model_speedtree
+        neoeter_model_grn
+        neoeter_audio
+        neoeter_render
         CWebBrowser
-        SphereLib
-        EterImageLib
-        EterPack
-        EterLocale
-        EterBase
+        neoeter_platform_math
+        neoeter_image
+        neoeter_io
+        neoeter_platform_locale
+        neoeter_platform_base
         ${PYTHON_LIBRARIES}
         $<$<PLATFORM_ID:Linux>:pthread>
         $<$<PLATFORM_ID:Linux>:dl>

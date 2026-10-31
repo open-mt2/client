@@ -1,7 +1,7 @@
 #include <support/TestAssert.h>
 
 #include <UserInterface/StdAfx.h>
-#include <EterLib/NetPacketHeaderMap.h>
+#include <Neoeter/Render/NetPacketHeaderMap.h>
 #include <UserInterface/Packet.h>
 
 #include <cstddef>

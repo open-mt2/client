@@ -1,6 +1,6 @@
 #include "StdAfx.h"
-#include <EterLib/StateManager.h>
-#include <EterPack/EterPackManager.h>
+#include <Neoeter/Render/StateManager.h>
+#include <Neoeter/IO/EterPackManager.h>
 
 #include "MapManager.h"
 #include "MapOutdoor.h"

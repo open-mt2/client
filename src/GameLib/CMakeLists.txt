@@ -61,14 +61,14 @@ endif()
 
 target_link_libraries(GameLib
     PUBLIC
-        EterBase
-        EterPack
-        EterLib
-        MilesLib
-        EterGrnLib
-        SpeedTreeLib
-        PRTerrainLib
-        EffectLib
+        neoeter_platform_base
+        neoeter_io
+        neoeter_render
+        neoeter_audio
+        neoeter_model_grn
+        neoeter_model_speedtree
+        neoeter_terrain
+        neoeter_effect
 )
 
 if(UNIX)

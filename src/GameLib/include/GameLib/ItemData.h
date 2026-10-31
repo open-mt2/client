@@ -3,8 +3,8 @@
 // NOTE : Item의 통합 관리 클래스다.
 //        Icon, Model (droped on ground), Game Data
 
-#include <EterLib/GrpSubImage.h>
-#include <EterGrnLib/Thing.h>
+#include <Neoeter/Render/GrpSubImage.h>
+#include <Neoeter/Model/Grn/Thing.h>
 
 class CItemData
 {

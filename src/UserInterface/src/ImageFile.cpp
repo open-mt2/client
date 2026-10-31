@@ -4,7 +4,7 @@
 #include <cstdio>
 #include <vector>
 
-#include <EterBase/ImageLoaderCompat.h>
+#include <Neoeter/Platform/Base/ImageLoaderCompat.h>
 
 static bool ReadFileBytes(const char* path, std::vector<uint8_t>& out)
 {

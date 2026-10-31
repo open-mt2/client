@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "DungeonBlock.h"
 
-#include <EterLib/StateManager.h>
+#include <Neoeter/Render/StateManager.h>
 
 class CDungeonModelInstance : public CGrannyModelInstance
 {

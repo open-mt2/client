@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include <EterLib/GrpMath.h>
+#include <Neoeter/Render/GrpMath.h>
 
 #include "ActorInstance.h"
 

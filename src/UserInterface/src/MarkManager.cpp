@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "MarkManager.h"
 
-#include <EterBase/CRC32.h>
+#include <Neoeter/Platform/Base/CRC32.h>
 #define sys_err TraceError
 #define sys_log // (n, format, ...) Tracenf(format, __VA_ARGS__)
 #define thecore_memcpy memcpy

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <EterLib/parser.h>
+#include <Neoeter/Render/parser.h>
 
 #include <string>
 #include <map>

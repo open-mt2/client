@@ -2,9 +2,9 @@
 #include "Locale.h"
 #include "PythonApplication.h"
 #include "resource.h"
-#include <EterBase/CRC32.h>
-#include <EterPack/EterPackManager.h>
-#include <EterLocale/Japanese.h>
+#include <Neoeter/Platform/Base/CRC32.h>
+#include <Neoeter/IO/EterPackManager.h>
+#include <Neoeter/Platform/Locale/Japanese.h>
 #ifndef OPENMT2_PLATFORM_LINUX
 #include <windowsx.h>
 #endif

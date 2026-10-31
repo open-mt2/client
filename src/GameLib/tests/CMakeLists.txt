@@ -5,17 +5,17 @@ add_executable(test_gamelib
 target_link_libraries(test_gamelib
     PRIVATE
         GameLib
-        EffectLib
-        PRTerrainLib
-        SpeedTreeLib
-        EterGrnLib
-        MilesLib
-        EterLib
-        EterPack
-        EterImageLib
-        SphereLib
-        EterLocale
-        EterBase
+        neoeter_effect
+        neoeter_terrain
+        neoeter_model_speedtree
+        neoeter_model_grn
+        neoeter_audio
+        neoeter_render
+        neoeter_io
+        neoeter_image
+        neoeter_platform_math
+        neoeter_platform_locale
+        neoeter_platform_base
         pthread
         dl
 )

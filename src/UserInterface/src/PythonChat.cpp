@@ -3,7 +3,7 @@
 
 #include "AbstractApplication.h"
 #include "PythonCharacterManager.h"
-#include <EterBase/Timer.h>
+#include <Neoeter/Platform/Base/Timer.h>
 
 int CPythonChat::TChatSet::ms_iChatModeSize = CHAT_TYPE_MAX_NUM;
 

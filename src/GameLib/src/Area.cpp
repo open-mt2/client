@@ -1,10 +1,10 @@
 #include "StdAfx.h"
 
-#include <EterLib/ResourceManager.h>
-#include <EterLib/StateManager.h>
-#include <EffectLib/EffectManager.h>
-#include <SpeedTreeLib/CSpeedTreeDirectX.h>
-#include <EterBase/Timer.h>
+#include <Neoeter/Render/ResourceManager.h>
+#include <Neoeter/Render/StateManager.h>
+#include <Neoeter/Effect/EffectManager.h>
+#include <Neoeter/Model/SpeedTree/CSpeedTreeDirectX.h>
+#include <Neoeter/Platform/Base/Timer.h>
 
 #include "Area.h"
 #include "PropertyManager.h"

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <EterLib/NetStream.h>
+#include <Neoeter/Render/NetStream.h>
 #include "MarkManager.h"
 
 class CGuildMarkDownloader : public CNetworkStream, public CSingleton<CGuildMarkDownloader>

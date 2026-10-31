@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include <EterLib/lineintersect_utils.h>
+#include <Neoeter/Render/lineintersect_utils.h>
 
 #include "GameUtil.h"
 

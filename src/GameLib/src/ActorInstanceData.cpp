@@ -4,8 +4,8 @@
 #include "ItemManager.h"
 #include "RaceData.h"
 
-#include <EterLib/ResourceManager.h>
-#include <EterGrnLib/Util.h>
+#include <Neoeter/Render/ResourceManager.h>
+#include <Neoeter/Model/Grn/Util.h>
 
 DWORD CActorInstance::GetVirtualID()
 {

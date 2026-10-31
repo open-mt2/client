@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include <EterLib/Profiler.h>
+#include <Neoeter/Render/Profiler.h>
 
 PyObject * profilerPush(PyObject * poSelf, PyObject * poArgs)
 {

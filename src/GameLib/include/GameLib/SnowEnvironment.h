@@ -1,6 +1,6 @@
 #pragma once
 
-#include <EterLib/GrpScreen.h>
+#include <Neoeter/Render/GrpScreen.h>
 
 class CSnowParticle;
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <EterLib/NetStream.h>
+#include <Neoeter/Render/NetStream.h>
 
 class CServerStateChecker : public CSingleton<CServerStateChecker>
 {

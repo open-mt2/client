@@ -5,7 +5,7 @@
 #include "AbstractPlayer.h"
 #include "Packet.h"
 
-#include <EterLib/Camera.h>
+#include <Neoeter/Render/Camera.h>
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Frame Process

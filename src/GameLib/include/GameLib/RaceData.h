@@ -1,6 +1,6 @@
 #pragma once
 
-#include <EterGrnLib/Thing.h>
+#include <Neoeter/Model/Grn/Thing.h>
 
 class CRaceMotionData;
 class CAttributeData;

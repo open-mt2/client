@@ -1,10 +1,10 @@
 #include "StdAfx.h"
-#include <EterLib/ResourceManager.h>
-#include <EterLib/AttributeInstance.h>
-#include <EterBase/Utils.h>
+#include <Neoeter/Render/ResourceManager.h>
+#include <Neoeter/Render/AttributeInstance.h>
+#include <Neoeter/Platform/Base/Utils.h>
 #include "RaceData.h"
 #include "RaceMotionData.h"
-#include <EterBase/Filename.h>
+#include <Neoeter/Platform/Base/Filename.h>
 
 CDynamicPool<CRaceData> CRaceData::ms_kPool;
 CDynamicPool<CRaceData::TMotionModeData> CRaceData::ms_MotionModeDataPool;

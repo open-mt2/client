@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include <EterPack/EterPackManager.h>
+#include <Neoeter/IO/EterPackManager.h>
 #include "PythonNonPlayer.h"
 #include "InstanceBase.h"
 #include "PythonCharacterManager.h"

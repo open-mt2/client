@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "MapOutdoor.h"
 
-#include <EterLib/StateManager.h>
+#include <Neoeter/Render/StateManager.h>
 
 void CMapOutdoor::__RenderTerrain_RenderHardwareTransformPatch()
 {

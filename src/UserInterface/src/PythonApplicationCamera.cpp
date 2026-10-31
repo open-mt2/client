@@ -1,8 +1,8 @@
 #include "StdAfx.h"
 #include "PythonApplication.h"
 
-#include <EterBase/Timer.h>
-#include <EterLib/Camera.h>
+#include <Neoeter/Platform/Base/Timer.h>
+#include <Neoeter/Render/Camera.h>
 
 float BlendValueByLinear(float fElapsedTime, float fDuration, float fBeginValue, float fEndValue)
 {

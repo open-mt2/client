@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "InstanceBase.h"
 #include "PythonBackground.h"
-#include <EterLib/GrpMath.h>
+#include <Neoeter/Render/GrpMath.h>
 
 void CInstanceBase::SetAttackSpeed(UINT uAtkSpd)
 {

@@ -1,6 +1,6 @@
 #include "StdAfx.h"
-#include <EterLib/Camera.h>
-#include <PRTerrainLib/StdAfx.h>
+#include <Neoeter/Render/Camera.h>
+#include <Neoeter/Terrain/StdAfx.h>
 
 #include "MapOutdoor.h"
 #include "TerrainPatch.h"

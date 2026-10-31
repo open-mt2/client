@@ -2,7 +2,7 @@
 #include "PythonPlayerEventHandler.h"
 #include "PythonApplication.h"
 #include "PythonItem.h"
-#include <EterBase/Timer.h>
+#include <Neoeter/Platform/Base/Timer.h>
 
 #include "AbstractPlayer.h"
 

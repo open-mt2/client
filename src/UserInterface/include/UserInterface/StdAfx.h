@@ -8,14 +8,14 @@
 #pragma warning(disable:4018)
 #pragma warning(disable:4245)
 
-#include <EterLib/StdAfx.h>
+#include <Neoeter/Render/StdAfx.h>
 #include <EterPythonLib/StdAfx.h>
 #include <GameLib/StdAfx.h>
 #include <ScriptLib/StdAfx.h>
-#include <MilesLib/StdAfx.h>
-#include <EffectLib/StdAfx.h>
-#include <PRTerrainLib/StdAfx.h>
-#include <SpeedTreeLib/StdAfx.h>
+#include <Neoeter/Audio/StdAfx.h>
+#include <Neoeter/Effect/StdAfx.h>
+#include <Neoeter/Terrain/StdAfx.h>
+#include <Neoeter/Model/SpeedTree/StdAfx.h>
 
 #ifndef __D3DRM_H__
 #define __D3DRM_H__

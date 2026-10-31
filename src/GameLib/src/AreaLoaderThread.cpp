@@ -4,7 +4,7 @@
 
 #include "StdAfx.h"
 
-#include <EterLib/ResourceManager.h>
+#include <Neoeter/Render/ResourceManager.h>
 
 #include "AreaLoaderThread.h"
 #include "AreaTerrain.h"

@@ -1,9 +1,9 @@
 #include "StdAfx.h"
-#include <EterBase/error.h>
-#include <EterLib/Camera.h>
-#include <EterLib/AttributeInstance.h>
+#include <Neoeter/Platform/Base/error.h>
+#include <Neoeter/Render/Camera.h>
+#include <Neoeter/Render/AttributeInstance.h>
 #include <GameLib/AreaTerrain.h>
-#include <EterGrnLib/Material.h>
+#include <Neoeter/Model/Grn/Material.h>
 #include <CWebBrowser/CWebBrowser.h>
 
 #include "resource.h"

@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "PythonSystem.h"
 #include "PythonBackground.h"
-#include <EterLib/StateManager.h>
+#include <Neoeter/Render/StateManager.h>
 #include <GameLib/MapOutdoor.h>
 
 PyObject * backgroundIsSoftwareTiling(PyObject * poSelf, PyObject * poArgs)

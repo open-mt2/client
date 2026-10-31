@@ -8,7 +8,7 @@
 #include <GameLib/ItemData.h>
 #include <GameLib/ItemManager.h>
 
-#include <EterPack/EterPackManager.h>
+#include <Neoeter/IO/EterPackManager.h>
 
 #include "PythonMiniMap.h"
 

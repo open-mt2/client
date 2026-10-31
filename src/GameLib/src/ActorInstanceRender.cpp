@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include <EterLib/StateManager.h>
+#include <Neoeter/Render/StateManager.h>
 
 #include "ActorInstance.h"
 

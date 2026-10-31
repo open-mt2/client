@@ -1,13 +1,13 @@
 #pragma once
 
-#include <EterLib/SkyBox.h>
-#include <EterLib/LensFlare.h>
-#include <EterLib/ScreenFilter.h>
+#include <Neoeter/Render/SkyBox.h>
+#include <Neoeter/Render/LensFlare.h>
+#include <Neoeter/Render/ScreenFilter.h>
 
-#include <PRTerrainLib/TerrainType.h>
-#include <PRTerrainLib/TextureSet.h>
+#include <Neoeter/Terrain/TerrainType.h>
+#include <Neoeter/Terrain/TextureSet.h>
 
-#include <SpeedTreeLib/CSpeedTreeDirectX.h>
+#include <Neoeter/Model/SpeedTree/CSpeedTreeDirectX.h>
 
 #include "MapBase.h"
 #include "Area.h"

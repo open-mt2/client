@@ -1,17 +1,17 @@
 #pragma once
 
-#include <EterLib/MSApplication.h>
-#include <EterLib/Input.h>
-#include <EterLib/Profiler.h>
-#include <EterLib/GrpDevice.h>
-#include <EterLib/NetDevice.h>
-#include <EterLib/GrpLightManager.h>
-#include <EffectLib/EffectManager.h>
+#include <Neoeter/Render/MSApplication.h>
+#include <Neoeter/Render/Input.h>
+#include <Neoeter/Render/Profiler.h>
+#include <Neoeter/Render/GrpDevice.h>
+#include <Neoeter/Render/NetDevice.h>
+#include <Neoeter/Render/GrpLightManager.h>
+#include <Neoeter/Effect/EffectManager.h>
 #include <GameLib/RaceManager.h>
 #include <GameLib/ItemManager.h>
 #include <GameLib/FlyingObjectManager.h>
 #include <GameLib/GameEventManager.h>
-#include <MilesLib/SoundManager.h>
+#include <Neoeter/Audio/SoundManager.h>
 
 #include "PythonEventManager.h"
 #include "PythonPlayer.h"

@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 #include "GameType.h"
-#include <EffectLib/EffectManager.h>
+#include <Neoeter/Effect/EffectManager.h>
 
 extern float g_fGameFPS = 60.0f;
 

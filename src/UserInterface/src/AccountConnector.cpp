@@ -2,8 +2,8 @@
 #include "AccountConnector.h"
 #include "Packet.h"
 #include "PythonNetworkStream.h"
-#include <EterBase/tea.h>
-#include <EterPack/EterPackManager.h>
+#include <Neoeter/Platform/Base/tea.h>
+#include <Neoeter/IO/EterPackManager.h>
 
 // CHINA_CRYPT_KEY
 extern DWORD g_adwEncryptKey[4];

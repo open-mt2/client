@@ -1,6 +1,6 @@
 #include "StdAfx.h"
-#include <EterLib/StateManager.h>
-#include <EterLib/Camera.h>
+#include <Neoeter/Render/StateManager.h>
+#include <Neoeter/Render/Camera.h>
 
 #include "FlyingData.h"
 #include "FlyTrace.h"

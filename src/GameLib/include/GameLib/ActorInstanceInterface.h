@@ -1,6 +1,6 @@
 #pragma once
 
-#include <EterGrnLib/ThingInstance.h>
+#include <Neoeter/Model/Grn/ThingInstance.h>
 
 class IActorInstance : public CGraphicThingInstance
 {

@@ -1,9 +1,9 @@
 #include "StdAfx.h"
-#include <PRTerrainLib/StdAfx.h>
+#include <Neoeter/Terrain/StdAfx.h>
 
-#include <EterLib/ResourceManager.h>
-#include <EterLib/StateManager.h>
-#include <EterPack/EterPackManager.h>
+#include <Neoeter/Render/ResourceManager.h>
+#include <Neoeter/Render/StateManager.h>
+#include <Neoeter/IO/EterPackManager.h>
 
 #include "AreaTerrain.h"
 #include "MapOutdoor.h"

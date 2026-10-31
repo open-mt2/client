@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 #include <string.h>
-#include <EterBase/TempFile.h>
+#include <Neoeter/Platform/Base/TempFile.h>
 
 #include "PropertyManager.h"
 #include "Property.h"

@@ -9,7 +9,7 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include <EterLib/Mutex.h>
+#include <Neoeter/Render/Mutex.h>
 
 class CTerrain;
 class CArea;

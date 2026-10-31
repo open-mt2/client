@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include <EterLib/NetPacketHeaderMap.h>
+#include <Neoeter/Render/NetPacketHeaderMap.h>
 
 #include "PythonNetworkStream.h"
 #include "Packet.h"

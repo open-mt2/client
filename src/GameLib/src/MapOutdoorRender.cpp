@@ -4,8 +4,8 @@
 #include "AreaTerrain.h"
 #include "TerrainQuadtree.h"
 
-#include <EterLib/Camera.h>
-#include <EterLib/StateManager.h>
+#include <Neoeter/Render/Camera.h>
+#include <Neoeter/Render/StateManager.h>
 
 
 #define MAX_RENDER_SPALT 150

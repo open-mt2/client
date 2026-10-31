@@ -1,8 +1,8 @@
 #pragma once
 
-#include <EterLib/FuncObject.h>
-#include <EterLib/NetStream.h>
-#include <EterLib/NetPacketHeaderMap.h>
+#include <Neoeter/Render/FuncObject.h>
+#include <Neoeter/Render/NetStream.h>
+#include <Neoeter/Render/NetPacketHeaderMap.h>
 
 #include "InsultChecker.h"
 

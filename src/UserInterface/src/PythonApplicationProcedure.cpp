@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "PythonApplication.h"
 #include "SdlCursor.h"
-#include <EterLib/Camera.h>
+#include <Neoeter/Render/Camera.h>
 #include <CWebBrowser/CWebBrowser.h>
 
 #ifndef OPENMT2_PLATFORM_LINUX

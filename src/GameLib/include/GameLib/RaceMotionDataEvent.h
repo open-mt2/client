@@ -1,6 +1,6 @@
 #pragma once
 
-#include <EffectLib/EffectManager.h>
+#include <Neoeter/Effect/EffectManager.h>
 #include "FlyingObjectManager.h"
 
 namespace NMotionEvent

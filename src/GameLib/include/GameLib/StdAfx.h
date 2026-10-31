@@ -6,13 +6,13 @@
 
 
 #include <Platform/Platform.h>
-#include <EterBase/Utils.h>
-#include <EterBase/CRC32.h>
-#include <EterBase/Random.h>
+#include <Neoeter/Platform/Base/Utils.h>
+#include <Neoeter/Platform/Base/CRC32.h>
+#include <Neoeter/Platform/Base/Random.h>
 
-#include <EterLib/StdAfx.h>
-#include <MilesLib/StdAfx.h>
-#include <EffectLib/StdAfx.h>
+#include <Neoeter/Render/StdAfx.h>
+#include <Neoeter/Audio/StdAfx.h>
+#include <Neoeter/Effect/StdAfx.h>
 
 #include "GameType.h"
 #include "GameUtil.h"

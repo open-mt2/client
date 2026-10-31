@@ -3,8 +3,8 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "StdAfx.h"
-#include <EterLib/StateManager.h>
-#include <PRTerrainLib/StdAfx.h>
+#include <Neoeter/Render/StateManager.h>
+#include <Neoeter/Terrain/StdAfx.h>
 
 #include "TerrainDecal.h"
 #include "MapOutdoor.h"

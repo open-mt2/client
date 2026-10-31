@@ -1,7 +1,7 @@
 #pragma once
 
 // change CatMull to cubic spline
-#include <EterGrnLib/ThingInstance.h>
+#include <Neoeter/Model/Grn/ThingInstance.h>
 
 class CWeaponTrace
 {

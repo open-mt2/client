@@ -3,8 +3,8 @@
 
 class CProperty;
 
-#include <EterLib/SkyBox.h>
-#include <MilesLib/SoundManager.h>
+#include <Neoeter/Render/SkyBox.h>
+#include <Neoeter/Audio/SoundManager.h>
 
 /////////////////////////////////////////////////////////////////
 // Property

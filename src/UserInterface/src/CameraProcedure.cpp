@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 #include "PythonBackground.h"
-#include <EterLib/Camera.h>
+#include <Neoeter/Render/Camera.h>
 
 //////////////////////////////////////////////////////////////////////////
 // 메세지

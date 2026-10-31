@@ -9,10 +9,10 @@
 #include <crtdbg.h>
 #endif
 
-#include <EterPack/EterPackManager.h>
-#include <EterLib/Util.h>
+#include <Neoeter/IO/EterPackManager.h>
+#include <Neoeter/Render/Util.h>
 #include <CWebBrowser/CWebBrowser.h>
-#include <EterBase/CPostIt.h>
+#include <Neoeter/Platform/Base/CPostIt.h>
 
 // Force link ImageLoaderCompat.cpp from libEterBase.a
 extern bool Platform_GetImageInfo(const void* data, size_t size, uint32_t* outW, uint32_t* outH, uint32_t* outFormat);

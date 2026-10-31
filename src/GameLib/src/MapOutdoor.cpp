@@ -1,8 +1,8 @@
 #include "StdAfx.h"
-#include <EterLib/StateManager.h>
-#include <EterLib/Camera.h>
-#include <PRTerrainLib/StdAfx.h>
-#include <EffectLib/EffectManager.h>
+#include <Neoeter/Render/StateManager.h>
+#include <Neoeter/Render/Camera.h>
+#include <Neoeter/Terrain/StdAfx.h>
+#include <Neoeter/Effect/EffectManager.h>
 
 #include "MapOutdoor.h"
 #include "TerrainPatch.h"

@@ -6,7 +6,7 @@
 
 #include "AbstractPlayer.h"
 
-#include <EterPack/EterPackManager.h>
+#include <Neoeter/IO/EterPackManager.h>
 
 void CPythonNetworkStream::EnableChatInsultFilter(bool isEnable)
 {

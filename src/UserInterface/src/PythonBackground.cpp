@@ -3,9 +3,9 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "StdAfx.h"
-#include <EterLib/CullingManager.h>
-#include <EterLib/Camera.h>
-#include <EterPack/EterPackManager.h>
+#include <Neoeter/Render/CullingManager.h>
+#include <Neoeter/Render/Camera.h>
+#include <Neoeter/IO/EterPackManager.h>
 #include <GameLib/MapOutdoor.h>
 #include <GameLib/PropertyLoader.h>
 

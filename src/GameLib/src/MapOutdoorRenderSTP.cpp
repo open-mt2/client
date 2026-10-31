@@ -3,8 +3,8 @@
 #include "TerrainPatch.h"
 #include "TerrainQuadtree.h"
 
-#include <EterLib/Camera.h>
-#include <EterLib/StateManager.h>
+#include <Neoeter/Render/Camera.h>
+#include <Neoeter/Render/StateManager.h>
 
 struct SoftwareTransformPatch_SSplatVertex
 {

@@ -5,7 +5,7 @@
 #include <memory>
 #include <vector>
 
-#include <EterBase/lzo.h>
+#include <Neoeter/Platform/Base/lzo.h>
 #include <Platform/Platform.h>
 #include "MarkImage.h"
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <MilesLib/Type.h>
+#include <Neoeter/Audio/Type.h>
 #include "RaceMotionDataEvent.h"
 
 class CRaceMotionData

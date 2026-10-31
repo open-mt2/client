@@ -1,7 +1,7 @@
 #include "StdAfx.h"
-#include <EterLib/GrpMath.h>
+#include <Neoeter/Render/GrpMath.h>
 #include <GameLib/ItemManager.h>
-#include <EffectLib/EffectManager.h>
+#include <Neoeter/Effect/EffectManager.h>
 #include "PythonBackground.h"
 
 #include "PythonItem.h"

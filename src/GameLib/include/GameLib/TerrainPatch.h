@@ -9,8 +9,8 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include <EterLib/GrpVertexBuffer.h>
-#include <PRTerrainLib/Terrain.h>
+#include <Neoeter/Render/GrpVertexBuffer.h>
+#include <Neoeter/Terrain/Terrain.h>
 
 #pragma pack(push)
 #pragma pack(1)

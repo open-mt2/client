@@ -2,8 +2,8 @@
 #include "PythonPlayer.h"
 #include "PythonPlayerEventHandler.h"
 #include "PythonApplication.h"
-#include <EterLib/Camera.h>
-#include <EterBase/Timer.h>
+#include <Neoeter/Render/Camera.h>
+#include <Neoeter/Platform/Base/Timer.h>
 
 const int c_iFastestSendingCount = 3;
 const int c_iSlowestSendingCount = 3;

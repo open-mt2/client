@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include <EterPack/EterPackManager.h>
+#include <Neoeter/IO/EterPackManager.h>
 
 #include "PropertyManager.h"
 #include "Property.h"

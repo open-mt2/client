@@ -8,7 +8,7 @@
 #include "AbstractApplication.h"
 #include "Packet.h"
 
-#include <EterLib/StateManager.h>
+#include <Neoeter/Render/StateManager.h>
 #include <GameLib/ItemManager.h>
 
 BOOL HAIR_COLOR_ENABLE=FALSE;

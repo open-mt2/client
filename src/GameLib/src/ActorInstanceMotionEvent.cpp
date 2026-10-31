@@ -1,6 +1,6 @@
 #include "StdAfx.h"
-#include <EffectLib/EffectManager.h>
-#include <MilesLib/SoundManager.h>
+#include <Neoeter/Effect/EffectManager.h>
+#include <Neoeter/Audio/SoundManager.h>
 
 #include "ActorInstance.h"
 #include "FlyingObjectManager.h"
