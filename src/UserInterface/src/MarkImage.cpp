@@ -1,7 +1,11 @@
 #include "StdAfx.h"
 #include "MarkImage.h"
 
-#include <IL/il.h>
+#include <algorithm>
+#include <cstring>
+
+#include <EterBase/ImageLoaderCompat.h>
+#include "ImageFile.h"
 #include <EterBase/CRC32.h>
 #include <EterBase/lzo.h>
 #define sys_err TraceError
@@ -21,7 +25,6 @@ void DeleteMarkImage(CGuildMarkImage * pkImage)
 
 CGuildMarkImage::CGuildMarkImage()
 {
-	m_uImg = INVALID_HANDLE;
 }
 
 CGuildMarkImage::~CGuildMarkImage()
@@ -31,30 +34,21 @@ CGuildMarkImage::~CGuildMarkImage()
 
 void CGuildMarkImage::Destroy()
 {
-	if (INVALID_HANDLE == m_uImg)
-		return;
-
-	ilDeleteImages(1, &m_uImg);
-	m_uImg = INVALID_HANDLE;
+	m_pixels.clear();
 }
 
 void CGuildMarkImage::Create()
 {
-	if (INVALID_HANDLE != m_uImg)
+	if (!m_pixels.empty())
 		return;
 
-	ilGenImages(1, &m_uImg);
+	m_pixels.assign(WIDTH * HEIGHT * 4, 0);
 }
 
 bool CGuildMarkImage::Save(const char* c_szFileName) 
 {
-	ilEnable(IL_FILE_OVERWRITE);
-	ilBindImage(m_uImg);
-
-	if (!ilSave(IL_TGA, (const ILstring)c_szFileName))
-		return false;
-
-	return true;
+	Create();
+	return Platform_SaveImageTGA(c_szFileName, WIDTH, HEIGHT, m_pixels.data());
 }
 
 bool CGuildMarkImage::Build(const char * c_szFileName)
@@ -62,62 +56,42 @@ bool CGuildMarkImage::Build(const char * c_szFileName)
 	Destroy();
 	Create();
 
-	ilBindImage(m_uImg);
-	ilEnable(IL_ORIGIN_SET);
-	ilOriginFunc(IL_ORIGIN_UPPER_LEFT);
-
-	BYTE * data = (BYTE *) malloc(sizeof(Pixel) * WIDTH * HEIGHT);
-	memset(data, 0, sizeof(Pixel) * WIDTH * HEIGHT);
-
-	if (!ilTexImage(WIDTH, HEIGHT, 1, 4, IL_BGRA, IL_UNSIGNED_BYTE, data))
-	{
-		sys_err("CGuildMarkImage: cannot initialize image");
-		return false;
-	}
-
-	free(data);
-
-	ilEnable(IL_FILE_OVERWRITE);
-
-	if (!ilSave(IL_TGA, (const ILstring)c_szFileName))
-		return false;
-
-	return true;
+	return Save(c_szFileName);
 }
 
 bool CGuildMarkImage::Load(const char * c_szFileName) 
 {
 	Destroy();
-	Create();	
+	Create();
 
-	ilBindImage(m_uImg);
-	ilEnable(IL_ORIGIN_SET);
-	ilOriginFunc(IL_ORIGIN_UPPER_LEFT);
+	uint32_t width = 0;
+	uint32_t height = 0;
+	std::vector<uint8_t> pixels;
 
-	if (!ilLoad(IL_TYPE_UNKNOWN, (const ILstring) c_szFileName))
+	if (!LoadImageFileBGRA(c_szFileName, &width, &height, pixels))
 	{
 		Build(c_szFileName);
-		
-		if (!Load(c_szFileName))
+
+		if (!LoadImageFileBGRA(c_szFileName, &width, &height, pixels))
 		{
 			sys_err("CGuildMarkImage: cannot open file for writing %s", c_szFileName);
 			return false;
 		}
 	}
 
-	if (ilGetInteger(IL_IMAGE_WIDTH) != WIDTH)	
+	if (width != WIDTH)	
 	{
 		sys_err("CGuildMarkImage: %s width must be %u", c_szFileName, WIDTH);
 		return false;
 	}
 
-	if (ilGetInteger(IL_IMAGE_HEIGHT) != HEIGHT)
+	if (height != HEIGHT)
 	{
 		sys_err("CGuildMarkImage: %s height must be %u", c_szFileName, HEIGHT);
 		return false;
 	}
 
-	ilConvertImage(IL_BGRA, IL_UNSIGNED_BYTE);
+	memcpy(m_pixels.data(), pixels.data(), std::min(pixels.size(), m_pixels.size()));
 
 	BuildAllBlocks();
 	return true;
@@ -125,14 +99,32 @@ bool CGuildMarkImage::Load(const char * c_szFileName)
 
 void CGuildMarkImage::PutData(UINT x, UINT y, UINT width, UINT height, void * data)
 {
-	ilBindImage(m_uImg);
-	ilSetPixels(x, y, 0, width, height, 1, IL_BGRA, IL_UNSIGNED_BYTE, data);
+	if (m_pixels.empty() || !data || x >= WIDTH || y >= HEIGHT)
+		return;
+
+	const BYTE* src = (const BYTE*) data;
+	const UINT copyWidth = std::min(width, WIDTH - x);
+	const UINT copyHeight = std::min(height, HEIGHT - y);
+
+	for (UINT row = 0; row < copyHeight; ++row)
+	{
+		memcpy(&m_pixels[((y + row) * WIDTH + x) * 4], src + row * width * 4, copyWidth * 4);
+	}
 }
 
 void CGuildMarkImage::GetData(UINT x, UINT y, UINT width, UINT height, void * data)
 {
-	ilBindImage(m_uImg);
-	ilCopyPixels(x, y, 0, width, height, 1, IL_BGRA, IL_UNSIGNED_BYTE, data);	
+	if (m_pixels.empty() || !data || x >= WIDTH || y >= HEIGHT)
+		return;
+
+	BYTE* dst = (BYTE*) data;
+	const UINT copyWidth = std::min(width, WIDTH - x);
+	const UINT copyHeight = std::min(height, HEIGHT - y);
+
+	for (UINT row = 0; row < copyHeight; ++row)
+	{
+		memcpy(dst + row * width * 4, &m_pixels[((y + row) * WIDTH + x) * 4], copyWidth * 4);
+	}
 }
 
 // 이미지 = 512x512

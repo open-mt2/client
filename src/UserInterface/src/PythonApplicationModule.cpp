@@ -1,4 +1,5 @@
 #include "StdAfx.h"
+#include "ImageFile.h"
 #include "Resource.h"
 #include "PythonApplication.h"
 #include <EterLib/Camera.h>
@@ -321,46 +322,20 @@ PyObject* appGetDefaultCodePage(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildValue("i", LocaleService_GetCodePage());
 }
 
-#ifdef __VTUNE__
-
 PyObject* appGetImageInfo(PyObject* poSelf, PyObject* poArgs)
 {
 	char* szFileName;
 	if (!PyTuple_GetString(poArgs, 0, &szFileName))
 		return Py_BuildException();
 
-	return Py_BuildValue("iii", 0, 0, 0);
-}
+	uint32_t uWidth = 0;
+	uint32_t uHeight = 0;
+	uint32_t uFormat = 0;
 
-#else
-
-#include <IL/il.h>
-	
-PyObject* appGetImageInfo(PyObject* poSelf, PyObject* poArgs)
-{
-	char* szFileName;
-	if (!PyTuple_GetString(poArgs, 0, &szFileName))
-		return Py_BuildException();
-
-	BOOL canLoad=FALSE;
-	ILuint uWidth=0;
-	ILuint uHeight=0;
-
-	ILuint uImg;
-	ilGenImages(1, &uImg);
-	ilBindImage(uImg);
-	if (ilLoad(IL_TYPE_UNKNOWN, szFileName))
-	{
-		canLoad=TRUE;
-		uWidth=ilGetInteger(IL_IMAGE_WIDTH);
-		uHeight=ilGetInteger(IL_IMAGE_HEIGHT);
-	}
-
-	ilDeleteImages(1, &uImg);
+	BOOL canLoad = GetImageFileInfo(szFileName, &uWidth, &uHeight, &uFormat) ? TRUE : FALSE;
 
 	return Py_BuildValue("iii", canLoad, uWidth, uHeight);
 }
-#endif
 
 #include <EterPack/EterPackManager.h>
 

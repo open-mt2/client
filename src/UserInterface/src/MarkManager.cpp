@@ -397,6 +397,7 @@ void CGuildMarkManager::UploadSymbol(DWORD guildID, int iSize, const BYTE* pbyDa
 
 #ifdef __UNITTEST__
 #include "lzo_manager.h"
+#include "ImageFile.h"
 
 Guild::CGuildMarkManager * mgr;
 
@@ -407,26 +408,14 @@ void heartbeat(LPHEART ht, int pulse)
 
 void SaveMark(DWORD guildID, const char * filename)
 {
-	ILuint m_uImg;
+	uint32_t width = 0;
+	uint32_t height = 0;
+	std::vector<uint8_t> pixels;
 
-	ilGenImages(1, &m_uImg);
-	ilBindImage(m_uImg);
-	ilEnable(IL_ORIGIN_SET);
-	ilOriginFunc(IL_ORIGIN_UPPER_LEFT);
-
-	if (ilLoad(IL_TYPE_UNKNOWN, (const ILstring) filename))
+	if (LoadImageFileBGRA(filename, &width, &height, pixels))
 	{
-		ILuint width = ilGetInteger(IL_IMAGE_WIDTH);
-		ILuint height = ilGetInteger(IL_IMAGE_HEIGHT);
-
-		ilConvertImage(IL_BGRA, IL_UNSIGNED_BYTE);
-
-		BYTE * data = (BYTE *) malloc(sizeof(DWORD) * width * height);
-		ilCopyPixels(0, 0, 0, width, height, 1, IL_BGRA, IL_UNSIGNED_BYTE, data);
-		ilDeleteImages(1, &m_uImg);
-
 		printf("%s w%u h%u ", filename, width, height);
-		mgr->SaveMark(guildID, data);
+		mgr->SaveMark(guildID, pixels.data());
 	}
 	else
 		printf("%s cannot open file.\n", filename);
@@ -439,7 +428,6 @@ int main(int argc, char **argv)
 
 	srandom(time(0));
 
-	ilInit(); // DevIL Initialize
 	thecore_init(25, heartbeat);
 
 	std::vector<int> vec_guild_id;

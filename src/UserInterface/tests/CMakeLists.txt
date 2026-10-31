@@ -64,3 +64,20 @@ foreach(_test_target test_userinterface test_packet test_python_client_api)
     target_include_directories(${_test_target} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
     target_compile_options(${_test_target} PRIVATE $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-UNDEBUG>)
 endforeach()
+
+add_executable(test_mark_image test_mark_image.cpp)
+target_link_libraries(test_mark_image PRIVATE UserInterface pthread dl)
+target_include_directories(test_mark_image
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}/../include
+        ${CMAKE_CURRENT_SOURCE_DIR}/../include/UserInterface
+        ${PYTHON_INCLUDE_DIRS}
+)
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../../../extern/include")
+    target_include_directories(test_mark_image PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../../../extern/include)
+endif()
+if(UNIX)
+    target_compile_definitions(test_mark_image PRIVATE OPENMT2_PLATFORM_LINUX=1 OPENMT2_RENDERER_GL=1 OPENMT2_SDL_WINDOW=1 _GNU_SOURCE)
+endif()
+add_test(NAME test_mark_image COMMAND test_mark_image)
