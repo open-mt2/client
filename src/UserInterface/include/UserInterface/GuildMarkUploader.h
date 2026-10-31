@@ -29,8 +29,6 @@ class CGuildMarkUploader : public CNetworkStream, public CSingleton<CGuildMarkUp
 
 #else
 
-#include <IL/il.h>
-
 class CGuildMarkUploader : public CNetworkStream, public CSingleton<CGuildMarkUploader>
 {
 	public:

@@ -2,6 +2,11 @@
 #include "GuildMarkUploader.h"
 #include "Packet.h"
 #include "Test.h"
+#include "ImageFile.h"
+
+#include <algorithm>
+#include <cstring>
+#include <vector>
 
 #ifdef __VTUNE__
 #else
@@ -31,103 +36,61 @@ bool CGuildMarkUploader::IsCompleteUploading()
 
 bool CGuildMarkUploader::__Save(const char* c_szFileName)
 {
-	/* 업로더에서 저장하지 않아야 함;
-	ILuint uImg;
-	ilGenImages(1, &uImg);
-	ilBindImage(uImg);
-	ilEnable(IL_FILE_OVERWRITE);
-	ilEnable(IL_ORIGIN_SET);
-	ilOriginFunc(IL_ORIGIN_UPPER_LEFT);
-
-	if (!ilLoad(IL_TYPE_UNKNOWN, (const ILstring)c_szFileName))	
-	{
-		return false;
-	}
-
-	if (ilGetInteger(IL_IMAGE_WIDTH) != CGuildMarkImage::WIDTH)	
-	{
-		return false;
-	}
-
-	if (ilGetInteger(IL_IMAGE_HEIGHT) != CGuildMarkImage::HEIGHT)
-	{
-		return false;
-	}
-
-	ilConvertImage(IL_BGRA, IL_BYTE);
-
-	UINT uColCount = CGuildMarkImage::MARK_COL_COUNT;
-	UINT uCol = m_dwGuildID % uColCount;
-	UINT uRow = m_dwGuildID / uColCount;
-
-	ilSetPixels(uCol*SGuildMark::WIDTH, uRow*SGuildMark::HEIGHT, 0, SGuildMark::WIDTH, SGuildMark::HEIGHT, 1, IL_BGRA, IL_BYTE, (ILvoid*)m_kMark.m_apxBuf);
-
-	ilSave(IL_TGA, (ILstring)c_szFileName);
-
-	ilDeleteImages(1, &uImg);
-	*/
+	// The uploader must not write the mark image (see the original note);
+	// saving is CGuildMarkImage's job.
+	(void) c_szFileName;
 	return true;
 }
 
 bool CGuildMarkUploader::__Load(const char* c_szFileName, UINT* peError)
 {
-	ILuint uImg;
-	ilGenImages(1, &uImg);
-	ilBindImage(uImg);
-	ilEnable(IL_ORIGIN_SET);
-	ilOriginFunc(IL_ORIGIN_UPPER_LEFT);
+	uint32_t width = 0;
+	uint32_t height = 0;
+	std::vector<uint8_t> pixels;
 
-	if (!ilLoad(IL_TYPE_UNKNOWN, (const ILstring)c_szFileName))	
+	if (!LoadImageFileBGRA(c_szFileName, &width, &height, pixels))
 	{
 		*peError=ERROR_LOAD;
 		return false;
 	}
 
-	if (ilGetInteger(IL_IMAGE_WIDTH)!=SGuildMark::WIDTH)	
+	if (width != SGuildMark::WIDTH)
 	{
 		*peError=ERROR_WIDTH;
 		return false;
 	}
 
-	if (ilGetInteger(IL_IMAGE_HEIGHT)!=SGuildMark::HEIGHT)
+	if (height != SGuildMark::HEIGHT)
 	{
 		*peError=ERROR_HEIGHT;
 		return false;
 	}
 
-	ilConvertImage(IL_BGRA, IL_BYTE);
-
-	ilCopyPixels(0, 0, 0, SGuildMark::WIDTH, SGuildMark::HEIGHT, 1, IL_BGRA, IL_BYTE, m_kMark.m_apxBuf);
-
-	ilDeleteImages(1, &uImg);
+	memcpy(m_kMark.m_apxBuf, pixels.data(), std::min(pixels.size(), sizeof(m_kMark.m_apxBuf)));
 	return true;
 }
 
 bool CGuildMarkUploader::__LoadSymbol(const char* c_szFileName, UINT* peError)
 {
-	//	For Check Image
-	ILuint uImg;
-	ilGenImages(1, &uImg);
-	ilBindImage(uImg);
-	ilEnable(IL_ORIGIN_SET);
-	ilOriginFunc(IL_ORIGIN_UPPER_LEFT);
-	if (!ilLoad(IL_TYPE_UNKNOWN, (const ILstring)c_szFileName))
+	uint32_t width = 0;
+	uint32_t height = 0;
+	uint32_t format = 0;
+
+	if (!GetImageFileInfo(c_szFileName, &width, &height, &format))
 	{
 		*peError=ERROR_LOAD;
 		return false;
 	}
-	if (ilGetInteger(IL_IMAGE_WIDTH) != 64)
+	if (width != 64)
 	{
 		*peError=ERROR_WIDTH;
 		return false;
 	}
-	if (ilGetInteger(IL_IMAGE_HEIGHT) != 128)
+	if (height != 128)
 	{
 		*peError=ERROR_HEIGHT;
 		return false;
 	}
-	ilDeleteImages(1, &uImg);
-	ilShutDown();
 
 	/////
 

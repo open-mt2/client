@@ -383,9 +383,6 @@ bool Main(HINSTANCE hInstance, LPSTR lpCmdLine)
 		system("patchupdater.exe");
 		return false;
 	}
-#ifndef __VTUNE__
-	ilInit();
-#endif
 	Tracef("[UserInterface] Setting up environment...\n");
 	if (!Setup(lpCmdLine))
 		return false;

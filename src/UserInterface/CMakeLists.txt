@@ -97,7 +97,6 @@ target_link_libraries(UserInterface
         EterLocale
         EterBase
         ${PYTHON_LIBRARIES}
-        IL
         pthread
         dl
 )

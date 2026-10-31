@@ -1,10 +1,15 @@
 #ifndef __INC_METIN_II_MARKIMAGE_H__
 #define __INC_METIN_II_MARKIMAGE_H__
 
-#define IL_STATIC_LIB 1
-#include <IL/il.h>
+#include <cstdint>
+#include <map>
+#include <vector>
 
-typedef unsigned long Pixel;
+// Guild-mark pixels are 32-bit BGRA on the wire (T0.3 data-width audit).
+// 'unsigned long' is 8 bytes on LP64, which broke the 16x12 mark buffer and
+// the LZO block sizes; uint32_t matches the protocol on every target.
+typedef uint32_t Pixel;
+static_assert(sizeof(Pixel) == 4, "guild mark pixels must be 32-bit");
 
 struct SGuildMark
 {
@@ -103,9 +108,10 @@ class CGuildMarkImage
 		void	BuildAllBlocks();
 
 		SGuildMarkBlock	m_aakBlock[BLOCK_ROW_COUNT][BLOCK_COL_COUNT];
-		Pixel m_apxImage[WIDTH * HEIGHT * sizeof(Pixel)];
 
-		ILuint m_uImg;
+		// BGRA pixels, WIDTH * HEIGHT * 4 bytes. Replaces the DevIL image
+		// handle the class used before T2.1.
+		std::vector<BYTE> m_pixels;
 };
 
 #endif
