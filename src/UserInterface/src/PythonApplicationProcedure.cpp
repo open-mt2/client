@@ -1,5 +1,6 @@
 #include "StdAfx.h"
 #include "PythonApplication.h"
+#include "SdlCursor.h"
 #include <EterLib/Camera.h>
 #include <CWebBrowser/CWebBrowser.h>
 
@@ -253,12 +254,12 @@ LRESULT CPythonApplication::WindowProcedure(HWND hWnd, UINT uiMsg, WPARAM wParam
 			{
 				if (m_bCursorVisible && CURSOR_MODE_HARDWARE == m_iCursorMode)
 				{
-					SetCursor((HCURSOR) m_hCurrentCursor);
+					Platform_SetCursorHandle(m_hCurrentCursor);
 					return 0;
 				}
 				else
 				{
-					SetCursor(NULL);
+					Platform_SetCursorHandle(NULL);
 					return 0;
 				}
 			}

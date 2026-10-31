@@ -1,38 +1,41 @@
 #include "StdAfx.h"
 #include "PythonApplication.h"
 #include "resource.h"
+#include "SdlCursor.h"
 
 bool CPythonApplication::CreateCursors()
 {
 	m_bCursorVisible = TRUE;
 	m_bLiarCursorOn = false;
 
-	int ResourceID[CURSOR_COUNT] =
+	// The Win32 cursor resources are not part of the source tree, so the SDL
+	// window/input path uses SDL system cursors on every target (T3.2).
+	static const SDL_SystemCursor s_systemCursors[CURSOR_COUNT] =
 	{
-		IDC_CURSOR_NORMAL,
-		IDC_CURSOR_ATTACK,
-		IDC_CURSOR_ATTACK,
-		IDC_CURSOR_TALK,
-		IDC_CURSOR_NO,
-		IDC_CURSOR_PICK,
+		SDL_SYSTEM_CURSOR_ARROW,       // NORMAL
+		SDL_SYSTEM_CURSOR_ARROW,       // ATTACK
+		SDL_SYSTEM_CURSOR_CROSSHAIR,   // TARGET
+		SDL_SYSTEM_CURSOR_HAND,        // TALK
+		SDL_SYSTEM_CURSOR_NO,          // CANT_GO
+		SDL_SYSTEM_CURSOR_CROSSHAIR,   // PICK
 
-		IDC_CURSOR_DOOR,
-		IDC_CURSOR_CHAIR,
-		IDC_CURSOR_CHAIR,			// Magic
-		IDC_CURSOR_BUY,				// Buy
-		IDC_CURSOR_SELL,			// Sell
+		SDL_SYSTEM_CURSOR_HAND,        // DOOR
+		SDL_SYSTEM_CURSOR_ARROW,       // CHAIR
+		SDL_SYSTEM_CURSOR_ARROW,       // MAGIC
+		SDL_SYSTEM_CURSOR_HAND,        // BUY
+		SDL_SYSTEM_CURSOR_HAND,        // SELL
 
-		IDC_CURSOR_CAMERA_ROTATE,	// Camera Rotate
-		IDC_CURSOR_HSIZE,			// Horizontal Size
-		IDC_CURSOR_VSIZE,			// Vertical Size
-		IDC_CURSOR_HVSIZE,			// Horizontal & Vertical Size
+		SDL_SYSTEM_CURSOR_SIZEALL,     // CAMERA_ROTATE
+		SDL_SYSTEM_CURSOR_SIZEWE,      // HSIZE
+		SDL_SYSTEM_CURSOR_SIZENS,      // VSIZE
+		SDL_SYSTEM_CURSOR_SIZENWSE,    // HVSIZE
 	};
 
 	m_CursorHandleMap.clear();
-	
+
 	for (int i = 0; i < CURSOR_COUNT; ++i)
 	{
-		HANDLE hCursor = LoadImage(ms_hInstance, MAKEINTRESOURCE(ResourceID[i]), IMAGE_CURSOR, 32, 32, LR_VGACOLOR);
+		HANDLE hCursor = Platform_CreateSystemCursor(s_systemCursors[i]);
 
 		if (NULL == hCursor)
 			return false;
@@ -48,7 +51,7 @@ void CPythonApplication::DestroyCursors()
 	TCursorHandleMap::iterator itor;
 	for (itor = m_CursorHandleMap.begin(); itor != m_CursorHandleMap.end(); ++itor)
 	{
-		DestroyCursor((HCURSOR) itor->second);
+		Platform_DestroyCursor(itor->second);
 	}
 }
 
@@ -59,21 +62,10 @@ void CPythonApplication::SetCursorVisible(BOOL bFlag, bool bLiarCursorOn)
 	
 	if (CURSOR_MODE_HARDWARE == m_iCursorMode)
 	{
-		int iShowNum;
-		if (FALSE == m_bCursorVisible)
-		{
-			do
-			{
-				iShowNum = ShowCursor(m_bCursorVisible);
-			} while(iShowNum >= 0);
-		}
-		else
-		{
-			do
-			{
-				iShowNum = ShowCursor(m_bCursorVisible);
-			} while(iShowNum < 0);
-		}
+		// SDL_ShowCursor returns the previous state (0/1) instead of the
+		// Win32 reference counter, so it must be called once, not in the
+		// Win32 do/while loop.
+		Platform_ShowCursorFlag(m_bCursorVisible);
 	}
 }
 
@@ -132,9 +124,9 @@ BOOL CPythonApplication::SetCursorNum(int iCursorNum)
 		if (m_CursorHandleMap.end() == itor)
 			return FALSE;
 
-		HCURSOR hCursor = (HCURSOR)itor->second;
+		HANDLE hCursor = itor->second;
 
-		SetCursor(hCursor);
+		Platform_SetCursorHandle(hCursor);
 		m_hCurrentCursor = hCursor;
 	}
 
@@ -151,13 +143,13 @@ void CPythonApplication::SetCursorMode(int iMode)
 	{
 		case CURSOR_MODE_HARDWARE:
 			m_iCursorMode = CURSOR_MODE_HARDWARE;
-			ShowCursor(true);
+			Platform_ShowCursorFlag(TRUE);
 			break;
 
 		case CURSOR_MODE_SOFTWARE:
 			m_iCursorMode = CURSOR_MODE_SOFTWARE;
-			SetCursor(NULL);
-			ShowCursor(false);
+			Platform_SetCursorHandle(NULL);
+			Platform_ShowCursorFlag(FALSE);
 			break;
 	}
 }

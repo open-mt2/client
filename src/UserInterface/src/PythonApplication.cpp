@@ -59,13 +59,12 @@ m_dwLastIdleTime(0)
 	m_iPort = 0;
 	m_iFPS = 60;
 
-#ifdef OPENMT2_PLATFORM_LINUX
+	// The window is created shown by the SDL path on every target (T1.2), so
+	// start active and not minimized. The old Windows default waited for a
+	// WM_SIZE event that Wine never synthesizes for the initial window, which
+	// left the render loop permanently minimized (T3.2).
 	m_isActivateWnd = true;
 	m_isMinimizedWnd = false;
-#else
-	m_isActivateWnd = false;
-	m_isMinimizedWnd = true;
-#endif
 
 	m_fRotationSpeed = 0.0f;
 	m_fPitchSpeed = 0.0f;
