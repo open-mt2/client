@@ -2,14 +2,18 @@
 
 ## Role
 
-The game, in the sense the engine is not: data formats of Metin2 and the
+The game, in the sense the engine is not: Metin2 data formats and the
 application that turns content into a running client.
 
-| Package | Responsibility |
+| Directory | Responsibility |
 |---|---|
-| `GameLib` | item/race/skill tables, network packet structs, game-side data managers |
-| `UserInterface` | application loop, scene setup, 38 Python game modules, `metin2client` |
-| `CWebBrowser` | no-op stub keeping the UI's web-page entry points linkable |
+| `src/game` | item/race/skill tables, network packet structs, game-side data managers |
+| `src/ui` | application loop, scene setup, the 38 Python game modules, `metin2client` |
+| `src/webbrowser` | no-op stub keeping the UI's web-page entry points linkable |
+
+Include roots: `<Client/Game/...>`, `<Client/UI/...>`,
+`<Client/WebBrowser/...>`. Engine headers are `<Neoeter/...>`; the Python bridge
+is `<Neoeter/Python/...>`.
 
 ## Dependency boundaries
 
@@ -18,16 +22,14 @@ client ──► neoeter-python ──► neoeter
    └──────────────────────────►
 ```
 
-- the client may include `<EterBase/…>`, `<EterLib/…>`, `<ScriptLib/…>` — the
-  historic include roots are preserved by the move;
-- the client may **not** include another game-internal implementation detail
-  through a different repository: everything game-side is here;
-- `neoeter` and `neoeter-python` never include a client header. If a change
-  needs that direction, it belongs in `neoeter` as a generic service.
+- the client may include engine and bridge headers through their public names;
+- everything game-side is here; the engine and the bridge never include a
+  client header. A change that needs that direction belongs in `neoeter` as a
+  generic service.
 
 ## Module registration
 
-`UserInterface` owns the game modules. Each is a flat C function table
+`src/ui` owns the game modules. Each is a flat C function table
 (`Py_InitModule("player", …)`, `"item"`, `"skill"`, `"chrmgr"`, `"quest"`, …),
 registered after `neoeter-python` has created the interpreter. This is the seam
 where a future C# host can take over one module at a time
@@ -41,6 +43,6 @@ provenance and licenses; keeping them apart is deliberate.
 
 ## Executable
 
-`UserInterface` defines the `metin2client` target. The devkit pins its binary
-directory to `build/src/UserInterface`, so `build.sh`, `smoke.sh` and the dist
-layout are unchanged by the move.
+`src/ui` defines the `metin2client` target, built from `src/ui/UserInterface.cpp`.
+The devkit pins its binary directory to `build/src/ui`, which is what `build.sh`,
+`smoke.sh` and the dist assembly use.
