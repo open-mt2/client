@@ -97,8 +97,8 @@ target_link_libraries(UserInterface
         EterLocale
         EterBase
         ${PYTHON_LIBRARIES}
-        pthread
-        dl
+        $<$<PLATFORM_ID:Linux>:pthread>
+        $<$<PLATFORM_ID:Linux>:dl>
 )
 
 if(UNIX)
