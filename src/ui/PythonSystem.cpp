@@ -286,11 +286,8 @@ void CPythonSystem::SetDefaultConfig()
 	m_Config.height				= 768;
 	m_Config.bpp				= 32;
 
-#if defined( LOCALE_SERVICE_WE_JAPAN ) || defined(OPENMT2_PLATFORM_LINUX)
+	// Start in a window on every platform; fullscreen is opt-in (WINDOWED 0).
 	m_Config.bWindowed			= true;
-#else
-	m_Config.bWindowed			= false;
-#endif
 
 	m_Config.is_software_cursor	= false;
 	m_Config.is_object_culling	= true;
@@ -538,8 +535,9 @@ bool CPythonSystem::SaveConfig()
 				g_iLoadingDelayTime,
 				m_Config.bDecompressDDS);
 
-	if (m_Config.bWindowed == 1)
-		fprintf(fp, "WINDOWED				%d\n", m_Config.bWindowed);
+	// Always written: windowed is the default, so an omitted line would turn a
+	// fullscreen choice back into a window on the next start.
+	fprintf(fp, "WINDOWED				%d\n", m_Config.bWindowed);
 	if (m_Config.bViewChat == 0)
 		fprintf(fp, "VIEW_CHAT				%d\n", m_Config.bViewChat);
 	if (m_Config.bAlwaysShowName != DEFAULT_VALUE_ALWAYS_SHOW_NAME)
