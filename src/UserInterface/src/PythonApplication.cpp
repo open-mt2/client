@@ -59,7 +59,7 @@ m_dwLastIdleTime(0)
 	m_iPort = 0;
 	m_iFPS = 60;
 
-#ifdef __LINUX__
+#ifdef OPENMT2_PLATFORM_LINUX
 	m_isActivateWnd = true;
 	m_isMinimizedWnd = false;
 #else
@@ -398,7 +398,7 @@ void CPythonApplication::SkipRenderBuffering(DWORD dwSleepMSec)
 
 bool CPythonApplication::Process()
 {
-#if defined(__LINUX__)
+#if defined(OPENMT2_PLATFORM_LINUX)
 	if (Platform_IsQuitRequested())
 		return false;
 #endif
@@ -713,7 +713,7 @@ bool CPythonApplication::Process()
 
 				m_pyGraphic.ClearDepthBuffer();
 
-#if defined(_DEBUG) || defined(__LINUX__)
+#if defined(_DEBUG) || defined(OPENMT2_PLATFORM_LINUX)
 				m_pyGraphic.SetClearColor(0.1f, 0.1f, 0.15f);
 				m_pyGraphic.Clear();
 #endif
@@ -1100,7 +1100,7 @@ bool CPythonApplication::Create(PyObject * poSelf, const char * c_szName, int wi
 
 	Tracef("[PythonApplication] Create(name='%s', width=%d, height=%d, Windowed=%d)\n", c_szName, width, height, Windowed);
 
-#if defined(__LINUX__)
+#if defined(OPENMT2_PLATFORM_LINUX)
 	Windowed = 1;
 #else
 	Windowed = CPythonSystem::Instance().IsWindowed() ? 1 : 0;
@@ -1132,7 +1132,7 @@ bool CPythonApplication::Create(PyObject * poSelf, const char * c_szName, int wi
 		CPythonIME::Instance().UseDefaultIME();
 	}
 
-#if defined(__LINUX__)
+#if defined(OPENMT2_PLATFORM_LINUX)
 	m_isWindowed = true;
 	AdjustSize(width, height);
 #else

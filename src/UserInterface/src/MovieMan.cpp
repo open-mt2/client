@@ -2,7 +2,7 @@
 #include "MovieMan.h"
 #include "PythonApplication.h"
 
-#ifdef __LINUX__
+#ifdef OPENMT2_PLATFORM_LINUX
 
 void CMovieMan::ClearToBlack() {}
 void CMovieMan::PlayLogo(const char *pcszName) {}

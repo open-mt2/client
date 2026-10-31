@@ -21,7 +21,7 @@
 #define __D3DRM_H__
 #endif
 
-#ifndef __LINUX__
+#ifndef OPENMT2_PLATFORM_LINUX
 #include <dshow.h>
 #include <qedit.h>
 #endif

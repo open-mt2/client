@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "PythonApplication.h"
 
-#ifdef __LINUX__
+#ifdef OPENMT2_PLATFORM_LINUX
 
 int CPythonApplication::OnLogoOpen(char*) { return 0; }
 int CPythonApplication::OnLogoUpdate() { return 0; }

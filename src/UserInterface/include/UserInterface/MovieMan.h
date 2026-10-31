@@ -29,14 +29,14 @@ public:
 		  m_pPrimarySurface(NULL),
 		  m_pBasicAudio(NULL)
 	{
-#ifndef __LINUX__
+#ifndef OPENMT2_PLATFORM_LINUX
 		CoInitialize(NULL);
 #endif
 	};
 
 	virtual ~CMovieMan()
 	{
-#ifndef __LINUX__
+#ifndef OPENMT2_PLATFORM_LINUX
 		CoUninitialize();
 #endif
 	};

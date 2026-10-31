@@ -22,7 +22,7 @@ void* g_pForceLinkImageLoader[] = {
     (void*)&Platform_DecodeImage
 };
 
-#ifndef __LINUX__
+#ifndef OPENMT2_PLATFORM_LINUX
 extern "C" {  
 	extern int32_t _fltused;
 	volatile int32_t _AVOID_FLOATING_POINT_LIBRARY_BUG = _fltused;
@@ -390,7 +390,7 @@ bool Main(HINSTANCE hInstance, LPSTR lpCmdLine)
 	if (!Setup(lpCmdLine))
 		return false;
 
-#if defined(_DEBUG) || defined(__LINUX__)
+#if defined(_DEBUG) || defined(OPENMT2_PLATFORM_LINUX)
 	OpenConsoleWindow();
 	OpenLogFile(true); // true == uses syserr.txt and log.txt
 #else
@@ -678,7 +678,7 @@ Clean:
 	return 0;
 }
 
-#ifdef __LINUX__
+#ifdef OPENMT2_PLATFORM_LINUX
 int main(int argc, char** argv)
 {
 	printf("====================================================\n");

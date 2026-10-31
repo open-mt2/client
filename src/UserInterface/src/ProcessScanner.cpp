@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "ProcessScanner.h"
 
-#ifdef __LINUX__
+#ifdef OPENMT2_PLATFORM_LINUX
 
 void ProcessScanner_Destroy() {}
 bool ProcessScanner_Create() { return true; }

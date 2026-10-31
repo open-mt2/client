@@ -3,7 +3,7 @@
 #include <EterLib/Camera.h>
 #include <CWebBrowser/CWebBrowser.h>
 
-#ifndef __LINUX__
+#ifndef OPENMT2_PLATFORM_LINUX
 #include <winuser.h>
 #endif
 
