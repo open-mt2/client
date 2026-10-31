@@ -88,6 +88,36 @@ void test_python_system_config()
     std::printf("[PASS] test_python_system_config\n");
 }
 
+void test_python_system_window_mode_persists()
+{
+    std::remove("metin2.cfg");
+    CSoundManager soundManager;
+
+    {
+        // No metin2.cfg: the client starts in a window on every platform.
+        CPythonSystem system;
+        assert(system.IsWindowed());
+
+        // A fullscreen choice must survive a save and reload.
+        system.GetConfig()->bWindowed = false;
+        assert(system.SaveConfig());
+    }
+    {
+        CPythonSystem system;
+        assert(!system.IsWindowed());
+
+        system.GetConfig()->bWindowed = true;
+        assert(system.SaveConfig());
+    }
+    {
+        CPythonSystem system;
+        assert(system.IsWindowed());
+    }
+
+    std::remove("metin2.cfg");
+    std::printf("[PASS] test_python_system_window_mode_persists\n");
+}
+
 void test_show_cursor_counter()
 {
     // The client hides the cursor with a Windows-style do/while loop:
@@ -139,6 +169,7 @@ int main()
     test_affect_flag_container();
     test_insult_checker();
     test_python_system_config();
+    test_python_system_window_mode_persists();
     test_show_cursor_counter();
     test_packet_structure_alignment();
     std::printf("All UserInterface smoke tests passed successfully!\n");
