@@ -286,7 +286,7 @@ void CPythonSystem::SetDefaultConfig()
 	m_Config.height				= 768;
 	m_Config.bpp				= 32;
 
-#if defined( LOCALE_SERVICE_WE_JAPAN ) || defined(__LINUX__)
+#if defined( LOCALE_SERVICE_WE_JAPAN ) || defined(OPENMT2_PLATFORM_LINUX)
 	m_Config.bWindowed			= true;
 #else
 	m_Config.bWindowed			= false;

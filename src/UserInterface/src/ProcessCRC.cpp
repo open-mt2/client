@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "ProcessCRC.h"
 
-#ifdef __LINUX__
+#ifdef OPENMT2_PLATFORM_LINUX
 
 bool GetExeCRC(DWORD & r_dwProcCRC, DWORD & r_dwFileCRC)
 {

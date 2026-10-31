@@ -5,7 +5,7 @@
 #include <EterBase/CRC32.h>
 #include <EterPack/EterPackManager.h>
 #include <EterLocale/Japanese.h>
-#ifndef __LINUX__
+#ifndef OPENMT2_PLATFORM_LINUX
 #include <windowsx.h>
 #endif
 

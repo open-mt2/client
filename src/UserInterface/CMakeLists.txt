@@ -103,7 +103,12 @@ target_link_libraries(UserInterface
 )
 
 if(UNIX)
-    target_compile_definitions(UserInterface PUBLIC __LINUX__ _GNU_SOURCE)
+    target_compile_definitions(UserInterface PUBLIC
+        OPENMT2_PLATFORM_LINUX=1
+        OPENMT2_RENDERER_GL=1
+        OPENMT2_SDL_WINDOW=1
+        _GNU_SOURCE
+    )
 endif()
 
 # Master Executable target: metin2client
@@ -115,7 +120,7 @@ target_include_directories(metin2client PRIVATE
     ${PYTHON_INCLUDE_DIRS}
 )
 if(UNIX)
-    target_compile_definitions(metin2client PRIVATE __LINUX__ _GNU_SOURCE)
+    target_compile_definitions(metin2client PRIVATE OPENMT2_PLATFORM_LINUX=1 OPENMT2_RENDERER_GL=1 OPENMT2_SDL_WINDOW=1 _GNU_SOURCE)
 endif()
 
 if(CMAKE_BUILD_TYPE STREQUAL "Release" OR CMAKE_BUILD_TYPE STREQUAL "Distribute" OR NOT CMAKE_BUILD_TYPE)

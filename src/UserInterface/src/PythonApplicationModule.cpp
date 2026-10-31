@@ -184,7 +184,7 @@ PyObject* appSetCameraMaxDistance(PyObject* poSelf, PyObject* poArgs)
 
 PyObject* appSetControlFP(PyObject* poSelf, PyObject* poArgs)
 {
-#ifndef __LINUX__
+#ifndef OPENMT2_PLATFORM_LINUX
 	_controlfp( _PC_24, _MCW_PC );
 #endif
 	return Py_BuildNone();
