@@ -19,7 +19,7 @@
 // - The snapshot is text, sorted, and contains no timestamps, so it is stable
 //   across runs and machines.
 
-#include <python2.7/Python.h>
+#include <Python.h>  // T1.9: the include dir selects the platform copy
 
 #include <algorithm>
 #include <cstdio>

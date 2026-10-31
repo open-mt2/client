@@ -1,6 +1,31 @@
 #include "StdAfx.h"
 #include "MovieMan.h"
 #include "PythonApplication.h"
+#if defined(_WIN32)
+#include <dshow.h>
+#include <dmodshow.h>
+#include <dmoreg.h>
+#endif
+
+#if defined(_WIN32)
+// mingw-w64 ships ddraw.h but no import library, so resolve the entry point at
+// run time and keep the SDK signature at the call site (T1.9).
+namespace {
+typedef HRESULT (WINAPI *PFN_DirectDrawCreate)(GUID*, LPDIRECTDRAW*, IUnknown*);
+HRESULT DirectDrawCreate_Load(GUID* guid, LPDIRECTDRAW* out, IUnknown* outer) {
+    static PFN_DirectDrawCreate fn = nullptr;
+    static bool tried = false;
+    if (!tried) {
+        tried = true;
+        if (HMODULE ddraw = LoadLibraryA("ddraw.dll"))
+            fn = reinterpret_cast<PFN_DirectDrawCreate>(GetProcAddress(ddraw, "DirectDrawCreate"));
+    }
+    if (!fn) return E_FAIL;
+    return fn(guid, out, outer);
+}
+}
+#define DirectDrawCreate DirectDrawCreate_Load
+#endif
 
 #ifdef OPENMT2_PLATFORM_LINUX
 

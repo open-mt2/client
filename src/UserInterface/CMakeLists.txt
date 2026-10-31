@@ -99,6 +99,8 @@ target_link_libraries(UserInterface
         ${PYTHON_LIBRARIES}
         $<$<PLATFORM_ID:Linux>:pthread>
         $<$<PLATFORM_ID:Linux>:dl>
+    $<$<PLATFORM_ID:Windows>:dmoguids>
+    $<$<PLATFORM_ID:Windows>:strmiids>
 )
 
 if(UNIX)
