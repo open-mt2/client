@@ -1,5 +1,6 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/UI/SdlCursor.h>
+#include <Client/UI/FrameClear.h>
 #include <Neoeter/Platform/Base/error.h>
 #include <Neoeter/Render/Camera.h>
 #include <Neoeter/Render/AttributeInstance.h>
@@ -711,12 +712,7 @@ bool CPythonApplication::Process()
 			if (m_pyGraphic.Begin())
 			{
 
-				m_pyGraphic.ClearDepthBuffer();
-
-#if defined(_DEBUG) || defined(OPENMT2_PLATFORM_LINUX)
-				m_pyGraphic.SetClearColor(0.1f, 0.1f, 0.15f);
-				m_pyGraphic.Clear();
-#endif
+				BeginFrameClear(m_pyGraphic);
 
 				/////////////////////
 				// Interface
