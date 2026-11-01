@@ -759,7 +759,7 @@ void initchrmgr()
 		{ "RegisterNameColor",			chrmgrRegisterNameColor,				METH_VARARGS },
 		{ "RegisterTitleColor",			chrmgrRegisterTitleColor,				METH_VARARGS },
 
-		{ NULL,							NULL,									NULL },
+		{ NULL,							NULL,									0 },
 	};	
 
 	PyObject * poModule = Py_InitModule("chrmgr", s_methods);

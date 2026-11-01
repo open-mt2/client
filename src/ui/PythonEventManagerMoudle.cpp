@@ -303,7 +303,7 @@ void initEvent()
 
 		{ "QuestButtonClick",			eventQuestButtonClick,				METH_VARARGS },
 		{ "Destroy",					eventDestroy,						METH_VARARGS },
-		{ NULL,							NULL,								NULL         },
+		{ NULL,							NULL,								0         },
 	};
 
 	PyObject * poModule = Py_InitModule("event", s_methods);

@@ -2327,7 +2327,7 @@ void initPlayer()
 		{ "SlotTypeToInvenType",		playerSlotTypeToInvenType,			METH_VARARGS },
 		{ "SendDragonSoulRefine",		playerSendDragonSoulRefine,			METH_VARARGS },
 
-		{ NULL,							NULL,								NULL },
+		{ NULL,							NULL,								0 },
 	};
 
 	PyObject* poModule = Py_InitModule("player", s_methods);

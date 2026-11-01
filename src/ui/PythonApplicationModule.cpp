@@ -5,9 +5,9 @@
 
 extern bool PERF_CHECKER_RENDER_GAME;
 extern D3DXCOLOR g_fSpecularColor;
-extern BOOL bVisibleNotice = true;
-extern BOOL bTestServerFlag = FALSE;
-extern int TWOHANDED_WEWAPON_ATT_SPEED_DECREASE_VALUE = 0;
+BOOL bVisibleNotice = true;
+BOOL bTestServerFlag = FALSE;
+int TWOHANDED_WEWAPON_ATT_SPEED_DECREASE_VALUE = 0;
 
 #ifdef USE_OPENID
 extern int openid_test;

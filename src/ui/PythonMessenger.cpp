@@ -153,7 +153,7 @@ void initMessenger()
 		{ "Destroy",					messengerDestroy,					METH_VARARGS },
 		{ "RefreshGuildMember",			messengerRefreshGuildMember,		METH_VARARGS },
 		{ "SetMessengerHandler",		messengerSetMessengerHandler,		METH_VARARGS },
-		{ NULL,							NULL,								NULL         },
+		{ NULL,							NULL,								0         },
 	};
 
 	Py_InitModule("messenger", s_methods);

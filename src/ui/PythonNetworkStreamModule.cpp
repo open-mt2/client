@@ -1833,7 +1833,7 @@ void initnet()
 		// Log
 		{ "RegisterErrorLog",						netRegisterErrorLog,						METH_VARARGS },
 
-		{ NULL,										NULL,										NULL },
+		{ NULL,										NULL,										0 },
 	};
 
 	PyObject* poModule = Py_InitModule("net", s_methods);

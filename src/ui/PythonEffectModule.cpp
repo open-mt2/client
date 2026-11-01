@@ -101,7 +101,7 @@ void initeffect()
 		{ "Update",						effectUpdate,					METH_VARARGS },
 		{ "Render",						effectRender,					METH_VARARGS },
 
-		{ NULL,							NULL,							NULL         },
+		{ NULL,							NULL,							0         },
 	};
 
 	PyObject * poModule = Py_InitModule("effect", s_methods);

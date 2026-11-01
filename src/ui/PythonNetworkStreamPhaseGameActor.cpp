@@ -400,7 +400,7 @@ bool CPythonNetworkStream::RecvSyncPositionPacket()
 
 #ifdef __MOVIE_MODE__
 		return true;
-#endif __MOVIE_MODE__
+#endif // __MOVIE_MODE__
 
 		//Tracenf("CPythonNetworkStream::RecvSyncPositionPacket %d (%d, %d)", kSyncPos.dwVID, kSyncPos.lX, kSyncPos.lY);
 

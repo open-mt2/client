@@ -99,7 +99,7 @@ void initNonPlayer()
 
 		{ "LoadNonPlayerData",			nonplayerLoadNonPlayerData,			METH_VARARGS },
 
-		{ NULL,							NULL,								NULL		 },
+		{ NULL,							NULL,								0		 },
 	};
 
 	PyObject * poModule = Py_InitModule("nonplayer", s_methods);

@@ -228,7 +228,7 @@ void initTextTail()
 		{ "RegisterInfoTail",			textTailRegisterInfoTail,			METH_VARARGS },
 		{ "AttachTitle",				textTailAttachTitle,				METH_VARARGS },
 
-		{ NULL, NULL, NULL },
+		{ NULL, NULL, 0 },
 	};
 
 	Py_InitModule("textTail", s_methods);

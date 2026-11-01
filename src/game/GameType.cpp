@@ -2,7 +2,7 @@
 #include <Client/Game/GameType.h>
 #include <Neoeter/Effect/EffectManager.h>
 
-extern float g_fGameFPS = 60.0f;
+float g_fGameFPS = 60.0f;
 
 CDynamicPool<NRaceData::TCollisionData>			NRaceData::g_CollisionDataPool;
 CDynamicPool<NRaceData::TAttachingEffectData>	NRaceData::g_EffectDataPool;

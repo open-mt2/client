@@ -56,7 +56,7 @@ void initServerStateChecker()
 		{ "Request",	ServerStateCheckerRequest,		METH_VARARGS },
 		{ "AddChannel",	ServerStateCheckerAddChannel,	METH_VARARGS },
 		{ "Initialize",	ServerStateCheckerInitialize,	METH_VARARGS },
-		{ NULL,			NULL,							NULL },
+		{ NULL,			NULL,							0 },
 	};
 
 	//PyObject * poModule = Py_InitModule("ServerStateChecker", s_methods);

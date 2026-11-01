@@ -262,7 +262,7 @@ void initquest()
 		{ "GetQuestIndex",				questGetQuestIndex,				METH_VARARGS },
 		{ "GetQuestLastTime",			questGetQuestLastTime,			METH_VARARGS },
 		{ "Clear",						questClear,						METH_VARARGS },
-		{ NULL,							NULL,							NULL },
+		{ NULL,							NULL,							0 },
 	};
 
 	PyObject * poModule = Py_InitModule("quest", s_methods);

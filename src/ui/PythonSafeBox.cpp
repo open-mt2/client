@@ -328,7 +328,7 @@ void initsafebox()
 		{ "GetMallItemMetinSocket",		safeboxGetMallItemMetinSocket,			METH_VARARGS },
 		{ "GetMallItemAttribute",		safeboxGetMallItemAttribute,			METH_VARARGS },
 		{ "GetMallSize",				safeboxGetMallSize,						METH_VARARGS },
-		{ NULL,							NULL,									NULL },
+		{ NULL,							NULL,									0 },
 	};
 
 	PyObject * poModule = Py_InitModule("safebox", s_methods);
