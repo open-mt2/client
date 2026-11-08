@@ -8,9 +8,9 @@ on:
   workflow_dispatch:
     inputs:
       neoeter_version:
-        description: Neoeter release version, or "latest"
+        description: Override the Neoeter release version; tags default to the client tag
         required: false
-        default: latest
+        default: ""
 
 permissions:
   contents: write
@@ -21,7 +21,7 @@ concurrency:
 
 env:
   BUILD_TYPE: Release
-  NEOETER_VERSION: ${{ github.event.inputs.neoeter_version || vars.NEOETER_VERSION || 'latest' }}
+  NEOETER_VERSION_OVERRIDE: ${{ github.event.inputs.neoeter_version || vars.NEOETER_VERSION }}
 
 jobs:
   build:
@@ -99,12 +99,18 @@ jobs:
           if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
             version="${GITHUB_REF_NAME#v}"
             label="${version}"
+            neoeter_version="${version}"
           else
             version="0.0.0"
             label="0.0.0-${GITHUB_SHA::12}"
+            neoeter_version="latest"
+          fi
+          if [[ -n "${NEOETER_VERSION_OVERRIDE}" ]]; then
+            neoeter_version="${NEOETER_VERSION_OVERRIDE#v}"
           fi
           echo "PACKAGE_VERSION=${version}" >> "$GITHUB_ENV"
           echo "PACKAGE_LABEL=${label}" >> "$GITHUB_ENV"
+          echo "NEOETER_VERSION=${neoeter_version}" >> "$GITHUB_ENV"
 
       - name: Resolve Neoeter version
         if: env.NEOETER_VERSION == 'latest'
