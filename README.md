@@ -1,33 +1,50 @@
 # OpenMT2 client
 
-Game layer: the Metin2 client libraries and the `metin2client` executable.
+Game layer of the OpenMT2 client: game data, the UI and the `metin2client`
+executable.
 
-**Status:** consolidated.
+The executable is built at `build/src/ui/metin2client`. Headers are included as
+`<Client/Game/...>`, `<Client/UI/...>` and `<Client/WebBrowser/...>`; the engine
+and Python bridge keep their `<Neoeter/...>` roots.
 
-## Layout
+Game assets (`bin/`) are devkit-owned and are not committed here.
 
+## Build
+
+```bash
+cmake -S . -B build -G Ninja
+cmake --build build --parallel
 ```
-include/Client/
-├── Game/            item/race/skill data, net packet structs
-├── UI/              application, game modules, UI runtime
-└── WebBrowser/      embedded web-page stub
-src/
-├── game/
-├── ui/              metin2client (UserInterface.cpp), Cursors/, icon, manifest
-└── webbrowser/
-```
 
-Each directory holds the code directly; tests sit next to their code.
+With no arguments the client builds standalone: it downloads the latest Neoeter
+release and fetches `neoeter-python` from source.
 
-| Path | Target | Alias |
+| Option | Default | Purpose |
 |---|---|---|
-| `src/game/` | `client_game` | `Client::Game` |
-| `src/ui/` | `client_ui` | `Client::UI` |
-| `src/webbrowser/` | `client_webbrowser` | `Client::WebBrowser` |
+| `CLIENT_STANDALONE` | `ON` when the client is the top-level project, `OFF` under a superproject | Fetch `neoeter` / `neoeter-python` instead of relying on a parent project |
+| `CLIENT_DOWNLOAD_NEOETER` | same as `CLIENT_STANDALONE` | Download a prebuilt Neoeter release instead of building it from source |
+| `NEOETER_VERSION` | `latest` | Neoeter release tag, without the leading `v` |
+| `NEOETER_SHA256` | empty | Expected archive hash; read from the release `.sha256` when empty |
+| `NEOETER_ASSET_PLATFORM` | auto | Release asset suffix (`linux-x86_64`, `windows-x86_64`, `darwin-x86_64`) |
+| `NEOETER_GIT_TAG` | `main` | Neoeter git ref when `CLIENT_DOWNLOAD_NEOETER=OFF` |
+| `NEOETER_PYTHON_GIT_TAG` | `main` | `neoeter-python` git ref |
 
-The executable is `build/src/ui/metin2client`. Headers are included as
-`<Client/Game/...>`, `<Client/UI/...>`, `<Client/WebBrowser/...>`; engine and
-Python-bridge headers keep their `Neoeter::*` roots.
+`latest` resolves through the GitHub releases API. Pin `NEOETER_VERSION` for
+reproducible builds; if no release exists yet, pass a tag explicitly.
 
-Game assets (`bin/`) are devkit-owned and are not committed here. See
-`docs/architecture.md`.
+Examples:
+
+```bash
+# Pin a Neoeter release
+cmake -S . -B build -G Ninja -DNEOETER_VERSION=0.1.5
+
+# Build Neoeter from source
+cmake -S . -B build -G Ninja -DCLIENT_DOWNLOAD_NEOETER=OFF
+
+# Build under a superproject that provides the Neoeter targets
+cmake -S . -B build -G Ninja -DCLIENT_STANDALONE=OFF
+```
+
+## Documentation
+
+https://open-mt2.github.io/docs/client/
