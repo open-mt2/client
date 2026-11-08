@@ -1,4 +1,5 @@
 #include <Client/UI/StdAfx.h>
+#include <SDL2/SDL.h>
 #include <Client/UI/SdlCursor.h>
 #include <Client/UI/FrameClear.h>
 #include <Neoeter/Platform/Base/error.h>
@@ -11,8 +12,13 @@
 #include <Client/UI/resource.h>
 #include <Client/UI/PythonApplication.h>
 #include <Client/UI/PythonCharacterManager.h>
+#include <Client/UI/LoadingScreen.h>
 
 #include <Client/UI/ProcessScanner.h>
+
+#ifndef OPENMT2_CLIENT_VERSION
+#define OPENMT2_CLIENT_VERSION "unknown"
+#endif
 
 extern void GrannyCreateSharedDeformBuffer();
 extern void GrannyDestroySharedDeformBuffer();
@@ -724,6 +730,8 @@ bool CPythonApplication::Process()
 
 				m_pyGraphic.End();
 
+				LoadingScreen_RenderFadeIn();
+
 				//DWORD t1 = ELTimer_GetMSec();
 				m_pyGraphic.Show();
 				//DWORD t2 = ELTimer_GetMSec();
@@ -1085,6 +1093,37 @@ unsigned __GetWindowMode(bool windowed)
 	return WS_POPUP;
 }
 
+static const std::string &GetWindowTitle()
+{
+	static const std::string s_title = std::string("OpenMT2 (v") + OPENMT2_CLIENT_VERSION + ")";
+	return s_title;
+}
+
+bool CPythonApplication::CreateStartupWindow()
+{
+	if (GetWindowHandle())
+		return true;
+
+	int width = m_pySystem.GetWidth();
+	int height = m_pySystem.GetHeight();
+	if (width <= 0) width = 1024;
+	if (height <= 0) height = 768;
+
+	m_dwWidth = width;
+	m_dwHeight = height;
+#if defined(OPENMT2_PLATFORM_LINUX)
+	m_isWindowed = true;
+#else
+	m_isWindowed = m_pySystem.IsWindowed();
+#endif
+	Platform_SetWindowResolution(width, height);
+
+	UINT WindowMode = __GetWindowMode(true);
+	return CMSWindow::Create(GetWindowTitle().c_str(), 4, 0, WindowMode,
+		::LoadIcon(GetInstance(), MAKEINTRESOURCE(IDI_OPENMT2)),
+		IDC_CURSOR_NORMAL, width, height);
+}
+
 bool CPythonApplication::Create(PyObject * poSelf, const char * c_szName, int width, int height, int Windowed)
 {
 	int cfgWidth = m_pySystem.GetWidth();
@@ -1102,10 +1141,19 @@ bool CPythonApplication::Create(PyObject * poSelf, const char * c_szName, int wi
 	Windowed = CPythonSystem::Instance().IsWindowed() ? 1 : 0;
 #endif
 
+	bool bHasWindow = GetWindowHandle() != NULL;
+	int existingWidth = 0;
+	int existingHeight = 0;
+	SDL_Window *existingWindow = CMSWindow::GetSDLWindow();
+	if (existingWindow)
+		SDL_GetWindowSize(existingWindow, &existingWidth, &existingHeight);
+
+#if !defined(OPENMT2_PLATFORM_LINUX)
 	bool bAnotherWindow = false;
 
-	if (FindWindow(NULL, c_szName))
+	if (!bHasWindow && FindWindow(NULL, GetWindowTitle().c_str()))
 		bAnotherWindow = true;
+#endif
 
 	m_dwWidth = width;
 	m_dwHeight = height;
@@ -1115,7 +1163,15 @@ bool CPythonApplication::Create(PyObject * poSelf, const char * c_szName, int wi
 	// Window
 	UINT WindowMode = __GetWindowMode(Windowed ? true : false);
 
-	if (!CMSWindow::Create(c_szName, 4, 0, WindowMode, ::LoadIcon( GetInstance(), MAKEINTRESOURCE( IDI_METIN2 ) ), IDC_CURSOR_NORMAL, width, height))
+	if (bHasWindow)
+	{
+#if !defined(OPENMT2_PLATFORM_LINUX)
+		SetText(GetWindowTitle().c_str());
+#endif
+		if (existingWidth != width || existingHeight != height)
+			SetSize(width, height);
+	}
+	else if (!CMSWindow::Create(GetWindowTitle().c_str(), 4, 0, WindowMode, ::LoadIcon( GetInstance(), MAKEINTRESOURCE( IDI_OPENMT2 ) ), IDC_CURSOR_NORMAL, width, height))
 	{
 		//PyErr_SetString(PyExc_RuntimeError, "CMSWindow::Create failed");
 		TraceError("CMSWindow::Create failed");
@@ -1130,7 +1186,17 @@ bool CPythonApplication::Create(PyObject * poSelf, const char * c_szName, int wi
 
 #if defined(OPENMT2_PLATFORM_LINUX)
 	m_isWindowed = true;
-	AdjustSize(width, height);
+	if (!bHasWindow || existingWidth != width || existingHeight != height)
+		AdjustSize(width, height);
+
+	if (SDL_Window *window = CMSWindow::GetSDLWindow())
+	{
+		Uint32 flags = SDL_GetWindowFlags(window);
+		if (flags & (SDL_WINDOW_FULLSCREEN | SDL_WINDOW_FULLSCREEN_DESKTOP))
+			SDL_SetWindowFullscreen(window, 0);
+		if (flags & SDL_WINDOW_MAXIMIZED)
+			SDL_RestoreWindow(window);
+	}
 #else
 	// 풀스크린 모드이고
 	// 디폴트 IME 를 사용하거나 유럽 버전이면
@@ -1284,6 +1350,16 @@ bool CPythonApplication::Create(PyObject * poSelf, const char * c_szName, int wi
 	CGrannyMaterial::CreateSphereMap(0, "d:/ymir work/special/spheremap.jpg");
 	CGrannyMaterial::CreateSphereMap(1, "d:/ymir work/special/spheremap01.jpg");
 	Tracef("[PythonApplication] Application subsystems initialized successfully.\n");
+
+	static bool bStartupFadePlayed = false;
+	if (!bStartupFadePlayed)
+	{
+		bStartupFadePlayed = true;
+		LoadingScreen_FadeOut(0.35f);
+		LoadingScreen_BeginFadeIn(0.8f);
+		m_SoundManager.BeginStartupMusicFadeIn(1.0f);
+	}
+
 	return true;
 }
 

@@ -384,7 +384,7 @@ bool CPythonSystem::LoadConfig()
 {
 	FILE * fp = NULL;
 
-	if (NULL == (fp = fopen("metin2.cfg", "rt")))
+	if (NULL == (fp = fopen("openmt2.cfg", "rt")))
 		return false;
 
 	char buf[256];
@@ -503,7 +503,7 @@ bool CPythonSystem::SaveConfig()
 {
 	FILE *fp;
 
-	if (NULL == (fp = fopen("metin2.cfg", "wt")))
+	if (NULL == (fp = fopen("openmt2.cfg", "wt")))
 		return false;
 
 	fprintf(fp, "WIDTH						%d\n"

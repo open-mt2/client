@@ -61,7 +61,9 @@ file(GLOB_RECURSE USERINTERFACE_SOURCES CONFIGURE_DEPENDS
     "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
 )
 list(FILTER USERINTERFACE_SOURCES EXCLUDE REGEX "/tests/")
-list(REMOVE_ITEM USERINTERFACE_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/UserInterface.cpp")
+list(REMOVE_ITEM USERINTERFACE_SOURCES
+    "${CMAKE_CURRENT_SOURCE_DIR}/UserInterface.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/ClientMain.cpp")
 
 add_library(client_ui STATIC ${USERINTERFACE_SOURCES})
 add_library(Client::UI ALIAS client_ui)
@@ -113,21 +115,43 @@ if(UNIX)
     )
 endif()
 
-# Master Executable target: metin2client
-add_executable(metin2client "${CMAKE_CURRENT_SOURCE_DIR}/UserInterface.cpp")
-target_link_libraries(metin2client PRIVATE client_ui)
-target_include_directories(metin2client PRIVATE
+# Master Executable target: openmt2
+add_executable(openmt2
+    "${CMAKE_CURRENT_SOURCE_DIR}/ClientMain.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../Main.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/UserInterface.cpp")
+set_target_properties(openmt2 PROPERTIES
+    OUTPUT_NAME "openmt2"
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+)
+foreach(_config IN LISTS CMAKE_CONFIGURATION_TYPES)
+    string(TOUPPER "${_config}" _config_upper)
+    set_target_properties(openmt2 PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY_${_config_upper} "${CMAKE_BINARY_DIR}"
+    )
+endforeach()
+if(NOT TARGET SDL2::SDL2main)
+    find_package(SDL2 REQUIRED)
+endif()
+
+if(NOT DEFINED OPENMT2_CLIENT_VERSION)
+    set(OPENMT2_CLIENT_VERSION "unknown")
+endif()
+target_compile_definitions(client_ui PRIVATE OPENMT2_CLIENT_VERSION="${OPENMT2_CLIENT_VERSION}")
+target_compile_definitions(openmt2 PRIVATE OPENMT2_CLIENT_VERSION="${OPENMT2_CLIENT_VERSION}")
+target_link_libraries(openmt2 PRIVATE client_ui SDL2::SDL2main)
+target_include_directories(openmt2 PRIVATE
     ${CLIENT_INCLUDE_DIR}
     ${CLIENT_INCLUDE_DIR}
 )
-target_include_directories(metin2client SYSTEM PRIVATE ${PYTHON_INCLUDE_DIRS})
+target_include_directories(openmt2 SYSTEM PRIVATE ${PYTHON_INCLUDE_DIRS})
 if(UNIX)
-    target_compile_definitions(metin2client PRIVATE OPENMT2_PLATFORM_LINUX=1 OPENMT2_RENDERER_GL=1 OPENMT2_SDL_WINDOW=1 _GNU_SOURCE)
+    target_compile_definitions(openmt2 PRIVATE OPENMT2_PLATFORM_LINUX=1 OPENMT2_RENDERER_GL=1 OPENMT2_SDL_WINDOW=1 _GNU_SOURCE)
 endif()
 
 if(CMAKE_BUILD_TYPE STREQUAL "Release" OR CMAKE_BUILD_TYPE STREQUAL "Distribute" OR NOT CMAKE_BUILD_TYPE)
     target_compile_definitions(client_ui PUBLIC _DISTRIBUTE)
-    target_compile_definitions(metin2client PRIVATE _DISTRIBUTE)
+    target_compile_definitions(openmt2 PRIVATE _DISTRIBUTE)
 endif()
 
 if((USERINTERFACE_STANDALONE AND BUILD_TESTING) OR (NOT USERINTERFACE_STANDALONE AND BUILD_TESTS))

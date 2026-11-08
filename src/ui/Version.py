@@ -20,4 +20,4 @@ if oldVersion != newVersion:
 	f = open ("Version.h", "wb")
 	f.write("#define VER_FILE_VERSION   1,0,%d,0\r\n" % newVersion)
 	f.write("#define VER_FILE_VERSION_STR   \"1.0.%d.1\"\r\n" % newVersion)
-	f.write("int METIN2_GET_VERSION() { return %d; }\r\n" % newVersion)
+	f.write("int OPENMT2_GET_VERSION() { return %d; }\r\n" % newVersion)

@@ -14,7 +14,7 @@ namespace
 
 void test_game_math_and_util()
 {
-    // Rotation from position (Metin2 uses (0, -1, 0) as standard 0-degree vector)
+    // Rotation from position (OpenMT2 uses (0, -1, 0) as standard 0-degree vector)
     float degSouth = GetDegreeFromPosition(0.0f, -10.0f);
     assert(std::fabs(degSouth - 0.0f) < 1.0f || std::fabs(degSouth - 360.0f) < 1.0f);
 

@@ -162,6 +162,7 @@ class CPythonApplication : public CMSApplication, public CInputKeyboard, public 
 		void SkipRenderBuffering(DWORD dwSleepMSec);
 
 		bool Create(PyObject* poSelf, const char* c_szName, int width, int height, int Windowed);
+		bool CreateStartupWindow();
 		bool CreateDevice(int width, int height, int Windowed, int bit = 32, int frequency = 0);
 
 		void UpdateGame();

@@ -1,0 +1,174 @@
+name: client
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      neoeter_version:
+        description: Neoeter release version, or "latest"
+        required: false
+        default: latest
+
+permissions:
+  contents: write
+
+concurrency:
+  group: client-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  BUILD_TYPE: Release
+  NEOETER_VERSION: ${{ github.event.inputs.neoeter_version || vars.NEOETER_VERSION || 'latest' }}
+
+jobs:
+  build:
+    name: Build client
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate tag
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          if [[ ! "${GITHUB_REF_NAME}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]]; then
+            echo "error: release tags must look like vX.Y.Z, got ${GITHUB_REF_NAME}" >&2
+            exit 1
+          fi
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            build-essential \
+            cmake \
+            ninja-build \
+            pkg-config \
+            libsdl2-dev \
+            libfreetype-dev \
+            libfontconfig1-dev \
+            liblzo2-dev \
+            libzip-dev \
+            zlib1g-dev \
+            libgl-dev \
+            libegl-dev \
+            libjpeg-dev \
+            libssl-dev \
+            libbz2-dev \
+            libreadline-dev \
+            libsqlite3-dev \
+            libffi-dev \
+            liblzma-dev \
+            libncurses-dev
+
+      - name: Cache Python 2.7
+        id: python-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/python2.7
+          key: python-2.7.18-${{ runner.os }}-${{ runner.arch }}
+
+      - name: Build Python 2.7
+        if: steps.python-cache.outputs.cache-hit != 'true'
+        run: |
+          curl -fsSL --retry 3 -o /tmp/Python-2.7.18.tgz \
+            https://www.python.org/ftp/python/2.7.18/Python-2.7.18.tgz
+          tar -xzf /tmp/Python-2.7.18.tgz -C /tmp
+          cd /tmp/Python-2.7.18
+          export LD_LIBRARY_PATH="${PWD}${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+          ./configure \
+            --prefix="${HOME}/python2.7" \
+            --enable-shared \
+            --enable-unicode=ucs4 \
+            --with-ensurepip=no
+          make -j"$(nproc)"
+          make altinstall
+
+      - name: Set up Python 2.7
+        run: |
+          echo "PYTHON_LIBRARY=${HOME}/python2.7/lib/libpython2.7.so" >> "$GITHUB_ENV"
+          echo "PYTHON_INCLUDE_DIR=${HOME}/python2.7/include/python2.7" >> "$GITHUB_ENV"
+          echo "LD_LIBRARY_PATH=${HOME}/python2.7/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}" >> "$GITHUB_ENV"
+
+      - name: Version
+        run: |
+          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+            version="${GITHUB_REF_NAME#v}"
+            label="${version}"
+          else
+            version="0.0.0"
+            label="0.0.0-${GITHUB_SHA::12}"
+          fi
+          echo "PACKAGE_VERSION=${version}" >> "$GITHUB_ENV"
+          echo "PACKAGE_LABEL=${label}" >> "$GITHUB_ENV"
+
+      - name: Resolve Neoeter version
+        if: env.NEOETER_VERSION == 'latest'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="$(gh api repos/open-mt2/neoeter/releases/latest --jq .tag_name)"
+          echo "NEOETER_VERSION=${tag#v}" >> "$GITHUB_ENV"
+
+      - name: Configure
+        run: |
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" \
+            -DBUILD_TESTS=OFF \
+            -DNEOETER_VERSION="${NEOETER_VERSION}" \
+            -DPYTHON_LIBRARY="${PYTHON_LIBRARY}" \
+            -DPYTHON_INCLUDE_DIR="${PYTHON_INCLUDE_DIR}"
+
+      - name: Build
+        run: cmake --build build --parallel "$(nproc)"
+
+      - name: Verify executable
+        run: |
+          test -x build/openmt2
+          file build/openmt2
+          ldd build/openmt2 > /tmp/openmt2.ldd
+          if grep -q "not found" /tmp/openmt2.ldd; then
+            cat /tmp/openmt2.ldd >&2
+            echo "error: the executable has unresolved shared libraries" >&2
+            exit 1
+          fi
+
+      - name: Package
+        run: |
+          version="${PACKAGE_LABEL}"
+          out="openmt2-${version}-linux-x86_64"
+          mkdir -p "dist/${out}"
+          install -m 755 build/openmt2 "dist/${out}/openmt2"
+          printf '%s\n' "${version}" > "dist/${out}/VERSION"
+          tar -C dist -czf "dist/${out}.tar.gz" "${out}"
+          (cd dist && sha256sum "${out}.tar.gz" | awk '{print $1}' > "${out}.tar.gz.sha256")
+          install -m 755 build/openmt2 dist/openmt2
+          (cd dist && sha256sum openmt2 | awk '{print $1}' > openmt2.sha256)
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: openmt2-linux-x86_64
+          path: |
+            dist/openmt2
+            dist/openmt2.sha256
+            dist/*.tar.gz
+            dist/*.tar.gz.sha256
+          if-no-files-found: error
+
+      - name: Publish release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          name: OpenMT2 Client ${{ github.ref_name }}
+          generate_release_notes: true
+          fail_on_unmatched_files: true
+          prerelease: ${{ contains(github.ref_name, '-') }}
+          files: |
+            dist/openmt2
+            dist/openmt2.sha256
+            dist/*.tar.gz
+            dist/*.tar.gz.sha256

@@ -90,11 +90,11 @@ void test_python_system_config()
 
 void test_python_system_window_mode_persists()
 {
-    std::remove("metin2.cfg");
+    std::remove("openmt2.cfg");
     CSoundManager soundManager;
 
     {
-        // No metin2.cfg: the client starts in a window on every platform.
+        // No openmt2.cfg: the client starts in a window on every platform.
         CPythonSystem system;
         assert(system.IsWindowed());
 
@@ -114,7 +114,7 @@ void test_python_system_window_mode_persists()
         assert(system.IsWindowed());
     }
 
-    std::remove("metin2.cfg");
+    std::remove("openmt2.cfg");
     std::printf("[PASS] test_python_system_window_mode_persists\n");
 }
 

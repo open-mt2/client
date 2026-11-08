@@ -22,7 +22,7 @@ const std::string& ApplicationStringTable_GetString(DWORD dwID, LPCSTR szKey)
 	::GetCurrentDirectory(sizeof(szIniFileName), szIniFileName);
 	if(szIniFileName[lstrlen(szIniFileName)-1] != '\\' && szIniFileName[lstrlen(szIniFileName)-1] != '/')
 		strcat(szIniFileName, "/");
-	strcat(szIniFileName, "metin2client.dat");
+	strcat(szIniFileName, "openmt2client.dat");
 
 	strcpy(szLocale, LocaleService_GetLocalePath());
 	if(strnicmp(szLocale, "locale/", strlen("locale/")) == 0)

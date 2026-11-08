@@ -9,7 +9,7 @@
 #define IDS_ERR_CANNOT_READ_FILE        5
 #define IDS_ERR_NOT_LATEST_FILE         6
 #define IDS_ERR_MUST_LAUNCH_FROM_PATCHER 7
-#define IDI_METIN2                      100
+#define IDI_OPENMT2                     100
 #define IDD_COLOR_DIALOG                101
 #define IDC_CURSOR_NORMAL               102
 #define IDC_CURSOR_ATTACK               104

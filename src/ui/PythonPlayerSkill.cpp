@@ -331,7 +331,7 @@ bool CPythonPlayer::__CheckShortMana(TSkillInstance& rkSkillInst, CPythonSkill::
 	{
 		if (iNeedSP == 0)
 		{
-			CPythonChat::Instance().AppendChat(CHAT_TYPE_INFO, "!!! Find strange game data. Please reinstall metin2.");
+			CPythonChat::Instance().AppendChat(CHAT_TYPE_INFO, "!!! Find strange game data. Please reinstall OpenMT2.");
 			return true;
 		}
 	}

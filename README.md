@@ -1,9 +1,9 @@
 # OpenMT2 client
 
-Game layer of the OpenMT2 client: game data, the UI and the `metin2client`
+Game layer of the OpenMT2 client: game data, the UI and the `openmt2`
 executable.
 
-The executable is built at `build/src/ui/metin2client`. Headers are included as
+The executable is built at `build/openmt2` (CMake target `openmt2`). Headers are included as
 `<Client/Game/...>`, `<Client/UI/...>` and `<Client/WebBrowser/...>`; the engine
 and Python bridge keep their `<Neoeter/...>` roots.
 

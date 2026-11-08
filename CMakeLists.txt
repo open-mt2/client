@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
-project(Client VERSION 0.1.0 LANGUAGES C CXX)
+project(Client VERSION 0.1.5 LANGUAGES C CXX)
+
+set(OPENMT2_CLIENT_VERSION "${PROJECT_VERSION}")
 
 # Game layer: GameLib + UserInterface + CWebBrowser. One header root, one
 # directory per package. Depends on neoeter and neoeter-python.

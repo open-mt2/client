@@ -2,7 +2,7 @@
 
 #ifdef USE_AHNLAB_HACKSHIELD
 #include "Hackshield.h"
-#include METIN2HS_INCLUDE_ANTICPXSVR
+#include OPENMT2HS_INCLUDE_ANTICPXSVR
 #else
 #pragma pack(push) //기존 alignment 저장
 #pragma pack(8)
