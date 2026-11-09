@@ -600,6 +600,8 @@ void CMapManager::__LoadMapInfoVector()
 	CEterPackManager::TPackDataPtr data;
 	CMemoryTextFileLoader textFileLoader;
 
+	m_kVct_kMapInfo.clear();
+
 	if (!CEterPackManager::Instance().Get(m_stAtlasInfoFileName, data))
 		if (!CEterPackManager::Instance().Get("AtlasInfo.txt", data))
 			return;
