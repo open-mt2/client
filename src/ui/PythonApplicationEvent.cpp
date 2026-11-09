@@ -1,6 +1,7 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/UI/PythonApplication.h>
 #include <Neoeter/Render/Camera.h>
+#include <Neoeter/Render/SdlPlatform.h>
 
 void CPythonApplication::OnCameraUpdate()
 {
@@ -78,6 +79,7 @@ void CPythonApplication::OnMouseMove(int x, int y)
 		{
 			x = Point.x;
 			y = Point.y;
+			Platform_WarpMouse(Point.x, Point.y);
 		}
 	}
 

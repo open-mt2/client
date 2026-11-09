@@ -1,5 +1,6 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/UI/PythonApplication.h>
+#include <Client/UI/PythonBackground.h>
 #include <Client/UI/PythonExceptionSender.h>
 
 #ifdef _DEBUG
@@ -293,6 +294,9 @@ bool RunClientGame(CPythonApplication &app, HINSTANCE hInstance,
   Tracef("[UserInterface] Loading global locale configuration...\n");
   if (LocaleService_LoadGlobal(hInstance))
     SetDefaultCodePage(LocaleService_GetCodePage());
+
+  Tracef("[UserInterface] Reloading map atlas from packs...\n");
+  CPythonBackground::Instance().Initialize();
 
   LoadingScreen_Show();
 
