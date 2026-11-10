@@ -117,6 +117,7 @@ void CPythonApplication::GetMousePosition(POINT* ppt)
 void CPythonApplication::SetMinFog(float fMinFog)
 {
 	MIN_FOG = fMinFog;
+	m_pyBackground.SetFogDistance(fMinFog);
 }
 
 void CPythonApplication::SetFrameSkip(bool isEnable)
