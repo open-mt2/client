@@ -71,6 +71,7 @@ public:
 	void RefreshShadowLevel();
 	void SelectViewDistanceNum(int eNum);
 	void SetViewDistanceSet(int eNum, float fFarClip);
+	void SetFogDistance(float fFogDistance);
 	float GetFarClip();
 
 	DWORD GetRenderShadowTime();
@@ -151,6 +152,7 @@ private:
 	DWORD m_dwBaseY;
 
 	TVIEWDISTANCESET m_ViewDistanceSet[NUM_DISTANCE_SET];
+	float m_fFogDistance;
 
 	std::set<int> m_kSet_iShowingPortalID;
 	std::set<std::string> m_kSet_strDungeonMapName;

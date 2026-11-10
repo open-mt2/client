@@ -144,13 +144,25 @@ void CPythonBackground::SelectViewDistanceNum(int eNum)
 
 	TEnvironmentData * env = ((TEnvironmentData *) mc_pcurEnvironmentData);
 
+	env->m_fFogNearDistance = m_ViewDistanceSet[m_eViewDistanceNum].m_fFogStart;
+	env->m_fFogFarDistance = m_ViewDistanceSet[m_eViewDistanceNum].m_fFogEnd;
+
 	// 게임 분위기를 바꿔놓을 수 있으므로 reserve로 되어있으면 고치지 않는다.
 	if (env->bReserve)
 	{
-		env->m_fFogNearDistance = m_ViewDistanceSet[m_eViewDistanceNum].m_fFogStart;
-		env->m_fFogFarDistance = m_ViewDistanceSet[m_eViewDistanceNum].m_fFogEnd;
 		env->v3SkyBoxScale = m_ViewDistanceSet[m_eViewDistanceNum].m_v3SkyBoxScale;
 		rkMap.SetEnvironmentSkyBox();
+	}
+}
+
+void CPythonBackground::SetFogDistance(float fFogDistance)
+{
+	m_fFogDistance = fFogDistance;
+
+	for (int i = 0; i < NUM_DISTANCE_SET; ++i)
+	{
+		if (m_ViewDistanceSet[i].m_fFarClip > 0.0f)
+			SetViewDistanceSet(i, m_ViewDistanceSet[i].m_fFarClip);
 	}
 }
 
@@ -158,10 +170,20 @@ void CPythonBackground::SetViewDistanceSet(int eNum, float fFarClip)
 {
 	if (!m_pkMap)
 		return;
-	
-	m_ViewDistanceSet[eNum].m_fFogStart		= fFarClip * 0.5f;//0.3333333f;
-	m_ViewDistanceSet[eNum].m_fFogEnd		= fFarClip * 0.7f;//0.6666667f;
-	
+
+	if (m_fFogDistance > 0.0f)
+	{
+		float fFogEnd = (m_fFogDistance < fFarClip) ? m_fFogDistance : fFarClip;
+
+		m_ViewDistanceSet[eNum].m_fFogStart = fFogEnd * 0.6f;
+		m_ViewDistanceSet[eNum].m_fFogEnd = fFogEnd;
+	}
+	else
+	{
+		m_ViewDistanceSet[eNum].m_fFogStart		= fFarClip * 0.5f;//0.3333333f;
+		m_ViewDistanceSet[eNum].m_fFogEnd		= fFarClip * 0.7f;//0.6666667f;
+	}
+
 	float fSkyBoxScale						= fFarClip * 0.6f;//0.5773502f;
 	m_ViewDistanceSet[eNum].m_v3SkyBoxScale	= D3DXVECTOR3(fSkyBoxScale, fSkyBoxScale, fSkyBoxScale);
 	m_ViewDistanceSet[eNum].m_fFarClip		= fFarClip;
@@ -217,12 +239,16 @@ CPythonBackground::CPythonBackground()
 	m_iDayMode = DAY_MODE_LIGHT;
 	m_iXMasTreeGrade = 0;
 	m_bVisibleGuildArea = FALSE;
+	m_fFogDistance = 0.0f;
 
-	SetViewDistanceSet(4, 25600.0f);
-	SetViewDistanceSet(3, 25600.0f);
-	SetViewDistanceSet(2, 25600.0f);
-	SetViewDistanceSet(1, 25600.0f);
-	SetViewDistanceSet(0, 25600.0f);
+	for (int i = 0; i < NUM_DISTANCE_SET; ++i)
+	{
+		m_ViewDistanceSet[i].m_fFogStart = 25600.0f * 0.5f;
+		m_ViewDistanceSet[i].m_fFogEnd = 25600.0f * 0.7f;
+		m_ViewDistanceSet[i].m_fFarClip = 25600.0f;
+		m_ViewDistanceSet[i].m_v3SkyBoxScale = D3DXVECTOR3(25600.0f * 0.6f, 25600.0f * 0.6f, 25600.0f * 0.6f);
+	}
+
 	Initialize();
 }
 
