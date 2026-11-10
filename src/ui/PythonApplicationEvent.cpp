@@ -35,7 +35,7 @@ void CPythonApplication::OnSizeChange(int width, int height)
 
 void CPythonApplication::OnMouseMiddleButtonDown(int x, int y)
 {
-	if (Neoeter::Debug::WantsMouse())
+	if (Neoeter::Debug::WantsMouseAt(x, y))
 		return;
 
 	CCameraManager& rkCmrMgr = CCameraManager::Instance();
@@ -82,7 +82,7 @@ void CPythonApplication::OnMouseMove(int x, int y)
 	CCameraManager& rkCmrMgr = CCameraManager::Instance();
 	CCamera* pkCmrCur = rkCmrMgr.GetCurrentCamera();
 
-	if (!(pkCmrCur && pkCmrCur->IsDraging()) && Neoeter::Debug::WantsMouse())
+	if (!(pkCmrCur && pkCmrCur->IsDraging()) && Neoeter::Debug::WantsMouseAt(x, y))
 	{
 		if (CURSOR_MODE_SOFTWARE == GetCursorMode())
 			UI::CWindowManager::Instance().RunMouseMove(x, y);
@@ -112,7 +112,7 @@ void CPythonApplication::OnMouseMove(int x, int y)
 
 void CPythonApplication::OnMouseLeftButtonDown(int x, int y)
 {
-	if (Neoeter::Debug::WantsMouse())
+	if (Neoeter::Debug::WantsMouseAt(x, y))
 		return;
 
 	UI::CWindowManager& rkWndMgr = UI::CWindowManager::Instance();
@@ -127,7 +127,7 @@ void CPythonApplication::OnMouseLeftButtonUp(int x, int y)
 
 void CPythonApplication::OnMouseLeftButtonDoubleClick(int x, int y)
 {
-	if (Neoeter::Debug::WantsMouse())
+	if (Neoeter::Debug::WantsMouseAt(x, y))
 		return;
 
 	UI::CWindowManager& rkWndMgr = UI::CWindowManager::Instance();
@@ -137,7 +137,7 @@ void CPythonApplication::OnMouseLeftButtonDoubleClick(int x, int y)
 
 void CPythonApplication::OnMouseRightButtonDown(int x, int y)
 {
-	if (Neoeter::Debug::WantsMouse())
+	if (Neoeter::Debug::WantsMouseAt(x, y))
 		return;
 
 	UI::CWindowManager& rkWndMgr = UI::CWindowManager::Instance();
