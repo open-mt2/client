@@ -23,32 +23,6 @@ void CPythonApplication::SafeReleaseCapture()
 		ReleaseCapture();
 }
 
-void CPythonApplication::__SetFullScreenWindow(HWND hWnd, DWORD dwWidth, DWORD dwHeight, DWORD dwBPP)
-{
-	DEVMODE DevMode;
-	DevMode.dmSize = sizeof(DevMode);
-	DevMode.dmBitsPerPel = dwBPP;
-	DevMode.dmPelsWidth = dwWidth;
-	DevMode.dmPelsHeight = dwHeight;
-	DevMode.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
-
-	LONG Error = ChangeDisplaySettings(&DevMode, CDS_FULLSCREEN);
-	if(Error == DISP_CHANGE_RESTART)
-	{
-		ChangeDisplaySettings(0,0);
-	}
-}
-
-void CPythonApplication::__MinimizeFullScreenWindow(HWND hWnd, DWORD dwWidth, DWORD dwHeight)
-{
-	ChangeDisplaySettings(0, 0);
-	SetWindowPos(hWnd, 0, 0, 0,
-				 dwWidth,
-				 dwHeight,
-				 SWP_SHOWWINDOW);
-	ShowWindow(hWnd, SW_MINIMIZE);
-}
-
 LRESULT CPythonApplication::WindowProcedure(HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam)
 {
 	const int c_DoubleClickTime = 300;
@@ -70,7 +44,7 @@ LRESULT CPythonApplication::WindowProcedure(HWND hWnd, UINT uiMsg, WPARAM wParam
 
 					if (m_isWindowFullScreenEnable)
 					{
-						__SetFullScreenWindow(hWnd, m_dwWidth, m_dwHeight, m_pySystem.GetBPP());
+						SetWindowFullscreen(true, m_dwWidth, m_dwHeight);
 					}
 				}
 				else
@@ -81,7 +55,8 @@ LRESULT CPythonApplication::WindowProcedure(HWND hWnd, UINT uiMsg, WPARAM wParam
 
 					if (m_isWindowFullScreenEnable)
 					{
-						__MinimizeFullScreenWindow(hWnd, m_dwWidth, m_dwHeight);
+						SetWindowFullscreen(false, m_dwWidth, m_dwHeight);
+						MinimizeWindow();
 					}
 				}
 			}
@@ -203,7 +178,7 @@ LRESULT CPythonApplication::WindowProcedure(HWND hWnd, UINT uiMsg, WPARAM wParam
 						GetClientRect(&rcWnd); 
 				
 						UINT uWidth=rcWnd.right-rcWnd.left; 
-						UINT uHeight=rcWnd.bottom-rcWnd.left; 
+						UINT uHeight=rcWnd.bottom-rcWnd.top;
 						m_grpDevice.ResizeBackBuffer(uWidth, uHeight);				
 					}
 					break;
@@ -224,7 +199,7 @@ LRESULT CPythonApplication::WindowProcedure(HWND hWnd, UINT uiMsg, WPARAM wParam
 				GetClientRect(&rcWnd); 
 				
 				UINT uWidth=rcWnd.right-rcWnd.left; 
-				UINT uHeight=rcWnd.bottom-rcWnd.left; 
+				UINT uHeight=rcWnd.bottom-rcWnd.top;
 				m_grpDevice.ResizeBackBuffer(uWidth, uHeight);				
 				OnSizeChange(short(LOWORD(lParam)), short(HIWORD(lParam)));
 			}

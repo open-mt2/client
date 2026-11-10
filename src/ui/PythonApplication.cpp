@@ -1099,15 +1099,104 @@ static const std::string &GetWindowTitle()
 	return s_title;
 }
 
+static void ClampWindowSizeToDisplay(int & width, int & height)
+{
+	SDL_DisplayMode mode;
+	if (SDL_GetDesktopDisplayMode(0, &mode) != 0)
+		return;
+
+	if (width > mode.w)
+		width = mode.w;
+	if (height > mode.h)
+		height = mode.h;
+}
+
+bool CPythonApplication::SetWindowFullscreen(bool enabled, int width, int height)
+{
+	SDL_Window * window = CMSWindow::GetSDLWindow();
+	if (!window)
+		return false;
+
+	if (enabled)
+	{
+		SDL_RestoreWindow(window);
+		SDL_ShowWindow(window);
+
+		int display = SDL_GetWindowDisplayIndex(window);
+		if (display < 0)
+			display = 0;
+
+		SDL_SetWindowMinimumSize(window, 0, 0);
+		SDL_SetWindowMaximumSize(window, 0, 0);
+
+		if (width > 0 && height > 0)
+		{
+			SDL_DisplayMode desired = {};
+			desired.w = width;
+			desired.h = height;
+
+			SDL_DisplayMode closest = {};
+			if (SDL_GetClosestDisplayMode(display, &desired, &closest))
+				SDL_SetWindowDisplayMode(window, &closest);
+		}
+
+		if (SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN) != 0)
+		{
+			if (SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP) != 0)
+			{
+				SDL_SetWindowFullscreen(window, 0);
+				return false;
+			}
+		}
+	}
+	else
+	{
+		SDL_SetWindowFullscreen(window, 0);
+
+		if (width > 0 && height > 0)
+		{
+			SDL_SetWindowResizable(window, SDL_FALSE);
+			SDL_SetWindowMinimumSize(window, width, height);
+			SDL_SetWindowMaximumSize(window, width, height);
+			SDL_SetWindowSize(window, width, height);
+			SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+		}
+	}
+
+#if defined(OPENMT2_RENDERER_GL)
+	if (SDL_GLContext context = CMSWindow::GetGLContext())
+		SDL_GL_MakeCurrent(window, context);
+#endif
+
+	int actualWidth = width;
+	int actualHeight = height;
+	SDL_GetWindowSize(window, &actualWidth, &actualHeight);
+	if (actualWidth > 0 && actualHeight > 0)
+		Platform_SetWindowResolution(actualWidth, actualHeight);
+
+	return true;
+}
+
+void CPythonApplication::MinimizeWindow()
+{
+	if (SDL_Window * window = CMSWindow::GetSDLWindow())
+		SDL_MinimizeWindow(window);
+}
+
 bool CPythonApplication::CreateStartupWindow()
 {
 	if (GetWindowHandle())
 		return true;
 
+	if (SDL_WasInit(SDL_INIT_VIDEO) == 0)
+		SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
+
 	int width = m_pySystem.GetWidth();
 	int height = m_pySystem.GetHeight();
 	if (width <= 0) width = 1024;
 	if (height <= 0) height = 768;
+
+	ClampWindowSizeToDisplay(width, height);
 
 	m_dwWidth = width;
 	m_dwHeight = height;
@@ -1132,6 +1221,8 @@ bool CPythonApplication::Create(PyObject * poSelf, const char * c_szName, int wi
 	if (cfgHeight > 0) height = cfgHeight;
 	if (width <= 0) width = 1024;
 	if (height <= 0) height = 768;
+
+	ClampWindowSizeToDisplay(width, height);
 
 	Tracef("[PythonApplication] Create(name='%s', width=%d, height=%d, Windowed=%d)\n", c_szName, width, height, Windowed);
 
@@ -1198,41 +1289,52 @@ bool CPythonApplication::Create(PyObject * poSelf, const char * c_szName, int wi
 			SDL_RestoreWindow(window);
 	}
 #else
-	// 풀스크린 모드이고
-	// 디폴트 IME 를 사용하거나 유럽 버전이면
-	// 윈도우 풀스크린 모드를 사용한다
-	if (!m_pySystem.IsWindowed() && (m_pySystem.IsUseDefaultIME() || LocaleService_IsEUROPE()))
+	if (!m_pySystem.IsWindowed())
 	{
 		m_isWindowed = false;
-		m_isWindowFullScreenEnable = TRUE;
-		__SetFullScreenWindow(GetWindowHandle(), width, height, m_pySystem.GetBPP());
+		m_isWindowFullScreenEnable = FALSE;
+
+		if (SetWindowFullscreen(true, width, height))
+		{
+			m_isWindowFullScreenEnable = TRUE;
+
+			int actualWidth = width;
+			int actualHeight = height;
+			if (SDL_Window *window = CMSWindow::GetSDLWindow())
+				SDL_GetWindowSize(window, &actualWidth, &actualHeight);
+
+			if (actualWidth > 0 && actualHeight > 0)
+			{
+				width = actualWidth;
+				height = actualHeight;
+				m_dwWidth = width;
+				m_dwHeight = height;
+			}
+		}
+		else
+		{
+			m_isWindowed = true;
+			AdjustSize(width, height);
+		}
 
 		Windowed = true;
 	}
 	else
 	{
-		AdjustSize(m_pySystem.GetWidth(), m_pySystem.GetHeight());
+		m_isWindowFullScreenEnable = FALSE;
+		AdjustSize(width, height);
+		m_isWindowed = true;
 
-		if (Windowed)
+		if (bAnotherWindow)
 		{
-			m_isWindowed = true;
+			RECT rc;
 
-			if (bAnotherWindow)
-			{
-				RECT rc;
+			GetClientRect(&rc);
 
-				GetClientRect(&rc);
+			int windowWidth = rc.right - rc.left;
+			int windowHeight = (rc.bottom - rc.top);
 
-				int windowWidth = rc.right - rc.left;
-				int windowHeight = (rc.bottom - rc.top);
-
-				CMSApplication::SetPosition(GetScreenWidth() - windowWidth, GetScreenHeight() - 60 - windowHeight);
-			}
-		}
-		else
-		{
-			m_isWindowed = false;
-			SetPosition(0, 0);
+			CMSApplication::SetPosition(GetScreenWidth() - windowWidth, GetScreenHeight() - 60 - windowHeight);
 		}
 	}
 #endif
@@ -1270,7 +1372,7 @@ bool CPythonApplication::Create(PyObject * poSelf, const char * c_szName, int wi
 		GRAPHICS_CAPS_SOFTWARE_TILING = m_pySystem.IsSoftwareTiling();
 
 	// Device
-	if (!CreateDevice(m_pySystem.GetWidth(), m_pySystem.GetHeight(), Windowed, m_pySystem.GetBPP(), m_pySystem.GetFrequency()))
+	if (!CreateDevice(width, height, Windowed, m_pySystem.GetBPP(), m_pySystem.GetFrequency()))
 		return false;
 
 	GrannyCreateSharedDeformBuffer();
@@ -1292,11 +1394,6 @@ bool CPythonApplication::Create(PyObject * poSelf, const char * c_szName, int wi
 	}
 
 	SetVisibleMode(true);
-
-	if (m_isWindowFullScreenEnable) //m_pySystem.IsUseDefaultIME() && !m_pySystem.IsWindowed())
-	{
-		SetWindowPos(GetWindowHandle(), HWND_TOP, 0, 0, width, height, SWP_SHOWWINDOW);
-	}
 
 	if (!InitializeKeyboard(GetWindowHandle()))
 		return false;

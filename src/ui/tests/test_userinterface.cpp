@@ -118,6 +118,29 @@ void test_python_system_window_mode_persists()
     std::printf("[PASS] test_python_system_window_mode_persists\n");
 }
 
+void test_python_system_keeps_requested_window_size()
+{
+    std::remove("openmt2.cfg");
+    CSoundManager soundManager;
+
+    {
+        CPythonSystem system;
+        system.GetConfig()->bWindowed = true;
+        system.GetConfig()->width = 1920;
+        system.GetConfig()->height = 1080;
+        assert(system.SaveConfig());
+    }
+    {
+        CPythonSystem system;
+        assert(system.IsWindowed());
+        assert(system.GetWidth() == 1920);
+        assert(system.GetHeight() == 1080);
+    }
+
+    std::remove("openmt2.cfg");
+    std::printf("[PASS] test_python_system_keeps_requested_window_size\n");
+}
+
 void test_show_cursor_counter()
 {
     // The client hides the cursor with a Windows-style do/while loop:
@@ -170,6 +193,7 @@ int main()
     test_insult_checker();
     test_python_system_config();
     test_python_system_window_mode_persists();
+    test_python_system_keeps_requested_window_size();
     test_show_cursor_counter();
     test_packet_structure_alignment();
     std::printf("All UserInterface smoke tests passed successfully!\n");

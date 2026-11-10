@@ -2,6 +2,8 @@
 #include <Client/UI/PythonSystem.h>
 #include <Client/UI/PythonApplication.h>
 
+#include <SDL2/SDL.h>
+
 #define DEFAULT_VALUE_ALWAYS_SHOW_NAME		true
 
 void CPythonSystem::SetInterfaceHandler(PyObject * poHandler)
@@ -36,34 +38,28 @@ void CPythonSystem::GetDisplaySettings()
 	memset(m_ResolutionList, 0, sizeof(TResolution) * RESOLUTION_MAX_NUM);
 	m_ResolutionCount = 0;
 
-	LPDIRECT3D9 lpD3D = CPythonGraphic::Instance().GetD3D();
-
-	D3DADAPTER_IDENTIFIER9 d3dAdapterIdentifier;
-	D3DDISPLAYMODE d3ddmDesktop;
-
-	lpD3D->GetAdapterIdentifier(D3DADAPTER_DEFAULT, D3DENUM_WHQL_LEVEL, &d3dAdapterIdentifier);
-	lpD3D->GetAdapterDisplayMode(D3DADAPTER_DEFAULT, &d3ddmDesktop);
-
-	// 이 어뎁터가 가지고 있는 디스플래이 모드갯수를 나열한다..
-	DWORD dwNumAdapterModes = lpD3D->GetAdapterModeCount(D3DADAPTER_DEFAULT, D3DFMT_UNKNOWN);
-
-	for (UINT iMode = 0; iMode < dwNumAdapterModes; iMode++)
+	int display = 0;
+	if (SDL_Window * window = CMSWindow::GetSDLWindow())
 	{
-		D3DDISPLAYMODE DisplayMode;
-		lpD3D->EnumAdapterModes(D3DADAPTER_DEFAULT, D3DFMT_UNKNOWN, iMode, &DisplayMode);
-		DWORD bpp = 0;
+		int index = SDL_GetWindowDisplayIndex(window);
+		if (index >= 0)
+			display = index;
+	}
 
-		// 800 600 이상만 걸러낸다.
-		if (DisplayMode.Width < 800 || DisplayMode.Height < 600)
+	int modeCount = SDL_GetNumDisplayModes(display);
+	for (int iMode = 0; iMode < modeCount; ++iMode)
+	{
+		SDL_DisplayMode DisplayMode;
+		if (SDL_GetDisplayMode(display, iMode, &DisplayMode) != 0)
 			continue;
 
-		// 일단 16bbp 와 32bbp만 취급하자.
-		// 16bbp만 처리하게끔 했음 - [levites]
-		if (DisplayMode.Format == D3DFMT_R5G6B5)
-			bpp = 16;
-		else if (DisplayMode.Format == D3DFMT_X8R8G8B8)
+		if (DisplayMode.w < 800 || DisplayMode.h < 600)
+			continue;
+
+		DWORD bpp = SDL_BITSPERPIXEL(DisplayMode.format);
+		if (bpp == 0 || bpp == 24)
 			bpp = 32;
-		else
+		if (bpp != 16 && bpp != 32)
 			continue;
 
 		int check_res = false;
@@ -71,16 +67,15 @@ void CPythonSystem::GetDisplaySettings()
 		for (int i = 0; !check_res && i < m_ResolutionCount; ++i)
 		{
 			if (m_ResolutionList[i].bpp != bpp ||
-				m_ResolutionList[i].width != DisplayMode.Width ||
-				m_ResolutionList[i].height != DisplayMode.Height)
+				m_ResolutionList[i].width != static_cast<DWORD>(DisplayMode.w) ||
+				m_ResolutionList[i].height != static_cast<DWORD>(DisplayMode.h))
 				continue;
 
 			int check_fre = false;
 
-			// 프리퀀시만 다르므로 프리퀀시만 셋팅해준다.
 			for (int j = 0; j < m_ResolutionList[i].frequency_count; ++j)
 			{
-				if (m_ResolutionList[i].frequency[j] == DisplayMode.RefreshRate)
+				if (m_ResolutionList[i].frequency[j] == static_cast<DWORD>(DisplayMode.refresh_rate))
 				{
 					check_fre = true;
 					break;
@@ -89,20 +84,19 @@ void CPythonSystem::GetDisplaySettings()
 
 			if (!check_fre)
 				if (m_ResolutionList[i].frequency_count < FREQUENCY_MAX_NUM)
-					m_ResolutionList[i].frequency[m_ResolutionList[i].frequency_count++] = DisplayMode.RefreshRate;
+					m_ResolutionList[i].frequency[m_ResolutionList[i].frequency_count++] = static_cast<DWORD>(DisplayMode.refresh_rate);
 
 			check_res = true;
 		}
 
 		if (!check_res)
 		{
-			// 새로운 거니까 추가해주자.
 			if (m_ResolutionCount < RESOLUTION_MAX_NUM)
 			{
-				m_ResolutionList[m_ResolutionCount].width			= DisplayMode.Width;
-				m_ResolutionList[m_ResolutionCount].height			= DisplayMode.Height;
+				m_ResolutionList[m_ResolutionCount].width			= static_cast<DWORD>(DisplayMode.w);
+				m_ResolutionList[m_ResolutionCount].height			= static_cast<DWORD>(DisplayMode.h);
 				m_ResolutionList[m_ResolutionCount].bpp				= bpp;
-				m_ResolutionList[m_ResolutionCount].frequency[0]	= DisplayMode.RefreshRate;
+				m_ResolutionList[m_ResolutionCount].frequency[0]	= static_cast<DWORD>(DisplayMode.refresh_rate);
 				m_ResolutionList[m_ResolutionCount].frequency_count	= 1;
 
 				++m_ResolutionCount;
@@ -467,21 +461,6 @@ bool CPythonSystem::LoadConfig()
 			m_Config.bShowSalesText = atoi(value) == 1 ? true : false;
 	}
 
-	if (m_Config.bWindowed)
-	{
-		unsigned screen_width = GetSystemMetrics(SM_CXFULLSCREEN);
-		unsigned screen_height = GetSystemMetrics(SM_CYFULLSCREEN);
-
-		if (m_Config.width >= screen_width)
-		{
-			m_Config.width = screen_width;
-		}
-		if (m_Config.height >= screen_height)
-		{
-			m_Config.height = screen_height;
-		}
-	}
-	
 	m_OldConfig = m_Config;
 
 	fclose(fp);
