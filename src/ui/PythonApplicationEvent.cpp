@@ -36,7 +36,10 @@ void CPythonApplication::OnSizeChange(int width, int height)
 void CPythonApplication::OnMouseMiddleButtonDown(int x, int y)
 {
 	if (Neoeter::Debug::WantsMouseAt(x, y))
+	{
+		m_isDebugMiddleButtonCaptured = true;
 		return;
+	}
 
 	CCameraManager& rkCmrMgr = CCameraManager::Instance();
 	CCamera* pkCmrCur = rkCmrMgr.GetCurrentCamera();
@@ -53,6 +56,12 @@ void CPythonApplication::OnMouseMiddleButtonDown(int x, int y)
 
 void CPythonApplication::OnMouseMiddleButtonUp(int x, int y)
 {
+	if (m_isDebugMiddleButtonCaptured)
+	{
+		m_isDebugMiddleButtonCaptured = false;
+		return;
+	}
+
 	CCameraManager& rkCmrMgr = CCameraManager::Instance();
 	CCamera* pkCmrCur = rkCmrMgr.GetCurrentCamera();
 	if (pkCmrCur)
@@ -113,7 +122,10 @@ void CPythonApplication::OnMouseMove(int x, int y)
 void CPythonApplication::OnMouseLeftButtonDown(int x, int y)
 {
 	if (Neoeter::Debug::WantsMouseAt(x, y))
+	{
+		m_isDebugLeftButtonCaptured = true;
 		return;
+	}
 
 	UI::CWindowManager& rkWndMgr = UI::CWindowManager::Instance();
 	rkWndMgr.RunMouseLeftButtonDown(x, y);
@@ -121,13 +133,19 @@ void CPythonApplication::OnMouseLeftButtonDown(int x, int y)
 
 void CPythonApplication::OnMouseLeftButtonUp(int x, int y)
 {
+	if (m_isDebugLeftButtonCaptured)
+	{
+		m_isDebugLeftButtonCaptured = false;
+		return;
+	}
+
 	UI::CWindowManager& rkWndMgr = UI::CWindowManager::Instance();
 	rkWndMgr.RunMouseLeftButtonUp(x, y);
 }
 
 void CPythonApplication::OnMouseLeftButtonDoubleClick(int x, int y)
 {
-	if (Neoeter::Debug::WantsMouseAt(x, y))
+	if (m_isDebugLeftButtonCaptured || Neoeter::Debug::WantsMouseAt(x, y))
 		return;
 
 	UI::CWindowManager& rkWndMgr = UI::CWindowManager::Instance();
@@ -138,7 +156,10 @@ void CPythonApplication::OnMouseLeftButtonDoubleClick(int x, int y)
 void CPythonApplication::OnMouseRightButtonDown(int x, int y)
 {
 	if (Neoeter::Debug::WantsMouseAt(x, y))
+	{
+		m_isDebugRightButtonCaptured = true;
 		return;
+	}
 
 	UI::CWindowManager& rkWndMgr = UI::CWindowManager::Instance();
 	rkWndMgr.RunMouseRightButtonDown(x, y);
@@ -146,6 +167,12 @@ void CPythonApplication::OnMouseRightButtonDown(int x, int y)
 
 void CPythonApplication::OnMouseRightButtonUp(int x, int y)
 {
+	if (m_isDebugRightButtonCaptured)
+	{
+		m_isDebugRightButtonCaptured = false;
+		return;
+	}
+
 	UI::CWindowManager& rkWndMgr = UI::CWindowManager::Instance();
 	rkWndMgr.RunMouseRightButtonUp(x, y);
 }
