@@ -185,9 +185,8 @@ void CPythonApplication::InitializeDebugRows()
 	});
 
 	Neoeter::Debug::AddRow("Frame", [] {
-		char buffer[32];
-		std::snprintf(buffer, sizeof(buffer), "%.1f ms", CPythonApplication::Instance().GetAveRenderTime());
-		return std::string(buffer);
+		const long tenths = static_cast<long>(CPythonApplication::Instance().GetAveRenderTime() * 10.0f + 0.5f);
+		return std::to_string(tenths / 10) + "." + std::to_string(tenths % 10) + " ms";
 	});
 
 	Neoeter::Debug::AddRow("Update FPS", [] {
