@@ -288,6 +288,35 @@ void CMapOutdoor::SetEnvironmentScreenFilter()
 	m_ScreenFilter.SetColor(mc_pEnvironmentData->FilteringColor);
 }
 
+static void __BlendSkyGradientColor(TColor & rColor, const TColor & c_rTargetColor, float fRate)
+{
+	rColor.r = rColor.r + (c_rTargetColor.r - rColor.r) * fRate;
+	rColor.g = rColor.g + (c_rTargetColor.g - rColor.g) * fRate;
+	rColor.b = rColor.b + (c_rTargetColor.b - rColor.b) * fRate;
+	rColor.a = rColor.a + (c_rTargetColor.a - rColor.a) * fRate;
+}
+
+static float __GetSkyFogBlendRate(int iEdge, int iHorizonEdge)
+{
+	int iDistance = iHorizonEdge - iEdge;
+
+	switch (iDistance)
+	{
+		case 0:
+			return 1.0f;
+		case 1:
+			return 0.72f;
+		case 2:
+			return 0.46f;
+		case 3:
+			return 0.24f;
+		case 4:
+			return 0.09f;
+	}
+
+	return (iDistance < 0) ? 1.0f : 0.0f;
+}
+
 void CMapOutdoor::SetEnvironmentSkyBox()
 {
 	if (!mc_pEnvironmentData)
@@ -316,7 +345,30 @@ void CMapOutdoor::SetEnvironmentSkyBox()
 	m_SkyBox.SetCloudColor(mc_pEnvironmentData->CloudGradientColor, mc_pEnvironmentData->CloudGradientColor, 1);
 
 	if (!mc_pEnvironmentData->SkyBoxGradientColorVector.empty())
-		m_SkyBox.SetSkyColor(mc_pEnvironmentData->SkyBoxGradientColorVector, mc_pEnvironmentData->SkyBoxGradientColorVector, 1);
+	{
+		TVectorGradientColor kGradientColorVector = mc_pEnvironmentData->SkyBoxGradientColorVector;
+
+		if (mc_pEnvironmentData->bFogEnable)
+		{
+			TColor kFogColor(mc_pEnvironmentData->FogColor.r,
+				mc_pEnvironmentData->FogColor.g,
+				mc_pEnvironmentData->FogColor.b,
+				mc_pEnvironmentData->FogColor.a);
+			int iHorizonEdge = int(mc_pEnvironmentData->bySkyBoxGradientLevelUpper);
+			int iGradientCount = int(kGradientColorVector.size());
+
+			for (int i = 0; i < iGradientCount; ++i)
+			{
+				float fFirstRate = __GetSkyFogBlendRate(i, iHorizonEdge);
+				float fSecondRate = __GetSkyFogBlendRate(i + 1, iHorizonEdge);
+
+				__BlendSkyGradientColor(kGradientColorVector[i].m_FirstColor, kFogColor, fFirstRate);
+				__BlendSkyGradientColor(kGradientColorVector[i].m_SecondColor, kFogColor, fSecondRate);
+			}
+		}
+
+		m_SkyBox.SetSkyColor(kGradientColorVector, kGradientColorVector, 1);
+	}
 	// Temporary
 
 	m_SkyBox.StartTransition();
