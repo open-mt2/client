@@ -27,6 +27,9 @@ void CPythonApplication::OnUIRender()
 
 void CPythonApplication::OnSizeChange(int width, int height)
 {
+	UI::CWindowManager& rkWndMgr = UI::CWindowManager::Instance();
+	rkWndMgr.SetResolution(width, height);
+	rkWndMgr.SetScreenSize(width, height);
 }
 
 void CPythonApplication::OnMouseMiddleButtonDown(int x, int y)

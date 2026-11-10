@@ -309,9 +309,8 @@ class CPythonApplication : public CMSApplication, public CInputKeyboard, public 
 
 		void __UpdateCamera();
 
-		void __SetFullScreenWindow(HWND hWnd, DWORD dwWidth, DWORD dwHeight, DWORD dwBPP);
-		void __MinimizeFullScreenWindow(HWND hWnd, DWORD dwWidth, DWORD dwHeight);
-
+		bool SetWindowFullscreen(bool enabled, int width, int height);
+		void MinimizeWindow();
 
 	protected:
 		CTimer m_timer;

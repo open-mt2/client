@@ -22,7 +22,7 @@ class CPythonSystem : public CSingleton<CPythonSystem>
 
 		enum
 		{
-			FREQUENCY_MAX_NUM  = 30,
+			FREQUENCY_MAX_NUM  = 20,
 			RESOLUTION_MAX_NUM = 100
 		};
 
