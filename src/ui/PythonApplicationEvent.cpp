@@ -1,5 +1,6 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/UI/PythonApplication.h>
+#include <Neoeter/Debug/Debug.h>
 #include <Neoeter/Render/Camera.h>
 #include <Neoeter/Render/SdlPlatform.h>
 
@@ -34,6 +35,9 @@ void CPythonApplication::OnSizeChange(int width, int height)
 
 void CPythonApplication::OnMouseMiddleButtonDown(int x, int y)
 {
+	if (Neoeter::Debug::WantsMouse())
+		return;
+
 	CCameraManager& rkCmrMgr = CCameraManager::Instance();
 	CCamera* pkCmrCur = rkCmrMgr.GetCurrentCamera();
 	if (pkCmrCur)
@@ -64,6 +68,9 @@ void CPythonApplication::OnMouseMiddleButtonUp(int x, int y)
 
 void CPythonApplication::OnMouseWheel(int nLen)
 {
+	if (Neoeter::Debug::WantsMouse())
+		return;
+
 	CCameraManager& rkCmrMgr = CCameraManager::Instance();
 	CCamera* pkCmrCur = rkCmrMgr.GetCurrentCamera();
 	if (pkCmrCur)
@@ -74,6 +81,14 @@ void CPythonApplication::OnMouseMove(int x, int y)
 {
 	CCameraManager& rkCmrMgr = CCameraManager::Instance();
 	CCamera* pkCmrCur = rkCmrMgr.GetCurrentCamera();
+
+	if (!(pkCmrCur && pkCmrCur->IsDraging()) && Neoeter::Debug::WantsMouse())
+	{
+		if (CURSOR_MODE_SOFTWARE == GetCursorMode())
+			UI::CWindowManager::Instance().RunMouseMove(x, y);
+
+		return;
+	}
 
 	POINT Point;
 	if (pkCmrCur)
@@ -97,6 +112,9 @@ void CPythonApplication::OnMouseMove(int x, int y)
 
 void CPythonApplication::OnMouseLeftButtonDown(int x, int y)
 {
+	if (Neoeter::Debug::WantsMouse())
+		return;
+
 	UI::CWindowManager& rkWndMgr = UI::CWindowManager::Instance();
 	rkWndMgr.RunMouseLeftButtonDown(x, y);
 }
@@ -109,6 +127,9 @@ void CPythonApplication::OnMouseLeftButtonUp(int x, int y)
 
 void CPythonApplication::OnMouseLeftButtonDoubleClick(int x, int y)
 {
+	if (Neoeter::Debug::WantsMouse())
+		return;
+
 	UI::CWindowManager& rkWndMgr = UI::CWindowManager::Instance();
 	rkWndMgr.RunMouseLeftButtonDown(x, y);
 	rkWndMgr.RunMouseLeftButtonDoubleClick(x, y);
@@ -116,6 +137,9 @@ void CPythonApplication::OnMouseLeftButtonDoubleClick(int x, int y)
 
 void CPythonApplication::OnMouseRightButtonDown(int x, int y)
 {
+	if (Neoeter::Debug::WantsMouse())
+		return;
+
 	UI::CWindowManager& rkWndMgr = UI::CWindowManager::Instance();
 	rkWndMgr.RunMouseRightButtonDown(x, y);
 }
@@ -128,6 +152,17 @@ void CPythonApplication::OnMouseRightButtonUp(int x, int y)
 
 void CPythonApplication::OnKeyDown(int iIndex)
 {
+#if defined(NEOETER_DEBUG_UI)
+	if (DIK_F12 == iIndex)
+	{
+		Neoeter::Debug::Toggle();
+		return;
+	}
+#endif
+
+	if (Neoeter::Debug::WantsKeyboard())
+		return;
+
 	UI::CWindowManager& rkWndMgr = UI::CWindowManager::Instance();
 
 	if (DIK_ESCAPE == iIndex)

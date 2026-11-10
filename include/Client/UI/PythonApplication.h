@@ -283,6 +283,8 @@ class CPythonApplication : public CMSApplication, public CInputKeyboard, public 
 
 		void OnCameraUpdate();
 
+		void InitializeDebugRows();
+
 		void OnUIUpdate();
 		void OnUIRender();
 
