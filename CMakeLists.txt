@@ -131,10 +131,14 @@ if(CLIENT_STANDALONE)
 endif()
 
 # The browser stub has no dependencies; the UI links both.
-foreach(_package IN ITEMS webbrowser game ui)
+foreach(_package IN ITEMS webbrowser game ui application)
     if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/${_package}/CMakeLists.txt")
         add_subdirectory("src/${_package}" "${CMAKE_BINARY_DIR}/src/${_package}")
     else()
         message(STATUS "Client: src/${_package} not imported yet")
     endif()
 endforeach()
+
+if(TARGET openmt2 AND TARGET client_application)
+    target_link_libraries(openmt2 PRIVATE client_application)
+endif()
