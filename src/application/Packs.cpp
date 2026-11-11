@@ -16,7 +16,10 @@ namespace Neoeter
 	bool Packs::Mount(const std::string& folder)
 	{
 		if (_access(folder.c_str(), 0) != 0)
+		{
+			TraceError("Pack folder '%s' not found; the client will run without pack assets", folder.c_str());
 			return true;
+		}
 
 		bool packFirst = true;
 		const std::string packFolder = folder + "/";
@@ -45,8 +48,7 @@ namespace Neoeter
 
 		if (!file.Create(fileName.c_str(), &data, 0, 0))
 		{
-			LogBoxf("FATAL ERROR! File not exist: %s", fileName.c_str());
-			TraceError("FATAL ERROR! File not exist: %s", fileName.c_str());
+			TraceError("Pack index not found: %s; the client will run without pack assets", fileName.c_str());
 			return true;
 		}
 
@@ -62,7 +64,14 @@ namespace Neoeter
 		std::string texCachePackName;
 		CTokenVector tokens;
 
-		for (DWORD i = 0; i < textLoader.GetLineCount() - 1; ++i)
+		const DWORD lineCount = textLoader.GetLineCount();
+		if (lineCount < 2)
+		{
+			TraceError("Pack index '%s' is empty; the client will run without pack assets", fileName.c_str());
+			return true;
+		}
+
+		for (DWORD i = 0; i + 1 < lineCount; ++i)
 		{
 			textLoader.SplitLineByTab(i, &tokens);
 

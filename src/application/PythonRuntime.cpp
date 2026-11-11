@@ -7,6 +7,7 @@
 
 #include <Neoeter/Python/Host/PythonLauncher.h>
 #include <Neoeter/Python/Host/StdAfx.h>
+#include <Neoeter/IO/EterPackManager.h>
 #include <Neoeter/Platform/Base/Debug.h>
 
 namespace Neoeter
@@ -47,10 +48,7 @@ namespace Neoeter
 		}
 
 		if (!RunSystemScript())
-		{
-			TraceError("RunMain Error");
 			return Result::ScriptFailure;
-		}
 
 		return Result::Success;
 	}
@@ -118,6 +116,18 @@ namespace Neoeter
 
 	bool PythonRuntime::RunSystemScript()
 	{
-		return m_launcher->RunFile("system.py");
+		if (!CEterPackManager::Instance().isExist("system.py"))
+		{
+			TraceError("system.py not found; check that the pack folder with Index and the archive files is next to the client");
+			return false;
+		}
+
+		if (!m_launcher->RunFile("system.py"))
+		{
+			TraceError("system.py failed with a Python exception");
+			return false;
+		}
+
+		return true;
 	}
 }
