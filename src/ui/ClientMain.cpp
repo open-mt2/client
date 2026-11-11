@@ -27,10 +27,6 @@
 #define OPENMT2_CLIENT_VERSION "unknown"
 #endif
 
-#ifdef USE_OPENID
-extern int openid_test;
-#endif
-
 static const char *sc_apszPythonLibraryFilenames[] =
 
     {
@@ -156,16 +152,6 @@ static bool __IsLocaleVersion(LPSTR lpCmdLine) {
   return (strcmp(lpCmdLine, "--perforce-revision") == 0);
 }
 
-#ifdef USE_OPENID
-static bool __IsOpenIDAuthKeyOption(LPSTR lpCmdLine) {
-  return (strcmp(lpCmdLine, "--openid-authkey") == 0);
-}
-
-static bool __IsOpenIDTestOption(LPSTR lpCmdLine) {
-  return (strcmp(lpCmdLine, "--openid-test") == 0);
-}
-#endif
-
 int ClientMain_Run(const std::string &commandLine) {
   HINSTANCE hInstance = (HINSTANCE)GetModuleHandle(NULL);
   if (commandLine.find("--hackshield") != std::string::npos)
@@ -186,9 +172,6 @@ int ClientMain_Run(const std::string &commandLine) {
   OpenLogFile(true);
 
   bool bQuit = false;
-#ifdef USE_OPENID
-  bool bAuthKeyChecked = false;
-#endif
   int nArgc = 0;
   std::string mutableCommandLine = commandLine;
   PCHAR *szArgv =
@@ -232,29 +215,7 @@ int ClientMain_Run(const std::string &commandLine) {
       const char *localePath = szArgv[++i];
       LocaleService_ForceSetLocale(localeName, localePath);
     }
-#ifdef USE_OPENID
-    else if (__IsOpenIDAuthKeyOption(szArgv[i])) {
-      if (nArgc <= i + 1) {
-        ShowStartupError("Invalid arguments");
-        SAFE_FREE_GLOBAL(szArgv);
-        return 1;
-      }
-
-      LocaleService_SetOpenIDAuthKey(szArgv[++i]);
-      bAuthKeyChecked = true;
-    } else if (__IsOpenIDTestOption(szArgv[i])) {
-      openid_test = 1;
-    }
-#endif
   }
-
-#ifdef USE_OPENID
-  if (false == bAuthKeyChecked && !openid_test) {
-    ShowStartupError("Invalid execution");
-    SAFE_FREE_GLOBAL(szArgv);
-    return 1;
-  }
-#endif
 
   if (bQuit) {
     SAFE_FREE_GLOBAL(szArgv);
