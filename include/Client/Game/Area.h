@@ -206,8 +206,8 @@ class CArea
 		DWORD GetObjectDataCount();
 		bool GetObjectDataPointer(DWORD dwIndex, const TObjectData** ppObjectData) const;
 
-		const DWORD GetObjectInstanceCount() const;
-		const bool GetObjectInstancePointer(const DWORD& dwIndex, const TObjectInstance** ppObjectInstance) const;
+		DWORD GetObjectInstanceCount() const;
+		bool GetObjectInstancePointer(const DWORD& dwIndex, const TObjectInstance** ppObjectInstance) const;
 
 		void EnablePortal(BOOL bFlag = TRUE);
 		void ClearPortal();

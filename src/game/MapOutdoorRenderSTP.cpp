@@ -401,10 +401,6 @@ void CMapOutdoor::__SoftwareTransformPatch_ApplyRenderState()
 	if (mc_pEnvironmentData)
 		dwFogColor = mc_pEnvironmentData->FogColor;
 
-	BOOL isSoftwareVertexClipping = FALSE;
-	if (!IsTLVertexClipping())
-		isSoftwareVertexClipping = TRUE;
-
 	STATEMANAGER.SaveRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 	STATEMANAGER.SaveRenderState(D3DRS_ALPHATESTENABLE, TRUE);
 	STATEMANAGER.SaveRenderState(D3DRS_ALPHAREF, 0x00000000);
@@ -480,7 +476,7 @@ void CMapOutdoor::__SoftwareTransformPatch_RestoreRenderState(DWORD dwFogEnable)
 
 void CMapOutdoor::__SoftwareTransformPatch_BuildPipeline(SoftwareTransformPatch_SRenderState& rkTPRS)
 {
-	memset(&rkTPRS, 0, sizeof(rkTPRS));
+	rkTPRS = {};
 
 	if (mc_pEnvironmentData)
 	{

@@ -77,9 +77,9 @@ void initpack()
 {
 	static PyMethodDef s_methods[] =
 		{
-			{"Exist", packExist, METH_VARARGS},
-			{"Get", packGet, METH_VARARGS},
-			{NULL, NULL},
+			{"Exist", packExist, METH_VARARGS, NULL},
+			{"Get", packGet, METH_VARARGS, NULL},
+			{NULL, NULL, 0, NULL},
 		};
 
 	Py_InitModule("pack", s_methods);

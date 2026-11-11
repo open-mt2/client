@@ -3,7 +3,7 @@
 
 #include <Neoeter/Platform/Base/CRC32.h>
 #define sys_err TraceError
-#define sys_log // (n, format, ...) Tracenf(format, __VA_ARGS__)
+#define sys_log(...) ((void)0)
 #define thecore_memcpy memcpy
 #define itertype(cont) typeof((cont).begin())
 
@@ -41,7 +41,7 @@ bool CGuildMarkManager::GetMarkImageFilename(DWORD imgIdx, std::string& path) co
 		return false;
 
 	char buf[64];
-	snprintf(buf, sizeof(buf), "mark/%s_%lu.tga", m_pathPrefix.c_str(), imgIdx);
+	snprintf(buf, sizeof(buf), "mark/%s_%u.tga", m_pathPrefix.c_str(), imgIdx);
 	path = buf;
 	return true;
 }
@@ -68,7 +68,7 @@ bool CGuildMarkManager::LoadMarkIndex()
 
 	while (fgets(line, sizeof(line) - 1, fp))
 	{
-		sscanf(line, "%lu %lu", &guildID, &markID);
+		sscanf(line, "%u %u", &guildID, &markID);
 		line[0] = '\0';
 		AddMarkIDByGuildID(guildID, markID);
 	}

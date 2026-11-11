@@ -16,10 +16,10 @@ void initfly()
 {
 	static PyMethodDef s_methods[] =
 		{
-			{"Update", flyUpdate, METH_VARARGS},
-			{"Render", flyRender, METH_VARARGS},
+			{"Update", flyUpdate, METH_VARARGS, NULL},
+			{"Render", flyRender, METH_VARARGS, NULL},
 
-			{NULL, NULL, 0},
+			{NULL, NULL, 0, NULL},
 		};
 
 	Py_InitModule("fly", s_methods);

@@ -14,7 +14,7 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-TEMP_CAreaLoaderThread::TEMP_CAreaLoaderThread() : m_bShutdowned(false), m_pArg(NULL), m_hThread(NULL), m_uThreadID(0)
+TEMP_CAreaLoaderThread::TEMP_CAreaLoaderThread() : m_hThread(NULL), m_pArg(NULL), m_uThreadID(0), m_bShutdowned(false)
 {
 }
 

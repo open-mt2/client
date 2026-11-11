@@ -1381,7 +1381,7 @@ bool CPythonNetworkStream::RecvWhisperPacket()
 
 	buf[whisperPacket.wSize - sizeof(whisperPacket)] = '\0';
 
-	static char line[256];
+	static char line[1024];
 	if (CPythonChat::WHISPER_TYPE_CHAT == whisperPacket.bType || CPythonChat::WHISPER_TYPE_GM == whisperPacket.bType)
 	{
 		_snprintf(line, sizeof(line), "%s : %s", whisperPacket.szNameFrom, buf);
@@ -1437,6 +1437,7 @@ bool CPythonNetworkStream::RecvPointChange()
 
 	// 자신의 Point가 변경되었을 경우..
 	if (pInstance)
+	{
 		if (PointChange.dwVID == pInstance->GetVirtualID())
 		{
 			CPythonPlayer& rkPlayer = CPythonPlayer::Instance();
@@ -1486,6 +1487,7 @@ bool CPythonNetworkStream::RecvPointChange()
 			if (pOtherInstance)
 				pOtherInstance->UpdateTextTailLevel(PointChange.value);
 		}
+	}
 
 	return true;
 }
@@ -1603,10 +1605,6 @@ bool CPythonNetworkStream::RecvMotionPacket()
 		return false;
 
 	CInstanceBase* pMainInstance = CPythonCharacterManager::Instance().GetInstancePtr(MotionPacket.vid);
-	CInstanceBase* pVictimInstance = NULL;
-
-	if (0 != MotionPacket.victim_vid)
-		pVictimInstance = CPythonCharacterManager::Instance().GetInstancePtr(MotionPacket.victim_vid);
 
 	if (!pMainInstance)
 		return false;

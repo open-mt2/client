@@ -395,7 +395,6 @@ void CPythonBackground::Update(float fCenterX, float fCenterY, float fCenterZ)
 
 		rkCullingMgr.ForInRay(aVector3d, toTop, &kGetPortalID);
 
-		std::set<int>::iterator itor = kGetPortalID.m_kSet_iPortalID.begin();
 		if (!__IsSame(kGetPortalID.m_kSet_iPortalID, m_kSet_iShowingPortalID))
 		{
 			ClearPortal();
@@ -563,7 +562,7 @@ struct CollisionChecker
 {
 		bool isBlocked;
 		CInstanceBase* pInstance;
-		CollisionChecker(CInstanceBase* pInstance) : pInstance(pInstance), isBlocked(false) {}
+		CollisionChecker(CInstanceBase* pInstance) : isBlocked(false), pInstance(pInstance) {}
 		void operator()(CGraphicObjectInstance* pOpponent)
 		{
 			if (isBlocked)
@@ -581,7 +580,7 @@ struct CollisionAdjustChecker
 {
 		bool isBlocked;
 		CInstanceBase* pInstance;
-		CollisionAdjustChecker(CInstanceBase* pInstance) : pInstance(pInstance), isBlocked(false) {}
+		CollisionAdjustChecker(CInstanceBase* pInstance) : isBlocked(false), pInstance(pInstance) {}
 		void operator()(CGraphicObjectInstance* pOpponent)
 		{
 			if (!pOpponent)

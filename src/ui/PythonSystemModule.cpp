@@ -376,57 +376,57 @@ void initsystem()
 {
 	static PyMethodDef s_methods[] =
 		{
-			{"GetWidth", systemGetWidth, METH_VARARGS},
-			{"GetHeight", systemGetHeight, METH_VARARGS},
+			{"GetWidth", systemGetWidth, METH_VARARGS, NULL},
+			{"GetHeight", systemGetHeight, METH_VARARGS, NULL},
 
-			{"SetInterfaceHandler", systemSetInterfaceHandler, METH_VARARGS},
-			{"DestroyInterfaceHandler", systemDestroyInterfaceHandler, METH_VARARGS},
-			{"ReserveResource", systemReserveResource, METH_VARARGS},
+			{"SetInterfaceHandler", systemSetInterfaceHandler, METH_VARARGS, NULL},
+			{"DestroyInterfaceHandler", systemDestroyInterfaceHandler, METH_VARARGS, NULL},
+			{"ReserveResource", systemReserveResource, METH_VARARGS, NULL},
 
-			{"isInterfaceConfig", systemisInterfaceConfig, METH_VARARGS},
-			{"SaveWindowStatus", systemSaveWindowStatus, METH_VARARGS},
-			{"GetWindowStatus", systemGetWindowStatus, METH_VARARGS},
+			{"isInterfaceConfig", systemisInterfaceConfig, METH_VARARGS, NULL},
+			{"SaveWindowStatus", systemSaveWindowStatus, METH_VARARGS, NULL},
+			{"GetWindowStatus", systemGetWindowStatus, METH_VARARGS, NULL},
 
-			{"GetResolutionCount", systemGetResolutionCount, METH_VARARGS},
-			{"GetFrequencyCount", systemGetFrequencyCount, METH_VARARGS},
+			{"GetResolutionCount", systemGetResolutionCount, METH_VARARGS, NULL},
+			{"GetFrequencyCount", systemGetFrequencyCount, METH_VARARGS, NULL},
 
-			{"GetCurrentResolution", systemGetCurrentResolution, METH_VARARGS},
+			{"GetCurrentResolution", systemGetCurrentResolution, METH_VARARGS, NULL},
 
-			{"GetResolution", systemGetResolution, METH_VARARGS},
-			{"GetFrequency", systemGetFrequency, METH_VARARGS},
+			{"GetResolution", systemGetResolution, METH_VARARGS, NULL},
+			{"GetFrequency", systemGetFrequency, METH_VARARGS, NULL},
 
-			{"ApplyConfig", systemApplyConfig, METH_VARARGS},
-			{"SetConfig", systemSetConfig, METH_VARARGS},
-			{"SaveConfig", systemSaveConfig, METH_VARARGS},
-			{"GetConfig", systemGetConfig, METH_VARARGS},
+			{"ApplyConfig", systemApplyConfig, METH_VARARGS, NULL},
+			{"SetConfig", systemSetConfig, METH_VARARGS, NULL},
+			{"SaveConfig", systemSaveConfig, METH_VARARGS, NULL},
+			{"GetConfig", systemGetConfig, METH_VARARGS, NULL},
 
-			{"SetSaveID", systemSetSaveID, METH_VARARGS},
-			{"isSaveID", systemisSaveID, METH_VARARGS},
-			{"GetSaveID", systemGetSaveID, METH_VARARGS},
+			{"SetSaveID", systemSetSaveID, METH_VARARGS, NULL},
+			{"isSaveID", systemisSaveID, METH_VARARGS, NULL},
+			{"GetSaveID", systemGetSaveID, METH_VARARGS, NULL},
 
-			{"GetMusicVolume", systemGetMusicVolume, METH_VARARGS},
-			{"GetSoundVolume", systemGetSoundVolume, METH_VARARGS},
+			{"GetMusicVolume", systemGetMusicVolume, METH_VARARGS, NULL},
+			{"GetSoundVolume", systemGetSoundVolume, METH_VARARGS, NULL},
 
-			{"SetMusicVolume", systemSetMusicVolume, METH_VARARGS},
-			{"SetSoundVolumef", systemSetSoundVolumef, METH_VARARGS},
-			{"IsSoftwareCursor", systemIsSoftwareCursor, METH_VARARGS},
+			{"SetMusicVolume", systemSetMusicVolume, METH_VARARGS, NULL},
+			{"SetSoundVolumef", systemSetSoundVolumef, METH_VARARGS, NULL},
+			{"IsSoftwareCursor", systemIsSoftwareCursor, METH_VARARGS, NULL},
 
-			{"SetViewChatFlag", systemSetViewChatFlag, METH_VARARGS},
-			{"IsViewChat", systemIsViewChat, METH_VARARGS},
+			{"SetViewChatFlag", systemSetViewChatFlag, METH_VARARGS, NULL},
+			{"IsViewChat", systemIsViewChat, METH_VARARGS, NULL},
 
-			{"SetAlwaysShowNameFlag", systemSetAlwaysShowNameFlag, METH_VARARGS},
-			{"IsAlwaysShowName", systemIsAlwaysShowName, METH_VARARGS},
+			{"SetAlwaysShowNameFlag", systemSetAlwaysShowNameFlag, METH_VARARGS, NULL},
+			{"IsAlwaysShowName", systemIsAlwaysShowName, METH_VARARGS, NULL},
 
-			{"SetShowDamageFlag", systemSetShowDamageFlag, METH_VARARGS},
-			{"IsShowDamage", systemIsShowDamage, METH_VARARGS},
+			{"SetShowDamageFlag", systemSetShowDamageFlag, METH_VARARGS, NULL},
+			{"IsShowDamage", systemIsShowDamage, METH_VARARGS, NULL},
 
-			{"SetShowSalesTextFlag", systemSetShowSalesTextFlag, METH_VARARGS},
-			{"IsShowSalesText", systemIsShowSalesText, METH_VARARGS},
+			{"SetShowSalesTextFlag", systemSetShowSalesTextFlag, METH_VARARGS, NULL},
+			{"IsShowSalesText", systemIsShowSalesText, METH_VARARGS, NULL},
 
-			{"GetShadowLevel", systemGetShadowLevel, METH_VARARGS},
-			{"SetShadowLevel", systemSetShadowLevel, METH_VARARGS},
+			{"GetShadowLevel", systemGetShadowLevel, METH_VARARGS, NULL},
+			{"SetShadowLevel", systemSetShadowLevel, METH_VARARGS, NULL},
 
-			{NULL, NULL, 0}};
+			{NULL, NULL, 0, NULL}};
 
 	PyObject* poModule = Py_InitModule("systemSetting", s_methods);
 

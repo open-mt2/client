@@ -301,44 +301,44 @@ void initMiniMap()
 {
 	static PyMethodDef s_methods[] =
 		{
-			{"SetScale", miniMapSetScale, METH_VARARGS},
-			{"ScaleUp", miniMapScaleUp, METH_VARARGS},
-			{"ScaleDown", miniMapScaleDown, METH_VARARGS},
-			{"SetMiniMapSize", miniMapSetMiniMapSize, METH_VARARGS},
+			{"SetScale", miniMapSetScale, METH_VARARGS, NULL},
+			{"ScaleUp", miniMapScaleUp, METH_VARARGS, NULL},
+			{"ScaleDown", miniMapScaleDown, METH_VARARGS, NULL},
+			{"SetMiniMapSize", miniMapSetMiniMapSize, METH_VARARGS, NULL},
 
-			{"SetCenterPosition", miniMapSetCenterPosition, METH_VARARGS},
+			{"SetCenterPosition", miniMapSetCenterPosition, METH_VARARGS, NULL},
 
-			{"Destroy", miniMapDestroy, METH_VARARGS},
-			{"Create", miniMapCreate, METH_VARARGS},
-			{"Update", miniMapUpdate, METH_VARARGS},
-			{"Render", miniMapRender, METH_VARARGS},
+			{"Destroy", miniMapDestroy, METH_VARARGS, NULL},
+			{"Create", miniMapCreate, METH_VARARGS, NULL},
+			{"Update", miniMapUpdate, METH_VARARGS, NULL},
+			{"Render", miniMapRender, METH_VARARGS, NULL},
 
-			{"Show", miniMapShow, METH_VARARGS},
-			{"Hide", miniMapHide, METH_VARARGS},
+			{"Show", miniMapShow, METH_VARARGS, NULL},
+			{"Hide", miniMapHide, METH_VARARGS, NULL},
 
-			{"isShow", miniMapisShow, METH_VARARGS},
+			{"isShow", miniMapisShow, METH_VARARGS, NULL},
 
-			{"GetInfo", miniMapGetInfo, METH_VARARGS},
+			{"GetInfo", miniMapGetInfo, METH_VARARGS, NULL},
 
-			{"LoadAtlas", miniMapLoadAtlas, METH_VARARGS},
-			{"UpdateAtlas", miniMapUpdateAtlas, METH_VARARGS},
-			{"RenderAtlas", miniMapRenderAtlas, METH_VARARGS},
-			{"ShowAtlas", miniMapShowAtlas, METH_VARARGS},
-			{"HideAtlas", miniMapHideAtlas, METH_VARARGS},
-			{"isShowAtlas", miniMapisShowAtlas, METH_VARARGS},
-			{"IsAtlas", miniMapIsAtlas, METH_VARARGS},
-			{"GetAtlasInfo", miniMapGetAtlasInfo, METH_VARARGS},
-			{"GetAtlasSize", miniMapGetAtlasSize, METH_VARARGS},
+			{"LoadAtlas", miniMapLoadAtlas, METH_VARARGS, NULL},
+			{"UpdateAtlas", miniMapUpdateAtlas, METH_VARARGS, NULL},
+			{"RenderAtlas", miniMapRenderAtlas, METH_VARARGS, NULL},
+			{"ShowAtlas", miniMapShowAtlas, METH_VARARGS, NULL},
+			{"HideAtlas", miniMapHideAtlas, METH_VARARGS, NULL},
+			{"isShowAtlas", miniMapisShowAtlas, METH_VARARGS, NULL},
+			{"IsAtlas", miniMapIsAtlas, METH_VARARGS, NULL},
+			{"GetAtlasInfo", miniMapGetAtlasInfo, METH_VARARGS, NULL},
+			{"GetAtlasSize", miniMapGetAtlasSize, METH_VARARGS, NULL},
 
-			{"AddWayPoint", miniMapAddWayPoint, METH_VARARGS},
-			{"RemoveWayPoint", miniMapRemoveWayPoint, METH_VARARGS},
+			{"AddWayPoint", miniMapAddWayPoint, METH_VARARGS, NULL},
+			{"RemoveWayPoint", miniMapRemoveWayPoint, METH_VARARGS, NULL},
 
-			{"RegisterAtlasWindow", miniMapRegisterAtlasWindow, METH_VARARGS},
-			{"UnregisterAtlasWindow", miniMapUnregisterAtlasWindow, METH_VARARGS},
+			{"RegisterAtlasWindow", miniMapRegisterAtlasWindow, METH_VARARGS, NULL},
+			{"UnregisterAtlasWindow", miniMapUnregisterAtlasWindow, METH_VARARGS, NULL},
 
-			{"GetGuildAreaID", miniMapGetGuildAreaID, METH_VARARGS},
+			{"GetGuildAreaID", miniMapGetGuildAreaID, METH_VARARGS, NULL},
 
-			{NULL, NULL},
+			{NULL, NULL, 0, NULL},
 		};
 
 	PyObject* poModule = Py_InitModule("miniMap", s_methods);

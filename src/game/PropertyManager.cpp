@@ -74,7 +74,8 @@ DWORD CPropertyManager::GetUniqueCRC(const char* c_szSeed)
 			return dwCRC;
 
 		char szAdd[2];
-		_snprintf(szAdd, sizeof(szAdd), "%d", random() % 10);
+		szAdd[0] = static_cast<char>('0' + random() % 10);
+		szAdd[1] = '\0';
 		stTmp += szAdd;
 	}
 }

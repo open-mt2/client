@@ -91,17 +91,17 @@ void initeffect()
 {
 	static PyMethodDef s_methods[] =
 		{
-			{"RegisterEffect", effectRegisterEffect, METH_VARARGS},
-			{"CreateEffect", effectCreateEffect, METH_VARARGS},
-			{"DeleteEffect", effectDeleteEffect, METH_VARARGS},
-			{"SetPosition", effectSetPosition, METH_VARARGS},
+			{"RegisterEffect", effectRegisterEffect, METH_VARARGS, NULL},
+			{"CreateEffect", effectCreateEffect, METH_VARARGS, NULL},
+			{"DeleteEffect", effectDeleteEffect, METH_VARARGS, NULL},
+			{"SetPosition", effectSetPosition, METH_VARARGS, NULL},
 
-			{"RegisterIndexedFlyData", effectRegisterIndexedFlyData, METH_VARARGS},
+			{"RegisterIndexedFlyData", effectRegisterIndexedFlyData, METH_VARARGS, NULL},
 
-			{"Update", effectUpdate, METH_VARARGS},
-			{"Render", effectRender, METH_VARARGS},
+			{"Update", effectUpdate, METH_VARARGS, NULL},
+			{"Render", effectRender, METH_VARARGS, NULL},
 
-			{NULL, NULL, 0},
+			{NULL, NULL, 0, NULL},
 		};
 
 	PyObject* poModule = Py_InitModule("effect", s_methods);

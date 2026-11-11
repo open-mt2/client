@@ -195,7 +195,6 @@ void CPythonPlayerEventHandler::FlushVictimList()
 		return;
 
 	// #0000682: [M2EU] 대진각 스킬 사용시 튕김
-	unsigned int SYNC_POSITION_COUNT_LIMIT = 16;
 	unsigned int uiVictimCount = m_kVctkVictim.size();
 
 	CPythonNetworkStream& rkStream = CPythonNetworkStream::Instance();

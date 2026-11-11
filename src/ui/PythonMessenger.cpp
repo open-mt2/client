@@ -148,12 +148,12 @@ void initMessenger()
 {
 	static PyMethodDef s_methods[] =
 		{
-			{"RemoveFriend", messengerRemoveFriend, METH_VARARGS},
-			{"IsFriendByName", messengerIsFriendByName, METH_VARARGS},
-			{"Destroy", messengerDestroy, METH_VARARGS},
-			{"RefreshGuildMember", messengerRefreshGuildMember, METH_VARARGS},
-			{"SetMessengerHandler", messengerSetMessengerHandler, METH_VARARGS},
-			{NULL, NULL, 0},
+			{"RemoveFriend", messengerRemoveFriend, METH_VARARGS, NULL},
+			{"IsFriendByName", messengerIsFriendByName, METH_VARARGS, NULL},
+			{"Destroy", messengerDestroy, METH_VARARGS, NULL},
+			{"RefreshGuildMember", messengerRefreshGuildMember, METH_VARARGS, NULL},
+			{"SetMessengerHandler", messengerSetMessengerHandler, METH_VARARGS, NULL},
+			{NULL, NULL, 0, NULL},
 		};
 
 	Py_InitModule("messenger", s_methods);

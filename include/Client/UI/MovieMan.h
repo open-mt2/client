@@ -23,9 +23,9 @@ class CMovieMan : public CSingleton<CMovieMan>
 {
 	public:
 		CMovieMan()
-			: m_movieWidth(0),
+			: m_usingRGB32(false),
+			  m_movieWidth(0),
 			  m_movieHeight(0),
-			  m_usingRGB32(false),
 			  m_pPrimarySurface(NULL),
 			  m_pBasicAudio(NULL)
 		{

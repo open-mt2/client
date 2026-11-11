@@ -21,7 +21,7 @@ const char* LSS_GLOBAL = "GLOBAL";
 static bool IS_CHEONMA = false;
 
 char MULTI_LOCALE_SERVICE[256] = "EUROPE";
-char MULTI_LOCALE_PATH[256] = "locale/en";
+char MULTI_LOCALE_PATH[512] = "locale/en";
 char MULTI_LOCALE_NAME[256] = "en";
 int MULTI_LOCALE_CODE = 1252;
 
@@ -41,7 +41,7 @@ void LocaleService_LoadConfig(const char* fileName)
 
 			MULTI_LOCALE_CODE = code;
 			strcpy(MULTI_LOCALE_NAME, name);
-			sprintf(MULTI_LOCALE_PATH, "locale/%s", MULTI_LOCALE_NAME);
+			snprintf(MULTI_LOCALE_PATH, sizeof(MULTI_LOCALE_PATH), "locale/%s", MULTI_LOCALE_NAME);
 		}
 		fclose(fp);
 	}
@@ -329,7 +329,7 @@ struct SLOCALEDATA
 	{LSS_NEWCIBN, "newcibn", 936},	 // CIBN (Free world)
 	{LSS_ENGLISH, "english", 949},	 // English (Obsoleted)
 	{LSS_YMIR, "kr", 949},			 // Korea (Obsoleted)
-	{NULL, NULL, 0}};
+	{NULL, NULL, 0, NULL}};
 
 const char* LocaleService_GetName()
 {
@@ -430,7 +430,7 @@ bool LocaleService_LoadGlobal(HINSTANCE hInstance)
 		return false;
 	strcpy(MULTI_LOCALE_SERVICE, gs_stLocaleData[gs_iLocale].szServiceName);
 	strcpy(MULTI_LOCALE_NAME, gs_stLocaleData[gs_iLocale].szLocaleName);
-	sprintf(MULTI_LOCALE_PATH, "locale/%s", gs_stLocaleData[gs_iLocale].szLocaleName);
+	snprintf(MULTI_LOCALE_PATH, sizeof(MULTI_LOCALE_PATH), "locale/%s", gs_stLocaleData[gs_iLocale].szLocaleName);
 	MULTI_LOCALE_CODE = gs_stLocaleData[gs_iLocale].wCodePage;
 	return true;
 }

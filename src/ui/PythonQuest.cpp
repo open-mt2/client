@@ -257,12 +257,12 @@ void initquest()
 {
 	static PyMethodDef s_methods[] =
 		{
-			{"GetQuestCount", questGetQuestCount, METH_VARARGS},
-			{"GetQuestData", questGetQuestData, METH_VARARGS},
-			{"GetQuestIndex", questGetQuestIndex, METH_VARARGS},
-			{"GetQuestLastTime", questGetQuestLastTime, METH_VARARGS},
-			{"Clear", questClear, METH_VARARGS},
-			{NULL, NULL, 0},
+			{"GetQuestCount", questGetQuestCount, METH_VARARGS, NULL},
+			{"GetQuestData", questGetQuestData, METH_VARARGS, NULL},
+			{"GetQuestIndex", questGetQuestIndex, METH_VARARGS, NULL},
+			{"GetQuestLastTime", questGetQuestLastTime, METH_VARARGS, NULL},
+			{"Clear", questClear, METH_VARARGS, NULL},
+			{NULL, NULL, 0, NULL},
 		};
 
 	PyObject* poModule = Py_InitModule("quest", s_methods);

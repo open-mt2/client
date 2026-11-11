@@ -681,7 +681,7 @@ bool CMapOutdoor::GetPickingPointWithRayOnlyTerrain(const CRay& rRay, D3DXVECTOR
 
 void CMapOutdoor::GetHeightMap(const BYTE& c_rucTerrainNum, WORD** pwHeightMap)
 {
-	if (c_rucTerrainNum < 0 || c_rucTerrainNum > AROUND_AREA_NUM - 1 || !m_pTerrain[c_rucTerrainNum])
+	if (c_rucTerrainNum > AROUND_AREA_NUM - 1 || !m_pTerrain[c_rucTerrainNum])
 	{
 		*pwHeightMap = NULL;
 		return;
@@ -692,7 +692,7 @@ void CMapOutdoor::GetHeightMap(const BYTE& c_rucTerrainNum, WORD** pwHeightMap)
 
 void CMapOutdoor::GetNormalMap(const BYTE& c_rucTerrainNum, char** pucNormalMap)
 {
-	if (c_rucTerrainNum < 0 || c_rucTerrainNum > AROUND_AREA_NUM - 1 || !m_pTerrain[c_rucTerrainNum])
+	if (c_rucTerrainNum > AROUND_AREA_NUM - 1 || !m_pTerrain[c_rucTerrainNum])
 	{
 		*pucNormalMap = NULL;
 		return;
@@ -703,7 +703,7 @@ void CMapOutdoor::GetNormalMap(const BYTE& c_rucTerrainNum, char** pucNormalMap)
 
 void CMapOutdoor::GetWaterMap(const BYTE& c_rucTerrainNum, BYTE** pucWaterMap)
 {
-	if (c_rucTerrainNum < 0 || c_rucTerrainNum > AROUND_AREA_NUM - 1 || !m_pTerrain[c_rucTerrainNum])
+	if (c_rucTerrainNum > AROUND_AREA_NUM - 1 || !m_pTerrain[c_rucTerrainNum])
 	{
 		*pucWaterMap = NULL;
 		return;
@@ -714,7 +714,7 @@ void CMapOutdoor::GetWaterMap(const BYTE& c_rucTerrainNum, BYTE** pucWaterMap)
 
 void CMapOutdoor::GetWaterHeight(BYTE byTerrainNum, BYTE byWaterNum, long* plWaterHeight)
 {
-	if (byTerrainNum < 0 || byTerrainNum > AROUND_AREA_NUM - 1 || !m_pTerrain[byTerrainNum])
+	if (byTerrainNum > AROUND_AREA_NUM - 1 || !m_pTerrain[byTerrainNum])
 	{
 		*plWaterHeight = -1;
 		return;
@@ -755,7 +755,7 @@ bool CMapOutdoor::GetTerrainNumFromCoord(WORD wCoordX, WORD wCoordY, BYTE* pbyTe
 	*pbyTerrainNum = (wCoordY - m_CurCoordinate.m_sTerrainCoordY + LOAD_SIZE_WIDTH) * 3 +
 					 (wCoordX - m_CurCoordinate.m_sTerrainCoordX + LOAD_SIZE_WIDTH);
 
-	if (*pbyTerrainNum < 0 || *pbyTerrainNum > AROUND_AREA_NUM)
+	if (*pbyTerrainNum > AROUND_AREA_NUM)
 		return false;
 	return true;
 }
@@ -1098,7 +1098,10 @@ BOOL CMapOutdoor::GetTerrainPointer(const BYTE c_byTerrainNum, CTerrain** ppTerr
 
 void CMapOutdoor::InitializeFog()
 {
-	memset(&m_matAlphaFogTexture, 0, sizeof(D3DXMATRIX));
+	m_matAlphaFogTexture = D3DXMATRIX(0.0f, 0.0f, 0.0f, 0.0f,
+									  0.0f, 0.0f, 0.0f, 0.0f,
+									  0.0f, 0.0f, 0.0f, 0.0f,
+									  0.0f, 0.0f, 0.0f, 0.0f);
 	m_matAlphaFogTexture._31 = -0.001f;
 	m_matAlphaFogTexture._41 = -7.0f;
 	m_matAlphaFogTexture._42 = 0.5f;

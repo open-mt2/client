@@ -162,7 +162,7 @@ struct FGetShadowReceiverFromCollisionData
 		bool m_bCollide;
 		std::vector<CGraphicObjectInstance*>* m_pkVct_pkShadowReceiver;
 		CDynamicSphereInstance* m_pdsi;
-		FGetShadowReceiverFromCollisionData(CDynamicSphereInstance* pdsi, std::vector<CGraphicObjectInstance*>* pkVct_pkShadowReceiver) : m_pdsi(pdsi), m_bCollide(false)
+		FGetShadowReceiverFromCollisionData(CDynamicSphereInstance* pdsi, std::vector<CGraphicObjectInstance*>* pkVct_pkShadowReceiver) : m_bCollide(false), m_pdsi(pdsi)
 		{
 			m_pkVct_pkShadowReceiver = pkVct_pkShadowReceiver;
 			m_pkVct_pkShadowReceiver->clear();
@@ -229,8 +229,6 @@ void CMapOutdoor::__Game_UpdateArea(D3DXVECTOR3& v3Player)
 
 	float fDistance = pCamera->GetDistance();
 
-	D3DXVECTOR3 v3View = pCamera->GetView();
-	D3DXVECTOR3 v3Target = pCamera->GetTarget();
 	D3DXVECTOR3 v3Eye = pCamera->GetEye();
 
 	D3DXVECTOR3 v3Light = D3DXVECTOR3(1.732f, 1.0f, -3.464f); // 빛의 방향
@@ -295,16 +293,21 @@ void CMapOutdoor::__UpdateAroundAreaList()
 #ifdef __PERFORMANCE_CHECKER__
 	DWORD ft1 = timeGetTime();
 #endif
+#ifdef __PERFORMANCE_CHECKER__
 	DWORD at[AROUND_AREA_NUM];
+#endif
 	for (int i = 0; i < AROUND_AREA_NUM; ++i)
 	{
+#ifdef __PERFORMANCE_CHECKER__
 		DWORD t1 = timeGetTime();
+#endif
 		CArea* pArea;
 		if (GetAreaPointer(i, &pArea))
 			pArea->Update();
+#ifdef __PERFORMANCE_CHECKER__
 		DWORD t2 = timeGetTime();
-
 		at[i] = t2 - t1;
+#endif
 	}
 #ifdef __PERFORMANCE_CHECKER__
 	DWORD ft2 = timeGetTime();
@@ -332,7 +335,7 @@ struct FGetShadowReceiverFromHeightData
 
 		CGraphicObjectInstance* m_apkShadowReceiver[COLLECT_MAX];
 
-		FGetShadowReceiverFromHeightData(float fFromX, float fFromY, float fToX, float fToY) : m_fFromX(fFromX), m_fFromY(fFromY), m_fToX(fToX), m_fToY(fToY), m_bReceiverFound(false)
+		FGetShadowReceiverFromHeightData(float fFromX, float fFromY, float fToX, float fToY) : m_bReceiverFound(false), m_fFromX(fFromX), m_fFromY(fFromY), m_fToX(fToX), m_fToY(fToY)
 		{
 			m_dwCheckCount = 0;
 			m_dwCollectOverCount = 0;
@@ -757,6 +760,8 @@ void CMapOutdoor::FPushTerrainToDeleteVector::operator()(CTerrain* pTerrain)
 			if (wCoordX > wReferenceCoordX + LOAD_SIZE_WIDTH)
 				m_ReturnTerrainVector.push_back(pTerrain);
 			break;
+		default:
+			break;
 	}
 
 	aIterator = std::find(m_ReturnTerrainVector.begin(), m_ReturnTerrainVector.end(), pTerrain);
@@ -772,6 +777,8 @@ void CMapOutdoor::FPushTerrainToDeleteVector::operator()(CTerrain* pTerrain)
 		case DELETE_BOTTOM:
 			if (wCoordY > wReferenceCoordY + LOAD_SIZE_WIDTH)
 				m_ReturnTerrainVector.push_back(pTerrain);
+			break;
+		default:
 			break;
 	}
 }
@@ -798,6 +805,8 @@ void CMapOutdoor::FPushAreaToDeleteVector::operator()(CArea* pArea)
 			if (wCoordX > wReferenceCoordX + LOAD_SIZE_WIDTH)
 				m_ReturnAreaVector.push_back(pArea);
 			break;
+		default:
+			break;
 	}
 
 	aIterator = std::find(m_ReturnAreaVector.begin(), m_ReturnAreaVector.end(), pArea);
@@ -813,6 +822,8 @@ void CMapOutdoor::FPushAreaToDeleteVector::operator()(CArea* pArea)
 		case DELETE_BOTTOM:
 			if (wCoordY > wReferenceCoordY + LOAD_SIZE_WIDTH)
 				m_ReturnAreaVector.push_back(pArea);
+			break;
+		default:
 			break;
 	}
 }
@@ -891,7 +902,6 @@ void CMapOutdoor::UpdateAreaList(long lCenterX, long lCenterY)
 
 		for (DWORD dwIndex = 0; dwIndex < rPushTerrainToDeleteVector.m_ReturnTerrainVector.size(); ++dwIndex)
 		{
-			bool isDel = false;
 			TTerrainPtrVectorIterator aTerrainPtrItertor = m_TerrainVector.begin();
 			while (aTerrainPtrItertor != m_TerrainVector.end())
 			{
@@ -899,7 +909,6 @@ void CMapOutdoor::UpdateAreaList(long lCenterX, long lCenterY)
 				if (pTerrain == rPushTerrainToDeleteVector.m_ReturnTerrainVector[dwIndex])
 				{
 					aTerrainPtrItertor = m_TerrainVector.erase(aTerrainPtrItertor);
-					isDel = true;
 				}
 				else
 					++aTerrainPtrItertor;

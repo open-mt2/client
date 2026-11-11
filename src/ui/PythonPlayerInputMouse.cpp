@@ -366,6 +366,9 @@ void CPythonPlayer::NEW_RefreshMouseWalkingDirection()
 			}
 			break;
 		}
+
+		default:
+			break;
 	}
 
 	if (m_isSmtMov)

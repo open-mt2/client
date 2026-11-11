@@ -153,22 +153,22 @@ void initsnd()
 {
 	static PyMethodDef s_methods[] =
 		{
-			{"PlaySound", sndPlaySound, METH_VARARGS},
-			{"PlaySound3D", sndPlaySound3D, METH_VARARGS},
-			{"PlayMusic", sndPlayMusic, METH_VARARGS},
-			{"FadeInMusic", sndFadeInMusic, METH_VARARGS},
-			{"FadeOutMusic", sndFadeOutMusic, METH_VARARGS},
-			{"FadeOutAllMusic", sndFadeOutAllMusic, METH_VARARGS},
-			{"FadeLimitOutMusic", sndFadeLimitOutMusic, METH_VARARGS},
-			{"StopAllSound", sndStopAllSound, METH_VARARGS},
+			{"PlaySound", sndPlaySound, METH_VARARGS, NULL},
+			{"PlaySound3D", sndPlaySound3D, METH_VARARGS, NULL},
+			{"PlayMusic", sndPlayMusic, METH_VARARGS, NULL},
+			{"FadeInMusic", sndFadeInMusic, METH_VARARGS, NULL},
+			{"FadeOutMusic", sndFadeOutMusic, METH_VARARGS, NULL},
+			{"FadeOutAllMusic", sndFadeOutAllMusic, METH_VARARGS, NULL},
+			{"FadeLimitOutMusic", sndFadeLimitOutMusic, METH_VARARGS, NULL},
+			{"StopAllSound", sndStopAllSound, METH_VARARGS, NULL},
 
-			{"SetMusicVolumef", sndSetMusicVolume, METH_VARARGS},
-			{"SetMusicVolume", sndSetMusicVolume, METH_VARARGS},
-			{"SetSoundVolumef", sndSetSoundVolumef, METH_VARARGS},
-			{"SetSoundVolume", sndSetSoundVolume, METH_VARARGS},
-			{"SetSoundScale", sndSetSoundScale, METH_VARARGS},
-			{"SetAmbienceSoundScale", sndSetAmbienceSoundScale, METH_VARARGS},
-			{NULL, NULL, 0},
+			{"SetMusicVolumef", sndSetMusicVolume, METH_VARARGS, NULL},
+			{"SetMusicVolume", sndSetMusicVolume, METH_VARARGS, NULL},
+			{"SetSoundVolumef", sndSetSoundVolumef, METH_VARARGS, NULL},
+			{"SetSoundVolume", sndSetSoundVolume, METH_VARARGS, NULL},
+			{"SetSoundScale", sndSetSoundScale, METH_VARARGS, NULL},
+			{"SetAmbienceSoundScale", sndSetAmbienceSoundScale, METH_VARARGS, NULL},
+			{NULL, NULL, 0, NULL},
 		};
 
 	Py_InitModule("snd", s_methods);

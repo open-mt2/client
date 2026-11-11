@@ -250,8 +250,8 @@ class CMapOutdoor : public CMapBase
 
 		void RenderTerrain();
 
-		const long GetViewRadius() { return m_lViewRadius; }
-		const float GetHeightScale() { return m_fHeightScale; }
+		long GetViewRadius() { return m_lViewRadius; }
+		float GetHeightScale() { return m_fHeightScale; }
 
 		const TOutdoorMapCoordinate& GetEntryPoint(const std::string& c_rstrEntryPointName) const;
 		void SetEntryPoint(const std::string& c_rstrEntryPointName, const TOutdoorMapCoordinate& c_rOutdoorMapCoordinate);

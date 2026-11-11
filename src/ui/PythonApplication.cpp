@@ -32,20 +32,20 @@ float c_fDefaultCameraRotateSpeed = 1.5f;
 float c_fDefaultCameraPitchSpeed = 1.5f;
 float c_fDefaultCameraZoomSpeed = 0.05f;
 
-CPythonApplication::CPythonApplication() : m_bCursorVisible(TRUE),
+CPythonApplication::CPythonApplication() : m_poMouseHandler(NULL),
+										   m_fAveRenderTime(0.0f),
+										   m_dwLastIdleTime(0),
+										   m_fGlobalTime(0.0f),
+										   m_fGlobalElapsedTime(0.0f),
+										   m_dwUpdateFPS(0),
+										   m_dwRenderFPS(0),
+										   m_dwFaceCount(0),
+										   m_dwLButtonDownTime(0),
+										   m_bCursorVisible(TRUE),
 										   m_bLiarCursorOn(false),
 										   m_iCursorMode(CURSOR_MODE_HARDWARE),
 										   m_isWindowed(false),
-										   m_isFrameSkipDisable(false),
-										   m_poMouseHandler(NULL),
-										   m_dwUpdateFPS(0),
-										   m_dwRenderFPS(0),
-										   m_fAveRenderTime(0.0f),
-										   m_dwFaceCount(0),
-										   m_fGlobalTime(0.0f),
-										   m_fGlobalElapsedTime(0.0f),
-										   m_dwLButtonDownTime(0),
-										   m_dwLastIdleTime(0)
+										   m_isFrameSkipDisable(false)
 {
 #ifndef _DEBUG
 	SetEterExceptionHandler();
@@ -629,7 +629,6 @@ bool CPythonApplication::Process()
 
 	//m_pyNetworkStream.AbsoluteExitGame();
 
-	/*
 	TraceError("Terminate a connection with infinite frame skips");
 
 	{
@@ -888,6 +887,9 @@ int CPythonApplication::CheckDeviceState()
 			if (!m_grpDevice.Reset())
 				return DEVICE_STATE_SKIP;
 
+			break;
+
+		default:
 			break;
 	}
 

@@ -314,21 +314,21 @@ void initsafebox()
 	static PyMethodDef s_methods[] =
 		{
 			// SafeBox
-			{"GetCurrentSafeboxSize", safeboxGetCurrentSafeboxSize, METH_VARARGS},
-			{"GetItemID", safeboxGetItemID, METH_VARARGS},
-			{"GetItemCount", safeboxGetItemCount, METH_VARARGS},
-			{"GetItemFlags", safeboxGetItemFlags, METH_VARARGS},
-			{"GetItemMetinSocket", safeboxGetItemMetinSocket, METH_VARARGS},
-			{"GetItemAttribute", safeboxGetItemAttribute, METH_VARARGS},
-			{"GetMoney", safeboxGetMoney, METH_VARARGS},
+			{"GetCurrentSafeboxSize", safeboxGetCurrentSafeboxSize, METH_VARARGS, NULL},
+			{"GetItemID", safeboxGetItemID, METH_VARARGS, NULL},
+			{"GetItemCount", safeboxGetItemCount, METH_VARARGS, NULL},
+			{"GetItemFlags", safeboxGetItemFlags, METH_VARARGS, NULL},
+			{"GetItemMetinSocket", safeboxGetItemMetinSocket, METH_VARARGS, NULL},
+			{"GetItemAttribute", safeboxGetItemAttribute, METH_VARARGS, NULL},
+			{"GetMoney", safeboxGetMoney, METH_VARARGS, NULL},
 
 			// Mall
-			{"GetMallItemID", safeboxGetMallItemID, METH_VARARGS},
-			{"GetMallItemCount", safeboxGetMallItemCount, METH_VARARGS},
-			{"GetMallItemMetinSocket", safeboxGetMallItemMetinSocket, METH_VARARGS},
-			{"GetMallItemAttribute", safeboxGetMallItemAttribute, METH_VARARGS},
-			{"GetMallSize", safeboxGetMallSize, METH_VARARGS},
-			{NULL, NULL, 0},
+			{"GetMallItemID", safeboxGetMallItemID, METH_VARARGS, NULL},
+			{"GetMallItemCount", safeboxGetMallItemCount, METH_VARARGS, NULL},
+			{"GetMallItemMetinSocket", safeboxGetMallItemMetinSocket, METH_VARARGS, NULL},
+			{"GetMallItemAttribute", safeboxGetMallItemAttribute, METH_VARARGS, NULL},
+			{"GetMallSize", safeboxGetMallSize, METH_VARARGS, NULL},
+			{NULL, NULL, 0, NULL},
 		};
 
 	PyObject* poModule = Py_InitModule("safebox", s_methods);

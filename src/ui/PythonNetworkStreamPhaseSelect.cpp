@@ -268,7 +268,7 @@ bool CPythonNetworkStream::__RecvChangeName()
 		if (ChangeNamePacket.pid == m_akSimplePlayerInfo[i].dwID)
 		{
 			m_akSimplePlayerInfo[i].bChangeName = FALSE;
-			strncpy(m_akSimplePlayerInfo[i].szName, ChangeNamePacket.name, CHARACTER_NAME_MAX_LEN);
+			snprintf(m_akSimplePlayerInfo[i].szName, sizeof(m_akSimplePlayerInfo[i].szName), "%s", ChangeNamePacket.name);
 
 			PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_SELECT], "OnChangeName", Py_BuildValue("(is)", i, ChangeNamePacket.name));
 			return true;

@@ -201,34 +201,34 @@ void initTextTail()
 {
 	static PyMethodDef s_methods[] =
 		{
-			{"Clear", textTailClear, METH_VARARGS},
+			{"Clear", textTailClear, METH_VARARGS, NULL},
 
-			{"UpdateAllTextTail", textTailUpdateAllTextTail, METH_VARARGS},
-			{"UpdateShowingTextTail", textTailUpdateShowingTextTail, METH_VARARGS},
-			{"Render", textTailRender, METH_VARARGS},
+			{"UpdateAllTextTail", textTailUpdateAllTextTail, METH_VARARGS, NULL},
+			{"UpdateShowingTextTail", textTailUpdateShowingTextTail, METH_VARARGS, NULL},
+			{"Render", textTailRender, METH_VARARGS, NULL},
 
-			{"ShowCharacterTextTail", textTailShowCharacterTextTail, METH_VARARGS},
-			{"ShowItemTextTail", textTailShowItemTextTail, METH_VARARGS},
+			{"ShowCharacterTextTail", textTailShowCharacterTextTail, METH_VARARGS, NULL},
+			{"ShowItemTextTail", textTailShowItemTextTail, METH_VARARGS, NULL},
 
-			{"GetPosition", textTailGetPosition, METH_VARARGS},
-			{"IsChat", textTailIsChat, METH_VARARGS},
+			{"GetPosition", textTailGetPosition, METH_VARARGS, NULL},
+			{"IsChat", textTailIsChat, METH_VARARGS, NULL},
 
-			{"ArrangeTextTail", textTailArrangeTextTail, METH_VARARGS},
-			{"HideAllTextTail", textTailHideAllTextTail, METH_VARARGS},
-			{"ShowAllTextTail", textTailShowAllTextTail, METH_VARARGS},
+			{"ArrangeTextTail", textTailArrangeTextTail, METH_VARARGS, NULL},
+			{"HideAllTextTail", textTailHideAllTextTail, METH_VARARGS, NULL},
+			{"ShowAllTextTail", textTailShowAllTextTail, METH_VARARGS, NULL},
 
-			{"Pick", textTailPick, METH_VARARGS},
-			{"SelectItemName", textTailSelectItemName, METH_VARARGS},
+			{"Pick", textTailPick, METH_VARARGS, NULL},
+			{"SelectItemName", textTailSelectItemName, METH_VARARGS, NULL},
 
-			{"EnablePKTitle", textTailEnablePKTitle, METH_VARARGS},
+			{"EnablePKTitle", textTailEnablePKTitle, METH_VARARGS, NULL},
 
 			// For Test
-			{"RegisterCharacterTextTail", textTailRegisterCharacterTextTail, METH_VARARGS},
-			{"RegisterChatTail", textTailRegisterChatTail, METH_VARARGS},
-			{"RegisterInfoTail", textTailRegisterInfoTail, METH_VARARGS},
-			{"AttachTitle", textTailAttachTitle, METH_VARARGS},
+			{"RegisterCharacterTextTail", textTailRegisterCharacterTextTail, METH_VARARGS, NULL},
+			{"RegisterChatTail", textTailRegisterChatTail, METH_VARARGS, NULL},
+			{"RegisterInfoTail", textTailRegisterInfoTail, METH_VARARGS, NULL},
+			{"AttachTitle", textTailAttachTitle, METH_VARARGS, NULL},
 
-			{NULL, NULL, 0},
+			{NULL, NULL, 0, NULL},
 		};
 
 	Py_InitModule("textTail", s_methods);

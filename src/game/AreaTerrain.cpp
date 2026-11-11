@@ -913,7 +913,7 @@ void CTerrain::CalculateTerrainPatch()
 
 CTerrainPatch* CTerrain::GetTerrainPatchPtr(BYTE byPatchNumX, BYTE byPatchNumY)
 {
-	if (byPatchNumX < 0 || byPatchNumX >= PATCH_XCOUNT || byPatchNumY < 0 || byPatchNumY >= PATCH_YCOUNT)
+	if (byPatchNumX >= PATCH_XCOUNT || byPatchNumY >= PATCH_YCOUNT)
 		return NULL;
 
 	return &m_TerrainPatchList[byPatchNumY * PATCH_XCOUNT + byPatchNumX];
@@ -921,9 +921,6 @@ CTerrainPatch* CTerrain::GetTerrainPatchPtr(BYTE byPatchNumX, BYTE byPatchNumY)
 
 void CTerrain::_CalculateTerrainPatch(BYTE byPatchNumX, BYTE byPatchNumY)
 {
-	if (!m_awRawHeightMap || !m_acNormalMap || !m_abyWaterMap)
-		return;
-
 	DWORD dwPatchNum = byPatchNumY * PATCH_XCOUNT + byPatchNumX;
 
 	CTerrainPatch& rkTerrainPatch = m_TerrainPatchList[dwPatchNum];
@@ -947,9 +944,9 @@ void CTerrain::_CalculateTerrainPatch(BYTE byPatchNumX, BYTE byPatchNumY)
 	char* chOrigNormalPtr = m_acNormalMap + (dwStartY * dwNormalWidth) + dwStartX * 3;
 	BYTE* byOrigWaterPtr = m_abyWaterMap + (dwStartY * WATERMAP_XSIZE) + dwStartX;
 
-	float fX, fY, fOrigX, fOrigY;
+	float fX, fY, fOrigX;
 	fOrigX = fX = (float)(m_wX * XSIZE * CELLSCALE) + (float)(dwStartX * CELLSCALE);
-	fOrigY = fY = (float)(m_wY * YSIZE * CELLSCALE) + (float)(dwStartY * CELLSCALE);
+	fY = (float)(m_wY * YSIZE * CELLSCALE) + (float)(dwStartY * CELLSCALE);
 
 	rkTerrainPatch.SetMinX(fX);
 	rkTerrainPatch.SetMaxX(fX + (float)(PATCH_XSIZE * CELLSCALE));
@@ -1005,7 +1002,7 @@ void CTerrain::_CalculateTerrainPatch(BYTE byPatchNumX, BYTE byPatchNumY)
 			if (kPosition.z < fMinZ)
 				fMinZ = kPosition.z;
 
-			if (0 <= dwX && 0 <= dwY && XSIZE > dwX && YSIZE > dwY &&
+			if (XSIZE > dwX && YSIZE > dwY &&
 				(dwStartX + PATCH_XSIZE) != dwX && (dwStartY + PATCH_YSIZE) != dwY)
 			{
 				BYTE byNumWater = (*pbyWater++);

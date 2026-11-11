@@ -127,13 +127,7 @@ void GetTimeString(char* str, time_t ct)
 	struct tm tm;
 	tm = *localtime(&ct);
 
-	_snprintf(str, 15, "%04d%02d%02d%02d%02d%02d",
-			  tm.tm_year + 1900,
-			  tm.tm_mon + 1,
-			  tm.tm_mday,
-			  tm.tm_hour,
-			  tm.tm_min,
-			  tm.tm_sec);
+	strftime(str, 15, "%Y%m%d%H%M%S", &tm);
 }
 
 bool CProperty::ReadFromMemory(const void* c_pvData, int iLen, const char* c_pszFileName)

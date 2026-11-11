@@ -452,49 +452,49 @@ void initChat()
 {
 	static PyMethodDef s_methods[] =
 		{
-			{"SetChatColor", chatSetChatColor, METH_VARARGS},
-			{"Clear", chatClear, METH_VARARGS},
-			{"Close", chatClose, METH_VARARGS},
+			{"SetChatColor", chatSetChatColor, METH_VARARGS, NULL},
+			{"Clear", chatClear, METH_VARARGS, NULL},
+			{"Close", chatClose, METH_VARARGS, NULL},
 
-			{"CreateChatSet", chatCreateChatSet, METH_VARARGS},
-			{"Update", chatUpdate, METH_VARARGS},
-			{"Render", chatRender, METH_VARARGS},
+			{"CreateChatSet", chatCreateChatSet, METH_VARARGS, NULL},
+			{"Update", chatUpdate, METH_VARARGS, NULL},
+			{"Render", chatRender, METH_VARARGS, NULL},
 
-			{"SetBoardState", chatSetBoardState, METH_VARARGS},
-			{"SetPosition", chatSetPosition, METH_VARARGS},
-			{"SetHeight", chatSetHeight, METH_VARARGS},
-			{"SetStep", chatSetStep, METH_VARARGS},
-			{"ToggleChatMode", chatToggleChatMode, METH_VARARGS},
-			{"EnableChatMode", chatEnableChatMode, METH_VARARGS},
-			{"DisableChatMode", chatDisableChatMode, METH_VARARGS},
-			{"SetEndPos", chatSetEndPos, METH_VARARGS},
+			{"SetBoardState", chatSetBoardState, METH_VARARGS, NULL},
+			{"SetPosition", chatSetPosition, METH_VARARGS, NULL},
+			{"SetHeight", chatSetHeight, METH_VARARGS, NULL},
+			{"SetStep", chatSetStep, METH_VARARGS, NULL},
+			{"ToggleChatMode", chatToggleChatMode, METH_VARARGS, NULL},
+			{"EnableChatMode", chatEnableChatMode, METH_VARARGS, NULL},
+			{"DisableChatMode", chatDisableChatMode, METH_VARARGS, NULL},
+			{"SetEndPos", chatSetEndPos, METH_VARARGS, NULL},
 
-			{"GetLineCount", chatGetLineCount, METH_VARARGS},
-			{"GetVisibleLineCount", chatGetVisibleLineCount, METH_VARARGS},
-			{"GetLineStep", chatGetLineStep, METH_VARARGS},
+			{"GetLineCount", chatGetLineCount, METH_VARARGS, NULL},
+			{"GetVisibleLineCount", chatGetVisibleLineCount, METH_VARARGS, NULL},
+			{"GetLineStep", chatGetLineStep, METH_VARARGS, NULL},
 
 			// Chat
-			{"AppendChat", chatAppendChat, METH_VARARGS},
-			{"AppendChatWithDelay", chatAppendChatWithDelay, METH_VARARGS},
-			{"ArrangeShowingChat", chatArrangeShowingChat, METH_VARARGS},
+			{"AppendChat", chatAppendChat, METH_VARARGS, NULL},
+			{"AppendChatWithDelay", chatAppendChatWithDelay, METH_VARARGS, NULL},
+			{"ArrangeShowingChat", chatArrangeShowingChat, METH_VARARGS, NULL},
 
 			// Ignore
-			{"IgnoreCharacter", chatIgnoreCharacter, METH_VARARGS},
-			{"IsIgnoreCharacter", chatIsIgnoreCharacter, METH_VARARGS},
+			{"IgnoreCharacter", chatIgnoreCharacter, METH_VARARGS, NULL},
+			{"IsIgnoreCharacter", chatIsIgnoreCharacter, METH_VARARGS, NULL},
 
 			// Whisper
-			{"CreateWhisper", chatCreateWhisper, METH_VARARGS},
-			{"AppendWhisper", chatAppendWhisper, METH_VARARGS},
-			{"RenderWhisper", chatRenderWhisper, METH_VARARGS},
-			{"SetWhisperBoxSize", chatSetWhisperBoxSize, METH_VARARGS},
-			{"SetWhisperPosition", chatSetWhisperPosition, METH_VARARGS},
-			{"ClearWhisper", chatClearWhisper, METH_VARARGS},
-			{"InitWhisper", chatInitWhisper, METH_VARARGS},
+			{"CreateWhisper", chatCreateWhisper, METH_VARARGS, NULL},
+			{"AppendWhisper", chatAppendWhisper, METH_VARARGS, NULL},
+			{"RenderWhisper", chatRenderWhisper, METH_VARARGS, NULL},
+			{"SetWhisperBoxSize", chatSetWhisperBoxSize, METH_VARARGS, NULL},
+			{"SetWhisperPosition", chatSetWhisperPosition, METH_VARARGS, NULL},
+			{"ClearWhisper", chatClearWhisper, METH_VARARGS, NULL},
+			{"InitWhisper", chatInitWhisper, METH_VARARGS, NULL},
 
 			// Link
-			{"GetLinkFromHyperlink", chatGetLinkFromHyperlink, METH_VARARGS},
+			{"GetLinkFromHyperlink", chatGetLinkFromHyperlink, METH_VARARGS, NULL},
 
-			{NULL, NULL, 0},
+			{NULL, NULL, 0, NULL},
 		};
 
 	PyObject* poModule = Py_InitModule("chat", s_methods);

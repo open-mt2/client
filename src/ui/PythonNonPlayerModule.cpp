@@ -90,15 +90,15 @@ void initNonPlayer()
 {
 	static PyMethodDef s_methods[] =
 		{
-			{"GetEventType", nonplayerGetEventType, METH_VARARGS},
-			{"GetEventTypeByVID", nonplayerGetEventTypeByVID, METH_VARARGS},
-			{"GetLevelByVID", nonplayerGetLevelByVID, METH_VARARGS},
-			{"GetGradeByVID", nonplayerGetGradeByVID, METH_VARARGS},
-			{"GetMonsterName", nonplayerGetMonsterName, METH_VARARGS},
+			{"GetEventType", nonplayerGetEventType, METH_VARARGS, NULL},
+			{"GetEventTypeByVID", nonplayerGetEventTypeByVID, METH_VARARGS, NULL},
+			{"GetLevelByVID", nonplayerGetLevelByVID, METH_VARARGS, NULL},
+			{"GetGradeByVID", nonplayerGetGradeByVID, METH_VARARGS, NULL},
+			{"GetMonsterName", nonplayerGetMonsterName, METH_VARARGS, NULL},
 
-			{"LoadNonPlayerData", nonplayerLoadNonPlayerData, METH_VARARGS},
+			{"LoadNonPlayerData", nonplayerLoadNonPlayerData, METH_VARARGS, NULL},
 
-			{NULL, NULL, 0},
+			{NULL, NULL, 0, NULL},
 		};
 
 	PyObject* poModule = Py_InitModule("nonplayer", s_methods);

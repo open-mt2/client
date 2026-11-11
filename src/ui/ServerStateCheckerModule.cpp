@@ -51,12 +51,12 @@ void initServerStateChecker()
 {
 	static PyMethodDef s_methods[] =
 		{
-			{"Create", ServerStateCheckerCreate, METH_VARARGS},
-			{"Update", ServerStateCheckerUpdate, METH_VARARGS},
-			{"Request", ServerStateCheckerRequest, METH_VARARGS},
-			{"AddChannel", ServerStateCheckerAddChannel, METH_VARARGS},
-			{"Initialize", ServerStateCheckerInitialize, METH_VARARGS},
-			{NULL, NULL, 0},
+			{"Create", ServerStateCheckerCreate, METH_VARARGS, NULL},
+			{"Update", ServerStateCheckerUpdate, METH_VARARGS, NULL},
+			{"Request", ServerStateCheckerRequest, METH_VARARGS, NULL},
+			{"AddChannel", ServerStateCheckerAddChannel, METH_VARARGS, NULL},
+			{"Initialize", ServerStateCheckerInitialize, METH_VARARGS, NULL},
+			{NULL, NULL, 0, NULL},
 		};
 
 	// PyObject * poModule = Py_InitModule("ServerStateChecker", s_methods);

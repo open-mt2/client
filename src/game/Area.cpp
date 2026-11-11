@@ -405,8 +405,6 @@ void CArea::Refresh()
 			{
 				m_TreeCloneInstaceVector.push_back(pObjectInstance->pTree);
 
-				const float* pfPosition;
-				pfPosition = pObjectInstance->pTree->GetPosition();
 				pObjectInstance->pTree->UpdateBoundingSphere();
 				pObjectInstance->pTree->UpdateCollisionData();
 			}
@@ -951,8 +949,7 @@ bool CArea::__Load_LoadObject(const char* c_szFileName)
 		const std::string& c_rstrzPosition = rVector[2].c_str();
 		const std::string& c_rstrCRC = rVector[3].c_str();
 
-		TObjectData ObjectData;
-		ZeroMemory(&ObjectData, sizeof(ObjectData));
+		TObjectData ObjectData = {};
 		ObjectData.Position.x = atof(c_rstrxPosition.c_str());
 		ObjectData.Position.y = atof(c_rstryPosition.c_str());
 		ObjectData.Position.z = atof(c_rstrzPosition.c_str());
@@ -1050,8 +1047,7 @@ bool CArea::__Load_LoadAmbience(const char* c_szFileName)
 		const std::string& c_rstrCRC = rVector[3].c_str();
 		const std::string& c_rstrRange = rVector[4].c_str();
 
-		TObjectData ObjectData;
-		ZeroMemory(&ObjectData, sizeof(ObjectData));
+		TObjectData ObjectData = {};
 		ObjectData.Position.x = atof(c_rstrxPosition.c_str());
 		ObjectData.Position.y = atof(c_rstryPosition.c_str());
 		ObjectData.Position.z = atof(c_rstrzPosition.c_str());
@@ -1110,12 +1106,12 @@ bool CArea::GetObjectDataPointer(DWORD dwIndex, const TObjectData** ppObjectData
 	return true;
 }
 
-const DWORD CArea::GetObjectInstanceCount() const
+DWORD CArea::GetObjectInstanceCount() const
 {
 	return m_ObjectInstanceVector.size();
 }
 
-const bool CArea::GetObjectInstancePointer(const DWORD& dwIndex, const TObjectInstance** ppObjectInstance) const
+bool CArea::GetObjectInstancePointer(const DWORD& dwIndex, const TObjectInstance** ppObjectInstance) const
 {
 	if (dwIndex >= m_ObjectInstanceVector.size())
 		return false;

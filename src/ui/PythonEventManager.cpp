@@ -56,7 +56,7 @@ void GetCameraSettingFromArgList(script::TArgList& rArgList, IAbstractApplicatio
 	int iRot = atoi(GetArgument("rot", rArgList));
 	int iPitch = atoi(GetArgument("pitch", rArgList));
 
-	ZeroMemory(pCameraSetting, sizeof(IAbstractApplication::SCameraSetting));
+	*pCameraSetting = {};
 	pCameraSetting->v3CenterPosition.x = float(ix);
 	pCameraSetting->v3CenterPosition.y = float(iy);
 	pCameraSetting->v3CenterPosition.z = float(iz);

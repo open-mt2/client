@@ -264,6 +264,8 @@ namespace NMotionEvent
 			SMotionEventDataCharacterShow() {}
 			virtual ~SMotionEventDataCharacterShow() {}
 
+			using SMotionEventData::Load;
+
 			void Save(FILE* File, int iTabs) {}
 			void Load() {}
 	} TMotionEventDataCharacterShow;
@@ -274,6 +276,8 @@ namespace NMotionEvent
 			SMotionEventDataCharacterHide() {}
 			virtual ~SMotionEventDataCharacterHide() {}
 
+			using SMotionEventData::Load;
+
 			void Save(FILE* File, int iTabs) {}
 			void Load() {}
 	} TMotionEventDataCharacterHide;
@@ -283,6 +287,8 @@ namespace NMotionEvent
 	{
 			SMotionEventDataWarp() {}
 			virtual ~SMotionEventDataWarp() {}
+
+			using SMotionEventData::Load;
 
 			void Save(FILE* File, int iTabs) {}
 			void Load() {}

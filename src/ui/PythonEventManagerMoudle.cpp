@@ -273,37 +273,37 @@ void initEvent()
 {
 	static PyMethodDef s_methods[] =
 		{
-			{"RegisterEventSet", eventRegisterEventSet, METH_VARARGS},
-			{"RegisterEventSetFromString", eventRegisterEventSetFromString, METH_VARARGS},
-			{"ClearEventSet", eventClearEventSet, METH_VARARGS},
+			{"RegisterEventSet", eventRegisterEventSet, METH_VARARGS, NULL},
+			{"RegisterEventSetFromString", eventRegisterEventSetFromString, METH_VARARGS, NULL},
+			{"ClearEventSet", eventClearEventSet, METH_VARARGS, NULL},
 
-			{"SetRestrictedCount", eventSetRestrictedCount, METH_VARARGS},
+			{"SetRestrictedCount", eventSetRestrictedCount, METH_VARARGS, NULL},
 
-			{"GetEventSetLocalYPosition", eventGetEventSetLocalYPosition, METH_VARARGS},
-			{"AddEventSetLocalYPosition", eventAddEventSetLocalYPosition, METH_VARARGS},
-			{"InsertText", eventInsertText, METH_VARARGS},
-			{"InsertTextInline", eventInsertTextInline, METH_VARARGS},
+			{"GetEventSetLocalYPosition", eventGetEventSetLocalYPosition, METH_VARARGS, NULL},
+			{"AddEventSetLocalYPosition", eventAddEventSetLocalYPosition, METH_VARARGS, NULL},
+			{"InsertText", eventInsertText, METH_VARARGS, NULL},
+			{"InsertTextInline", eventInsertTextInline, METH_VARARGS, NULL},
 
-			{"UpdateEventSet", eventUpdateEventSet, METH_VARARGS},
-			{"RenderEventSet", eventRenderEventSet, METH_VARARGS},
-			{"SetEventSetWidth", eventSetEventSetWidth, METH_VARARGS},
+			{"UpdateEventSet", eventUpdateEventSet, METH_VARARGS, NULL},
+			{"RenderEventSet", eventRenderEventSet, METH_VARARGS, NULL},
+			{"SetEventSetWidth", eventSetEventSetWidth, METH_VARARGS, NULL},
 
-			{"Skip", eventSkip, METH_VARARGS},
-			{"IsWait", eventIsWait, METH_VARARGS},
-			{"EndEventProcess", eventEndEventProcess, METH_VARARGS},
+			{"Skip", eventSkip, METH_VARARGS, NULL},
+			{"IsWait", eventIsWait, METH_VARARGS, NULL},
+			{"EndEventProcess", eventEndEventProcess, METH_VARARGS, NULL},
 
-			{"SelectAnswer", eventSelectAnswer, METH_VARARGS},
-			{"GetLineCount", eventGetLineCount, METH_VARARGS},
-			{"SetVisibleStartLine", eventSetVisibleStartLine, METH_VARARGS},
-			{"GetVisibleStartLine", eventGetVisibleStartLine, METH_VARARGS},
+			{"SelectAnswer", eventSelectAnswer, METH_VARARGS, NULL},
+			{"GetLineCount", eventGetLineCount, METH_VARARGS, NULL},
+			{"SetVisibleStartLine", eventSetVisibleStartLine, METH_VARARGS, NULL},
+			{"GetVisibleStartLine", eventGetVisibleStartLine, METH_VARARGS, NULL},
 
-			{"SetEventHandler", eventSetEventHandler, METH_VARARGS},
-			{"SetInterfaceWindow", eventSetInterfaceWindow, METH_VARARGS},
-			{"SetLeftTimeString", eventSetLeftTimeString, METH_VARARGS},
+			{"SetEventHandler", eventSetEventHandler, METH_VARARGS, NULL},
+			{"SetInterfaceWindow", eventSetInterfaceWindow, METH_VARARGS, NULL},
+			{"SetLeftTimeString", eventSetLeftTimeString, METH_VARARGS, NULL},
 
-			{"QuestButtonClick", eventQuestButtonClick, METH_VARARGS},
-			{"Destroy", eventDestroy, METH_VARARGS},
-			{NULL, NULL, 0},
+			{"QuestButtonClick", eventQuestButtonClick, METH_VARARGS, NULL},
+			{"Destroy", eventDestroy, METH_VARARGS, NULL},
+			{NULL, NULL, 0, NULL},
 		};
 
 	PyObject* poModule = Py_InitModule("event", s_methods);

@@ -72,8 +72,7 @@ CFlyingData::TFlyingAttachData& CFlyingData::GetAttachDataReference(int iIndex)
 
 DWORD CFlyingData::AttachFlyEffect(int iType, const std::string& strFilename, float fRoll, float fArg1, float fArg2)
 {
-	TFlyingAttachData fad;
-	memset(&fad, 0, sizeof(fad));
+	TFlyingAttachData fad = {};
 	fad.iType = FLY_ATTACH_EFFECT;
 	fad.iFlyType = iType;
 	fad.fPeriod = 1.0f;

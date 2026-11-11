@@ -9,7 +9,7 @@
 #include <Neoeter/Platform/Base/CRC32.h>
 #include <Neoeter/Platform/Base/lzo.h>
 #define sys_err TraceError
-#define sys_log //(n, format, ...) Tracenf(format, __VA_ARGS__)
+#define sys_log(...) ((void)0)
 #define thecore_memcpy memcpy
 #define itertype(cont) typeof(cont.begin())
 

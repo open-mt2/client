@@ -156,34 +156,34 @@ void initTrade()
 {
 	static PyMethodDef s_methods[] =
 		{
-			{"InitTrading", exchangeInitTrading, METH_VARARGS},
-			{"isTrading", exchangeisTrading, METH_VARARGS},
+			{"InitTrading", exchangeInitTrading, METH_VARARGS, NULL},
+			{"isTrading", exchangeisTrading, METH_VARARGS, NULL},
 
-			{"GetElkFromSelf", exchangeGetElkFromSelf, METH_VARARGS},
-			{"GetElkFromTarget", exchangeGetElkFromTarget, METH_VARARGS},
+			{"GetElkFromSelf", exchangeGetElkFromSelf, METH_VARARGS, NULL},
+			{"GetElkFromTarget", exchangeGetElkFromTarget, METH_VARARGS, NULL},
 
-			{"GetItemVnumFromSelf", exchangeGetItemVnumFromSelf, METH_VARARGS},
-			{"GetItemVnumFromTarget", exchangeGetItemVnumFromTarget, METH_VARARGS},
+			{"GetItemVnumFromSelf", exchangeGetItemVnumFromSelf, METH_VARARGS, NULL},
+			{"GetItemVnumFromTarget", exchangeGetItemVnumFromTarget, METH_VARARGS, NULL},
 
-			{"GetItemCountFromSelf", exchangeGetItemCountFromSelf, METH_VARARGS},
-			{"GetItemCountFromTarget", exchangeGetItemCountFromTarget, METH_VARARGS},
+			{"GetItemCountFromSelf", exchangeGetItemCountFromSelf, METH_VARARGS, NULL},
+			{"GetItemCountFromTarget", exchangeGetItemCountFromTarget, METH_VARARGS, NULL},
 
-			{"GetAcceptFromSelf", exchangeGetAcceptFromSelf, METH_VARARGS},
-			{"GetAcceptFromTarget", exchangeGetAcceptFromTarget, METH_VARARGS},
+			{"GetAcceptFromSelf", exchangeGetAcceptFromSelf, METH_VARARGS, NULL},
+			{"GetAcceptFromTarget", exchangeGetAcceptFromTarget, METH_VARARGS, NULL},
 
-			{"GetNameFromSelf", exchangeGetNameFromSelf, METH_VARARGS},
-			{"GetNameFromTarget", exchangeGetNameFromTarget, METH_VARARGS},
+			{"GetNameFromSelf", exchangeGetNameFromSelf, METH_VARARGS, NULL},
+			{"GetNameFromTarget", exchangeGetNameFromTarget, METH_VARARGS, NULL},
 
-			{"GetItemMetinSocketFromTarget", exchangeGetItemMetinSocketFromTarget, METH_VARARGS},
-			{"GetItemMetinSocketFromSelf", exchangeGetItemMetinSocketFromSelf, METH_VARARGS},
+			{"GetItemMetinSocketFromTarget", exchangeGetItemMetinSocketFromTarget, METH_VARARGS, NULL},
+			{"GetItemMetinSocketFromSelf", exchangeGetItemMetinSocketFromSelf, METH_VARARGS, NULL},
 
-			{"GetItemAttributeFromTarget", exchangeGetItemAttributeFromTarget, METH_VARARGS},
-			{"GetItemAttributeFromSelf", exchangeGetItemAttributeFromSelf, METH_VARARGS},
+			{"GetItemAttributeFromTarget", exchangeGetItemAttributeFromTarget, METH_VARARGS, NULL},
+			{"GetItemAttributeFromSelf", exchangeGetItemAttributeFromSelf, METH_VARARGS, NULL},
 
-			{"GetElkMode", exchangeGetElkMode, METH_VARARGS},
-			{"SetElkMode", exchangeSetElkMode, METH_VARARGS},
+			{"GetElkMode", exchangeGetElkMode, METH_VARARGS, NULL},
+			{"SetElkMode", exchangeSetElkMode, METH_VARARGS, NULL},
 
-			{NULL, NULL},
+			{NULL, NULL, 0, NULL},
 		};
 
 	PyObject* poModule = Py_InitModule("exchange", s_methods);

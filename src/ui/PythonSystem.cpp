@@ -443,7 +443,7 @@ bool CPythonSystem::LoadConfig()
 		else if (!stricmp(command, "IS_SAVE_ID"))
 			m_Config.isSaveID = atoi(value);
 		else if (!stricmp(command, "SAVE_ID"))
-			strncpy(m_Config.SaveID, value, 20);
+			snprintf(m_Config.SaveID, sizeof(m_Config.SaveID), "%s", value);
 		else if (!stricmp(command, "PRE_LOADING_DELAY_TIME"))
 			g_iLoadingDelayTime = atoi(value);
 		else if (!stricmp(command, "WINDOWED"))

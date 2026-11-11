@@ -2,6 +2,8 @@
 //
 //////////////////////////////////////////////////////////////////////
 
+#include <algorithm>
+
 #include <Client/Game/StdAfx.h>
 #include <Neoeter/Render/StateManager.h>
 #include <Neoeter/Terrain/StdAfx.h>
@@ -63,8 +65,8 @@ void CTerrainDecal::Make(D3DXVECTOR3 v3Center, D3DXVECTOR3 v3Normal, D3DXVECTOR3
 	DWORD dwAffectedPrimitiveCount = 0;
 	D3DXVECTOR3 v3AffectedVertex[MAX_SEARCH_VERTICES];
 	D3DXVECTOR3 v3AffectedNormal[MAX_SEARCH_VERTICES];
-	memset(v3AffectedVertex, 0, sizeof(v3AffectedVertex));
-	memset(v3AffectedNormal, 0, sizeof(v3AffectedNormal));
+	std::fill(v3AffectedVertex, v3AffectedVertex + MAX_SEARCH_VERTICES, D3DXVECTOR3());
+	std::fill(v3AffectedNormal, v3AffectedNormal + MAX_SEARCH_VERTICES, D3DXVECTOR3());
 
 	SearchAffectedTerrainMesh(fMinX, fMaxX, fMinY, fMaxY, &dwAffectedPrimitiveCount, v3AffectedVertex, v3AffectedNormal);
 

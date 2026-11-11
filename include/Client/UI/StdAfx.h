@@ -1,5 +1,6 @@
 #pragma once
 
+#ifdef _MSC_VER
 #pragma warning(disable : 4702)
 #pragma warning(disable : 4100)
 #pragma warning(disable : 4201)
@@ -7,6 +8,7 @@
 #pragma warning(disable : 4663)
 #pragma warning(disable : 4018)
 #pragma warning(disable : 4245)
+#endif
 
 #include <Neoeter/Render/StdAfx.h>
 #include <Neoeter/Python/Bindings/StdAfx.h>

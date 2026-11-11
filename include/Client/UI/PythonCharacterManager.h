@@ -129,6 +129,7 @@ class CPythonCharacterManager : public CSingleton<CPythonCharacterManager>, publ
 		{
 			public:
 				CharacterIterator() {}
+				CharacterIterator(const CharacterIterator&) = default;
 				CharacterIterator(const TCharacterInstanceMap::iterator& it) : m_it(it) {}
 
 				inline CInstanceBase* operator*() { return m_it->second; }

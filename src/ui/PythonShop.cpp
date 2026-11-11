@@ -404,27 +404,27 @@ void initshop()
 	static PyMethodDef s_methods[] =
 		{
 			// Shop
-			{"Open", shopOpen, METH_VARARGS},
-			{"Close", shopClose, METH_VARARGS},
-			{"IsOpen", shopIsOpen, METH_VARARGS},
-			{"IsPrivateShop", shopIsPrviateShop, METH_VARARGS},
-			{"IsMainPlayerPrivateShop", shopIsMainPlayerPrivateShop, METH_VARARGS},
-			{"GetItemID", shopGetItemID, METH_VARARGS},
-			{"GetItemCount", shopGetItemCount, METH_VARARGS},
-			{"GetItemPrice", shopGetItemPrice, METH_VARARGS},
-			{"GetItemMetinSocket", shopGetItemMetinSocket, METH_VARARGS},
-			{"GetItemAttribute", shopGetItemAttribute, METH_VARARGS},
-			{"GetTabCount", shopGetTabCount, METH_VARARGS},
-			{"GetTabName", shopGetTabName, METH_VARARGS},
-			{"GetTabCoinType", shopGetTabCoinType, METH_VARARGS},
+			{"Open", shopOpen, METH_VARARGS, NULL},
+			{"Close", shopClose, METH_VARARGS, NULL},
+			{"IsOpen", shopIsOpen, METH_VARARGS, NULL},
+			{"IsPrivateShop", shopIsPrviateShop, METH_VARARGS, NULL},
+			{"IsMainPlayerPrivateShop", shopIsMainPlayerPrivateShop, METH_VARARGS, NULL},
+			{"GetItemID", shopGetItemID, METH_VARARGS, NULL},
+			{"GetItemCount", shopGetItemCount, METH_VARARGS, NULL},
+			{"GetItemPrice", shopGetItemPrice, METH_VARARGS, NULL},
+			{"GetItemMetinSocket", shopGetItemMetinSocket, METH_VARARGS, NULL},
+			{"GetItemAttribute", shopGetItemAttribute, METH_VARARGS, NULL},
+			{"GetTabCount", shopGetTabCount, METH_VARARGS, NULL},
+			{"GetTabName", shopGetTabName, METH_VARARGS, NULL},
+			{"GetTabCoinType", shopGetTabCoinType, METH_VARARGS, NULL},
 
 			// Private Shop
-			{"ClearPrivateShopStock", shopClearPrivateShopStock, METH_VARARGS},
-			{"AddPrivateShopItemStock", shopAddPrivateShopItemStock, METH_VARARGS},
-			{"DelPrivateShopItemStock", shopDelPrivateShopItemStock, METH_VARARGS},
-			{"GetPrivateShopItemPrice", shopGetPrivateShopItemPrice, METH_VARARGS},
-			{"BuildPrivateShop", shopBuildPrivateShop, METH_VARARGS},
-			{NULL, NULL, 0},
+			{"ClearPrivateShopStock", shopClearPrivateShopStock, METH_VARARGS, NULL},
+			{"AddPrivateShopItemStock", shopAddPrivateShopItemStock, METH_VARARGS, NULL},
+			{"DelPrivateShopItemStock", shopDelPrivateShopItemStock, METH_VARARGS, NULL},
+			{"GetPrivateShopItemPrice", shopGetPrivateShopItemPrice, METH_VARARGS, NULL},
+			{"BuildPrivateShop", shopBuildPrivateShop, METH_VARARGS, NULL},
+			{NULL, NULL, 0, NULL},
 		};
 	PyObject* poModule = Py_InitModule("shop", s_methods);
 

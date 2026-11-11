@@ -251,8 +251,10 @@ void CMapManager::BeginEnvironment()
 		if (mc_pcurEnvironmentData->bDensityFog)
 		{
 			float fDensity = 0.00015f;
-			STATEMANAGER.SetRenderState(D3DRS_FOGVERTEXMODE, D3DFOG_EXP);		 // pixel fog
-			STATEMANAGER.SetRenderState(D3DRS_FOGDENSITY, *((DWORD*)&fDensity)); // vertex fog
+			DWORD dwDensity;
+			memcpy(&dwDensity, &fDensity, sizeof(dwDensity));
+			STATEMANAGER.SetRenderState(D3DRS_FOGVERTEXMODE, D3DFOG_EXP);   // pixel fog
+			STATEMANAGER.SetRenderState(D3DRS_FOGDENSITY, dwDensity);	   // vertex fog
 		}
 		else
 		{
@@ -263,10 +265,13 @@ void CMapManager::BeginEnvironment()
 
 			float fFogNear = mc_pcurEnvironmentData->GetFogNearDistance();
 			float fFogFar = mc_pcurEnvironmentData->GetFogFarDistance();
-			STATEMANAGER.SetRenderState(D3DRS_FOGVERTEXMODE, D3DFOG_LINEAR);   // vertex fox
-			STATEMANAGER.SetRenderState(D3DRS_RANGEFOGENABLE, TRUE);		   // vertex fox
-			STATEMANAGER.SetRenderState(D3DRS_FOGSTART, *((DWORD*)&fFogNear)); // USED BY D3DFOG_LINEAR
-			STATEMANAGER.SetRenderState(D3DRS_FOGEND, *((DWORD*)&fFogFar));	   // USED BY D3DFOG_LINEAR
+			DWORD dwFogNear, dwFogFar;
+			memcpy(&dwFogNear, &fFogNear, sizeof(dwFogNear));
+			memcpy(&dwFogFar, &fFogFar, sizeof(dwFogFar));
+			STATEMANAGER.SetRenderState(D3DRS_FOGVERTEXMODE, D3DFOG_LINEAR); // vertex fox
+			STATEMANAGER.SetRenderState(D3DRS_RANGEFOGENABLE, TRUE);		 // vertex fox
+			STATEMANAGER.SetRenderState(D3DRS_FOGSTART, dwFogNear);			 // USED BY D3DFOG_LINEAR
+			STATEMANAGER.SetRenderState(D3DRS_FOGEND, dwFogFar);			 // USED BY D3DFOG_LINEAR
 		}
 	}
 

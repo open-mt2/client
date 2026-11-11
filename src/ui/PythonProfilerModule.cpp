@@ -23,10 +23,10 @@ void initProfiler()
 {
 	static PyMethodDef s_methods[] =
 		{
-			{"Push", profilerPush, METH_VARARGS},
-			{"Pop", profilerPop, METH_VARARGS},
+			{"Push", profilerPush, METH_VARARGS, NULL},
+			{"Pop", profilerPop, METH_VARARGS, NULL},
 
-			{NULL, NULL, 0},
+			{NULL, NULL, 0, NULL},
 		};
 
 	Py_InitModule("profiler", s_methods);

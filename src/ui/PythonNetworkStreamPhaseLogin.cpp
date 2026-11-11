@@ -259,7 +259,6 @@ bool CPythonNetworkStream::SendLoginPacketNew(const char* c_szName, const char* 
 	LoginPacket.name[ID_MAX_NUM] = '\0';
 
 	extern DWORD g_adwEncryptKey[4];
-	extern DWORD g_adwDecryptKey[4];
 	for (DWORD i = 0; i < 4; ++i)
 		LoginPacket.adwClientKey[i] = g_adwEncryptKey[i];
 

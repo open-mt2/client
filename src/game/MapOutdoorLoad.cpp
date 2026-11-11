@@ -162,7 +162,7 @@ bool CMapOutdoor::LoadArea(WORD wAreaCoordX, WORD wAreaCoordY, WORD wCellCoordX,
 #endif
 	unsigned long ulID = (unsigned long)(wAreaCoordX) * 1000L + (unsigned long)(wAreaCoordY);
 	char szAreaPathName[64 + 1];
-	_snprintf(szAreaPathName, sizeof(szAreaPathName), "%s\\%06u\\", GetMapDataDirectory().c_str(), ulID);
+	_snprintf(szAreaPathName, sizeof(szAreaPathName), "%s\\%06lu\\", GetMapDataDirectory().c_str(), ulID);
 
 	CArea* pArea = CArea::New();
 	pArea->SetMapOutDoor(this);
@@ -199,7 +199,7 @@ bool CMapOutdoor::LoadTerrain(WORD wTerrainCoordX, WORD wTerrainCoordY, WORD wCe
 
 	unsigned long ulID = (unsigned long)(wTerrainCoordX) * 1000L + (unsigned long)(wTerrainCoordY);
 	char filename[256];
-	sprintf(filename, "%s\\%06u\\AreaProperty.txt", GetMapDataDirectory().c_str(), ulID);
+	sprintf(filename, "%s\\%06lu\\AreaProperty.txt", GetMapDataDirectory().c_str(), ulID);
 
 	CTokenVectorMap stTokenVectorMap;
 
@@ -247,13 +247,13 @@ bool CMapOutdoor::LoadTerrain(WORD wTerrainCoordX, WORD wTerrainCoordY, WORD wCe
 	char szMiniMapTexName[64 + 1];
 	char szSplatName[64 + 1];
 
-	_snprintf(szRawHeightFieldname, sizeof(szRawHeightFieldname), "%s\\%06u\\height.raw", GetMapDataDirectory().c_str(), ulID);
-	_snprintf(szSplatName, sizeof(szSplatName), "%s\\%06u\\tile.raw", GetMapDataDirectory().c_str(), ulID);
-	_snprintf(szAttrMapName, sizeof(szAttrMapName), "%s\\%06u\\attr.atr", GetMapDataDirectory().c_str(), ulID);
-	_snprintf(szWaterMapName, sizeof(szWaterMapName), "%s\\%06u\\water.wtr", GetMapDataDirectory().c_str(), ulID);
-	_snprintf(szShadowTexName, sizeof(szShadowTexName), "%s\\%06u\\shadowmap.dds", GetMapDataDirectory().c_str(), ulID);
-	_snprintf(szShadowMapName, sizeof(szShadowMapName), "%s\\%06u\\shadowmap.raw", GetMapDataDirectory().c_str(), ulID);
-	_snprintf(szMiniMapTexName, sizeof(szMiniMapTexName), "%s\\%06u\\minimap.dds", GetMapDataDirectory().c_str(), ulID);
+	_snprintf(szRawHeightFieldname, sizeof(szRawHeightFieldname), "%s\\%06lu\\height.raw", GetMapDataDirectory().c_str(), ulID);
+	_snprintf(szSplatName, sizeof(szSplatName), "%s\\%06lu\\tile.raw", GetMapDataDirectory().c_str(), ulID);
+	_snprintf(szAttrMapName, sizeof(szAttrMapName), "%s\\%06lu\\attr.atr", GetMapDataDirectory().c_str(), ulID);
+	_snprintf(szWaterMapName, sizeof(szWaterMapName), "%s\\%06lu\\water.wtr", GetMapDataDirectory().c_str(), ulID);
+	_snprintf(szShadowTexName, sizeof(szShadowTexName), "%s\\%06lu\\shadowmap.dds", GetMapDataDirectory().c_str(), ulID);
+	_snprintf(szShadowMapName, sizeof(szShadowMapName), "%s\\%06lu\\shadowmap.raw", GetMapDataDirectory().c_str(), ulID);
+	_snprintf(szMiniMapTexName, sizeof(szMiniMapTexName), "%s\\%06lu\\minimap.dds", GetMapDataDirectory().c_str(), ulID);
 
 	if (!pTerrain->LoadWaterMap(szWaterMapName))
 		TraceError(" CMapOutdoor::LoadTerrain(%d, %d) LoadWaterMap ERROR", wTerrainCoordX, wTerrainCoordY);
@@ -503,7 +503,7 @@ bool CMapOutdoor::LoadMonsterAreaInfo()
 			const std::string& c_rstrCount = stTokenVector[9].c_str();
 			const std::string& c_rstrVID = stTokenVector[10].c_str();
 
-			long lOriginX, lOriginY, lSizeX, lSizeY, lZ, lTime, lPercent;
+			long lOriginX, lOriginY, lSizeX, lSizeY;
 			CMonsterAreaInfo::EMonsterDir eMonsterDir;
 			DWORD dwMonsterCount;
 			DWORD dwMonsterVID;
@@ -512,10 +512,7 @@ bool CMapOutdoor::LoadMonsterAreaInfo()
 			lOriginY = atol(c_rstrOriginY.c_str());
 			lSizeX = atol(c_rstrSizeX.c_str());
 			lSizeY = atol(c_rstrSizeY.c_str());
-			lZ = atol(c_rstrZ.c_str());
 			eMonsterDir = (CMonsterAreaInfo::EMonsterDir)atoi(c_rstrDir.c_str());
-			lTime = atol(c_rstrTime.c_str());
-			lPercent = atol(c_rstrPercent.c_str());
 			dwMonsterCount = (DWORD)atoi(c_rstrCount.c_str());
 			dwMonsterVID = (DWORD)atoi(c_rstrVID.c_str());
 

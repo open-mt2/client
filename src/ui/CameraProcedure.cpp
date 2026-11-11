@@ -108,7 +108,7 @@ struct CameraCollisionChecker
 		std::vector<D3DXVECTOR3>* m_pkVct_v3Position;
 		CDynamicSphereInstance* m_pdsi;
 
-		CameraCollisionChecker(CDynamicSphereInstance* pdsi, std::vector<D3DXVECTOR3>* pkVct_v3Position) : m_pdsi(pdsi), m_pkVct_v3Position(pkVct_v3Position), m_isBlocked(false)
+		CameraCollisionChecker(CDynamicSphereInstance* pdsi, std::vector<D3DXVECTOR3>* pkVct_v3Position) : m_isBlocked(false), m_pkVct_v3Position(pkVct_v3Position), m_pdsi(pdsi)
 		{
 		}
 		void operator()(CGraphicObjectInstance* pOpponent)

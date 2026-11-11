@@ -752,7 +752,6 @@ PyObject* playerMoveItem(PyObject* poSelf, PyObject* poArgs)
 	switch (PyTuple_Size(poArgs))
 	{
 		case 2:
-			int iSourceSlotIndex;
 			if (!PyTuple_GetInteger(poArgs, 0, &srcCell.cell))
 				return Py_BuildException();
 			if (!PyTuple_GetInteger(poArgs, 1, &dstCell.cell))
@@ -767,6 +766,7 @@ PyObject* playerMoveItem(PyObject* poSelf, PyObject* poArgs)
 				return Py_BuildException();
 			if (!PyTuple_GetInteger(poArgs, 3, &dstCell.cell))
 				return Py_BuildException();
+			break;
 		default:
 			return Py_BuildException();
 	}
@@ -962,7 +962,6 @@ PyObject* playerGetItemMetinSocket(PyObject* poSelf, PyObject* poArgs)
 PyObject* playerGetItemAttribute(PyObject* poSelf, PyObject* poArgs)
 {
 	TItemPos Cell;
-	int iSlotPos;
 	int iAttributeSlotIndex;
 	switch (PyTuple_Size(poArgs))
 	{
@@ -1695,11 +1694,13 @@ PyObject* playerIsRefineGradeScroll(PyObject* poSelf, PyObject* poArgs)
 		case 1:
 			if (!PyTuple_GetInteger(poArgs, 0, &ScrollSlotIndex.cell))
 				return Py_BuildException();
+			break;
 		case 2:
 			if (!PyTuple_GetInteger(poArgs, 0, &ScrollSlotIndex.window_type))
 				return Py_BuildException();
 			if (!PyTuple_GetInteger(poArgs, 1, &ScrollSlotIndex.cell))
 				return Py_BuildException();
+			break;
 		default:
 			return Py_BuildException();
 	}
@@ -2120,7 +2121,6 @@ PyObject* playerSendDragonSoulRefine(PyObject* poSelf, PyObject* poArgs)
 				return Py_BuildException();
 			Py_ssize_t pos = 0;
 			PyObject *key, *value;
-			int size = PyDict_Size(pDic);
 
 			while (PyDict_Next(pDic, &pos, &key, &value))
 			{
@@ -2146,171 +2146,171 @@ void initPlayer()
 {
 	static PyMethodDef s_methods[] =
 		{
-			{"GetAutoPotionInfo", playerGetAutoPotionInfo, METH_VARARGS},
-			{"SetAutoPotionInfo", playerSetAutoPotionInfo, METH_VARARGS},
+			{"GetAutoPotionInfo", playerGetAutoPotionInfo, METH_VARARGS, NULL},
+			{"SetAutoPotionInfo", playerSetAutoPotionInfo, METH_VARARGS, NULL},
 
-			{"PickCloseItem", playerPickCloseItem, METH_VARARGS},
-			{"SetGameWindow", playerSetGameWindow, METH_VARARGS},
-			{"RegisterEffect", playerRegisterEffect, METH_VARARGS},
-			{"RegisterCacheEffect", playerRegisterCacheEffect, METH_VARARGS},
-			{"SetMouseState", playerSetMouseState, METH_VARARGS},
-			{"SetMouseFunc", playerSetMouseFunc, METH_VARARGS},
-			{"GetMouseFunc", playerGetMouseFunc, METH_VARARGS},
-			{"SetMouseMiddleButtonState", playerSetMouseMiddleButtonState, METH_VARARGS},
-			{"SetMainCharacterIndex", playerSetMainCharacterIndex, METH_VARARGS},
-			{"GetMainCharacterIndex", playerGetMainCharacterIndex, METH_VARARGS},
-			{"GetMainCharacterName", playerGetMainCharacterName, METH_VARARGS},
-			{"GetMainCharacterPosition", playerGetMainCharacterPosition, METH_VARARGS},
-			{"IsMainCharacterIndex", playerIsMainCharacterIndex, METH_VARARGS},
-			{"CanAttackInstance", playerCanAttackInstance, METH_VARARGS},
-			{"IsActingEmotion", playerIsActingEmotion, METH_VARARGS},
-			{"IsPVPInstance", playerIsPVPInstance, METH_VARARGS},
-			{"IsSameEmpire", playerIsSameEmpire, METH_VARARGS},
-			{"IsChallengeInstance", playerIsChallengeInstance, METH_VARARGS},
-			{"IsRevengeInstance", playerIsRevengeInstance, METH_VARARGS},
-			{"IsCantFightInstance", playerIsCantFightInstance, METH_VARARGS},
-			{"GetCharacterDistance", playerGetCharacterDistance, METH_VARARGS},
-			{"IsInSafeArea", playerIsInSafeArea, METH_VARARGS},
-			{"IsMountingHorse", playerIsMountingHorse, METH_VARARGS},
-			{"IsObserverMode", playerIsObserverMode, METH_VARARGS},
-			{"ActEmotion", playerActEmotion, METH_VARARGS},
+			{"PickCloseItem", playerPickCloseItem, METH_VARARGS, NULL},
+			{"SetGameWindow", playerSetGameWindow, METH_VARARGS, NULL},
+			{"RegisterEffect", playerRegisterEffect, METH_VARARGS, NULL},
+			{"RegisterCacheEffect", playerRegisterCacheEffect, METH_VARARGS, NULL},
+			{"SetMouseState", playerSetMouseState, METH_VARARGS, NULL},
+			{"SetMouseFunc", playerSetMouseFunc, METH_VARARGS, NULL},
+			{"GetMouseFunc", playerGetMouseFunc, METH_VARARGS, NULL},
+			{"SetMouseMiddleButtonState", playerSetMouseMiddleButtonState, METH_VARARGS, NULL},
+			{"SetMainCharacterIndex", playerSetMainCharacterIndex, METH_VARARGS, NULL},
+			{"GetMainCharacterIndex", playerGetMainCharacterIndex, METH_VARARGS, NULL},
+			{"GetMainCharacterName", playerGetMainCharacterName, METH_VARARGS, NULL},
+			{"GetMainCharacterPosition", playerGetMainCharacterPosition, METH_VARARGS, NULL},
+			{"IsMainCharacterIndex", playerIsMainCharacterIndex, METH_VARARGS, NULL},
+			{"CanAttackInstance", playerCanAttackInstance, METH_VARARGS, NULL},
+			{"IsActingEmotion", playerIsActingEmotion, METH_VARARGS, NULL},
+			{"IsPVPInstance", playerIsPVPInstance, METH_VARARGS, NULL},
+			{"IsSameEmpire", playerIsSameEmpire, METH_VARARGS, NULL},
+			{"IsChallengeInstance", playerIsChallengeInstance, METH_VARARGS, NULL},
+			{"IsRevengeInstance", playerIsRevengeInstance, METH_VARARGS, NULL},
+			{"IsCantFightInstance", playerIsCantFightInstance, METH_VARARGS, NULL},
+			{"GetCharacterDistance", playerGetCharacterDistance, METH_VARARGS, NULL},
+			{"IsInSafeArea", playerIsInSafeArea, METH_VARARGS, NULL},
+			{"IsMountingHorse", playerIsMountingHorse, METH_VARARGS, NULL},
+			{"IsObserverMode", playerIsObserverMode, METH_VARARGS, NULL},
+			{"ActEmotion", playerActEmotion, METH_VARARGS, NULL},
 
-			{"ShowPlayer", playerShowPlayer, METH_VARARGS},
-			{"HidePlayer", playerHidePlayer, METH_VARARGS},
+			{"ShowPlayer", playerShowPlayer, METH_VARARGS, NULL},
+			{"HidePlayer", playerHidePlayer, METH_VARARGS, NULL},
 
-			{"ComboAttack", playerComboAttack, METH_VARARGS},
+			{"ComboAttack", playerComboAttack, METH_VARARGS, NULL},
 
-			{"SetAutoCameraRotationSpeed", playerSetAutoCameraRotationSpeed, METH_VARARGS},
-			{"SetAttackKeyState", playerSetAttackKeyState, METH_VARARGS},
-			{"SetSingleDIKKeyState", playerSetSingleDIKKeyState, METH_VARARGS},
-			{"EndKeyWalkingImmediately", playerEndKeyWalkingImmediately, METH_VARARGS},
-			{"StartMouseWalking", playerStartMouseWalking, METH_VARARGS},
-			{"EndMouseWalking", playerEndMouseWalking, METH_VARARGS},
-			{"ResetCameraRotation", playerResetCameraRotation, METH_VARARGS},
-			{"SetQuickCameraMode", playerSetQuickCameraMode, METH_VARARGS},
+			{"SetAutoCameraRotationSpeed", playerSetAutoCameraRotationSpeed, METH_VARARGS, NULL},
+			{"SetAttackKeyState", playerSetAttackKeyState, METH_VARARGS, NULL},
+			{"SetSingleDIKKeyState", playerSetSingleDIKKeyState, METH_VARARGS, NULL},
+			{"EndKeyWalkingImmediately", playerEndKeyWalkingImmediately, METH_VARARGS, NULL},
+			{"StartMouseWalking", playerStartMouseWalking, METH_VARARGS, NULL},
+			{"EndMouseWalking", playerEndMouseWalking, METH_VARARGS, NULL},
+			{"ResetCameraRotation", playerResetCameraRotation, METH_VARARGS, NULL},
+			{"SetQuickCameraMode", playerSetQuickCameraMode, METH_VARARGS, NULL},
 
 			///////////////////////////////////////////////////////////////////////////////////////////
 
-			{"SetSkill", playerSetSkill, METH_VARARGS},
-			{"GetSkillIndex", playerGetSkillIndex, METH_VARARGS},
-			{"GetSkillSlotIndex", playerGetSkillSlotIndex, METH_VARARGS},
-			{"GetSkillGrade", playerGetSkillGrade, METH_VARARGS},
-			{"GetSkillLevel", playerGetSkillLevel, METH_VARARGS},
-			{"GetSkillCurrentEfficientPercentage", playerGetSkillCurrentEfficientPercentage, METH_VARARGS},
-			{"GetSkillNextEfficientPercentage", playerGetSkillNextEfficientPercentage, METH_VARARGS},
-			{"ClickSkillSlot", playerClickSkillSlot, METH_VARARGS},
-			{"ChangeCurrentSkillNumberOnly", playerChangeCurrentSkillNumberOnly, METH_VARARGS},
-			{"ClearSkillDict", playerClearSkillDict, METH_VARARGS},
+			{"SetSkill", playerSetSkill, METH_VARARGS, NULL},
+			{"GetSkillIndex", playerGetSkillIndex, METH_VARARGS, NULL},
+			{"GetSkillSlotIndex", playerGetSkillSlotIndex, METH_VARARGS, NULL},
+			{"GetSkillGrade", playerGetSkillGrade, METH_VARARGS, NULL},
+			{"GetSkillLevel", playerGetSkillLevel, METH_VARARGS, NULL},
+			{"GetSkillCurrentEfficientPercentage", playerGetSkillCurrentEfficientPercentage, METH_VARARGS, NULL},
+			{"GetSkillNextEfficientPercentage", playerGetSkillNextEfficientPercentage, METH_VARARGS, NULL},
+			{"ClickSkillSlot", playerClickSkillSlot, METH_VARARGS, NULL},
+			{"ChangeCurrentSkillNumberOnly", playerChangeCurrentSkillNumberOnly, METH_VARARGS, NULL},
+			{"ClearSkillDict", playerClearSkillDict, METH_VARARGS, NULL},
 
-			{"GetItemIndex", playerGetItemIndex, METH_VARARGS},
-			{"GetItemFlags", playerGetItemFlags, METH_VARARGS},
-			{"GetItemCount", playerGetItemCount, METH_VARARGS},
-			{"GetItemCountByVnum", playerGetItemCountByVnum, METH_VARARGS},
-			{"GetItemMetinSocket", playerGetItemMetinSocket, METH_VARARGS},
-			{"GetItemAttribute", playerGetItemAttribute, METH_VARARGS},
+			{"GetItemIndex", playerGetItemIndex, METH_VARARGS, NULL},
+			{"GetItemFlags", playerGetItemFlags, METH_VARARGS, NULL},
+			{"GetItemCount", playerGetItemCount, METH_VARARGS, NULL},
+			{"GetItemCountByVnum", playerGetItemCountByVnum, METH_VARARGS, NULL},
+			{"GetItemMetinSocket", playerGetItemMetinSocket, METH_VARARGS, NULL},
+			{"GetItemAttribute", playerGetItemAttribute, METH_VARARGS, NULL},
 #if defined(GAIDEN)
-			{"GetItemUnbindTime", playerGetItemUnbindTime, METH_VARARGS},
+			{"GetItemUnbindTime", playerGetItemUnbindTime, METH_VARARGS, NULL},
 #endif
-			{"GetISellItemPrice", playerGetISellItemPrice, METH_VARARGS},
-			{"MoveItem", playerMoveItem, METH_VARARGS},
-			{"SendClickItemPacket", playerSendClickItemPacket, METH_VARARGS},
+			{"GetISellItemPrice", playerGetISellItemPrice, METH_VARARGS, NULL},
+			{"MoveItem", playerMoveItem, METH_VARARGS, NULL},
+			{"SendClickItemPacket", playerSendClickItemPacket, METH_VARARGS, NULL},
 
 			///////////////////////////////////////////////////////////////////////////////////////////
 
-			{"GetName", playerGetName, METH_VARARGS},
-			{"GetJob", playerGetJob, METH_VARARGS},
-			{"GetRace", playerGetRace, METH_VARARGS},
-			{"GetPlayTime", playerGetPlayTime, METH_VARARGS},
-			{"SetPlayTime", playerSetPlayTime, METH_VARARGS},
+			{"GetName", playerGetName, METH_VARARGS, NULL},
+			{"GetJob", playerGetJob, METH_VARARGS, NULL},
+			{"GetRace", playerGetRace, METH_VARARGS, NULL},
+			{"GetPlayTime", playerGetPlayTime, METH_VARARGS, NULL},
+			{"SetPlayTime", playerSetPlayTime, METH_VARARGS, NULL},
 
-			{"IsSkillCoolTime", playerIsSkillCoolTime, METH_VARARGS},
-			{"GetSkillCoolTime", playerGetSkillCoolTime, METH_VARARGS},
-			{"IsSkillActive", playerIsSkillActive, METH_VARARGS},
-			{"UseGuildSkill", playerUseGuildSkill, METH_VARARGS},
-			{"AffectIndexToSkillIndex", playerAffectIndexToSkillIndex, METH_VARARGS},
-			{"GetEXP", playerGetEXP, METH_VARARGS},
-			{"GetStatus", playerGetStatus, METH_VARARGS},
-			{"SetStatus", playerSetStatus, METH_VARARGS},
-			{"GetElk", playerGetElk, METH_VARARGS},
-			{"GetMoney", playerGetElk, METH_VARARGS},
-			{"GetGuildID", playerGetGuildID, METH_VARARGS},
-			{"GetGuildName", playerGetGuildName, METH_VARARGS},
-			{"GetAlignmentData", playerGetAlignmentData, METH_VARARGS},
-			{"RequestAddLocalQuickSlot", playerRequestAddLocalQuickSlot, METH_VARARGS},
-			{"RequestAddToEmptyLocalQuickSlot", playerRequestAddToEmptyLocalQuickSlot, METH_VARARGS},
-			{"RequestDeleteGlobalQuickSlot", playerRequestDeleteGlobalQuickSlot, METH_VARARGS},
-			{"RequestMoveGlobalQuickSlotToLocalQuickSlot", playerRequestMoveGlobalQuickSlotToLocalQuickSlot, METH_VARARGS},
-			{"RequestUseLocalQuickSlot", playerRequestUseLocalQuickSlot, METH_VARARGS},
-			{"LocalQuickSlotIndexToGlobalQuickSlotIndex", playerLocalQuickSlotIndexToGlobalQuickSlotIndex, METH_VARARGS},
+			{"IsSkillCoolTime", playerIsSkillCoolTime, METH_VARARGS, NULL},
+			{"GetSkillCoolTime", playerGetSkillCoolTime, METH_VARARGS, NULL},
+			{"IsSkillActive", playerIsSkillActive, METH_VARARGS, NULL},
+			{"UseGuildSkill", playerUseGuildSkill, METH_VARARGS, NULL},
+			{"AffectIndexToSkillIndex", playerAffectIndexToSkillIndex, METH_VARARGS, NULL},
+			{"GetEXP", playerGetEXP, METH_VARARGS, NULL},
+			{"GetStatus", playerGetStatus, METH_VARARGS, NULL},
+			{"SetStatus", playerSetStatus, METH_VARARGS, NULL},
+			{"GetElk", playerGetElk, METH_VARARGS, NULL},
+			{"GetMoney", playerGetElk, METH_VARARGS, NULL},
+			{"GetGuildID", playerGetGuildID, METH_VARARGS, NULL},
+			{"GetGuildName", playerGetGuildName, METH_VARARGS, NULL},
+			{"GetAlignmentData", playerGetAlignmentData, METH_VARARGS, NULL},
+			{"RequestAddLocalQuickSlot", playerRequestAddLocalQuickSlot, METH_VARARGS, NULL},
+			{"RequestAddToEmptyLocalQuickSlot", playerRequestAddToEmptyLocalQuickSlot, METH_VARARGS, NULL},
+			{"RequestDeleteGlobalQuickSlot", playerRequestDeleteGlobalQuickSlot, METH_VARARGS, NULL},
+			{"RequestMoveGlobalQuickSlotToLocalQuickSlot", playerRequestMoveGlobalQuickSlotToLocalQuickSlot, METH_VARARGS, NULL},
+			{"RequestUseLocalQuickSlot", playerRequestUseLocalQuickSlot, METH_VARARGS, NULL},
+			{"LocalQuickSlotIndexToGlobalQuickSlotIndex", playerLocalQuickSlotIndexToGlobalQuickSlotIndex, METH_VARARGS, NULL},
 
-			{"GetQuickPage", playerGetQuickPage, METH_VARARGS},
-			{"SetQuickPage", playerSetQuickPage, METH_VARARGS},
-			{"GetLocalQuickSlot", playerGetLocalQuickSlot, METH_VARARGS},
-			{"GetGlobalQuickSlot", playerGetGlobalQuickSlot, METH_VARARGS},
-			{"RemoveQuickSlotByValue", playerRemoveQuickSlotByValue, METH_VARARGS},
+			{"GetQuickPage", playerGetQuickPage, METH_VARARGS, NULL},
+			{"SetQuickPage", playerSetQuickPage, METH_VARARGS, NULL},
+			{"GetLocalQuickSlot", playerGetLocalQuickSlot, METH_VARARGS, NULL},
+			{"GetGlobalQuickSlot", playerGetGlobalQuickSlot, METH_VARARGS, NULL},
+			{"RemoveQuickSlotByValue", playerRemoveQuickSlotByValue, METH_VARARGS, NULL},
 
-			{"isItem", playerisItem, METH_VARARGS},
-			{"IsEquipmentSlot", playerIsEquipmentSlot, METH_VARARGS},
-			{"IsDSEquipmentSlot", playerIsDSEquipmentSlot, METH_VARARGS},
-			{"IsCostumeSlot", playerIsCostumeSlot, METH_VARARGS},
-			{"IsValuableItem", playerIsValuableItem, METH_VARARGS},
-			{"IsOpenPrivateShop", playerIsOpenPrivateShop, METH_VARARGS},
+			{"isItem", playerisItem, METH_VARARGS, NULL},
+			{"IsEquipmentSlot", playerIsEquipmentSlot, METH_VARARGS, NULL},
+			{"IsDSEquipmentSlot", playerIsDSEquipmentSlot, METH_VARARGS, NULL},
+			{"IsCostumeSlot", playerIsCostumeSlot, METH_VARARGS, NULL},
+			{"IsValuableItem", playerIsValuableItem, METH_VARARGS, NULL},
+			{"IsOpenPrivateShop", playerIsOpenPrivateShop, METH_VARARGS, NULL},
 
 #ifdef ENABLE_NEW_EQUIPMENT_SYSTEM
-			{"IsBeltInventorySlot", playerIsBeltInventorySlot, METH_VARARGS},
-			{"IsEquippingBelt", playerIsEquippingBelt, METH_VARARGS},
-			{"IsAvailableBeltInventoryCell", playerIsAvailableBeltInventoryCell, METH_VARARGS},
+			{"IsBeltInventorySlot", playerIsBeltInventorySlot, METH_VARARGS, NULL},
+			{"IsEquippingBelt", playerIsEquippingBelt, METH_VARARGS, NULL},
+			{"IsAvailableBeltInventoryCell", playerIsAvailableBeltInventoryCell, METH_VARARGS, NULL},
 #endif
 
 			// Refine
-			{"GetItemGrade", playerGetItemGrade, METH_VARARGS},
-			{"CanRefine", playerCanRefine, METH_VARARGS},
-			{"CanDetach", playerCanDetach, METH_VARARGS},
-			{"CanUnlock", playerCanUnlock, METH_VARARGS},
-			{"CanAttachMetin", playerCanAttachMetin, METH_VARARGS},
-			{"IsRefineGradeScroll", playerIsRefineGradeScroll, METH_VARARGS},
+			{"GetItemGrade", playerGetItemGrade, METH_VARARGS, NULL},
+			{"CanRefine", playerCanRefine, METH_VARARGS, NULL},
+			{"CanDetach", playerCanDetach, METH_VARARGS, NULL},
+			{"CanUnlock", playerCanUnlock, METH_VARARGS, NULL},
+			{"CanAttachMetin", playerCanAttachMetin, METH_VARARGS, NULL},
+			{"IsRefineGradeScroll", playerIsRefineGradeScroll, METH_VARARGS, NULL},
 
-			{"ClearTarget", playerClearTarget, METH_VARARGS},
-			{"SetTarget", playerSetTarget, METH_VARARGS},
-			{"OpenCharacterMenu", playerOpenCharacterMenu, METH_VARARGS},
+			{"ClearTarget", playerClearTarget, METH_VARARGS, NULL},
+			{"SetTarget", playerSetTarget, METH_VARARGS, NULL},
+			{"OpenCharacterMenu", playerOpenCharacterMenu, METH_VARARGS, NULL},
 
-			{"Update", playerUpdate, METH_VARARGS},
-			{"Render", playerRender, METH_VARARGS},
-			{"Clear", playerClear, METH_VARARGS},
+			{"Update", playerUpdate, METH_VARARGS, NULL},
+			{"Render", playerRender, METH_VARARGS, NULL},
+			{"Clear", playerClear, METH_VARARGS, NULL},
 
 			// Party
-			{"IsPartyMember", playerIsPartyMember, METH_VARARGS},
-			{"IsPartyLeader", playerIsPartyLeader, METH_VARARGS},
-			{"IsPartyLeaderByPID", playerIsPartyLeaderByPID, METH_VARARGS},
-			{"GetPartyMemberHPPercentage", playerGetPartyMemberHPPercentage, METH_VARARGS},
-			{"GetPartyMemberState", playerGetPartyMemberState, METH_VARARGS},
-			{"GetPartyMemberAffects", playerGetPartyMemberAffects, METH_VARARGS},
-			{"RemovePartyMember", playerRemovePartyMember, METH_VARARGS},
-			{"ExitParty", playerExitParty, METH_VARARGS},
+			{"IsPartyMember", playerIsPartyMember, METH_VARARGS, NULL},
+			{"IsPartyLeader", playerIsPartyLeader, METH_VARARGS, NULL},
+			{"IsPartyLeaderByPID", playerIsPartyLeaderByPID, METH_VARARGS, NULL},
+			{"GetPartyMemberHPPercentage", playerGetPartyMemberHPPercentage, METH_VARARGS, NULL},
+			{"GetPartyMemberState", playerGetPartyMemberState, METH_VARARGS, NULL},
+			{"GetPartyMemberAffects", playerGetPartyMemberAffects, METH_VARARGS, NULL},
+			{"RemovePartyMember", playerRemovePartyMember, METH_VARARGS, NULL},
+			{"ExitParty", playerExitParty, METH_VARARGS, NULL},
 
 			// PK Mode
-			{"GetPKMode", playerGetPKMode, METH_VARARGS},
+			{"GetPKMode", playerGetPKMode, METH_VARARGS, NULL},
 
 			// Emotion
-			{"RegisterEmotionIcon", playerRegisterEmotionIcon, METH_VARARGS},
-			{"GetEmotionIconImage", playerGetEmotionIconImage, METH_VARARGS},
+			{"RegisterEmotionIcon", playerRegisterEmotionIcon, METH_VARARGS, NULL},
+			{"GetEmotionIconImage", playerGetEmotionIconImage, METH_VARARGS, NULL},
 
 			// For System
-			{"SetWeaponAttackBonusFlag", playerSetWeaponAttackBonusFlag, METH_VARARGS},
-			{"ToggleCoolTime", playerToggleCoolTime, METH_VARARGS},
-			{"ToggleLevelLimit", playerToggleLevelLimit, METH_VARARGS},
-			{"GetTargetVID", playerGetTargetVID, METH_VARARGS},
+			{"SetWeaponAttackBonusFlag", playerSetWeaponAttackBonusFlag, METH_VARARGS, NULL},
+			{"ToggleCoolTime", playerToggleCoolTime, METH_VARARGS, NULL},
+			{"ToggleLevelLimit", playerToggleLevelLimit, METH_VARARGS, NULL},
+			{"GetTargetVID", playerGetTargetVID, METH_VARARGS, NULL},
 
-			{"SetItemData", playerSetItemData, METH_VARARGS},
-			{"SetItemMetinSocket", playerSetItemMetinSocket, METH_VARARGS},
-			{"SetItemAttribute", playerSetItemAttribute, METH_VARARGS},
-			{"SetItemCount", playerSetItemCount, METH_VARARGS},
+			{"SetItemData", playerSetItemData, METH_VARARGS, NULL},
+			{"SetItemMetinSocket", playerSetItemMetinSocket, METH_VARARGS, NULL},
+			{"SetItemAttribute", playerSetItemAttribute, METH_VARARGS, NULL},
+			{"SetItemCount", playerSetItemCount, METH_VARARGS, NULL},
 
-			{"GetItemLink", playerGetItemLink, METH_VARARGS},
-			{"SlotTypeToInvenType", playerSlotTypeToInvenType, METH_VARARGS},
-			{"SendDragonSoulRefine", playerSendDragonSoulRefine, METH_VARARGS},
+			{"GetItemLink", playerGetItemLink, METH_VARARGS, NULL},
+			{"SlotTypeToInvenType", playerSlotTypeToInvenType, METH_VARARGS, NULL},
+			{"SendDragonSoulRefine", playerSendDragonSoulRefine, METH_VARARGS, NULL},
 
-			{NULL, NULL, 0},
+			{NULL, NULL, 0, NULL},
 		};
 
 	PyObject* poModule = Py_InitModule("player", s_methods);

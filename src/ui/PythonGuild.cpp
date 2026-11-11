@@ -734,57 +734,57 @@ void initguild()
 	static PyMethodDef s_methods[] =
 		{
 			// Enable
-			{"IsGuildEnable", guildIsGuildEnable, METH_VARARGS},
-			{"GuildIDToMarkID", guildGuildIDToMarkID, METH_VARARGS},
-			{"GetMarkImageFilenameByMarkID", guildGetMarkImageFilenameByMarkID, METH_VARARGS},
-			{"GetMarkIndexByMarkID", guildGetMarkIndexByMarkID, METH_VARARGS},
+			{"IsGuildEnable", guildIsGuildEnable, METH_VARARGS, NULL},
+			{"GuildIDToMarkID", guildGuildIDToMarkID, METH_VARARGS, NULL},
+			{"GetMarkImageFilenameByMarkID", guildGetMarkImageFilenameByMarkID, METH_VARARGS, NULL},
+			{"GetMarkIndexByMarkID", guildGetMarkIndexByMarkID, METH_VARARGS, NULL},
 
 			// GuildInfo
-			{"GetGuildID", guildGetGuildID, METH_VARARGS},
-			{"HasGuildLand", guildHasGuildLand, METH_VARARGS},
-			{"GetGuildName", guildGetGuildName, METH_VARARGS},
-			{"GetGuildMasterName", guildGetGuildMasterName, METH_VARARGS},
-			{"GetEnemyGuildName", guildGetEnemyGuildName, METH_VARARGS},
-			{"GetGuildMoney", guildGetGuildMoney, METH_VARARGS},
+			{"GetGuildID", guildGetGuildID, METH_VARARGS, NULL},
+			{"HasGuildLand", guildHasGuildLand, METH_VARARGS, NULL},
+			{"GetGuildName", guildGetGuildName, METH_VARARGS, NULL},
+			{"GetGuildMasterName", guildGetGuildMasterName, METH_VARARGS, NULL},
+			{"GetEnemyGuildName", guildGetEnemyGuildName, METH_VARARGS, NULL},
+			{"GetGuildMoney", guildGetGuildMoney, METH_VARARGS, NULL},
 
 			// BoardPage
-			{"GetGuildBoardCommentCount", guildGetGuildBoardCommentCount, METH_VARARGS},
-			{"GetGuildBoardCommentData", guildGetGuildBoardCommentData, METH_VARARGS},
+			{"GetGuildBoardCommentCount", guildGetGuildBoardCommentCount, METH_VARARGS, NULL},
+			{"GetGuildBoardCommentData", guildGetGuildBoardCommentData, METH_VARARGS, NULL},
 
 			// MemberPage
-			{"GetGuildLevel", guildGetGuildLevel, METH_VARARGS},
-			{"GetGuildExperience", guildGetGuildExperience, METH_VARARGS},
-			{"GetGuildMemberCount", guildGetGuildMemberCount, METH_VARARGS},
-			{"GetGuildMemberLevelSummary", guildGetGuildMemberLevelSummary, METH_VARARGS},
-			{"GetGuildMemberLevelAverage", guildGetGuildMemberLevelAverage, METH_VARARGS},
-			{"GetGuildExperienceSummary", guildGetGuildExperienceSummary, METH_VARARGS},
+			{"GetGuildLevel", guildGetGuildLevel, METH_VARARGS, NULL},
+			{"GetGuildExperience", guildGetGuildExperience, METH_VARARGS, NULL},
+			{"GetGuildMemberCount", guildGetGuildMemberCount, METH_VARARGS, NULL},
+			{"GetGuildMemberLevelSummary", guildGetGuildMemberLevelSummary, METH_VARARGS, NULL},
+			{"GetGuildMemberLevelAverage", guildGetGuildMemberLevelAverage, METH_VARARGS, NULL},
+			{"GetGuildExperienceSummary", guildGetGuildExperienceSummary, METH_VARARGS, NULL},
 
 			// SkillPage
-			{"GetGuildSkillPoint", guildGetGuildSkillPoint, METH_VARARGS},
-			{"GetDragonPowerPoint", guildGetDragonPowerPoint, METH_VARARGS},
-			{"GetGuildSkillLevel", guildGetGuildSkillLevel, METH_VARARGS},
-			{"GetSkillLevel", guildGetSkillLevel, METH_VARARGS},
-			{"GetSkillMaxLevelNew", guildGetSkillMaxLevelNew, METH_VARARGS},
+			{"GetGuildSkillPoint", guildGetGuildSkillPoint, METH_VARARGS, NULL},
+			{"GetDragonPowerPoint", guildGetDragonPowerPoint, METH_VARARGS, NULL},
+			{"GetGuildSkillLevel", guildGetGuildSkillLevel, METH_VARARGS, NULL},
+			{"GetSkillLevel", guildGetSkillLevel, METH_VARARGS, NULL},
+			{"GetSkillMaxLevelNew", guildGetSkillMaxLevelNew, METH_VARARGS, NULL},
 
-			{"SetSkillIndex", guildSetSkillIndex, METH_VARARGS},
-			{"GetSkillIndex", guildGetSkillIndex, METH_VARARGS},
+			{"SetSkillIndex", guildSetSkillIndex, METH_VARARGS, NULL},
+			{"GetSkillIndex", guildGetSkillIndex, METH_VARARGS, NULL},
 
 			// GradePage
-			{"GetGradeData", guildGetGradeData, METH_VARARGS},
-			{"GetGradeName", guildGetGradeName, METH_VARARGS},
+			{"GetGradeData", guildGetGradeData, METH_VARARGS, NULL},
+			{"GetGradeName", guildGetGradeName, METH_VARARGS, NULL},
 
 			// About Member
-			{"GetMemberCount", guildGetMemberCount, METH_VARARGS},
-			{"GetMemberData", guildGetMemberData, METH_VARARGS},
-			{"MemberIndexToPID", guildMemberIndexToPID, METH_VARARGS},
-			{"IsMember", guildIsMember, METH_VARARGS},
-			{"IsMemberByName", guildIsMemberByName, METH_VARARGS},
-			{"MainPlayerHasAuthority", guildMainPlayerHasAuthority, METH_VARARGS},
+			{"GetMemberCount", guildGetMemberCount, METH_VARARGS, NULL},
+			{"GetMemberData", guildGetMemberData, METH_VARARGS, NULL},
+			{"MemberIndexToPID", guildMemberIndexToPID, METH_VARARGS, NULL},
+			{"IsMember", guildIsMember, METH_VARARGS, NULL},
+			{"IsMemberByName", guildIsMemberByName, METH_VARARGS, NULL},
+			{"MainPlayerHasAuthority", guildMainPlayerHasAuthority, METH_VARARGS, NULL},
 
 			// Guild
-			{"Destroy", guildDestroy, METH_VARARGS},
+			{"Destroy", guildDestroy, METH_VARARGS, NULL},
 
-			{NULL, NULL, 0},
+			{NULL, NULL, 0, NULL},
 		};
 
 	PyObject* poModule = Py_InitModule("guild", s_methods);

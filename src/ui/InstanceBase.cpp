@@ -3056,7 +3056,7 @@ void CInstanceBase::__Initialize()
 	memset(m_awPart, 0, sizeof(m_awPart));
 	memset(m_adwCRCAffectEffect, 0, sizeof(m_adwCRCAffectEffect));
 	// memset(m_adwCRCEmoticonEffect, 0, sizeof(m_adwCRCEmoticonEffect));
-	memset(&m_kMovAfterFunc, 0, sizeof(m_kMovAfterFunc));
+	m_kMovAfterFunc = SMoveAfterFunc();
 
 	m_bDamageEffectType = false;
 	m_dwDuelMode = DUEL_NONE;
