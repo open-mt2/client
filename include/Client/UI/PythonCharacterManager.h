@@ -8,8 +8,8 @@ class CPythonCharacterManager : public CSingleton<CPythonCharacterManager>, publ
 {
 	public:
 		// Character List
-		typedef std::list<CInstanceBase *>			TCharacterInstanceList;
-		typedef std::map<DWORD, CInstanceBase *>	TCharacterInstanceMap;
+		typedef std::list<CInstanceBase*> TCharacterInstanceList;
+		typedef std::map<DWORD, CInstanceBase*> TCharacterInstanceMap;
 
 		class CharacterIterator;
 
@@ -17,7 +17,7 @@ class CPythonCharacterManager : public CSingleton<CPythonCharacterManager>, publ
 		CPythonCharacterManager();
 		virtual ~CPythonCharacterManager();
 
-		virtual void AdjustCollisionWithOtherObjects(CActorInstance* pInst ); 
+		virtual void AdjustCollisionWithOtherObjects(CActorInstance* pInst);
 
 		void EnableSortRendering(bool isEnable);
 
@@ -42,59 +42,59 @@ class CPythonCharacterManager : public CSingleton<CPythonCharacterManager>, publ
 		bool SetMainInstance(DWORD dwVID);
 		CInstanceBase* GetMainInstancePtr();
 
-		void								SCRIPT_SetAffect(DWORD dwVID, DWORD eAffect, BOOL isVisible);
-		void								SetEmoticon(DWORD dwVID, DWORD eEmoticon);
-		bool								IsPossibleEmoticon(DWORD dwVID);
-		void								ShowPointEffect(DWORD dwVID, DWORD ePoint);
-		bool								RegisterPointEffect(DWORD ePoint, const char* c_szFileName);
+		void SCRIPT_SetAffect(DWORD dwVID, DWORD eAffect, BOOL isVisible);
+		void SetEmoticon(DWORD dwVID, DWORD eEmoticon);
+		bool IsPossibleEmoticon(DWORD dwVID);
+		void ShowPointEffect(DWORD dwVID, DWORD ePoint);
+		bool RegisterPointEffect(DWORD ePoint, const char* c_szFileName);
 
 		// System
-		void								Destroy();
+		void Destroy();
 
-		void								DeleteAllInstances();
+		void DeleteAllInstances();
 
-		bool								CreateDeviceObjects();
-		void								DestroyDeviceObjects();
+		bool CreateDeviceObjects();
+		void DestroyDeviceObjects();
 
-		void								Update();
-		void								Deform();
-		void								Render();
-		void								RenderShadowMainInstance();
-		void								RenderShadowAllInstances();
-		void								RenderCollision();
+		void Update();
+		void Deform();
+		void Render();
+		void RenderShadowMainInstance();
+		void RenderShadowAllInstances();
+		void RenderCollision();
 
 		// Create/Delete Instance
-		CInstanceBase *						CreateInstance(const CInstanceBase::SCreateData& c_rkCreateData);
-		CInstanceBase *						RegisterInstance(DWORD VirtualID);
+		CInstanceBase* CreateInstance(const CInstanceBase::SCreateData& c_rkCreateData);
+		CInstanceBase* RegisterInstance(DWORD VirtualID);
 
-		void								DeleteInstance(DWORD VirtualID);
-		void								DeleteInstanceByFade(DWORD VirtualID);
-		void								DeleteVehicleInstance(DWORD VirtualID);
+		void DeleteInstance(DWORD VirtualID);
+		void DeleteInstanceByFade(DWORD VirtualID);
+		void DeleteVehicleInstance(DWORD VirtualID);
 
-		void 								DestroyAliveInstanceMap();
-		void 								DestroyDeadInstanceList();
+		void DestroyAliveInstanceMap();
+		void DestroyDeadInstanceList();
 
-		inline CharacterIterator			CharacterInstanceBegin() { return CharacterIterator(m_kAliveInstMap.begin());}
-		inline CharacterIterator			CharacterInstanceEnd() { return CharacterIterator(m_kAliveInstMap.end());}
+		inline CharacterIterator CharacterInstanceBegin() { return CharacterIterator(m_kAliveInstMap.begin()); }
+		inline CharacterIterator CharacterInstanceEnd() { return CharacterIterator(m_kAliveInstMap.end()); }
 
 		// Access Instance
-		void								SelectInstance(DWORD VirtualID);
-		CInstanceBase *						GetSelectedInstancePtr();
+		void SelectInstance(DWORD VirtualID);
+		CInstanceBase* GetSelectedInstancePtr();
 
-		CInstanceBase *						GetInstancePtr(DWORD VirtualID);
-		CInstanceBase *						GetInstancePtrByName(const char *name);
+		CInstanceBase* GetInstancePtr(DWORD VirtualID);
+		CInstanceBase* GetInstancePtrByName(const char* name);
 
-		// Pick		
-		int									PickAll();
-		CInstanceBase *						GetCloseInstance(CInstanceBase * pInstance);
+		// Pick
+		int PickAll();
+		CInstanceBase* GetCloseInstance(CInstanceBase* pInstance);
 
 		// Refresh TextTail
-		void								RefreshAllPCTextTail();
-		void								RefreshAllGuildMark();
+		void RefreshAllPCTextTail();
+		void RefreshAllGuildMark();
 
 	protected:
-		void								UpdateTransform();
-		void								UpdateDeleting();
+		void UpdateTransform();
+		void UpdateDeleting();
 
 	protected:
 		void __Initialize();
@@ -112,55 +112,55 @@ class CPythonCharacterManager : public CSingleton<CPythonCharacterManager>, publ
 		void __RenderSortedDeadActorList();
 
 	protected:
-		CInstanceBase *						m_pkInstMain;
-		CInstanceBase *						m_pkInstPick;
-		CInstanceBase *						m_pkInstBind;
-		D3DXVECTOR2							m_v2PickedInstProjPos;
+		CInstanceBase* m_pkInstMain;
+		CInstanceBase* m_pkInstPick;
+		CInstanceBase* m_pkInstBind;
+		D3DXVECTOR2 m_v2PickedInstProjPos;
 
-		TCharacterInstanceMap				m_kAliveInstMap;
-		TCharacterInstanceList				m_kDeadInstList;
+		TCharacterInstanceMap m_kAliveInstMap;
+		TCharacterInstanceList m_kDeadInstList;
 
-		std::vector<CInstanceBase*>			m_kVct_pkInstPicked;
+		std::vector<CInstanceBase*> m_kVct_pkInstPicked;
 
-		DWORD								m_adwPointEffect[POINT_MAX_NUM];
+		DWORD m_adwPointEffect[POINT_MAX_NUM];
 
 	public:
 		class CharacterIterator
 		{
-		public:
-			CharacterIterator(){}
-			CharacterIterator(const TCharacterInstanceMap::iterator & it) : m_it(it) {}
+			public:
+				CharacterIterator() {}
+				CharacterIterator(const TCharacterInstanceMap::iterator& it) : m_it(it) {}
 
-			inline CInstanceBase * operator * () {	return m_it->second; }
+				inline CInstanceBase* operator*() { return m_it->second; }
 
-			inline CharacterIterator & operator ++()
-			{
-				++m_it;
-				return *this;
-			}
+				inline CharacterIterator& operator++()
+				{
+					++m_it;
+					return *this;
+				}
 
-			inline CharacterIterator operator ++(int)
-			{
-				CharacterIterator new_it = *this;
-				++(*this);
-				return new_it;
-			}
+				inline CharacterIterator operator++(int)
+				{
+					CharacterIterator new_it = *this;
+					++(*this);
+					return new_it;
+				}
 
-			inline CharacterIterator & operator = (const CharacterIterator & rhs)
-			{
-				m_it = rhs.m_it;
-				return (*this);
-			}
+				inline CharacterIterator& operator=(const CharacterIterator& rhs)
+				{
+					m_it = rhs.m_it;
+					return (*this);
+				}
 
-			inline bool operator == (const CharacterIterator & rhs) const
-			{
-				return m_it == rhs.m_it;
-			}
+				inline bool operator==(const CharacterIterator& rhs) const
+				{
+					return m_it == rhs.m_it;
+				}
 
-			inline bool operator != (const CharacterIterator & rhs) const
-			{
-				return m_it != rhs.m_it;
-			}
+				inline bool operator!=(const CharacterIterator& rhs) const
+				{
+					return m_it != rhs.m_it;
+				}
 
 			private:
 				TCharacterInstanceMap::iterator m_it;

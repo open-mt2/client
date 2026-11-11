@@ -1,7 +1,7 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/Game/GameEventManager.h>
 
-PyObject * eventMgrUpdate(PyObject * poSelf, PyObject * poArgs)
+PyObject* eventMgrUpdate(PyObject* poSelf, PyObject* poArgs)
 {
 	float fx;
 	if (!PyTuple_GetFloat(poArgs, 0, &fx))
@@ -20,11 +20,11 @@ PyObject * eventMgrUpdate(PyObject * poSelf, PyObject * poArgs)
 
 void initeventmgr()
 {
-	static PyMethodDef s_methods[] = 
-	{
-		{ "Update",					eventMgrUpdate,					METH_VARARGS },
-		{ NULL,						NULL,							0 },
-	};
+	static PyMethodDef s_methods[] =
+		{
+			{"Update", eventMgrUpdate, METH_VARARGS},
+			{NULL, NULL, 0},
+		};
 
 	Py_InitModule("eventMgr", s_methods);
 }

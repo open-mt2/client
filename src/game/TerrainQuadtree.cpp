@@ -12,7 +12,7 @@
 //////////////////////////////////////////////////////////////////////
 // CTerrainQuadtreeNode
 //////////////////////////////////////////////////////////////////////
-CTerrainQuadtreeNode::CTerrainQuadtreeNode():NW_Node(NULL), NE_Node(NULL), SW_Node(NULL), SE_Node(NULL), center(-1.0f, -1.0f, -1.0f)
+CTerrainQuadtreeNode::CTerrainQuadtreeNode() : NW_Node(NULL), NE_Node(NULL), SW_Node(NULL), SE_Node(NULL), center(-1.0f, -1.0f, -1.0f)
 {
 	x0 = y0 = x1 = y1 = 0;
 	Size = 0;

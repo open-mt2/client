@@ -57,7 +57,7 @@ PyObject* imeSetText(PyObject* poSelf, PyObject* poArgs)
 }
 
 PyObject* imeGetText(PyObject* poSelf, PyObject* poArgs)
-{	
+{
 	int bCodePage;
 	if (!PyTuple_GetInteger(poArgs, 0, &bCodePage))
 		bCodePage = 0;
@@ -94,7 +94,7 @@ PyObject* imeGetCandidateSelection(PyObject* poSelf, PyObject* poArgs)
 }
 
 PyObject* imeGetReading(PyObject* poSelf, PyObject* poArgs)
-{	
+{
 	std::string strText;
 	CPythonIME::Instance().GetReading(strText);
 	return Py_BuildValue("s", strText.c_str());
@@ -118,8 +118,8 @@ PyObject* imeDisableIME(PyObject* poSelf, PyObject* poArgs)
 }
 
 PyObject* imeSetInputMode(PyObject* poSelf, PyObject* poArgs)
-{	
-	int	mode;
+{
+	int mode;
 	if (!PyTuple_GetInteger(poArgs, 0, &mode))
 		return Py_BuildException();
 
@@ -127,13 +127,13 @@ PyObject* imeSetInputMode(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildNone();
 }
 
-PyObject * imeSetNumberMode(PyObject* poSelf, PyObject* poArgs)
+PyObject* imeSetNumberMode(PyObject* poSelf, PyObject* poArgs)
 {
 	CPythonIME::Instance().SetNumberMode();
 	return Py_BuildNone();
 }
 
-PyObject * imeAddExceptKey(PyObject* poSelf, PyObject* poArgs)
+PyObject* imeAddExceptKey(PyObject* poSelf, PyObject* poArgs)
 {
 	int key;
 	if (!PyTuple_GetInteger(poArgs, 0, &key))
@@ -143,13 +143,13 @@ PyObject * imeAddExceptKey(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildNone();
 }
 
-PyObject * imeClearExceptKey(PyObject* poSelf, PyObject* poArgs)
+PyObject* imeClearExceptKey(PyObject* poSelf, PyObject* poArgs)
 {
 	CPythonIME::Instance().ClearExceptKey();
 	return Py_BuildNone();
 }
 
-PyObject * imeSetStringMode(PyObject* poSelf, PyObject* poArgs)
+PyObject* imeSetStringMode(PyObject* poSelf, PyObject* poArgs)
 {
 	CPythonIME::Instance().SetStringMode();
 	return Py_BuildNone();
@@ -188,7 +188,7 @@ PyObject* imeMoveEnd(PyObject* poSelf, PyObject* poArgs)
 
 PyObject* imeSetCursorPosition(PyObject* poSelf, PyObject* poArgs)
 {
-	int	iPosition;
+	int iPosition;
 	if (!PyTuple_GetInteger(poArgs, 0, &iPosition))
 		return Py_BuildException();
 
@@ -212,7 +212,7 @@ PyObject* imePasteTextFromClipBoard(PyObject* poSelf, PyObject* poArgs)
 
 PyObject* imeEnablePaste(PyObject* poSelf, PyObject* poArgs)
 {
-	int	iFlag;
+	int iFlag;
 	if (!PyTuple_GetInteger(poArgs, 0, &iFlag))
 		return Py_BuildException();
 
@@ -220,7 +220,7 @@ PyObject* imeEnablePaste(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildNone();
 }
 
-PyObject* imePasteString(PyObject * poSelf, PyObject * poArgs)
+PyObject* imePasteString(PyObject* poSelf, PyObject* poArgs)
 {
 	char* szText;
 	if (!PyTuple_GetString(poArgs, 0, &szText))
@@ -229,13 +229,13 @@ PyObject* imePasteString(PyObject * poSelf, PyObject * poArgs)
 	return Py_BuildNone();
 }
 
-PyObject* imePasteBackspace(PyObject * poSelf, PyObject * poArgs)
+PyObject* imePasteBackspace(PyObject* poSelf, PyObject* poArgs)
 {
 	CPythonIME::Instance().WMChar(NULL, WM_CHAR, 0x08, 0);
 	return Py_BuildNone();
 }
 
-PyObject* imePasteReturn(PyObject * poSelf, PyObject * poArgs)
+PyObject* imePasteReturn(PyObject* poSelf, PyObject* poArgs)
 {
 	CPythonIME::Instance().WMChar(NULL, WM_CHAR, 0x0D, 0);
 	return Py_BuildNone();
@@ -244,46 +244,46 @@ PyObject* imePasteReturn(PyObject * poSelf, PyObject * poArgs)
 void initime()
 {
 	static PyMethodDef s_methods[] =
-	{
-		{ "Enable",					imeEnable,					METH_VARARGS },
-		{ "Disable",				imeDisable,					METH_VARARGS },
+		{
+			{"Enable", imeEnable, METH_VARARGS},
+			{"Disable", imeDisable, METH_VARARGS},
 
-		{ "EnableCaptureInput",		imeEnableCaptureInput,		METH_VARARGS },
-		{ "DisableCaptureInput",	imeDisableCaptureInput,		METH_VARARGS },
-		{ "SetMax",					imeSetMax,					METH_VARARGS },
-		{ "SetUserMax",				imeSetUserMax,				METH_VARARGS },
-		{ "SetText",				imeSetText,					METH_VARARGS },
-		{ "GetText",				imeGetText,					METH_VARARGS },
-		{ "GetCodePage",			imeGetCodePage,				METH_VARARGS },
-		{ "GetCandidateCount",		imeGetCandidateCount,		METH_VARARGS },
-		{ "GetCandidate",			imeGetCandidate,			METH_VARARGS },
-		{ "GetCandidateSelection",	imeGetCandidateSelection,	METH_VARARGS },
-		{ "GetReading",				imeGetReading,				METH_VARARGS },
-		{ "GetReadingError",		imeGetReadingError,			METH_VARARGS },
-		{ "EnableIME",				imeEnableIME,				METH_VARARGS },
-		{ "DisableIME",				imeDisableIME,				METH_VARARGS },
-		{ "GetInputMode",			imeGetInputMode,			METH_VARARGS },
-		{ "SetInputMode",			imeSetInputMode,			METH_VARARGS },
+			{"EnableCaptureInput", imeEnableCaptureInput, METH_VARARGS},
+			{"DisableCaptureInput", imeDisableCaptureInput, METH_VARARGS},
+			{"SetMax", imeSetMax, METH_VARARGS},
+			{"SetUserMax", imeSetUserMax, METH_VARARGS},
+			{"SetText", imeSetText, METH_VARARGS},
+			{"GetText", imeGetText, METH_VARARGS},
+			{"GetCodePage", imeGetCodePage, METH_VARARGS},
+			{"GetCandidateCount", imeGetCandidateCount, METH_VARARGS},
+			{"GetCandidate", imeGetCandidate, METH_VARARGS},
+			{"GetCandidateSelection", imeGetCandidateSelection, METH_VARARGS},
+			{"GetReading", imeGetReading, METH_VARARGS},
+			{"GetReadingError", imeGetReadingError, METH_VARARGS},
+			{"EnableIME", imeEnableIME, METH_VARARGS},
+			{"DisableIME", imeDisableIME, METH_VARARGS},
+			{"GetInputMode", imeGetInputMode, METH_VARARGS},
+			{"SetInputMode", imeSetInputMode, METH_VARARGS},
 
-		{ "SetNumberMode",			imeSetNumberMode,			METH_VARARGS },
-		{ "SetStringMode",			imeSetStringMode,			METH_VARARGS },
-		{ "AddExceptKey",			imeAddExceptKey,			METH_VARARGS },
-		{ "ClearExceptKey",			imeClearExceptKey,			METH_VARARGS },
-		
-		{ "MoveLeft",				imeMoveLeft,				METH_VARARGS },
-		{ "MoveRight",				imeMoveRight,				METH_VARARGS },
-		{ "MoveHome",				imeMoveHome,				METH_VARARGS },
-		{ "MoveEnd",				imeMoveEnd,					METH_VARARGS },
-		{ "SetCursorPosition",		imeSetCursorPosition,		METH_VARARGS },
-		{ "Delete",					imeDelete,					METH_VARARGS },
-		{ "PasteString",			imePasteString,				METH_VARARGS },
-		{ "PasteBackspace",			imePasteBackspace,			METH_VARARGS },
-		{ "PasteReturn",			imePasteReturn,				METH_VARARGS },
-		{ "PasteTextFromClipBoard",	imePasteTextFromClipBoard,	METH_VARARGS },
-		{ "EnablePaste",			imeEnablePaste,				METH_VARARGS },
+			{"SetNumberMode", imeSetNumberMode, METH_VARARGS},
+			{"SetStringMode", imeSetStringMode, METH_VARARGS},
+			{"AddExceptKey", imeAddExceptKey, METH_VARARGS},
+			{"ClearExceptKey", imeClearExceptKey, METH_VARARGS},
 
-		{ NULL,						NULL,						0		 },
-	};	
+			{"MoveLeft", imeMoveLeft, METH_VARARGS},
+			{"MoveRight", imeMoveRight, METH_VARARGS},
+			{"MoveHome", imeMoveHome, METH_VARARGS},
+			{"MoveEnd", imeMoveEnd, METH_VARARGS},
+			{"SetCursorPosition", imeSetCursorPosition, METH_VARARGS},
+			{"Delete", imeDelete, METH_VARARGS},
+			{"PasteString", imePasteString, METH_VARARGS},
+			{"PasteBackspace", imePasteBackspace, METH_VARARGS},
+			{"PasteReturn", imePasteReturn, METH_VARARGS},
+			{"PasteTextFromClipBoard", imePasteTextFromClipBoard, METH_VARARGS},
+			{"EnablePaste", imeEnablePaste, METH_VARARGS},
+
+			{NULL, NULL, 0},
+		};
 
 	Py_InitModule("ime", s_methods);
 }

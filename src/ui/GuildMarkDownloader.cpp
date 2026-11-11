@@ -7,15 +7,15 @@
 // MARK_BUG_FIX
 struct SMarkIndex
 {
-	WORD guild_id;
-	WORD mark_id;
+		WORD guild_id;
+		WORD mark_id;
 };
 
 // END_OFMARK_BUG_FIX
 
 CGuildMarkDownloader::CGuildMarkDownloader()
 {
-	SetRecvBufferSize(640*1024);
+	SetRecvBufferSize(640 * 1024);
 	SetSendBufferSize(1024);
 	__Initialize();
 }
@@ -29,19 +29,19 @@ bool CGuildMarkDownloader::Connect(const CNetworkAddress& c_rkNetAddr, DWORD dwH
 {
 	__OfflineState_Set();
 
-	m_dwHandle=dwHandle;
-	m_dwRandomKey=dwRandomKey;
-	m_dwTodo=TODO_RECV_MARK;
+	m_dwHandle = dwHandle;
+	m_dwRandomKey = dwRandomKey;
+	m_dwTodo = TODO_RECV_MARK;
 	return CNetworkStream::Connect(c_rkNetAddr);
 }
 
-bool CGuildMarkDownloader::ConnectToRecvSymbol(const CNetworkAddress& c_rkNetAddr, DWORD dwHandle, DWORD dwRandomKey, const std::vector<DWORD> & c_rkVec_dwGuildID)
+bool CGuildMarkDownloader::ConnectToRecvSymbol(const CNetworkAddress& c_rkNetAddr, DWORD dwHandle, DWORD dwRandomKey, const std::vector<DWORD>& c_rkVec_dwGuildID)
 {
 	__OfflineState_Set();
 
-	m_dwHandle=dwHandle;
-	m_dwRandomKey=dwRandomKey;
-	m_dwTodo=TODO_RECV_SYMBOL;
+	m_dwHandle = dwHandle;
+	m_dwRandomKey = dwRandomKey;
+	m_dwTodo = TODO_RECV_SYMBOL;
 	m_kVec_dwGuildID = c_rkVec_dwGuildID;
 	return CNetworkStream::Connect(c_rkNetAddr);
 }
@@ -79,16 +79,16 @@ void CGuildMarkDownloader::OnDisconnect()
 
 void CGuildMarkDownloader::__Initialize()
 {
-	m_eState=STATE_OFFLINE;
-	m_pkMarkMgr=NULL;
-	m_currentRequestingImageIndex=0;
-	m_dwBlockIndex=0;
-	m_dwBlockDataPos=0;
-	m_dwBlockDataSize=0;
+	m_eState = STATE_OFFLINE;
+	m_pkMarkMgr = NULL;
+	m_currentRequestingImageIndex = 0;
+	m_dwBlockIndex = 0;
+	m_dwBlockDataPos = 0;
+	m_dwBlockDataSize = 0;
 
-	m_dwHandle=0;
-	m_dwRandomKey=0;
-	m_dwTodo=TODO_RECV_NONE;
+	m_dwHandle = 0;
+	m_dwRandomKey = 0;
+	m_dwTodo = TODO_RECV_NONE;
 	m_kVec_dwGuildID.clear();
 }
 
@@ -128,7 +128,7 @@ bool CGuildMarkDownloader::__LoginState_Process()
 
 	if (!Peek(sizeof(BYTE), &header))
 		return true;
-	
+
 	UINT needPacketSize = __GetPacketSize(header);
 
 	if (!needPacketSize)
@@ -158,7 +158,7 @@ UINT CGuildMarkDownloader::__GetPacketSize(UINT header)
 			return sizeof(TPacketGCMarkBlock);
 		case HEADER_GC_GUILD_SYMBOL_DATA:
 			return sizeof(TPacketGCGuildSymbolData);
-		case HEADER_GC_MARK_DIFF_DATA:	// 사용하지 않음
+		case HEADER_GC_MARK_DIFF_DATA: // 사용하지 않음
 			return sizeof(BYTE);
 	}
 	return 0;
@@ -183,7 +183,7 @@ bool CGuildMarkDownloader::__DispatchPacket(UINT header)
 		case HEADER_GC_MARK_DIFF_DATA: // 사용하지 않음
 			return true;
 	}
-	return false;	
+	return false;
 }
 // END_OF_MARK_BUG_FIX
 
@@ -255,7 +255,7 @@ bool CGuildMarkDownloader::__LoginState_RecvPhase()
 	}
 
 	return true;
-}			 
+}
 
 // MARK_BUG_FIX
 bool CGuildMarkDownloader::__SendMarkIDXList()
@@ -275,7 +275,7 @@ bool CGuildMarkDownloader::__LoginState_RecvMarkIndex()
 	if (!Peek(sizeof(kPacketMarkIndex), &kPacketMarkIndex))
 		return false;
 
-	//DWORD bufSize = sizeof(WORD) * 2 * kPacketMarkIndex.count;
+	// DWORD bufSize = sizeof(WORD) * 2 * kPacketMarkIndex.count;
 
 	if (!Peek(kPacketMarkIndex.bufSize))
 		return false;
@@ -349,7 +349,7 @@ bool CGuildMarkDownloader::__LoginState_RecvMarkBlock()
 		{
 			Recv(compSize, compBuf);
 			// 압축된 이미지를 실제로 저장한다. CRC등 여러가지 정보가 함께 빌드된다.
-			CGuildMarkManager::Instance().SaveBlockFromCompressedData(kPacket.imgIdx, posBlock, (const BYTE *) compBuf, compSize);
+			CGuildMarkManager::Instance().SaveBlockFromCompressedData(kPacket.imgIdx, posBlock, (const BYTE*)compBuf, compSize);
 		}
 	}
 
@@ -363,10 +363,10 @@ bool CGuildMarkDownloader::__LoginState_RecvMarkBlock()
 
 		if (CGuildMarkManager::Instance().GetMarkImageFilename(kPacket.imgIdx, imagePath))
 		{
-			CResource * pResource = CResourceManager::Instance().GetResourcePointer(imagePath.c_str());
+			CResource* pResource = CResourceManager::Instance().GetResourcePointer(imagePath.c_str());
 			if (pResource->IsType(CGraphicImage::Type()))
 			{
-				CGraphicImage* pkGrpImg=static_cast<CGraphicImage*>(pResource);
+				CGraphicImage* pkGrpImg = static_cast<CGraphicImage*>(pResource);
 				pkGrpImg->Reload();
 			}
 		}
@@ -384,7 +384,7 @@ bool CGuildMarkDownloader::__LoginState_RecvMarkBlock()
 
 bool CGuildMarkDownloader::__SendSymbolCRCList()
 {
-	for (DWORD i=0; i<m_kVec_dwGuildID.size(); ++i)
+	for (DWORD i = 0; i < m_kVec_dwGuildID.size(); ++i)
 	{
 		TPacketCGSymbolCRC kSymbolCRCPacket;
 		kSymbolCRCPacket.header = HEADER_CG_GUILD_SYMBOL_CRC;
@@ -423,7 +423,7 @@ bool CGuildMarkDownloader::__LoginState_RecvSymbolData()
 
 	WORD wDataSize = kPacketSymbolData.size - sizeof(kPacketSymbolData);
 	DWORD dwGuildID = kPacketSymbolData.guild_id;
-	BYTE * pbyBuf = new BYTE [wDataSize];
+	BYTE* pbyBuf = new BYTE[wDataSize];
 
 	if (!Recv(wDataSize, pbyBuf))
 	{
@@ -435,7 +435,7 @@ bool CGuildMarkDownloader::__LoginState_RecvSymbolData()
 
 	std::string strFileName = GetGuildSymbolFileName(dwGuildID);
 
-	FILE * File = fopen(strFileName.c_str(), "wb");
+	FILE* File = fopen(strFileName.c_str(), "wb");
 	if (!File)
 	{
 		delete[] pbyBuf;

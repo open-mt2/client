@@ -34,65 +34,65 @@
 namespace
 {
 	const char* const kPythonLibraries[] =
-	{
+		{
 #if PY_MINOR_VERSION == 7
-		"abc.pyc",
-		"bisect.pyc",
-		"codecs.pyc",
-		"collections.pyc",
-		"copy.pyc",
-		"copy_reg.pyc",
-		"fnmatch.pyc",
-		"functools.pyc",
-		"genericpath.pyc",
-		"heapq.pyc",
-		"hashlib.pyc",
-		"keyword.pyc",
-		"linecache.pyc",
-		"locale.pyc",
-		"ntpath.pyc",
-		"os.pyc",
-		"random.pyc",
-		"re.pyc",
-		"shutil.pyc",
-		"site.pyc",
-		"sre_compile.pyc",
-		"sre_constants.pyc",
-		"sre_parse.pyc",
-		"stat.pyc",
-		"string.pyc",
-		"sysconfig.pyc",
-		"traceback.pyc",
-		"types.pyc",
-		"UserDict.pyc",
-		"warnings.pyc",
-		"weakref.pyc",
-		"_abcoll.pyc",
-		"_weakrefset.pyc",
-		"__future__.pyc",
-		"encodings/aliases.pyc",
-		"encodings/ascii.pyc",
-		"encodings/cp1250.pyc",
-		"encodings/cp1251.pyc",
-		"encodings/cp1252.pyc",
-		"encodings/cp949.pyc",
-		"encodings/utf_8.pyc",
-		"encodings/cp850.pyc",
-		"encodings/__init__.pyc",
+			"abc.pyc",
+			"bisect.pyc",
+			"codecs.pyc",
+			"collections.pyc",
+			"copy.pyc",
+			"copy_reg.pyc",
+			"fnmatch.pyc",
+			"functools.pyc",
+			"genericpath.pyc",
+			"heapq.pyc",
+			"hashlib.pyc",
+			"keyword.pyc",
+			"linecache.pyc",
+			"locale.pyc",
+			"ntpath.pyc",
+			"os.pyc",
+			"random.pyc",
+			"re.pyc",
+			"shutil.pyc",
+			"site.pyc",
+			"sre_compile.pyc",
+			"sre_constants.pyc",
+			"sre_parse.pyc",
+			"stat.pyc",
+			"string.pyc",
+			"sysconfig.pyc",
+			"traceback.pyc",
+			"types.pyc",
+			"UserDict.pyc",
+			"warnings.pyc",
+			"weakref.pyc",
+			"_abcoll.pyc",
+			"_weakrefset.pyc",
+			"__future__.pyc",
+			"encodings/aliases.pyc",
+			"encodings/ascii.pyc",
+			"encodings/cp1250.pyc",
+			"encodings/cp1251.pyc",
+			"encodings/cp1252.pyc",
+			"encodings/cp949.pyc",
+			"encodings/utf_8.pyc",
+			"encodings/cp850.pyc",
+			"encodings/__init__.pyc",
 #else
-		"UserDict.pyc",
-		"__future__.pyc",
-		"copy_reg.pyc",
-		"linecache.pyc",
-		"ntpath.pyc",
-		"os.pyc",
-		"site.pyc",
-		"stat.pyc",
-		"string.pyc",
-		"traceback.pyc",
-		"types.pyc",
+			"UserDict.pyc",
+			"__future__.pyc",
+			"copy_reg.pyc",
+			"linecache.pyc",
+			"ntpath.pyc",
+			"os.pyc",
+			"site.pyc",
+			"stat.pyc",
+			"string.pyc",
+			"traceback.pyc",
+			"types.pyc",
 #endif
-		"\n",
+			"\n",
 	};
 
 	bool CheckPythonLibraryFilenames()
@@ -196,7 +196,7 @@ namespace
 			PCHAR* m_argv;
 			int m_count;
 	};
-}
+} // namespace
 
 namespace Neoeter
 {
@@ -392,4 +392,4 @@ namespace Neoeter
 		::CoUninitialize();
 		m_pythonApplication.reset();
 	}
-}
+} // namespace Neoeter

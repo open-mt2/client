@@ -20,32 +20,32 @@ void CPythonNetworkStream::HandShakePhase()
 			break;
 
 		case HEADER_GC_HANDSHAKE:
+		{
+			if (!Recv(sizeof(TPacketGCHandshake), &m_HandshakeData))
+				return;
+
+			Tracenf("HANDSHAKE RECV %u %d", m_HandshakeData.dwTime, m_HandshakeData.lDelta);
+
+			ELTimer_SetServerMSec(m_HandshakeData.dwTime + m_HandshakeData.lDelta);
+
+			// m_dwBaseServerTime = m_HandshakeData.dwTime+ m_HandshakeData.lDelta;
+			// m_dwBaseClientTime = ELTimer_GetMSec();
+
+			m_HandshakeData.dwTime = m_HandshakeData.dwTime + m_HandshakeData.lDelta + m_HandshakeData.lDelta;
+			m_HandshakeData.lDelta = 0;
+
+			Tracenf("HANDSHAKE SEND %u", m_HandshakeData.dwTime);
+
+			if (!Send(sizeof(TPacketGCHandshake), &m_HandshakeData))
 			{
-				if (!Recv(sizeof(TPacketGCHandshake), &m_HandshakeData))
-					return;
-
-				Tracenf("HANDSHAKE RECV %u %d", m_HandshakeData.dwTime, m_HandshakeData.lDelta);
-
-				ELTimer_SetServerMSec(m_HandshakeData.dwTime+ m_HandshakeData.lDelta);
-
-				//m_dwBaseServerTime = m_HandshakeData.dwTime+ m_HandshakeData.lDelta;
-				//m_dwBaseClientTime = ELTimer_GetMSec();
-
-				m_HandshakeData.dwTime = m_HandshakeData.dwTime + m_HandshakeData.lDelta + m_HandshakeData.lDelta;
-				m_HandshakeData.lDelta = 0;
-
-				Tracenf("HANDSHAKE SEND %u", m_HandshakeData.dwTime);
-
-				if (!Send(sizeof(TPacketGCHandshake), &m_HandshakeData))
-				{
-					assert(!"Failed Sending Handshake");
-					return;
-				}
-
-				CTimer::Instance().SetBaseTime();
+				assert(!"Failed Sending Handshake");
 				return;
 			}
-			break;
+
+			CTimer::Instance().SetBaseTime();
+			return;
+		}
+		break;
 		case HEADER_GC_PING:
 			RecvPingPacket();
 			return;
@@ -57,7 +57,7 @@ void CPythonNetworkStream::HandShakePhase()
 
 void CPythonNetworkStream::SetHandShakePhase()
 {
-	if ("HandShake"!=m_strPhase)
+	if ("HandShake" != m_strPhase)
 		m_phaseLeaveFunc.Run();
 
 	Tracen("");
@@ -92,7 +92,7 @@ bool CPythonNetworkStream::RecvHandshakePacket()
 
 	m_kServerTimeSync.m_dwChangeServerTime = kHandshakeData.dwTime + kHandshakeData.lDelta;
 	m_kServerTimeSync.m_dwChangeClientTime = ELTimer_GetMSec();
-	
+
 	kHandshakeData.dwTime = kHandshakeData.dwTime + kHandshakeData.lDelta + kHandshakeData.lDelta;
 	kHandshakeData.lDelta = 0;
 
@@ -116,8 +116,8 @@ bool CPythonNetworkStream::RecvHandshakeOKPacket()
 	if (!Recv(sizeof(TPacketGCBlank), &kBlankPacket))
 		return false;
 
-	DWORD dwDelta=ELTimer_GetMSec()-m_kServerTimeSync.m_dwChangeClientTime;
-	ELTimer_SetServerMSec(m_kServerTimeSync.m_dwChangeServerTime+dwDelta);
+	DWORD dwDelta = ELTimer_GetMSec() - m_kServerTimeSync.m_dwChangeClientTime;
+	ELTimer_SetServerMSec(m_kServerTimeSync.m_dwChangeServerTime + dwDelta);
 
 	Tracenf("HANDSHAKE OK RECV %u %u", m_kServerTimeSync.m_dwChangeServerTime, dwDelta);
 

@@ -10,12 +10,12 @@ class CPropertyLoader : public CDir
 		CPropertyLoader();
 		virtual ~CPropertyLoader();
 
-		void			SetPropertyManager(CPropertyManager * pPropertyManager);
-		DWORD			RegisterFile(const char* c_szPathName, const char* c_szFileName);
+		void SetPropertyManager(CPropertyManager* pPropertyManager);
+		DWORD RegisterFile(const char* c_szPathName, const char* c_szFileName);
 
-		virtual bool	OnFolder(const char* c_szFilter, const char* c_szPathName, const char* c_szFileName);
-		virtual bool	OnFile(const char* c_szPathName, const char* c_szFileName);
+		virtual bool OnFolder(const char* c_szFilter, const char* c_szPathName, const char* c_szFileName);
+		virtual bool OnFile(const char* c_szPathName, const char* c_szFileName);
 
 	protected:
-		CPropertyManager * m_pPropertyManager;
+		CPropertyManager* m_pPropertyManager;
 };

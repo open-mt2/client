@@ -11,25 +11,25 @@ bool CPythonApplication::CreateCursors()
 	// The Win32 cursor resources are not part of the source tree, so the SDL
 	// window/input path uses SDL system cursors on every target (T3.2).
 	static const SDL_SystemCursor s_systemCursors[CURSOR_COUNT] =
-	{
-		SDL_SYSTEM_CURSOR_ARROW,       // NORMAL
-		SDL_SYSTEM_CURSOR_ARROW,       // ATTACK
-		SDL_SYSTEM_CURSOR_CROSSHAIR,   // TARGET
-		SDL_SYSTEM_CURSOR_HAND,        // TALK
-		SDL_SYSTEM_CURSOR_NO,          // CANT_GO
-		SDL_SYSTEM_CURSOR_CROSSHAIR,   // PICK
+		{
+			SDL_SYSTEM_CURSOR_ARROW,	 // NORMAL
+			SDL_SYSTEM_CURSOR_ARROW,	 // ATTACK
+			SDL_SYSTEM_CURSOR_CROSSHAIR, // TARGET
+			SDL_SYSTEM_CURSOR_HAND,		 // TALK
+			SDL_SYSTEM_CURSOR_NO,		 // CANT_GO
+			SDL_SYSTEM_CURSOR_CROSSHAIR, // PICK
 
-		SDL_SYSTEM_CURSOR_HAND,        // DOOR
-		SDL_SYSTEM_CURSOR_ARROW,       // CHAIR
-		SDL_SYSTEM_CURSOR_ARROW,       // MAGIC
-		SDL_SYSTEM_CURSOR_HAND,        // BUY
-		SDL_SYSTEM_CURSOR_HAND,        // SELL
+			SDL_SYSTEM_CURSOR_HAND,	 // DOOR
+			SDL_SYSTEM_CURSOR_ARROW, // CHAIR
+			SDL_SYSTEM_CURSOR_ARROW, // MAGIC
+			SDL_SYSTEM_CURSOR_HAND,	 // BUY
+			SDL_SYSTEM_CURSOR_HAND,	 // SELL
 
-		SDL_SYSTEM_CURSOR_SIZEALL,     // CAMERA_ROTATE
-		SDL_SYSTEM_CURSOR_SIZEWE,      // HSIZE
-		SDL_SYSTEM_CURSOR_SIZENS,      // VSIZE
-		SDL_SYSTEM_CURSOR_SIZENWSE,    // HVSIZE
-	};
+			SDL_SYSTEM_CURSOR_SIZEALL,	// CAMERA_ROTATE
+			SDL_SYSTEM_CURSOR_SIZEWE,	// HSIZE
+			SDL_SYSTEM_CURSOR_SIZENS,	// VSIZE
+			SDL_SYSTEM_CURSOR_SIZENWSE, // HVSIZE
+		};
 
 	m_CursorHandleMap.clear();
 
@@ -59,7 +59,7 @@ void CPythonApplication::SetCursorVisible(BOOL bFlag, bool bLiarCursorOn)
 {
 	m_bCursorVisible = bFlag;
 	m_bLiarCursorOn = bLiarCursorOn;
-	
+
 	if (CURSOR_MODE_HARDWARE == m_iCursorMode)
 	{
 		// SDL_ShowCursor returns the previous state (0/1) instead of the
@@ -112,9 +112,9 @@ BOOL CPythonApplication::SetCursorNum(int iCursorNum)
 	}
 	else
 	{
-		if (__IsContinuousChangeTypeCursor(m_iCursorNum))		// 현재 커서가 지속 커서일때만
+		if (__IsContinuousChangeTypeCursor(m_iCursorNum)) // 현재 커서가 지속 커서일때만
 		{
-			m_iContinuousCursorNum = m_iCursorNum;			// 현재의 커서를 저장한다.
+			m_iContinuousCursorNum = m_iCursorNum; // 현재의 커서를 저장한다.
 		}
 	}
 

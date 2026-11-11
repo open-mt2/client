@@ -14,17 +14,17 @@ class CServerStateChecker : public CSingleton<CServerStateChecker>
 		void Update();
 
 		void Initialize();
-		
+
 	private:
 		typedef struct SChannel
 		{
-			UINT uServerIndex;
-			const char* c_szAddr;
-			UINT uPort;
+				UINT uServerIndex;
+				const char* c_szAddr;
+				UINT uPort;
 		} TChannel;
 
 		PyObject* m_poWnd;
-		
+
 		std::list<TChannel> m_lstChannel;
 
 		CNetworkStream m_kStream;

@@ -1,12 +1,12 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/Game/FlyingObjectManager.h>
-PyObject * flyUpdate(PyObject * poSelf, PyObject * poArgs)
+PyObject* flyUpdate(PyObject* poSelf, PyObject* poArgs)
 {
 	CFlyingManager::Instance().Update();
 	return Py_BuildNone();
 }
 
-PyObject * flyRender(PyObject * poSelf, PyObject * poArgs)
+PyObject* flyRender(PyObject* poSelf, PyObject* poArgs)
 {
 	CFlyingManager::Instance().Render();
 	return Py_BuildNone();
@@ -15,12 +15,12 @@ PyObject * flyRender(PyObject * poSelf, PyObject * poArgs)
 void initfly()
 {
 	static PyMethodDef s_methods[] =
-	{
-		{ "Update",						flyUpdate,					METH_VARARGS },
-		{ "Render",						flyRender,					METH_VARARGS },
-		
-		{ NULL,							NULL,							0         },
-	};
-	
+		{
+			{"Update", flyUpdate, METH_VARARGS},
+			{"Render", flyRender, METH_VARARGS},
+
+			{NULL, NULL, 0},
+		};
+
 	Py_InitModule("fly", s_methods);
 }

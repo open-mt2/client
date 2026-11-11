@@ -25,26 +25,27 @@ void CPropertyManager::Initialize()
 			continue;
 		}
 
-		if (itor.first.rfind("property/", 0) == 0) {
+		if (itor.first.rfind("property/", 0) == 0)
+		{
 			if (!Register(itor.first.c_str()))
 				continue;
 		}
 	}
 }
 
-bool CPropertyManager::LoadReservedCRC(const char * c_pszFileName)
+bool CPropertyManager::LoadReservedCRC(const char* c_pszFileName)
 {
 	CEterPackManager::TPackDataPtr data;
 	CMemoryTextFileLoader textFileLoader;
 
 	if (!CEterPackManager::Instance().Get(c_pszFileName, data))
 		return false;
-	
+
 	textFileLoader.Bind(data->size(), data->data());
 
 	for (DWORD i = 0; i < textFileLoader.GetLineCount(); ++i)
 	{
-		const char * pszLine = textFileLoader.GetLineString(i).c_str();
+		const char* pszLine = textFileLoader.GetLineString(i).c_str();
 
 		if (!pszLine || !*pszLine)
 			continue;
@@ -60,7 +61,7 @@ void CPropertyManager::ReserveCRC(DWORD dwCRC)
 	m_ReservedCRCSet.insert(dwCRC);
 }
 
-DWORD CPropertyManager::GetUniqueCRC(const char * c_szSeed)
+DWORD CPropertyManager::GetUniqueCRC(const char* c_szSeed)
 {
 	std::string stTmp = c_szSeed;
 
@@ -78,13 +79,13 @@ DWORD CPropertyManager::GetUniqueCRC(const char * c_szSeed)
 	}
 }
 
-bool CPropertyManager::Register(const char * c_pszFileName, CProperty ** ppProperty)
+bool CPropertyManager::Register(const char* c_pszFileName, CProperty** ppProperty)
 {
 	CEterPackManager::TPackDataPtr data;
 	if (!CEterPackManager::Instance().Get(c_pszFileName, data))
 		return false;
 
-	CProperty * pProperty = new CProperty(c_pszFileName);
+	CProperty* pProperty = new CProperty(c_pszFileName);
 
 	if (!pProperty->ReadFromMemory(data->data(), data->size(), c_pszFileName))
 	{
@@ -99,8 +100,8 @@ bool CPropertyManager::Register(const char * c_pszFileName, CProperty ** ppPrope
 	if (m_PropertyByCRCMap.end() != itor)
 	{
 		Tracef("Property already registered, replace %s to %s\n",
-				itor->second->GetFileName(),
-				c_pszFileName);
+			   itor->second->GetFileName(),
+			   c_pszFileName);
 
 		delete itor->second;
 		itor->second = pProperty;
@@ -114,12 +115,12 @@ bool CPropertyManager::Register(const char * c_pszFileName, CProperty ** ppPrope
 	return true;
 }
 
-bool CPropertyManager::Get(const char * c_pszFileName, CProperty ** ppProperty)
+bool CPropertyManager::Get(const char* c_pszFileName, CProperty** ppProperty)
 {
 	return Register(c_pszFileName, ppProperty);
 }
 
-bool CPropertyManager::Get(DWORD dwCRC, CProperty ** ppProperty)
+bool CPropertyManager::Get(DWORD dwCRC, CProperty** ppProperty)
 {
 	TPropertyCRCMap::iterator itor = m_PropertyByCRCMap.find(dwCRC);
 

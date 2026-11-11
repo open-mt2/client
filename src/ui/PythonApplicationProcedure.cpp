@@ -19,7 +19,7 @@ void CPythonApplication::SafeSetCapture()
 void CPythonApplication::SafeReleaseCapture()
 {
 	gs_nMouseCaptureRef--;
-	if (gs_nMouseCaptureRef==0)
+	if (gs_nMouseCaptureRef == 0)
 		ReleaseCapture();
 }
 
@@ -28,39 +28,39 @@ LRESULT CPythonApplication::WindowProcedure(HWND hWnd, UINT uiMsg, WPARAM wParam
 	const int c_DoubleClickTime = 300;
 	const int c_DoubleClickBox = 5;
 	static int s_xDownPosition = 0;
-	static int s_yDownPosition = 0;	
+	static int s_yDownPosition = 0;
 
 	switch (uiMsg)
 	{
 		case WM_ACTIVATEAPP:
+		{
+			m_isActivateWnd = (wParam == WA_ACTIVE) || (wParam == WA_CLICKACTIVE);
+
+			if (m_isActivateWnd)
 			{
-				m_isActivateWnd = (wParam == WA_ACTIVE) || (wParam == WA_CLICKACTIVE);
+				m_SoundManager.RestoreVolume();
 
-				if (m_isActivateWnd)
+				//////////////////
+
+				if (m_isWindowFullScreenEnable)
 				{
-					m_SoundManager.RestoreVolume();
-
-					//////////////////
-
-					if (m_isWindowFullScreenEnable)
-					{
-						SetWindowFullscreen(true, m_dwWidth, m_dwHeight);
-					}
-				}
-				else
-				{
-					m_SoundManager.SaveVolume();
-
-					//////////////////
-
-					if (m_isWindowFullScreenEnable)
-					{
-						SetWindowFullscreen(false, m_dwWidth, m_dwHeight);
-						MinimizeWindow();
-					}
+					SetWindowFullscreen(true, m_dwWidth, m_dwHeight);
 				}
 			}
-			break;
+			else
+			{
+				m_SoundManager.SaveVolume();
+
+				//////////////////
+
+				if (m_isWindowFullScreenEnable)
+				{
+					SetWindowFullscreen(false, m_dwWidth, m_dwHeight);
+					MinimizeWindow();
+				}
+			}
+		}
+		break;
 
 		case WM_INPUTLANGCHANGE:
 			return CPythonIME::Instance().WMInputLanguage(hWnd, uiMsg, wParam, lParam);
@@ -130,7 +130,7 @@ LRESULT CPythonApplication::WindowProcedure(HWND hWnd, UINT uiMsg, WPARAM wParam
 			SafeSetCapture();
 
 			UI::CWindowManager::Instance().RunMouseMiddleButtonDown(short(LOWORD(lParam)), short(HIWORD(lParam)));
-//			OnMouseMiddleButtonDown(short(LOWORD(lParam)), short(HIWORD(lParam)));
+			//			OnMouseMiddleButtonDown(short(LOWORD(lParam)), short(HIWORD(lParam)));
 			break;
 
 		case WM_MBUTTONUP:
@@ -139,7 +139,7 @@ LRESULT CPythonApplication::WindowProcedure(HWND hWnd, UINT uiMsg, WPARAM wParam
 				SafeReleaseCapture();
 
 				UI::CWindowManager::Instance().RunMouseMiddleButtonUp(short(LOWORD(lParam)), short(HIWORD(lParam)));
-//				OnMouseMiddleButtonUp(short(LOWORD(lParam)), short(HIWORD(lParam)));
+				//				OnMouseMiddleButtonUp(short(LOWORD(lParam)), short(HIWORD(lParam)));
 			}
 			break;
 
@@ -149,7 +149,7 @@ LRESULT CPythonApplication::WindowProcedure(HWND hWnd, UINT uiMsg, WPARAM wParam
 			return 0;
 
 		case WM_RBUTTONUP:
-			if (hWnd == GetCapture() || !GetCapture()) 
+			if (hWnd == GetCapture() || !GetCapture())
 			{
 				SafeReleaseCapture();
 
@@ -173,37 +173,37 @@ LRESULT CPythonApplication::WindowProcedure(HWND hWnd, UINT uiMsg, WPARAM wParam
 			{
 				case SIZE_RESTORED:
 				case SIZE_MAXIMIZED:
-					{
-						RECT rcWnd; 
-						GetClientRect(&rcWnd); 
-				
-						UINT uWidth=rcWnd.right-rcWnd.left; 
-						UINT uHeight=rcWnd.bottom-rcWnd.top;
-						m_grpDevice.ResizeBackBuffer(uWidth, uHeight);				
-					}
-					break;
+				{
+					RECT rcWnd;
+					GetClientRect(&rcWnd);
+
+					UINT uWidth = rcWnd.right - rcWnd.left;
+					UINT uHeight = rcWnd.bottom - rcWnd.top;
+					m_grpDevice.ResizeBackBuffer(uWidth, uHeight);
+				}
+				break;
 			}
 
-			if (wParam==SIZE_MINIMIZED)
-				m_isMinimizedWnd=true;
+			if (wParam == SIZE_MINIMIZED)
+				m_isMinimizedWnd = true;
 			else
-				m_isMinimizedWnd=false;
+				m_isMinimizedWnd = false;
 
 			OnSizeChange(short(LOWORD(lParam)), short(HIWORD(lParam)));
 
 			break;
 
-		case WM_EXITSIZEMOVE:    
-			{
-				RECT rcWnd; 
-				GetClientRect(&rcWnd); 
-				
-				UINT uWidth=rcWnd.right-rcWnd.left; 
-				UINT uHeight=rcWnd.bottom-rcWnd.top;
-				m_grpDevice.ResizeBackBuffer(uWidth, uHeight);				
-				OnSizeChange(short(LOWORD(lParam)), short(HIWORD(lParam)));
-			}
-			break; 
+		case WM_EXITSIZEMOVE:
+		{
+			RECT rcWnd;
+			GetClientRect(&rcWnd);
+
+			UINT uWidth = rcWnd.right - rcWnd.left;
+			UINT uHeight = rcWnd.bottom - rcWnd.top;
+			m_grpDevice.ResizeBackBuffer(uWidth, uHeight);
+			OnSizeChange(short(LOWORD(lParam)), short(HIWORD(lParam)));
+		}
+		break;
 
 		case WM_SYSKEYDOWN:
 			switch (LOWORD(wParam))
@@ -214,7 +214,7 @@ LRESULT CPythonApplication::WindowProcedure(HWND hWnd, UINT uiMsg, WPARAM wParam
 			break;
 
 		case WM_SYSKEYUP:
-			switch(LOWORD(wParam))
+			switch (LOWORD(wParam))
 			{
 				case 18:
 					return FALSE;
@@ -243,7 +243,7 @@ LRESULT CPythonApplication::WindowProcedure(HWND hWnd, UINT uiMsg, WPARAM wParam
 		case WM_CLOSE:
 #ifdef _DEBUG
 			PostQuitMessage(0);
-#else	
+#else
 			RunPressExitKey();
 #endif
 			return 0;
@@ -251,9 +251,9 @@ LRESULT CPythonApplication::WindowProcedure(HWND hWnd, UINT uiMsg, WPARAM wParam
 		case WM_DESTROY:
 			return 0;
 		default:
-			//Tracenf("%x msg %x", timeGetTime(), uiMsg);
+			// Tracenf("%x msg %x", timeGetTime(), uiMsg);
 			break;
-	}	
+	}
 
 	return CMSApplication::WindowProcedure(hWnd, uiMsg, wParam, lParam);
 }

@@ -7,9 +7,9 @@ void CActorInstance::TraceProcess()
 	if (!m_WeaponTraceVector.empty())
 	{
 		std::vector<CWeaponTrace*>::iterator it;
-		for(it = m_WeaponTraceVector.begin(); it != m_WeaponTraceVector.end(); ++it)
+		for (it = m_WeaponTraceVector.begin(); it != m_WeaponTraceVector.end(); ++it)
 		{
-			CWeaponTrace * pWeaponTrace = (*it);
+			CWeaponTrace* pWeaponTrace = (*it);
 			pWeaponTrace->SetPosition(m_x, m_y, m_z);
 			pWeaponTrace->SetRotation(m_fcurRotation);
 			pWeaponTrace->Update(__GetReachScale());
@@ -37,4 +37,3 @@ void CActorInstance::__HideWeaponTrace()
 {
 	for_each(m_WeaponTraceVector.begin(), m_WeaponTraceVector.end(), std::void_mem_fun(&CWeaponTrace::TurnOff));
 }
-

@@ -22,10 +22,10 @@ static void FillMark(BYTE* data, BYTE seed)
 {
 	for (int i = 0; i < SGuildMark::SIZE; ++i)
 	{
-		data[i * 4 + 0] = (BYTE)(seed + i);       // B
-		data[i * 4 + 1] = (BYTE)(seed + i + 1);   // G
-		data[i * 4 + 2] = (BYTE)(seed + i + 2);   // R
-		data[i * 4 + 3] = 0xFF;                   // A
+		data[i * 4 + 0] = (BYTE)(seed + i);		// B
+		data[i * 4 + 1] = (BYTE)(seed + i + 1); // G
+		data[i * 4 + 2] = (BYTE)(seed + i + 2); // R
+		data[i * 4 + 3] = 0xFF;					// A
 	}
 }
 

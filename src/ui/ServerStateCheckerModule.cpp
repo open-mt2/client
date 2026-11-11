@@ -1,9 +1,9 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/UI/ServerStateChecker.h>
 
-PyObject * ServerStateCheckerCreate(PyObject* poSelf, PyObject* poArgs)
+PyObject* ServerStateCheckerCreate(PyObject* poSelf, PyObject* poArgs)
 {
-	PyObject * poWnd;
+	PyObject* poWnd;
 	if (!PyTuple_GetObject(poArgs, 0, &poWnd))
 		return Py_BadArgument();
 
@@ -11,25 +11,25 @@ PyObject * ServerStateCheckerCreate(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildNone();
 }
 
-PyObject * ServerStateCheckerUpdate(PyObject* poSelf, PyObject* poArgs)
+PyObject* ServerStateCheckerUpdate(PyObject* poSelf, PyObject* poArgs)
 {
 	CServerStateChecker::Instance().Update();
 	return Py_BuildNone();
 }
 
-PyObject * ServerStateCheckerRequest(PyObject* poSelf, PyObject* poArgs)
+PyObject* ServerStateCheckerRequest(PyObject* poSelf, PyObject* poArgs)
 {
 	CServerStateChecker::Instance().Request();
 	return Py_BuildNone();
 }
 
-PyObject * ServerStateCheckerAddChannel(PyObject* poSelf, PyObject* poArgs)
+PyObject* ServerStateCheckerAddChannel(PyObject* poSelf, PyObject* poArgs)
 {
 	int nServerIndex;
 	if (!PyTuple_GetInteger(poArgs, 0, &nServerIndex))
 		return Py_BuildException();
 
-	char * szAddr;
+	char* szAddr;
 	if (!PyTuple_GetString(poArgs, 1, &szAddr))
 		return Py_BuildException();
 
@@ -41,7 +41,7 @@ PyObject * ServerStateCheckerAddChannel(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildNone();
 }
 
-PyObject * ServerStateCheckerInitialize(PyObject* poSelf, PyObject* poArgs)
+PyObject* ServerStateCheckerInitialize(PyObject* poSelf, PyObject* poArgs)
 {
 	CServerStateChecker::Instance().Initialize();
 	return Py_BuildNone();
@@ -50,15 +50,15 @@ PyObject * ServerStateCheckerInitialize(PyObject* poSelf, PyObject* poArgs)
 void initServerStateChecker()
 {
 	static PyMethodDef s_methods[] =
-	{
-		{ "Create",		ServerStateCheckerCreate,		METH_VARARGS },
-		{ "Update",		ServerStateCheckerUpdate,		METH_VARARGS },
-		{ "Request",	ServerStateCheckerRequest,		METH_VARARGS },
-		{ "AddChannel",	ServerStateCheckerAddChannel,	METH_VARARGS },
-		{ "Initialize",	ServerStateCheckerInitialize,	METH_VARARGS },
-		{ NULL,			NULL,							0 },
-	};
+		{
+			{"Create", ServerStateCheckerCreate, METH_VARARGS},
+			{"Update", ServerStateCheckerUpdate, METH_VARARGS},
+			{"Request", ServerStateCheckerRequest, METH_VARARGS},
+			{"AddChannel", ServerStateCheckerAddChannel, METH_VARARGS},
+			{"Initialize", ServerStateCheckerInitialize, METH_VARARGS},
+			{NULL, NULL, 0},
+		};
 
-	//PyObject * poModule = Py_InitModule("ServerStateChecker", s_methods);
+	// PyObject * poModule = Py_InitModule("ServerStateChecker", s_methods);
 	Py_InitModule("ServerStateChecker", s_methods);
 }

@@ -42,13 +42,15 @@ void CServerStateChecker::AddChannel(UINT uServerIndex, const char* c_szAddr, UI
 
 void CServerStateChecker::Request()
 {
-	if (m_lstChannel.empty()) { 
-		return; 
+	if (m_lstChannel.empty())
+	{
+		return;
 	}
 
 	if (!m_kStream.Connect(m_lstChannel.begin()->c_szAddr, m_lstChannel.begin()->uPort))
 	{
-		for (std::list<TChannel>::const_iterator it = m_lstChannel.begin(); it != m_lstChannel.end(); ++it) {
+		for (std::list<TChannel>::const_iterator it = m_lstChannel.begin(); it != m_lstChannel.end(); ++it)
+		{
 			PyCallClassMemberFunc(m_poWnd, "NotifyChannelState", Py_BuildValue("(ii)", it->uServerIndex, 0));
 		}
 		return;
@@ -60,7 +62,8 @@ void CServerStateChecker::Request()
 	BYTE bHeader = HEADER_CG_STATE_CHECKER;
 	if (!m_kStream.Send(sizeof(bHeader), &bHeader))
 	{
-		for (std::list<TChannel>::const_iterator it = m_lstChannel.begin(); it != m_lstChannel.end(); ++it) {
+		for (std::list<TChannel>::const_iterator it = m_lstChannel.begin(); it != m_lstChannel.end(); ++it)
+		{
 			PyCallClassMemberFunc(m_poWnd, "NotifyChannelState", Py_BuildValue("(ii)", it->uServerIndex, 0));
 		}
 		Initialize();
@@ -73,23 +76,30 @@ void CServerStateChecker::Update()
 	m_kStream.Process();
 
 	BYTE bHeader;
-	if (!m_kStream.Recv(sizeof(bHeader), &bHeader)) {
+	if (!m_kStream.Recv(sizeof(bHeader), &bHeader))
+	{
 		return;
 	}
-	if (HEADER_GC_RESPOND_CHANNELSTATUS != bHeader) {
+	if (HEADER_GC_RESPOND_CHANNELSTATUS != bHeader)
+	{
 		return;
 	}
 	int nSize;
-	if (!m_kStream.Recv(sizeof(nSize), &nSize)) {
+	if (!m_kStream.Recv(sizeof(nSize), &nSize))
+	{
 		return;
 	}
-	for (int i = 0; i < nSize; i++) {
+	for (int i = 0; i < nSize; i++)
+	{
 		TChannelStatus channelStatus;
-		if (!m_kStream.Recv(sizeof(channelStatus), &channelStatus)) {
+		if (!m_kStream.Recv(sizeof(channelStatus), &channelStatus))
+		{
 			return;
 		}
-		for (std::list<TChannel>::const_iterator it = m_lstChannel.begin(); it != m_lstChannel.end(); ++it) {
-			if (channelStatus.nPort == it->uPort) {
+		for (std::list<TChannel>::const_iterator it = m_lstChannel.begin(); it != m_lstChannel.end(); ++it)
+		{
+			if (channelStatus.nPort == it->uPort)
+			{
 				PyCallClassMemberFunc(m_poWnd, "NotifyChannelState", Py_BuildValue("(ii)", it->uServerIndex, channelStatus.bStatus));
 				break;
 			}

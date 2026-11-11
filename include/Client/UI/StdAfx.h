@@ -1,12 +1,12 @@
 #pragma once
 
-#pragma warning(disable:4702)
-#pragma warning(disable:4100)
-#pragma warning(disable:4201)
-#pragma warning(disable:4511)
-#pragma warning(disable:4663)
-#pragma warning(disable:4018)
-#pragma warning(disable:4245)
+#pragma warning(disable : 4702)
+#pragma warning(disable : 4100)
+#pragma warning(disable : 4201)
+#pragma warning(disable : 4511)
+#pragma warning(disable : 4663)
+#pragma warning(disable : 4018)
+#pragma warning(disable : 4245)
 
 #include <Neoeter/Render/StdAfx.h>
 #include <Neoeter/Python/Bindings/StdAfx.h>
@@ -31,11 +31,11 @@
 #include <Client/UI/GameType.h>
 extern DWORD __DEFAULT_CODE_PAGE__;
 
-#define APP_NAME	"Metin 2"
+#define APP_NAME "Metin 2"
 
 enum
 {
-	POINT_MAX_NUM = 255,	
+	POINT_MAX_NUM = 255,
 	CHARACTER_NAME_MAX_LEN = 24,
 #if defined(LOCALE_SERVICE_JAPAN)
 	PLAYER_NAME_MAX_LEN = 16,

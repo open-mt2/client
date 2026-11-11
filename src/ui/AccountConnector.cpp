@@ -15,19 +15,18 @@ void CAccountConnector::SetHandler(PyObject* poHandler)
 	m_poHandler = poHandler;
 }
 
-void CAccountConnector::SetLoginInfo(const char * c_szName, const char * c_szPwd)
+void CAccountConnector::SetLoginInfo(const char* c_szName, const char* c_szPwd)
 {
 	m_strID = c_szName;
 	m_strPassword = c_szPwd;
 }
 
-
-void CAccountConnector::ClearLoginInfo( void )
+void CAccountConnector::ClearLoginInfo(void)
 {
 	m_strPassword = "";
 }
 
-bool CAccountConnector::Connect(const char * c_szAddr, int iPort, const char * c_szAccountAddr, int iAccountPort)
+bool CAccountConnector::Connect(const char* c_szAddr, int iPort, const char* c_szAccountAddr, int iAccountPort)
 {
 	m_strAddr = c_szAddr;
 	m_iPort = iPort;
@@ -37,10 +36,10 @@ bool CAccountConnector::Connect(const char * c_szAddr, int iPort, const char * c
 	// CHINA_CRYPT_KEY
 	if (LocaleService_IsYMIR())
 	{
-	}	
+	}
 	else
 	{
-		__BuildClientKey_20050304Myevan();		
+		__BuildClientKey_20050304Myevan();
 	}
 	// END_OF_CHINA_CRYPT_KEY
 
@@ -53,12 +52,12 @@ void CAccountConnector::Disconnect()
 	__OfflineState_Set();
 }
 
-bool CAccountConnector::SendNEWCIBNPasspodAnswerPacket(const char * answer)
+bool CAccountConnector::SendNEWCIBNPasspodAnswerPacket(const char* answer)
 {
 	TPacketCGNEWCIBNPasspodAnswer answerPacket;
 	answerPacket.bHeader = HEADER_CG_NEWCIBN_PASSPOD_ANSWER;
 	strncpy(answerPacket.szAnswer, answer, NEWCIBN_PASSPOD_ANSWER_MAX_LEN);
-	answerPacket.szAnswer[NEWCIBN_PASSPOD_ANSWER_MAX_LEN] = '\0';	
+	answerPacket.szAnswer[NEWCIBN_PASSPOD_ANSWER_MAX_LEN] = '\0';
 	if (!Send(sizeof(answerPacket), &answerPacket))
 	{
 		TraceError("SendNEWCIBNPasspodAnswerPacket");
@@ -67,7 +66,7 @@ bool CAccountConnector::SendNEWCIBNPasspodAnswerPacket(const char * answer)
 	return SendSequence();
 }
 
-bool CAccountConnector::SendRunupMatrixCardPacket(const char * c_szMatrixCardString)
+bool CAccountConnector::SendRunupMatrixCardPacket(const char* c_szMatrixCardString)
 {
 	TPacketCGRunupMatrixAnswer answerPacket;
 	answerPacket.bHeader = HEADER_CG_RUNUP_MATRIX_ANSWER;
@@ -81,7 +80,7 @@ bool CAccountConnector::SendRunupMatrixCardPacket(const char * c_szMatrixCardStr
 	return SendSequence();
 }
 
-bool CAccountConnector::SendChinaMatrixCardPacket(const char * c_szMatrixCardString)
+bool CAccountConnector::SendChinaMatrixCardPacket(const char* c_szMatrixCardString)
 {
 	TPacketCGChinaMatrixCard MatrixCardPacket;
 	MatrixCardPacket.bHeader = HEADER_CG_CHINA_MATRIX_CARD;
@@ -202,7 +201,7 @@ bool CAccountConnector::__AuthState_RecvPhase()
 
 		// 비밀번호를 메모리에 계속 갖고 있는 문제가 있어서, 사용 즉시 날리는 것으로 변경
 		ClearLoginInfo();
-		CPythonNetworkStream& rkNetStream=CPythonNetworkStream::Instance();
+		CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 		rkNetStream.ClearLoginInfo();
 
 		m_strPassword = "";
@@ -237,10 +236,10 @@ bool CAccountConnector::__AuthState_RecvHandshake()
 	{
 		Tracenf("HANDSHAKE RECV %u %d", kPacketHandshake.dwTime, kPacketHandshake.lDelta);
 
-		ELTimer_SetServerMSec(kPacketHandshake.dwTime+ kPacketHandshake.lDelta);
+		ELTimer_SetServerMSec(kPacketHandshake.dwTime + kPacketHandshake.lDelta);
 
-		//DWORD dwBaseServerTime = kPacketHandshake.dwTime+ kPacketHandshake.lDelta;
-		//DWORD dwBaseClientTime = ELTimer_GetMSec();
+		// DWORD dwBaseServerTime = kPacketHandshake.dwTime+ kPacketHandshake.lDelta;
+		// DWORD dwBaseClientTime = ELTimer_GetMSec();
 
 		kPacketHandshake.dwTime = kPacketHandshake.dwTime + kPacketHandshake.lDelta + kPacketHandshake.lDelta;
 		kPacketHandshake.lDelta = 0;
@@ -291,7 +290,7 @@ bool CAccountConnector::__AuthState_RecvAuthSuccess()
 	}
 	else
 	{
-		CPythonNetworkStream & rkNet = CPythonNetworkStream::Instance();
+		CPythonNetworkStream& rkNet = CPythonNetworkStream::Instance();
 		rkNet.SetLoginKey(kAuthSuccessPacket.dwLoginKey);
 		rkNet.Connect(m_strAddr.c_str(), m_iPort);
 	}
@@ -311,7 +310,7 @@ bool CAccountConnector::__AuthState_RecvAuthFailure()
 	if (m_poHandler)
 		PyCallClassMemberFunc(m_poHandler, "OnLoginFailure", Py_BuildValue("(s)", packet_failure.szStatus));
 
-//	__OfflineState_Set();
+	//	__OfflineState_Set();
 
 	return true;
 }
@@ -322,7 +321,7 @@ bool CAccountConnector::__AuthState_RecvRunupMatrixQuiz()
 	if (!Recv(sizeof(TPacketGCRunupMatrixQuiz), &kMatrixQuizPacket))
 		return false;
 
-	PyCallClassMemberFunc(m_poHandler, "BINARY_OnRunupMatrixQuiz", Py_BuildValue("(s)", kMatrixQuizPacket.szQuiz));	
+	PyCallClassMemberFunc(m_poHandler, "BINARY_OnRunupMatrixQuiz", Py_BuildValue("(s)", kMatrixQuizPacket.szQuiz));
 	return true;
 }
 
@@ -332,7 +331,7 @@ bool CAccountConnector::__AuthState_RecvNEWCIBNPasspodRequest()
 	if (!Recv(sizeof(kRequestPacket), &kRequestPacket))
 		return false;
 
-	PyCallClassMemberFunc(m_poHandler, "BINARY_OnNEWCIBNPasspodRequest", Py_BuildValue("()"));	
+	PyCallClassMemberFunc(m_poHandler, "BINARY_OnNEWCIBNPasspodRequest", Py_BuildValue("()"));
 	return true;
 }
 
@@ -347,14 +346,14 @@ bool CAccountConnector::__AuthState_RecvChinaMatrixCard()
 
 	if (m_poHandler)
 	{
-		PyObject * pyValue = Py_BuildValue("(iiiiiiii)",	ROW(kMatrixCardPacket.dwRows, 0),
-															ROW(kMatrixCardPacket.dwRows, 1),
-															ROW(kMatrixCardPacket.dwRows, 2),
-															ROW(kMatrixCardPacket.dwRows, 3),
-															COL(kMatrixCardPacket.dwCols, 0),
-															COL(kMatrixCardPacket.dwCols, 1),
-															COL(kMatrixCardPacket.dwCols, 2),
-															COL(kMatrixCardPacket.dwCols, 3));
+		PyObject* pyValue = Py_BuildValue("(iiiiiiii)", ROW(kMatrixCardPacket.dwRows, 0),
+										  ROW(kMatrixCardPacket.dwRows, 1),
+										  ROW(kMatrixCardPacket.dwRows, 2),
+										  ROW(kMatrixCardPacket.dwRows, 3),
+										  COL(kMatrixCardPacket.dwCols, 0),
+										  COL(kMatrixCardPacket.dwCols, 1),
+										  COL(kMatrixCardPacket.dwCols, 2),
+										  COL(kMatrixCardPacket.dwCols, 3));
 		PyCallClassMemberFunc(m_poHandler, "OnMatrixCard", pyValue);
 	}
 
@@ -367,7 +366,7 @@ bool CAccountConnector::__AnalyzePacket(UINT uHeader, UINT uPacketSize, bool (CA
 	if (!Peek(sizeof(bHeader), &bHeader))
 		return true;
 
-	if (bHeader!=uHeader)
+	if (bHeader != uHeader)
 		return true;
 
 	if (!Peek(uPacketSize))
@@ -382,7 +381,7 @@ bool CAccountConnector::__AnalyzeVarSizePacket(UINT uHeader, bool (CAccountConne
 	if (!Peek(sizeof(bHeader), &bHeader))
 		return true;
 
-	if (bHeader!=uHeader)
+	if (bHeader != uHeader)
 		return true;
 
 	TDynamicSizePacketHeader dynamicHeader;
@@ -396,7 +395,6 @@ bool CAccountConnector::__AnalyzeVarSizePacket(UINT uHeader, bool (CAccountConne
 	return (this->*pfnDispatchPacket)(dynamicHeader.size);
 }
 
-
 void CAccountConnector::__OfflineState_Set()
 {
 	__Inialize();
@@ -404,12 +402,12 @@ void CAccountConnector::__OfflineState_Set()
 
 void CAccountConnector::__HandshakeState_Set()
 {
-	m_eState=STATE_HANDSHAKE;
+	m_eState = STATE_HANDSHAKE;
 }
 
 void CAccountConnector::__AuthState_Set()
 {
-	m_eState=STATE_AUTH;
+	m_eState = STATE_AUTH;
 }
 
 void CAccountConnector::OnConnectFailure()
@@ -447,7 +445,7 @@ void CAccountConnector::OnDisconnect()
 
 void CAccountConnector::__Inialize()
 {
-	m_eState=STATE_OFFLINE;
+	m_eState = STATE_OFFLINE;
 	m_isWaitKey = FALSE;
 }
 

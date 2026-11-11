@@ -16,14 +16,14 @@ bool CPythonNetworkStream::SendSafeBoxMoneyPacket(BYTE byState, DWORD dwMoney)
 	assert(!"CPythonNetworkStream::SendSafeBoxMoneyPacket - \xBB\xE7\xBF\xEB\xC7\xCF\xC1\xF6 \xBE\xCA\xB4\xC2 \xC7\xD4\xBC\xF6");
 	return false;
 
-//	TPacketCGSafeboxMoney kSafeboxMoney;
-//	kSafeboxMoney.bHeader = HEADER_CG_SAFEBOX_MONEY;
-//	kSafeboxMoney.bState = byState;
-//	kSafeboxMoney.dwMoney = dwMoney;
-//	if (!Send(sizeof(kSafeboxMoney), &kSafeboxMoney))
-//		return false;
-//
-//	return SendSequence();
+	//	TPacketCGSafeboxMoney kSafeboxMoney;
+	//	kSafeboxMoney.bHeader = HEADER_CG_SAFEBOX_MONEY;
+	//	kSafeboxMoney.bState = byState;
+	//	kSafeboxMoney.dwMoney = dwMoney;
+	//	if (!Send(sizeof(kSafeboxMoney), &kSafeboxMoney))
+	//		return false;
+	//
+	//	return SendSequence();
 }
 
 bool CPythonNetworkStream::SendSafeBoxCheckinPacket(TItemPos InventoryPos, BYTE bySafeBoxPos)
@@ -76,13 +76,13 @@ bool CPythonNetworkStream::RecvSafeBoxSetPacket()
 		return false;
 
 	TItemData kItemData;
-	kItemData.vnum	= kItemSet.vnum;
+	kItemData.vnum = kItemSet.vnum;
 	kItemData.count = kItemSet.count;
 	kItemData.flags = kItemSet.flags;
 	kItemData.anti_flags = kItemSet.anti_flags;
-	for (int isocket=0; isocket<ITEM_SOCKET_SLOT_MAX_NUM; ++isocket)
+	for (int isocket = 0; isocket < ITEM_SOCKET_SLOT_MAX_NUM; ++isocket)
 		kItemData.alSockets[isocket] = kItemSet.alSockets[isocket];
-	for (int iattr=0; iattr<ITEM_ATTRIBUTE_SLOT_MAX_NUM; ++iattr)
+	for (int iattr = 0; iattr < ITEM_ATTRIBUTE_SLOT_MAX_NUM; ++iattr)
 		kItemData.aAttr[iattr] = kItemSet.aAttr[iattr];
 
 	CPythonSafeBox::Instance().SetItemData(kItemSet.Cell.cell, kItemData);
@@ -182,9 +182,9 @@ bool CPythonNetworkStream::RecvMallItemSetPacket()
 	kItemData.count = kItemSet.count;
 	kItemData.flags = kItemSet.flags;
 	kItemData.anti_flags = kItemSet.anti_flags;
-	for (int isocket=0; isocket<ITEM_SOCKET_SLOT_MAX_NUM; ++isocket)
+	for (int isocket = 0; isocket < ITEM_SOCKET_SLOT_MAX_NUM; ++isocket)
 		kItemData.alSockets[isocket] = kItemSet.alSockets[isocket];
-	for (int iattr=0; iattr<ITEM_ATTRIBUTE_SLOT_MAX_NUM; ++iattr)
+	for (int iattr = 0; iattr < ITEM_ATTRIBUTE_SLOT_MAX_NUM; ++iattr)
 		kItemData.aAttr[iattr] = kItemSet.aAttr[iattr];
 
 	CPythonSafeBox::Instance().SetMallItemData(kItemSet.Cell.cell, kItemData);
@@ -219,18 +219,18 @@ bool CPythonNetworkStream::RecvItemSetPacket()
 		return false;
 
 	TItemData kItemData;
-	kItemData.vnum	= packet_item_set.vnum;
-	kItemData.count	= packet_item_set.count;
+	kItemData.vnum = packet_item_set.vnum;
+	kItemData.count = packet_item_set.count;
 	kItemData.flags = 0;
-	for (int i=0; i<ITEM_SOCKET_SLOT_MAX_NUM; ++i)
-		kItemData.alSockets[i]=packet_item_set.alSockets[i];
-	for (int j=0; j<ITEM_ATTRIBUTE_SLOT_MAX_NUM; ++j)
-		kItemData.aAttr[j]=packet_item_set.aAttr[j];
+	for (int i = 0; i < ITEM_SOCKET_SLOT_MAX_NUM; ++i)
+		kItemData.alSockets[i] = packet_item_set.alSockets[i];
+	for (int j = 0; j < ITEM_ATTRIBUTE_SLOT_MAX_NUM; ++j)
+		kItemData.aAttr[j] = packet_item_set.aAttr[j];
 
-	IAbstractPlayer& rkPlayer=IAbstractPlayer::GetSingleton();
-	
+	IAbstractPlayer& rkPlayer = IAbstractPlayer::GetSingleton();
+
 	rkPlayer.SetItemData(packet_item_set.Cell, kItemData);
-	
+
 	__RefreshInventoryWindow();
 	return true;
 }
@@ -243,17 +243,17 @@ bool CPythonNetworkStream::RecvItemSetPacket2()
 		return false;
 
 	TItemData kItemData;
-	kItemData.vnum	= packet_item_set.vnum;
-	kItemData.count	= packet_item_set.count;
+	kItemData.vnum = packet_item_set.vnum;
+	kItemData.count = packet_item_set.count;
 	kItemData.flags = packet_item_set.flags;
 	kItemData.anti_flags = packet_item_set.anti_flags;
 
-	for (int i=0; i<ITEM_SOCKET_SLOT_MAX_NUM; ++i)
-		kItemData.alSockets[i]=packet_item_set.alSockets[i];
-	for (int j=0; j<ITEM_ATTRIBUTE_SLOT_MAX_NUM; ++j)
-		kItemData.aAttr[j]=packet_item_set.aAttr[j];
+	for (int i = 0; i < ITEM_SOCKET_SLOT_MAX_NUM; ++i)
+		kItemData.alSockets[i] = packet_item_set.alSockets[i];
+	for (int j = 0; j < ITEM_ATTRIBUTE_SLOT_MAX_NUM; ++j)
+		kItemData.aAttr[j] = packet_item_set.aAttr[j];
 
-	IAbstractPlayer& rkPlayer=IAbstractPlayer::GetSingleton();
+	IAbstractPlayer& rkPlayer = IAbstractPlayer::GetSingleton();
 	rkPlayer.SetItemData(packet_item_set.Cell, kItemData);
 
 	if (packet_item_set.highlight)
@@ -262,7 +262,6 @@ bool CPythonNetworkStream::RecvItemSetPacket2()
 	__RefreshInventoryWindow();
 	return true;
 }
-
 
 bool CPythonNetworkStream::RecvItemUsePacket()
 {
@@ -282,7 +281,7 @@ bool CPythonNetworkStream::RecvItemUpdatePacket()
 	if (!Recv(sizeof(TPacketGCItemUpdate), &packet_item_update))
 		return false;
 
-	IAbstractPlayer& rkPlayer=IAbstractPlayer::GetSingleton();
+	IAbstractPlayer& rkPlayer = IAbstractPlayer::GetSingleton();
 	rkPlayer.SetItemCount(packet_item_update.Cell, packet_item_update.count);
 	for (int i = 0; i < ITEM_SOCKET_SLOT_MAX_NUM; ++i)
 		rkPlayer.SetItemMetinSocket(packet_item_update.Cell, i, packet_item_update.alSockets[i]);
@@ -302,14 +301,13 @@ bool CPythonNetworkStream::RecvItemGroundAddPacket()
 
 	__GlobalPositionToLocalPosition(packet_item_ground_add.lX, packet_item_ground_add.lY);
 
-	CPythonItem::Instance().CreateItem(packet_item_ground_add.dwVID, 
+	CPythonItem::Instance().CreateItem(packet_item_ground_add.dwVID,
 									   packet_item_ground_add.dwVnum,
 									   packet_item_ground_add.lX,
 									   packet_item_ground_add.lY,
 									   packet_item_ground_add.lZ);
 	return true;
 }
-
 
 bool CPythonNetworkStream::RecvItemOwnership()
 {
@@ -324,7 +322,7 @@ bool CPythonNetworkStream::RecvItemOwnership()
 
 bool CPythonNetworkStream::RecvItemGroundDelPacket()
 {
-	TPacketGCItemGroundDel	packet_item_ground_del;
+	TPacketGCItemGroundDel packet_item_ground_del;
 
 	if (!Recv(sizeof(TPacketGCItemGroundDel), &packet_item_ground_del))
 		return false;
@@ -340,7 +338,7 @@ bool CPythonNetworkStream::RecvQuickSlotAddPacket()
 	if (!Recv(sizeof(TPacketGCQuickSlotAdd), &packet_quick_slot_add))
 		return false;
 
-	IAbstractPlayer& rkPlayer=IAbstractPlayer::GetSingleton();
+	IAbstractPlayer& rkPlayer = IAbstractPlayer::GetSingleton();
 	rkPlayer.AddQuickSlot(packet_quick_slot_add.pos, packet_quick_slot_add.slot.Type, packet_quick_slot_add.slot.Position);
 
 	__RefreshInventoryWindow();
@@ -355,7 +353,7 @@ bool CPythonNetworkStream::RecvQuickSlotDelPacket()
 	if (!Recv(sizeof(TPacketGCQuickSlotDel), &packet_quick_slot_del))
 		return false;
 
-	IAbstractPlayer& rkPlayer=IAbstractPlayer::GetSingleton();
+	IAbstractPlayer& rkPlayer = IAbstractPlayer::GetSingleton();
 	rkPlayer.DeleteQuickSlot(packet_quick_slot_del.pos);
 
 	__RefreshInventoryWindow();
@@ -370,15 +368,13 @@ bool CPythonNetworkStream::RecvQuickSlotMovePacket()
 	if (!Recv(sizeof(TPacketGCQuickSlotSwap), &packet_quick_slot_swap))
 		return false;
 
-	IAbstractPlayer& rkPlayer=IAbstractPlayer::GetSingleton();
+	IAbstractPlayer& rkPlayer = IAbstractPlayer::GetSingleton();
 	rkPlayer.MoveQuickSlot(packet_quick_slot_swap.pos, packet_quick_slot_swap.change_pos);
 
 	__RefreshInventoryWindow();
 
 	return true;
 }
-
-
 
 bool CPythonNetworkStream::SendShopEndPacket()
 {
@@ -402,7 +398,7 @@ bool CPythonNetworkStream::SendShopBuyPacket(BYTE bPos)
 {
 	if (!__CanActMainInstance())
 		return true;
-	
+
 	TPacketCGShop PacketShop;
 	PacketShop.header = HEADER_CG_SHOP;
 	PacketShop.subheader = SHOP_SUBHEADER_CG_BUY;
@@ -413,7 +409,7 @@ bool CPythonNetworkStream::SendShopBuyPacket(BYTE bPos)
 		return false;
 	}
 
-	BYTE bCount=1;
+	BYTE bCount = 1;
 	if (!Send(sizeof(BYTE), &bCount))
 	{
 		Tracef("SendShopBuyPacket Error\n");
@@ -524,7 +520,7 @@ bool CPythonNetworkStream::SendItemUsePacket(TItemPos pos)
 bool CPythonNetworkStream::SendItemUseToItemPacket(TItemPos source_pos, TItemPos target_pos)
 {
 	if (!__CanActMainInstance())
-		return true;	
+		return true;
 
 	TPacketCGItemUseToItem itemUseToItemPacket;
 	itemUseToItemPacket.header = HEADER_CG_ITEM_USE_TO_ITEM;
@@ -585,66 +581,66 @@ bool CPythonNetworkStream::SendItemDropPacketNew(TItemPos pos, DWORD elk, DWORD 
 
 bool CPythonNetworkStream::__IsEquipItemInSlot(TItemPos uSlotPos)
 {
-	IAbstractPlayer& rkPlayer=IAbstractPlayer::GetSingleton();
+	IAbstractPlayer& rkPlayer = IAbstractPlayer::GetSingleton();
 	return rkPlayer.IsEquipItemInSlot(uSlotPos);
 }
 
 void CPythonNetworkStream::__PlayInventoryItemUseSound(TItemPos uSlotPos)
 {
-	IAbstractPlayer& rkPlayer=IAbstractPlayer::GetSingleton();
-	DWORD dwItemID=rkPlayer.GetItemIndex(uSlotPos);
+	IAbstractPlayer& rkPlayer = IAbstractPlayer::GetSingleton();
+	DWORD dwItemID = rkPlayer.GetItemIndex(uSlotPos);
 
-	CPythonItem& rkItem=CPythonItem::Instance();
+	CPythonItem& rkItem = CPythonItem::Instance();
 	rkItem.PlayUseSound(dwItemID);
 }
 
 void CPythonNetworkStream::__PlayInventoryItemDropSound(TItemPos uSlotPos)
 {
-	IAbstractPlayer& rkPlayer=IAbstractPlayer::GetSingleton();
-	DWORD dwItemID=rkPlayer.GetItemIndex(uSlotPos);
+	IAbstractPlayer& rkPlayer = IAbstractPlayer::GetSingleton();
+	DWORD dwItemID = rkPlayer.GetItemIndex(uSlotPos);
 
-	CPythonItem& rkItem=CPythonItem::Instance();
+	CPythonItem& rkItem = CPythonItem::Instance();
 	rkItem.PlayDropSound(dwItemID);
 }
 
-//void CPythonNetworkStream::__PlayShopItemDropSound(UINT uSlotPos)
+// void CPythonNetworkStream::__PlayShopItemDropSound(UINT uSlotPos)
 //{
 //	DWORD dwItemID;
 //	CPythonShop& rkShop=CPythonShop::Instance();
 //	if (!rkShop.GetSlotItemID(uSlotPos, &dwItemID))
 //		return;
-//	
+//
 //	CPythonItem& rkItem=CPythonItem::Instance();
 //	rkItem.PlayDropSound(dwItemID);
-//}
+// }
 
 void CPythonNetworkStream::__PlaySafeBoxItemDropSound(UINT uSlotPos)
 {
 	DWORD dwItemID;
-	CPythonSafeBox& rkSafeBox=CPythonSafeBox::Instance();
+	CPythonSafeBox& rkSafeBox = CPythonSafeBox::Instance();
 	if (!rkSafeBox.GetSlotItemID(uSlotPos, &dwItemID))
 		return;
 
-	CPythonItem& rkItem=CPythonItem::Instance();
+	CPythonItem& rkItem = CPythonItem::Instance();
 	rkItem.PlayDropSound(dwItemID);
 }
 
 void CPythonNetworkStream::__PlayMallItemDropSound(UINT uSlotPos)
 {
 	DWORD dwItemID;
-	CPythonSafeBox& rkSafeBox=CPythonSafeBox::Instance();
+	CPythonSafeBox& rkSafeBox = CPythonSafeBox::Instance();
 	if (!rkSafeBox.GetSlotMallItemID(uSlotPos, &dwItemID))
 		return;
 
-	CPythonItem& rkItem=CPythonItem::Instance();
+	CPythonItem& rkItem = CPythonItem::Instance();
 	rkItem.PlayDropSound(dwItemID);
 }
 
 bool CPythonNetworkStream::SendItemMovePacket(TItemPos pos, TItemPos change_pos, BYTE num)
-{	
+{
 	if (!__CanActMainInstance())
 		return true;
-	
+
 	if (__IsEquipItemInSlot(pos))
 	{
 		if (CPythonExchange::Instance().isTrading())
@@ -671,7 +667,7 @@ bool CPythonNetworkStream::SendItemMovePacket(TItemPos pos, TItemPos change_pos,
 
 	__PlayInventoryItemDropSound(pos);
 
-	TPacketCGItemMove	itemMovePacket;
+	TPacketCGItemMove itemMovePacket;
 	itemMovePacket.header = HEADER_CG_ITEM_MOVE;
 	itemMovePacket.pos = pos;
 	itemMovePacket.change_pos = change_pos;
@@ -691,7 +687,7 @@ bool CPythonNetworkStream::SendItemPickUpPacket(DWORD vid)
 	if (!__CanActMainInstance())
 		return true;
 
-	TPacketCGItemPickUp	itemPickUpPacket;
+	TPacketCGItemPickUp itemPickUpPacket;
 	itemPickUpPacket.header = HEADER_CG_ITEM_PICKUP;
 	itemPickUpPacket.vid = vid;
 
@@ -704,7 +700,6 @@ bool CPythonNetworkStream::SendItemPickUpPacket(DWORD vid)
 	return SendSequence();
 }
 
-
 bool CPythonNetworkStream::SendQuickSlotAddPacket(BYTE wpos, BYTE type, BYTE pos)
 {
 	if (!__CanActMainInstance())
@@ -712,9 +707,9 @@ bool CPythonNetworkStream::SendQuickSlotAddPacket(BYTE wpos, BYTE type, BYTE pos
 
 	TPacketCGQuickSlotAdd quickSlotAddPacket;
 
-	quickSlotAddPacket.header		= HEADER_CG_QUICKSLOT_ADD;
-	quickSlotAddPacket.pos			= wpos;
-	quickSlotAddPacket.slot.Type	= type;
+	quickSlotAddPacket.header = HEADER_CG_QUICKSLOT_ADD;
+	quickSlotAddPacket.pos = wpos;
+	quickSlotAddPacket.slot.Type = type;
 	quickSlotAddPacket.slot.Position = pos;
 
 	if (!Send(sizeof(TPacketCGQuickSlotAdd), &quickSlotAddPacket))
@@ -772,8 +767,8 @@ bool CPythonNetworkStream::RecvSpecialEffect()
 		return false;
 
 	DWORD effect = -1;
-	bool bPlayPotionSound = false;	//포션을 먹을 경우는 포션 사운드를 출력하자.!!
-	bool bAttachEffect = true;		//캐리터에 붙는 어태치 이펙트와 일반 이펙트 구분.!!
+	bool bPlayPotionSound = false; // 포션을 먹을 경우는 포션 사운드를 출력하자.!!
+	bool bAttachEffect = true;	   // 캐리터에 붙는 어태치 이펙트와 일반 이펙트 구분.!!
 	switch (kSpecialEffect.type)
 	{
 		case SE_HPUP_RED:
@@ -812,24 +807,24 @@ bool CPythonNetworkStream::RecvSpecialEffect()
 			effect = CInstanceBase::EFFECT_SPIN_TOP;
 			bAttachEffect = false;
 			break;
-		case SE_SUCCESS :
-			effect = CInstanceBase::EFFECT_SUCCESS ;
-			bAttachEffect = false ;
-			break ;
-		case SE_FAIL :
-			effect = CInstanceBase::EFFECT_FAIL ;
-			break ;
+		case SE_SUCCESS:
+			effect = CInstanceBase::EFFECT_SUCCESS;
+			bAttachEffect = false;
+			break;
+		case SE_FAIL:
+			effect = CInstanceBase::EFFECT_FAIL;
+			break;
 		case SE_FR_SUCCESS:
 			effect = CInstanceBase::EFFECT_FR_SUCCESS;
-			bAttachEffect = false ;
+			bAttachEffect = false;
 			break;
-		case SE_LEVELUP_ON_14_FOR_GERMANY:	//레벨업 14일때 ( 독일전용 )
+		case SE_LEVELUP_ON_14_FOR_GERMANY: // 레벨업 14일때 ( 독일전용 )
 			effect = CInstanceBase::EFFECT_LEVELUP_ON_14_FOR_GERMANY;
-			bAttachEffect = false ;
+			bAttachEffect = false;
 			break;
-		case SE_LEVELUP_UNDER_15_FOR_GERMANY: //레벨업 15일때 ( 독일전용 )
+		case SE_LEVELUP_UNDER_15_FOR_GERMANY: // 레벨업 15일때 ( 독일전용 )
 			effect = CInstanceBase::EFFECT_LEVELUP_UNDER_15_FOR_GERMANY;
-			bAttachEffect = false ;
+			bAttachEffect = false;
 			break;
 		case SE_PERCENT_DAMAGE1:
 			effect = CInstanceBase::EFFECT_PERCENT_DAMAGE1;
@@ -853,34 +848,33 @@ bool CPythonNetworkStream::RecvSpecialEffect()
 			effect = CInstanceBase::EFFECT_HALLOWEEN_CANDY_EQUIP;
 			break;
 		case SE_EQUIP_HAPPINESS_RING:
- 			effect = CInstanceBase::EFFECT_HAPPINESS_RING_EQUIP;
+			effect = CInstanceBase::EFFECT_HAPPINESS_RING_EQUIP;
 			break;
 		case SE_EQUIP_LOVE_PENDANT:
 			effect = CInstanceBase::EFFECT_LOVE_PENDANT_EQUIP;
 			break;
 
-		
 		default:
-			TraceError("%d is a special effect number that does not exist. TPacketGCSpecialEffect",kSpecialEffect.type);
+			TraceError("%d is a special effect number that does not exist. TPacketGCSpecialEffect", kSpecialEffect.type);
 			break;
 	}
 
 	if (bPlayPotionSound)
-	{		
-		IAbstractPlayer& rkPlayer=IAbstractPlayer::GetSingleton();
-		if(rkPlayer.IsMainCharacterIndex(kSpecialEffect.vid))
+	{
+		IAbstractPlayer& rkPlayer = IAbstractPlayer::GetSingleton();
+		if (rkPlayer.IsMainCharacterIndex(kSpecialEffect.vid))
 		{
-			CPythonItem& rkItem=CPythonItem::Instance();
+			CPythonItem& rkItem = CPythonItem::Instance();
 			rkItem.PlayUsePotionSound();
 		}
 	}
 
 	if (-1 != effect)
 	{
-		CInstanceBase * pInstance = CPythonCharacterManager::Instance().GetInstancePtr(kSpecialEffect.vid);
+		CInstanceBase* pInstance = CPythonCharacterManager::Instance().GetInstancePtr(kSpecialEffect.vid);
 		if (pInstance)
 		{
-			if(bAttachEffect)
+			if (bAttachEffect)
 				pInstance->AttachSpecialEffect(effect);
 			else
 				pInstance->CreateSpecialEffect(effect);
@@ -890,15 +884,14 @@ bool CPythonNetworkStream::RecvSpecialEffect()
 	return true;
 }
 
-
 bool CPythonNetworkStream::RecvSpecificEffect()
 {
 	TPacketGCSpecificEffect kSpecificEffect;
 	if (!Recv(sizeof(kSpecificEffect), &kSpecificEffect))
 		return false;
 
-	CInstanceBase * pInstance = CPythonCharacterManager::Instance().GetInstancePtr(kSpecificEffect.vid);
-	//EFFECT_TEMP
+	CInstanceBase* pInstance = CPythonCharacterManager::Instance().GetInstancePtr(kSpecificEffect.vid);
+	// EFFECT_TEMP
 	if (pInstance)
 	{
 		CInstanceBase::RegisterEffect(CInstanceBase::EFFECT_TEMP, "", kSpecificEffect.effect_file, false);
@@ -914,26 +907,24 @@ bool CPythonNetworkStream::RecvDragonSoulRefine()
 
 	if (!Recv(sizeof(kDragonSoul), &kDragonSoul))
 		return false;
-	
-	
+
 	switch (kDragonSoul.bSubType)
 	{
-	case DS_SUB_HEADER_OPEN:
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_DragonSoulRefineWindow_Open", Py_BuildValue("()"));
-		break;
-	case DS_SUB_HEADER_REFINE_FAIL:
-	case DS_SUB_HEADER_REFINE_FAIL_MAX_REFINE:
-	case DS_SUB_HEADER_REFINE_FAIL_INVALID_MATERIAL:
-	case DS_SUB_HEADER_REFINE_FAIL_NOT_ENOUGH_MONEY:
-	case DS_SUB_HEADER_REFINE_FAIL_NOT_ENOUGH_MATERIAL:
-	case DS_SUB_HEADER_REFINE_FAIL_TOO_MUCH_MATERIAL:
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_DragonSoulRefineWindow_RefineFail", Py_BuildValue("(iii)", 
-			kDragonSoul.bSubType, kDragonSoul.Pos.window_type, kDragonSoul.Pos.cell));
-		break;
-	case DS_SUB_HEADER_REFINE_SUCCEED:
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_DragonSoulRefineWindow_RefineSucceed", 
-				Py_BuildValue("(ii)", kDragonSoul.Pos.window_type, kDragonSoul.Pos.cell));
-		break;
+		case DS_SUB_HEADER_OPEN:
+			PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_DragonSoulRefineWindow_Open", Py_BuildValue("()"));
+			break;
+		case DS_SUB_HEADER_REFINE_FAIL:
+		case DS_SUB_HEADER_REFINE_FAIL_MAX_REFINE:
+		case DS_SUB_HEADER_REFINE_FAIL_INVALID_MATERIAL:
+		case DS_SUB_HEADER_REFINE_FAIL_NOT_ENOUGH_MONEY:
+		case DS_SUB_HEADER_REFINE_FAIL_NOT_ENOUGH_MATERIAL:
+		case DS_SUB_HEADER_REFINE_FAIL_TOO_MUCH_MATERIAL:
+			PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_DragonSoulRefineWindow_RefineFail", Py_BuildValue("(iii)", kDragonSoul.bSubType, kDragonSoul.Pos.window_type, kDragonSoul.Pos.cell));
+			break;
+		case DS_SUB_HEADER_REFINE_SUCCEED:
+			PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_DragonSoulRefineWindow_RefineSucceed",
+								  Py_BuildValue("(ii)", kDragonSoul.Pos.window_type, kDragonSoul.Pos.cell));
+			break;
 	}
 
 	return true;

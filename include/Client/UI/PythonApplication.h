@@ -25,7 +25,7 @@
 #include <Client/UI/PythonTextTail.h>
 #include <Client/UI/PythonSkill.h>
 #include <Client/UI/PythonSystem.h>
-//#include "PythonNetworkDatagram.h"
+// #include "PythonNetworkDatagram.h"
 #include <Client/UI/PythonNetworkStream.h>
 #include <Client/UI/PythonCharacterManager.h>
 #include <Client/UI/PythonQuest.h>
@@ -77,14 +77,14 @@ class CPythonApplication : public CMSApplication, public CInputKeyboard, public 
 
 			CURSOR_SHAPE_DOOR,
 			CURSOR_SHAPE_CHAIR,
-			CURSOR_SHAPE_MAGIC,				// Magic
-			CURSOR_SHAPE_BUY,				// Buy
-			CURSOR_SHAPE_SELL,				// Sell
+			CURSOR_SHAPE_MAGIC, // Magic
+			CURSOR_SHAPE_BUY,	// Buy
+			CURSOR_SHAPE_SELL,	// Sell
 
-			CURSOR_SHAPE_CAMERA_ROTATE,		// Camera Rotate
-			CURSOR_SHAPE_HSIZE,				// Horizontal Size
-			CURSOR_SHAPE_VSIZE,				// Vertical Size
-			CURSOR_SHAPE_HVSIZE,			// Horizontal & Vertical Size
+			CURSOR_SHAPE_CAMERA_ROTATE, // Camera Rotate
+			CURSOR_SHAPE_HSIZE,			// Horizontal Size
+			CURSOR_SHAPE_VSIZE,			// Vertical Size
+			CURSOR_SHAPE_HVSIZE,		// Horizontal & Vertical Size
 
 			CURSOR_SHAPE_COUNT,
 
@@ -122,11 +122,11 @@ class CPythonApplication : public CMSApplication, public CInputKeyboard, public 
 
 		struct SCameraSpeed
 		{
-			float m_fUpDir;
-			float m_fViewDir;
-			float m_fCrossDir;
+				float m_fUpDir;
+				float m_fViewDir;
+				float m_fCrossDir;
 
-			SCameraSpeed() : m_fUpDir(0.0f), m_fViewDir(0.0f), m_fCrossDir(0.0f) {}
+				SCameraSpeed() : m_fUpDir(0.0f), m_fViewDir(0.0f), m_fCrossDir(0.0f) {}
 		};
 
 	public:
@@ -144,7 +144,7 @@ class CPythonApplication : public CMSApplication, public CInputKeyboard, public 
 		void NotifyHack(const char* c_szFormat, ...);
 		void GetInfo(UINT eInfo, std::string* pstInfo);
 		void GetMousePosition(POINT* ppt);
-		
+
 		static CPythonApplication& Instance()
 		{
 			assert(ms_pInstance != NULL);
@@ -186,16 +186,16 @@ class CPythonApplication : public CMSApplication, public CInputKeyboard, public 
 		int GetCursorMode();
 		int GetCursorNum() { return m_iCursorNum; }
 
-		void SetMouseHandler(PyObject * poMouseHandler);
+		void SetMouseHandler(PyObject* poMouseHandler);
 
 		int GetWidth();
 		int GetHeight();
 
 		void SetGlobalCenterPosition(LONG x, LONG y);
 		void SetCenterPosition(float fx, float fy, float fz);
-		void GetCenterPosition(TPixelPosition * pPixelPosition);
+		void GetCenterPosition(TPixelPosition* pPixelPosition);
 		void SetCamera(float Distance, float Pitch, float Rotation, float fDestinationHeight);
-		void GetCamera(float * Distance, float * Pitch, float * Rotation, float * DestinationHeight);
+		void GetCamera(float* Distance, float* Pitch, float* Rotation, float* DestinationHeight);
 		void RotateCamera(int iDirection);
 		void PitchCamera(int iDirection);
 		void ZoomCamera(int iDirection);
@@ -216,17 +216,17 @@ class CPythonApplication : public CMSApplication, public CInputKeyboard, public 
 		float GetGlobalTime();
 		float GetGlobalElapsedTime();
 
-		float GetFaceSpeed()		{ return m_fFaceSpd; }
-		float GetAveRenderTime()	{ return m_fAveRenderTime; }
-		DWORD GetCurRenderTime()	{ return m_dwCurRenderTime; }
-		DWORD GetCurUpdateTime()	{ return m_dwCurUpdateTime; }
-		DWORD GetUpdateFPS()		{ return m_dwUpdateFPS; }
-		DWORD GetRenderFPS()		{ return m_dwRenderFPS; }
-		DWORD GetLoad()			{ return m_dwLoad; }
-		DWORD GetFaceCount()	{ return m_dwFaceCount; }
+		float GetFaceSpeed() { return m_fFaceSpd; }
+		float GetAveRenderTime() { return m_fAveRenderTime; }
+		DWORD GetCurRenderTime() { return m_dwCurRenderTime; }
+		DWORD GetCurUpdateTime() { return m_dwCurUpdateTime; }
+		DWORD GetUpdateFPS() { return m_dwUpdateFPS; }
+		DWORD GetRenderFPS() { return m_dwRenderFPS; }
+		DWORD GetLoad() { return m_dwLoad; }
+		DWORD GetFaceCount() { return m_dwFaceCount; }
 
-		void SetConnectData(const char * c_szIP, int iPort);
-		void GetConnectData(std::string & rstIP, int & riPort);
+		void SetConnectData(const char* c_szIP, int iPort);
+		void GetConnectData(std::string& rstIP, int& riPort);
 
 		void RunIMEUpdate();
 		void RunIMETabEvent();
@@ -243,17 +243,16 @@ class CPythonApplication : public CMSApplication, public CInputKeyboard, public 
 		void SetCameraSpeed(int iPercentage);
 
 		bool IsLockCurrentCamera();
-		void SetEventCamera(const SCameraSetting & c_rCameraSetting);
-		void BlendEventCamera(const SCameraSetting & c_rCameraSetting, float fBlendTime);
+		void SetEventCamera(const SCameraSetting& c_rCameraSetting);
+		void BlendEventCamera(const SCameraSetting& c_rCameraSetting, float fBlendTime);
 		void SetDefaultCamera();
 
-		void SetCameraSetting(const SCameraSetting & c_rCameraSetting);
-		void GetCameraSetting(SCameraSetting * pCameraSetting);
-		void SaveCameraSetting(const char * c_szFileName);
-		bool LoadCameraSetting(const char * c_szFileName);
+		void SetCameraSetting(const SCameraSetting& c_rCameraSetting);
+		void GetCameraSetting(SCameraSetting* pCameraSetting);
+		void SaveCameraSetting(const char* c_szFileName);
+		bool LoadCameraSetting(const char* c_szFileName);
 
 		void SetForceSightRange(int iRange);
-	
 
 	public:
 		int OnLogoOpen(char* szName);
@@ -262,21 +261,20 @@ class CPythonApplication : public CMSApplication, public CInputKeyboard, public 
 		void OnLogoClose();
 
 	protected:
-		IGraphBuilder*			m_pGraphBuilder;			// Graph Builder
-		IBaseFilter*			m_pFilterSG;				// Sample Grabber 필터
-		ISampleGrabber*			m_pSampleGrabber;			// 영상 이미지 캡처를 위한 샘플 그래버
-		IMediaControl*			m_pMediaCtrl;				// Media Control
-		IMediaEventEx*			m_pMediaEvent;				// Media Event
-		IVideoWindow*			m_pVideoWnd;				// Video Window
-		IBasicVideo*			m_pBasicVideo;
-		BYTE*					m_pCaptureBuffer;			// 영상 이미지를 캡처한 버퍼
-		LONG					m_lBufferSize;				// Video 버퍼 크기 변수 
-		CGraphicImageTexture*	m_pLogoTex;					// 출력할 텍스쳐
-		bool					m_bLogoError;				// 영상 읽기 상태
-		bool					m_bLogoPlay;
+		IGraphBuilder* m_pGraphBuilder;	  // Graph Builder
+		IBaseFilter* m_pFilterSG;		  // Sample Grabber 필터
+		ISampleGrabber* m_pSampleGrabber; // 영상 이미지 캡처를 위한 샘플 그래버
+		IMediaControl* m_pMediaCtrl;	  // Media Control
+		IMediaEventEx* m_pMediaEvent;	  // Media Event
+		IVideoWindow* m_pVideoWnd;		  // Video Window
+		IBasicVideo* m_pBasicVideo;
+		BYTE* m_pCaptureBuffer;			  // 영상 이미지를 캡처한 버퍼
+		LONG m_lBufferSize;				  // Video 버퍼 크기 변수
+		CGraphicImageTexture* m_pLogoTex; // 출력할 텍스쳐
+		bool m_bLogoError;				  // 영상 읽기 상태
+		bool m_bLogoPlay;
 
-		int						m_nLeft, m_nRight, m_nTop, m_nBottom;
-
+		int m_nLeft, m_nRight, m_nTop, m_nBottom;
 
 	protected:
 		LRESULT WindowProcedure(HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam);
@@ -315,132 +313,131 @@ class CPythonApplication : public CMSApplication, public CInputKeyboard, public 
 	protected:
 		CTimer m_timer;
 
-		CLightManager				m_LightManager;
-		CSoundManager				m_SoundManager;
-		CFlyingManager				m_FlyingManager;
-		CRaceManager				m_RaceManager;
-		CGameEventManager			m_GameEventManager;
-		CItemManager				m_kItemMgr;
-		CMovieMan					m_MovieManager;
+		CLightManager m_LightManager;
+		CSoundManager m_SoundManager;
+		CFlyingManager m_FlyingManager;
+		CRaceManager m_RaceManager;
+		CGameEventManager m_GameEventManager;
+		CItemManager m_kItemMgr;
+		CMovieMan m_MovieManager;
 
-		UI::CWindowManager			m_kWndMgr;
-		CEffectManager				m_kEftMgr;
-		CPythonCharacterManager		m_kChrMgr;
+		UI::CWindowManager m_kWndMgr;
+		CEffectManager m_kEftMgr;
+		CPythonCharacterManager m_kChrMgr;
 
-		CServerStateChecker			m_kServerStateChecker;
-		CPythonGraphic				m_pyGraphic;
-		CPythonNetworkStream		m_pyNetworkStream;
-		//CPythonNetworkDatagram		m_pyNetworkDatagram;
-		CPythonPlayer				m_pyPlayer;
-		CPythonIME					m_pyIme;
-		CPythonItem					m_pyItem;
-		CPythonShop					m_pyShop;
-		CPythonExchange				m_pyExchange;
-		CPythonChat					m_pyChat;
-		CPythonTextTail				m_pyTextTail;
-		CPythonNonPlayer			m_pyNonPlayer;
-		CPythonMiniMap				m_pyMiniMap;
-		CPythonEventManager			m_pyEventManager;
-		CPythonBackground			m_pyBackground;
-		CPythonSkill				m_pySkill;
-		CPythonResource				m_pyRes;
-		CPythonQuest				m_pyQuest;
-		CPythonMessenger			m_pyManager;
-		CPythonSafeBox				m_pySafeBox;
-		CPythonGuild				m_pyGuild;
+		CServerStateChecker m_kServerStateChecker;
+		CPythonGraphic m_pyGraphic;
+		CPythonNetworkStream m_pyNetworkStream;
+		// CPythonNetworkDatagram		m_pyNetworkDatagram;
+		CPythonPlayer m_pyPlayer;
+		CPythonIME m_pyIme;
+		CPythonItem m_pyItem;
+		CPythonShop m_pyShop;
+		CPythonExchange m_pyExchange;
+		CPythonChat m_pyChat;
+		CPythonTextTail m_pyTextTail;
+		CPythonNonPlayer m_pyNonPlayer;
+		CPythonMiniMap m_pyMiniMap;
+		CPythonEventManager m_pyEventManager;
+		CPythonBackground m_pyBackground;
+		CPythonSkill m_pySkill;
+		CPythonResource m_pyRes;
+		CPythonQuest m_pyQuest;
+		CPythonMessenger m_pyManager;
+		CPythonSafeBox m_pySafeBox;
+		CPythonGuild m_pyGuild;
 
-		CGuildMarkManager			m_kGuildMarkManager;
-		CGuildMarkDownloader		m_kGuildMarkDownloader;
-		CGuildMarkUploader			m_kGuildMarkUploader;
-		CAccountConnector			m_kAccountConnector;
+		CGuildMarkManager m_kGuildMarkManager;
+		CGuildMarkDownloader m_kGuildMarkDownloader;
+		CGuildMarkUploader m_kGuildMarkUploader;
+		CAccountConnector m_kAccountConnector;
 
-		CGraphicDevice				m_grpDevice;
-		CNetworkDevice				m_netDevice;
+		CGraphicDevice m_grpDevice;
+		CNetworkDevice m_netDevice;
 
-		CPythonSystem				m_pySystem;
+		CPythonSystem m_pySystem;
 
+		PyObject* m_poMouseHandler;
+		D3DXVECTOR3 m_v3CenterPosition;
 
-		PyObject *					m_poMouseHandler;
-		D3DXVECTOR3					m_v3CenterPosition;
-
-		unsigned int				m_iFPS;
-		float						m_fAveRenderTime;
-		DWORD						m_dwCurRenderTime;
-		DWORD						m_dwCurUpdateTime;
-		DWORD						m_dwLoad;
-		DWORD						m_dwWidth;
-		DWORD						m_dwHeight;
+		unsigned int m_iFPS;
+		float m_fAveRenderTime;
+		DWORD m_dwCurRenderTime;
+		DWORD m_dwCurUpdateTime;
+		DWORD m_dwLoad;
+		DWORD m_dwWidth;
+		DWORD m_dwHeight;
 
 	protected:
 		// Time
-		DWORD						m_dwLastIdleTime;
-		DWORD						m_dwStartLocalTime;
-		time_t						m_tServerTime;
-		time_t						m_tLocalStartTime;
-		float						m_fGlobalTime;
-		float						m_fGlobalElapsedTime;
+		DWORD m_dwLastIdleTime;
+		DWORD m_dwStartLocalTime;
+		time_t m_tServerTime;
+		time_t m_tLocalStartTime;
+		float m_fGlobalTime;
+		float m_fGlobalElapsedTime;
 
 		/////////////////////////////////////////////////////////////
 		// Camera
-		SCameraSetting				m_DefaultCameraSetting;
-		SCameraSetting				m_kEventCameraSetting;
+		SCameraSetting m_DefaultCameraSetting;
+		SCameraSetting m_kEventCameraSetting;
 
-		int							m_iCameraMode;
-		float						m_fBlendCameraStartTime;
-		float						m_fBlendCameraBlendTime;
-		SCameraSetting				m_kEndBlendCameraSetting;
+		int m_iCameraMode;
+		float m_fBlendCameraStartTime;
+		float m_fBlendCameraBlendTime;
+		SCameraSetting m_kEndBlendCameraSetting;
 
-		float						m_fRotationSpeed;
-		float						m_fPitchSpeed;
-		float						m_fZoomSpeed;
-		float						m_fCameraRotateSpeed;
-		float						m_fCameraPitchSpeed;
-		float						m_fCameraZoomSpeed;
+		float m_fRotationSpeed;
+		float m_fPitchSpeed;
+		float m_fZoomSpeed;
+		float m_fCameraRotateSpeed;
+		float m_fCameraPitchSpeed;
+		float m_fCameraZoomSpeed;
 
-		SCameraPos					m_kCmrPos;
-		SCameraSpeed				m_kCmrSpd;
+		SCameraPos m_kCmrPos;
+		SCameraSpeed m_kCmrSpd;
 
-		BOOL						m_isSpecialCameraMode;
+		BOOL m_isSpecialCameraMode;
 		// Camera
 		/////////////////////////////////////////////////////////////
 
-		float						m_fFaceSpd;
-		DWORD						m_dwFaceSpdSum;
-		DWORD						m_dwFaceSpdCount;
+		float m_fFaceSpd;
+		DWORD m_dwFaceSpdSum;
+		DWORD m_dwFaceSpdCount;
 
-		DWORD						m_dwFaceAccCount;
-		DWORD						m_dwFaceAccTime;
+		DWORD m_dwFaceAccCount;
+		DWORD m_dwFaceAccTime;
 
-		DWORD						m_dwUpdateFPS;
-		DWORD						m_dwRenderFPS;
-		DWORD						m_dwFaceCount;
+		DWORD m_dwUpdateFPS;
+		DWORD m_dwRenderFPS;
+		DWORD m_dwFaceCount;
 
-		DWORD						m_dwLButtonDownTime;
-		DWORD						m_dwLButtonUpTime;
+		DWORD m_dwLButtonDownTime;
+		DWORD m_dwLButtonUpTime;
 
-		typedef std::map<int, HANDLE>		TCursorHandleMap;
-		TCursorHandleMap			m_CursorHandleMap;
-		HANDLE						m_hCurrentCursor;
+		typedef std::map<int, HANDLE> TCursorHandleMap;
+		TCursorHandleMap m_CursorHandleMap;
+		HANDLE m_hCurrentCursor;
 
-		BOOL						m_bCursorVisible;
-		bool						m_bLiarCursorOn;
-		int							m_iCursorMode;
-		bool						m_isWindowed;
-		bool						m_isFrameSkipDisable;
+		BOOL m_bCursorVisible;
+		bool m_bLiarCursorOn;
+		int m_iCursorMode;
+		bool m_isWindowed;
+		bool m_isFrameSkipDisable;
 
 		// Connect Data
-		std::string					m_strIP;
-		int							m_iPort;
+		std::string m_strIP;
+		int m_iPort;
 
-		static CPythonApplication*	ms_pInstance;
+		static CPythonApplication* ms_pInstance;
 
-		bool						m_isMinimizedWnd;
-		bool						m_isActivateWnd;
-		BOOL						m_isWindowFullScreenEnable;
+		bool m_isMinimizedWnd;
+		bool m_isActivateWnd;
+		BOOL m_isWindowFullScreenEnable;
 
-		DWORD						m_dwStickyKeysFlag;
-		DWORD						m_dwBufSleepSkipTime;
-		int							m_iForceSightRange;
+		DWORD m_dwStickyKeysFlag;
+		DWORD m_dwBufSleepSkipTime;
+		int m_iForceSightRange;
 
 	protected:
 		int m_iCursorNum;

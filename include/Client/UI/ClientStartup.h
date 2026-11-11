@@ -4,5 +4,5 @@
 
 class CPythonApplication;
 
-bool RunClientGame(CPythonApplication &app, HINSTANCE hInstance,
-                   const char *lpCmdLine);
+bool RunClientGame(CPythonApplication& app, HINSTANCE hInstance,
+				   const char* lpCmdLine);

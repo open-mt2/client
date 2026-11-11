@@ -1,28 +1,28 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/UI/PythonExchange.h>
 
-void CPythonExchange::SetSelfName(const char *name)
+void CPythonExchange::SetSelfName(const char* name)
 {
 	strncpy(m_self.name, name, CHARACTER_NAME_MAX_LEN);
 }
 
-void CPythonExchange::SetTargetName(const char *name)
+void CPythonExchange::SetTargetName(const char* name)
 {
 	strncpy(m_victim.name, name, CHARACTER_NAME_MAX_LEN);
 }
 
-char * CPythonExchange::GetNameFromSelf()
+char* CPythonExchange::GetNameFromSelf()
 {
 	return m_self.name;
 }
 
-char * CPythonExchange::GetNameFromTarget()
+char* CPythonExchange::GetNameFromTarget()
 {
 	return m_victim.name;
 }
 
-void CPythonExchange::SetElkToTarget(DWORD	elk)
-{	
+void CPythonExchange::SetElkToTarget(DWORD elk)
+{
 	m_victim.elk = elk;
 }
 
@@ -159,7 +159,7 @@ DWORD CPythonExchange::GetItemMetinSocketFromSelf(BYTE pos, int iMetinSocketPos)
 	return m_self.item_metin[pos][iMetinSocketPos];
 }
 
-void CPythonExchange::GetItemAttributeFromTarget(BYTE pos, int iAttrPos, BYTE * pbyType, short * psValue)
+void CPythonExchange::GetItemAttributeFromTarget(BYTE pos, int iAttrPos, BYTE* pbyType, short* psValue)
 {
 	if (pos >= EXCHANGE_ITEM_MAX_NUM)
 		return;
@@ -168,7 +168,7 @@ void CPythonExchange::GetItemAttributeFromTarget(BYTE pos, int iAttrPos, BYTE * 
 	*psValue = m_victim.item_attr[pos][iAttrPos].sValue;
 }
 
-void CPythonExchange::GetItemAttributeFromSelf(BYTE pos, int iAttrPos, BYTE * pbyType, short * psValue)
+void CPythonExchange::GetItemAttributeFromSelf(BYTE pos, int iAttrPos, BYTE* pbyType, short* psValue)
 {
 	if (pos >= EXCHANGE_ITEM_MAX_NUM)
 		return;
@@ -226,12 +226,12 @@ void CPythonExchange::Clear()
 {
 	memset(&m_self, 0, sizeof(m_self));
 	memset(&m_victim, 0, sizeof(m_victim));
-/*
-	m_self.item_vnum[0] = 30;
-	m_victim.item_vnum[0] = 30;
-	m_victim.item_vnum[1] = 40;
-	m_victim.item_vnum[2] = 50;
-*/
+	/*
+		m_self.item_vnum[0] = 30;
+		m_victim.item_vnum[0] = 30;
+		m_victim.item_vnum[1] = 40;
+		m_victim.item_vnum[2] = 50;
+	*/
 }
 
 CPythonExchange::CPythonExchange()
@@ -239,9 +239,9 @@ CPythonExchange::CPythonExchange()
 	Clear();
 	m_isTrading = false;
 	m_elk_mode = false;
-		// Clear로 옴겨놓으면 안됨. 
-		// trade_start 페킷이 오면 Clear를 실행하는데
-		// m_elk_mode는 클리어 되선 안됨.;  
+	// Clear로 옴겨놓으면 안됨.
+	// trade_start 페킷이 오면 Clear를 실행하는데
+	// m_elk_mode는 클리어 되선 안됨.;
 }
 CPythonExchange::~CPythonExchange()
 {

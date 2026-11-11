@@ -10,7 +10,7 @@ class CDungeonModelInstance;
 class CDungeonBlock : public CGraphicObjectInstance
 {
 	public:
-		typedef std::vector<CDungeonModelInstance *> TModelInstanceContainer;
+		typedef std::vector<CDungeonModelInstance*> TModelInstanceContainer;
 		enum
 		{
 			ID = THING_OBJECT
@@ -24,18 +24,18 @@ class CDungeonBlock : public CGraphicObjectInstance
 		void Destroy();
 
 		void BuildBoundingSphere();
-		bool Load(const char * c_szFileName);
+		bool Load(const char* c_szFileName);
 
-		bool Intersect(float * pfu, float * pfv, float * pft);
-		void GetBoundBox(D3DXVECTOR3 * pv3Min, D3DXVECTOR3 * pv3Max);
+		bool Intersect(float* pfu, float* pfv, float* pft);
+		void GetBoundBox(D3DXVECTOR3* pv3Min, D3DXVECTOR3* pv3Max);
 
 		void Update();
 		void Render();
 
-		bool GetBoundingSphere(D3DXVECTOR3 & v3Center, float & fRadius);
-		void OnUpdateCollisionData(const CStaticCollisionDataVector * pscdVector);
-		void OnUpdateHeighInstance(CAttributeInstance * pAttributeInstance);
-		bool OnGetObjectHeight(float fX, float fY, float * pfHeight);
+		bool GetBoundingSphere(D3DXVECTOR3& v3Center, float& fRadius);
+		void OnUpdateCollisionData(const CStaticCollisionDataVector* pscdVector);
+		void OnUpdateHeighInstance(CAttributeInstance* pAttributeInstance);
+		bool OnGetObjectHeight(float fX, float fY, float* pfHeight);
 
 		void OnRender() {}
 		void OnBlendRender() {}
@@ -50,7 +50,7 @@ class CDungeonBlock : public CGraphicObjectInstance
 		D3DXVECTOR3 m_v3Center;
 		float m_fRadius;
 
-		CGraphicThing * m_pThing;
+		CGraphicThing* m_pThing;
 		TModelInstanceContainer m_ModelInstanceContainer;
-		CGraphicVertexBuffer	m_kDeformableVertexBuffer;
+		CGraphicVertexBuffer m_kDeformableVertexBuffer;
 };

@@ -2,9 +2,9 @@
 #include <Client/UI/PythonEventManager.h>
 #include <Client/UI/PythonNetworkStream.h>
 
-PyObject * eventRegisterEventSet(PyObject * poSelf, PyObject * poArgs)
+PyObject* eventRegisterEventSet(PyObject* poSelf, PyObject* poArgs)
 {
-	char * szFileName;
+	char* szFileName;
 	if (!PyTuple_GetString(poArgs, 0, &szFileName))
 		return Py_BuildException();
 
@@ -12,9 +12,9 @@ PyObject * eventRegisterEventSet(PyObject * poSelf, PyObject * poArgs)
 	return Py_BuildValue("i", iEventIndex);
 }
 
-PyObject * eventRegisterEventSetFromString(PyObject * poSelf, PyObject * poArgs)
+PyObject* eventRegisterEventSetFromString(PyObject* poSelf, PyObject* poArgs)
 {
-	char * szEventString;
+	char* szEventString;
 	if (!PyTuple_GetString(poArgs, 0, &szEventString))
 		return Py_BuildException();
 
@@ -22,7 +22,7 @@ PyObject * eventRegisterEventSetFromString(PyObject * poSelf, PyObject * poArgs)
 	return Py_BuildValue("i", iEventIndex);
 }
 
-PyObject * eventClearEventSet(PyObject * poSelf, PyObject * poArgs)
+PyObject* eventClearEventSet(PyObject* poSelf, PyObject* poArgs)
 {
 	int iIndex;
 	if (!PyTuple_GetInteger(poArgs, 0, &iIndex))
@@ -32,7 +32,7 @@ PyObject * eventClearEventSet(PyObject * poSelf, PyObject * poArgs)
 	return Py_BuildNone();
 }
 
-PyObject * eventSetRestrictedCount(PyObject * poSelf, PyObject * poArgs)
+PyObject* eventSetRestrictedCount(PyObject* poSelf, PyObject* poArgs)
 {
 	int iIndex;
 	if (!PyTuple_GetInteger(poArgs, 0, &iIndex))
@@ -46,7 +46,7 @@ PyObject * eventSetRestrictedCount(PyObject * poSelf, PyObject * poArgs)
 	return Py_BuildNone();
 }
 
-PyObject * eventGetEventSetLocalYPosition(PyObject * poSelf, PyObject * poArgs)
+PyObject* eventGetEventSetLocalYPosition(PyObject* poSelf, PyObject* poArgs)
 {
 	int iIndex;
 	if (!PyTuple_GetInteger(poArgs, 0, &iIndex))
@@ -55,7 +55,7 @@ PyObject * eventGetEventSetLocalYPosition(PyObject * poSelf, PyObject * poArgs)
 	return Py_BuildValue("i", CPythonEventManager::Instance().GetEventSetLocalYPosition(iIndex));
 }
 
-PyObject * eventAddEventSetLocalYPosition(PyObject * poSelf, PyObject * poArgs)
+PyObject* eventAddEventSetLocalYPosition(PyObject* poSelf, PyObject* poArgs)
 {
 	int iIndex;
 	if (!PyTuple_GetInteger(poArgs, 0, &iIndex))
@@ -68,12 +68,12 @@ PyObject * eventAddEventSetLocalYPosition(PyObject * poSelf, PyObject * poArgs)
 	return Py_BuildNone();
 }
 
-PyObject * eventInsertText(PyObject * poSelf, PyObject * poArgs)
+PyObject* eventInsertText(PyObject* poSelf, PyObject* poArgs)
 {
 	int iIndex;
 	if (!PyTuple_GetInteger(poArgs, 0, &iIndex))
 		return Py_BuildException();
-	char * szText;
+	char* szText;
 	if (!PyTuple_GetString(poArgs, 1, &szText))
 		return Py_BuildException();
 
@@ -81,23 +81,23 @@ PyObject * eventInsertText(PyObject * poSelf, PyObject * poArgs)
 	return Py_BuildNone();
 }
 
-PyObject * eventInsertTextInline(PyObject * poSelf, PyObject * poArgs)
+PyObject* eventInsertTextInline(PyObject* poSelf, PyObject* poArgs)
 {
 	int iIndex;
 	if (!PyTuple_GetInteger(poArgs, 0, &iIndex))
 		return Py_BuildException();
-	char * szText;
+	char* szText;
 	if (!PyTuple_GetString(poArgs, 1, &szText))
 		return Py_BuildException();
 	int iXIndex;
 	if (!PyTuple_GetInteger(poArgs, 2, &iXIndex))
 		return Py_BuildException();
 
-	CPythonEventManager::Instance().InsertText(iIndex, szText,iXIndex);
+	CPythonEventManager::Instance().InsertText(iIndex, szText, iXIndex);
 	return Py_BuildNone();
 }
 
-PyObject * eventUpdateEventSet(PyObject * poSelf, PyObject * poArgs)
+PyObject* eventUpdateEventSet(PyObject* poSelf, PyObject* poArgs)
 {
 	int iIndex;
 	if (!PyTuple_GetInteger(poArgs, 0, &iIndex))
@@ -115,7 +115,7 @@ PyObject * eventUpdateEventSet(PyObject * poSelf, PyObject * poArgs)
 	return Py_BuildNone();
 }
 
-PyObject * eventRenderEventSet(PyObject * poSelf, PyObject * poArgs)
+PyObject* eventRenderEventSet(PyObject* poSelf, PyObject* poArgs)
 {
 	int iIndex;
 	if (!PyTuple_GetInteger(poArgs, 0, &iIndex))
@@ -125,7 +125,7 @@ PyObject * eventRenderEventSet(PyObject * poSelf, PyObject * poArgs)
 	return Py_BuildNone();
 }
 
-PyObject * eventSetEventSetWidth(PyObject * poSelf, PyObject * poArgs)
+PyObject* eventSetEventSetWidth(PyObject* poSelf, PyObject* poArgs)
 {
 	int iIndex;
 	if (!PyTuple_GetInteger(poArgs, 0, &iIndex))
@@ -138,7 +138,7 @@ PyObject * eventSetEventSetWidth(PyObject * poSelf, PyObject * poArgs)
 	return Py_BuildNone();
 }
 
-PyObject * eventSkip(PyObject * poSelf, PyObject * poArgs)
+PyObject* eventSkip(PyObject* poSelf, PyObject* poArgs)
 {
 	int iIndex;
 	if (!PyTuple_GetInteger(poArgs, 0, &iIndex))
@@ -148,7 +148,7 @@ PyObject * eventSkip(PyObject * poSelf, PyObject * poArgs)
 	return Py_BuildNone();
 }
 
-PyObject * eventIsWait(PyObject * poSelf, PyObject * poArgs)
+PyObject* eventIsWait(PyObject* poSelf, PyObject* poArgs)
 {
 	int iIndex;
 	if (!PyTuple_GetInteger(poArgs, 0, &iIndex))
@@ -157,7 +157,7 @@ PyObject * eventIsWait(PyObject * poSelf, PyObject * poArgs)
 	return Py_BuildValue("i", CPythonEventManager::Instance().IsWait(iIndex) == true ? 1 : 0);
 }
 
-PyObject * eventEndEventProcess(PyObject * poSelf, PyObject * poArgs)
+PyObject* eventEndEventProcess(PyObject* poSelf, PyObject* poArgs)
 {
 	int iIndex;
 	if (!PyTuple_GetInteger(poArgs, 0, &iIndex))
@@ -168,13 +168,13 @@ PyObject * eventEndEventProcess(PyObject * poSelf, PyObject * poArgs)
 	return Py_BuildNone();
 }
 
-PyObject * eventSetEventHandler(PyObject * poSelf, PyObject * poArgs)
+PyObject* eventSetEventHandler(PyObject* poSelf, PyObject* poArgs)
 {
 	int iIndex;
 	if (!PyTuple_GetInteger(poArgs, 0, &iIndex))
 		return Py_BuildException();
 
-	PyObject * poEventHandler;
+	PyObject* poEventHandler;
 	if (!PyTuple_GetObject(poArgs, 1, &poEventHandler))
 		return Py_BuildException();
 
@@ -182,7 +182,7 @@ PyObject * eventSetEventHandler(PyObject * poSelf, PyObject * poArgs)
 	return Py_BuildNone();
 }
 
-PyObject * eventSelectAnswer(PyObject * poSelf, PyObject * poArgs)
+PyObject* eventSelectAnswer(PyObject* poSelf, PyObject* poArgs)
 {
 	int iIndex;
 	if (!PyTuple_GetInteger(poArgs, 0, &iIndex))
@@ -196,7 +196,7 @@ PyObject * eventSelectAnswer(PyObject * poSelf, PyObject * poArgs)
 	return Py_BuildNone();
 }
 
-PyObject * eventGetLineCount(PyObject * poSelf, PyObject * poArgs)
+PyObject* eventGetLineCount(PyObject* poSelf, PyObject* poArgs)
 {
 	int iIndex;
 	if (!PyTuple_GetInteger(poArgs, 0, &iIndex))
@@ -206,7 +206,7 @@ PyObject * eventGetLineCount(PyObject * poSelf, PyObject * poArgs)
 	return Py_BuildValue("i", iLineCount);
 }
 
-PyObject * eventSetVisibleStartLine(PyObject * poSelf, PyObject * poArgs)
+PyObject* eventSetVisibleStartLine(PyObject* poSelf, PyObject* poArgs)
 {
 	int iIndex;
 	if (!PyTuple_GetInteger(poArgs, 0, &iIndex))
@@ -220,7 +220,7 @@ PyObject * eventSetVisibleStartLine(PyObject * poSelf, PyObject * poArgs)
 	return Py_BuildNone();
 }
 
-PyObject * eventGetVisibleStartLine(PyObject * poSelf, PyObject * poArgs)
+PyObject* eventGetVisibleStartLine(PyObject* poSelf, PyObject* poArgs)
 {
 	int iIndex;
 	if (!PyTuple_GetInteger(poArgs, 0, &iIndex))
@@ -229,42 +229,42 @@ PyObject * eventGetVisibleStartLine(PyObject * poSelf, PyObject * poArgs)
 	return Py_BuildValue("i", CPythonEventManager::Instance().GetVisibleStartLine(iIndex));
 }
 
-PyObject * eventQuestButtonClick(PyObject * poSelf, PyObject * poArgs)
+PyObject* eventQuestButtonClick(PyObject* poSelf, PyObject* poArgs)
 {
 	int iIndex;
 	if (!PyTuple_GetInteger(poArgs, 0, &iIndex))
 		return Py_BuildException();
-	
+
 	CPythonNetworkStream::Instance().SendScriptButtonPacket(iIndex);
 
 	return Py_BuildNone();
 }
 
-PyObject * eventSetInterfaceWindow(PyObject* poSelf, PyObject* poArgs)
+PyObject* eventSetInterfaceWindow(PyObject* poSelf, PyObject* poArgs)
 {
-	PyObject * pyHandle;
+	PyObject* pyHandle;
 	if (!PyTuple_GetObject(poArgs, 0, &pyHandle))
 		return Py_BadArgument();
-	
-	CPythonEventManager & rpem = CPythonEventManager::Instance();
+
+	CPythonEventManager& rpem = CPythonEventManager::Instance();
 	rpem.SetInterfaceWindow(pyHandle);
-	return Py_BuildNone();	
+	return Py_BuildNone();
 }
 
-PyObject * eventSetLeftTimeString(PyObject* poSelf, PyObject* poArgs)
+PyObject* eventSetLeftTimeString(PyObject* poSelf, PyObject* poArgs)
 {
-	char * szText;
+	char* szText;
 	if (!PyTuple_GetString(poArgs, 0, &szText))
 		return Py_BuildException();
 
-	CPythonEventManager & rpem = CPythonEventManager::Instance();
+	CPythonEventManager& rpem = CPythonEventManager::Instance();
 	rpem.SetLeftTimeString(szText);
 	return Py_BuildNone();
 }
 
-PyObject * eventDestroy(PyObject* poSelf, PyObject* poArgs)
+PyObject* eventDestroy(PyObject* poSelf, PyObject* poArgs)
 {
-	CPythonEventManager & rpem = CPythonEventManager::Instance();
+	CPythonEventManager& rpem = CPythonEventManager::Instance();
 	rpem.Destroy();
 	return Py_BuildNone();
 }
@@ -272,41 +272,41 @@ PyObject * eventDestroy(PyObject* poSelf, PyObject* poArgs)
 void initEvent()
 {
 	static PyMethodDef s_methods[] =
-	{
-		{ "RegisterEventSet",			eventRegisterEventSet,				METH_VARARGS },
-		{ "RegisterEventSetFromString",	eventRegisterEventSetFromString,	METH_VARARGS },
-		{ "ClearEventSet",				eventClearEventSet,					METH_VARARGS },
+		{
+			{"RegisterEventSet", eventRegisterEventSet, METH_VARARGS},
+			{"RegisterEventSetFromString", eventRegisterEventSetFromString, METH_VARARGS},
+			{"ClearEventSet", eventClearEventSet, METH_VARARGS},
 
-		{ "SetRestrictedCount",			eventSetRestrictedCount,			METH_VARARGS },
+			{"SetRestrictedCount", eventSetRestrictedCount, METH_VARARGS},
 
-		{ "GetEventSetLocalYPosition",	eventGetEventSetLocalYPosition,		METH_VARARGS },
-		{ "AddEventSetLocalYPosition",	eventAddEventSetLocalYPosition,		METH_VARARGS },
-		{ "InsertText",					eventInsertText,					METH_VARARGS },
-		{ "InsertTextInline",			eventInsertTextInline,				METH_VARARGS },
+			{"GetEventSetLocalYPosition", eventGetEventSetLocalYPosition, METH_VARARGS},
+			{"AddEventSetLocalYPosition", eventAddEventSetLocalYPosition, METH_VARARGS},
+			{"InsertText", eventInsertText, METH_VARARGS},
+			{"InsertTextInline", eventInsertTextInline, METH_VARARGS},
 
-		{ "UpdateEventSet",				eventUpdateEventSet,				METH_VARARGS },
-		{ "RenderEventSet",				eventRenderEventSet,				METH_VARARGS },
-		{ "SetEventSetWidth",			eventSetEventSetWidth,				METH_VARARGS },
+			{"UpdateEventSet", eventUpdateEventSet, METH_VARARGS},
+			{"RenderEventSet", eventRenderEventSet, METH_VARARGS},
+			{"SetEventSetWidth", eventSetEventSetWidth, METH_VARARGS},
 
-		{ "Skip",						eventSkip,							METH_VARARGS },
-		{ "IsWait",						eventIsWait,						METH_VARARGS },
-		{ "EndEventProcess",			eventEndEventProcess,				METH_VARARGS },
+			{"Skip", eventSkip, METH_VARARGS},
+			{"IsWait", eventIsWait, METH_VARARGS},
+			{"EndEventProcess", eventEndEventProcess, METH_VARARGS},
 
-		{ "SelectAnswer",				eventSelectAnswer,					METH_VARARGS },
-		{ "GetLineCount",				eventGetLineCount,					METH_VARARGS },
-		{ "SetVisibleStartLine",		eventSetVisibleStartLine,			METH_VARARGS },
-		{ "GetVisibleStartLine",		eventGetVisibleStartLine,			METH_VARARGS },
+			{"SelectAnswer", eventSelectAnswer, METH_VARARGS},
+			{"GetLineCount", eventGetLineCount, METH_VARARGS},
+			{"SetVisibleStartLine", eventSetVisibleStartLine, METH_VARARGS},
+			{"GetVisibleStartLine", eventGetVisibleStartLine, METH_VARARGS},
 
-		{ "SetEventHandler",			eventSetEventHandler,				METH_VARARGS },
-		{ "SetInterfaceWindow",			eventSetInterfaceWindow,			METH_VARARGS },
-		{ "SetLeftTimeString",			eventSetLeftTimeString,				METH_VARARGS },
+			{"SetEventHandler", eventSetEventHandler, METH_VARARGS},
+			{"SetInterfaceWindow", eventSetInterfaceWindow, METH_VARARGS},
+			{"SetLeftTimeString", eventSetLeftTimeString, METH_VARARGS},
 
-		{ "QuestButtonClick",			eventQuestButtonClick,				METH_VARARGS },
-		{ "Destroy",					eventDestroy,						METH_VARARGS },
-		{ NULL,							NULL,								0         },
-	};
+			{"QuestButtonClick", eventQuestButtonClick, METH_VARARGS},
+			{"Destroy", eventDestroy, METH_VARARGS},
+			{NULL, NULL, 0},
+		};
 
-	PyObject * poModule = Py_InitModule("event", s_methods);
+	PyObject* poModule = Py_InitModule("event", s_methods);
 
 	PyModule_AddIntConstant(poModule, "BOX_VISIBLE_LINE_COUNT", CPythonEventManager::BOX_VISIBLE_LINE_COUNT);
 	PyModule_AddIntConstant(poModule, "BUTTON_TYPE_NEXT", CPythonEventManager::BUTTON_TYPE_NEXT);

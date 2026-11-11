@@ -11,5 +11,5 @@ class IAbstractCharacterManager : public TAbstractSingleton<IAbstractCharacterMa
 		virtual ~IAbstractCharacterManager() {}
 
 		virtual void Destroy() = 0;
-		virtual CInstanceBase *						GetInstancePtr(DWORD dwVID) = 0;
+		virtual CInstanceBase* GetInstancePtr(DWORD dwVID) = 0;
 };

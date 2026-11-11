@@ -1,4 +1,4 @@
-#pragma 
+#pragma
 
 #include <Neoeter/Render/NetStream.h>
 #include <Neoeter/Render/FuncObject.h>
@@ -18,14 +18,14 @@ class CAccountConnector : public CNetworkStream, public CSingleton<CAccountConne
 		virtual ~CAccountConnector();
 
 		void SetHandler(PyObject* poHandler);
-		void SetLoginInfo(const char * c_szName, const char * c_szPwd);
-		void ClearLoginInfo( void );
+		void SetLoginInfo(const char* c_szName, const char* c_szPwd);
+		void ClearLoginInfo(void);
 
-		bool SendChinaMatrixCardPacket(const char * c_szMatrixCardString);
-		bool SendRunupMatrixCardPacket(const char * c_szMatrixCardString);
-		bool SendNEWCIBNPasspodAnswerPacket(const char * answer);
+		bool SendChinaMatrixCardPacket(const char* c_szMatrixCardString);
+		bool SendRunupMatrixCardPacket(const char* c_szMatrixCardString);
+		bool SendNEWCIBNPasspodAnswerPacket(const char* answer);
 
-		bool Connect(const char * c_szAddr, int iPort, const char * c_szAccountAddr, int iAccountPort);
+		bool Connect(const char* c_szAddr, int iPort, const char* c_szAccountAddr, int iAccountPort);
 		void Disconnect();
 		void Process();
 
@@ -59,7 +59,7 @@ class CAccountConnector : public CNetworkStream, public CSingleton<CAccountConne
 
 		bool __AnalyzePacket(UINT uHeader, UINT uPacketSize, bool (CAccountConnector::*pfnDispatchPacket)());
 		// TODO:  지금 현재는 임시다.  header뒤에 size 4byte가 무조건 온다는 가정임.
-		// 제대로 하려면  Packet System Refactoring해야 한다. 
+		// 제대로 하려면  Packet System Refactoring해야 한다.
 		bool __AnalyzeVarSizePacket(UINT uHeader, bool (CAccountConnector::*pfnDispatchPacket)(int));
 
 	protected:
@@ -71,7 +71,7 @@ class CAccountConnector : public CNetworkStream, public CSingleton<CAccountConne
 		int m_iPort;
 		BOOL m_isWaitKey;
 
-		PyObject * m_poHandler;
+		PyObject* m_poHandler;
 
 		// CHINA_CRYPT_KEY
 		void __BuildClientKey_20050304Myevan();

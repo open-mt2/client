@@ -13,12 +13,12 @@
 #define thecore_memcpy memcpy
 #define itertype(cont) typeof(cont.begin())
 
-CGuildMarkImage * NewMarkImage()
+CGuildMarkImage* NewMarkImage()
 {
 	return new CGuildMarkImage;
 }
 
-void DeleteMarkImage(CGuildMarkImage * pkImage)
+void DeleteMarkImage(CGuildMarkImage* pkImage)
 {
 	delete pkImage;
 }
@@ -45,13 +45,13 @@ void CGuildMarkImage::Create()
 	m_pixels.assign(WIDTH * HEIGHT * 4, 0);
 }
 
-bool CGuildMarkImage::Save(const char* c_szFileName) 
+bool CGuildMarkImage::Save(const char* c_szFileName)
 {
 	Create();
 	return Platform_SaveImageTGA(c_szFileName, WIDTH, HEIGHT, m_pixels.data());
 }
 
-bool CGuildMarkImage::Build(const char * c_szFileName)
+bool CGuildMarkImage::Build(const char* c_szFileName)
 {
 	Destroy();
 	Create();
@@ -59,7 +59,7 @@ bool CGuildMarkImage::Build(const char * c_szFileName)
 	return Save(c_szFileName);
 }
 
-bool CGuildMarkImage::Load(const char * c_szFileName) 
+bool CGuildMarkImage::Load(const char* c_szFileName)
 {
 	Destroy();
 	Create();
@@ -79,7 +79,7 @@ bool CGuildMarkImage::Load(const char * c_szFileName)
 		}
 	}
 
-	if (width != WIDTH)	
+	if (width != WIDTH)
 	{
 		sys_err("CGuildMarkImage: %s width must be %u", c_szFileName, WIDTH);
 		return false;
@@ -97,12 +97,12 @@ bool CGuildMarkImage::Load(const char * c_szFileName)
 	return true;
 }
 
-void CGuildMarkImage::PutData(UINT x, UINT y, UINT width, UINT height, void * data)
+void CGuildMarkImage::PutData(UINT x, UINT y, UINT width, UINT height, void* data)
 {
 	if (m_pixels.empty() || !data || x >= WIDTH || y >= HEIGHT)
 		return;
 
-	const BYTE* src = (const BYTE*) data;
+	const BYTE* src = (const BYTE*)data;
 	const UINT copyWidth = std::min(width, WIDTH - x);
 	const UINT copyHeight = std::min(height, HEIGHT - y);
 
@@ -112,12 +112,12 @@ void CGuildMarkImage::PutData(UINT x, UINT y, UINT width, UINT height, void * da
 	}
 }
 
-void CGuildMarkImage::GetData(UINT x, UINT y, UINT width, UINT height, void * data)
+void CGuildMarkImage::GetData(UINT x, UINT y, UINT width, UINT height, void* data)
 {
 	if (m_pixels.empty() || !data || x >= WIDTH || y >= HEIGHT)
 		return;
 
-	BYTE* dst = (BYTE*) data;
+	BYTE* dst = (BYTE*)data;
 	const UINT copyWidth = std::min(width, WIDTH - x);
 	const UINT copyHeight = std::min(height, HEIGHT - y);
 
@@ -133,7 +133,7 @@ void CGuildMarkImage::GetData(UINT x, UINT y, UINT width, UINT height, void * da
 // 한 이미지의 블럭 = 8 x 10
 
 // SERVER
-bool CGuildMarkImage::SaveMark(DWORD posMark, BYTE * pbImage)
+bool CGuildMarkImage::SaveMark(DWORD posMark, BYTE* pbImage)
 {
 	if (posMark >= MARK_TOTAL_COUNT)
 	{
@@ -162,11 +162,11 @@ bool CGuildMarkImage::DeleteMark(DWORD posMark)
 {
 	Pixel image[SGuildMark::SIZE];
 	memset(&image, 0, sizeof(image));
-	return SaveMark(posMark, (BYTE *) &image);
+	return SaveMark(posMark, (BYTE*)&image);
 }
 
 // CLIENT
-bool CGuildMarkImage::SaveBlockFromCompressedData(DWORD posBlock, const BYTE * pbComp, DWORD dwCompSize)
+bool CGuildMarkImage::SaveBlockFromCompressedData(DWORD posBlock, const BYTE* pbComp, DWORD dwCompSize)
 {
 	if (posBlock >= BLOCK_TOTAL_COUNT)
 		return false;
@@ -174,7 +174,7 @@ bool CGuildMarkImage::SaveBlockFromCompressedData(DWORD posBlock, const BYTE * p
 	Pixel apxBuf[SGuildMarkBlock::SIZE];
 	size_t sizeBuf = sizeof(apxBuf);
 
-	if (LZO_E_OK != lzo1x_decompress_safe(pbComp, dwCompSize, (BYTE *) apxBuf, (lzo_uint*) &sizeBuf, CLZO::Instance().GetWorkMemory()))
+	if (LZO_E_OK != lzo1x_decompress_safe(pbComp, dwCompSize, (BYTE*)apxBuf, (lzo_uint*)&sizeBuf, CLZO::Instance().GetWorkMemory()))
 	{
 		sys_err("CGuildMarkImage::CopyBlockFromCompressedData: cannot decompress, compressed size = %u", dwCompSize);
 		return false;
@@ -191,7 +191,7 @@ bool CGuildMarkImage::SaveBlockFromCompressedData(DWORD posBlock, const BYTE * p
 
 	PutData(colBlock * SGuildMarkBlock::WIDTH, rowBlock * SGuildMarkBlock::HEIGHT, SGuildMarkBlock::WIDTH, SGuildMarkBlock::HEIGHT, apxBuf);
 
-	m_aakBlock[rowBlock][colBlock].CopyFrom(pbComp, dwCompSize, GetCRC32((const char *) apxBuf, sizeof(Pixel) * SGuildMarkBlock::SIZE));
+	m_aakBlock[rowBlock][colBlock].CopyFrom(pbComp, dwCompSize, GetCRC32((const char*)apxBuf, sizeof(Pixel) * SGuildMarkBlock::SIZE));
 	return true;
 }
 
@@ -226,7 +226,7 @@ DWORD CGuildMarkImage::GetEmptyPosition()
 	return INVALID_MARK_POSITION;
 }
 
-void CGuildMarkImage::GetDiffBlocks(const DWORD * crcList, std::map<BYTE, const SGuildMarkBlock *> & mapDiffBlocks)
+void CGuildMarkImage::GetDiffBlocks(const DWORD* crcList, std::map<BYTE, const SGuildMarkBlock*>& mapDiffBlocks)
 {
 	BYTE posBlock = 0;
 
@@ -235,14 +235,14 @@ void CGuildMarkImage::GetDiffBlocks(const DWORD * crcList, std::map<BYTE, const 
 		{
 			if (m_aakBlock[row][col].m_crc != *crcList)
 			{
-				mapDiffBlocks.insert(std::map<BYTE, const SGuildMarkBlock *>::value_type(posBlock, &m_aakBlock[row][col]));
+				mapDiffBlocks.insert(std::map<BYTE, const SGuildMarkBlock*>::value_type(posBlock, &m_aakBlock[row][col]));
 			}
 			++crcList;
 			++posBlock;
 		}
 }
 
-void CGuildMarkImage::GetBlockCRCList(DWORD * crcList)
+void CGuildMarkImage::GetBlockCRCList(DWORD* crcList)
 {
 	for (DWORD row = 0; row < BLOCK_ROW_COUNT; ++row)
 		for (DWORD col = 0; col < BLOCK_COL_COUNT; ++col)
@@ -253,7 +253,7 @@ void CGuildMarkImage::GetBlockCRCList(DWORD * crcList)
 void SGuildMark::Clear()
 {
 	for (DWORD iPixel = 0; iPixel < SIZE; ++iPixel)
-		m_apxBuf[iPixel] = 0xff000000;	
+		m_apxBuf[iPixel] = 0xff000000;
 }
 
 bool SGuildMark::IsEmpty()
@@ -271,7 +271,7 @@ DWORD SGuildMarkBlock::GetCRC() const
 	return m_crc;
 }
 
-void SGuildMarkBlock::CopyFrom(const BYTE * pbCompBuf, DWORD dwCompSize, DWORD crc)
+void SGuildMarkBlock::CopyFrom(const BYTE* pbCompBuf, DWORD dwCompSize, DWORD crc)
 {
 	if (dwCompSize > MAX_COMP_SIZE)
 		return;
@@ -279,22 +279,22 @@ void SGuildMarkBlock::CopyFrom(const BYTE * pbCompBuf, DWORD dwCompSize, DWORD c
 	m_sizeCompBuf = dwCompSize;
 	thecore_memcpy(m_abCompBuf, pbCompBuf, dwCompSize);
 	m_crc = crc;
-	//printf("SGuildMarkBlock::CopyFrom: %u > %u crc %u\n", sizeof(Pixel) * SGuildMarkBlock::SIZE, m_sizeCompBuf, m_crc);
+	// printf("SGuildMarkBlock::CopyFrom: %u > %u crc %u\n", sizeof(Pixel) * SGuildMarkBlock::SIZE, m_sizeCompBuf, m_crc);
 }
 
-void SGuildMarkBlock::Compress(const Pixel * pxBuf)
+void SGuildMarkBlock::Compress(const Pixel* pxBuf)
 {
 	m_sizeCompBuf = MAX_COMP_SIZE;
 
-	if (LZO_E_OK != lzo1x_999_compress((const BYTE *) pxBuf,
-		sizeof(Pixel) * SGuildMarkBlock::SIZE, m_abCompBuf,
-		(lzo_uint*) &m_sizeCompBuf,
-		CLZO::Instance().GetWorkMemory()))
+	if (LZO_E_OK != lzo1x_999_compress((const BYTE*)pxBuf,
+									   sizeof(Pixel) * SGuildMarkBlock::SIZE, m_abCompBuf,
+									   (lzo_uint*)&m_sizeCompBuf,
+									   CLZO::Instance().GetWorkMemory()))
 	{
 		sys_err("SGuildMarkBlock::Compress: Error! %u > %u", sizeof(Pixel) * SGuildMarkBlock::SIZE, m_sizeCompBuf);
 		return;
 	}
 
-	//sys_log(0, "SGuildMarkBlock::Compress %u > %u", sizeof(Pixel) * SGuildMarkBlock::SIZE, m_sizeCompBuf);
-	m_crc = GetCRC32((const char *) pxBuf, sizeof(Pixel) * SGuildMarkBlock::SIZE);
+	// sys_log(0, "SGuildMarkBlock::Compress %u > %u", sizeof(Pixel) * SGuildMarkBlock::SIZE, m_sizeCompBuf);
+	m_crc = GetCRC32((const char*)pxBuf, sizeof(Pixel) * SGuildMarkBlock::SIZE);
 }

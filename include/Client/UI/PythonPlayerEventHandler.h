@@ -37,9 +37,9 @@ class CPythonPlayerEventHandler : public CActorInstance::IEventHandler
 	protected:
 		struct SVictim
 		{
-			DWORD	m_dwVID;
-			long	m_lPixelX;
-			long	m_lPixelY;
+				DWORD m_dwVID;
+				long m_lPixelX;
+				long m_lPixelY;
 		};
 
 	protected:
@@ -57,7 +57,7 @@ class CPythonPlayerEventHandler : public CActorInstance::IEventHandler
 				CNormalBowAttack_FlyEventHandler_AutoClear() {}
 				virtual ~CNormalBowAttack_FlyEventHandler_AutoClear() {}
 
-				void Set(CPythonPlayerEventHandler * pParent, CInstanceBase * pInstMain, CInstanceBase * pInstTarget);
+				void Set(CPythonPlayerEventHandler* pParent, CInstanceBase* pInstMain, CInstanceBase* pInstTarget);
 				void SetTarget(CInstanceBase* pInstTarget);
 
 				virtual void OnSetFlyTarget();
@@ -70,20 +70,20 @@ class CPythonPlayerEventHandler : public CActorInstance::IEventHandler
 				virtual void OnExplodingAtTarget(DWORD dwSkillIndex);
 
 			protected:
-				CPythonPlayerEventHandler * m_pParent;
-				CInstanceBase * m_pInstMain;
-				CInstanceBase * m_pInstTarget;
+				CPythonPlayerEventHandler* m_pParent;
+				CInstanceBase* m_pInstMain;
+				CInstanceBase* m_pInstTarget;
 		} m_NormalBowAttack_FlyEventHandler_AutoClear;
 
-		public:
-			IFlyEventHandler * GetNormalBowAttackFlyEventHandler(CInstanceBase* pInstMain, CInstanceBase* pInstTarget)
-			{
-				m_NormalBowAttack_FlyEventHandler_AutoClear.Set(this,pInstMain,pInstTarget);
-				return &m_NormalBowAttack_FlyEventHandler_AutoClear;
-			}
+	public:
+		IFlyEventHandler* GetNormalBowAttackFlyEventHandler(CInstanceBase* pInstMain, CInstanceBase* pInstTarget)
+		{
+			m_NormalBowAttack_FlyEventHandler_AutoClear.Set(this, pInstMain, pInstTarget);
+			return &m_NormalBowAttack_FlyEventHandler_AutoClear;
+		}
 
-			void ChangeFlyTarget(CInstanceBase* pInstTarget)
-			{
-				m_NormalBowAttack_FlyEventHandler_AutoClear.SetTarget(pInstTarget);
-			}
+		void ChangeFlyTarget(CInstanceBase* pInstTarget)
+		{
+			m_NormalBowAttack_FlyEventHandler_AutoClear.SetTarget(pInstTarget);
+		}
 };

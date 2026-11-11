@@ -36,7 +36,7 @@ void CPythonApplication::HideWebPage()
 	{
 		WebBrowser_Hide();
 
-		m_grpDevice.DisableWebBrowserMode();	
+		m_grpDevice.DisableWebBrowserMode();
 
 		if (m_pySystem.IsSoftwareCursor())
 			SetCursorMode(CURSOR_MODE_SOFTWARE);

@@ -31,13 +31,13 @@ bool CMapBase::Leave()
 	return true;
 }
 
-void CMapBase::SetEnvironmentDataPtr(const TEnvironmentData * c_pEnvironmentData)
+void CMapBase::SetEnvironmentDataPtr(const TEnvironmentData* c_pEnvironmentData)
 {
 	mc_pEnvironmentData = c_pEnvironmentData;
 	OnSetEnvironmentDataPtr();
 }
 
-void CMapBase::ResetEnvironmentDataPtr(const TEnvironmentData * c_pEnvironmentData)
+void CMapBase::ResetEnvironmentDataPtr(const TEnvironmentData* c_pEnvironmentData)
 {
 	mc_pEnvironmentData = c_pEnvironmentData;
 	OnResetEnvironmentDataPtr();
@@ -54,7 +54,7 @@ bool CMapBase::LoadProperty()
 	std::string strFileName = GetName() + "\\MapProperty.txt";
 
 	CTokenVectorMap stTokenVectorMap;
-	
+
 	if (!LoadMultipleTextData(strFileName.c_str(), stTokenVectorMap))
 	{
 		TraceError("CMapBase::LoadProperty(FileName=%s) - LoadMultipleTextData ERROR The file is likely missing.", strFileName.c_str());
@@ -81,9 +81,9 @@ bool CMapBase::LoadProperty()
 		m_strParentMapName = stTokenVectorMap["parentmapname"][0];
 	}
 
-	const std::string & c_rstrType = stTokenVectorMap["scripttype"][0];
-	const std::string & c_rstrMapType = stTokenVectorMap["maptype"][0];
-	
+	const std::string& c_rstrType = stTokenVectorMap["scripttype"][0];
+	const std::string& c_rstrMapType = stTokenVectorMap["maptype"][0];
+
 	if (0 != c_rstrType.compare("MapProperty"))
 	{
 		TraceError("CMapBase::LoadProperty(FileName=%s) - Resourse Type ERROR", strFileName.c_str());

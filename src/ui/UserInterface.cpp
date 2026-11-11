@@ -14,15 +14,15 @@
 extern bool Platform_GetImageInfo(const void* data, size_t size, uint32_t* outW, uint32_t* outH, uint32_t* outFormat);
 extern bool Platform_DecodeImage(const void* data, size_t size, uint32_t* outW, uint32_t* outH, std::vector<uint8_t>& outPixels);
 void* g_pForceLinkImageLoader[] = {
-    (void*)&Platform_GetImageInfo,
-    (void*)&Platform_DecodeImage
-};
+	(void*)&Platform_GetImageInfo,
+	(void*)&Platform_DecodeImage};
 
 #ifndef OPENMT2_PLATFORM_LINUX
 // T4.1: the DirectX SDK, Miles (mss32) and the SpeedTree import library are
 // gone. The Windows libraries the client actually needs (opengl32, winmm,
 // imagehlp, ws2_32) are linked by CMake, not by #pragma.
-extern "C" {
+extern "C"
+{
 #if defined(_MSC_VER)
 	// _fltused is provided by the MSVC CRT; MinGW has no such symbol (T1.9).
 	extern int32_t _fltused;
@@ -36,10 +36,9 @@ extern "C" {
 
 #include <Client/UI/ClientStartup.h>
 #include <Client/UI/LoadingScreen.h>
-bool __IS_TEST_SERVER_MODE__=false;
+bool __IS_TEST_SERVER_MODE__ = false;
 
 extern bool SetDefaultCodePage(DWORD codePage);
-
 
 int Setup();
 
@@ -123,7 +122,8 @@ bool PackInitialize(const std::string& packFolder)
 
 		// Try to load texture cache pack if it exists
 		strTexCachePackName = strPackName + "_texcache";
-		if (CEterPackManager::Instance().PackExists(strTexCachePackName, c_rstContainer)) {
+		if (CEterPackManager::Instance().PackExists(strTexCachePackName, c_rstContainer))
+		{
 			CEterPackManager::Instance().RegisterPack(strTexCachePackName, c_rstContainer);
 		}
 	}
@@ -172,10 +172,10 @@ bool RunMainScript(CPythonLauncher& pyLauncher, const char* lpCmdLine)
 	{
 		std::string stRegisterDebugFlag;
 
-#ifdef _DISTRIBUTE 
-		stRegisterDebugFlag ="__DEBUG__ = 0";
+#ifdef _DISTRIBUTE
+		stRegisterDebugFlag = "__DEBUG__ = 0";
 #else
-		stRegisterDebugFlag ="__DEBUG__ = 1"; 
+		stRegisterDebugFlag = "__DEBUG__ = 1";
 #endif
 
 		if (!pyLauncher.RunLine(stRegisterDebugFlag.c_str()))
@@ -189,35 +189,35 @@ bool RunMainScript(CPythonLauncher& pyLauncher, const char* lpCmdLine)
 	{
 		std::string stRegisterCmdLine;
 
-		const char * loginMark = "-cs";
-		const char * loginMark_NonEncode = "-ncs";
-		const char * seperator = " ";
+		const char* loginMark = "-cs";
+		const char* loginMark_NonEncode = "-ncs";
+		const char* seperator = " ";
 
 		std::string stCmdLine;
 		const int CmdSize = 3;
 		std::vector<std::string> stVec;
-		SplitLine(lpCmdLine,seperator,&stVec);
-		if (CmdSize == stVec.size() && stVec[0]==loginMark)
+		SplitLine(lpCmdLine, seperator, &stVec);
+		if (CmdSize == stVec.size() && stVec[0] == loginMark)
 		{
-			char buf[MAX_PATH];	//TODO 아래 함수 string 형태로 수정
-			base64_decode(stVec[2].c_str(),buf);
+			char buf[MAX_PATH]; // TODO 아래 함수 string 형태로 수정
+			base64_decode(stVec[2].c_str(), buf);
 			stVec[2] = buf;
-			string_join(seperator,stVec,&stCmdLine);
+			string_join(seperator, stVec, &stCmdLine);
 		}
-		else if (CmdSize <= stVec.size() && stVec[0]==loginMark_NonEncode)
+		else if (CmdSize <= stVec.size() && stVec[0] == loginMark_NonEncode)
 		{
 			stVec[0] = loginMark;
-			string_join(" ",stVec,&stCmdLine);
+			string_join(" ", stVec, &stCmdLine);
 		}
 		else
 			stCmdLine = lpCmdLine;
 
-		stRegisterCmdLine ="__COMMAND_LINE__ = ";
-		stRegisterCmdLine+='"';
-		stRegisterCmdLine+=stCmdLine;
-		stRegisterCmdLine+='"';
+		stRegisterCmdLine = "__COMMAND_LINE__ = ";
+		stRegisterCmdLine += '"';
+		stRegisterCmdLine += stCmdLine;
+		stRegisterCmdLine += '"';
 
-		const CHAR* c_szRegisterCmdLine=stRegisterCmdLine.c_str();
+		const CHAR* c_szRegisterCmdLine = stRegisterCmdLine.c_str();
 		if (!pyLauncher.RunLine(c_szRegisterCmdLine))
 		{
 			TraceError("RegisterCommandLine Error");
@@ -226,7 +226,7 @@ bool RunMainScript(CPythonLauncher& pyLauncher, const char* lpCmdLine)
 	}
 	{
 		std::vector<std::string> stVec;
-		SplitLine(lpCmdLine," " ,&stVec);
+		SplitLine(lpCmdLine, " ", &stVec);
 
 		if (stVec.size() != 0 && "--pause-before-create-window" == stVec[0])
 		{
@@ -242,101 +242,106 @@ bool RunMainScript(CPythonLauncher& pyLauncher, const char* lpCmdLine)
 	return true;
 }
 
-bool RunClientGame(CPythonApplication &app, HINSTANCE hInstance,
-                   const char *lpCmdLine) {
+bool RunClientGame(CPythonApplication& app, HINSTANCE hInstance,
+				   const char* lpCmdLine)
+{
 #ifdef LOCALE_SERVICE_YMIR
-  extern bool g_isScreenShotKey;
-  g_isScreenShotKey = true;
+	extern bool g_isScreenShotKey;
+	g_isScreenShotKey = true;
 #endif
 
-  DWORD dwRandSeed = time(NULL) + DWORD((uintptr_t)GetCurrentProcess());
-  srandom(dwRandSeed);
-  srand(random());
+	DWORD dwRandSeed = time(NULL) + DWORD((uintptr_t)GetCurrentProcess());
+	srandom(dwRandSeed);
+	srand(random());
 
-  SetLogLevel(1);
+	SetLogLevel(1);
 
 #ifdef LOCALE_SERVICE_VIETNAM_MILD
-  extern BOOL USE_VIETNAM_CONVERT_WEAPON_VNUM;
-  USE_VIETNAM_CONVERT_WEAPON_VNUM = true;
+	extern BOOL USE_VIETNAM_CONVERT_WEAPON_VNUM;
+	USE_VIETNAM_CONVERT_WEAPON_VNUM = true;
 #endif
 
-  if (_access("perf_game_update.txt", 0) == 0) {
-    DeleteFile("perf_game_update.txt");
-  }
+	if (_access("perf_game_update.txt", 0) == 0)
+	{
+		DeleteFile("perf_game_update.txt");
+	}
 
-  if (_access("newpatch.exe", 0) == 0) {
-    system("patchupdater.exe");
-    app.CMSWindow::Destroy();
-    return false;
-  }
+	if (_access("newpatch.exe", 0) == 0)
+	{
+		system("patchupdater.exe");
+		app.CMSWindow::Destroy();
+		return false;
+	}
 
+	Tracef("[UserInterface] Setting up environment...\n");
+	if (!Setup())
+	{
+		LoadingScreen_ShowError("Could not initialize the client environment.");
+		app.CMSWindow::Destroy();
+		return false;
+	}
 
-  Tracef("[UserInterface] Setting up environment...\n");
-  if (!Setup()) {
-    LoadingScreen_ShowError("Could not initialize the client environment.");
-    app.CMSWindow::Destroy();
-    return false;
-  }
+	Tracef("[UserInterface] Initializing pack system from 'pack'...\n");
 
+	if (!PackInitialize("pack"))
+	{
+		LoadingScreen_ShowError("Pack initialization failed. Check log.txt.");
+		app.CMSWindow::Destroy();
+		return false;
+	}
+	Tracef("[UserInterface] Pack system initialized successfully.\n");
 
-  Tracef("[UserInterface] Initializing pack system from 'pack'...\n");
+	LoadingScreen_Show();
 
-  if (!PackInitialize("pack")) {
-    LoadingScreen_ShowError("Pack initialization failed. Check log.txt.");
-    app.CMSWindow::Destroy();
-    return false;
-  }
-  Tracef("[UserInterface] Pack system initialized successfully.\n");
+	Tracef("[UserInterface] Loading global locale configuration...\n");
+	if (LocaleService_LoadGlobal(hInstance))
+		SetDefaultCodePage(LocaleService_GetCodePage());
 
-  LoadingScreen_Show();
+	Tracef("[UserInterface] Reloading map atlas from packs...\n");
+	CPythonBackground::Instance().Initialize();
 
+	LoadingScreen_Show();
 
-  Tracef("[UserInterface] Loading global locale configuration...\n");
-  if (LocaleService_LoadGlobal(hInstance))
-    SetDefaultCodePage(LocaleService_GetCodePage());
+	bool ret = false;
+	{
+		Tracef("[UserInterface] Creating CPythonLauncher...\n");
+		CPythonLauncher pyLauncher;
+		CPythonExceptionSender pyExceptionSender;
+		SetExceptionSender(&pyExceptionSender);
 
-  Tracef("[UserInterface] Reloading map atlas from packs...\n");
-  CPythonBackground::Instance().Initialize();
+		if (pyLauncher.Create())
+		{
+			Tracef("[UserInterface] Python runtime created. Launching main script "
+				   "(system.py)...\n");
+			ret = RunMainScript(pyLauncher, lpCmdLine);
+			Tracef("[UserInterface] RunMainScript exited with code %d.\n", ret);
+		}
+		else
+		{
+			Tracef("[UserInterface] Failed to initialize Python Launcher!\n");
+			LoadingScreen_ShowError("Could not initialize the Python runtime.");
+		}
 
-  LoadingScreen_Show();
+		Tracef("[UserInterface] Cleaning up application...\n");
+		app.Clear();
 
-  bool ret = false;
-  {
-    Tracef("[UserInterface] Creating CPythonLauncher...\n");
-    CPythonLauncher pyLauncher;
-    CPythonExceptionSender pyExceptionSender;
-    SetExceptionSender(&pyExceptionSender);
+		timeEndPeriod(1);
+		pyLauncher.Clear();
+	}
 
-    if (pyLauncher.Create()) {
-      Tracef("[UserInterface] Python runtime created. Launching main script "
-             "(system.py)...\n");
-      ret = RunMainScript(pyLauncher, lpCmdLine);
-      Tracef("[UserInterface] RunMainScript exited with code %d.\n", ret);
-    } else {
-      Tracef("[UserInterface] Failed to initialize Python Launcher!\n");
-      LoadingScreen_ShowError("Could not initialize the Python runtime.");
-    }
+	app.Destroy();
+	Tracef("[UserInterface] Application cleanly terminated.\n");
 
-    Tracef("[UserInterface] Cleaning up application...\n");
-    app.Clear();
-
-    timeEndPeriod(1);
-    pyLauncher.Clear();
-  }
-
-  app.Destroy();
-  Tracef("[UserInterface] Application cleanly terminated.\n");
-
-  return ret;
+	return ret;
 }
 
 HANDLE CreateOpenMT2GameMutex()
 {
 	SECURITY_ATTRIBUTES sa;
 	ZeroMemory(&sa, sizeof(SECURITY_ATTRIBUTES));
-	sa.nLength				= sizeof(sa);
-	sa.lpSecurityDescriptor	= NULL;
-	sa.bInheritHandle		= FALSE;
+	sa.nLength = sizeof(sa);
+	sa.lpSecurityDescriptor = NULL;
+	sa.bInheritHandle = FALSE;
 
 	return CreateMutex(&sa, FALSE, "OpenMT2GameMutex");
 }
@@ -350,36 +355,35 @@ void DestroyOpenMT2GameMutex(HANDLE hMutex)
 	}
 }
 
-
 static void GrannyError(granny_log_message_type Type,
 						granny_log_message_origin Origin,
-						char const *Error,
-						void *UserData)
+						char const* Error,
+						void* UserData)
 {
-    TraceError("GRANNY: %s", Error);
+	TraceError("GRANNY: %s", Error);
 }
 
 int Setup()
 {
-	/* 
+	/*
 	 *	타이머 정밀도를 올린다.
 	 */
-	TIMECAPS tc; 
-	UINT wTimerRes; 
+	TIMECAPS tc;
+	UINT wTimerRes;
 
-	if (timeGetDevCaps(&tc, sizeof(TIMECAPS)) != TIMERR_NOERROR) 
+	if (timeGetDevCaps(&tc, sizeof(TIMECAPS)) != TIMERR_NOERROR)
 		return 0;
 
-	wTimerRes = MINMAX(tc.wPeriodMin, 1, tc.wPeriodMax); 
-	timeBeginPeriod(wTimerRes); 
+	wTimerRes = MINMAX(tc.wPeriodMin, 1, tc.wPeriodMax);
+	timeBeginPeriod(wTimerRes);
 
 	/*
 	 *	그래니 에러 핸들링
 	 */
 
 	granny_log_callback Callback;
-    Callback.Function = GrannyError;
-    Callback.UserData = 0;
-    GrannySetLogCallback(&Callback);
+	Callback.Function = GrannyError;
+	Callback.UserData = 0;
+	GrannySetLogCallback(&Callback);
 	return 1;
 }

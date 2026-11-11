@@ -22,100 +22,100 @@ bool __IsNPCRace(unsigned race)
 	return false;
 }
 
-void __GetRaceResourcePathes(unsigned race, std::vector <std::string>& vec_stPathes)
+void __GetRaceResourcePathes(unsigned race, std::vector<std::string>& vec_stPathes)
 {
 	if (__IsGuildRace(race))
 	{
-		vec_stPathes.push_back ("d:/ymir work/guild/");
-		vec_stPathes.push_back ("d:/ymir work/npc/");
-		vec_stPathes.push_back ("d:/ymir work/npc2/");
-		vec_stPathes.push_back ("d:/ymir work/monster/");
-		vec_stPathes.push_back ("d:/ymir work/monster2/");
+		vec_stPathes.push_back("d:/ymir work/guild/");
+		vec_stPathes.push_back("d:/ymir work/npc/");
+		vec_stPathes.push_back("d:/ymir work/npc2/");
+		vec_stPathes.push_back("d:/ymir work/monster/");
+		vec_stPathes.push_back("d:/ymir work/monster2/");
 	}
 	else if (__IsNPCRace(race))
 	{
 		if (race >= 30000)
 		{
-			vec_stPathes.push_back ("d:/ymir work/npc2/");
-			vec_stPathes.push_back ("d:/ymir work/npc/");
-			vec_stPathes.push_back ("d:/ymir work/monster/");
-			vec_stPathes.push_back ("d:/ymir work/monster2/");
-			vec_stPathes.push_back ("d:/ymir work/guild/");
+			vec_stPathes.push_back("d:/ymir work/npc2/");
+			vec_stPathes.push_back("d:/ymir work/npc/");
+			vec_stPathes.push_back("d:/ymir work/monster/");
+			vec_stPathes.push_back("d:/ymir work/monster2/");
+			vec_stPathes.push_back("d:/ymir work/guild/");
 		}
 		else
 		{
-			vec_stPathes.push_back ("d:/ymir work/npc/");
-			vec_stPathes.push_back ("d:/ymir work/npc2/");
-			vec_stPathes.push_back ("d:/ymir work/monster/");
-			vec_stPathes.push_back ("d:/ymir work/monster2/");
-			vec_stPathes.push_back ("d:/ymir work/guild/");
+			vec_stPathes.push_back("d:/ymir work/npc/");
+			vec_stPathes.push_back("d:/ymir work/npc2/");
+			vec_stPathes.push_back("d:/ymir work/monster/");
+			vec_stPathes.push_back("d:/ymir work/monster2/");
+			vec_stPathes.push_back("d:/ymir work/guild/");
 		}
 	}
 	// 만우절 이벤트용 예외 몬스터
 	else if (8507 == race || 8510 == race)
 	{
-		vec_stPathes.push_back ("d:/ymir work/monster2/");
-		vec_stPathes.push_back ("d:/ymir work/monster/");
-		vec_stPathes.push_back ("d:/ymir work/npc/");
-		vec_stPathes.push_back ("d:/ymir work/npc2/");
-		vec_stPathes.push_back ("d:/ymir work/guild/");
+		vec_stPathes.push_back("d:/ymir work/monster2/");
+		vec_stPathes.push_back("d:/ymir work/monster/");
+		vec_stPathes.push_back("d:/ymir work/npc/");
+		vec_stPathes.push_back("d:/ymir work/npc2/");
+		vec_stPathes.push_back("d:/ymir work/guild/");
 	}
 	else if (race > 8000)
 	{
-		vec_stPathes.push_back ("d:/ymir work/monster/");
-		vec_stPathes.push_back ("d:/ymir work/monster2/");
-		vec_stPathes.push_back ("d:/ymir work/npc/");
-		vec_stPathes.push_back ("d:/ymir work/npc2/");
-		vec_stPathes.push_back ("d:/ymir work/guild/");
+		vec_stPathes.push_back("d:/ymir work/monster/");
+		vec_stPathes.push_back("d:/ymir work/monster2/");
+		vec_stPathes.push_back("d:/ymir work/npc/");
+		vec_stPathes.push_back("d:/ymir work/npc2/");
+		vec_stPathes.push_back("d:/ymir work/guild/");
 	}
 	else if (race > 2000)
 	{
-		vec_stPathes.push_back ("d:/ymir work/monster2/");
-		vec_stPathes.push_back ("d:/ymir work/monster/");
-		vec_stPathes.push_back ("d:/ymir work/npc/");
-		vec_stPathes.push_back ("d:/ymir work/npc2/");
-		vec_stPathes.push_back ("d:/ymir work/guild/");
+		vec_stPathes.push_back("d:/ymir work/monster2/");
+		vec_stPathes.push_back("d:/ymir work/monster/");
+		vec_stPathes.push_back("d:/ymir work/npc/");
+		vec_stPathes.push_back("d:/ymir work/npc2/");
+		vec_stPathes.push_back("d:/ymir work/guild/");
 	}
-	else if (race>=1400 && race<=1700)
+	else if (race >= 1400 && race <= 1700)
 	{
-		vec_stPathes.push_back ("d:/ymir work/monster2/");
-		vec_stPathes.push_back ("d:/ymir work/monster/");
-		vec_stPathes.push_back ("d:/ymir work/npc/");
-		vec_stPathes.push_back ("d:/ymir work/npc2/");
-		vec_stPathes.push_back ("d:/ymir work/guild/");
+		vec_stPathes.push_back("d:/ymir work/monster2/");
+		vec_stPathes.push_back("d:/ymir work/monster/");
+		vec_stPathes.push_back("d:/ymir work/npc/");
+		vec_stPathes.push_back("d:/ymir work/npc2/");
+		vec_stPathes.push_back("d:/ymir work/guild/");
 	}
 	else
 	{
-		vec_stPathes.push_back ("d:/ymir work/monster/");
-		vec_stPathes.push_back ("d:/ymir work/monster2/");
-		vec_stPathes.push_back ("d:/ymir work/npc/");
-		vec_stPathes.push_back ("d:/ymir work/npc2/");
-		vec_stPathes.push_back ("d:/ymir work/guild/");
+		vec_stPathes.push_back("d:/ymir work/monster/");
+		vec_stPathes.push_back("d:/ymir work/monster2/");
+		vec_stPathes.push_back("d:/ymir work/npc/");
+		vec_stPathes.push_back("d:/ymir work/npc2/");
+		vec_stPathes.push_back("d:/ymir work/guild/");
 	}
 	return;
 }
 
 CRaceData* CRaceManager::__LoadRaceData(DWORD dwRaceIndex)
 {
-	std::map<DWORD, std::string>::iterator fRaceName=m_kMap_dwRaceKey_stRaceName.find(dwRaceIndex);
-	if (m_kMap_dwRaceKey_stRaceName.end()==fRaceName)
+	std::map<DWORD, std::string>::iterator fRaceName = m_kMap_dwRaceKey_stRaceName.find(dwRaceIndex);
+	if (m_kMap_dwRaceKey_stRaceName.end() == fRaceName)
 		return NULL;
 
-	const std::string& c_rstRaceName=fRaceName->second;
+	const std::string& c_rstRaceName = fRaceName->second;
 
 	if (c_rstRaceName.empty())
 		return NULL;
-	
+
 	// LOAD_LOCAL_RESOURCE
 	if (c_rstRaceName[0] == '#')
-	{	
+	{
 		const char* pathName = c_rstRaceName.c_str() + 1;
 		char shapeFileName[256];
 		char motionListFileName[256];
 		_snprintf(shapeFileName, sizeof(shapeFileName), "%sshape.msm", pathName);
 		_snprintf(motionListFileName, sizeof(motionListFileName), "%smotlist.txt", pathName);
-				
-		CRaceData * pRaceData = CRaceData::New();
+
+		CRaceData* pRaceData = CRaceData::New();
 		pRaceData->SetRace(dwRaceIndex);
 		if (!pRaceData->LoadRaceData(shapeFileName))
 		{
@@ -124,33 +124,33 @@ CRaceData* CRaceManager::__LoadRaceData(DWORD dwRaceIndex)
 			return NULL;
 		}
 
-		__LoadRaceMotionList(*pRaceData, pathName, motionListFileName);		
+		__LoadRaceMotionList(*pRaceData, pathName, motionListFileName);
 
 		return pRaceData;
 	}
 	// END_OF_LOAD_LOCAL_RESOURCE
-	std::vector <std::string> vec_stFullPathName;
+	std::vector<std::string> vec_stFullPathName;
 	__GetRaceResourcePathes(dwRaceIndex, vec_stFullPathName);
 
-	CRaceData * pRaceData = CRaceData::New();
+	CRaceData* pRaceData = CRaceData::New();
 	pRaceData->SetRace(dwRaceIndex);
-	
+
 	for (int i = 0; i < vec_stFullPathName.size(); i++)
 	{
 		std::string stFullPathName = vec_stFullPathName[i];
 		{
-			std::map<std::string, std::string>::iterator fRaceSrcName=m_kMap_stRaceName_stSrcName.find(c_rstRaceName);
-			if (m_kMap_stRaceName_stSrcName.end()==fRaceSrcName)
-				stFullPathName+=c_rstRaceName;
+			std::map<std::string, std::string>::iterator fRaceSrcName = m_kMap_stRaceName_stSrcName.find(c_rstRaceName);
+			if (m_kMap_stRaceName_stSrcName.end() == fRaceSrcName)
+				stFullPathName += c_rstRaceName;
 			else
-				stFullPathName+=fRaceSrcName->second;
+				stFullPathName += fRaceSrcName->second;
 		}
 
-		stFullPathName+="/";
+		stFullPathName += "/";
 
-		std::string stMSMFileName=stFullPathName;
-		stMSMFileName+=c_rstRaceName;
-		stMSMFileName+=".msm";
+		std::string stMSMFileName = stFullPathName;
+		stMSMFileName += c_rstRaceName;
+		stMSMFileName += ".msm";
 
 		if (!pRaceData->LoadRaceData(stMSMFileName.c_str()))
 		{
@@ -159,16 +159,16 @@ CRaceData* CRaceManager::__LoadRaceData(DWORD dwRaceIndex)
 				TraceError("CRaceManager::RegisterRacePath : RACE[%u] LOAD MSMFILE[%s] ERROR. Will Find Another Path.", dwRaceIndex, stMSMFileName.c_str());
 				continue;
 			}
-			
+
 			TraceError("CRaceManager::RegisterRacePath : RACE[%u] LOAD MSMFILE[%s] ERROR", dwRaceIndex, stMSMFileName.c_str());
 			CRaceData::Delete(pRaceData);
 			return NULL;
 		}
 
-		std::string stMotionListFileName=stFullPathName;
-		stMotionListFileName+=pRaceData->GetMotionListFileName();
+		std::string stMotionListFileName = stFullPathName;
+		stMotionListFileName += pRaceData->GetMotionListFileName();
 
-		__LoadRaceMotionList(*pRaceData, stFullPathName.c_str(), stMotionListFileName.c_str());		
+		__LoadRaceMotionList(*pRaceData, stFullPathName.c_str(), stMotionListFileName.c_str());
 
 		return pRaceData;
 	}
@@ -180,11 +180,11 @@ CRaceData* CRaceManager::__LoadRaceData(DWORD dwRaceIndex)
 bool CRaceManager::__LoadRaceMotionList(CRaceData& rkRaceData, const char* pathName, const char* motionListFileName)
 {
 	static std::map<std::string, DWORD> s_kMap_stType_dwIndex;
-	static bool s_isInit=false;
+	static bool s_isInit = false;
 
 	if (!s_isInit)
 	{
-		s_isInit=true;
+		s_isInit = true;
 
 		s_kMap_stType_dwIndex.insert(std::map<std::string, DWORD>::value_type("SPAWN", CRaceMotionData::NAME_SPAWN));
 		s_kMap_stType_dwIndex.insert(std::map<std::string, DWORD>::value_type("WAIT", CRaceMotionData::NAME_WAIT));
@@ -230,13 +230,13 @@ bool CRaceManager::__LoadRaceMotionList(CRaceData& rkRaceData, const char* pathN
 		s_kMap_stType_dwIndex.insert(std::map<std::string, DWORD>::value_type("SPECIAL3", CRaceMotionData::NAME_SPECIAL_4));
 		s_kMap_stType_dwIndex.insert(std::map<std::string, DWORD>::value_type("SPECIAL4", CRaceMotionData::NAME_SPECIAL_5));
 		s_kMap_stType_dwIndex.insert(std::map<std::string, DWORD>::value_type("SPECIAL5", CRaceMotionData::NAME_SPECIAL_6));
-		s_kMap_stType_dwIndex.insert(std::map<std::string, DWORD>::value_type("SKILL1", CRaceMotionData::NAME_SKILL+121));
-		s_kMap_stType_dwIndex.insert(std::map<std::string, DWORD>::value_type("SKILL2", CRaceMotionData::NAME_SKILL+122));
-		s_kMap_stType_dwIndex.insert(std::map<std::string, DWORD>::value_type("SKILL3", CRaceMotionData::NAME_SKILL+123));
-		s_kMap_stType_dwIndex.insert(std::map<std::string, DWORD>::value_type("SKILL4", CRaceMotionData::NAME_SKILL+124));
-		s_kMap_stType_dwIndex.insert(std::map<std::string, DWORD>::value_type("SKILL5", CRaceMotionData::NAME_SKILL+125));
+		s_kMap_stType_dwIndex.insert(std::map<std::string, DWORD>::value_type("SKILL1", CRaceMotionData::NAME_SKILL + 121));
+		s_kMap_stType_dwIndex.insert(std::map<std::string, DWORD>::value_type("SKILL2", CRaceMotionData::NAME_SKILL + 122));
+		s_kMap_stType_dwIndex.insert(std::map<std::string, DWORD>::value_type("SKILL3", CRaceMotionData::NAME_SKILL + 123));
+		s_kMap_stType_dwIndex.insert(std::map<std::string, DWORD>::value_type("SKILL4", CRaceMotionData::NAME_SKILL + 124));
+		s_kMap_stType_dwIndex.insert(std::map<std::string, DWORD>::value_type("SKILL5", CRaceMotionData::NAME_SKILL + 125));
 	}
-	
+
 	CEterPackManager::TPackDataPtr data;
 	CMemoryTextFileLoader kTextFileLoader;
 
@@ -252,7 +252,7 @@ bool CRaceManager::__LoadRaceMotionList(CRaceData& rkRaceData, const char* pathN
 	char szFile[256];
 	int nPercent = 0;
 
-	bool isSpawn=false;
+	bool isSpawn = false;
 
 	static std::string stSpawnMotionFileName;
 	static std::string stMotionFileName;
@@ -260,15 +260,15 @@ bool CRaceManager::__LoadRaceMotionList(CRaceData& rkRaceData, const char* pathN
 	stSpawnMotionFileName = "";
 	stMotionFileName = "";
 
-	UINT uLineCount=kTextFileLoader.GetLineCount();
-	for (UINT uLineIndex=0; uLineIndex<uLineCount; ++uLineIndex)
+	UINT uLineCount = kTextFileLoader.GetLineCount();
+	for (UINT uLineIndex = 0; uLineIndex < uLineCount; ++uLineIndex)
 	{
 		DWORD motionType = CRaceMotionData::NAME_NONE;
 
-		const std::string& c_rstLine=kTextFileLoader.GetLineString(uLineIndex);
+		const std::string& c_rstLine = kTextFileLoader.GetLineString(uLineIndex);
 		sscanf(c_rstLine.c_str(), "%s %s %s %d", szMode, szType, szFile, &nPercent);
 
-		std::map<std::string, DWORD>::iterator fTypeIndex=s_kMap_stType_dwIndex.find(szType);
+		std::map<std::string, DWORD>::iterator fTypeIndex = s_kMap_stType_dwIndex.find(szType);
 
 		if (s_kMap_stType_dwIndex.end() == fTypeIndex)
 		{
@@ -299,22 +299,22 @@ bool CRaceManager::__LoadRaceMotionList(CRaceData& rkRaceData, const char* pathN
 		motionType = fTypeIndex->second;
 
 		stMotionFileName = pathName;
-		stMotionFileName += szFile; 
+		stMotionFileName += szFile;
 
 		rkRaceData.RegisterMotionData(CRaceMotionData::MODE_GENERAL, motionType, stMotionFileName.c_str(), nPercent);
 
 		switch (motionType)
 		{
 			case CRaceMotionData::NAME_SPAWN:
-				isSpawn=true;
+				isSpawn = true;
 				break;
 			case CRaceMotionData::NAME_DAMAGE:
-				stSpawnMotionFileName=stMotionFileName;
+				stSpawnMotionFileName = stMotionFileName;
 				break;
 		}
 	}
 
-	if (!isSpawn && stSpawnMotionFileName!="")
+	if (!isSpawn && stSpawnMotionFileName != "")
 	{
 		rkRaceData.RegisterMotionData(CRaceMotionData::MODE_GENERAL, CRaceMotionData::NAME_SPAWN, stSpawnMotionFileName.c_str(), nPercent);
 	}
@@ -324,13 +324,13 @@ bool CRaceManager::__LoadRaceMotionList(CRaceData& rkRaceData, const char* pathN
 	return true;
 }
 
-void CRaceManager::RegisterRaceSrcName(const char * c_szName, const char * c_szSrcName)
+void CRaceManager::RegisterRaceSrcName(const char* c_szName, const char* c_szSrcName)
 {
 	m_kMap_stRaceName_stSrcName.insert(std::map<std::string, std::string>::value_type(c_szName, c_szSrcName));
 }
 
-void CRaceManager::RegisterRaceName(DWORD dwRaceIndex, const char * c_szName)
-{	
+void CRaceManager::RegisterRaceName(DWORD dwRaceIndex, const char* c_szName)
+{
 	m_kMap_dwRaceKey_stRaceName.insert(std::map<DWORD, std::string>::value_type(dwRaceIndex, c_szName));
 }
 
@@ -342,7 +342,7 @@ void CRaceManager::CreateRace(DWORD dwRaceIndex)
 		return;
 	}
 
-	CRaceData * pRaceData = CRaceData::New();
+	CRaceData* pRaceData = CRaceData::New();
 	pRaceData->SetRace(dwRaceIndex);
 	m_RaceDataMap.insert(TRaceDataMap::value_type(dwRaceIndex, pRaceData));
 
@@ -361,12 +361,12 @@ void CRaceManager::SelectRace(DWORD dwRaceIndex)
 	m_pSelectedRaceData = itor->second;
 }
 
-CRaceData * CRaceManager::GetSelectedRaceDataPointer()
+CRaceData* CRaceManager::GetSelectedRaceDataPointer()
 {
 	return m_pSelectedRaceData;
 }
 
-BOOL CRaceManager::GetRaceDataPointer(DWORD dwRaceIndex, CRaceData ** ppRaceData)
+BOOL CRaceManager::GetRaceDataPointer(DWORD dwRaceIndex, CRaceData** ppRaceData)
 {
 	TRaceDataIterator itor = m_RaceDataMap.find(dwRaceIndex);
 
@@ -389,15 +389,15 @@ BOOL CRaceManager::GetRaceDataPointer(DWORD dwRaceIndex, CRaceData ** ppRaceData
 	return TRUE;
 }
 
-void CRaceManager::SetPathName(const char * c_szPathName)
+void CRaceManager::SetPathName(const char* c_szPathName)
 {
 	m_strPathName = c_szPathName;
 }
 
-const char * CRaceManager::GetFullPathFileName(const char * c_szFileName)
+const char* CRaceManager::GetFullPathFileName(const char* c_szFileName)
 {
 	static std::string s_stFileName;
-	
+
 	if (c_szFileName[0] != '.')
 	{
 		s_stFileName = m_strPathName;
@@ -410,7 +410,6 @@ const char * CRaceManager::GetFullPathFileName(const char * c_szFileName)
 
 	return s_stFileName.c_str();
 }
-
 
 void CRaceManager::Create()
 {
@@ -426,7 +425,7 @@ void CRaceManager::__Initialize()
 void CRaceManager::__DestroyRaceDataMap()
 {
 	TRaceDataMap::iterator i;
-	for (i=m_RaceDataMap.begin(); i!=m_RaceDataMap.end(); ++i)
+	for (i = m_RaceDataMap.begin(); i != m_RaceDataMap.end(); ++i)
 		CRaceData::Delete(i->second);
 
 	m_RaceDataMap.clear();
@@ -444,7 +443,7 @@ void CRaceManager::Destroy()
 
 CRaceManager::CRaceManager()
 {
-	__Initialize();	
+	__Initialize();
 }
 
 CRaceManager::~CRaceManager()

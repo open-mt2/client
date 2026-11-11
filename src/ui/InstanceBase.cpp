@@ -11,12 +11,11 @@
 #include <Neoeter/Render/StateManager.h>
 #include <Client/Game/ItemManager.h>
 
-BOOL HAIR_COLOR_ENABLE=FALSE;
-BOOL USE_ARMOR_SPECULAR=FALSE;
-BOOL RIDE_HORSE_ENABLE=TRUE;
+BOOL HAIR_COLOR_ENABLE = FALSE;
+BOOL USE_ARMOR_SPECULAR = FALSE;
+BOOL RIDE_HORSE_ENABLE = TRUE;
 const float c_fDefaultRotationSpeed = 1200.0f;
 const float c_fDefaultHorseRotationSpeed = 300.0f;
-
 
 bool IsWall(unsigned race)
 {
@@ -34,7 +33,6 @@ bool IsWall(unsigned race)
 
 //////////////////////////////////////////////////////////////////////////////////////
 
-
 CInstanceBase::SHORSE::SHORSE()
 {
 	__Initialize();
@@ -42,13 +40,13 @@ CInstanceBase::SHORSE::SHORSE()
 
 CInstanceBase::SHORSE::~SHORSE()
 {
-	assert(m_pkActor==NULL);
+	assert(m_pkActor == NULL);
 }
 
 void CInstanceBase::SHORSE::__Initialize()
 {
-	m_isMounting=false;
-	m_pkActor=NULL;
+	m_isMounting = false;
+	m_pkActor = NULL;
 }
 
 void CInstanceBase::SHORSE::SetAttackSpeed(UINT uAtkSpd)
@@ -56,31 +54,31 @@ void CInstanceBase::SHORSE::SetAttackSpeed(UINT uAtkSpd)
 	if (!IsMounting())
 		return;
 
-	CActorInstance& rkActor=GetActorRef();
-	rkActor.SetAttackSpeed(uAtkSpd/100.0f);	
+	CActorInstance& rkActor = GetActorRef();
+	rkActor.SetAttackSpeed(uAtkSpd / 100.0f);
 }
 
 void CInstanceBase::SHORSE::SetMoveSpeed(UINT uMovSpd)
-{	
+{
 	if (!IsMounting())
 		return;
 
-	CActorInstance& rkActor=GetActorRef();
-	rkActor.SetMoveSpeed(uMovSpd/100.0f);
+	CActorInstance& rkActor = GetActorRef();
+	rkActor.SetMoveSpeed(uMovSpd / 100.0f);
 }
 
 void CInstanceBase::SHORSE::Create(const TPixelPosition& c_rkPPos, UINT eRace, UINT eHitEffect)
 {
-	assert(NULL==m_pkActor && "CInstanceBase::SHORSE::Create - ALREADY MOUNT");
+	assert(NULL == m_pkActor && "CInstanceBase::SHORSE::Create - ALREADY MOUNT");
 
-	m_pkActor=new CActorInstance;
+	m_pkActor = new CActorInstance;
 
-	CActorInstance& rkActor=GetActorRef();
+	CActorInstance& rkActor = GetActorRef();
 	rkActor.SetEventHandler(CActorInstance::IEventHandler::GetEmptyPtr());
 	if (!rkActor.SetRace(eRace))
 	{
 		delete m_pkActor;
-		m_pkActor=NULL;
+		m_pkActor = NULL;
 		return;
 	}
 
@@ -96,7 +94,7 @@ void CInstanceBase::SHORSE::Create(const TPixelPosition& c_rkPPos, UINT eRace, U
 
 	rkActor.SetCurPixelPosition(c_rkPPos);
 
-	m_isMounting=true;
+	m_isMounting = true;
 }
 
 void CInstanceBase::SHORSE::Destroy()
@@ -104,15 +102,15 @@ void CInstanceBase::SHORSE::Destroy()
 	if (m_pkActor)
 	{
 		m_pkActor->Destroy();
-		delete m_pkActor;	
-	}	
+		delete m_pkActor;
+	}
 
 	__Initialize();
 }
 
 CActorInstance& CInstanceBase::SHORSE::GetActorRef()
 {
-	assert(NULL!=m_pkActor && "CInstanceBase::SHORSE::GetActorRef");
+	assert(NULL != m_pkActor && "CInstanceBase::SHORSE::GetActorRef");
 	return *m_pkActor;
 }
 
@@ -139,10 +137,10 @@ UINT CInstanceBase::SHORSE::GetLevel()
 			case 20107:
 			case 20108:
 			case 20109:
-			case 20110: // #0000673: [M2EU] 새로운 탈것 타고 공격 안됨 
-			case 20111: // #0000673: [M2EU] 새로운 탈것 타고 공격 안됨 
-			case 20112: // #0000673: [M2EU] 새로운 탈것 타고 공격 안됨 
-			case 20113: // #0000673: [M2EU] 새로운 탈것 타고 공격 안됨 
+			case 20110: // #0000673: [M2EU] 새로운 탈것 타고 공격 안됨
+			case 20111: // #0000673: [M2EU] 새로운 탈것 타고 공격 안됨
+			case 20112: // #0000673: [M2EU] 새로운 탈것 타고 공격 안됨
+			case 20113: // #0000673: [M2EU] 새로운 탈것 타고 공격 안됨
 			case 20114:
 			case 20115:
 			case 20116:
@@ -167,16 +165,15 @@ UINT CInstanceBase::SHORSE::GetLevel()
 		//	-- 탈것 레벨을 클라에서 측정하고 공격/스킬 사용가능 여부도 클라에서 처리하는 것 자체에 문제가 있는 듯.. [hyo]
 		{
 			// 중급 탈것은 레벨2 (공격 가능, 스킬 불가)
-			if ((20205 <= mount &&  20208 >= mount) ||
-				(20214 == mount) || (20217 == mount)			// 난폭한 전갑순순록, 난폭한 전갑암순록
-				)
+			if ((20205 <= mount && 20208 >= mount) ||
+				(20214 == mount) || (20217 == mount) // 난폭한 전갑순순록, 난폭한 전갑암순록
+			)
 				return 2;
 
 			// 고급 탈것은 레벨3 (공격 가능, 스킬 가능)
-			if ((20209 <= mount &&  20212 >= mount) || 
-				(20215 == mount) || (20218 == mount) ||			// 용맹한 전갑순순록, 용맹한 전갑암순록
-				(20220 == mount)
-				)
+			if ((20209 <= mount && 20212 >= mount) ||
+				(20215 == mount) || (20218 == mount) || // 용맹한 전갑순순록, 용맹한 전갑암순록
+				(20220 == mount))
 				return 3;
 		}
 	}
@@ -189,16 +186,15 @@ bool CInstanceBase::SHORSE::IsNewMount()
 		return false;
 	DWORD mount = m_pkActor->GetRace();
 
-	if ((20205 <= mount &&  20208 >= mount) ||
-		(20214 == mount) || (20217 == mount)			// 난폭한 전갑순순록, 난폭한 전갑암순록
-		)
+	if ((20205 <= mount && 20208 >= mount) ||
+		(20214 == mount) || (20217 == mount) // 난폭한 전갑순순록, 난폭한 전갑암순록
+	)
 		return true;
 
 	// 고급 탈것
-	if ((20209 <= mount &&  20212 >= mount) || 
-		(20215 == mount) || (20218 == mount) ||			// 용맹한 전갑순순록, 용맹한 전갑암순록
-		(20220 == mount)
-		)
+	if ((20209 <= mount && 20212 >= mount) ||
+		(20215 == mount) || (20218 == mount) || // 용맹한 전갑순순록, 용맹한 전갑암순록
+		(20220 == mount))
 		return true;
 
 	return false;
@@ -215,12 +211,12 @@ bool CInstanceBase::SHORSE::CanUseSkill()
 bool CInstanceBase::SHORSE::CanAttack()
 {
 	if (IsMounting())
-		if (GetLevel()<=1)
+		if (GetLevel() <= 1)
 			return false;
 
 	return true;
 }
-			
+
 bool CInstanceBase::SHORSE::IsMounting()
 {
 	return m_isMounting;
@@ -231,7 +227,7 @@ void CInstanceBase::SHORSE::Deform()
 	if (!IsMounting())
 		return;
 
-	CActorInstance& rkActor=GetActorRef();
+	CActorInstance& rkActor = GetActorRef();
 	rkActor.INSTANCEBASE_Deform();
 }
 
@@ -240,7 +236,7 @@ void CInstanceBase::SHORSE::Render()
 	if (!IsMounting())
 		return;
 
-	CActorInstance& rkActor=GetActorRef();
+	CActorInstance& rkActor = GetActorRef();
 	rkActor.Render();
 }
 
@@ -277,7 +273,7 @@ bool CInstanceBase::AvoidObject(const CGraphicObjectInstance& c_rkBGObj)
 
 ///////////////////////////////////////////////////////////////////////////////////
 
-bool __ArmorVnumToShape(int iVnum, DWORD * pdwShape)
+bool __ArmorVnumToShape(int iVnum, DWORD* pdwShape)
 {
 	*pdwShape = iVnum;
 
@@ -289,7 +285,7 @@ bool __ArmorVnumToShape(int iVnum, DWORD * pdwShape)
 	if (!USE_ARMOR_SPECULAR)
 		return false;
 
-	CItemData * pItemData;
+	CItemData* pItemData;
 	if (!CItemManager::Instance().GetItemDataPointer(iVnum, &pItemData))
 		return false;
 
@@ -311,7 +307,7 @@ class CActorInstanceBackground : public IBackground
 		virtual ~CActorInstanceBackground() {}
 		bool IsBlock(int x, int y)
 		{
-			CPythonBackground& rkBG=CPythonBackground::Instance();
+			CPythonBackground& rkBG = CPythonBackground::Instance();
 			return rkBG.isAttrOn(x, y, CTerrainImpl::ATTRIBUTE_BLOCK);
 		}
 };
@@ -320,32 +316,32 @@ static CActorInstanceBackground gs_kActorInstBG;
 
 bool CInstanceBase::LessRenderOrder(CInstanceBase* pkInst)
 {
-	int nMainAlpha=(__GetAlphaValue() < 1.0f) ? 1 : 0;
-	int nTestAlpha=(pkInst->__GetAlphaValue() < 1.0f) ? 1 : 0;
+	int nMainAlpha = (__GetAlphaValue() < 1.0f) ? 1 : 0;
+	int nTestAlpha = (pkInst->__GetAlphaValue() < 1.0f) ? 1 : 0;
 	if (nMainAlpha < nTestAlpha)
 		return true;
 	if (nMainAlpha > nTestAlpha)
 		return false;
 
-	if (GetRace()<pkInst->GetRace())
+	if (GetRace() < pkInst->GetRace())
 		return true;
-	if (GetRace()>pkInst->GetRace())
+	if (GetRace() > pkInst->GetRace())
 		return false;
 
-	if (GetShape()<pkInst->GetShape())
+	if (GetShape() < pkInst->GetShape())
 		return true;
 
-	if (GetShape()>pkInst->GetShape())
+	if (GetShape() > pkInst->GetShape())
 		return false;
 
-	UINT uLeftLODLevel=__LessRenderOrder_GetLODLevel();
-	UINT uRightLODLevel=pkInst->__LessRenderOrder_GetLODLevel();
-	if (uLeftLODLevel<uRightLODLevel)
+	UINT uLeftLODLevel = __LessRenderOrder_GetLODLevel();
+	UINT uRightLODLevel = pkInst->__LessRenderOrder_GetLODLevel();
+	if (uLeftLODLevel < uRightLODLevel)
 		return true;
-	if (uLeftLODLevel>uRightLODLevel)
+	if (uLeftLODLevel > uRightLODLevel)
 		return false;
 
-	if (m_awPart[CRaceData::PART_WEAPON]<pkInst->m_awPart[CRaceData::PART_WEAPON])
+	if (m_awPart[CRaceData::PART_WEAPON] < pkInst->m_awPart[CRaceData::PART_WEAPON])
 		return true;
 
 	return false;
@@ -353,7 +349,7 @@ bool CInstanceBase::LessRenderOrder(CInstanceBase* pkInst)
 
 UINT CInstanceBase::__LessRenderOrder_GetLODLevel()
 {
-	CGrannyLODController* pLODCtrl=m_GraphicThingInstance.GetLODControllerPointer(0);
+	CGrannyLODController* pLODCtrl = m_GraphicThingInstance.GetLODControllerPointer(0);
 	if (!pLODCtrl)
 		return 0;
 
@@ -379,9 +375,9 @@ bool CInstanceBase::__Background_IsWaterPixelPosition(const TPixelPosition& c_rk
 const float PC_DUST_RANGE = 2000.0f;
 const float NPC_DUST_RANGE = 1000.0f;
 
-DWORD CInstanceBase::ms_dwUpdateCounter=0;
-DWORD CInstanceBase::ms_dwRenderCounter=0;
-DWORD CInstanceBase::ms_dwDeformCounter=0;
+DWORD CInstanceBase::ms_dwUpdateCounter = 0;
+DWORD CInstanceBase::ms_dwRenderCounter = 0;
+DWORD CInstanceBase::ms_dwDeformCounter = 0;
 
 CDynamicPool<CInstanceBase> CInstanceBase::ms_kPool;
 
@@ -390,17 +386,17 @@ bool CInstanceBase::__IsInDustRange()
 	if (!__IsExistMainInstance())
 		return false;
 
-	CInstanceBase* pkInstMain=__GetMainInstancePtr();
+	CInstanceBase* pkInstMain = __GetMainInstancePtr();
 
-	float fDistance=NEW_GetDistanceFromDestInstance(*pkInstMain);
+	float fDistance = NEW_GetDistanceFromDestInstance(*pkInstMain);
 
 	if (IsPC())
 	{
-		if (fDistance<=PC_DUST_RANGE)
+		if (fDistance <= PC_DUST_RANGE)
 			return true;
 	}
 
-	if (fDistance<=NPC_DUST_RANGE)
+	if (fDistance <= NPC_DUST_RANGE)
 		return true;
 
 	return false;
@@ -423,13 +419,13 @@ void CInstanceBase::__DisableSkipCollision()
 
 DWORD CInstanceBase::__GetShadowMapColor(float x, float y)
 {
-	CPythonBackground& rkBG=CPythonBackground::Instance();
+	CPythonBackground& rkBG = CPythonBackground::Instance();
 	return rkBG.GetShadowMapColor(x, y);
 }
 
 float CInstanceBase::__GetBackgroundHeight(float x, float y)
 {
-	CPythonBackground& rkBG=CPythonBackground::Instance();
+	CPythonBackground& rkBG = CPythonBackground::Instance();
 	return rkBG.GetHeight(x, y);
 }
 
@@ -465,7 +461,6 @@ BOOL CInstanceBase::IsGameMaster()
 	return false;
 }
 
-
 BOOL CInstanceBase::IsSameEmpire(CInstanceBase& rkInstDst)
 {
 	if (0 == rkInstDst.m_dwEmpireID)
@@ -477,7 +472,7 @@ BOOL CInstanceBase::IsSameEmpire(CInstanceBase& rkInstDst)
 	if (rkInstDst.IsGameMaster())
 		return TRUE;
 
-	if (rkInstDst.m_dwEmpireID==m_dwEmpireID)
+	if (rkInstDst.m_dwEmpireID == m_dwEmpireID)
 		return TRUE;
 
 	return FALSE;
@@ -563,7 +558,7 @@ bool CInstanceBase::IsPartyMember()
 
 BOOL CInstanceBase::IsInSafe()
 {
-	const TPixelPosition& c_rkPPosCur=m_GraphicThingInstance.NEW_GetCurPixelPositionRef();
+	const TPixelPosition& c_rkPPosCur = m_GraphicThingInstance.NEW_GetCurPixelPositionRef();
 	if (CPythonBackground::Instance().isAttrOn(c_rkPPosCur.x, c_rkPPosCur.y, CTerrainImpl::ATTRIBUTE_BANPK))
 		return TRUE;
 
@@ -572,7 +567,7 @@ BOOL CInstanceBase::IsInSafe()
 
 float CInstanceBase::CalculateDistanceSq3d(const TPixelPosition& c_rkPPosDst)
 {
-	const TPixelPosition& c_rkPPosSrc=m_GraphicThingInstance.NEW_GetCurPixelPositionRef();
+	const TPixelPosition& c_rkPPosSrc = m_GraphicThingInstance.NEW_GetCurPixelPositionRef();
 	return SPixelPosition_CalculateDistanceSq3d(c_rkPPosSrc, c_rkPPosDst);
 }
 
@@ -629,8 +624,8 @@ void CInstanceBase::CreateSystem(UINT uCapacity)
 
 	memset(ms_adwCRCAffectEffect, 0, sizeof(ms_adwCRCAffectEffect));
 
-	ms_fDustGap=250.0f;
-	ms_fHorseDustGap=500.0f;
+	ms_fDustGap = 250.0f;
+	ms_fHorseDustGap = 500.0f;
 }
 
 CInstanceBase* CInstanceBase::New()
@@ -646,9 +641,9 @@ void CInstanceBase::Delete(CInstanceBase* pkInst)
 
 void CInstanceBase::SetMainInstance()
 {
-	CPythonCharacterManager& rkChrMgr=CPythonCharacterManager::Instance();
+	CPythonCharacterManager& rkChrMgr = CPythonCharacterManager::Instance();
 
-	DWORD dwVID=GetVirtualID();
+	DWORD dwVID = GetVirtualID();
 	rkChrMgr.SetMainInstance(dwVID);
 
 	m_GraphicThingInstance.SetMainInstance();
@@ -656,20 +651,20 @@ void CInstanceBase::SetMainInstance()
 
 CInstanceBase* CInstanceBase::__GetMainInstancePtr()
 {
-	CPythonCharacterManager& rkChrMgr=CPythonCharacterManager::Instance();
+	CPythonCharacterManager& rkChrMgr = CPythonCharacterManager::Instance();
 	return rkChrMgr.GetMainInstancePtr();
 }
 
 void CInstanceBase::__ClearMainInstance()
 {
-	CPythonCharacterManager& rkChrMgr=CPythonCharacterManager::Instance();
+	CPythonCharacterManager& rkChrMgr = CPythonCharacterManager::Instance();
 	rkChrMgr.ClearMainInstance();
 }
 
 /* 실제 플레이어 캐릭터인지 조사.*/
 bool CInstanceBase::__IsMainInstance()
 {
-	if (this==__GetMainInstancePtr())
+	if (this == __GetMainInstancePtr())
 		return true;
 
 	return false;
@@ -677,7 +672,7 @@ bool CInstanceBase::__IsMainInstance()
 
 bool CInstanceBase::__IsExistMainInstance()
 {
-	if(__GetMainInstancePtr())
+	if (__GetMainInstancePtr())
 		return true;
 	else
 		return false;
@@ -686,8 +681,8 @@ bool CInstanceBase::__IsExistMainInstance()
 bool CInstanceBase::__MainCanSeeHiddenThing()
 {
 	return false;
-//	CInstanceBase * pInstance = __GetMainInstancePtr();
-//	return pInstance->IsAffect(AFFECT_GAMJI);
+	//	CInstanceBase * pInstance = __GetMainInstancePtr();
+	//	return pInstance->IsAffect(AFFECT_GAMJI);
 }
 
 float CInstanceBase::__GetBowRange()
@@ -696,7 +691,7 @@ float CInstanceBase::__GetBowRange()
 
 	if (__IsMainInstance())
 	{
-		IAbstractPlayer& rPlayer=IAbstractPlayer::GetSingleton();
+		IAbstractPlayer& rPlayer = IAbstractPlayer::GetSingleton();
 		fRange += float(rPlayer.GetStatus(POINT_BOW_DISTANCE));
 	}
 
@@ -705,13 +700,13 @@ float CInstanceBase::__GetBowRange()
 
 CInstanceBase* CInstanceBase::__FindInstancePtr(DWORD dwVID)
 {
-	CPythonCharacterManager& rkChrMgr=CPythonCharacterManager::Instance();
+	CPythonCharacterManager& rkChrMgr = CPythonCharacterManager::Instance();
 	return rkChrMgr.GetInstancePtr(dwVID);
 }
 
 bool CInstanceBase::__FindRaceType(DWORD dwRace, BYTE* pbType)
 {
-	CPythonNonPlayer& rkNonPlayer=CPythonNonPlayer::Instance();
+	CPythonNonPlayer& rkNonPlayer = CPythonNonPlayer::Instance();
 	return rkNonPlayer.GetInstanceType(dwRace, pbType);
 }
 
@@ -720,7 +715,6 @@ bool CInstanceBase::Create(const SCreateData& c_rkCreateData)
 	IAbstractApplication::GetSingleton().SkipRenderBuffering(300);
 
 	SetInstanceType(c_rkCreateData.m_bType);
-
 
 	if (!SetRace(c_rkCreateData.m_dwRace))
 		return false;
@@ -736,14 +730,14 @@ bool CInstanceBase::Create(const SCreateData& c_rkCreateData)
 		unsigned center_y;
 
 		c_rkCreateData.m_kAffectFlags.ConvertToPosition(&center_x, &center_y);
-		
+
 		float center_z = __GetBackgroundHeight(center_x, center_y);
 		NEW_SetPixelPosition(TPixelPosition(float(c_rkCreateData.m_lPosX), float(c_rkCreateData.m_lPosY), center_z));
 	}
 	else
 	{
 		SCRIPT_SetPixelPosition(float(c_rkCreateData.m_lPosX), float(c_rkCreateData.m_lPosY));
-	}	
+	}
 
 	if (0 != c_rkCreateData.m_dwMountVnum)
 		MountHorse(c_rkCreateData.m_dwMountVnum);
@@ -770,7 +764,7 @@ bool CInstanceBase::Create(const SCreateData& c_rkCreateData)
 
 	SetMoveSpeed(c_rkCreateData.m_dwMovSpd);
 	SetAttackSpeed(c_rkCreateData.m_dwAtkSpd);
-	
+
 	// NOTE : Dress 를 입고 있으면 Alpha 를 넣지 않는다.
 	if (!IsWearingDress())
 	{
@@ -782,13 +776,13 @@ bool CInstanceBase::Create(const SCreateData& c_rkCreateData)
 	if (!IsGuildWall())
 	{
 		SetAffectFlagContainer(c_rkCreateData.m_kAffectFlags);
-	}	
+	}
 
 	// NOTE : 반드시 Affect 셋팅 후에 해야 함
 	AttachTextTail();
 	RefreshTextTail();
 
-	if (c_rkCreateData.m_dwStateFlags & ADD_CHARACTER_STATE_SPAWN) 
+	if (c_rkCreateData.m_dwStateFlags & ADD_CHARACTER_STATE_SPAWN)
 	{
 		if (IsAffect(AFFECT_SPAWN))
 			__AttachEffect(EFFECT_SPAWN_APPEAR);
@@ -842,7 +836,6 @@ bool CInstanceBase::Create(const SCreateData& c_rkCreateData)
 	return true;
 }
 
-
 void CInstanceBase::__Create_SetName(const SCreateData& c_rkCreateData)
 {
 	if (IsGoto())
@@ -861,7 +854,7 @@ void CInstanceBase::__Create_SetName(const SCreateData& c_rkCreateData)
 
 void CInstanceBase::__Create_SetWarpName(const SCreateData& c_rkCreateData)
 {
-	const char * c_szName;
+	const char* c_szName;
 	if (CPythonNonPlayer::Instance().GetName(c_rkCreateData.m_dwRace, &c_szName))
 	{
 		std::string strName = c_szName;
@@ -883,7 +876,6 @@ void CInstanceBase::SetNameString(const char* c_szName, int len)
 	m_stName.assign(c_szName, len);
 }
 
-
 bool CInstanceBase::SetRace(DWORD eRace)
 {
 	m_dwRace = eRace;
@@ -892,24 +884,24 @@ bool CInstanceBase::SetRace(DWORD eRace)
 		return false;
 
 	if (!__FindRaceType(m_dwRace, &m_eRaceType))
-		m_eRaceType=CActorInstance::TYPE_PC;
+		m_eRaceType = CActorInstance::TYPE_PC;
 
 	return true;
 }
 
 BOOL CInstanceBase::__IsChangableWeapon(int iWeaponID)
-{	
+{
 	// 드레스 입고 있을때는 부케외의 장비는 나오지 않게..
 	if (IsWearingDress())
 	{
 		const int c_iBouquets[] =
-		{
-			50201,	// Bouquet for Assassin
-			50202,	// Bouquet for Shaman
-			50203,
-			50204,
-			0, // #0000545: [M2CN] 웨딩 드레스와 장비 착용 문제
-		};
+			{
+				50201, // Bouquet for Assassin
+				50202, // Bouquet for Shaman
+				50203,
+				50204,
+				0, // #0000545: [M2CN] 웨딩 드레스와 장비 착용 문제
+			};
 
 		for (int i = 0; c_iBouquets[i] != 0; ++i)
 			if (iWeaponID == c_iBouquets[i])
@@ -949,7 +941,7 @@ void CInstanceBase::MountHorse(UINT eRace)
 	m_kHorse.Destroy();
 	m_kHorse.Create(m_GraphicThingInstance.NEW_GetCurPixelPositionRef(), eRace, ms_adwCRCAffectEffect[EFFECT_HIT]);
 
-	SetMotionMode(CRaceMotionData::MODE_HORSE);	
+	SetMotionMode(CRaceMotionData::MODE_HORSE);
 	SetRotationSpeed(c_fDefaultHorseRotationSpeed);
 
 	m_GraphicThingInstance.MountHorse(m_kHorse.GetActorPtr());
@@ -965,20 +957,19 @@ void CInstanceBase::DismountHorse()
 void CInstanceBase::GetInfo(std::string* pstInfo)
 {
 	char szInfo[256];
-	sprintf(szInfo, "Inst - UC %d, RC %d Pool - %d ", 
-		ms_dwUpdateCounter, 
-		ms_dwRenderCounter,
-		ms_kPool.GetCapacity()
-	);
+	sprintf(szInfo, "Inst - UC %d, RC %d Pool - %d ",
+			ms_dwUpdateCounter,
+			ms_dwRenderCounter,
+			ms_kPool.GetCapacity());
 
 	pstInfo->append(szInfo);
 }
 
 void CInstanceBase::ResetPerformanceCounter()
 {
-	ms_dwUpdateCounter=0;
-	ms_dwRenderCounter=0;
-	ms_dwDeformCounter=0;
+	ms_dwUpdateCounter = 0;
+	ms_dwRenderCounter = 0;
+	ms_dwDeformCounter = 0;
 }
 
 bool CInstanceBase::NEW_IsLastPixelPosition()
@@ -1008,7 +999,7 @@ void CInstanceBase::NEW_SetSrcPixelPosition(const TPixelPosition& c_rkPPosSrc)
 
 const TPixelPosition& CInstanceBase::NEW_GetCurPixelPositionRef()
 {
-	return m_GraphicThingInstance.NEW_GetCurPixelPositionRef();	
+	return m_GraphicThingInstance.NEW_GetCurPixelPositionRef();
 }
 
 const TPixelPosition& CInstanceBase::NEW_GetDstPixelPositionRef()
@@ -1039,7 +1030,7 @@ void CInstanceBase::OnMoving()
 
 void CInstanceBase::ChangeGuild(DWORD dwGuildID)
 {
-	m_dwGuildID=dwGuildID;
+	m_dwGuildID = dwGuildID;
 
 	DetachTextTail();
 	AttachTextTail();
@@ -1097,17 +1088,14 @@ bool CInstanceBase::CanAttack()
 
 	if (IsHoldingPickAxe())
 		return false;
-	
+
 	return m_GraphicThingInstance.CanAttack();
 }
-
-
 
 bool CInstanceBase::CanFishing()
 {
 	return m_GraphicThingInstance.CanFishing();
 }
-
 
 BOOL CInstanceBase::IsBowMode()
 {
@@ -1147,13 +1135,10 @@ BOOL CInstanceBase::IsSleep()
 	return m_GraphicThingInstance.IsSleep();
 }
 
-
 BOOL CInstanceBase::__IsSyncing()
 {
 	return m_GraphicThingInstance.__IsSyncing();
 }
-
-
 
 void CInstanceBase::NEW_SetOwner(DWORD dwVIDOwner)
 {
@@ -1165,18 +1150,17 @@ float CInstanceBase::GetLocalTime()
 	return m_GraphicThingInstance.GetLocalTime();
 }
 
-
 void CInstanceBase::PushUDPState(DWORD dwCmdTime, const TPixelPosition& c_rkPPosDst, float fDstRot, UINT eFunc, UINT uArg)
 {
 }
 
-DWORD	ELTimer_GetServerFrameMSec();
+DWORD ELTimer_GetServerFrameMSec();
 
 void CInstanceBase::PushTCPStateExpanded(DWORD dwCmdTime, const TPixelPosition& c_rkPPosDst, float fDstRot, UINT eFunc, UINT uArg, UINT uTargetVID)
 {
 	SCommand kCmdNew;
 	kCmdNew.m_kPPosDst = c_rkPPosDst;
-	kCmdNew.m_dwChkTime = dwCmdTime+100;
+	kCmdNew.m_dwChkTime = dwCmdTime + 100;
 	kCmdNew.m_dwCmdTime = dwCmdTime;
 	kCmdNew.m_fDstRot = fDstRot;
 	kCmdNew.m_eFunc = eFunc;
@@ -1186,18 +1170,18 @@ void CInstanceBase::PushTCPStateExpanded(DWORD dwCmdTime, const TPixelPosition& 
 }
 
 void CInstanceBase::PushTCPState(DWORD dwCmdTime, const TPixelPosition& c_rkPPosDst, float fDstRot, UINT eFunc, UINT uArg)
-{	
+{
 	if (__IsMainInstance())
 	{
-		//assert(!"CInstanceBase::PushTCPState \xC7\xC3\xB7\xB9\xC0\xCC\xBE\xEE \xC0\xDA\xBD\xC5\xBF\xA1\xB0\xD4 \xC0\xCC\xB5\xBF\xC6\xD0\xC5\xB6\xC0\xBA \xBF\xC0\xB8\xE9 \xBE\xC8\xB5\xC8\xB4\xD9!");
+		// assert(!"CInstanceBase::PushTCPState \xC7\xC3\xB7\xB9\xC0\xCC\xBE\xEE \xC0\xDA\xBD\xC5\xBF\xA1\xB0\xD4 \xC0\xCC\xB5\xBF\xC6\xD0\xC5\xB6\xC0\xBA \xBF\xC0\xB8\xE9 \xBE\xC8\xB5\xC8\xB4\xD9!");
 		TraceError("CInstanceBase::PushTCPState Movement packets should not come from the player themselves!");
 		return;
 	}
 
-	int nNetworkGap=ELTimer_GetServerFrameMSec()-dwCmdTime;
-	
-	m_nAverageNetworkGap=(m_nAverageNetworkGap*70+nNetworkGap*30)/100;
-	
+	int nNetworkGap = ELTimer_GetServerFrameMSec() - dwCmdTime;
+
+	m_nAverageNetworkGap = (m_nAverageNetworkGap * 70 + nNetworkGap * 30) / 100;
+
 	/*
 	if (m_dwBaseCmdTime == 0)
 	{
@@ -1208,20 +1192,20 @@ void CInstanceBase::PushTCPState(DWORD dwCmdTime, const TPixelPosition& c_rkPPos
 	}
 	*/
 
-	//m_dwBaseChkTime-m_dwBaseCmdTime+ELTimer_GetServerMSec();
+	// m_dwBaseChkTime-m_dwBaseCmdTime+ELTimer_GetServerMSec();
 
 	SCommand kCmdNew;
 	kCmdNew.m_kPPosDst = c_rkPPosDst;
-	kCmdNew.m_dwChkTime = dwCmdTime+m_nAverageNetworkGap;//m_dwBaseChkTime + (dwCmdTime - m_dwBaseCmdTime);// + nNetworkGap;
+	kCmdNew.m_dwChkTime = dwCmdTime + m_nAverageNetworkGap; // m_dwBaseChkTime + (dwCmdTime - m_dwBaseCmdTime);// + nNetworkGap;
 	kCmdNew.m_dwCmdTime = dwCmdTime;
 	kCmdNew.m_fDstRot = fDstRot;
 	kCmdNew.m_eFunc = eFunc;
 	kCmdNew.m_uArg = uArg;
 	m_kQue_kCmdNew.push_back(kCmdNew);
 
-	//int nApplyGap=kCmdNew.m_dwChkTime-ELTimer_GetServerFrameMSec();
+	// int nApplyGap=kCmdNew.m_dwChkTime-ELTimer_GetServerFrameMSec();
 
-	//if (nApplyGap<-500 || nApplyGap>500)
+	// if (nApplyGap<-500 || nApplyGap>500)
 	//	Tracenf("VID[%d] NAME[%s] Network Gap [cur:%d ave:%d] applyGap (%d)", GetVirtualID(), GetNameString(), nNetworkGap, m_nAverageNetworkGap, nApplyGap);
 }
 
@@ -1275,27 +1259,27 @@ BOOL CInstanceBase::__IsEnableTCPProcess(UINT eCurFunc)
 }
 
 void CInstanceBase::StateProcess()
-{	
+{
 	while (1)
 	{
 		if (m_kQue_kCmdNew.empty())
-			return;	
+			return;
 
 		DWORD dwDstChkTime = m_kQue_kCmdNew.front().m_dwChkTime;
-		DWORD dwCurChkTime = ELTimer_GetServerFrameMSec();	
+		DWORD dwCurChkTime = ELTimer_GetServerFrameMSec();
 
 		if (dwCurChkTime < dwDstChkTime)
 			return;
 
 		SCommand kCmdTop = m_kQue_kCmdNew.front();
-		m_kQue_kCmdNew.pop_front();	
+		m_kQue_kCmdNew.pop_front();
 
 		TPixelPosition kPPosDst = kCmdTop.m_kPPosDst;
-		//DWORD dwCmdTime = kCmdTop.m_dwCmdTime;	
+		// DWORD dwCmdTime = kCmdTop.m_dwCmdTime;
 		FLOAT fRotDst = kCmdTop.m_fDstRot;
 		UINT eFunc = kCmdTop.m_eFunc;
 		UINT uArg = kCmdTop.m_uArg;
-		UINT uVID = GetVirtualID();	
+		UINT uVID = GetVirtualID();
 		UINT uTargetVID = kCmdTop.m_uTargetVID;
 
 		TPixelPosition kPPosCur;
@@ -1303,9 +1287,9 @@ void CInstanceBase::StateProcess()
 
 		/*
 		if (IsPC())
-			Tracenf("%d cmd: vid=%d[%s] func=%d arg=%d  curPos=(%f, %f) dstPos=(%f, %f) rot=%f (time %d)", 
+			Tracenf("%d cmd: vid=%d[%s] func=%d arg=%d  curPos=(%f, %f) dstPos=(%f, %f) rot=%f (time %d)",
 			ELTimer_GetMSec(),
-			uVID, m_stName.c_str(), eFunc, uArg, 
+			uVID, m_stName.c_str(), eFunc, uArg,
 			kPPosCur.x, kPPosCur.y,
 			kPPosDst.x, kPPosDst.y, fRotDst, dwCmdTime-m_dwBaseCmdTime);
 		*/
@@ -1313,7 +1297,7 @@ void CInstanceBase::StateProcess()
 		TPixelPosition kPPosDir = kPPosDst - kPPosCur;
 		float fDirLen = (float)sqrt(kPPosDir.x * kPPosDir.x + kPPosDir.y * kPPosDir.y);
 
-		//Tracenf("Distance %f", fDirLen);
+		// Tracenf("Distance %f", fDirLen);
 
 		if (!__CanProcessNetworkStatePacket())
 		{
@@ -1330,11 +1314,11 @@ void CInstanceBase::StateProcess()
 		{
 			case FUNC_WAIT:
 			{
-				//Tracenf("%s (%f, %f) -> (%f, %f) 남은거리 %f", GetNameString(), kPPosCur.x, kPPosCur.y, kPPosDst.x, kPPosDst.y, fDirLen);
+				// Tracenf("%s (%f, %f) -> (%f, %f) 남은거리 %f", GetNameString(), kPPosCur.x, kPPosCur.y, kPPosDst.x, kPPosDst.y, fDirLen);
 				if (fDirLen > 1.0f)
 				{
-					//NEW_GetSrcPixelPositionRef() = kPPosCur;
-					//NEW_GetDstPixelPositionRef() = kPPosDst;
+					// NEW_GetSrcPixelPositionRef() = kPPosCur;
+					// NEW_GetDstPixelPositionRef() = kPPosDst;
 					NEW_SetSrcPixelPosition(kPPosCur);
 					NEW_SetDstPixelPosition(kPPosDst);
 
@@ -1348,11 +1332,11 @@ void CInstanceBase::StateProcess()
 					if (!IsWalking())
 						StartWalking();
 
-					//Tracen("Target Stop");
+					// Tracen("Target Stop");
 				}
 				else
 				{
-					//Tracen("Freeze");
+					// Tracen("Freeze");
 
 					m_isGoing = FALSE;
 
@@ -1368,25 +1352,25 @@ void CInstanceBase::StateProcess()
 
 			case FUNC_MOVE:
 			{
-				//NEW_GetSrcPixelPositionRef() = kPPosCur;
-				//NEW_GetDstPixelPositionRef() = kPPosDst;
+				// NEW_GetSrcPixelPositionRef() = kPPosCur;
+				// NEW_GetDstPixelPositionRef() = kPPosDst;
 				NEW_SetSrcPixelPosition(kPPosCur);
 				NEW_SetDstPixelPosition(kPPosDst);
 				m_fDstRot = fRotDst;
 				m_isGoing = TRUE;
 				__EnableSkipCollision();
-				//m_isSyncMov = TRUE;
+				// m_isSyncMov = TRUE;
 
 				m_kMovAfterFunc.eFunc = FUNC_MOVE;
 
 				if (!IsWalking())
 				{
-					//Tracen("I'm not walking, start walking");
+					// Tracen("I'm not walking, start walking");
 					StartWalking();
 				}
 				else
 				{
-					//Tracen("Already walking");
+					// Tracen("Already walking");
 				}
 				break;
 			}
@@ -1397,7 +1381,7 @@ void CInstanceBase::StateProcess()
 				{
 					NEW_SetSrcPixelPosition(kPPosCur);
 					NEW_SetDstPixelPosition(kPPosDst);
-					m_fDstRot=fRotDst;
+					m_fDstRot = fRotDst;
 					m_isGoing = TRUE;
 					__EnableSkipCollision();
 
@@ -1409,7 +1393,7 @@ void CInstanceBase::StateProcess()
 				}
 				else
 				{
-					//Tracen("Stopping Standby Attacks");
+					// Tracen("Stopping Standby Attacks");
 
 					m_isGoing = FALSE;
 
@@ -1424,27 +1408,27 @@ void CInstanceBase::StateProcess()
 
 			case FUNC_ATTACK:
 			{
-				if (fDirLen>=50.0f)
+				if (fDirLen >= 50.0f)
 				{
-					//NEW_GetSrcPixelPositionRef() = kPPosCur;
-					//NEW_GetDstPixelPositionRef() = kPPosDst;
+					// NEW_GetSrcPixelPositionRef() = kPPosCur;
+					// NEW_GetDstPixelPositionRef() = kPPosDst;
 					NEW_SetSrcPixelPosition(kPPosCur);
 					NEW_SetDstPixelPosition(kPPosDst);
 					m_fDstRot = fRotDst;
 					m_isGoing = TRUE;
 					__EnableSkipCollision();
-					//m_isSyncMov = TRUE;
+					// m_isSyncMov = TRUE;
 
 					m_kMovAfterFunc.eFunc = FUNC_ATTACK;
 
 					if (!IsWalking())
 						StartWalking();
 
-					//Tracen("Attack after moving too far away");
+					// Tracen("Attack after moving too far away");
 				}
 				else
 				{
-					//Tracen("Stop normal attacks");
+					// Tracen("Stop normal attacks");
 
 					m_isGoing = FALSE;
 
@@ -1456,7 +1440,7 @@ void CInstanceBase::StateProcess()
 
 					RunNormalAttack(fRotDst);
 
-					//Tracen("Warp Attack due to proximity");
+					// Tracen("Warp Attack due to proximity");
 				}
 				break;
 			}
@@ -1494,7 +1478,7 @@ void CInstanceBase::StateProcess()
 
 			case FUNC_EMOTION:
 			{
-				if (fDirLen>100.0f)
+				if (fDirLen > 100.0f)
 				{
 					NEW_SetSrcPixelPosition(kPPosCur);
 					NEW_SetDstPixelPosition(kPPosDst);
@@ -1525,13 +1509,13 @@ void CInstanceBase::StateProcess()
 				{
 					if (fDirLen >= 50.0f)
 					{
-						//NEW_GetSrcPixelPositionRef() = kPPosCur;
-						//NEW_GetDstPixelPositionRef() = kPPosDst;
+						// NEW_GetSrcPixelPositionRef() = kPPosCur;
+						// NEW_GetDstPixelPositionRef() = kPPosDst;
 						NEW_SetSrcPixelPosition(kPPosCur);
 						NEW_SetDstPixelPosition(kPPosDst);
 						m_fDstRot = fRotDst;
 						m_isGoing = TRUE;
-						//m_isSyncMov = TRUE;
+						// m_isSyncMov = TRUE;
 						__EnableSkipCollision();
 
 						m_kMovAfterFunc.eFunc = eFunc;
@@ -1540,11 +1524,11 @@ void CInstanceBase::StateProcess()
 						if (!IsWalking())
 							StartWalking();
 
-						//Tracen("Attack after moving too far away");
+						// Tracen("Attack after moving too far away");
 					}
 					else
 					{
-						//Tracen("Stop Skills");
+						// Tracen("Stop Skills");
 
 						m_isGoing = FALSE;
 
@@ -1555,8 +1539,8 @@ void CInstanceBase::StateProcess()
 						SetAdvancingRotation(fRotDst);
 						SetRotation(fRotDst);
 
-						NEW_UseSkill(0, eFunc & 0x7f, uArg&0x0f, (uArg>>4) ? true : false);
-						//Tracen("Warp Attack due to proximity");
+						NEW_UseSkill(0, eFunc & 0x7f, uArg & 0x0f, (uArg >> 4) ? true : false);
+						// Tracen("Warp Attack due to proximity");
 					}
 				}
 				break;
@@ -1564,7 +1548,6 @@ void CInstanceBase::StateProcess()
 		}
 	}
 }
-
 
 void CInstanceBase::MovementProcess()
 {
@@ -1575,7 +1558,7 @@ void CInstanceBase::MovementProcess()
 
 	TPixelPosition kPPosNext;
 	{
-		const D3DXVECTOR3 & c_rkV3Mov = m_GraphicThingInstance.GetMovementVectorRef();
+		const D3DXVECTOR3& c_rkV3Mov = m_GraphicThingInstance.GetMovementVectorRef();
 
 		kPPosNext.x = kPPosCur.x + (+c_rkV3Mov.x);
 		kPPosNext.y = kPPosCur.y + (-c_rkV3Mov.y);
@@ -1599,12 +1582,12 @@ void CInstanceBase::MovementProcess()
 
 			SetAdvancingRotation(fDstRot);
 
-			if (fRestLen<=0.0)
+			if (fRestLen <= 0.0)
 			{
 				if (IsWalking())
 					EndWalking();
 
-				//Tracen("Stop reaching goals");
+				// Tracen("Stop reaching goals");
 
 				m_isGoing = FALSE;
 
@@ -1636,7 +1619,7 @@ void CInstanceBase::MovementProcess()
 
 				float fDstRot = NEW_GetAdvancingRotationFromPixelPosition(kPPosCur, NEW_GetDstPixelPositionRef());
 				SetAdvancingRotation(fDstRot);
-				//Tracenf("VID %d Over Orientation (%f, %f) %f rest %f", GetVirtualID(), kPPosCur.x, kPPosCur.y, fDstRot, fRestLen);			
+				// Tracenf("VID %d Over Orientation (%f, %f) %f rest %f", GetVirtualID(), kPPosCur.x, kPPosCur.y, fDstRot, fRestLen);
 
 				// 이동중이라면 다음번에 멈추게 한다
 				if (FUNC_MOVE == m_kMovAfterFunc.eFunc)
@@ -1651,11 +1634,11 @@ void CInstanceBase::MovementProcess()
 				{
 					__DisableSkipCollision();
 
-					//Tracen("Skip the action because you're dead");
+					// Tracen("Skip the action because you're dead");
 
 					m_isGoing = FALSE;
 
-					//Tracen("Skip subsequent actions because you're dead");
+					// Tracen("Skip subsequent actions because you're dead");
 				}
 				else
 				{
@@ -1733,11 +1716,11 @@ void CInstanceBase::MovementProcess()
 							{
 								SetAdvancingRotation(m_fDstRot);
 								BlendRotation(m_fDstRot);
-								NEW_UseSkill(0, m_kMovAfterFunc.eFunc & 0x7f, m_kMovAfterFunc.uArg&0x0f, (m_kMovAfterFunc.uArg>>4) ? true : false);
+								NEW_UseSkill(0, m_kMovAfterFunc.eFunc & 0x7f, m_kMovAfterFunc.uArg & 0x0f, (m_kMovAfterFunc.uArg >> 4) ? true : false);
 							}
 							else
 							{
-								//Tracenf("VID %d Skill Attacks (%f, %f) rot %f", GetVirtualID(), NEW_GetDstPixelPositionRef().x, NEW_GetDstPixelPositionRef().y, m_fDstRot);
+								// Tracenf("VID %d Skill Attacks (%f, %f) rot %f", GetVirtualID(), NEW_GetDstPixelPositionRef().x, NEW_GetDstPixelPositionRef().y, m_fDstRot);
 
 								__DisableSkipCollision();
 								m_isGoing = FALSE;
@@ -1751,15 +1734,13 @@ void CInstanceBase::MovementProcess()
 									EndWalking();
 								}
 
-								//Tracenf("VID %d Stop (%f, %f) rot %f IsWalking %d", GetVirtualID(), NEW_GetDstPixelPositionRef().x, NEW_GetDstPixelPositionRef().y, m_fDstRot, IsWalking());
+								// Tracenf("VID %d Stop (%f, %f) rot %f IsWalking %d", GetVirtualID(), NEW_GetDstPixelPositionRef().x, NEW_GetDstPixelPositionRef().y, m_fDstRot, IsWalking());
 							}
 							break;
 						}
 					}
-
 				}
 			}
-
 		}
 	}
 
@@ -1773,11 +1754,11 @@ void CInstanceBase::MovementProcess()
 		{
 			if (DEGREE_DIRECTION_LEFT == iDirection)
 			{
-				fRotation = fmodf(fRotation + m_fRotSpd*m_GraphicThingInstance.GetSecondElapsed(), 360.0f);
+				fRotation = fmodf(fRotation + m_fRotSpd * m_GraphicThingInstance.GetSecondElapsed(), 360.0f);
 			}
 			else if (DEGREE_DIRECTION_RIGHT == iDirection)
 			{
-				fRotation = fmodf(fRotation - m_fRotSpd*m_GraphicThingInstance.GetSecondElapsed() + 360.0f, 360.0f);
+				fRotation = fmodf(fRotation - m_fRotSpd * m_GraphicThingInstance.GetSecondElapsed() + 360.0f, 360.0f);
 			}
 
 			if (m_iRotatingDirection != GetRotatingDirection(fRotation, fAdvancingRotation))
@@ -1790,7 +1771,7 @@ void CInstanceBase::MovementProcess()
 		}
 
 		if (__IsInDustRange())
-		{ 
+		{
 			float fDustDistance = NEW_GetDistanceFromDestPixelPosition(m_kPPosDust);
 			if (IsMountingHorse())
 			{
@@ -1812,7 +1793,7 @@ void CInstanceBase::MovementProcess()
 	}
 }
 
-void CInstanceBase::__ProcessFunctionEmotion(DWORD dwMotionNumber, DWORD dwTargetVID, const TPixelPosition & c_rkPosDst)
+void CInstanceBase::__ProcessFunctionEmotion(DWORD dwMotionNumber, DWORD dwTargetVID, const TPixelPosition& c_rkPosDst)
 {
 	if (IsWalking())
 		EndWalkingWithoutBlending();
@@ -1820,7 +1801,7 @@ void CInstanceBase::__ProcessFunctionEmotion(DWORD dwMotionNumber, DWORD dwTarge
 	__EnableChangingTCPState();
 	SCRIPT_SetPixelPosition(c_rkPosDst.x, c_rkPosDst.y);
 
-	CInstanceBase * pTargetInstance = CPythonCharacterManager::Instance().GetInstancePtr(dwTargetVID);
+	CInstanceBase* pTargetInstance = CPythonCharacterManager::Instance().GetInstancePtr(dwTargetVID);
 	if (pTargetInstance)
 	{
 		pTargetInstance->__EnableChangingTCPState();
@@ -1846,14 +1827,14 @@ void CInstanceBase::__ProcessFunctionEmotion(DWORD dwMotionNumber, DWORD dwTarge
 
 		if (pTargetInstance->__IsMainInstance())
 		{
-			IAbstractPlayer & rPlayer=IAbstractPlayer::GetSingleton();
+			IAbstractPlayer& rPlayer = IAbstractPlayer::GetSingleton();
 			rPlayer.EndEmotionProcess();
 		}
 	}
 
 	if (__IsMainInstance())
 	{
-		IAbstractPlayer & rPlayer=IAbstractPlayer::GetSingleton();
+		IAbstractPlayer& rPlayer = IAbstractPlayer::GetSingleton();
 		rPlayer.EndEmotionProcess();
 	}
 }
@@ -1865,7 +1846,7 @@ int g_iAccumulationTime = 0;
 
 void CInstanceBase::Update()
 {
-	++ms_dwUpdateCounter;	
+	++ms_dwUpdateCounter;
 
 	StateProcess();
 	m_GraphicThingInstance.PhysicsProcess();
@@ -1878,17 +1859,17 @@ void CInstanceBase::Update()
 		TPixelPosition kPPosCur;
 		NEW_GetPixelPosition(&kPPosCur);
 
-		DWORD dwCurTime=ELTimer_GetFrameMSec();
-		//if (m_dwNextUpdateHeightTime<dwCurTime)
+		DWORD dwCurTime = ELTimer_GetFrameMSec();
+		// if (m_dwNextUpdateHeightTime<dwCurTime)
 		{
-			m_dwNextUpdateHeightTime=dwCurTime;
+			m_dwNextUpdateHeightTime = dwCurTime;
 			kPPosCur.z = __GetBackgroundHeight(kPPosCur.x, kPPosCur.y);
 			NEW_SetPixelPosition(kPPosCur);
 		}
 
 		// SetMaterialColor
 		{
-			DWORD dwMtrlColor=__GetShadowMapColor(kPPosCur.x, kPPosCur.y);
+			DWORD dwMtrlColor = __GetShadowMapColor(kPPosCur.x, kPPosCur.y);
 			m_GraphicThingInstance.SetMaterialColor(dwMtrlColor);
 		}
 	}
@@ -1904,35 +1885,33 @@ void CInstanceBase::Update()
 		m_kHorse.m_pkActor->HORSE_MotionProcess(FALSE);
 	}
 
-	__ComboProcess();	
-	
-	ProcessDamage();
+	__ComboProcess();
 
+	ProcessDamage();
 }
 
 void CInstanceBase::Transform()
 {
 	if (__IsSyncing())
 	{
-		//OnSyncing();
+		// OnSyncing();
 	}
 	else
 	{
 		if (IsWalking() || m_GraphicThingInstance.IsUsingMovingSkill())
 		{
-			const D3DXVECTOR3& c_rv3Movment=m_GraphicThingInstance.GetMovementVectorRef();
+			const D3DXVECTOR3& c_rv3Movment = m_GraphicThingInstance.GetMovementVectorRef();
 
-			float len=(c_rv3Movment.x*c_rv3Movment.x)+(c_rv3Movment.y*c_rv3Movment.y);
-			if (len>1.0f)
+			float len = (c_rv3Movment.x * c_rv3Movment.x) + (c_rv3Movment.y * c_rv3Movment.y);
+			if (len > 1.0f)
 				OnMoving();
 			else
-				OnWaiting();	
-		}	
+				OnWaiting();
+		}
 	}
 
 	m_GraphicThingInstance.INSTANCEBASE_Transform();
 }
-
 
 void CInstanceBase::Deform()
 {
@@ -1955,9 +1934,6 @@ void CInstanceBase::RenderTrace()
 	m_GraphicThingInstance.RenderTrace();
 }
 
-
-
-
 void CInstanceBase::Render()
 {
 	// 2004.07.17.levites.isShow를 ViewFrustumCheck로 변경
@@ -1967,30 +1943,30 @@ void CInstanceBase::Render()
 	++ms_dwRenderCounter;
 
 	m_kHorse.Render();
-	m_GraphicThingInstance.Render();	
-	
+	m_GraphicThingInstance.Render();
+
 	if (CActorInstance::IsDirLine())
-	{	
+	{
 		if (NEW_GetDstPixelPositionRef().x != 0.0f)
 		{
 			static CScreen s_kScreen;
 
-			STATEMANAGER.SetTextureStageState(0, D3DTSS_COLORARG1,	D3DTA_DIFFUSE);
-			STATEMANAGER.SetTextureStageState(0, D3DTSS_COLOROP,	D3DTOP_SELECTARG1);
-			STATEMANAGER.SetTextureStageState(0, D3DTSS_ALPHAOP,	D3DTOP_DISABLE);	
+			STATEMANAGER.SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_DIFFUSE);
+			STATEMANAGER.SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
+			STATEMANAGER.SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_DISABLE);
 			STATEMANAGER.SaveRenderState(D3DRS_ZENABLE, FALSE);
 			STATEMANAGER.SetRenderState(D3DRS_FOGENABLE, FALSE);
 			STATEMANAGER.SetRenderState(D3DRS_LIGHTING, FALSE);
-			
+
 			TPixelPosition px;
 			m_GraphicThingInstance.GetPixelPosition(&px);
 			D3DXVECTOR3 kD3DVt3Cur(px.x, px.y, px.z);
-			//D3DXVECTOR3 kD3DVt3Cur(NEW_GetSrcPixelPositionRef().x, -NEW_GetSrcPixelPositionRef().y, NEW_GetSrcPixelPositionRef().z);
+			// D3DXVECTOR3 kD3DVt3Cur(NEW_GetSrcPixelPositionRef().x, -NEW_GetSrcPixelPositionRef().y, NEW_GetSrcPixelPositionRef().z);
 			D3DXVECTOR3 kD3DVt3Dest(NEW_GetDstPixelPositionRef().x, -NEW_GetDstPixelPositionRef().y, NEW_GetDstPixelPositionRef().z);
 
-			//printf("%s %f\n", GetNameString(), kD3DVt3Cur.y - kD3DVt3Dest.y);
-			//float fdx = NEW_GetDstPixelPositionRef().x - NEW_GetSrcPixelPositionRef().x;
-			//float fdy = NEW_GetDstPixelPositionRef().y - NEW_GetSrcPixelPositionRef().y;
+			// printf("%s %f\n", GetNameString(), kD3DVt3Cur.y - kD3DVt3Dest.y);
+			// float fdx = NEW_GetDstPixelPositionRef().x - NEW_GetSrcPixelPositionRef().x;
+			// float fdy = NEW_GetDstPixelPositionRef().y - NEW_GetSrcPixelPositionRef().y;
 
 			s_kScreen.SetDiffuseColor(0.0f, 0.0f, 1.0f);
 			s_kScreen.RenderLine3d(kD3DVt3Cur.x, kD3DVt3Cur.y, px.z, kD3DVt3Dest.x, kD3DVt3Dest.y, px.z);
@@ -1998,7 +1974,7 @@ void CInstanceBase::Render()
 			STATEMANAGER.SetRenderState(D3DRS_FOGENABLE, TRUE);
 			STATEMANAGER.SetRenderState(D3DRS_LIGHTING, TRUE);
 		}
-	}	
+	}
 }
 
 void CInstanceBase::RenderToShadowMap()
@@ -2015,15 +1991,15 @@ void CInstanceBase::RenderToShadowMap()
 	if (!__IsExistMainInstance())
 		return;
 
-	CInstanceBase* pkInstMain=__GetMainInstancePtr();
+	CInstanceBase* pkInstMain = __GetMainInstancePtr();
 
 	const float SHADOW_APPLY_DISTANCE = 2500.0f;
 
-	float fDistance=NEW_GetDistanceFromDestInstance(*pkInstMain);
-	if (fDistance>=SHADOW_APPLY_DISTANCE)
+	float fDistance = NEW_GetDistanceFromDestInstance(*pkInstMain);
+	if (fDistance >= SHADOW_APPLY_DISTANCE)
 		return;
 
-	m_GraphicThingInstance.RenderToShadowMap();	
+	m_GraphicThingInstance.RenderToShadowMap();
 }
 
 void CInstanceBase::RenderCollision()
@@ -2036,7 +2012,7 @@ void CInstanceBase::RenderCollision()
 
 void CInstanceBase::SetVirtualID(DWORD dwVirtualID)
 {
-	m_GraphicThingInstance.SetVirtualID(dwVirtualID);		
+	m_GraphicThingInstance.SetVirtualID(dwVirtualID);
 }
 
 void CInstanceBase::SetVirtualNumber(DWORD dwVirtualNumber)
@@ -2064,9 +2040,9 @@ void CInstanceBase::SetPKMode(BYTE byPKMode)
 
 	if (__IsMainInstance())
 	{
-		IAbstractPlayer& rPlayer=IAbstractPlayer::GetSingleton();
+		IAbstractPlayer& rPlayer = IAbstractPlayer::GetSingleton();
 		rPlayer.NotifyChangePKMode();
-	}	
+	}
 }
 
 void CInstanceBase::SetKiller(bool bFlag)
@@ -2101,7 +2077,7 @@ void CInstanceBase::SetComboType(UINT uComboType)
 	m_GraphicThingInstance.SetComboType(uComboType);
 }
 
-const char * CInstanceBase::GetNameString()
+const char* CInstanceBase::GetNameString()
 {
 	return m_stName.c_str();
 }
@@ -2110,7 +2086,6 @@ DWORD CInstanceBase::GetRace()
 {
 	return m_dwRace;
 }
-
 
 bool CInstanceBase::IsConflictAlignmentInstance(CInstanceBase& rkInstVictim)
 {
@@ -2144,11 +2119,11 @@ DWORD CInstanceBase::GetDuelMode()
 }
 
 bool CInstanceBase::IsAttackableInstance(CInstanceBase& rkInstVictim)
-{	
+{
 	if (__IsMainInstance())
-	{		
-		CPythonPlayer& rkPlayer=CPythonPlayer::Instance();
-		if(rkPlayer.IsObserverMode())
+	{
+		CPythonPlayer& rkPlayer = CPythonPlayer::Instance();
+		if (rkPlayer.IsObserverMode())
 			return false;
 	}
 
@@ -2169,15 +2144,15 @@ bool CInstanceBase::IsAttackableInstance(CInstanceBase& rkInstVictim)
 		{
 			if (GetDuelMode())
 			{
-				switch(GetDuelMode())
+				switch (GetDuelMode())
 				{
-				case DUEL_CANNOTATTACK:
-					return false;
-				case DUEL_START:
-					if(__FindDUELKey(GetVirtualID(),rkInstVictim.GetVirtualID()))
-						return true;
-					else
+					case DUEL_CANNOTATTACK:
 						return false;
+					case DUEL_START:
+						if (__FindDUELKey(GetVirtualID(), rkInstVictim.GetVirtualID()))
+							return true;
+						else
+							return false;
 				}
 			}
 			if (PK_MODE_GUILD == GetPKMode())
@@ -2234,7 +2209,6 @@ bool CInstanceBase::IsAttackableInstance(CInstanceBase& rkInstVictim)
 
 		if (rkInstVictim.IsBuilding())
 			return true;
-		
 	}
 	else if (IsPoly())
 	{
@@ -2326,12 +2300,10 @@ BOOL CInstanceBase::IsStone()
 	return m_GraphicThingInstance.IsStone();
 }
 
-
-BOOL CInstanceBase::IsGuildWall()	//IsBuilding 길드건물전체 IsGuildWall은 담장벽만(문은 제외)
+BOOL CInstanceBase::IsGuildWall() // IsBuilding 길드건물전체 IsGuildWall은 담장벽만(문은 제외)
 {
-	return IsWall(m_dwRace);		
+	return IsWall(m_dwRace);
 }
-
 
 BOOL CInstanceBase::IsResource()
 {
@@ -2426,13 +2398,13 @@ BOOL CInstanceBase::IsForceVisible()
 	if (IsAffect(AFFECT_SHOW_ALWAYS))
 		return TRUE;
 
-	if (IsObject() || IsBuilding() || IsDoor() )
+	if (IsObject() || IsBuilding() || IsDoor())
 		return TRUE;
 
 	return FALSE;
 }
 
-int	CInstanceBase::GetInstanceType()
+int CInstanceBase::GetInstanceType()
 {
 	return m_GraphicThingInstance.GetActorType();
 }
@@ -2463,7 +2435,6 @@ bool CInstanceBase::__CanRender()
 	return true;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Graphic Control
 
@@ -2478,14 +2449,14 @@ bool CInstanceBase::IntersectDefendingSphere()
 	return m_GraphicThingInstance.IntersectDefendingSphere();
 }
 
-float CInstanceBase::GetDistance(CInstanceBase * pkTargetInst)
+float CInstanceBase::GetDistance(CInstanceBase* pkTargetInst)
 {
 	TPixelPosition TargetPixelPosition;
 	pkTargetInst->m_GraphicThingInstance.GetPixelPosition(&TargetPixelPosition);
 	return GetDistance(TargetPixelPosition);
 }
 
-float CInstanceBase::GetDistance(const TPixelPosition & c_rPixelPosition)
+float CInstanceBase::GetDistance(const TPixelPosition& c_rPixelPosition)
 {
 	TPixelPosition PixelPosition;
 	m_GraphicThingInstance.GetPixelPosition(&PixelPosition);
@@ -2493,7 +2464,7 @@ float CInstanceBase::GetDistance(const TPixelPosition & c_rPixelPosition)
 	float fdx = PixelPosition.x - c_rPixelPosition.x;
 	float fdy = PixelPosition.y - c_rPixelPosition.y;
 
-	return sqrtf((fdx*fdx) + (fdy*fdy));
+	return sqrtf((fdx * fdx) + (fdy * fdy));
 }
 
 CActorInstance& CInstanceBase::GetGraphicThingInstanceRef()
@@ -2536,7 +2507,7 @@ void CInstanceBase::SetRenderMode(int iRenderMode)
 	m_GraphicThingInstance.SetRenderMode(iRenderMode);
 }
 
-void CInstanceBase::SetAddColor(const D3DXCOLOR & c_rColor)
+void CInstanceBase::SetAddColor(const D3DXCOLOR& c_rColor)
 {
 	m_GraphicThingInstance.SetAddColor(c_rColor);
 }
@@ -2564,7 +2535,7 @@ void CInstanceBase::SetHair(DWORD eHair)
 	if (!HAIR_COLOR_ENABLE)
 		return;
 
-	if (IsPC()==false)
+	if (IsPC() == false)
 		return;
 	m_awPart[CRaceData::PART_HAIR] = eHair;
 	m_GraphicThingInstance.SetHair(eHair);
@@ -2575,18 +2546,18 @@ void CInstanceBase::ChangeHair(DWORD eHair)
 	if (!HAIR_COLOR_ENABLE)
 		return;
 
-	if (IsPC()==false)
+	if (IsPC() == false)
 		return;
 
-	if (GetPart(CRaceData::PART_HAIR)==eHair)
+	if (GetPart(CRaceData::PART_HAIR) == eHair)
 		return;
 
 	SetHair(eHair);
 
-	//int type = m_GraphicThingInstance.GetMotionMode();
+	// int type = m_GraphicThingInstance.GetMotionMode();
 
 	RefreshState(CRaceMotionData::NAME_WAIT, true);
-	//RefreshState(type, true);
+	// RefreshState(type, true);
 }
 
 void CInstanceBase::SetArmor(DWORD dwArmor)
@@ -2594,10 +2565,10 @@ void CInstanceBase::SetArmor(DWORD dwArmor)
 	DWORD dwShape;
 	if (__ArmorVnumToShape(dwArmor, &dwShape))
 	{
-		CItemData * pItemData;
+		CItemData* pItemData;
 		if (CItemManager::Instance().GetItemDataPointer(dwArmor, &pItemData))
 		{
-			float fSpecularPower=pItemData->GetSpecularPowerf();
+			float fSpecularPower = pItemData->GetSpecularPowerf();
 			SetShape(dwShape, fSpecularPower);
 			__GetRefinedEffect(pItemData);
 			return;
@@ -2613,22 +2584,20 @@ void CInstanceBase::SetShape(DWORD eShape, float fSpecular)
 {
 	if (IsPoly())
 	{
-		m_GraphicThingInstance.SetShape(0);	
+		m_GraphicThingInstance.SetShape(0);
 	}
 	else
 	{
-		m_GraphicThingInstance.SetShape(eShape, fSpecular);		
+		m_GraphicThingInstance.SetShape(eShape, fSpecular);
 	}
 
 	m_eShape = eShape;
 }
 
-
-
 DWORD CInstanceBase::GetWeaponType()
 {
 	DWORD dwWeapon = GetPart(CRaceData::PART_WEAPON);
-	CItemData * pItemData;
+	CItemData* pItemData;
 	if (!CItemManager::Instance().GetItemDataPointer(dwWeapon, &pItemData))
 		return CItemData::WEAPON_NONE;
 
@@ -2684,61 +2653,61 @@ void CInstanceBase::__ClearArmorRefineEffect()
 
 UINT CInstanceBase::__GetRefinedEffect(CItemData* pItem)
 {
-	DWORD refine = max(pItem->GetRefine() + pItem->GetSocketCount(),CItemData::ITEM_SOCKET_MAX_NUM) - CItemData::ITEM_SOCKET_MAX_NUM;
+	DWORD refine = max(pItem->GetRefine() + pItem->GetSocketCount(), CItemData::ITEM_SOCKET_MAX_NUM) - CItemData::ITEM_SOCKET_MAX_NUM;
 	switch (pItem->GetType())
 	{
-	case CItemData::ITEM_TYPE_WEAPON:
-		__ClearWeaponRefineEffect();		
-		if (refine < 7)	//현재 제련도 7 이상만 이펙트가 있습니다.
-			return 0;
-		switch(pItem->GetSubType())
-		{
-		case CItemData::WEAPON_DAGGER:
-			m_swordRefineEffectRight = EFFECT_REFINED+EFFECT_SMALLSWORD_REFINED7+refine-7;
-			m_swordRefineEffectLeft = EFFECT_REFINED+EFFECT_SMALLSWORD_REFINED7_LEFT+refine-7;
-			break;
-		case CItemData::WEAPON_FAN:
-			m_swordRefineEffectRight = EFFECT_REFINED+EFFECT_FANBELL_REFINED7+refine-7;
-			break;
-		case CItemData::WEAPON_ARROW:
-		case CItemData::WEAPON_BELL:
-			m_swordRefineEffectRight = EFFECT_REFINED+EFFECT_SMALLSWORD_REFINED7+refine-7;
-			break;
-		case CItemData::WEAPON_BOW:
-			m_swordRefineEffectRight = EFFECT_REFINED+EFFECT_BOW_REFINED7+refine-7;
-			break;
-		default:
-			m_swordRefineEffectRight = EFFECT_REFINED+EFFECT_SWORD_REFINED7+refine-7;
-		}
-		if (m_swordRefineEffectRight)
-			m_swordRefineEffectRight = __AttachEffect(m_swordRefineEffectRight);
-		if (m_swordRefineEffectLeft)
-			m_swordRefineEffectLeft = __AttachEffect(m_swordRefineEffectLeft);
-		break;
-	case CItemData::ITEM_TYPE_ARMOR:
-		__ClearArmorRefineEffect();
-
-		// 갑옷 특화 이펙트
-		if (pItem->GetSubType() == CItemData::ARMOR_BODY)
-		{
-			DWORD vnum = pItem->GetIndex();
-
-			if (12010 <= vnum && vnum <= 12049)
+		case CItemData::ITEM_TYPE_WEAPON:
+			__ClearWeaponRefineEffect();
+			if (refine < 7) // 현재 제련도 7 이상만 이펙트가 있습니다.
+				return 0;
+			switch (pItem->GetSubType())
 			{
-				__AttachEffect(EFFECT_REFINED+EFFECT_BODYARMOR_SPECIAL);
-				__AttachEffect(EFFECT_REFINED+EFFECT_BODYARMOR_SPECIAL2);
+				case CItemData::WEAPON_DAGGER:
+					m_swordRefineEffectRight = EFFECT_REFINED + EFFECT_SMALLSWORD_REFINED7 + refine - 7;
+					m_swordRefineEffectLeft = EFFECT_REFINED + EFFECT_SMALLSWORD_REFINED7_LEFT + refine - 7;
+					break;
+				case CItemData::WEAPON_FAN:
+					m_swordRefineEffectRight = EFFECT_REFINED + EFFECT_FANBELL_REFINED7 + refine - 7;
+					break;
+				case CItemData::WEAPON_ARROW:
+				case CItemData::WEAPON_BELL:
+					m_swordRefineEffectRight = EFFECT_REFINED + EFFECT_SMALLSWORD_REFINED7 + refine - 7;
+					break;
+				case CItemData::WEAPON_BOW:
+					m_swordRefineEffectRight = EFFECT_REFINED + EFFECT_BOW_REFINED7 + refine - 7;
+					break;
+				default:
+					m_swordRefineEffectRight = EFFECT_REFINED + EFFECT_SWORD_REFINED7 + refine - 7;
 			}
-		}
+			if (m_swordRefineEffectRight)
+				m_swordRefineEffectRight = __AttachEffect(m_swordRefineEffectRight);
+			if (m_swordRefineEffectLeft)
+				m_swordRefineEffectLeft = __AttachEffect(m_swordRefineEffectLeft);
+			break;
+		case CItemData::ITEM_TYPE_ARMOR:
+			__ClearArmorRefineEffect();
 
-		if (refine < 7)	//현재 제련도 7 이상만 이펙트가 있습니다.
-			return 0;
+			// 갑옷 특화 이펙트
+			if (pItem->GetSubType() == CItemData::ARMOR_BODY)
+			{
+				DWORD vnum = pItem->GetIndex();
 
-		if (pItem->GetSubType() == CItemData::ARMOR_BODY)
-		{
-			m_armorRefineEffect = EFFECT_REFINED+EFFECT_BODYARMOR_REFINED7+refine-7;
-			__AttachEffect(m_armorRefineEffect);
-		}
-		break;
+				if (12010 <= vnum && vnum <= 12049)
+				{
+					__AttachEffect(EFFECT_REFINED + EFFECT_BODYARMOR_SPECIAL);
+					__AttachEffect(EFFECT_REFINED + EFFECT_BODYARMOR_SPECIAL2);
+				}
+			}
+
+			if (refine < 7) // 현재 제련도 7 이상만 이펙트가 있습니다.
+				return 0;
+
+			if (pItem->GetSubType() == CItemData::ARMOR_BODY)
+			{
+				m_armorRefineEffect = EFFECT_REFINED + EFFECT_BODYARMOR_REFINED7 + refine - 7;
+				__AttachEffect(m_armorRefineEffect);
+			}
+			break;
 	}
 	return 0;
 }
@@ -2747,18 +2716,18 @@ bool CInstanceBase::SetWeapon(DWORD eWeapon)
 {
 	if (IsPoly())
 		return false;
-	
+
 	if (__IsShapeAnimalWear())
 		return false;
-	
+
 	if (__IsChangableWeapon(eWeapon) == false)
 		eWeapon = 0;
 
 	m_GraphicThingInstance.AttachWeapon(eWeapon);
 	m_awPart[CRaceData::PART_WEAPON] = eWeapon;
-	
-	//Weapon Effect
-	CItemData * pItemData;
+
+	// Weapon Effect
+	CItemData* pItemData;
 	if (CItemManager::Instance().GetItemDataPointer(eWeapon, &pItemData))
 		__GetRefinedEffect(pItemData);
 	else
@@ -2781,7 +2750,7 @@ bool CInstanceBase::ChangeArmor(DWORD dwArmor)
 	DWORD eShape;
 	__ArmorVnumToShape(dwArmor, &eShape);
 
-	if (GetShape()==eShape)
+	if (GetShape() == eShape)
 		return false;
 
 	CAffectFlagContainer kAffectFlagContainer;
@@ -2824,7 +2793,7 @@ bool CInstanceBase::ChangeArmor(DWORD dwArmor)
 	SetAffectFlagContainer(kAffectFlagContainer);
 	/////////////////////////////////////////////////
 
-	CActorInstance::IEventHandler& rkEventHandler=GetEventHandlerRef();
+	CActorInstance::IEventHandler& rkEventHandler = GetEventHandlerRef();
 	rkEventHandler.OnChangeShape();
 
 	return true;
@@ -2846,7 +2815,6 @@ DWORD CInstanceBase::__GetRaceType()
 	return m_eRaceType;
 }
 
-
 void CInstanceBase::RefreshState(DWORD dwMotIndex, bool isLoop)
 {
 	DWORD dwPartItemID = m_GraphicThingInstance.GetPartItemID(CRaceData::PART_WEAPON);
@@ -2854,9 +2822,9 @@ void CInstanceBase::RefreshState(DWORD dwMotIndex, bool isLoop)
 	BYTE byItemType = 0xff;
 	BYTE bySubType = 0xff;
 
-	CItemManager & rkItemMgr = CItemManager::Instance();
-	CItemData * pItemData;
-	
+	CItemManager& rkItemMgr = CItemManager::Instance();
+	CItemData* pItemData;
+
 	if (rkItemMgr.GetItemDataPointer(dwPartItemID, &pItemData))
 	{
 		byItemType = pItemData->GetType();
@@ -2996,21 +2964,21 @@ void CInstanceBase::DestroyDeviceObjects()
 }
 
 void CInstanceBase::Destroy()
-{	
+{
 	DetachTextTail();
-	
+
 	DismountHorse();
 
 	m_kQue_kCmdNew.clear();
-	
+
 	__EffectContainer_Destroy();
 	__StoneSmoke_Destroy();
 
 	if (__IsMainInstance())
-		__ClearMainInstance();	
-	
+		__ClearMainInstance();
+
 	m_GraphicThingInstance.Destroy();
-	
+
 	__Initialize();
 }
 
@@ -3021,7 +2989,7 @@ void CInstanceBase::__InitializeRotationSpeed()
 
 void CInstanceBase::__Warrior_Initialize()
 {
-	m_kWarrior.m_dwGeomgyeongEffect=0;
+	m_kWarrior.m_dwGeomgyeongEffect = 0;
 }
 
 void CInstanceBase::__Initialize()
@@ -3045,29 +3013,28 @@ void CInstanceBase::__Initialize()
 	m_dwRace = 0;
 	m_dwVirtualNumber = 0;
 
-	m_dwBaseCmdTime=0;
-	m_dwBaseChkTime=0;
-	m_dwSkipTime=0;
+	m_dwBaseCmdTime = 0;
+	m_dwBaseChkTime = 0;
+	m_dwSkipTime = 0;
 
 	m_GraphicThingInstance.Initialize();
 
-	m_dwAdvActorVID=0;
-	m_dwLastDmgActorVID=0;
+	m_dwAdvActorVID = 0;
+	m_dwLastDmgActorVID = 0;
 
-	m_nAverageNetworkGap=0;
-	m_dwNextUpdateHeightTime=0;
+	m_nAverageNetworkGap = 0;
+	m_dwNextUpdateHeightTime = 0;
 
 	// Moving by keyboard
 	m_iRotatingDirection = DEGREE_DIRECTION_SAME;
 
-	// Moving by mouse	
+	// Moving by mouse
 	m_isTextTail = FALSE;
 	m_isGoing = FALSE;
 	NEW_SetSrcPixelPosition(TPixelPosition(0, 0, 0));
 	NEW_SetDstPixelPosition(TPixelPosition(0, 0, 0));
 
 	m_kPPosDust = TPixelPosition(0, 0, 0);
-
 
 	m_kQue_kCmdNew.clear();
 
@@ -3088,7 +3055,7 @@ void CInstanceBase::__Initialize()
 
 	memset(m_awPart, 0, sizeof(m_awPart));
 	memset(m_adwCRCAffectEffect, 0, sizeof(m_adwCRCAffectEffect));
-	//memset(m_adwCRCEmoticonEffect, 0, sizeof(m_adwCRCEmoticonEffect));
+	// memset(m_adwCRCEmoticonEffect, 0, sizeof(m_adwCRCEmoticonEffect));
 	memset(&m_kMovAfterFunc, 0, sizeof(m_kMovAfterFunc));
 
 	m_bDamageEffectType = false;
@@ -3106,9 +3073,7 @@ CInstanceBase::~CInstanceBase()
 	Destroy();
 }
 
-
-void CInstanceBase::GetBoundBox(D3DXVECTOR3 * vtMin, D3DXVECTOR3 * vtMax)
+void CInstanceBase::GetBoundBox(D3DXVECTOR3* vtMin, D3DXVECTOR3* vtMax)
 {
 	m_GraphicThingInstance.GetBoundBox(vtMin, vtMax);
 }
-

@@ -25,13 +25,13 @@ void DefaultFont_Cleanup()
 		gs_pkDefaultFont->Release();
 }
 
-void DefaultFont_SetName(const char * c_szFontName)
+void DefaultFont_SetName(const char* c_szFontName)
 {
 	gs_strDefaultFontName = c_szFontName;
 	gs_strDefaultFontName += ".fnt";
 
 	gs_strDefaultItalicFontName = c_szFontName;
-	if(strchr(c_szFontName, ':'))
+	if (strchr(c_szFontName, ':'))
 		gs_strDefaultItalicFontName += "i";
 	gs_strDefaultItalicFontName += ".fnt";
 
@@ -60,14 +60,14 @@ bool ReloadDefaultFonts()
 }
 
 CResource* DefaultFont_GetResource()
-{	
+{
 	if (!gs_pkDefaultFont || gs_isReloadDefaultFont)
 		ReloadDefaultFonts();
 	return gs_pkDefaultFont;
 }
 
 CResource* DefaultItalicFont_GetResource()
-{	
+{
 	if (!gs_pkDefaultItalicFont || gs_isReloadDefaultFont)
 		ReloadDefaultFonts();
 	return gs_pkDefaultItalicFont;
@@ -75,32 +75,32 @@ CResource* DefaultItalicFont_GetResource()
 
 // END_OF_DEFAULT_FONT
 
-void SetGuildSymbolPath(const char * c_szPathName)
+void SetGuildSymbolPath(const char* c_szPathName)
 {
 	g_strGuildSymbolPathName = "mark/";
 	g_strGuildSymbolPathName += c_szPathName;
 	g_strGuildSymbolPathName += "/";
 }
 
-const char * GetGuildSymbolFileName(DWORD dwGuildID)
+const char* GetGuildSymbolFileName(DWORD dwGuildID)
 {
 	return _getf("%s%03d.jpg", g_strGuildSymbolPathName.c_str(), dwGuildID);
 }
 
 BYTE c_aSlotTypeToInvenType[SLOT_TYPE_MAX] =
-{
-	RESERVED_WINDOW,		// SLOT_TYPE_NONE
-	INVENTORY,				// SLOT_TYPE_INVENTORY
-	RESERVED_WINDOW,		// SLOT_TYPE_SKILL
-	RESERVED_WINDOW,		// SLOT_TYPE_EMOTION
-	RESERVED_WINDOW,		// SLOT_TYPE_SHOP
-	RESERVED_WINDOW,		// SLOT_TYPE_EXCHANGE_OWNER
-	RESERVED_WINDOW,		// SLOT_TYPE_EXCHANGE_TARGET
-	RESERVED_WINDOW,		// SLOT_TYPE_QUICK_SLOT
-	RESERVED_WINDOW,		// SLOT_TYPE_SAFEBOX	<- SAFEBOX, MALL의 경우 하드 코딩되어있는 LEGACY 코드를 유지함.
-	RESERVED_WINDOW,		// SLOT_TYPE_PRIVATE_SHOP
-	RESERVED_WINDOW,		// SLOT_TYPE_MALL		<- SAFEBOX, MALL의 경우 하드 코딩되어있는 LEGACY 코드를 유지함.
-	DRAGON_SOUL_INVENTORY,	// SLOT_TYPE_DRAGON_SOUL_INVENTORY
+	{
+		RESERVED_WINDOW,	   // SLOT_TYPE_NONE
+		INVENTORY,			   // SLOT_TYPE_INVENTORY
+		RESERVED_WINDOW,	   // SLOT_TYPE_SKILL
+		RESERVED_WINDOW,	   // SLOT_TYPE_EMOTION
+		RESERVED_WINDOW,	   // SLOT_TYPE_SHOP
+		RESERVED_WINDOW,	   // SLOT_TYPE_EXCHANGE_OWNER
+		RESERVED_WINDOW,	   // SLOT_TYPE_EXCHANGE_TARGET
+		RESERVED_WINDOW,	   // SLOT_TYPE_QUICK_SLOT
+		RESERVED_WINDOW,	   // SLOT_TYPE_SAFEBOX	<- SAFEBOX, MALL의 경우 하드 코딩되어있는 LEGACY 코드를 유지함.
+		RESERVED_WINDOW,	   // SLOT_TYPE_PRIVATE_SHOP
+		RESERVED_WINDOW,	   // SLOT_TYPE_MALL		<- SAFEBOX, MALL의 경우 하드 코딩되어있는 LEGACY 코드를 유지함.
+		DRAGON_SOUL_INVENTORY, // SLOT_TYPE_DRAGON_SOUL_INVENTORY
 };
 
 BYTE SlotTypeToInvenType(BYTE bSlotType)

@@ -5,15 +5,15 @@ class CFlyTrace : public CScreen
 	public:
 		CFlyTrace();
 		virtual ~CFlyTrace();
-		
+
 		void Destroy();
 
-		void Create(const CFlyingData::TFlyingAttachData & rFlyingAttachData);
+		void Create(const CFlyingData::TFlyingAttachData& rFlyingAttachData);
 
-		void UpdateNewPosition(const D3DXVECTOR3 & v3Position);
+		void UpdateNewPosition(const D3DXVECTOR3& v3Position);
 
 		void Update();
-		void Render();		
+		void Render();
 
 	protected:
 		void __Initialize();
@@ -22,8 +22,8 @@ class CFlyTrace : public CScreen
 		typedef std::pair<float, D3DXVECTOR3> TTimePosition;
 		typedef std::deque<TTimePosition> TTimePositionDeque;
 
-		//CGraphicImageInstance m_ImageInstance;
-		//LPDIRECT3DTEXTURE9 m_lpTexture;
+		// CGraphicImageInstance m_ImageInstance;
+		// LPDIRECT3DTEXTURE9 m_lpTexture;
 
 		bool m_bRectShape;
 		DWORD m_dwColor;
@@ -38,5 +38,5 @@ class CFlyTrace : public CScreen
 		static CFlyTrace* New();
 		static void Delete(CFlyTrace* pkInst);
 
-		static CDynamicPool<CFlyTrace>		ms_kPool;		
+		static CDynamicPool<CFlyTrace> ms_kPool;
 };

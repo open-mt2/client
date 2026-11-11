@@ -29,7 +29,7 @@ void CRaceMotionData::Delete(CRaceMotionData* pkData)
 
 void CRaceMotionData::SetName(UINT eName)
 {
-	m_eName=eName;
+	m_eName = eName;
 
 	switch (m_eName)
 	{
@@ -82,9 +82,9 @@ void CRaceMotionData::SetName(UINT eName)
 		case NAME_SHY:
 		case NAME_CHEERUP:
 		case NAME_BANTER:
-		case NAME_JOY:			
+		case NAME_JOY:
 		case NAME_CHEERS_1:
-		case NAME_CHEERS_2:	
+		case NAME_CHEERS_2:
 		case NAME_KISS_WITH_WARRIOR:
 		case NAME_KISS_WITH_ASSASSIN:
 		case NAME_KISS_WITH_SURA:
@@ -130,26 +130,26 @@ void CRaceMotionData::SetName(UINT eName)
 			SetType(TYPE_FISHING);
 			break;
 		default:
-			if (eName>=NAME_SKILL && eName<=NAME_SKILL+SKILL_NUM)
+			if (eName >= NAME_SKILL && eName <= NAME_SKILL + SKILL_NUM)
 				SetType(TYPE_SKILL);
 			else
 				TraceError("CRaceMotionData::SetName - UNKNOWN NAME %d", eName);
 			break;
-	}	
+	}
 }
 void CRaceMotionData::SetType(UINT eType)
 {
-	m_eType=eType;
+	m_eType = eType;
 
 	switch (m_eType)
 	{
 		case TYPE_ATTACK:
 		case TYPE_COMBO:
 		case TYPE_SKILL:
-			m_isLock=TRUE;
+			m_isLock = TRUE;
 			break;
 		default:
-			m_isLock=FALSE;
+			m_isLock = FALSE;
 			break;
 	}
 }
@@ -161,7 +161,7 @@ UINT CRaceMotionData::GetType() const
 
 bool CRaceMotionData::IsLock() const
 {
-	return m_isLock ? true : false;	
+	return m_isLock ? true : false;
 }
 
 int CRaceMotionData::GetLoopCount() const
@@ -209,12 +209,12 @@ BOOL CRaceMotionData::isAttackingMotion() const
 	return m_isAttackingMotion;
 }
 
-const NRaceData::TMotionAttackData * CRaceMotionData::GetMotionAttackDataPointer() const
+const NRaceData::TMotionAttackData* CRaceMotionData::GetMotionAttackDataPointer() const
 {
-	return & m_MotionAttackData;
+	return &m_MotionAttackData;
 }
 
-const NRaceData::TMotionAttackData & CRaceMotionData::GetMotionAttackDataReference() const
+const NRaceData::TMotionAttackData& CRaceMotionData::GetMotionAttackDataReference() const
 {
 	assert(m_isAttackingMotion);
 	return m_MotionAttackData;
@@ -253,7 +253,7 @@ DWORD CRaceMotionData::GetMotionEventDataCount() const
 	return m_MotionEventDataVector.size();
 }
 
-BOOL CRaceMotionData::GetMotionEventDataPointer(BYTE byIndex, const CRaceMotionData::TMotionEventData ** c_ppData) const
+BOOL CRaceMotionData::GetMotionEventDataPointer(BYTE byIndex, const CRaceMotionData::TMotionEventData** c_ppData) const
 {
 	if (byIndex >= m_MotionEventDataVector.size())
 		return FALSE;
@@ -263,13 +263,13 @@ BOOL CRaceMotionData::GetMotionEventDataPointer(BYTE byIndex, const CRaceMotionD
 	return TRUE;
 }
 
-BOOL CRaceMotionData::GetMotionAttackingEventDataPointer(BYTE byIndex, const CRaceMotionData::TMotionAttackingEventData ** c_ppData) const
+BOOL CRaceMotionData::GetMotionAttackingEventDataPointer(BYTE byIndex, const CRaceMotionData::TMotionAttackingEventData** c_ppData) const
 {
 	if (byIndex >= m_MotionEventDataVector.size())
 		return FALSE;
 
-	const CRaceMotionData::TMotionEventData * pData = m_MotionEventDataVector[byIndex];
-	const CRaceMotionData::TMotionAttackingEventData * pAttackingEvent = (const CRaceMotionData::TMotionAttackingEventData *)pData;
+	const CRaceMotionData::TMotionEventData* pData = m_MotionEventDataVector[byIndex];
+	const CRaceMotionData::TMotionAttackingEventData* pAttackingEvent = (const CRaceMotionData::TMotionAttackingEventData*)pData;
 
 	if (MOTION_EVENT_TYPE_SPECIAL_ATTACKING == pAttackingEvent->iType)
 		return FALSE;
@@ -295,26 +295,26 @@ float CRaceMotionData::GetEventStartTime(DWORD dwIndex) const
 	return m_MotionEventDataVector[dwIndex]->fStartingTime;
 }
 
-const NSound::TSoundInstanceVector * CRaceMotionData::GetSoundInstanceVectorPointer() const
+const NSound::TSoundInstanceVector* CRaceMotionData::GetSoundInstanceVectorPointer() const
 {
 	return &m_SoundInstanceVector;
 }
 
-void CRaceMotionData::SetAccumulationPosition(const TPixelPosition & c_rPos)
+void CRaceMotionData::SetAccumulationPosition(const TPixelPosition& c_rPos)
 {
 	m_accumulationPosition = c_rPos;
 	m_isAccumulationMotion = TRUE;
 }
 
-bool CRaceMotionData::LoadMotionData(const char * c_szFileName)
+bool CRaceMotionData::LoadMotionData(const char* c_szFileName)
 {
 	const float c_fFrameTime = 1.0f / g_fGameFPS;
 
-	CTextFileLoader* pkTextFileLoader=CTextFileLoader::Cache(c_szFileName);
+	CTextFileLoader* pkTextFileLoader = CTextFileLoader::Cache(c_szFileName);
 	if (!pkTextFileLoader)
 		return false;
 
-	CTextFileLoader& rkTextFileLoader=*pkTextFileLoader;
+	CTextFileLoader& rkTextFileLoader = *pkTextFileLoader;
 
 	if (rkTextFileLoader.IsEmpty())
 		return false;
@@ -327,7 +327,7 @@ bool CRaceMotionData::LoadMotionData(const char * c_szFileName)
 	if (!rkTextFileLoader.GetTokenFloat("motionduration", &m_fMotionDuration))
 		return false;
 
-	CTokenVector * pTokenVector;
+	CTokenVector* pTokenVector;
 
 	if (rkTextFileLoader.GetTokenVector("accumulation", &pTokenVector))
 	{
@@ -405,8 +405,8 @@ bool CRaceMotionData::LoadMotionData(const char * c_szFileName)
 				if (!rkTextFileLoader.GetTokenInteger("motioneventtype", &iType))
 					return false;
 
-				TMotionEventData * pData = NULL;
-				switch(iType)
+				TMotionEventData* pData = NULL;
+				switch (iType)
 				{
 					case MOTION_EVENT_TYPE_FLY:
 						pData = new TMotionFlyEventData;
@@ -454,13 +454,13 @@ bool CRaceMotionData::LoadMotionData(const char * c_szFileName)
 		}
 	}
 
-	std::string strSoundFileNameTemp=c_szFileName;
+	std::string strSoundFileNameTemp = c_szFileName;
 	strSoundFileNameTemp = CFileNameHelper::NoExtension(strSoundFileNameTemp);
-	strSoundFileNameTemp+= ".mss";
+	strSoundFileNameTemp += ".mss";
 
 	if (strSoundFileNameTemp.length() > 13)
 	{
-		const char * c_szHeader = &strSoundFileNameTemp[13];
+		const char* c_szHeader = &strSoundFileNameTemp[13];
 
 		m_strSoundScriptDataFileName = "sound/";
 		m_strSoundScriptDataFileName += c_szHeader;
@@ -471,9 +471,9 @@ bool CRaceMotionData::LoadMotionData(const char * c_szFileName)
 	return true;
 }
 #ifdef WORLD_EDITOR
-bool CRaceMotionData::SaveMotionData(const char * c_szFileName)
+bool CRaceMotionData::SaveMotionData(const char* c_szFileName)
 {
-	FILE * File;
+	FILE* File;
 
 	SetFileAttributes(c_szFileName, FILE_ATTRIBUTE_NORMAL);
 	File = fopen(c_szFileName, "w");
@@ -535,7 +535,7 @@ bool CRaceMotionData::SaveMotionData(const char * c_szFileName)
 
 		for (DWORD j = 0; j < m_MotionEventDataVector.size(); ++j)
 		{
-			TMotionEventData * c_pData = m_MotionEventDataVector[j];
+			TMotionEventData* c_pData = m_MotionEventDataVector[j];
 
 			fprintf(File, "    Group Event%02d\n", j);
 			fprintf(File, "    {\n");
@@ -551,24 +551,24 @@ bool CRaceMotionData::SaveMotionData(const char * c_szFileName)
 	return true;
 }
 #endif
-bool CRaceMotionData::LoadSoundScriptData(const char * c_szFileName)
+bool CRaceMotionData::LoadSoundScriptData(const char* c_szFileName)
 {
 	NSound::TSoundDataVector SoundDataVector;
 	if (!NSound::LoadSoundInformationPiece(c_szFileName, SoundDataVector))
-	{	
+	{
 		return false;
 	}
-	
-	NSound::DataToInstance(SoundDataVector, &m_SoundInstanceVector);	
+
+	NSound::DataToInstance(SoundDataVector, &m_SoundInstanceVector);
 	return true;
 }
 
-const char * CRaceMotionData::GetMotionFileName() const
+const char* CRaceMotionData::GetMotionFileName() const
 {
 	return m_strMotionFileName.c_str();
 }
 
-const char * CRaceMotionData::GetSoundScriptFileName() const
+const char* CRaceMotionData::GetSoundScriptFileName() const
 {
 	return m_strSoundScriptDataFileName.c_str();
 }
@@ -593,8 +593,8 @@ void CRaceMotionData::Initialize()
 
 	m_isLock = FALSE;
 
-	m_eType=TYPE_NONE;
-	m_eName=NAME_NONE;
+	m_eType = TYPE_NONE;
+	m_eName = NAME_NONE;
 
 	m_MotionEventDataVector.clear();
 	m_SoundInstanceVector.clear();

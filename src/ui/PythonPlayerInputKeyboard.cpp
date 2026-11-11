@@ -9,14 +9,14 @@ void CPythonPlayer::SetAttackKeyState(bool isPress)
 	{
 		CInstanceBase* pkInstMain = NEW_GetMainActorPtr();
 		if (pkInstMain)
-		if (pkInstMain->IsFishingMode())
-		{
-			NEW_Fishing();
-			return;
-		}
+			if (pkInstMain->IsFishingMode())
+			{
+				NEW_Fishing();
+				return;
+			}
 	}
 
-	m_isAtkKey=isPress;
+	m_isAtkKey = isPress;
 }
 
 void CPythonPlayer::NEW_SetSingleDIKKeyState(int eDIKKey, bool isPress)
@@ -46,20 +46,20 @@ void CPythonPlayer::NEW_SetSingleDirKeyState(int eDirKey, bool isPress)
 	switch (eDirKey)
 	{
 		case DIR_UP:
-			m_isUp=isPress;
+			m_isUp = isPress;
 			break;
 		case DIR_DOWN:
-			m_isDown=isPress;
+			m_isDown = isPress;
 			break;
 		case DIR_LEFT:
-			m_isLeft=isPress;
+			m_isLeft = isPress;
 			break;
 		case DIR_RIGHT:
-			m_isRight=isPress;
+			m_isRight = isPress;
 			break;
 	}
 
-	m_isDirKey=(m_isUp || m_isDown || m_isLeft || m_isRight);
+	m_isDirKey = (m_isUp || m_isDown || m_isLeft || m_isRight);
 
 	NEW_SetMultiDirKeyState(m_isLeft, m_isRight, m_isUp, m_isDown);
 }
@@ -67,13 +67,13 @@ void CPythonPlayer::NEW_SetSingleDirKeyState(int eDirKey, bool isPress)
 void CPythonPlayer::NEW_SetMultiDirKeyState(bool isLeft, bool isRight, bool isUp, bool isDown)
 {
 	if (!__CanMove())
-		return;	
+		return;
 
-	bool isAny=(isLeft || isRight || isUp || isDown);
+	bool isAny = (isLeft || isRight || isUp || isDown);
 
 	if (isAny)
 	{
-		float fDirRot=0.0f;
+		float fDirRot = 0.0f;
 		NEW_GetMultiKeyDirRotation(isLeft, isRight, isUp, isDown, &fDirRot);
 
 		if (!NEW_MoveToDirection(fDirRot))
@@ -90,7 +90,7 @@ void CPythonPlayer::NEW_SetMultiDirKeyState(bool isLeft, bool isRight, bool isUp
 
 float CPythonPlayer::GetDegreeFromDirection(int iUD, int iLR)
 {
-	switch(iUD)
+	switch (iUD)
 	{
 		case KEYBOARD_UD_UP:
 			if (KEYBOARD_LR_LEFT == iLR)

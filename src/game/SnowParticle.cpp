@@ -5,10 +5,10 @@ const float c_fSnowDistance = 70000.0f;
 
 std::vector<CSnowParticle*> CSnowParticle::ms_kVct_SnowParticlePool;
 
-void CSnowParticle::SetCameraVertex(const D3DXVECTOR3 & rv3Up, const D3DXVECTOR3 & rv3Cross)
+void CSnowParticle::SetCameraVertex(const D3DXVECTOR3& rv3Up, const D3DXVECTOR3& rv3Cross)
 {
-	m_v3Up = rv3Up*m_fHalfWidth;
-	m_v3Cross = rv3Cross*m_fHalfHeight;
+	m_v3Up = rv3Up * m_fHalfWidth;
+	m_v3Cross = rv3Cross * m_fHalfHeight;
 }
 
 bool CSnowParticle::IsActivate()
@@ -16,7 +16,7 @@ bool CSnowParticle::IsActivate()
 	return m_bActivate;
 }
 
-void CSnowParticle::Update(float fElapsedTime, const D3DXVECTOR3 & c_rv3Pos)
+void CSnowParticle::Update(float fElapsedTime, const D3DXVECTOR3& c_rv3Pos)
 {
 	m_v3Position += m_v3Velocity * fElapsedTime;
 
@@ -32,8 +32,8 @@ void CSnowParticle::Update(float fElapsedTime, const D3DXVECTOR3 & c_rv3Pos)
 		m_bActivate = false;
 }
 
-void CSnowParticle::GetVerticies(SParticleVertex & rv3Vertex1, SParticleVertex & rv3Vertex2,
-								 SParticleVertex & rv3Vertex3, SParticleVertex & rv3Vertex4)
+void CSnowParticle::GetVerticies(SParticleVertex& rv3Vertex1, SParticleVertex& rv3Vertex2,
+								 SParticleVertex& rv3Vertex3, SParticleVertex& rv3Vertex4)
 {
 	rv3Vertex1.v3Pos = m_v3Position - m_v3Cross - m_v3Up;
 	rv3Vertex1.u = 0.0f;
@@ -52,13 +52,13 @@ void CSnowParticle::GetVerticies(SParticleVertex & rv3Vertex1, SParticleVertex &
 	rv3Vertex4.v = 1.0f;
 }
 
-void CSnowParticle::Init(const D3DXVECTOR3 & c_rv3Pos)
+void CSnowParticle::Init(const D3DXVECTOR3& c_rv3Pos)
 {
 	float fRot = frandom(0.0f, 36000.0f) / 100.0f;
 	float fDistance = frandom(0.0f, c_fSnowDistance) / 10.0f;
 
-	m_v3Position.x = c_rv3Pos.x + fDistance*sin((double)D3DXToRadian(fRot));
-	m_v3Position.y = c_rv3Pos.y + fDistance*cos((double)D3DXToRadian(fRot));
+	m_v3Position.x = c_rv3Pos.x + fDistance * sin((double)D3DXToRadian(fRot));
+	m_v3Position.y = c_rv3Pos.y + fDistance * cos((double)D3DXToRadian(fRot));
 	m_v3Position.z = c_rv3Pos.z + frandom(1500.0f, 2000.0f);
 	m_v3Velocity.x = 0.0f;
 	m_v3Velocity.y = 0.0f;
@@ -73,19 +73,19 @@ void CSnowParticle::Init(const D3DXVECTOR3 & c_rv3Pos)
 	m_fAmplitude = frandom(1.0f, 3.0f);
 }
 
-CSnowParticle * CSnowParticle::New()
+CSnowParticle* CSnowParticle::New()
 {
 	if (ms_kVct_SnowParticlePool.empty())
 	{
 		return new CSnowParticle;
 	}
 
-	CSnowParticle * pParticle = ms_kVct_SnowParticlePool.back();
+	CSnowParticle* pParticle = ms_kVct_SnowParticlePool.back();
 	ms_kVct_SnowParticlePool.pop_back();
 	return pParticle;
 }
 
-void CSnowParticle::Delete(CSnowParticle * pSnowParticle)
+void CSnowParticle::Delete(CSnowParticle* pSnowParticle)
 {
 	ms_kVct_SnowParticlePool.push_back(pSnowParticle);
 }

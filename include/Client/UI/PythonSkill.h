@@ -89,43 +89,43 @@ class CPythonSkill : public CSingleton<CPythonSkill>
 
 		enum
 		{
-			SKILL_ATTRIBUTE_NEED_TARGET				= (1 << 0),
-			SKILL_ATTRIBUTE_TOGGLE					= (1 << 1),
-			SKILL_ATTRIBUTE_WEAPON_LIMITATION		= (1 << 2),
-			SKILL_ATTRIBUTE_MELEE_ATTACK			= (1 << 3),
-			SKILL_ATTRIBUTE_USE_HP					= (1 << 4),
-			SKILL_ATTRIBUTE_CAN_CHANGE_DIRECTION	= (1 << 5),
-			SKILL_ATTRIBUTE_STANDING_SKILL			= (1 << 6),
-			SKILL_ATTRIBUTE_ONLY_FOR_ALLIANCE		= (1 << 7),
-			SKILL_ATTRIBUTE_CAN_USE_FOR_ME			= (1 << 8),
-			SKILL_ATTRIBUTE_NEED_CORPSE				= (1 << 9),
-			SKILL_ATTRIBUTE_FAN_RANGE				= (1 << 10),
-			SKILL_ATTRIBUTE_CAN_USE_IF_NOT_ENOUGH	= (1 << 11),
-			SKILL_ATTRIBUTE_NEED_EMPTY_BOTTLE		= (1 << 12),
-			SKILL_ATTRIBUTE_NEED_POISON_BOTTLE		= (1 << 13),
-			SKILL_ATTRIBUTE_ATTACK_SKILL			= (1 << 14),
-			SKILL_ATTRIBUTE_TIME_INCREASE_SKILL		= (1 << 15), // 증지술 전용 attribute
-			SKILL_ATTRIBUTE_CHARGE_ATTACK			= (1 << 16),
-			SKILL_ATTRIBUTE_PASSIVE					= (1 << 17),
-			SKILL_ATTRIBUTE_CANNOT_LEVEL_UP			= (1 << 18),
-			SKILL_ATTRIBUTE_ONLY_FOR_GUILD_WAR		= (1 << 19),
-			SKILL_ATTRIBUTE_MOVING_SKILL			= (1 << 20),
-			SKILL_ATTRIBUTE_HORSE_SKILL				= (1 << 21),
-			SKILL_ATTRIBUTE_CIRCLE_RANGE			= (1 << 22),
-			SKILL_ATTRIBUTE_SEARCH_TARGET			= (1 << 23),
+			SKILL_ATTRIBUTE_NEED_TARGET = (1 << 0),
+			SKILL_ATTRIBUTE_TOGGLE = (1 << 1),
+			SKILL_ATTRIBUTE_WEAPON_LIMITATION = (1 << 2),
+			SKILL_ATTRIBUTE_MELEE_ATTACK = (1 << 3),
+			SKILL_ATTRIBUTE_USE_HP = (1 << 4),
+			SKILL_ATTRIBUTE_CAN_CHANGE_DIRECTION = (1 << 5),
+			SKILL_ATTRIBUTE_STANDING_SKILL = (1 << 6),
+			SKILL_ATTRIBUTE_ONLY_FOR_ALLIANCE = (1 << 7),
+			SKILL_ATTRIBUTE_CAN_USE_FOR_ME = (1 << 8),
+			SKILL_ATTRIBUTE_NEED_CORPSE = (1 << 9),
+			SKILL_ATTRIBUTE_FAN_RANGE = (1 << 10),
+			SKILL_ATTRIBUTE_CAN_USE_IF_NOT_ENOUGH = (1 << 11),
+			SKILL_ATTRIBUTE_NEED_EMPTY_BOTTLE = (1 << 12),
+			SKILL_ATTRIBUTE_NEED_POISON_BOTTLE = (1 << 13),
+			SKILL_ATTRIBUTE_ATTACK_SKILL = (1 << 14),
+			SKILL_ATTRIBUTE_TIME_INCREASE_SKILL = (1 << 15), // 증지술 전용 attribute
+			SKILL_ATTRIBUTE_CHARGE_ATTACK = (1 << 16),
+			SKILL_ATTRIBUTE_PASSIVE = (1 << 17),
+			SKILL_ATTRIBUTE_CANNOT_LEVEL_UP = (1 << 18),
+			SKILL_ATTRIBUTE_ONLY_FOR_GUILD_WAR = (1 << 19),
+			SKILL_ATTRIBUTE_MOVING_SKILL = (1 << 20),
+			SKILL_ATTRIBUTE_HORSE_SKILL = (1 << 21),
+			SKILL_ATTRIBUTE_CIRCLE_RANGE = (1 << 22),
+			SKILL_ATTRIBUTE_SEARCH_TARGET = (1 << 23),
 		};
 
 		enum
 		{
-			SKILL_NEED_WEAPON_SWORD				= (1 << CItemData::WEAPON_SWORD),
-			SKILL_NEED_WEAPON_DAGGER			= (1 << CItemData::WEAPON_DAGGER),
-			SKILL_NEED_WEAPON_BOW				= (1 << CItemData::WEAPON_BOW),
-			SKILL_NEED_WEAPON_TWO_HANDED		= (1 << CItemData::WEAPON_TWO_HANDED),
-			SKILL_NEED_WEAPON_DOUBLE_SWORD		= (1 << CItemData::WEAPON_DAGGER),
-			SKILL_NEED_WEAPON_BELL				= (1 << CItemData::WEAPON_BELL),
-			SKILL_NEED_WEAPON_FAN				= (1 << CItemData::WEAPON_FAN),
-			SKILL_NEED_WEAPON_ARROW				= (1 << CItemData::WEAPON_ARROW),
-			SKILL_NEED_WEAPON_EMPTY_HAND		= (1 << CItemData::WEAPON_NONE),
+			SKILL_NEED_WEAPON_SWORD = (1 << CItemData::WEAPON_SWORD),
+			SKILL_NEED_WEAPON_DAGGER = (1 << CItemData::WEAPON_DAGGER),
+			SKILL_NEED_WEAPON_BOW = (1 << CItemData::WEAPON_BOW),
+			SKILL_NEED_WEAPON_TWO_HANDED = (1 << CItemData::WEAPON_TWO_HANDED),
+			SKILL_NEED_WEAPON_DOUBLE_SWORD = (1 << CItemData::WEAPON_DAGGER),
+			SKILL_NEED_WEAPON_BELL = (1 << CItemData::WEAPON_BELL),
+			SKILL_NEED_WEAPON_FAN = (1 << CItemData::WEAPON_FAN),
+			SKILL_NEED_WEAPON_ARROW = (1 << CItemData::WEAPON_ARROW),
+			SKILL_NEED_WEAPON_EMPTY_HAND = (1 << CItemData::WEAPON_NONE),
 		};
 
 		enum
@@ -138,128 +138,128 @@ class CPythonSkill : public CSingleton<CPythonSkill>
 		enum
 		{
 			SKILL_GRADE_COUNT = 3,
-			SKILL_EFFECT_COUNT = 4,	//스킬은 초,중,고급 이외에 마스터일때 이펙트 추가.
+			SKILL_EFFECT_COUNT = 4, // 스킬은 초,중,고급 이외에 마스터일때 이펙트 추가.
 			SKILL_GRADE_STEP_COUNT = 20,
 			SKILL_GRADEGAP = 25,
 		};
 
 		typedef struct SAffectData
 		{
-			std::string strAffectDescription;
-			std::string strAffectMinFormula;
-			std::string strAffectMaxFormula;
+				std::string strAffectDescription;
+				std::string strAffectMinFormula;
+				std::string strAffectMaxFormula;
 		} TAffectData;
 		typedef struct SAffectDataNew
 		{
-			std::string strPointType;
-			std::string strPointPoly;
+				std::string strPointType;
+				std::string strPointPoly;
 		} TAffectDataNew;
 		typedef struct SRequireStatData
 		{
-			BYTE byPoint;
-			BYTE byLevel;
+				BYTE byPoint;
+				BYTE byLevel;
 		} TRequireStatData;
 		typedef struct SGradeData
 		{
-			std::string strName;
-			CGraphicImage * pImage;
-			WORD wMotionIndex;
+				std::string strName;
+				CGraphicImage* pImage;
+				WORD wMotionIndex;
 		} TGradeData;
 		typedef struct SSkillData
 		{
-			static DWORD MELEE_SKILL_TARGET_RANGE;
-			// Functions
-			SSkillData();
-			DWORD GetTargetRange() const;
-			BOOL CanChangeDirection();
-			BOOL IsFanRange();
-			BOOL IsCircleRange();
-			BOOL IsAutoSearchTarget();
-			BOOL IsNeedTarget();
-			BOOL IsNeedCorpse();			
-			BOOL IsToggleSkill();
-			BOOL IsUseHPSkill();
-			BOOL IsStandingSkill();
-			BOOL CanUseWeaponType(DWORD dwWeaponType);
-			BOOL IsOnlyForAlliance();
-			BOOL CanUseForMe();
-			BOOL CanUseIfNotEnough();
-			BOOL IsNeedEmptyBottle();
-			BOOL IsNeedPoisonBottle();
-			BOOL IsNeedBow();
-			BOOL IsAttackSkill();
-			BOOL IsHorseSkill();
-			BOOL IsMovingSkill();
-			BOOL IsTimeIncreaseSkill();
-			BOOL IsMeleeSkill();
-			BOOL IsChargeSkill();
-			BOOL IsOnlyForGuildWar();
+				static DWORD MELEE_SKILL_TARGET_RANGE;
+				// Functions
+				SSkillData();
+				DWORD GetTargetRange() const;
+				BOOL CanChangeDirection();
+				BOOL IsFanRange();
+				BOOL IsCircleRange();
+				BOOL IsAutoSearchTarget();
+				BOOL IsNeedTarget();
+				BOOL IsNeedCorpse();
+				BOOL IsToggleSkill();
+				BOOL IsUseHPSkill();
+				BOOL IsStandingSkill();
+				BOOL CanUseWeaponType(DWORD dwWeaponType);
+				BOOL IsOnlyForAlliance();
+				BOOL CanUseForMe();
+				BOOL CanUseIfNotEnough();
+				BOOL IsNeedEmptyBottle();
+				BOOL IsNeedPoisonBottle();
+				BOOL IsNeedBow();
+				BOOL IsAttackSkill();
+				BOOL IsHorseSkill();
+				BOOL IsMovingSkill();
+				BOOL IsTimeIncreaseSkill();
+				BOOL IsMeleeSkill();
+				BOOL IsChargeSkill();
+				BOOL IsOnlyForGuildWar();
 
-			bool GetState(const char * c_szStateName, int * piState, int iMinMaxType = VALUE_TYPE_FREE);
-			float ProcessFormula(CPoly * pPoly, float fSkillLevel = 0.0f, int iMinMaxType = VALUE_TYPE_FREE);
-			const char * GetAffectDescription(DWORD dwIndex, float fSkillLevel);
-			DWORD GetSkillCoolTime(float fSkillPoint);
-			int GetNeedSP(float fSkillPoint);
-			DWORD GetContinuationSP(float fSkillPoint);
-			DWORD GetMotionLoopCount(float fSkillPoint);
-			DWORD GetTargetCount(float fSkillPoint);
-			DWORD GetDuration(float fSkillPoint);
-			DWORD GetSkillMotionIndex(int iGrade=-1);
-			BYTE GetMaxLevel();
-			BYTE GetLevelUpPoint();
-			bool IsCanUseSkill();
-			BOOL IsNoMotion();
+				bool GetState(const char* c_szStateName, int* piState, int iMinMaxType = VALUE_TYPE_FREE);
+				float ProcessFormula(CPoly* pPoly, float fSkillLevel = 0.0f, int iMinMaxType = VALUE_TYPE_FREE);
+				const char* GetAffectDescription(DWORD dwIndex, float fSkillLevel);
+				DWORD GetSkillCoolTime(float fSkillPoint);
+				int GetNeedSP(float fSkillPoint);
+				DWORD GetContinuationSP(float fSkillPoint);
+				DWORD GetMotionLoopCount(float fSkillPoint);
+				DWORD GetTargetCount(float fSkillPoint);
+				DWORD GetDuration(float fSkillPoint);
+				DWORD GetSkillMotionIndex(int iGrade = -1);
+				BYTE GetMaxLevel();
+				BYTE GetLevelUpPoint();
+				bool IsCanUseSkill();
+				BOOL IsNoMotion();
 
-			const std::string GetName() const;
-			BYTE GetType() const;
+				const std::string GetName() const;
+				BYTE GetType() const;
 
-			///////////////////////////////////////////////////////////////////////////////////////
-			///////////////////////////////////////////////////////////////////////////////////////
+				///////////////////////////////////////////////////////////////////////////////////////
+				///////////////////////////////////////////////////////////////////////////////////////
 
-			// Variable
-			BYTE byType;
-			DWORD dwSkillIndex;
-			BYTE byMaxLevel;
-			BYTE byLevelUpPoint;
-			BYTE byLevelLimit;
-			BOOL bNoMotion;
+				// Variable
+				BYTE byType;
+				DWORD dwSkillIndex;
+				BYTE byMaxLevel;
+				BYTE byLevelUpPoint;
+				BYTE byLevelLimit;
+				BOOL bNoMotion;
 
-			std::string strName;
-			std::string strIconFileName;
-			std::string strDescription;
-			std::string strMotionScriptFileName;
+				std::string strName;
+				std::string strIconFileName;
+				std::string strDescription;
+				std::string strMotionScriptFileName;
 
-			std::vector<std::string> ConditionDataVector;
-			std::vector<TAffectData> AffectDataVector;
-			std::vector<TAffectDataNew> AffectDataNewVector;
-			std::vector<TRequireStatData> RequireStatDataVector;
-			std::string strCoolTimeFormula;
-			std::string strTargetCountFormula;
-			std::string strMotionLoopCountFormula;
-			std::string strNeedSPFormula;
-			std::string strContinuationSPFormula;
-			std::string strDuration;
+				std::vector<std::string> ConditionDataVector;
+				std::vector<TAffectData> AffectDataVector;
+				std::vector<TAffectDataNew> AffectDataNewVector;
+				std::vector<TRequireStatData> RequireStatDataVector;
+				std::string strCoolTimeFormula;
+				std::string strTargetCountFormula;
+				std::string strMotionLoopCountFormula;
+				std::string strNeedSPFormula;
+				std::string strContinuationSPFormula;
+				std::string strDuration;
 
-			DWORD dwSkillAttribute;
-			DWORD dwNeedWeapon;
-			DWORD dwTargetRange;
-			WORD wMotionIndex; // 없어질 변수
-			WORD wMotionIndexForMe; // 없어질 변수
+				DWORD dwSkillAttribute;
+				DWORD dwNeedWeapon;
+				DWORD dwTargetRange;
+				WORD wMotionIndex;		// 없어질 변수
+				WORD wMotionIndexForMe; // 없어질 변수
 
-			BOOL isRequirement;
-			std::string strRequireSkillName;
-			BYTE byRequireSkillLevel;
+				BOOL isRequirement;
+				std::string strRequireSkillName;
+				BYTE byRequireSkillLevel;
 
-			TGradeData GradeData[SKILL_EFFECT_COUNT];
+				TGradeData GradeData[SKILL_EFFECT_COUNT];
 
-			CGraphicImage * pImage;
+				CGraphicImage* pImage;
 
-			/////
+				/////
 
-			static std::map<std::string, DWORD> ms_StatusNameMap;
-			static std::map<std::string, DWORD> ms_NewMinStatusNameMap;
-			static std::map<std::string, DWORD> ms_NewMaxStatusNameMap;
-			static DWORD ms_dwTimeIncreaseSkillNumber;
+				static std::map<std::string, DWORD> ms_StatusNameMap;
+				static std::map<std::string, DWORD> ms_NewMinStatusNameMap;
+				static std::map<std::string, DWORD> ms_NewMaxStatusNameMap;
+				static DWORD ms_dwTimeIncreaseSkillNumber;
 		} TSkillData;
 
 		typedef std::map<DWORD, TSkillData> TSkillDataMap;
@@ -271,20 +271,20 @@ class CPythonSkill : public CSingleton<CPythonSkill>
 		virtual ~CPythonSkill();
 
 		void Destroy();
-		bool RegisterSkill(DWORD dwSkillIndex, const char * c_szFileName);
-		bool RegisterSkillTable(const char * c_szFileName);
-		bool RegisterSkillDesc(const char * c_szFileName);
-		BOOL GetSkillData(DWORD dwSkillIndex, TSkillData ** ppSkillData);
-		bool GetSkillDataByName(const char * c_szName, TSkillData ** ppSkillData);
+		bool RegisterSkill(DWORD dwSkillIndex, const char* c_szFileName);
+		bool RegisterSkillTable(const char* c_szFileName);
+		bool RegisterSkillDesc(const char* c_szFileName);
+		BOOL GetSkillData(DWORD dwSkillIndex, TSkillData** ppSkillData);
+		bool GetSkillDataByName(const char* c_szName, TSkillData** ppSkillData);
 
-		void SetPathName(const char * c_szFileName);
-		const char * GetPathName();
+		void SetPathName(const char* c_szFileName);
+		const char* GetPathName();
 
 		void TEST();
 
 	protected:
-		void __RegisterGradeIconImage(TSkillData & rData, const char * c_szHeader, const char * c_szImageName);
-		void __RegisterNormalIconImage(TSkillData & rData, const char * c_szHeader, const char * c_szImageName);
+		void __RegisterGradeIconImage(TSkillData& rData, const char* c_szHeader, const char* c_szImageName);
+		void __RegisterNormalIconImage(TSkillData& rData, const char* c_szHeader, const char* c_szImageName);
 
 	protected:
 		TSkillDataMap m_SkillDataMap;

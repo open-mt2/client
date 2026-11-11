@@ -21,7 +21,7 @@ void CSnowEnvironment::Disable()
 	m_bSnowEnable = FALSE;
 }
 
-void CSnowEnvironment::Update(const D3DXVECTOR3 & c_rv3Pos)
+void CSnowEnvironment::Update(const D3DXVECTOR3& c_rv3Pos)
 {
 	if (!m_bSnowEnable)
 	{
@@ -29,7 +29,7 @@ void CSnowEnvironment::Update(const D3DXVECTOR3 & c_rv3Pos)
 			return;
 	}
 
-	m_v3Center=c_rv3Pos;
+	m_v3Center = c_rv3Pos;
 }
 
 void CSnowEnvironment::Deform()
@@ -40,18 +40,18 @@ void CSnowEnvironment::Deform()
 			return;
 	}
 
-	const D3DXVECTOR3 & c_rv3Pos=m_v3Center;
-	
+	const D3DXVECTOR3& c_rv3Pos = m_v3Center;
+
 	static long s_lLastTime = CTimer::Instance().GetCurrentMillisecond();
 	long lcurTime = CTimer::Instance().GetCurrentMillisecond();
 	float fElapsedTime = float(lcurTime - s_lLastTime) / 1000.0f;
 	s_lLastTime = lcurTime;
 
-	CCamera * pCamera = CCameraManager::Instance().GetCurrentCamera();
+	CCamera* pCamera = CCameraManager::Instance().GetCurrentCamera();
 	if (!pCamera)
 		return;
 
-	const D3DXVECTOR3 & c_rv3View = pCamera->GetView();
+	const D3DXVECTOR3& c_rv3View = pCamera->GetView();
 
 	D3DXVECTOR3 v3ChangedPos = c_rv3View * 3500.0f + c_rv3Pos;
 	v3ChangedPos.z = c_rv3Pos.z;
@@ -59,7 +59,7 @@ void CSnowEnvironment::Deform()
 	std::vector<CSnowParticle*>::iterator itor = m_kVct_pkParticleSnow.begin();
 	for (; itor != m_kVct_pkParticleSnow.end();)
 	{
-		CSnowParticle * pSnow = *itor;
+		CSnowParticle* pSnow = *itor;
 		pSnow->Update(fElapsedTime, v3ChangedPos);
 
 		if (!pSnow->IsActivate())
@@ -78,7 +78,7 @@ void CSnowEnvironment::Deform()
 	{
 		for (int p = 0; p < min(10, m_dwParticleMaxNum - m_kVct_pkParticleSnow.size()); ++p)
 		{
-			CSnowParticle * pSnowParticle = CSnowParticle::New();
+			CSnowParticle* pSnowParticle = CSnowParticle::New();
 			pSnowParticle->Init(v3ChangedPos);
 			m_kVct_pkParticleSnow.push_back(pSnowParticle);
 		}
@@ -106,66 +106,66 @@ void CSnowEnvironment::__ApplyBlur()
 	if (!m_bBlurEnable)
 		return;
 
-//			{
-//				STATEMANAGER.SetRenderState( D3DRS_ALPHABLENDENABLE,   TRUE );
-//				STATEMANAGER.SetRenderState( D3DRS_SRCBLEND,  D3DBLEND_SRCALPHA );
-//				STATEMANAGER.SetRenderState( D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA );
-//				STATEMANAGER.SetRenderState( D3DRS_COLORVERTEX ,TRUE);
-//				STATEMANAGER.SetRenderState( D3DRS_DIFFUSEMATERIALSOURCE , D3DMCS_COLOR1 );
-//				STATEMANAGER.SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
-//				STATEMANAGER.SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
-//				STATEMANAGER.SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
-//				STATEMANAGER.SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
-//				STATEMANAGER.SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
-//				STATEMANAGER.SetTextureStageState(0,  D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
-//				DWORD	alphaColor = 0xFFFFFF | ((DWORD)(0.6f*255.0f) << 24);
-//
-//				BlurVertex V[4] = { BlurVertex(D3DXVECTOR3(0.0f,0.0f,0.0f),1.0f,		alphaColor, 0,0) ,
-//									BlurVertex(D3DXVECTOR3(wTextureSize,0.0f,0.0f),1.0f,		alphaColor, 1,0) , 
-//									BlurVertex(D3DXVECTOR3(0.0f,wTextureSize,0.0f),1.0f,		alphaColor, 0,1) , 
-//									BlurVertex(D3DXVECTOR3(wTextureSize,wTextureSize,0.0f),1.0f,	alphaColor, 1,1) };
-//				//누적 블러 텍스쳐를 찍는다.
-//				STATEMANAGER.SetTexture(0,m_lpAccumTexture);
-//				STATEMANAGER.SetVertexShader( D3DFVF_XYZRHW | D3DFVF_DIFFUSE|D3DFVF_TEX1 );
-//				STATEMANAGER.DrawPrimitiveUP(D3DPT_TRIANGLESTRIP,2,V,sizeof(BlurVertex));
-//			}
-//
-//			{
-//				STATEMANAGER.SetRenderTarget(m_lpAccumRenderTargetSurface, m_lpAccumDepthSurface);
-//
-//				BlurVertex V[4] = { BlurVertex(D3DXVECTOR3(0.0f,0.0f,0.0f),1.0f,		0xFFFFFF, 0,0) ,
-//									BlurVertex(D3DXVECTOR3(wTextureSize,0.0f,0.0f),1.0f,		0xFFFFFF, 1,0) , 
-//									BlurVertex(D3DXVECTOR3(0.0f,wTextureSize,0.0f),1.0f,		0xFFFFFF, 0,1) , 
-//									BlurVertex(D3DXVECTOR3(wTextureSize,wTextureSize,0.0f),1.0f,	0xFFFFFF, 1,1) };
-//
-//				STATEMANAGER.SetTexture(0,m_lpSnowTexture);
-//				STATEMANAGER.SetRenderState( D3DRS_ALPHABLENDENABLE,   FALSE);
-//				STATEMANAGER.SetVertexShader( D3DFVF_XYZRHW | D3DFVF_DIFFUSE|D3DFVF_TEX1 );
-//				STATEMANAGER.DrawPrimitiveUP(D3DPT_TRIANGLESTRIP,2,V,sizeof(BlurVertex));
-//			}
+	//			{
+	//				STATEMANAGER.SetRenderState( D3DRS_ALPHABLENDENABLE,   TRUE );
+	//				STATEMANAGER.SetRenderState( D3DRS_SRCBLEND,  D3DBLEND_SRCALPHA );
+	//				STATEMANAGER.SetRenderState( D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA );
+	//				STATEMANAGER.SetRenderState( D3DRS_COLORVERTEX ,TRUE);
+	//				STATEMANAGER.SetRenderState( D3DRS_DIFFUSEMATERIALSOURCE , D3DMCS_COLOR1 );
+	//				STATEMANAGER.SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+	//				STATEMANAGER.SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+	//				STATEMANAGER.SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
+	//				STATEMANAGER.SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+	//				STATEMANAGER.SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+	//				STATEMANAGER.SetTextureStageState(0,  D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
+	//				DWORD	alphaColor = 0xFFFFFF | ((DWORD)(0.6f*255.0f) << 24);
+	//
+	//				BlurVertex V[4] = { BlurVertex(D3DXVECTOR3(0.0f,0.0f,0.0f),1.0f,		alphaColor, 0,0) ,
+	//									BlurVertex(D3DXVECTOR3(wTextureSize,0.0f,0.0f),1.0f,		alphaColor, 1,0) ,
+	//									BlurVertex(D3DXVECTOR3(0.0f,wTextureSize,0.0f),1.0f,		alphaColor, 0,1) ,
+	//									BlurVertex(D3DXVECTOR3(wTextureSize,wTextureSize,0.0f),1.0f,	alphaColor, 1,1) };
+	//				//누적 블러 텍스쳐를 찍는다.
+	//				STATEMANAGER.SetTexture(0,m_lpAccumTexture);
+	//				STATEMANAGER.SetVertexShader( D3DFVF_XYZRHW | D3DFVF_DIFFUSE|D3DFVF_TEX1 );
+	//				STATEMANAGER.DrawPrimitiveUP(D3DPT_TRIANGLESTRIP,2,V,sizeof(BlurVertex));
+	//			}
+	//
+	//			{
+	//				STATEMANAGER.SetRenderTarget(m_lpAccumRenderTargetSurface, m_lpAccumDepthSurface);
+	//
+	//				BlurVertex V[4] = { BlurVertex(D3DXVECTOR3(0.0f,0.0f,0.0f),1.0f,		0xFFFFFF, 0,0) ,
+	//									BlurVertex(D3DXVECTOR3(wTextureSize,0.0f,0.0f),1.0f,		0xFFFFFF, 1,0) ,
+	//									BlurVertex(D3DXVECTOR3(0.0f,wTextureSize,0.0f),1.0f,		0xFFFFFF, 0,1) ,
+	//									BlurVertex(D3DXVECTOR3(wTextureSize,wTextureSize,0.0f),1.0f,	0xFFFFFF, 1,1) };
+	//
+	//				STATEMANAGER.SetTexture(0,m_lpSnowTexture);
+	//				STATEMANAGER.SetRenderState( D3DRS_ALPHABLENDENABLE,   FALSE);
+	//				STATEMANAGER.SetVertexShader( D3DFVF_XYZRHW | D3DFVF_DIFFUSE|D3DFVF_TEX1 );
+	//				STATEMANAGER.DrawPrimitiveUP(D3DPT_TRIANGLESTRIP,2,V,sizeof(BlurVertex));
+	//			}
 
 	///////////////
 	{
 		ms_lpd3dDevice->SetRenderTarget(0, m_lpOldSurface);
 		ms_lpd3dDevice->SetDepthStencilSurface(m_lpOldDepthStencilSurface);
 
-		STATEMANAGER.SetTexture(0,m_lpSnowTexture);
-		STATEMANAGER.SetRenderState( D3DRS_ALPHABLENDENABLE,   TRUE);
+		STATEMANAGER.SetTexture(0, m_lpSnowTexture);
+		STATEMANAGER.SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 
-		D3DSURFACE_DESC	desc;
+		D3DSURFACE_DESC desc;
 		m_lpOldSurface->GetDesc(&desc);
-		float sx = (float)desc.Width ;
+		float sx = (float)desc.Width;
 		float sy = (float)desc.Height;
-		SAFE_RELEASE( m_lpOldSurface );
-		SAFE_RELEASE( m_lpOldDepthStencilSurface );
+		SAFE_RELEASE(m_lpOldSurface);
+		SAFE_RELEASE(m_lpOldDepthStencilSurface);
 
-		BlurVertex V[4] = {	BlurVertex(D3DXVECTOR3(0.0f,0.0f,0.0f),1.0f	,0xFFFFFF, 0,0) ,
-							BlurVertex(D3DXVECTOR3(sx,0.0f,0.0f),1.0f	,0xFFFFFF, 1,0) , 
-							BlurVertex(D3DXVECTOR3(0.0f,sy,0.0f),1.0f	,0xFFFFFF, 0,1) , 
-							BlurVertex(D3DXVECTOR3(sx,sy,0.0f),1.0f		,0xFFFFFF, 1,1) };
+		BlurVertex V[4] = {BlurVertex(D3DXVECTOR3(0.0f, 0.0f, 0.0f), 1.0f, 0xFFFFFF, 0, 0),
+						   BlurVertex(D3DXVECTOR3(sx, 0.0f, 0.0f), 1.0f, 0xFFFFFF, 1, 0),
+						   BlurVertex(D3DXVECTOR3(0.0f, sy, 0.0f), 1.0f, 0xFFFFFF, 0, 1),
+						   BlurVertex(D3DXVECTOR3(sx, sy, 0.0f), 1.0f, 0xFFFFFF, 1, 1)};
 
 		STATEMANAGER.SetFVF(D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_TEX1);
-		STATEMANAGER.DrawPrimitiveUP(D3DPT_TRIANGLESTRIP,2,V,sizeof(BlurVertex));
+		STATEMANAGER.DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, V, sizeof(BlurVertex));
 	}
 }
 
@@ -181,26 +181,26 @@ void CSnowEnvironment::Render()
 
 	DWORD dwParticleCount = min(m_dwParticleMaxNum, m_kVct_pkParticleSnow.size());
 
-	CCamera * pCamera = CCameraManager::Instance().GetCurrentCamera();
+	CCamera* pCamera = CCameraManager::Instance().GetCurrentCamera();
 	if (!pCamera)
 		return;
 
-	const D3DXVECTOR3 & c_rv3Up = pCamera->GetUp();
-	const D3DXVECTOR3 & c_rv3Cross = pCamera->GetCross();
+	const D3DXVECTOR3& c_rv3Up = pCamera->GetUp();
+	const D3DXVECTOR3& c_rv3Cross = pCamera->GetCross();
 
-	SParticleVertex * pv3Verticies;
+	SParticleVertex* pv3Verticies;
 	if (SUCCEEDED(m_pVB->Lock(0, sizeof(SParticleVertex) * dwParticleCount * 4, (void**)&pv3Verticies, D3DLOCK_DISCARD)))
 	{
 		int i = 0;
 		std::vector<CSnowParticle*>::iterator itor = m_kVct_pkParticleSnow.begin();
 		for (; i < dwParticleCount && itor != m_kVct_pkParticleSnow.end(); ++i, ++itor)
 		{
-			CSnowParticle * pSnow = *itor;
+			CSnowParticle* pSnow = *itor;
 			pSnow->SetCameraVertex(c_rv3Up, c_rv3Cross);
-			pSnow->GetVerticies(pv3Verticies[i*4+0],
-								pv3Verticies[i*4+1],
-								pv3Verticies[i*4+2],
-								pv3Verticies[i*4+3]);
+			pSnow->GetVerticies(pv3Verticies[i * 4 + 0],
+								pv3Verticies[i * 4 + 1],
+								pv3Verticies[i * 4 + 2],
+								pv3Verticies[i * 4 + 3]);
 		}
 		m_pVB->Unlock();
 	}
@@ -208,7 +208,7 @@ void CSnowEnvironment::Render()
 	STATEMANAGER.SaveRenderState(D3DRS_ZWRITEENABLE, FALSE);
 	STATEMANAGER.SaveRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 	STATEMANAGER.SaveRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-	STATEMANAGER.SetRenderState(D3DRS_SRCBLEND,  D3DBLEND_SRCALPHA);
+	STATEMANAGER.SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	STATEMANAGER.SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 	STATEMANAGER.SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
 	STATEMANAGER.SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
@@ -222,7 +222,7 @@ void CSnowEnvironment::Render()
 	STATEMANAGER.SetIndices(m_pIB, 0);
 	STATEMANAGER.SetStreamSource(0, m_pVB, sizeof(SParticleVertex));
 	STATEMANAGER.SetFVF(D3DFVF_XYZ | D3DFVF_TEX1);
-	STATEMANAGER.DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, dwParticleCount*4, 0, dwParticleCount*2);
+	STATEMANAGER.DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, dwParticleCount * 4, 0, dwParticleCount * 2);
 	STATEMANAGER.RestoreRenderState(D3DRS_ALPHABLENDENABLE);
 	STATEMANAGER.RestoreRenderState(D3DRS_ZWRITEENABLE);
 	STATEMANAGER.RestoreRenderState(D3DRS_CULLMODE);
@@ -264,7 +264,14 @@ bool CSnowEnvironment::__CreateGeometry()
 	if (FAILED(m_pIB->Lock(0, sizeof(WORD) * m_dwParticleMaxNum * 6, (VOID**)&dstIndices, 0)))
 		return false;
 
-	const WORD c_awFillRectIndices[6] = { 0, 2, 1, 2, 3, 1, };
+	const WORD c_awFillRectIndices[6] = {
+		0,
+		2,
+		1,
+		2,
+		3,
+		1,
+	};
 	for (int i = 0; i < m_dwParticleMaxNum; ++i)
 	{
 		for (int j = 0; j < 6; ++j)
@@ -287,7 +294,7 @@ bool CSnowEnvironment::Create()
 	if (!__CreateGeometry())
 		return false;
 
-	CGraphicImage * pImage = (CGraphicImage *)CResourceManager::Instance().GetResourcePointer("d:/ymir work/special/snow.dds");
+	CGraphicImage* pImage = (CGraphicImage*)CResourceManager::Instance().GetResourcePointer("d:/ymir work/special/snow.dds");
 	m_pImageInstance = CGraphicImageInstance::New();
 	m_pImageInstance->SetImagePointer(pImage);
 

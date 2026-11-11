@@ -12,13 +12,13 @@ void CActorInstance::SetRotation(float fRot)
 	if (m_pkHorse)
 		m_pkHorse->SetRotation(fRot);
 
-	m_fcurRotation	= fRot;
-	m_rotBegin		= m_fcurRotation;
-	m_rotEnd		= m_fcurRotation;
+	m_fcurRotation = fRot;
+	m_rotBegin = m_fcurRotation;
+	m_rotEnd = m_fcurRotation;
 
-	m_rotBlendTime	= 0.0f;
-	m_rotBeginTime	= 0.0f;
-	m_rotEndTime	= 0.0f;
+	m_rotBlendTime = 0.0f;
+	m_rotBeginTime = 0.0f;
+	m_rotEndTime = 0.0f;
 
 	m_bNeedUpdateCollision = TRUE;
 }
@@ -57,7 +57,7 @@ void CActorInstance::RotationProcess()
 		m_fcurRotation = GetInterpolatedRotation(m_rotBegin, m_rotEnd, (GetLocalTime() - m_rotBeginTime) / m_rotBlendTime);
 		SetAdvancingRotation(m_fcurRotation);
 	}
-	else 
+	else
 	{
 		m_fcurRotation = m_rotEnd;
 	}
@@ -73,7 +73,7 @@ void CActorInstance::RotationProcess()
 	}
 }
 
-void CActorInstance::LookAtFromXY(float x, float y, CActorInstance * pDestInstance)
+void CActorInstance::LookAtFromXY(float x, float y, CActorInstance* pDestInstance)
 {
 	float rot = GetDegreeFromPosition2(pDestInstance->m_x,
 									   pDestInstance->m_y,
@@ -85,7 +85,7 @@ void CActorInstance::LookAtFromXY(float x, float y, CActorInstance * pDestInstan
 
 void CActorInstance::LookAt(float fDirRot)
 {
-	BlendRotation(fDirRot, 0.3f);	
+	BlendRotation(fDirRot, 0.3f);
 }
 
 void CActorInstance::LookAt(float fx, float fy)
@@ -95,14 +95,14 @@ void CActorInstance::LookAt(float fx, float fy)
 	LookAt(rot);
 }
 
-void CActorInstance::LookAt(CActorInstance * pInstance)
+void CActorInstance::LookAt(CActorInstance* pInstance)
 {
 	TPixelPosition PixelPosition;
 	pInstance->GetPixelPosition(&PixelPosition);
 	LookAt(PixelPosition.x, PixelPosition.y);
 }
 
-void CActorInstance::LookWith(CActorInstance * pInstance)
+void CActorInstance::LookWith(CActorInstance* pInstance)
 {
 	BlendRotation(pInstance->m_rotEnd, 0.3f);
 }

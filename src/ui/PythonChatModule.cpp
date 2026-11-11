@@ -3,7 +3,7 @@
 #include <Client/UI/PythonItem.h>
 #include <Client/Game/ItemManager.h>
 
-PyObject * chatSetChatColor(PyObject* poSelf, PyObject* poArgs)
+PyObject* chatSetChatColor(PyObject* poSelf, PyObject* poArgs)
 {
 	int iType;
 	if (!PyTuple_GetInteger(poArgs, 0, &iType))
@@ -25,19 +25,19 @@ PyObject * chatSetChatColor(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildNone();
 }
 
-PyObject * chatClear(PyObject* poSelf, PyObject* poArgs)
+PyObject* chatClear(PyObject* poSelf, PyObject* poArgs)
 {
 	CPythonChat::Instance().Destroy();
 	return Py_BuildNone();
 }
 
-PyObject * chatClose(PyObject* poSelf, PyObject* poArgs)
+PyObject* chatClose(PyObject* poSelf, PyObject* poArgs)
 {
 	CPythonChat::Instance().Close();
 	return Py_BuildNone();
 }
 
-PyObject * chatCreateChatSet(PyObject* poSelf, PyObject* poArgs)
+PyObject* chatCreateChatSet(PyObject* poSelf, PyObject* poArgs)
 {
 	int iID;
 	if (!PyTuple_GetInteger(poArgs, 0, &iID))
@@ -46,7 +46,7 @@ PyObject * chatCreateChatSet(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildValue("i", CPythonChat::Instance().CreateChatSet(iID));
 }
 
-PyObject * chatUpdate(PyObject* poSelf, PyObject* poArgs)
+PyObject* chatUpdate(PyObject* poSelf, PyObject* poArgs)
 {
 	int iID;
 	if (!PyTuple_GetInteger(poArgs, 0, &iID))
@@ -56,7 +56,7 @@ PyObject * chatUpdate(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildNone();
 }
 
-PyObject * chatRender(PyObject* poSelf, PyObject* poArgs)
+PyObject* chatRender(PyObject* poSelf, PyObject* poArgs)
 {
 	int iID;
 	if (!PyTuple_GetInteger(poArgs, 0, &iID))
@@ -66,7 +66,7 @@ PyObject * chatRender(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildNone();
 }
 
-PyObject * chatSetBoardState(PyObject* poSelf, PyObject* poArgs)
+PyObject* chatSetBoardState(PyObject* poSelf, PyObject* poArgs)
 {
 	int iID;
 	if (!PyTuple_GetInteger(poArgs, 0, &iID))
@@ -80,7 +80,7 @@ PyObject * chatSetBoardState(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildNone();
 }
 
-PyObject * chatSetPosition(PyObject* poSelf, PyObject* poArgs)
+PyObject* chatSetPosition(PyObject* poSelf, PyObject* poArgs)
 {
 	int iID;
 	if (!PyTuple_GetInteger(poArgs, 0, &iID))
@@ -97,7 +97,7 @@ PyObject * chatSetPosition(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildNone();
 }
 
-PyObject * chatSetHeight(PyObject* poSelf, PyObject* poArgs)
+PyObject* chatSetHeight(PyObject* poSelf, PyObject* poArgs)
 {
 	int iID;
 	if (!PyTuple_GetInteger(poArgs, 0, &iID))
@@ -111,7 +111,7 @@ PyObject * chatSetHeight(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildNone();
 }
 
-PyObject * chatSetStep(PyObject* poSelf, PyObject* poArgs)
+PyObject* chatSetStep(PyObject* poSelf, PyObject* poArgs)
 {
 	int iID;
 	if (!PyTuple_GetInteger(poArgs, 0, &iID))
@@ -125,7 +125,7 @@ PyObject * chatSetStep(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildNone();
 }
 
-PyObject * chatToggleChatMode(PyObject* poSelf, PyObject* poArgs)
+PyObject* chatToggleChatMode(PyObject* poSelf, PyObject* poArgs)
 {
 	int iID;
 	if (!PyTuple_GetInteger(poArgs, 0, &iID))
@@ -139,7 +139,7 @@ PyObject * chatToggleChatMode(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildNone();
 }
 
-PyObject * chatEnableChatMode(PyObject* poSelf, PyObject* poArgs)
+PyObject* chatEnableChatMode(PyObject* poSelf, PyObject* poArgs)
 {
 	int iID;
 	if (!PyTuple_GetInteger(poArgs, 0, &iID))
@@ -153,7 +153,7 @@ PyObject * chatEnableChatMode(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildNone();
 }
 
-PyObject * chatDisableChatMode(PyObject* poSelf, PyObject* poArgs)
+PyObject* chatDisableChatMode(PyObject* poSelf, PyObject* poArgs)
 {
 	int iID;
 	if (!PyTuple_GetInteger(poArgs, 0, &iID))
@@ -167,7 +167,7 @@ PyObject * chatDisableChatMode(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildNone();
 }
 
-PyObject * chatSetEndPos(PyObject* poSelf, PyObject* poArgs)
+PyObject* chatSetEndPos(PyObject* poSelf, PyObject* poArgs)
 {
 	int iID;
 	if (!PyTuple_GetInteger(poArgs, 0, &iID))
@@ -181,7 +181,7 @@ PyObject * chatSetEndPos(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildNone();
 }
 
-PyObject * chatGetLineCount(PyObject* poSelf, PyObject* poArgs)
+PyObject* chatGetLineCount(PyObject* poSelf, PyObject* poArgs)
 {
 	int iID;
 	if (!PyTuple_GetInteger(poArgs, 0, &iID))
@@ -190,7 +190,7 @@ PyObject * chatGetLineCount(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildValue("i", CPythonChat::Instance().GetLineCount(iID));
 }
 
-PyObject * chatGetVisibleLineCount(PyObject* poSelf, PyObject* poArgs)
+PyObject* chatGetVisibleLineCount(PyObject* poSelf, PyObject* poArgs)
 {
 	int iID;
 	if (!PyTuple_GetInteger(poArgs, 0, &iID))
@@ -199,7 +199,7 @@ PyObject * chatGetVisibleLineCount(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildValue("i", CPythonChat::Instance().GetVisibleLineCount(iID));
 }
 
-PyObject * chatGetLineStep(PyObject* poSelf, PyObject* poArgs)
+PyObject* chatGetLineStep(PyObject* poSelf, PyObject* poArgs)
 {
 	int iID;
 	if (!PyTuple_GetInteger(poArgs, 0, &iID))
@@ -208,13 +208,13 @@ PyObject * chatGetLineStep(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildValue("i", CPythonChat::Instance().GetLineStep(iID));
 }
 
-PyObject * chatAppendChat(PyObject* poSelf, PyObject* poArgs)
+PyObject* chatAppendChat(PyObject* poSelf, PyObject* poArgs)
 {
 	int iType;
 	if (!PyTuple_GetInteger(poArgs, 0, &iType))
 		return Py_BuildException();
 
-	char * szChat;
+	char* szChat;
 	if (!PyTuple_GetString(poArgs, 1, &szChat))
 		return Py_BuildException();
 
@@ -223,13 +223,13 @@ PyObject * chatAppendChat(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildNone();
 }
 
-PyObject * chatAppendChatWithDelay(PyObject* poSelf, PyObject* poArgs)
+PyObject* chatAppendChatWithDelay(PyObject* poSelf, PyObject* poArgs)
 {
 	int iType;
 	if (!PyTuple_GetInteger(poArgs, 0, &iType))
 		return Py_BuildException();
 
-	char * szChat;
+	char* szChat;
 	if (!PyTuple_GetString(poArgs, 1, &szChat))
 		return Py_BuildException();
 
@@ -242,7 +242,7 @@ PyObject * chatAppendChatWithDelay(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildNone();
 }
 
-PyObject * chatArrangeShowingChat(PyObject* poSelf, PyObject* poArgs)
+PyObject* chatArrangeShowingChat(PyObject* poSelf, PyObject* poArgs)
 {
 	int iID;
 	if (!PyTuple_GetInteger(poArgs, 0, &iID))
@@ -253,9 +253,9 @@ PyObject * chatArrangeShowingChat(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildNone();
 }
 
-PyObject * chatIgnoreCharacter(PyObject* poSelf, PyObject* poArgs)
+PyObject* chatIgnoreCharacter(PyObject* poSelf, PyObject* poArgs)
 {
-	char * szName;
+	char* szName;
 	if (!PyTuple_GetString(poArgs, 0, &szName))
 		return Py_BuildException();
 
@@ -264,9 +264,9 @@ PyObject * chatIgnoreCharacter(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildNone();
 }
 
-PyObject * chatIsIgnoreCharacter(PyObject* poSelf, PyObject* poArgs)
+PyObject* chatIsIgnoreCharacter(PyObject* poSelf, PyObject* poArgs)
 {
-	char * szName;
+	char* szName;
 	if (!PyTuple_GetString(poArgs, 0, &szName))
 		return Py_BuildException();
 
@@ -275,9 +275,9 @@ PyObject * chatIsIgnoreCharacter(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildNone();
 }
 
-PyObject * chatCreateWhisper(PyObject* poSelf, PyObject* poArgs)
+PyObject* chatCreateWhisper(PyObject* poSelf, PyObject* poArgs)
 {
-	char * szName;
+	char* szName;
 	if (!PyTuple_GetString(poArgs, 0, &szName))
 		return Py_BuildException();
 
@@ -286,17 +286,17 @@ PyObject * chatCreateWhisper(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildNone();
 }
 
-PyObject * chatAppendWhisper(PyObject* poSelf, PyObject* poArgs)
+PyObject* chatAppendWhisper(PyObject* poSelf, PyObject* poArgs)
 {
 	int iType;
 	if (!PyTuple_GetInteger(poArgs, 0, &iType))
 		return Py_BuildException();
 
-	char * szName;
+	char* szName;
 	if (!PyTuple_GetString(poArgs, 1, &szName))
 		return Py_BuildException();
 
-	char * szChat;
+	char* szChat;
 	if (!PyTuple_GetString(poArgs, 2, &szChat))
 		return Py_BuildException();
 
@@ -304,9 +304,9 @@ PyObject * chatAppendWhisper(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildNone();
 }
 
-PyObject * chatRenderWhisper(PyObject* poSelf, PyObject* poArgs)
+PyObject* chatRenderWhisper(PyObject* poSelf, PyObject* poArgs)
 {
-	char * szName;
+	char* szName;
 	if (!PyTuple_GetString(poArgs, 0, &szName))
 		return Py_BuildException();
 
@@ -318,7 +318,7 @@ PyObject * chatRenderWhisper(PyObject* poSelf, PyObject* poArgs)
 	if (!PyTuple_GetFloat(poArgs, 2, &fy))
 		return Py_BuildException();
 
-	CWhisper * pWhisper;
+	CWhisper* pWhisper;
 	if (CPythonChat::Instance().GetWhisper(szName, &pWhisper))
 	{
 		pWhisper->Render(fx, fy);
@@ -327,9 +327,9 @@ PyObject * chatRenderWhisper(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildNone();
 }
 
-PyObject * chatSetWhisperBoxSize(PyObject* poSelf, PyObject* poArgs)
+PyObject* chatSetWhisperBoxSize(PyObject* poSelf, PyObject* poArgs)
 {
-	char * szName;
+	char* szName;
 	if (!PyTuple_GetString(poArgs, 0, &szName))
 		return Py_BuildException();
 
@@ -341,7 +341,7 @@ PyObject * chatSetWhisperBoxSize(PyObject* poSelf, PyObject* poArgs)
 	if (!PyTuple_GetFloat(poArgs, 2, &fHeight))
 		return Py_BuildException();
 
-	CWhisper * pWhisper;
+	CWhisper* pWhisper;
 	if (CPythonChat::Instance().GetWhisper(szName, &pWhisper))
 	{
 		pWhisper->SetBoxSize(fWidth, fHeight);
@@ -350,9 +350,9 @@ PyObject * chatSetWhisperBoxSize(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildNone();
 }
 
-PyObject * chatSetWhisperPosition(PyObject* poSelf, PyObject* poArgs)
+PyObject* chatSetWhisperPosition(PyObject* poSelf, PyObject* poArgs)
 {
-	char * szName;
+	char* szName;
 	if (!PyTuple_GetString(poArgs, 0, &szName))
 		return Py_BuildException();
 
@@ -360,7 +360,7 @@ PyObject * chatSetWhisperPosition(PyObject* poSelf, PyObject* poArgs)
 	if (!PyTuple_GetFloat(poArgs, 1, &fPosition))
 		return Py_BuildException();
 
-	CWhisper * pWhisper;
+	CWhisper* pWhisper;
 	if (CPythonChat::Instance().GetWhisper(szName, &pWhisper))
 	{
 		pWhisper->SetPosition(fPosition);
@@ -369,9 +369,9 @@ PyObject * chatSetWhisperPosition(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildNone();
 }
 
-PyObject * chatClearWhisper(PyObject* poSelf, PyObject* poArgs)
+PyObject* chatClearWhisper(PyObject* poSelf, PyObject* poArgs)
 {
-	char * szName;
+	char* szName;
 	if (!PyTuple_GetString(poArgs, 0, &szName))
 		return Py_BuildException();
 
@@ -380,9 +380,9 @@ PyObject * chatClearWhisper(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildNone();
 }
 
-PyObject * chatInitWhisper(PyObject* poSelf, PyObject* poArgs)
+PyObject* chatInitWhisper(PyObject* poSelf, PyObject* poArgs)
 {
-	PyObject * poInterface;
+	PyObject* poInterface;
 	if (!PyTuple_GetObject(poArgs, 0, &poInterface))
 		return Py_BuildException();
 
@@ -390,10 +390,10 @@ PyObject * chatInitWhisper(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildNone();
 }
 
-PyObject * chatGetLinkFromHyperlink(PyObject * poSelf, PyObject * poArgs)
+PyObject* chatGetLinkFromHyperlink(PyObject* poSelf, PyObject* poArgs)
 {
-	char * szHyperlink;
-	
+	char* szHyperlink;
+
 	if (!PyTuple_GetString(poArgs, 0, &szHyperlink))
 		return Py_BuildException();
 
@@ -408,29 +408,29 @@ PyObject * chatGetLinkFromHyperlink(PyObject * poSelf, PyObject * poArgs)
 		if (results.size() < 6)
 			return Py_BuildValue("s", "");
 
-		CItemData * pItemData = NULL;
+		CItemData* pItemData = NULL;
 
 		if (CItemManager::Instance().GetItemDataPointer(htoi(results[1].c_str()), &pItemData))
 		{
-			char buf[1024] = { 0 };
+			char buf[1024] = {0};
 			char itemlink[256];
 			int len;
 			bool isAttr = false;
 
-			len = snprintf(itemlink, sizeof(itemlink), "item:%x:%x:%x:%x:%x", 
-					htoi(results[1].c_str()),
-					htoi(results[2].c_str()),
-					htoi(results[3].c_str()),
-					htoi(results[4].c_str()),
-					htoi(results[5].c_str()));
+			len = snprintf(itemlink, sizeof(itemlink), "item:%x:%x:%x:%x:%x",
+						   htoi(results[1].c_str()),
+						   htoi(results[2].c_str()),
+						   htoi(results[3].c_str()),
+						   htoi(results[4].c_str()),
+						   htoi(results[5].c_str()));
 
 			if (results.size() >= 8)
 			{
 				for (int i = 6; i < results.size(); i += 2)
 				{
-					len += snprintf(itemlink + len, sizeof(itemlink) - len, ":%x:%d", 
-							htoi(results[i].c_str()),
-							atoi(results[i+1].c_str()));
+					len += snprintf(itemlink + len, sizeof(itemlink) - len, ":%x:%d",
+									htoi(results[i].c_str()),
+									atoi(results[i + 1].c_str()));
 					isAttr = true;
 				}
 			}
@@ -450,71 +450,71 @@ PyObject * chatGetLinkFromHyperlink(PyObject * poSelf, PyObject * poArgs)
 
 void initChat()
 {
-	static PyMethodDef s_methods[] = 
-	{
-		{ "SetChatColor",			chatSetChatColor,			METH_VARARGS },
-		{ "Clear",					chatClear,					METH_VARARGS },
-		{ "Close",					chatClose,					METH_VARARGS },
+	static PyMethodDef s_methods[] =
+		{
+			{"SetChatColor", chatSetChatColor, METH_VARARGS},
+			{"Clear", chatClear, METH_VARARGS},
+			{"Close", chatClose, METH_VARARGS},
 
-		{ "CreateChatSet",			chatCreateChatSet,			METH_VARARGS },
-		{ "Update",					chatUpdate,					METH_VARARGS },
-		{ "Render",					chatRender,					METH_VARARGS },
+			{"CreateChatSet", chatCreateChatSet, METH_VARARGS},
+			{"Update", chatUpdate, METH_VARARGS},
+			{"Render", chatRender, METH_VARARGS},
 
-		{ "SetBoardState",			chatSetBoardState,			METH_VARARGS },
-		{ "SetPosition",			chatSetPosition,			METH_VARARGS },
-		{ "SetHeight",				chatSetHeight,				METH_VARARGS },
-		{ "SetStep",				chatSetStep,				METH_VARARGS },
-		{ "ToggleChatMode",			chatToggleChatMode,			METH_VARARGS },
-		{ "EnableChatMode",			chatEnableChatMode,			METH_VARARGS },
-		{ "DisableChatMode",		chatDisableChatMode,		METH_VARARGS },
-		{ "SetEndPos",				chatSetEndPos,				METH_VARARGS },
+			{"SetBoardState", chatSetBoardState, METH_VARARGS},
+			{"SetPosition", chatSetPosition, METH_VARARGS},
+			{"SetHeight", chatSetHeight, METH_VARARGS},
+			{"SetStep", chatSetStep, METH_VARARGS},
+			{"ToggleChatMode", chatToggleChatMode, METH_VARARGS},
+			{"EnableChatMode", chatEnableChatMode, METH_VARARGS},
+			{"DisableChatMode", chatDisableChatMode, METH_VARARGS},
+			{"SetEndPos", chatSetEndPos, METH_VARARGS},
 
-		{ "GetLineCount",			chatGetLineCount,			METH_VARARGS },
-		{ "GetVisibleLineCount",	chatGetVisibleLineCount,	METH_VARARGS },
-		{ "GetLineStep",			chatGetLineStep,			METH_VARARGS },
+			{"GetLineCount", chatGetLineCount, METH_VARARGS},
+			{"GetVisibleLineCount", chatGetVisibleLineCount, METH_VARARGS},
+			{"GetLineStep", chatGetLineStep, METH_VARARGS},
 
-		// Chat
-		{ "AppendChat",				chatAppendChat,				METH_VARARGS },
-		{ "AppendChatWithDelay",	chatAppendChatWithDelay,	METH_VARARGS },
-		{ "ArrangeShowingChat",		chatArrangeShowingChat,		METH_VARARGS },
+			// Chat
+			{"AppendChat", chatAppendChat, METH_VARARGS},
+			{"AppendChatWithDelay", chatAppendChatWithDelay, METH_VARARGS},
+			{"ArrangeShowingChat", chatArrangeShowingChat, METH_VARARGS},
 
-		// Ignore
-		{ "IgnoreCharacter",		chatIgnoreCharacter,		METH_VARARGS },
-		{ "IsIgnoreCharacter",		chatIsIgnoreCharacter,		METH_VARARGS },
+			// Ignore
+			{"IgnoreCharacter", chatIgnoreCharacter, METH_VARARGS},
+			{"IsIgnoreCharacter", chatIsIgnoreCharacter, METH_VARARGS},
 
-		// Whisper
-		{ "CreateWhisper",			chatCreateWhisper,			METH_VARARGS },
-		{ "AppendWhisper",			chatAppendWhisper,			METH_VARARGS },
-		{ "RenderWhisper",			chatRenderWhisper,			METH_VARARGS },
-		{ "SetWhisperBoxSize",		chatSetWhisperBoxSize,		METH_VARARGS },
-		{ "SetWhisperPosition",		chatSetWhisperPosition,		METH_VARARGS },
-		{ "ClearWhisper",			chatClearWhisper,			METH_VARARGS },
-		{ "InitWhisper",			chatInitWhisper,			METH_VARARGS },
+			// Whisper
+			{"CreateWhisper", chatCreateWhisper, METH_VARARGS},
+			{"AppendWhisper", chatAppendWhisper, METH_VARARGS},
+			{"RenderWhisper", chatRenderWhisper, METH_VARARGS},
+			{"SetWhisperBoxSize", chatSetWhisperBoxSize, METH_VARARGS},
+			{"SetWhisperPosition", chatSetWhisperPosition, METH_VARARGS},
+			{"ClearWhisper", chatClearWhisper, METH_VARARGS},
+			{"InitWhisper", chatInitWhisper, METH_VARARGS},
 
-		// Link
-		{ "GetLinkFromHyperlink",	chatGetLinkFromHyperlink,	METH_VARARGS },
+			// Link
+			{"GetLinkFromHyperlink", chatGetLinkFromHyperlink, METH_VARARGS},
 
-		{ NULL,						NULL,						0 },
-	};
+			{NULL, NULL, 0},
+		};
 
-	PyObject * poModule = Py_InitModule("chat", s_methods);
+	PyObject* poModule = Py_InitModule("chat", s_methods);
 
-	PyModule_AddIntConstant(poModule, "CHAT_TYPE_TALKING",		CHAT_TYPE_TALKING);
-	PyModule_AddIntConstant(poModule, "CHAT_TYPE_INFO",			CHAT_TYPE_INFO);
-	PyModule_AddIntConstant(poModule, "CHAT_TYPE_NOTICE",		CHAT_TYPE_NOTICE);
-	PyModule_AddIntConstant(poModule, "CHAT_TYPE_PARTY",		CHAT_TYPE_PARTY);
-	PyModule_AddIntConstant(poModule, "CHAT_TYPE_GUILD",		CHAT_TYPE_GUILD);
-	PyModule_AddIntConstant(poModule, "CHAT_TYPE_COMMAND",		CHAT_TYPE_COMMAND);
-	PyModule_AddIntConstant(poModule, "CHAT_TYPE_SHOUT",		CHAT_TYPE_SHOUT);
-	PyModule_AddIntConstant(poModule, "CHAT_TYPE_WHISPER",		CHAT_TYPE_WHISPER);
-	PyModule_AddIntConstant(poModule, "WHISPER_TYPE_CHAT",		CPythonChat::WHISPER_TYPE_CHAT);
-	PyModule_AddIntConstant(poModule, "WHISPER_TYPE_SYSTEM",	CPythonChat::WHISPER_TYPE_SYSTEM);
-	PyModule_AddIntConstant(poModule, "WHISPER_TYPE_GM",		CPythonChat::WHISPER_TYPE_GM);
+	PyModule_AddIntConstant(poModule, "CHAT_TYPE_TALKING", CHAT_TYPE_TALKING);
+	PyModule_AddIntConstant(poModule, "CHAT_TYPE_INFO", CHAT_TYPE_INFO);
+	PyModule_AddIntConstant(poModule, "CHAT_TYPE_NOTICE", CHAT_TYPE_NOTICE);
+	PyModule_AddIntConstant(poModule, "CHAT_TYPE_PARTY", CHAT_TYPE_PARTY);
+	PyModule_AddIntConstant(poModule, "CHAT_TYPE_GUILD", CHAT_TYPE_GUILD);
+	PyModule_AddIntConstant(poModule, "CHAT_TYPE_COMMAND", CHAT_TYPE_COMMAND);
+	PyModule_AddIntConstant(poModule, "CHAT_TYPE_SHOUT", CHAT_TYPE_SHOUT);
+	PyModule_AddIntConstant(poModule, "CHAT_TYPE_WHISPER", CHAT_TYPE_WHISPER);
+	PyModule_AddIntConstant(poModule, "WHISPER_TYPE_CHAT", CPythonChat::WHISPER_TYPE_CHAT);
+	PyModule_AddIntConstant(poModule, "WHISPER_TYPE_SYSTEM", CPythonChat::WHISPER_TYPE_SYSTEM);
+	PyModule_AddIntConstant(poModule, "WHISPER_TYPE_GM", CPythonChat::WHISPER_TYPE_GM);
 
-	PyModule_AddIntConstant(poModule, "BOARD_STATE_VIEW",		CPythonChat::BOARD_STATE_VIEW);
-	PyModule_AddIntConstant(poModule, "BOARD_STATE_EDIT",		CPythonChat::BOARD_STATE_EDIT);
-	PyModule_AddIntConstant(poModule, "BOARD_STATE_LOG",		CPythonChat::BOARD_STATE_LOG);
+	PyModule_AddIntConstant(poModule, "BOARD_STATE_VIEW", CPythonChat::BOARD_STATE_VIEW);
+	PyModule_AddIntConstant(poModule, "BOARD_STATE_EDIT", CPythonChat::BOARD_STATE_EDIT);
+	PyModule_AddIntConstant(poModule, "BOARD_STATE_LOG", CPythonChat::BOARD_STATE_LOG);
 
-	PyModule_AddIntConstant(poModule, "CHAT_SET_CHAT_WINDOW",	0);
-	PyModule_AddIntConstant(poModule, "CHAT_SET_LOG_WINDOW",	1);
+	PyModule_AddIntConstant(poModule, "CHAT_SET_CHAT_WINDOW", 0);
+	PyModule_AddIntConstant(poModule, "CHAT_SET_LOG_WINDOW", 1);
 }

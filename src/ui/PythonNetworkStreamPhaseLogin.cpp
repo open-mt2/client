@@ -27,10 +27,9 @@ void CPythonNetworkStream::LoginPhase()
 				return;
 			break;
 
-
 		case HEADER_GC_LOGIN_FAILURE:
 			if (__RecvLoginFailurePacket())
-				return;		
+				return;
 			break;
 
 		case HEADER_GC_EMPIRE:
@@ -56,7 +55,6 @@ void CPythonNetworkStream::LoginPhase()
 			if (__RecvNEWCIBNPasspodFailurePacket())
 				return;
 			break;
-
 
 		case HEADER_GC_LOGIN_KEY:
 			if (__RecvLoginKeyPacket())
@@ -86,7 +84,7 @@ void CPythonNetworkStream::SetLoginPhase()
 	Tracen("## Network - Login Phase ##");
 	Tracen("");
 
-	m_strPhase = "Login";	
+	m_strPhase = "Login";
 
 	m_phaseProcessFunc.Set(this, &CPythonNetworkStream::LoginPhase);
 	m_phaseLeaveFunc.Set(this, &CPythonNetworkStream::__LeaveLoginPhase);
@@ -102,7 +100,7 @@ void CPythonNetworkStream::SetLoginPhase()
 
 		// 비밀번호를 메모리에 계속 갖고 있는 문제가 있어서, 사용 즉시 날리는 것으로 변경
 		ClearLoginInfo();
-		CAccountConnector & rkAccountConnector = CAccountConnector::Instance();
+		CAccountConnector& rkAccountConnector = CAccountConnector::Instance();
 		rkAccountConnector.ClearLoginInfo();
 	}
 	else
@@ -114,7 +112,7 @@ void CPythonNetworkStream::SetLoginPhase()
 
 		// 비밀번호를 메모리에 계속 갖고 있는 문제가 있어서, 사용 즉시 날리는 것으로 변경
 		ClearLoginInfo();
-		CAccountConnector & rkAccountConnector = CAccountConnector::Instance();
+		CAccountConnector& rkAccountConnector = CAccountConnector::Instance();
 		rkAccountConnector.ClearLoginInfo();
 
 		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_LOGIN], "OnLoginStart", Py_BuildValue("()"));
@@ -129,7 +127,7 @@ bool CPythonNetworkStream::__RecvEmpirePacket()
 	if (!Recv(sizeof(kPacketEmpire), &kPacketEmpire))
 		return false;
 
-	m_dwEmpireID=kPacketEmpire.bEmpire;
+	m_dwEmpireID = kPacketEmpire.bEmpire;
 	return true;
 }
 
@@ -138,24 +136,24 @@ bool CPythonNetworkStream::__RecvLoginSuccessPacket3()
 	TPacketGCLoginSuccess3 kPacketLoginSuccess;
 
 	if (!Recv(sizeof(kPacketLoginSuccess), &kPacketLoginSuccess))
-		return false;	
-	
-	for (int i = 0; i<PLAYER_PER_ACCOUNT3; ++i)
+		return false;
+
+	for (int i = 0; i < PLAYER_PER_ACCOUNT3; ++i)
 	{
-		m_akSimplePlayerInfo[i]=kPacketLoginSuccess.akSimplePlayerInformation[i];
-		m_adwGuildID[i]=kPacketLoginSuccess.guild_id[i];
-		m_astrGuildName[i]=kPacketLoginSuccess.guild_name[i];
+		m_akSimplePlayerInfo[i] = kPacketLoginSuccess.akSimplePlayerInformation[i];
+		m_adwGuildID[i] = kPacketLoginSuccess.guild_id[i];
+		m_astrGuildName[i] = kPacketLoginSuccess.guild_name[i];
 	}
 
-	m_kMarkAuth.m_dwHandle=kPacketLoginSuccess.handle;
-	m_kMarkAuth.m_dwRandomKey=kPacketLoginSuccess.random_key;	
+	m_kMarkAuth.m_dwHandle = kPacketLoginSuccess.handle;
+	m_kMarkAuth.m_dwRandomKey = kPacketLoginSuccess.random_key;
 
 	if (__DirectEnterMode_IsSet())
 	{
 	}
 	else
 	{
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_SELECT], "Refresh", Py_BuildValue("()"));		
+		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_SELECT], "Refresh", Py_BuildValue("()"));
 	}
 
 	return true;
@@ -166,29 +164,28 @@ bool CPythonNetworkStream::__RecvLoginSuccessPacket4()
 	TPacketGCLoginSuccess4 kPacketLoginSuccess;
 
 	if (!Recv(sizeof(kPacketLoginSuccess), &kPacketLoginSuccess))
-		return false;	
-	
-	for (int i = 0; i<PLAYER_PER_ACCOUNT4; ++i)
+		return false;
+
+	for (int i = 0; i < PLAYER_PER_ACCOUNT4; ++i)
 	{
-		m_akSimplePlayerInfo[i]=kPacketLoginSuccess.akSimplePlayerInformation[i];
-		m_adwGuildID[i]=kPacketLoginSuccess.guild_id[i];
-		m_astrGuildName[i]=kPacketLoginSuccess.guild_name[i];
+		m_akSimplePlayerInfo[i] = kPacketLoginSuccess.akSimplePlayerInformation[i];
+		m_adwGuildID[i] = kPacketLoginSuccess.guild_id[i];
+		m_astrGuildName[i] = kPacketLoginSuccess.guild_name[i];
 	}
 
-	m_kMarkAuth.m_dwHandle=kPacketLoginSuccess.handle;
-	m_kMarkAuth.m_dwRandomKey=kPacketLoginSuccess.random_key;	
+	m_kMarkAuth.m_dwHandle = kPacketLoginSuccess.handle;
+	m_kMarkAuth.m_dwRandomKey = kPacketLoginSuccess.random_key;
 
 	if (__DirectEnterMode_IsSet())
 	{
 	}
 	else
 	{
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_SELECT], "Refresh", Py_BuildValue("()"));		
+		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_SELECT], "Refresh", Py_BuildValue("()"));
 	}
 
 	return true;
 }
-
 
 void CPythonNetworkStream::OnConnectFailure()
 {
@@ -198,10 +195,9 @@ void CPythonNetworkStream::OnConnectFailure()
 	}
 	else
 	{
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_LOGIN], "OnConnectFailure", Py_BuildValue("()"));	
+		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_LOGIN], "OnConnectFailure", Py_BuildValue("()"));
 	}
 }
-
 
 bool CPythonNetworkStream::__RecvLoginFailurePacket()
 {
@@ -219,8 +215,8 @@ bool CPythonNetworkStream::__RecvLoginFailurePacket()
 bool CPythonNetworkStream::SendDirectEnterPacket(const char* c_szID, const char* c_szPassword, UINT uChrSlot)
 {
 	TPacketCGDirectEnter kPacketDirectEnter;
-	kPacketDirectEnter.bHeader=HEADER_CG_DIRECT_ENTER;
-	kPacketDirectEnter.index=uChrSlot;
+	kPacketDirectEnter.bHeader = HEADER_CG_DIRECT_ENTER;
+	kPacketDirectEnter.index = uChrSlot;
 	strncpy(kPacketDirectEnter.login, c_szID, ID_MAX_NUM);
 	strncpy(kPacketDirectEnter.passwd, c_szPassword, PASS_MAX_NUM);
 
@@ -238,11 +234,11 @@ bool CPythonNetworkStream::SendLoginPacket(const char* c_szName, const char* c_s
 	TPacketCGLogin LoginPacket;
 	LoginPacket.header = HEADER_CG_LOGIN;
 
-	strncpy(LoginPacket.name, c_szName, sizeof(LoginPacket.name)-1);
-	strncpy(LoginPacket.pwd, c_szPassword, sizeof(LoginPacket.pwd)-1);
+	strncpy(LoginPacket.name, c_szName, sizeof(LoginPacket.name) - 1);
+	strncpy(LoginPacket.pwd, c_szPassword, sizeof(LoginPacket.pwd) - 1);
 
-	LoginPacket.name[ID_MAX_NUM]='\0';
-	LoginPacket.pwd[PASS_MAX_NUM]='\0';
+	LoginPacket.name[ID_MAX_NUM] = '\0';
+	LoginPacket.pwd[PASS_MAX_NUM] = '\0';
 
 	if (!Send(sizeof(LoginPacket), &LoginPacket))
 	{
@@ -253,14 +249,14 @@ bool CPythonNetworkStream::SendLoginPacket(const char* c_szName, const char* c_s
 	return SendSequence();
 }
 
-bool CPythonNetworkStream::SendLoginPacketNew(const char * c_szName, const char * c_szPassword)
+bool CPythonNetworkStream::SendLoginPacketNew(const char* c_szName, const char* c_szPassword)
 {
 	TPacketCGLogin2 LoginPacket;
 	LoginPacket.header = HEADER_CG_LOGIN2;
 	LoginPacket.login_key = m_dwLoginKey;
 
-	strncpy(LoginPacket.name, c_szName, sizeof(LoginPacket.name)-1);
-	LoginPacket.name[ID_MAX_NUM]='\0';
+	strncpy(LoginPacket.name, c_szName, sizeof(LoginPacket.name) - 1);
+	LoginPacket.name[ID_MAX_NUM] = '\0';
 
 	extern DWORD g_adwEncryptKey[4];
 	extern DWORD g_adwDecryptKey[4];
@@ -290,11 +286,11 @@ bool CPythonNetworkStream::__RecvRunupMatrixQuizPacket()
 	if (!Recv(sizeof(TPacketGCRunupMatrixQuiz), &kMatrixQuizPacket))
 		return false;
 
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_LOGIN], "BINARY_OnRunupMatrixQuiz", Py_BuildValue("(s)", kMatrixQuizPacket.szQuiz));	
+	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_LOGIN], "BINARY_OnRunupMatrixQuiz", Py_BuildValue("(s)", kMatrixQuizPacket.szQuiz));
 	return true;
 }
 
-bool CPythonNetworkStream::SendRunupMatrixAnswerPacket(const char * c_szMatrixCardString)
+bool CPythonNetworkStream::SendRunupMatrixAnswerPacket(const char* c_szMatrixCardString)
 {
 	TPacketCGRunupMatrixAnswer answerPacket;
 	answerPacket.bHeader = HEADER_CG_RUNUP_MATRIX_ANSWER;
@@ -314,7 +310,7 @@ bool CPythonNetworkStream::__RecvNEWCIBNPasspodRequestPacket()
 	if (!Recv(sizeof(kRequestPacket), &kRequestPacket))
 		return false;
 
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_LOGIN], "BINARY_OnNEWCIBNPasspodRequest", Py_BuildValue("()"));	
+	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_LOGIN], "BINARY_OnNEWCIBNPasspodRequest", Py_BuildValue("()"));
 	return true;
 }
 
@@ -324,17 +320,16 @@ bool CPythonNetworkStream::__RecvNEWCIBNPasspodFailurePacket()
 	if (!Recv(sizeof(kFailurePacket), &kFailurePacket))
 		return false;
 
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_LOGIN], "BINARY_OnNEWCIBNPasspodFailure", Py_BuildValue("()"));	
+	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_LOGIN], "BINARY_OnNEWCIBNPasspodFailure", Py_BuildValue("()"));
 	return true;
 }
 
-
-bool CPythonNetworkStream::SendNEWCIBNPasspodAnswerPacket(const char * answer)
+bool CPythonNetworkStream::SendNEWCIBNPasspodAnswerPacket(const char* answer)
 {
 	TPacketCGNEWCIBNPasspodAnswer answerPacket;
 	answerPacket.bHeader = HEADER_CG_NEWCIBN_PASSPOD_ANSWER;
 	strncpy(answerPacket.szAnswer, answer, NEWCIBN_PASSPOD_ANSWER_MAX_LEN);
-	answerPacket.szAnswer[NEWCIBN_PASSPOD_ANSWER_MAX_LEN] = '\0';	
+	answerPacket.szAnswer[NEWCIBN_PASSPOD_ANSWER_MAX_LEN] = '\0';
 	if (!Send(sizeof(answerPacket), &answerPacket))
 	{
 		TraceError("SendNEWCIBNPasspodAnswerPacket");
@@ -343,12 +338,12 @@ bool CPythonNetworkStream::SendNEWCIBNPasspodAnswerPacket(const char * answer)
 	return SendSequence();
 }
 
-bool CPythonNetworkStream::SendChinaMatrixCardPacket(const char * c_szMatrixCardString)
+bool CPythonNetworkStream::SendChinaMatrixCardPacket(const char* c_szMatrixCardString)
 {
 	TPacketCGChinaMatrixCard MatrixCardPacket;
 	MatrixCardPacket.bHeader = HEADER_CG_CHINA_MATRIX_CARD;
 	strncpy(MatrixCardPacket.szAnswer, c_szMatrixCardString, CHINA_MATRIX_ANSWER_MAX_LEN);
-	MatrixCardPacket.szAnswer[CHINA_MATRIX_ANSWER_MAX_LEN]='\0';
+	MatrixCardPacket.szAnswer[CHINA_MATRIX_ANSWER_MAX_LEN] = '\0';
 
 	if (!Send(sizeof(MatrixCardPacket), &MatrixCardPacket))
 	{
@@ -370,14 +365,14 @@ bool CPythonNetworkStream::__RecvChinaMatrixCardPacket()
 	if (!Recv(sizeof(TPacketGCChinaMatrixCard), &kMatrixCardPacket))
 		return false;
 
-	PyObject * pyValue = Py_BuildValue("(iiiiiiii)",	ROW(kMatrixCardPacket.dwRows, 0),
-														ROW(kMatrixCardPacket.dwRows, 1),
-														ROW(kMatrixCardPacket.dwRows, 2),
-														ROW(kMatrixCardPacket.dwRows, 3),
-														COL(kMatrixCardPacket.dwCols, 0),
-														COL(kMatrixCardPacket.dwCols, 1),
-														COL(kMatrixCardPacket.dwCols, 2),
-														COL(kMatrixCardPacket.dwCols, 3));
+	PyObject* pyValue = Py_BuildValue("(iiiiiiii)", ROW(kMatrixCardPacket.dwRows, 0),
+									  ROW(kMatrixCardPacket.dwRows, 1),
+									  ROW(kMatrixCardPacket.dwRows, 2),
+									  ROW(kMatrixCardPacket.dwRows, 3),
+									  COL(kMatrixCardPacket.dwCols, 0),
+									  COL(kMatrixCardPacket.dwCols, 1),
+									  COL(kMatrixCardPacket.dwCols, 2),
+									  COL(kMatrixCardPacket.dwCols, 3));
 	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_LOGIN], "OnMatrixCard", pyValue);
 	return true;
 }

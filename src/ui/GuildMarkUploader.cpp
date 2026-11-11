@@ -12,7 +12,7 @@
 #else
 
 CGuildMarkUploader::CGuildMarkUploader()
- : m_pbySymbolBuf(NULL)
+	: m_pbySymbolBuf(NULL)
 {
 	SetRecvBufferSize(1024);
 	SetSendBufferSize(1024);
@@ -38,7 +38,7 @@ bool CGuildMarkUploader::__Save(const char* c_szFileName)
 {
 	// The uploader must not write the mark image (see the original note);
 	// saving is CGuildMarkImage's job.
-	(void) c_szFileName;
+	(void)c_szFileName;
 	return true;
 }
 
@@ -50,19 +50,19 @@ bool CGuildMarkUploader::__Load(const char* c_szFileName, UINT* peError)
 
 	if (!LoadImageFileBGRA(c_szFileName, &width, &height, pixels))
 	{
-		*peError=ERROR_LOAD;
+		*peError = ERROR_LOAD;
 		return false;
 	}
 
 	if (width != SGuildMark::WIDTH)
 	{
-		*peError=ERROR_WIDTH;
+		*peError = ERROR_WIDTH;
 		return false;
 	}
 
 	if (height != SGuildMark::HEIGHT)
 	{
-		*peError=ERROR_HEIGHT;
+		*peError = ERROR_HEIGHT;
 		return false;
 	}
 
@@ -78,33 +78,33 @@ bool CGuildMarkUploader::__LoadSymbol(const char* c_szFileName, UINT* peError)
 
 	if (!GetImageFileInfo(c_szFileName, &width, &height, &format))
 	{
-		*peError=ERROR_LOAD;
+		*peError = ERROR_LOAD;
 		return false;
 	}
 	if (width != 64)
 	{
-		*peError=ERROR_WIDTH;
+		*peError = ERROR_WIDTH;
 		return false;
 	}
 	if (height != 128)
 	{
-		*peError=ERROR_HEIGHT;
+		*peError = ERROR_HEIGHT;
 		return false;
 	}
 
 	/////
 
-	FILE * file = fopen(c_szFileName, "rb");
+	FILE* file = fopen(c_szFileName, "rb");
 	if (!file)
 	{
-		*peError=ERROR_LOAD;
+		*peError = ERROR_LOAD;
 	}
 
 	fseek(file, 0, SEEK_END);
 	m_dwSymbolBufSize = ftell(file);
 	fseek(file, 0, SEEK_SET);
 
-	m_pbySymbolBuf = new BYTE [m_dwSymbolBufSize];
+	m_pbySymbolBuf = new BYTE[m_dwSymbolBufSize];
 	fread(m_pbySymbolBuf, m_dwSymbolBufSize, 1, file);
 
 	fclose(file);
@@ -123,21 +123,21 @@ bool CGuildMarkUploader::Connect(const CNetworkAddress& c_rkNetAddr, DWORD dwHan
 
 	if (!CNetworkStream::Connect(c_rkNetAddr))
 	{
-		*peError=ERROR_CONNECT;
+		*peError = ERROR_CONNECT;
 		return false;
 	}
 
-	m_dwSendType=SEND_TYPE_MARK;
-	m_dwHandle=dwHandle;
-	m_dwRandomKey=dwRandomKey;
-	m_dwGuildID=dwGuildID;
+	m_dwSendType = SEND_TYPE_MARK;
+	m_dwHandle = dwHandle;
+	m_dwRandomKey = dwRandomKey;
+	m_dwGuildID = dwGuildID;
 
 	if (!__Load(c_szFileName, peError))
 		return false;
-		
-	//if (!__Save(CGraphicMarkInstance::GetImageFileName().c_str()))
+
+	// if (!__Save(CGraphicMarkInstance::GetImageFileName().c_str()))
 	//	return false;
-	//CGraphicMarkInstance::ReloadImageFile();
+	// CGraphicMarkInstance::ReloadImageFile();
 	return true;
 }
 
@@ -145,18 +145,18 @@ bool CGuildMarkUploader::ConnectToSendSymbol(const CNetworkAddress& c_rkNetAddr,
 {
 	__OfflineState_Set();
 	SetRecvBufferSize(1024);
-	SetSendBufferSize(64*1024);
+	SetSendBufferSize(64 * 1024);
 
 	if (!CNetworkStream::Connect(c_rkNetAddr))
 	{
-		*peError=ERROR_CONNECT;
+		*peError = ERROR_CONNECT;
 		return false;
 	}
 
-	m_dwSendType=SEND_TYPE_SYMBOL;
-	m_dwHandle=dwHandle;
-	m_dwRandomKey=dwRandomKey;
-	m_dwGuildID=dwGuildID;
+	m_dwSendType = SEND_TYPE_SYMBOL;
+	m_dwHandle = dwHandle;
+	m_dwRandomKey = dwRandomKey;
+	m_dwGuildID = dwGuildID;
 
 	if (!__LoadSymbol(c_szFileName, peError))
 		return false;
@@ -231,15 +231,14 @@ void CGuildMarkUploader::__OfflineState_Set()
 
 void CGuildMarkUploader::__CompleteState_Set()
 {
-	m_eState=STATE_COMPLETE;
+	m_eState = STATE_COMPLETE;
 
 	__OfflineState_Set();
 }
 
-
 void CGuildMarkUploader::__LoginState_Set()
 {
-	m_eState=STATE_LOGIN;
+	m_eState = STATE_LOGIN;
 }
 
 bool CGuildMarkUploader::__LoginState_Process()
@@ -259,8 +258,8 @@ bool CGuildMarkUploader::__LoginState_Process()
 bool CGuildMarkUploader::__SendMarkPacket()
 {
 	TPacketCGMarkUpload kPacketMarkUpload;
-	kPacketMarkUpload.header=HEADER_CG_MARK_UPLOAD;
-	kPacketMarkUpload.gid=m_dwGuildID;
+	kPacketMarkUpload.header = HEADER_CG_MARK_UPLOAD;
+	kPacketMarkUpload.gid = m_dwGuildID;
 
 	assert(sizeof(kPacketMarkUpload.image) == sizeof(m_kMark.m_apxBuf));
 	memcpy(kPacketMarkUpload.image, m_kMark.m_apxBuf, sizeof(kPacketMarkUpload.image));
@@ -276,9 +275,9 @@ bool CGuildMarkUploader::__SendSymbolPacket()
 		return false;
 
 	TPacketCGSymbolUpload kPacketSymbolUpload;
-	kPacketSymbolUpload.header=HEADER_CG_GUILD_SYMBOL_UPLOAD;
-	kPacketSymbolUpload.handle=m_dwGuildID;
-	kPacketSymbolUpload.size=sizeof(TPacketCGSymbolUpload) + m_dwSymbolBufSize;
+	kPacketSymbolUpload.header = HEADER_CG_GUILD_SYMBOL_UPLOAD;
+	kPacketSymbolUpload.handle = m_dwGuildID;
+	kPacketSymbolUpload.size = sizeof(TPacketCGSymbolUpload) + m_dwSymbolBufSize;
 
 	if (!Send(sizeof(TPacketCGSymbolUpload), &kPacketSymbolUpload))
 		return false;
@@ -301,7 +300,7 @@ bool CGuildMarkUploader::__LoginState_RecvPhase()
 	if (!Recv(sizeof(kPacketPhase), &kPacketPhase))
 		return false;
 
-	if (kPacketPhase.phase==PHASE_LOGIN)
+	if (kPacketPhase.phase == PHASE_LOGIN)
 	{
 		if (SEND_TYPE_MARK == m_dwSendType)
 		{
@@ -326,9 +325,9 @@ bool CGuildMarkUploader::__LoginState_RecvHandshake()
 
 	{
 		TPacketCGMarkLogin kPacketMarkLogin;
-		kPacketMarkLogin.header=HEADER_CG_MARK_LOGIN;
-		kPacketMarkLogin.handle=m_dwHandle;
-		kPacketMarkLogin.random_key=m_dwRandomKey;
+		kPacketMarkLogin.header = HEADER_CG_MARK_LOGIN;
+		kPacketMarkLogin.handle = m_dwHandle;
+		kPacketMarkLogin.random_key = m_dwRandomKey;
 		if (!Send(sizeof(kPacketMarkLogin), &kPacketMarkLogin))
 			return false;
 	}
@@ -357,7 +356,7 @@ bool CGuildMarkUploader::__AnalyzePacket(UINT uHeader, UINT uPacketSize, bool (C
 	if (!Peek(sizeof(bHeader), &bHeader))
 		return true;
 
-	if (bHeader!=uHeader)
+	if (bHeader != uHeader)
 		return true;
 
 	if (!Peek(uPacketSize))

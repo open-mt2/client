@@ -16,11 +16,11 @@ class CSnowEnvironment : public CScreen
 		void Enable();
 		void Disable();
 
-		void Update(const D3DXVECTOR3 & c_rv3Pos);
+		void Update(const D3DXVECTOR3& c_rv3Pos);
 		void Deform();
 		void Render();
 
-	protected:		
+	protected:
 		void __Initialize();
 		bool __CreateBlurTexture();
 		bool __CreateGeometry();
@@ -45,7 +45,7 @@ class CSnowEnvironment : public CScreen
 		D3DXVECTOR3 m_v3Center;
 
 		WORD m_wBlurTextureSize;
-		CGraphicImageInstance * m_pImageInstance;
+		CGraphicImageInstance* m_pImageInstance;
 		std::vector<CSnowParticle*> m_kVct_pkParticleSnow;
 
 		DWORD m_dwParticleMaxNum;

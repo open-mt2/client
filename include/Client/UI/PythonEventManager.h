@@ -10,8 +10,8 @@ class CPythonEventManager : public CSingleton<CPythonEventManager>
 	public:
 		typedef struct STextLine
 		{
-			int ixLocal, iyLocal;
-			CGraphicTextInstance * pInstance;
+				int ixLocal, iyLocal;
+				CGraphicTextInstance* pInstance;
 		} TTextLine;
 
 		typedef std::list<TTextLine> TScriptTextLineList;
@@ -97,55 +97,54 @@ class CPythonEventManager : public CSingleton<CPythonEventManager>
 	public:
 		typedef struct SEventSet
 		{
-			int ix, iy;
-			int iWidth;
-			int iyLocal;
+				int ix, iy;
+				int iWidth;
+				int iyLocal;
 
-			// State
-			bool isLock;
+				// State
+				bool isLock;
 
-			long lLastDelayTime;
+				long lLastDelayTime;
 
-			int iCurrentLetter;
+				int iCurrentLetter;
 
-			D3DXCOLOR CurrentColor;
-			std::string strCurrentLine;
+				D3DXCOLOR CurrentColor;
+				std::string strCurrentLine;
 
-			CGraphicTextInstance * pCurrentTextLine;
-			TScriptTextLineList ScriptTextLineList;
+				CGraphicTextInstance* pCurrentTextLine;
+				TScriptTextLineList ScriptTextLineList;
 
-			BOOL isConfirmWait;
-			CGraphicTextInstance * pConfirmTimeTextLine;
-			int iConfirmEndTime;
+				BOOL isConfirmWait;
+				CGraphicTextInstance* pConfirmTimeTextLine;
+				int iConfirmEndTime;
 
-			// Group Data
-			script::Group ScriptGroup;
+				// Group Data
+				script::Group ScriptGroup;
 
-			// Static Data
-			char szFileName[32+1];
+				// Static Data
+				char szFileName[32 + 1];
 
-			int iVisibleStartLine;
-			int iVisibleLineCount;
+				int iVisibleStartLine;
+				int iVisibleLineCount;
 
-			int iAdjustLine;
+				int iAdjustLine;
 
-			D3DXCOLOR DiffuseColor;
-			long lWaitingTime;
-			int iRestrictedCharacterCount;
+				D3DXCOLOR DiffuseColor;
+				long lWaitingTime;
+				int iRestrictedCharacterCount;
 
-			int nAnswer;
+				int nAnswer;
 
-			bool isTextCenterMode;
-			bool isWaitFlag;
+				bool isTextCenterMode;
+				bool isWaitFlag;
 
-			PyObject * poEventHandler;
+				PyObject* poEventHandler;
 
-			SEventSet() {}
-			virtual ~SEventSet() {}
+				SEventSet() {}
+				virtual ~SEventSet() {}
 		} TEventSet;
 
 		typedef std::vector<TEventSet*> TEventSetVector;
-
 
 	public:
 		CPythonEventManager();
@@ -153,17 +152,17 @@ class CPythonEventManager : public CSingleton<CPythonEventManager>
 
 		void Destroy();
 
-		int RegisterEventSet(const char * c_szFileName);
+		int RegisterEventSet(const char* c_szFileName);
 		int RegisterEventSetFromString(const std::string& strScript);
 		void ClearEventSeti(int iIndex);
-		void __ClearEventSetp(TEventSet * pEventSet);
+		void __ClearEventSetp(TEventSet* pEventSet);
 
-		void SetEventHandler(int iIndex, PyObject * poEventHandler);
+		void SetEventHandler(int iIndex, PyObject* poEventHandler);
 		void SetRestrictedCount(int iIndex, int iCount);
 
 		int GetEventSetLocalYPosition(int iIndex);
 		void AddEventSetLocalYPosition(int iIndex, int iAddValue);
-		void InsertText(int iIndex, const char * c_szText, int iX_pos = 0);
+		void InsertText(int iIndex, const char* c_szText, int iX_pos = 0);
 
 		void UpdateEventSet(int iIndex, int ix, int iy);
 		void RenderEventSet(int iIndex);
@@ -179,26 +178,26 @@ class CPythonEventManager : public CSingleton<CPythonEventManager>
 		int GetLineCount(int iIndex);
 		void SetVisibleLineCount(int iIndex, int iLineCount);
 
-		void SetInterfaceWindow(PyObject * poInterface);
-		void SetLeftTimeString(const char * c_szString);
+		void SetInterfaceWindow(PyObject* poInterface);
+		void SetLeftTimeString(const char* c_szString);
 
 	protected:
 		void __InitEventSet(TEventSet& rEventSet);
-		void __InsertLine(TEventSet& rEventSet, BOOL isCenter=FALSE, int iX_pos=0);
+		void __InsertLine(TEventSet& rEventSet, BOOL isCenter = FALSE, int iX_pos = 0);
 		void __AddSpace(TEventSet& pEventSet, int iSpace);
 
 		DWORD GetEmptyEventSetSlot();
 
 		bool CheckEventSetIndex(int iIndex);
 
-		void ProcessEventSet(TEventSet * pEventSet);
+		void ProcessEventSet(TEventSet* pEventSet);
 
-		void ClearLine(TEventSet * pEventSet);		
-		void RefreshLinePosition(TEventSet * pEventSet);		
-		bool GetScriptEventIndex(const char * c_szName, int * pEventPosition, int * pEventType);
+		void ClearLine(TEventSet* pEventSet);
+		void RefreshLinePosition(TEventSet* pEventSet);
+		bool GetScriptEventIndex(const char* c_szName, int* pEventPosition, int* pEventType);
 
-		void MakeQuestion(TEventSet * pEventSet, script::TArgList & rArgumentList);
-		void MakeNextButton(TEventSet * pEventSet, int iButtonType);
+		void MakeQuestion(TEventSet* pEventSet, script::TArgList& rArgumentList);
+		void MakeNextButton(TEventSet* pEventSet, int iButtonType);
 
 	protected:
 		TEventSetVector m_EventSetVector;
@@ -207,6 +206,6 @@ class CPythonEventManager : public CSingleton<CPythonEventManager>
 	private:
 		CDynamicPool<TEventSet> m_EventSetPool;
 		CDynamicPool<CGraphicTextInstance> m_ScriptTextLinePool;
-		PyObject * m_poInterface;
+		PyObject* m_poInterface;
 		std::string m_strLeftTimeString;
 };

@@ -7,7 +7,7 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-BOOL CRaceData::LoadRaceData(const char * c_szFileName)
+BOOL CRaceData::LoadRaceData(const char* c_szFileName)
 {
 	CTextFileLoader TextFileLoader;
 	if (!TextFileLoader.Load(c_szFileName))
@@ -29,30 +29,30 @@ BOOL CRaceData::LoadRaceData(const char * c_szFileName)
 	CTokenVector* pSmokeTokenVector;
 	if (TextFileLoader.GetTokenVector("smokefilename", &pSmokeTokenVector))
 	{
-		if (pSmokeTokenVector->size()%2!=0)
+		if (pSmokeTokenVector->size() % 2 != 0)
 		{
 			TraceError("SmokeFileName ArgCount[%d]%2==0", pSmokeTokenVector->size());
 			return FALSE;
 		}
 
-		UINT uLineCount=pSmokeTokenVector->size()/2;
+		UINT uLineCount = pSmokeTokenVector->size() / 2;
 
-		for (UINT uLine=0; uLine<uLineCount; ++uLine)
+		for (UINT uLine = 0; uLine < uLineCount; ++uLine)
 		{
-			int eSmoke=atoi(pSmokeTokenVector->at(uLine*2+0).c_str());
-			if (eSmoke<0 || eSmoke>=SMOKE_NUM)
+			int eSmoke = atoi(pSmokeTokenVector->at(uLine * 2 + 0).c_str());
+			if (eSmoke < 0 || eSmoke >= SMOKE_NUM)
 			{
 				TraceError("SmokeFileName SmokeNum[%d] OUT OF RANGE", eSmoke);
 				return FALSE;
 			}
 
-			const std::string& c_rstrEffectFileName = pSmokeTokenVector->at(uLine*2+1);
+			const std::string& c_rstrEffectFileName = pSmokeTokenVector->at(uLine * 2 + 1);
 
-			DWORD& rdwCRCEft=m_adwSmokeEffectID[eSmoke];
+			DWORD& rdwCRCEft = m_adwSmokeEffectID[eSmoke];
 			if (!CEffectManager::Instance().RegisterEffect2(c_rstrEffectFileName.c_str(), &rdwCRCEft))
 			{
 				TraceError("CRaceData::RegisterEffect2(%s) ERROR", c_rstrEffectFileName.c_str());
-				rdwCRCEft=0;
+				rdwCRCEft = 0;
 				return false;
 			}
 		}
@@ -84,21 +84,19 @@ BOOL CRaceData::LoadRaceData(const char * c_szFileName)
 				}
 
 				// LOCAL_PATH_SUPPORT
-				std::string strModel;				
+				std::string strModel;
 				if (TextFileLoader.GetTokenString("model", &strModel))
 				{
 					SetShapeModel(dwShapeIndex, (strPathName + strModel).c_str());
 				}
 				else
-				{					
-					if (!TextFileLoader.GetTokenString("local_model", &strModel))					
+				{
+					if (!TextFileLoader.GetTokenString("local_model", &strModel))
 						continue;
 
 					SetShapeModel(dwShapeIndex, strModel.c_str());
 				}
 				// END_OF_LOCAL_PATH_SUPPORT
-
-				
 
 				std::string strSourceSkin;
 				std::string strTargetSkin;
@@ -155,7 +153,7 @@ BOOL CRaceData::LoadRaceData(const char * c_szFileName)
 				{
 					continue;
 				}
-				
+
 				std::string strModel;
 				std::string strSourceSkin;
 				std::string strTargetSkin;
@@ -172,7 +170,6 @@ BOOL CRaceData::LoadRaceData(const char * c_szFileName)
 
 		TextFileLoader.SetParentNode();
 	}
-
 
 	if (TextFileLoader.SetChildNode("attachingdata"))
 	{

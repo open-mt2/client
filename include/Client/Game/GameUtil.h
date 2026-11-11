@@ -2,17 +2,17 @@
 
 //   Collision Detection
 // Dynamic VS Dynamic
-bool DetectCollisionDynamicSphereVSDynamicSphere(const CDynamicSphereInstance & c_rSphere1, const CDynamicSphereInstance & c_rSphere2);
-bool DetectCollisionDynamicZCylinderVSDynamicZCylinder(const CDynamicSphereInstance & c_rSphere1, const CDynamicSphereInstance & c_rSphere2);
+bool DetectCollisionDynamicSphereVSDynamicSphere(const CDynamicSphereInstance& c_rSphere1, const CDynamicSphereInstance& c_rSphere2);
+bool DetectCollisionDynamicZCylinderVSDynamicZCylinder(const CDynamicSphereInstance& c_rSphere1, const CDynamicSphereInstance& c_rSphere2);
 // Dynamic VS Static
-//bool DetectCollisionDynamicSphereVSStaticPlane(const CDynamicSphereInstance & c_rSphere, const TPlaneData & c_rPlaneData);
-//bool DetectCollisionDynamicSphereVSStaticSphere(const CDynamicSphereInstance & c_rSphere, const TSphereData & c_rSphereData);
-//bool DetectCollisionDynamicSphereVSStaticCylinder(const CDynamicSphereInstance & c_rSphere, const TCylinderData & c_rCylinderData);
-//bool DetectCollisionDynamicSphereVSStaticBox(const TSphereInstance & c_rSphere, const TBoxData & c_rBoxData);
+// bool DetectCollisionDynamicSphereVSStaticPlane(const CDynamicSphereInstance & c_rSphere, const TPlaneData & c_rPlaneData);
+// bool DetectCollisionDynamicSphereVSStaticSphere(const CDynamicSphereInstance & c_rSphere, const TSphereData & c_rSphereData);
+// bool DetectCollisionDynamicSphereVSStaticCylinder(const CDynamicSphereInstance & c_rSphere, const TCylinderData & c_rCylinderData);
+// bool DetectCollisionDynamicSphereVSStaticBox(const TSphereInstance & c_rSphere, const TBoxData & c_rBoxData);
 // Static VS Static
-//bool DetectCollisionStaticSphereVSStaticSphere(const CDynamicSphereInstance & c_rSphere1, const TSphereData & c_rSphere2);
-//bool DetectCollisionStaticSphereVSStaticCylinder(const CDynamicSphereInstance & c_rSphere, const TCylinderData & c_rCylinder);
-//bool DetectCollisionStaticSphereVSStaticBox(const TSphereData & c_rSphere, const TBoxData & c_rBox);
+// bool DetectCollisionStaticSphereVSStaticSphere(const CDynamicSphereInstance & c_rSphere1, const TSphereData & c_rSphere2);
+// bool DetectCollisionStaticSphereVSStaticCylinder(const CDynamicSphereInstance & c_rSphere, const TCylinderData & c_rCylinder);
+// bool DetectCollisionStaticSphereVSStaticBox(const TSphereData & c_rSphere, const TBoxData & c_rBox);
 
 // Rotation
 float GetDegreeFromPosition(float x, float y);

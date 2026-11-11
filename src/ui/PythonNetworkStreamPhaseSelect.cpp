@@ -15,7 +15,7 @@ void CPythonNetworkStream::SetSelectPhase()
 	Tracen("## Network - Select Phase ##");
 	Tracen("");
 
-	m_strPhase = "Select";	
+	m_strPhase = "Select";
 
 	m_dwChangingPhaseTime = ELTimer_GetMSec();
 	m_phaseProcessFunc.Set(this, &CPythonNetworkStream::SelectPhase);
@@ -23,7 +23,7 @@ void CPythonNetworkStream::SetSelectPhase()
 
 	if (__DirectEnterMode_IsSet())
 	{
-		PyCallClassMemberFunc(m_poHandler, "SetLoadingPhase", Py_BuildValue("()"));	
+		PyCallClassMemberFunc(m_poHandler, "SetLoadingPhase", Py_BuildValue("()"));
 	}
 	else
 	{
@@ -45,7 +45,7 @@ void CPythonNetworkStream::SelectPhase()
 	{
 		case HEADER_GC_PHASE:
 			if (RecvPhasePacket())
-				return;	
+				return;
 			break;
 
 		case HEADER_GC_EMPIRE:
@@ -62,7 +62,6 @@ void CPythonNetworkStream::SelectPhase()
 			if (__RecvLoginSuccessPacket4())
 				return;
 			break;
-
 
 		case HEADER_GC_PLAYER_CREATE_SUCCESS:
 			if (__RecvPlayerCreateSuccessPacket())
@@ -118,8 +117,8 @@ void CPythonNetworkStream::SelectPhase()
 bool CPythonNetworkStream::SendSelectEmpirePacket(DWORD dwEmpireID)
 {
 	TPacketCGEmpire kPacketEmpire;
-	kPacketEmpire.bHeader=HEADER_CG_EMPIRE;
-	kPacketEmpire.bEmpire=dwEmpireID;
+	kPacketEmpire.bHeader = HEADER_CG_EMPIRE;
+	kPacketEmpire.bEmpire = dwEmpireID;
 
 	if (!Send(sizeof(kPacketEmpire), &kPacketEmpire))
 	{
@@ -147,13 +146,13 @@ bool CPythonNetworkStream::SendSelectCharacterPacket(BYTE Index)
 	return SendSequence();
 }
 
-bool CPythonNetworkStream::SendDestroyCharacterPacket(BYTE index, const char * szPrivateCode)
+bool CPythonNetworkStream::SendDestroyCharacterPacket(BYTE index, const char* szPrivateCode)
 {
-    TPacketCGDestroyCharacter DestroyCharacterPacket;
+	TPacketCGDestroyCharacter DestroyCharacterPacket;
 
 	DestroyCharacterPacket.header = HEADER_CG_PLAYER_DESTROY;
 	DestroyCharacterPacket.index = index;
-	strncpy(DestroyCharacterPacket.szPrivateCode, szPrivateCode, PRIVATE_CODE_LENGTH-1);
+	strncpy(DestroyCharacterPacket.szPrivateCode, szPrivateCode, PRIVATE_CODE_LENGTH - 1);
 
 	if (!Send(sizeof(TPacketCGDestroyCharacter), &DestroyCharacterPacket))
 	{
@@ -164,7 +163,7 @@ bool CPythonNetworkStream::SendDestroyCharacterPacket(BYTE index, const char * s
 	return SendSequence();
 }
 
-bool CPythonNetworkStream::SendCreateCharacterPacket(BYTE index, const char *name, BYTE job, BYTE shape, BYTE byCON, BYTE byINT, BYTE bySTR, BYTE byDEX)
+bool CPythonNetworkStream::SendCreateCharacterPacket(BYTE index, const char* name, BYTE job, BYTE shape, BYTE byCON, BYTE byINT, BYTE bySTR, BYTE byDEX)
 {
 	TPacketCGCreateCharacter createCharacterPacket;
 
@@ -187,7 +186,7 @@ bool CPythonNetworkStream::SendCreateCharacterPacket(BYTE index, const char *nam
 	return SendSequence();
 }
 
-bool CPythonNetworkStream::SendChangeNamePacket(BYTE index, const char *name)
+bool CPythonNetworkStream::SendChangeNamePacket(BYTE index, const char* name)
 {
 	TPacketCGChangeName ChangeNamePacket;
 	ChangeNamePacket.header = HEADER_CG_CHANGE_NAME;
@@ -210,14 +209,14 @@ bool CPythonNetworkStream::__RecvPlayerCreateSuccessPacket()
 	if (!Recv(sizeof(kCreateSuccessPacket), &kCreateSuccessPacket))
 		return false;
 
-	if (kCreateSuccessPacket.bAccountCharacterSlot>=PLAYER_PER_ACCOUNT4)
+	if (kCreateSuccessPacket.bAccountCharacterSlot >= PLAYER_PER_ACCOUNT4)
 	{
 		TraceError("CPythonNetworkStream::RecvPlayerCreateSuccessPacket - OUT OF RANGE SLOT(%d) > PLATER_PER_ACCOUNT(%d)",
-			kCreateSuccessPacket.bAccountCharacterSlot, PLAYER_PER_ACCOUNT4);
+				   kCreateSuccessPacket.bAccountCharacterSlot, PLAYER_PER_ACCOUNT4);
 		return true;
 	}
 
-	m_akSimplePlayerInfo[kCreateSuccessPacket.bAccountCharacterSlot]=kCreateSuccessPacket.kSimplePlayerInfomation;
+	m_akSimplePlayerInfo[kCreateSuccessPacket.bAccountCharacterSlot] = kCreateSuccessPacket.kSimplePlayerInfomation;
 	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_CREATE], "OnCreateSuccess", Py_BuildValue("()"));
 	return true;
 }

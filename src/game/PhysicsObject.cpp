@@ -2,7 +2,7 @@
 #include <Client/Game/PhysicsObject.h>
 
 const float c_fFrameTime = 0.02f;
-const float EPSILON		 = 0.001f;
+const float EPSILON = 0.001f;
 
 IPhysicsWorld* IPhysicsWorld::ms_pWorld = NULL;
 IObjectManager* IObjectManager::ms_ObjManager = NULL;
@@ -15,14 +15,14 @@ void CPhysicsObject::Update(float fElapsedTime)
 		m_yPushingPosition.Interpolate(fElapsedTime);
 }
 
-void CPhysicsObject::Accumulate(D3DXVECTOR3 * pv3Position)
+void CPhysicsObject::Accumulate(D3DXVECTOR3* pv3Position)
 {
 	// If object is moving, give minor power to object.
 	float fForce = 0.0f;
 
 	if (fabs(m_v3Velocity.x) < EPSILON ||
 		fabs(m_v3Velocity.y) < EPSILON ||
-		fabs(m_v3Velocity.z) < EPSILON )
+		fabs(m_v3Velocity.z) < EPSILON)
 	{
 		fForce -= (m_fMass * m_fFriction);
 	}
@@ -50,22 +50,22 @@ void CPhysicsObject::Accumulate(D3DXVECTOR3 * pv3Position)
 	pv3Position->z += m_v3Velocity.z;
 }
 
-void CPhysicsObject::IncreaseExternalForce(const D3DXVECTOR3 & c_rvBasePosition, float fForce)
-{	
+void CPhysicsObject::IncreaseExternalForce(const D3DXVECTOR3& c_rvBasePosition, float fForce)
+{
 	// Accumulate Acceleration by External Force
 	m_v3Acceleration = m_v3Direction * (fForce / m_fMass);
 	m_v3Velocity = m_v3Acceleration;
-/*
-	Tracenf("force %f, mass %f, accel (%f, %f, %f)", fForce, m_fMass, 
-		m_v3Acceleration.x, 
-		m_v3Acceleration.y,
-		m_v3Acceleration.z);
-*/
+	/*
+		Tracenf("force %f, mass %f, accel (%f, %f, %f)", fForce, m_fMass,
+			m_v3Acceleration.x,
+			m_v3Acceleration.y,
+			m_v3Acceleration.z);
+	*/
 	// NOTE : 최종 위치를 구해둔다. 근데 100보다 크다면? ;
 	const int LoopValue = 100;
 	D3DXVECTOR3 v3Movement(0.0f, 0.0f, 0.0f);
 
-	for(int i = 0; i < LoopValue; ++i)
+	for (int i = 0; i < LoopValue; ++i)
 	{
 		Accumulate(&v3Movement);
 
@@ -78,7 +78,7 @@ void CPhysicsObject::IncreaseExternalForce(const D3DXVECTOR3 & c_rvBasePosition,
 				Initialize();
 				return;
 
-				//for (float fRatio = 0.0f; fRatio < 1.0f; fRatio += 0.1f)
+				// for (float fRatio = 0.0f; fRatio < 1.0f; fRatio += 0.1f)
 				//{
 				//	// 좀더 정밀하게 체크한다
 				//	if (pWorld->isPhysicalCollision(c_rvBasePosition + v3Movement * fRatio))
@@ -86,28 +86,28 @@ void CPhysicsObject::IncreaseExternalForce(const D3DXVECTOR3 & c_rvBasePosition,
 				//		v3Movement = D3DXVECTOR3 (0.0f, 0.0f, 0.0f);
 				//		break;
 				//	}
-				//}
-				//break;
+				// }
+				// break;
 			}
 		}
 		// VICTIM_COLLISION_TEST_END
 
 		if (fabs(m_v3Velocity.x) < EPSILON &&
 			fabs(m_v3Velocity.y) < EPSILON &&
-			fabs(m_v3Velocity.z) < EPSILON )
+			fabs(m_v3Velocity.z) < EPSILON)
 			break;
-	}	
+	}
 
 	SetLastPosition(v3Movement, float(LoopValue) * c_fFrameTime);
 
-	if( m_pActorInstance )
+	if (m_pActorInstance)
 	{
 		IObjectManager* pObjectManager = IObjectManager::GetObjectManager();
-		pObjectManager->AdjustCollisionWithOtherObjects( m_pActorInstance );
+		pObjectManager->AdjustCollisionWithOtherObjects(m_pActorInstance);
 	}
 }
 
-void CPhysicsObject::SetLastPosition(const TPixelPosition & c_rPosition, float fBlendingTime)
+void CPhysicsObject::SetLastPosition(const TPixelPosition& c_rPosition, float fBlendingTime)
 {
 	m_v3LastPosition.x = float(c_rPosition.x);
 	m_v3LastPosition.y = float(c_rPosition.y);
@@ -116,14 +116,14 @@ void CPhysicsObject::SetLastPosition(const TPixelPosition & c_rPosition, float f
 	m_yPushingPosition.Setup(0.0f, c_rPosition.y, fBlendingTime);
 }
 
-void CPhysicsObject::GetLastPosition(TPixelPosition * pPosition)
+void CPhysicsObject::GetLastPosition(TPixelPosition* pPosition)
 {
 	pPosition->x = (m_v3LastPosition.x);
 	pPosition->y = (m_v3LastPosition.y);
 	pPosition->z = (m_v3LastPosition.z);
 }
 
-void CPhysicsObject::SetDirection(const D3DXVECTOR3 & c_rv3Direction)
+void CPhysicsObject::SetDirection(const D3DXVECTOR3& c_rv3Direction)
 {
 	m_v3Direction.x = c_rv3Direction.x;
 	m_v3Direction.y = c_rv3Direction.y;

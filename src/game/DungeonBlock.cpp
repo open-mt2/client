@@ -30,8 +30,8 @@ class CDungeonModelInstance : public CGrannyModelInstance
 
 			STATEMANAGER.SetRenderState(D3DRS_TEXTUREFACTOR, 0xffffffff);
 			STATEMANAGER.SaveTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TFACTOR);
-			STATEMANAGER.SaveTextureStageState(0, D3DTSS_COLOROP,   D3DTOP_SELECTARG1);
-			STATEMANAGER.SaveTextureStageState(0, D3DTSS_ALPHAOP,   D3DTOP_DISABLE);
+			STATEMANAGER.SaveTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
+			STATEMANAGER.SaveTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_DISABLE);
 			STATEMANAGER.SaveRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 			STATEMANAGER.SaveRenderState(D3DRS_SRCBLEND, D3DBLEND_ZERO);
 			STATEMANAGER.SaveRenderState(D3DRS_DESTBLEND, D3DBLEND_SRCCOLOR);
@@ -53,17 +53,16 @@ class CDungeonModelInstance : public CGrannyModelInstance
 		}
 };
 
-
 struct FUpdate
 {
-	float fElapsedTime;
-	D3DXMATRIX * pmatWorld;
-	void operator() (CGrannyModelInstance * pInstance)
-	{
-		pInstance->Update(CGrannyModelInstance::ANIFPS_MIN);
-		pInstance->UpdateLocalTime(fElapsedTime);
-		pInstance->Deform(pmatWorld);
-	}
+		float fElapsedTime;
+		D3DXMATRIX* pmatWorld;
+		void operator()(CGrannyModelInstance* pInstance)
+		{
+			pInstance->Update(CGrannyModelInstance::ANIFPS_MIN);
+			pInstance->UpdateLocalTime(fElapsedTime);
+			pInstance->Deform(pmatWorld);
+		}
 };
 
 void CDungeonBlock::Update()
@@ -78,26 +77,26 @@ void CDungeonBlock::Update()
 
 struct FRender
 {
-	void operator() (CDungeonModelInstance * pInstance)
-	{
-		pInstance->RenderDungeonBlock();
-	}
+		void operator()(CDungeonModelInstance* pInstance)
+		{
+			pInstance->RenderDungeonBlock();
+		}
 };
 
 void CDungeonBlock::Render()
 {
-//	if (!isShow())
-//		return;
+	//	if (!isShow())
+	//		return;
 
 	for_each(m_ModelInstanceContainer.begin(), m_ModelInstanceContainer.end(), FRender());
 }
 
 struct FRenderShadow
 {
-	void operator() (CDungeonModelInstance * pInstance)
-	{
-		pInstance->RenderDungeonBlockShadow();
-	}
+		void operator()(CDungeonModelInstance* pInstance)
+		{
+			pInstance->RenderDungeonBlockShadow();
+		}
 };
 
 void CDungeonBlock::OnRenderShadow()
@@ -107,21 +106,21 @@ void CDungeonBlock::OnRenderShadow()
 
 struct FBoundBox
 {
-	D3DXVECTOR3 * m_pv3Min;
-	D3DXVECTOR3 * m_pv3Max;
+		D3DXVECTOR3* m_pv3Min;
+		D3DXVECTOR3* m_pv3Max;
 
-	FBoundBox(D3DXVECTOR3 * pv3Min, D3DXVECTOR3 * pv3Max)
-	{
-		m_pv3Min = pv3Min;
-		m_pv3Max = pv3Max;
-	}
-	void operator() (CGrannyModelInstance * pInstance)
-	{
-		pInstance->GetBoundBox(m_pv3Min, m_pv3Max);
-	}
+		FBoundBox(D3DXVECTOR3* pv3Min, D3DXVECTOR3* pv3Max)
+		{
+			m_pv3Min = pv3Min;
+			m_pv3Max = pv3Max;
+		}
+		void operator()(CGrannyModelInstance* pInstance)
+		{
+			pInstance->GetBoundBox(m_pv3Min, m_pv3Max);
+		}
 };
 
-bool CDungeonBlock::GetBoundingSphere(D3DXVECTOR3 & v3Center, float & fRadius)
+bool CDungeonBlock::GetBoundingSphere(D3DXVECTOR3& v3Center, float& fRadius)
 {
 	v3Center = m_v3Center;
 	fRadius = m_fRadius;
@@ -129,23 +128,23 @@ bool CDungeonBlock::GetBoundingSphere(D3DXVECTOR3 & v3Center, float & fRadius)
 	return true;
 }
 
-void CDungeonBlock::OnUpdateCollisionData(const CStaticCollisionDataVector * pscdVector)
+void CDungeonBlock::OnUpdateCollisionData(const CStaticCollisionDataVector* pscdVector)
 {
 	assert(pscdVector);
 	CStaticCollisionDataVector::const_iterator it;
-	for(it = pscdVector->begin();it!=pscdVector->end();++it)
+	for (it = pscdVector->begin(); it != pscdVector->end(); ++it)
 	{
-		AddCollision(&(*it),&GetTransform());
+		AddCollision(&(*it), &GetTransform());
 	}
 }
 
-void CDungeonBlock::OnUpdateHeighInstance(CAttributeInstance * pAttributeInstance)
+void CDungeonBlock::OnUpdateHeighInstance(CAttributeInstance* pAttributeInstance)
 {
 	assert(pAttributeInstance);
-	SetHeightInstance(pAttributeInstance);	
+	SetHeightInstance(pAttributeInstance);
 }
 
-bool CDungeonBlock::OnGetObjectHeight(float fX, float fY, float * pfHeight)
+bool CDungeonBlock::OnGetObjectHeight(float fX, float fY, float* pfHeight)
 {
 	if (m_pHeightAttributeInstance && m_pHeightAttributeInstance->GetHeight(fX, fY, pfHeight))
 		return true;
@@ -157,16 +156,16 @@ void CDungeonBlock::BuildBoundingSphere()
 	D3DXVECTOR3 v3Min, v3Max;
 	for_each(m_ModelInstanceContainer.begin(), m_ModelInstanceContainer.end(), FBoundBox(&v3Min, &v3Max));
 
-	m_v3Center = (v3Min+v3Max) * 0.5f;
-	m_fRadius = D3DXVec3Length(&(v3Max-v3Min))*0.5f + 150.0f; // extra length for attached objects
+	m_v3Center = (v3Min + v3Max) * 0.5f;
+	m_fRadius = D3DXVec3Length(&(v3Max - v3Min)) * 0.5f + 150.0f; // extra length for attached objects
 }
 
-bool CDungeonBlock::Intersect(float * pfu, float * pfv, float * pft)
+bool CDungeonBlock::Intersect(float* pfu, float* pfv, float* pft)
 {
 	TModelInstanceContainer::iterator itor = m_ModelInstanceContainer.begin();
 	for (; itor != m_ModelInstanceContainer.end(); ++itor)
 	{
-		CDungeonModelInstance * pInstance = *itor;
+		CDungeonModelInstance* pInstance = *itor;
 		if (pInstance->Intersect(&CGraphicObjectInstance::GetTransform(), pfu, pfv, pft))
 			return true;
 	}
@@ -174,7 +173,7 @@ bool CDungeonBlock::Intersect(float * pfu, float * pfv, float * pft)
 	return false;
 }
 
-void CDungeonBlock::GetBoundBox(D3DXVECTOR3 * pv3Min, D3DXVECTOR3 * pv3Max)
+void CDungeonBlock::GetBoundBox(D3DXVECTOR3* pv3Min, D3DXVECTOR3* pv3Max)
 {
 	pv3Min->x = +10000000.0f;
 	pv3Min->y = +10000000.0f;
@@ -186,7 +185,7 @@ void CDungeonBlock::GetBoundBox(D3DXVECTOR3 * pv3Min, D3DXVECTOR3 * pv3Max)
 	TModelInstanceContainer::iterator itor = m_ModelInstanceContainer.begin();
 	for (; itor != m_ModelInstanceContainer.end(); ++itor)
 	{
-		CDungeonModelInstance * pInstance = *itor;
+		CDungeonModelInstance* pInstance = *itor;
 
 		D3DXVECTOR3 v3Min;
 		D3DXVECTOR3 v3Max;
@@ -201,11 +200,11 @@ void CDungeonBlock::GetBoundBox(D3DXVECTOR3 * pv3Min, D3DXVECTOR3 * pv3Max)
 	}
 }
 
-bool CDungeonBlock::Load(const char * c_szFileName)
+bool CDungeonBlock::Load(const char* c_szFileName)
 {
 	Destroy();
 
-	m_pThing = (CGraphicThing *)CResourceManager::Instance().GetResourcePointer(c_szFileName);
+	m_pThing = (CGraphicThing*)CResourceManager::Instance().GetResourcePointer(c_szFileName);
 	if (!m_pThing)
 	{
 		TraceError("CDungeonBlock::Load(filename=%s) - failed to get resource\n", c_szFileName);
@@ -223,15 +222,15 @@ bool CDungeonBlock::Load(const char * c_szFileName)
 
 	for (int i = 0; i < m_pThing->GetModelCount(); ++i)
 	{
-		CDungeonModelInstance * pModelInstance = new CDungeonModelInstance;
+		CDungeonModelInstance* pModelInstance = new CDungeonModelInstance;
 		pModelInstance->SetMainModelPointer(m_pThing->GetModelPointer(i), &m_kDeformableVertexBuffer);
 		DWORD dwVertexCount = pModelInstance->GetVertexCount();
 		m_kDeformableVertexBuffer.Destroy();
 		m_kDeformableVertexBuffer.Create(
-			dwVertexCount, 
-			D3DFVF_XYZ|D3DFVF_NORMAL|D3DFVF_TEX1, 
-			D3DUSAGE_WRITEONLY, 
-			D3DPOOL_MANAGED);	
+			dwVertexCount,
+			D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_TEX1,
+			D3DUSAGE_WRITEONLY,
+			D3DPOOL_MANAGED);
 		m_ModelInstanceContainer.push_back(pModelInstance);
 	}
 

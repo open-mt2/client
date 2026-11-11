@@ -5,17 +5,17 @@
 
 class CWeaponTrace
 {
-	/*
+		/*
+		public:
+			typedef struct SSplineValue
+			{
+				float fValue1;
+				float fValue2;
+				float fValue3;
+			} TSplineValue;
+		*/
 	public:
-		typedef struct SSplineValue
-		{
-			float fValue1;
-			float fValue2;
-			float fValue3;
-		} TSplineValue;
-	*/
-	public:
-		static void DestroySystem();		
+		static void DestroySystem();
 		static void Delete(CWeaponTrace* pkWTDel);
 		static CWeaponTrace* New();
 
@@ -27,12 +27,12 @@ class CWeaponTrace
 
 		void TurnOn();
 		void TurnOff();
-		
+
 		void UseAlpha();
 		void UseTexture();
 
-		void SetTexture(const char * c_szFileName);
-		bool SetWeaponInstance(CGraphicThingInstance * pInstance, DWORD dwModelIndex, const char * c_szBoneName);
+		void SetTexture(const char* c_szFileName);
+		bool SetWeaponInstance(CGraphicThingInstance* pInstance, DWORD dwModelIndex, const char* c_szBoneName);
 		void SetPosition(float fx, float fy, float fz);
 		void SetRotation(float fRotation);
 
@@ -48,7 +48,6 @@ class CWeaponTrace
 		bool BuildVertex();
 
 	protected:
-
 		float m_fLastUpdate;
 
 		typedef std::pair<float, D3DXVECTOR3> TTimePoint;
@@ -61,15 +60,15 @@ class CWeaponTrace
 		float m_fLifeTime;
 		float m_fSamplingTime;
 
-		//std::vector<TPDTVertex> m_PDTVertexVector;
-		//std::vector<TPDTVertex> m_CurvingTraceVector;
-		//std::vector<TSplineValue> m_SplineValueVector;
+		// std::vector<TPDTVertex> m_PDTVertexVector;
+		// std::vector<TPDTVertex> m_CurvingTraceVector;
+		// std::vector<TSplineValue> m_SplineValueVector;
 
-		CGraphicThingInstance * m_pInstance;
+		CGraphicThingInstance* m_pInstance;
 		DWORD m_dwModelInstanceIndex;
 
 		CGraphicImageInstance m_ImageInstance;
-		
+
 		float m_fx;
 		float m_fy;
 		float m_fz;

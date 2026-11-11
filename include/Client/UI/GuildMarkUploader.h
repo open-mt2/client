@@ -22,8 +22,8 @@ class CGuildMarkUploader : public CNetworkStream, public CSingleton<CGuildMarkUp
 		virtual ~CGuildMarkUploader() {}
 
 		void Disconnect() {}
-		bool Connect(const CNetworkAddress& c_rkNetAddr, DWORD dwHandle, DWORD dwRandomKey, DWORD dwGuildID, const char* c_szFileName, UINT* peError) {return false;}
-		bool ConnectToSendSymbol(const CNetworkAddress& c_rkNetAddr, DWORD dwHandle, DWORD dwRandomKey, DWORD dwGuildID, const char* c_szFileName, UINT* peError) {return false;}
+		bool Connect(const CNetworkAddress& c_rkNetAddr, DWORD dwHandle, DWORD dwRandomKey, DWORD dwGuildID, const char* c_szFileName, UINT* peError) { return false; }
+		bool ConnectToSendSymbol(const CNetworkAddress& c_rkNetAddr, DWORD dwHandle, DWORD dwRandomKey, DWORD dwGuildID, const char* c_szFileName, UINT* peError) { return false; }
 		void Process() {}
 };
 
@@ -106,7 +106,7 @@ class CGuildMarkUploader : public CNetworkStream, public CSingleton<CGuildMarkUp
 
 		DWORD m_dwSymbolBufSize;
 		DWORD m_dwSymbolCRC32;
-		BYTE * m_pbySymbolBuf;
+		BYTE* m_pbySymbolBuf;
 };
 
 #endif

@@ -10,7 +10,7 @@
 
 void CPythonNetworkStream::EnableChatInsultFilter(bool isEnable)
 {
-	m_isEnableChatInsultFilter=isEnable;
+	m_isEnableChatInsultFilter = isEnable;
 }
 
 void CPythonNetworkStream::__FilterInsult(char* szLine, UINT uLineLen)
@@ -41,9 +41,9 @@ bool CPythonNetworkStream::LoadInsultList(const char* c_szInsultListFileName)
 	kMemTextFileLoader.Bind(data->size(), data->data());
 
 	m_kInsultChecker.Clear();
-	for (DWORD dwLineIndex=0; dwLineIndex<kMemTextFileLoader.GetLineCount(); ++dwLineIndex)
+	for (DWORD dwLineIndex = 0; dwLineIndex < kMemTextFileLoader.GetLineCount(); ++dwLineIndex)
 	{
-		const std::string& c_rstLine=kMemTextFileLoader.GetLineString(dwLineIndex);		
+		const std::string& c_rstLine = kMemTextFileLoader.GetLineString(dwLineIndex);
 		m_kInsultChecker.AppendInsult(c_rstLine);
 	}
 	return true;
@@ -51,29 +51,29 @@ bool CPythonNetworkStream::LoadInsultList(const char* c_szInsultListFileName)
 
 bool CPythonNetworkStream::LoadConvertTable(DWORD dwEmpireID, const char* c_szFileName)
 {
-	if (dwEmpireID<1 || dwEmpireID>=4)
+	if (dwEmpireID < 1 || dwEmpireID >= 4)
 		return false;
 
 	std::stringstream data;
 	if (!CEterPackManager::Instance().Get(c_szFileName, data))
 		return false;
 
-	DWORD dwEngCount=26;
+	DWORD dwEngCount = 26;
 	DWORD dwHanCount = (0xc8 - 0xb0 + 1) * (0xfe - 0xa1 + 1);
-	DWORD dwHanSize=dwHanCount*2;
-	DWORD dwFileSize=dwEngCount*2+dwHanSize;
+	DWORD dwHanSize = dwHanCount * 2;
+	DWORD dwFileSize = dwEngCount * 2 + dwHanSize;
 
 	if (data.str().length() < dwFileSize)
 		return false;
 
-	STextConvertTable& rkTextConvTable=m_aTextConvTable[dwEmpireID-1];		
+	STextConvertTable& rkTextConvTable = m_aTextConvTable[dwEmpireID - 1];
 	data.read((char*)rkTextConvTable.acUpper, dwEngCount);
 	data.read((char*)rkTextConvTable.acLower, dwEngCount);
 	data.read((char*)rkTextConvTable.aacHan, dwHanSize);
 
 	if (!data)
 		return false;
-	
+
 	return true;
 }
 
@@ -113,7 +113,7 @@ void CPythonNetworkStream::LoadingPhase()
 				return;
 			break;
 
-		// END_OF_SUPPORT_BGM
+			// END_OF_SUPPORT_BGM
 
 		case HEADER_GC_CHARACTER_UPDATE:
 			if (RecvCharacterUpdatePacket())
@@ -156,20 +156,20 @@ void CPythonNetworkStream::LoadingPhase()
 
 void CPythonNetworkStream::SetLoadingPhase()
 {
-	if ("Loading"!=m_strPhase)
+	if ("Loading" != m_strPhase)
 		m_phaseLeaveFunc.Run();
 
 	Tracen("");
 	Tracen("## Network - Loading Phase ##");
 	Tracen("");
 
-	m_strPhase = "Loading";	
+	m_strPhase = "Loading";
 
 	m_dwChangingPhaseTime = ELTimer_GetMSec();
 	m_phaseProcessFunc.Set(this, &CPythonNetworkStream::LoadingPhase);
 	m_phaseLeaveFunc.Set(this, &CPythonNetworkStream::__LeaveLoadingPhase);
 
-	CPythonPlayer& rkPlayer=CPythonPlayer::Instance();
+	CPythonPlayer& rkPlayer = CPythonPlayer::Instance();
 	rkPlayer.Clear();
 
 	CFlyingManager::Instance().DeleteAllInstances();
@@ -191,13 +191,13 @@ bool CPythonNetworkStream::RecvMainCharacter()
 
 	m_rokNetActorMgr->SetMainActorVID(m_dwMainActorVID);
 
-	CPythonPlayer& rkPlayer=CPythonPlayer::Instance();
+	CPythonPlayer& rkPlayer = CPythonPlayer::Instance();
 	rkPlayer.SetName(MainChrPacket.szName);
 	rkPlayer.SetMainCharacterIndex(GetMainActorVID());
 
 	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_LOAD], "LoadData", Py_BuildValue("(ii)", MainChrPacket.lX, MainChrPacket.lY));
 
-	//Tracef(" >> RecvMainCharacter\n");
+	// Tracef(" >> RecvMainCharacter\n");
 
 	SendClientVersionPacket();
 	return true;
@@ -217,13 +217,13 @@ bool CPythonNetworkStream::RecvMainCharacter2_EMPIRE()
 
 	m_rokNetActorMgr->SetMainActorVID(m_dwMainActorVID);
 
-	CPythonPlayer& rkPlayer=CPythonPlayer::Instance();
+	CPythonPlayer& rkPlayer = CPythonPlayer::Instance();
 	rkPlayer.SetName(mainChrPacket.szName);
 	rkPlayer.SetMainCharacterIndex(GetMainActorVID());
 
 	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_LOAD], "LoadData", Py_BuildValue("(ii)", mainChrPacket.lX, mainChrPacket.lY));
 
-	//Tracef(" >> RecvMainCharacterNew : %d\n", m_dwMainActorEmpire);
+	// Tracef(" >> RecvMainCharacterNew : %d\n", m_dwMainActorEmpire);
 
 	SendClientVersionPacket();
 	return true;
@@ -242,7 +242,7 @@ bool CPythonNetworkStream::RecvMainCharacter3_BGM()
 
 	m_rokNetActorMgr->SetMainActorVID(m_dwMainActorVID);
 
-	CPythonPlayer& rkPlayer=CPythonPlayer::Instance();
+	CPythonPlayer& rkPlayer = CPythonPlayer::Instance();
 	rkPlayer.SetName(mainChrPacket.szUserName);
 	rkPlayer.SetMainCharacterIndex(GetMainActorVID());
 
@@ -250,7 +250,7 @@ bool CPythonNetworkStream::RecvMainCharacter3_BGM()
 
 	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_LOAD], "LoadData", Py_BuildValue("(ii)", mainChrPacket.lX, mainChrPacket.lY));
 
-	//Tracef(" >> RecvMainCharacterNew : %d\n", m_dwMainActorEmpire);
+	// Tracef(" >> RecvMainCharacterNew : %d\n", m_dwMainActorEmpire);
 
 	SendClientVersionPacket();
 	return true;
@@ -269,7 +269,7 @@ bool CPythonNetworkStream::RecvMainCharacter4_BGM_VOL()
 
 	m_rokNetActorMgr->SetMainActorVID(m_dwMainActorVID);
 
-	CPythonPlayer& rkPlayer=CPythonPlayer::Instance();
+	CPythonPlayer& rkPlayer = CPythonPlayer::Instance();
 	rkPlayer.SetName(mainChrPacket.szUserName);
 	rkPlayer.SetMainCharacterIndex(GetMainActorVID());
 
@@ -277,15 +277,14 @@ bool CPythonNetworkStream::RecvMainCharacter4_BGM_VOL()
 
 	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_LOAD], "LoadData", Py_BuildValue("(ii)", mainChrPacket.lX, mainChrPacket.lY));
 
-	//Tracef(" >> RecvMainCharacterNew : %d\n", m_dwMainActorEmpire);
+	// Tracef(" >> RecvMainCharacterNew : %d\n", m_dwMainActorEmpire);
 
 	SendClientVersionPacket();
 	return true;
 }
 
-
-static std::string	gs_fieldMusic_fileName;
-static float		gs_fieldMusic_volume = 1.0f / 5.0f * 0.1f;
+static std::string gs_fieldMusic_fileName;
+static float gs_fieldMusic_volume = 1.0f / 5.0f * 0.1f;
 
 void CPythonNetworkStream::__SetFieldMusicFileName(const char* musicName)
 {
@@ -300,7 +299,7 @@ void CPythonNetworkStream::__SetFieldMusicFileInfo(const char* musicName, float 
 
 const char* CPythonNetworkStream::GetFieldMusicFileName()
 {
-	return gs_fieldMusic_fileName.c_str();	
+	return gs_fieldMusic_fileName.c_str();
 }
 
 float CPythonNetworkStream::GetFieldMusicVolume()
@@ -308,7 +307,6 @@ float CPythonNetworkStream::GetFieldMusicVolume()
 	return gs_fieldMusic_volume;
 }
 // END_OF_SUPPORT_BGM
-
 
 bool CPythonNetworkStream::__RecvPlayerPoints()
 {
@@ -326,9 +324,9 @@ bool CPythonNetworkStream::__RecvPlayerPoints()
 
 void CPythonNetworkStream::StartGame()
 {
-	m_isStartGame=TRUE;
+	m_isStartGame = TRUE;
 }
-	
+
 bool CPythonNetworkStream::SendEnterGame()
 {
 	TPacketCGEnterFrontGame EnterFrontGamePacket;

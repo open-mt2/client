@@ -15,25 +15,25 @@
 
 inline HANDLE Platform_CreateSystemCursor(SDL_SystemCursor cursor)
 {
-    return reinterpret_cast<HANDLE>(SDL_CreateSystemCursor(cursor));
+	return reinterpret_cast<HANDLE>(SDL_CreateSystemCursor(cursor));
 }
 
 inline void Platform_DestroyCursor(HANDLE handle)
 {
-    if (handle)
-        SDL_FreeCursor(reinterpret_cast<SDL_Cursor*>(handle));
+	if (handle)
+		SDL_FreeCursor(reinterpret_cast<SDL_Cursor*>(handle));
 }
 
 inline void Platform_SetCursorHandle(HANDLE handle)
 {
-    SDL_SetCursor(reinterpret_cast<SDL_Cursor*>(handle));
+	SDL_SetCursor(reinterpret_cast<SDL_Cursor*>(handle));
 }
 
 // SDL_ShowCursor returns the previous 0/1 state, not the Win32 reference
 // counter; callers must not drive a do/while loop with it.
 inline int Platform_ShowCursorFlag(BOOL show)
 {
-    return SDL_ShowCursor(show ? SDL_ENABLE : SDL_DISABLE);
+	return SDL_ShowCursor(show ? SDL_ENABLE : SDL_DISABLE);
 }
 
 #if defined(_WIN32) || defined(_WIN64)

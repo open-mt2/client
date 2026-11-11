@@ -28,111 +28,111 @@ class CMainPacketHeaderMap : public CNetworkPacketHeaderMap
 	public:
 		CMainPacketHeaderMap()
 		{
-			Set(HEADER_GC_EMPIRE,				CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCEmpire), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_WARP,					CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCWarp), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_SKILL_COOLTIME_END,	CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCSkillCoolTimeEnd), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_QUEST_INFO,			CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCQuestInfo), DYNAMIC_SIZE_PACKET));
-			Set(HEADER_GC_REQUEST_MAKE_GUILD,	CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCBlank), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_PVP,					CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCPVP), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_DUEL_START,			CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCDuelStart), DYNAMIC_SIZE_PACKET));
-			Set(HEADER_GC_CHARACTER_ADD,		CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCCharacterAdd), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_CHAR_ADDITIONAL_INFO,	CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCCharacterAdditionalInfo), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_CHARACTER_ADD2,		CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCCharacterAdd2), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_CHARACTER_UPDATE,		CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCCharacterUpdate), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_CHARACTER_UPDATE2,	CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCCharacterUpdate2), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_CHARACTER_DEL,		CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCCharacterDelete), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_CHARACTER_MOVE,		CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCMove), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_CHAT,					CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCChat), DYNAMIC_SIZE_PACKET));
+			Set(HEADER_GC_EMPIRE, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCEmpire), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_WARP, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCWarp), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_SKILL_COOLTIME_END, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCSkillCoolTimeEnd), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_QUEST_INFO, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCQuestInfo), DYNAMIC_SIZE_PACKET));
+			Set(HEADER_GC_REQUEST_MAKE_GUILD, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCBlank), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_PVP, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCPVP), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_DUEL_START, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCDuelStart), DYNAMIC_SIZE_PACKET));
+			Set(HEADER_GC_CHARACTER_ADD, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCCharacterAdd), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_CHAR_ADDITIONAL_INFO, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCCharacterAdditionalInfo), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_CHARACTER_ADD2, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCCharacterAdd2), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_CHARACTER_UPDATE, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCCharacterUpdate), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_CHARACTER_UPDATE2, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCCharacterUpdate2), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_CHARACTER_DEL, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCCharacterDelete), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_CHARACTER_MOVE, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCMove), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_CHAT, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCChat), DYNAMIC_SIZE_PACKET));
 
-			Set(HEADER_GC_SYNC_POSITION,		CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCC2C), DYNAMIC_SIZE_PACKET));
+			Set(HEADER_GC_SYNC_POSITION, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCC2C), DYNAMIC_SIZE_PACKET));
 
-			Set(HEADER_GC_LOGIN_SUCCESS3,		CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCLoginSuccess3), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_LOGIN_SUCCESS4,		CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCLoginSuccess4), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_LOGIN_FAILURE,		CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCLoginFailure), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_LOGIN_SUCCESS3, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCLoginSuccess3), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_LOGIN_SUCCESS4, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCLoginSuccess4), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_LOGIN_FAILURE, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCLoginFailure), STATIC_SIZE_PACKET));
 
-			Set(HEADER_GC_PLAYER_CREATE_SUCCESS,		 CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCPlayerCreateSuccess), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_PLAYER_CREATE_FAILURE,		 CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCCreateFailure), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_PLAYER_DELETE_SUCCESS,		 CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCBlank), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_PLAYER_CREATE_SUCCESS, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCPlayerCreateSuccess), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_PLAYER_CREATE_FAILURE, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCCreateFailure), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_PLAYER_DELETE_SUCCESS, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCBlank), STATIC_SIZE_PACKET));
 			Set(HEADER_GC_PLAYER_DELETE_WRONG_SOCIAL_ID, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCBlank), STATIC_SIZE_PACKET));
 
-			Set(HEADER_GC_STUN,					CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCStun), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_DEAD,					CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCDead), STATIC_SIZE_PACKET));
-			
-			Set(HEADER_GC_MAIN_CHARACTER,			CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCMainCharacter), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_STUN, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCStun), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_DEAD, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCDead), STATIC_SIZE_PACKET));
+
+			Set(HEADER_GC_MAIN_CHARACTER, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCMainCharacter), STATIC_SIZE_PACKET));
 
 			// SUPPORT_BGM
-			Set(HEADER_GC_MAIN_CHARACTER2_EMPIRE,	CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCMainCharacter2_EMPIRE), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_MAIN_CHARACTER3_BGM,		CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCMainCharacter3_BGM), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_MAIN_CHARACTER4_BGM_VOL,	CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCMainCharacter4_BGM_VOL), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_MAIN_CHARACTER2_EMPIRE, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCMainCharacter2_EMPIRE), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_MAIN_CHARACTER3_BGM, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCMainCharacter3_BGM), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_MAIN_CHARACTER4_BGM_VOL, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCMainCharacter4_BGM_VOL), STATIC_SIZE_PACKET));
 			// END_OFSUPPORT_BGM
 
-			Set(HEADER_GC_PLAYER_POINTS,		CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCPoints), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_PLAYER_POINT_CHANGE,	CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCPointChange), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_PLAYER_POINTS, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCPoints), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_PLAYER_POINT_CHANGE, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCPointChange), STATIC_SIZE_PACKET));
 
-			Set(HEADER_GC_ITEM_SET,				CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCItemSet), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_ITEM_SET2,			CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCItemSet2), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_ITEM_SET, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCItemSet), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_ITEM_SET2, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCItemSet2), STATIC_SIZE_PACKET));
 
-			Set(HEADER_GC_ITEM_USE,				CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCItemUse), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_ITEM_UPDATE,			CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCItemUpdate), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_ITEM_USE, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCItemUse), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_ITEM_UPDATE, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCItemUpdate), STATIC_SIZE_PACKET));
 
-			Set(HEADER_GC_ITEM_GROUND_ADD,		CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCItemGroundAdd), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_ITEM_GROUND_DEL,		CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCItemGroundDel), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_ITEM_OWNERSHIP,		CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCItemOwnership), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_ITEM_GROUND_ADD, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCItemGroundAdd), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_ITEM_GROUND_DEL, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCItemGroundDel), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_ITEM_OWNERSHIP, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCItemOwnership), STATIC_SIZE_PACKET));
 
-			Set(HEADER_GC_QUICKSLOT_ADD,		CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCQuickSlotAdd), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_QUICKSLOT_DEL,		CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCQuickSlotDel), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_QUICKSLOT_SWAP,		CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCQuickSlotSwap), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_QUICKSLOT_ADD, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCQuickSlotAdd), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_QUICKSLOT_DEL, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCQuickSlotDel), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_QUICKSLOT_SWAP, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCQuickSlotSwap), STATIC_SIZE_PACKET));
 
-			Set(HEADER_GC_WHISPER,				CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCWhisper), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_WHISPER, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCWhisper), STATIC_SIZE_PACKET));
 
-			Set(HEADER_GC_CHARACTER_POSITION,	CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCPosition), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_MOTION,				CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCMotion), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_CHARACTER_POSITION, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCPosition), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_MOTION, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCMotion), STATIC_SIZE_PACKET));
 
-			Set(HEADER_GC_SHOP,			CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCShop), DYNAMIC_SIZE_PACKET));
-			Set(HEADER_GC_SHOP_SIGN,	CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCShopSign), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_EXCHANGE,		CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCExchange), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_SHOP, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCShop), DYNAMIC_SIZE_PACKET));
+			Set(HEADER_GC_SHOP_SIGN, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCShopSign), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_EXCHANGE, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCExchange), STATIC_SIZE_PACKET));
 
-			Set(HEADER_GC_PING,			CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCPing), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_PING, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCPing), STATIC_SIZE_PACKET));
 
-			Set(HEADER_GC_SCRIPT,			CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCScript), DYNAMIC_SIZE_PACKET));
-			Set(HEADER_GC_QUEST_CONFIRM,	CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCQuestConfirm), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_SCRIPT, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCScript), DYNAMIC_SIZE_PACKET));
+			Set(HEADER_GC_QUEST_CONFIRM, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCQuestConfirm), STATIC_SIZE_PACKET));
 
-			Set(HEADER_GC_TARGET,		CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCTarget), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_MOUNT,		CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCMount), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_TARGET, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCTarget), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_MOUNT, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCMount), STATIC_SIZE_PACKET));
 
-			Set(HEADER_GC_CHANGE_SPEED,	CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCChangeSpeed), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_CHANGE_SPEED, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCChangeSpeed), STATIC_SIZE_PACKET));
 
-			Set(HEADER_GC_HANDSHAKE,	CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCHandshake), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_HANDSHAKE_OK,	CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCBlank), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_OWNERSHIP,	CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCOwnership), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_CREATE_FLY,	CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCCreateFly), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_HANDSHAKE, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCHandshake), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_HANDSHAKE_OK, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCBlank), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_OWNERSHIP, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCOwnership), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_CREATE_FLY, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCCreateFly), STATIC_SIZE_PACKET));
 			Set(HEADER_GC_ADD_FLY_TARGETING, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCFlyTargeting), STATIC_SIZE_PACKET));
 			Set(HEADER_GC_FLY_TARGETING, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCFlyTargeting), STATIC_SIZE_PACKET));
 
-			Set(HEADER_GC_PHASE,		CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCPhase), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_SKILL_LEVEL,	CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCSkillLevel), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_SKILL_LEVEL_NEW,	CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCSkillLevelNew), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_PHASE, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCPhase), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_SKILL_LEVEL, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCSkillLevel), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_SKILL_LEVEL_NEW, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCSkillLevelNew), STATIC_SIZE_PACKET));
 
-			Set(HEADER_GC_MESSENGER,	CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCMessenger), DYNAMIC_SIZE_PACKET));
-			Set(HEADER_GC_GUILD,		CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCGuild), DYNAMIC_SIZE_PACKET));
+			Set(HEADER_GC_MESSENGER, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCMessenger), DYNAMIC_SIZE_PACKET));
+			Set(HEADER_GC_GUILD, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCGuild), DYNAMIC_SIZE_PACKET));
 
-			Set(HEADER_GC_PARTY_INVITE,	CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCPartyInvite), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_PARTY_ADD,	CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCPartyAdd), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_PARTY_UPDATE,	CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCPartyUpdate), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_PARTY_REMOVE,	CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCPartyRemove), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_PARTY_LINK,	CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCPartyLink), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_PARTY_UNLINK,	CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCPartyUnlink), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_PARTY_PARAMETER,	CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCPartyParameter), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_PARTY_INVITE, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCPartyInvite), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_PARTY_ADD, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCPartyAdd), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_PARTY_UPDATE, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCPartyUpdate), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_PARTY_REMOVE, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCPartyRemove), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_PARTY_LINK, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCPartyLink), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_PARTY_UNLINK, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCPartyUnlink), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_PARTY_PARAMETER, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCPartyParameter), STATIC_SIZE_PACKET));
 
-			Set(HEADER_GC_SAFEBOX_SET,	CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCItemSet), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_SAFEBOX_DEL,	CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCItemDel), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_SAFEBOX_WRONG_PASSWORD,	CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCSafeboxWrongPassword), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_SAFEBOX_SIZE,	CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCSafeboxSize), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_SAFEBOX_MONEY_CHANGE,	CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCSafeboxMoneyChange), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_SAFEBOX_SET, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCItemSet), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_SAFEBOX_DEL, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCItemDel), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_SAFEBOX_WRONG_PASSWORD, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCSafeboxWrongPassword), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_SAFEBOX_SIZE, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCSafeboxSize), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_SAFEBOX_MONEY_CHANGE, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCSafeboxMoneyChange), STATIC_SIZE_PACKET));
 
-			Set(HEADER_GC_FISHING,	CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCFishing), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_FISHING, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCFishing), STATIC_SIZE_PACKET));
 			Set(HEADER_GC_DUNGEON, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCDungeon), DYNAMIC_SIZE_PACKET));
-			//Set(HEADER_GC_SLOW_TIMER, CNetworkPacketHeaderMap::TPacketType(sizeof(BYTE), STATIC_SIZE_PACKET));
+			// Set(HEADER_GC_SLOW_TIMER, CNetworkPacketHeaderMap::TPacketType(sizeof(BYTE), STATIC_SIZE_PACKET));
 			Set(HEADER_GC_TIME, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCTime), STATIC_SIZE_PACKET));
 			Set(HEADER_GC_WALK_MODE, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCWalkMode), STATIC_SIZE_PACKET));
 			Set(HEADER_GC_CHANGE_SKILL_GROUP, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCChangeSkillGroup), STATIC_SIZE_PACKET));
@@ -153,7 +153,7 @@ class CMainPacketHeaderMap : public CNetworkPacketHeaderMap
 			Set(HEADER_GC_VIEW_EQUIP, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCViewEquip), STATIC_SIZE_PACKET));
 			Set(HEADER_GC_LAND_LIST, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCLandList), DYNAMIC_SIZE_PACKET));
 
-			//Set(HEADER_GC_TARGET_CREATE, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCTargetCreate), STATIC_SIZE_PACKET));
+			// Set(HEADER_GC_TARGET_CREATE, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCTargetCreate), STATIC_SIZE_PACKET));
 			Set(HEADER_GC_TARGET_UPDATE, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCTargetUpdate), STATIC_SIZE_PACKET));
 			Set(HEADER_GC_TARGET_DELETE, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCTargetDelete), STATIC_SIZE_PACKET));
 			Set(HEADER_GC_TARGET_CREATE_NEW, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCTargetCreateNew), STATIC_SIZE_PACKET));
@@ -171,12 +171,12 @@ class CMainPacketHeaderMap : public CNetworkPacketHeaderMap
 			Set(HEADER_GC_DIG_MOTION, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCDigMotion), STATIC_SIZE_PACKET));
 			Set(HEADER_GC_DAMAGE_INFO, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCDamageInfo), STATIC_SIZE_PACKET));
 
-			Set(HEADER_GC_SPECIFIC_EFFECT,	CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCSpecificEffect), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_DRAGON_SOUL_REFINE,		CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCDragonSoulRefine), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_SPECIFIC_EFFECT, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCSpecificEffect), STATIC_SIZE_PACKET));
+			Set(HEADER_GC_DRAGON_SOUL_REFINE, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCDragonSoulRefine), STATIC_SIZE_PACKET));
 		}
 };
 
-int g_iLastPacket[2] = { 0, 0 };
+int g_iLastPacket[2] = {0, 0};
 
 void CPythonNetworkStream::ExitApplication()
 {
@@ -202,13 +202,12 @@ void CPythonNetworkStream::ExitGame()
 	}
 }
 
-
 void CPythonNetworkStream::LogOutGame()
 {
 	if (__IsNotPing())
-	{		
+	{
 		AbsoluteExitGame();
-	}	
+	}
 	else
 	{
 		SendChatPacket("/logout");
@@ -220,7 +219,7 @@ void CPythonNetworkStream::AbsoluteExitGame()
 	if (!IsOnline())
 		return;
 
-	OnRemoteDisconnect();		
+	OnRemoteDisconnect();
 	Disconnect();
 }
 
@@ -240,7 +239,7 @@ DWORD CPythonNetworkStream::GetGuildID()
 	return m_dwGuildID;
 }
 
-UINT CPythonNetworkStream::UploadMark(const char * c_szImageFileName)
+UINT CPythonNetworkStream::UploadMark(const char* c_szImageFileName)
 {
 	// MARK_BUG_FIX
 	// 길드를 만든 직후는 길드 아이디가 0이다.
@@ -250,8 +249,8 @@ UINT CPythonNetworkStream::UploadMark(const char * c_szImageFileName)
 	gs_nextDownloadMarkTime = 0;
 	// END_OF_MARK_BUG_FIX
 
-	UINT uError=ERROR_UNKNOWN;
-	CGuildMarkUploader& rkGuildMarkUploader=CGuildMarkUploader::Instance();
+	UINT uError = ERROR_UNKNOWN;
+	CGuildMarkUploader& rkGuildMarkUploader = CGuildMarkUploader::Instance();
 	if (!rkGuildMarkUploader.Connect(m_kMarkAuth.m_kNetAddr, m_kMarkAuth.m_dwHandle, m_kMarkAuth.m_dwRandomKey, m_dwGuildID, c_szImageFileName, &uError))
 	{
 		switch (uError)
@@ -273,10 +272,10 @@ UINT CPythonNetworkStream::UploadMark(const char * c_szImageFileName)
 		}
 	}
 
-	// MARK_BUG_FIX	
+	// MARK_BUG_FIX
 	__DownloadMark();
 	// END_OF_MARK_BUG_FIX
-	
+
 	if (CGuildMarkManager::INVALID_MARK_ID == CGuildMarkManager::Instance().GetMarkID(m_dwGuildID))
 		return ERROR_MARK_CHECK_NEED_RECONNECT;
 
@@ -285,8 +284,8 @@ UINT CPythonNetworkStream::UploadMark(const char * c_szImageFileName)
 
 UINT CPythonNetworkStream::UploadSymbol(const char* c_szImageFileName)
 {
-	UINT uError=ERROR_UNKNOWN;
-	CGuildMarkUploader& rkGuildMarkUploader=CGuildMarkUploader::Instance();
+	UINT uError = ERROR_UNKNOWN;
+	CGuildMarkUploader& rkGuildMarkUploader = CGuildMarkUploader::Instance();
 	if (!rkGuildMarkUploader.ConnectToSendSymbol(m_kMarkAuth.m_kNetAddr, m_kMarkAuth.m_dwHandle, m_kMarkAuth.m_dwRandomKey, m_dwGuildID, c_szImageFileName, &uError))
 	{
 		switch (uError)
@@ -325,29 +324,29 @@ void CPythonNetworkStream::__DownloadMark()
 	rkGuildMarkDownloader.Connect(m_kMarkAuth.m_kNetAddr, m_kMarkAuth.m_dwHandle, m_kMarkAuth.m_dwRandomKey);
 }
 
-void CPythonNetworkStream::__DownloadSymbol(const std::vector<DWORD> & c_rkVec_dwGuildID)
+void CPythonNetworkStream::__DownloadSymbol(const std::vector<DWORD>& c_rkVec_dwGuildID)
 {
-	CGuildMarkDownloader& rkGuildMarkDownloader=CGuildMarkDownloader::Instance();
+	CGuildMarkDownloader& rkGuildMarkDownloader = CGuildMarkDownloader::Instance();
 	rkGuildMarkDownloader.ConnectToRecvSymbol(m_kMarkAuth.m_kNetAddr, m_kMarkAuth.m_dwHandle, m_kMarkAuth.m_dwRandomKey, c_rkVec_dwGuildID);
 }
 
 void CPythonNetworkStream::SetPhaseWindow(UINT ePhaseWnd, PyObject* poPhaseWnd)
 {
-	if (ePhaseWnd>=PHASE_WINDOW_NUM)
+	if (ePhaseWnd >= PHASE_WINDOW_NUM)
 		return;
 
-	m_apoPhaseWnd[ePhaseWnd]=poPhaseWnd;
+	m_apoPhaseWnd[ePhaseWnd] = poPhaseWnd;
 }
 
 void CPythonNetworkStream::ClearPhaseWindow(UINT ePhaseWnd, PyObject* poPhaseWnd)
 {
-	if (ePhaseWnd>=PHASE_WINDOW_NUM)
+	if (ePhaseWnd >= PHASE_WINDOW_NUM)
 		return;
 
 	if (poPhaseWnd != m_apoPhaseWnd[ePhaseWnd])
 		return;
 
-	m_apoPhaseWnd[ePhaseWnd]=0;
+	m_apoPhaseWnd[ePhaseWnd] = 0;
 }
 
 void CPythonNetworkStream::SetServerCommandParserWindow(PyObject* poWnd)
@@ -359,7 +358,7 @@ bool CPythonNetworkStream::IsSelectedEmpire()
 {
 	if (m_dwEmpireID)
 		return true;
-	
+
 	return false;
 }
 
@@ -367,9 +366,9 @@ UINT CPythonNetworkStream::GetAccountCharacterSlotDatau(UINT iSlot, UINT eType)
 {
 	if (iSlot >= PLAYER_PER_ACCOUNT4)
 		return 0;
-		
-	TSimplePlayerInformation&	rkSimplePlayerInfo=m_akSimplePlayerInfo[iSlot];
-	
+
+	TSimplePlayerInformation& rkSimplePlayerInfo = m_akSimplePlayerInfo[iSlot];
+
 	switch (eType)
 	{
 		case ACCOUNT_CHARACTER_SLOT_ID:
@@ -384,12 +383,12 @@ UINT CPythonNetworkStream::GetAccountCharacterSlotDatau(UINT iSlot, UINT eType)
 			return rkSimplePlayerInfo.byDX;
 		case ACCOUNT_CHARACTER_SLOT_HTH:
 			return rkSimplePlayerInfo.byHT;
-		case ACCOUNT_CHARACTER_SLOT_INT:			
+		case ACCOUNT_CHARACTER_SLOT_INT:
 			return rkSimplePlayerInfo.byIQ;
 		case ACCOUNT_CHARACTER_SLOT_PLAYTIME:
 			return rkSimplePlayerInfo.dwPlayMinutes;
 		case ACCOUNT_CHARACTER_SLOT_FORM:
-//			return rkSimplePlayerInfo.wParts[CRaceData::PART_MAIN];
+			//			return rkSimplePlayerInfo.wParts[CRaceData::PART_MAIN];
 			return rkSimplePlayerInfo.wMainPart;
 		case ACCOUNT_CHARACTER_SLOT_PORT:
 			return rkSimplePlayerInfo.wPort;
@@ -408,35 +407,34 @@ UINT CPythonNetworkStream::GetAccountCharacterSlotDatau(UINT iSlot, UINT eType)
 
 const char* CPythonNetworkStream::GetAccountCharacterSlotDataz(UINT iSlot, UINT eType)
 {
-	static const char* sc_szEmpty="";
+	static const char* sc_szEmpty = "";
 
 	if (iSlot >= PLAYER_PER_ACCOUNT4)
 		return sc_szEmpty;
-		
-	TSimplePlayerInformation&	rkSimplePlayerInfo=m_akSimplePlayerInfo[iSlot];
-	
+
+	TSimplePlayerInformation& rkSimplePlayerInfo = m_akSimplePlayerInfo[iSlot];
+
 	switch (eType)
 	{
 		case ACCOUNT_CHARACTER_SLOT_ADDR:
-			{				
-				BYTE ip[4];
+		{
+			BYTE ip[4];
 
-				const int LEN = 4;
-				for (int i = 0; i < LEN; i++)
-				{
-					ip[i] = BYTE(rkSimplePlayerInfo.lAddr&0xff);
-					rkSimplePlayerInfo.lAddr>>=8;
-				}
-
-
-				static char s_szAddr[256];
-				sprintf(s_szAddr, "%d.%d.%d.%d", ip[0], ip[1], ip[2], ip[3]);
-				return s_szAddr;
+			const int LEN = 4;
+			for (int i = 0; i < LEN; i++)
+			{
+				ip[i] = BYTE(rkSimplePlayerInfo.lAddr & 0xff);
+				rkSimplePlayerInfo.lAddr >>= 8;
 			}
-			break;
+
+			static char s_szAddr[256];
+			sprintf(s_szAddr, "%d.%d.%d.%d", ip[0], ip[1], ip[2], ip[3]);
+			return s_szAddr;
+		}
+		break;
 		case ACCOUNT_CHARACTER_SLOT_NAME:
 			return rkSimplePlayerInfo.szName;
-			break;		
+			break;
 		case ACCOUNT_CHARACTER_SLOT_GUILD_NAME:
 			return m_astrGuildName[iSlot].c_str();
 			break;
@@ -446,7 +444,7 @@ const char* CPythonNetworkStream::GetAccountCharacterSlotDataz(UINT iSlot, UINT 
 
 void CPythonNetworkStream::ConnectLoginServer(const char* c_szAddr, UINT uPort)
 {
-	CNetworkStream::Connect(c_szAddr, uPort);		
+	CNetworkStream::Connect(c_szAddr, uPort);
 }
 
 void CPythonNetworkStream::SetMarkServer(const char* c_szAddr, UINT uPort)
@@ -463,17 +461,17 @@ void CPythonNetworkStream::ConnectGameServer(UINT iChrSlot)
 
 	__DirectEnterMode_Set(iChrSlot);
 
-	TSimplePlayerInformation&	rkSimplePlayerInfo=m_akSimplePlayerInfo[iChrSlot];	
+	TSimplePlayerInformation& rkSimplePlayerInfo = m_akSimplePlayerInfo[iChrSlot];
 	CNetworkStream::Connect((DWORD)rkSimplePlayerInfo.lAddr, rkSimplePlayerInfo.wPort);
 }
 
 void CPythonNetworkStream::SetLoginInfo(const char* c_szID, const char* c_szPassword)
 {
-	m_stID=c_szID;
-	m_stPassword=c_szPassword;
+	m_stID = c_szID;
+	m_stPassword = c_szPassword;
 }
 
-void CPythonNetworkStream::ClearLoginInfo( void )
+void CPythonNetworkStream::ClearLoginInfo(void)
 {
 	m_stPassword = "";
 }
@@ -483,7 +481,7 @@ void CPythonNetworkStream::SetLoginKey(DWORD dwLoginKey)
 	m_dwLoginKey = dwLoginKey;
 }
 
-bool CPythonNetworkStream::CheckPacket(TPacketHeader * pRetHeader)
+bool CPythonNetworkStream::CheckPacket(TPacketHeader* pRetHeader)
 {
 	*pRetHeader = 0;
 
@@ -498,7 +496,7 @@ bool CPythonNetworkStream::CheckPacket(TPacketHeader * pRetHeader)
 	{
 		if (!Recv(sizeof(TPacketHeader), &header))
 			return false;
-		
+
 		while (Peek(sizeof(TPacketHeader), &header))
 		{
 			if (0 == header)
@@ -537,9 +535,9 @@ bool CPythonNetworkStream::CheckPacket(TPacketHeader * pRetHeader)
 
 		if (!Peek(DynamicSizePacketHeader.size))
 		{
-			Tracef("CPythonNetworkStream::CheckPacket - Not enough dynamic packet size: header %d packet size: %d\n", 
-				DynamicSizePacketHeader.header,
-				DynamicSizePacketHeader.size);
+			Tracef("CPythonNetworkStream::CheckPacket - Not enough dynamic packet size: header %d packet size: %d\n",
+				   DynamicSizePacketHeader.header,
+				   DynamicSizePacketHeader.size);
 			return false;
 		}
 	}
@@ -547,7 +545,7 @@ bool CPythonNetworkStream::CheckPacket(TPacketHeader * pRetHeader)
 	{
 		if (!Peek(PacketType.iPacketSize))
 		{
-			//Tracef("Not enough packet size: header %d packet size: %d, recv buffer size: %d",
+			// Tracef("Not enough packet size: header %d packet size: %d, recv buffer size: %d",
 			//	header,
 			//	PacketType.iPacketSize,
 			//	GetRecvBufferSize());
@@ -558,19 +556,19 @@ bool CPythonNetworkStream::CheckPacket(TPacketHeader * pRetHeader)
 	if (!header)
 		return false;
 
-	*pRetHeader = header;	
+	*pRetHeader = header;
 
 	g_iLastPacket[0] = g_iLastPacket[1];
 	g_iLastPacket[1] = header;
-	//Tracenf("header %d size %d", header, PacketType.iPacketSize);
-	//Tracenf("header %d size %d outputpos[%d] security %u", header, PacketType.iPacketSize, m_recvBufOutputPos, IsSecurityMode());
+	// Tracenf("header %d size %d", header, PacketType.iPacketSize);
+	// Tracenf("header %d size %d outputpos[%d] security %u", header, PacketType.iPacketSize, m_recvBufOutputPos, IsSecurityMode());
 	return true;
 }
 
 bool CPythonNetworkStream::RecvErrorPacket(int header)
 {
 	TraceError("Phase %s does not handle this header (header: %d, last: %d, %d)",
-		m_strPhase.c_str(), header, g_iLastPacket[0], g_iLastPacket[1]);
+			   m_strPhase.c_str(), header, g_iLastPacket[0], g_iLastPacket[1]);
 
 	ClearRecvBuffer();
 	return true;
@@ -585,37 +583,37 @@ bool CPythonNetworkStream::RecvPhasePacket()
 
 	switch (packet_phase.phase)
 	{
-		case PHASE_CLOSE:				// 끊기는 상태 (또는 끊기 전 상태)
+		case PHASE_CLOSE: // 끊기는 상태 (또는 끊기 전 상태)
 			ClosePhase();
 			break;
 
-		case PHASE_HANDSHAKE:			// 악수..;;
+		case PHASE_HANDSHAKE: // 악수..;;
 			SetHandShakePhase();
 			break;
 
-		case PHASE_LOGIN:				// 로그인 중
+		case PHASE_LOGIN: // 로그인 중
 			SetLoginPhase();
 			break;
 
-		case PHASE_SELECT:				// 캐릭터 선택 화면
+		case PHASE_SELECT: // 캐릭터 선택 화면
 			SetSelectPhase();
 
 			BuildProcessCRC();
-	
+
 			// MARK_BUG_FIX
 			__DownloadMark();
 			// END_OF_MARK_BUG_FIX
 			break;
 
-		case PHASE_LOADING:				// 선택 후 로딩 화면
+		case PHASE_LOADING: // 선택 후 로딩 화면
 			SetLoadingPhase();
 			break;
 
-		case PHASE_GAME:				// 게임 화면
+		case PHASE_GAME: // 게임 화면
 			SetGamePhase();
 			break;
 
-		case PHASE_DEAD:				// 죽었을 때.. (게임 안에 있는 것일 수도..)
+		case PHASE_DEAD: // 죽었을 때.. (게임 안에 있는 것일 수도..)
 			break;
 	}
 
@@ -659,23 +657,22 @@ bool CPythonNetworkStream::OnProcess()
 		m_isStartGame = FALSE;
 
 		PyCallClassMemberFunc(m_poHandler, "SetGamePhase", Py_BuildValue("()"));
-//		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "StartGame", Py_BuildValue("()"));
+		//		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "StartGame", Py_BuildValue("()"));
 	}
-	
+
 	m_rokNetActorMgr->Update();
 
 	if (m_phaseProcessFunc.IsEmpty())
 		return true;
 
-	//TPacketHeader header;
-	//while(CheckPacket(&header))
+	// TPacketHeader header;
+	// while(CheckPacket(&header))
 	{
 		m_phaseProcessFunc.Run();
 	}
 
 	return true;
 }
-
 
 // Set
 void CPythonNetworkStream::SetOffLinePhase()
@@ -686,7 +683,7 @@ void CPythonNetworkStream::SetOffLinePhase()
 	m_strPhase = "OffLine";
 
 	Tracen("");
-	Tracen("## Network - OffLine Phase ##");	
+	Tracen("## Network - OffLine Phase ##");
 	Tracen("");
 
 	m_dwChangingPhaseTime = ELTimer_GetMSec();
@@ -700,7 +697,6 @@ void CPythonNetworkStream::SetOffLinePhase()
 	__DirectEnterMode_Initialize();
 	__BettingGuildWar_Initialize();
 }
-
 
 void CPythonNetworkStream::ClosePhase()
 {
@@ -773,14 +769,14 @@ void CPythonNetworkStream::__ClearSelectCharacterData()
 
 void CPythonNetworkStream::__DirectEnterMode_Initialize()
 {
-	m_kDirectEnterMode.m_isSet=false;
-	m_kDirectEnterMode.m_dwChrSlotIndex=0;	
+	m_kDirectEnterMode.m_isSet = false;
+	m_kDirectEnterMode.m_dwChrSlotIndex = 0;
 }
 
 void CPythonNetworkStream::__DirectEnterMode_Set(UINT uChrSlotIndex)
 {
-	m_kDirectEnterMode.m_isSet=true;
-	m_kDirectEnterMode.m_dwChrSlotIndex=uChrSlotIndex;
+	m_kDirectEnterMode.m_isSet = true;
+	m_kDirectEnterMode.m_dwChrSlotIndex = uChrSlotIndex;
 }
 
 bool CPythonNetworkStream::__DirectEnterMode_IsSet()
@@ -790,24 +786,24 @@ bool CPythonNetworkStream::__DirectEnterMode_IsSet()
 
 void CPythonNetworkStream::__InitializeMarkAuth()
 {
-	m_kMarkAuth.m_dwHandle=0;
-	m_kMarkAuth.m_dwRandomKey=0;
+	m_kMarkAuth.m_dwHandle = 0;
+	m_kMarkAuth.m_dwRandomKey = 0;
 }
 
 void CPythonNetworkStream::__BettingGuildWar_Initialize()
 {
-	m_kBettingGuildWar.m_dwBettingMoney=0;
-	m_kBettingGuildWar.m_dwObserverCount=0;
+	m_kBettingGuildWar.m_dwBettingMoney = 0;
+	m_kBettingGuildWar.m_dwObserverCount = 0;
 }
 
 void CPythonNetworkStream::__BettingGuildWar_SetObserverCount(UINT uObserverCount)
 {
-	m_kBettingGuildWar.m_dwObserverCount=uObserverCount;
+	m_kBettingGuildWar.m_dwObserverCount = uObserverCount;
 }
 
 void CPythonNetworkStream::__BettingGuildWar_SetBettingMoney(UINT uBettingMoney)
 {
-	m_kBettingGuildWar.m_dwBettingMoney=uBettingMoney;
+	m_kBettingGuildWar.m_dwBettingMoney = uBettingMoney;
 }
 
 DWORD CPythonNetworkStream::EXPORT_GetBettingGuildWarValue(const char* c_szValueName)
@@ -823,8 +819,8 @@ DWORD CPythonNetworkStream::EXPORT_GetBettingGuildWarValue(const char* c_szValue
 
 void CPythonNetworkStream::__ServerTimeSync_Initialize()
 {
-	m_kServerTimeSync.m_dwChangeClientTime=0;
-	m_kServerTimeSync.m_dwChangeServerTime=0;
+	m_kServerTimeSync.m_dwChangeClientTime = 0;
+	m_kServerTimeSync.m_dwChangeServerTime = 0;
 }
 
 void CPythonNetworkStream::SetWaitFlag()
@@ -834,7 +830,7 @@ void CPythonNetworkStream::SetWaitFlag()
 
 void CPythonNetworkStream::SendEmoticon(UINT eEmoticon)
 {
-	if(eEmoticon < m_EmoticonStringVector.size())
+	if (eEmoticon < m_EmoticonStringVector.size())
 		SendChatPacket(m_EmoticonStringVector[eEmoticon].c_str());
 	else
 		assert(false && "SendEmoticon Error");
@@ -842,7 +838,7 @@ void CPythonNetworkStream::SendEmoticon(UINT eEmoticon)
 
 CPythonNetworkStream::CPythonNetworkStream()
 {
-	m_rokNetActorMgr=new CNetworkActorManager;
+	m_rokNetActorMgr = new CNetworkActorManager;
 
 	memset(m_akSimplePlayerInfo, 0, sizeof(m_akSimplePlayerInfo));
 
@@ -865,14 +861,14 @@ CPythonNetworkStream::CPythonNetworkStream()
 	m_isEnableChatInsultFilter = FALSE;
 	m_bComboSkillFlag = FALSE;
 	m_strPhase = "OffLine";
-	
+
 	__InitializeGamePhase();
 	__InitializeMarkAuth();
 
 	__DirectEnterMode_Initialize();
 	__BettingGuildWar_Initialize();
 
-	std::fill(m_apoPhaseWnd, m_apoPhaseWnd+PHASE_WINDOW_NUM, (PyObject*)NULL);
+	std::fill(m_apoPhaseWnd, m_apoPhaseWnd + PHASE_WINDOW_NUM, (PyObject*)NULL);
 	m_poSerCommandParserWnd = NULL;
 
 	SetOffLinePhase();

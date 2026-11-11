@@ -11,12 +11,12 @@ extern std::string g_strResourcePath;
 extern std::string g_strImagePath;
 
 // Motion Key
-#define MOTION_KEY									DWORD
-#define MAKE_MOTION_KEY(mode, index)				(((DWORD)(((BYTE)(mode)) << 24) | ((DWORD)((WORD)(index))) << 8) | ((DWORD)((BYTE)(0))))
-#define MAKE_RANDOM_MOTION_KEY(mode, index, type)	(((DWORD)(((BYTE)(mode)) << 24) | ((DWORD)((WORD)(index))) << 8) | ((DWORD)((BYTE)(type))))
-#define GET_MOTION_MODE(key)						((BYTE)(((DWORD)(key) >> 24) & 0xFF))
-#define GET_MOTION_INDEX(key)						((WORD)(((DWORD)(key) >> 8) & 0xFFFF))
-#define GET_MOTION_SUB_INDEX(key)					((BYTE)(((DWORD)(key)) & 0xFF))
+#define MOTION_KEY DWORD
+#define MAKE_MOTION_KEY(mode, index) (((DWORD)(((BYTE)(mode)) << 24) | ((DWORD)((WORD)(index))) << 8) | ((DWORD)((BYTE)(0))))
+#define MAKE_RANDOM_MOTION_KEY(mode, index, type) (((DWORD)(((BYTE)(mode)) << 24) | ((DWORD)((WORD)(index))) << 8) | ((DWORD)((BYTE)(type))))
+#define GET_MOTION_MODE(key) ((BYTE)(((DWORD)(key) >> 24) & 0xFF))
+#define GET_MOTION_INDEX(key) ((WORD)(((DWORD)(key) >> 8) & 0xFFFF))
+#define GET_MOTION_SUB_INDEX(key) ((BYTE)(((DWORD)(key)) & 0xFF))
 /*
 #define MAKE_MOTION_KEY(mode, index)		MAKELONG(index, mode)
 #define GET_MOTION_MODE(key)				HIWORD(key)
@@ -60,34 +60,34 @@ namespace NRaceData
 
 	typedef struct SAttackData
 	{
-		int iAttackType;
-		int iHittingType;
-		float fInvisibleTime;
-		float fExternalForce;
-		float fStiffenTime;
-		int iHitLimitCount;
+			int iAttackType;
+			int iHittingType;
+			float fInvisibleTime;
+			float fExternalForce;
+			float fStiffenTime;
+			int iHitLimitCount;
 	} TAttackData;
 
 	typedef struct SHitData
 	{
-		float fAttackStartTime;
-		float fAttackEndTime;
+			float fAttackStartTime;
+			float fAttackEndTime;
 
-		float fWeaponLength;
-		std::string strBoneName;
+			float fWeaponLength;
+			std::string strBoneName;
 
-		THitTimePositionMap mapHitPosition;
+			THitTimePositionMap mapHitPosition;
 
-		bool Load(CTextFileLoader & rTextFileLoader);
+			bool Load(CTextFileLoader& rTextFileLoader);
 	} THitData;
 
 	typedef std::vector<THitData> THitDataContainer;
 
 	typedef struct SMotionAttackData : public SAttackData
 	{
-		int iMotionType;
+			int iMotionType;
 
-		THitDataContainer HitDataContainer;
+			THitDataContainer HitDataContainer;
 	} TMotionAttackData;
 
 	/////////////////////////////////////////////////////////////////////////////////
@@ -106,49 +106,49 @@ namespace NRaceData
 		COLLISION_SHAPE_SPHERE,
 		COLLISION_SHAPE_CYLINDER,
 	};
-	
+
 	typedef struct SCollisionData
 	{
-		int					iCollisionType;
-		CSphereCollisionInstanceVector	SphereDataVector;
+			int iCollisionType;
+			CSphereCollisionInstanceVector SphereDataVector;
 
-		SCollisionData() {}
-		virtual ~SCollisionData() {}
+			SCollisionData() {}
+			virtual ~SCollisionData() {}
 	} TCollisionData;
 
 	typedef struct SAttachingEffectData
 	{
-		std::string			strFileName;
-		D3DXVECTOR3			v3Position;
-		D3DXVECTOR3			v3Rotation;
+			std::string strFileName;
+			D3DXVECTOR3 v3Position;
+			D3DXVECTOR3 v3Rotation;
 
-		SAttachingEffectData() {}
-		virtual ~SAttachingEffectData() {}
+			SAttachingEffectData() {}
+			virtual ~SAttachingEffectData() {}
 	} TAttachingEffectData;
 
 	typedef struct SAttachingObjectData
 	{
-		std::string			strFileName;
+			std::string strFileName;
 
-		SAttachingObjectData() {}
-		virtual ~SAttachingObjectData() {}
+			SAttachingObjectData() {}
+			virtual ~SAttachingObjectData() {}
 	} TAttachingObjectData;
 
 	typedef std::vector<TCollisionData> TCollisionDataVector;
 
 	void DestroySystem();
 
-	void SaveAttackData(FILE * File, int iTabCount, const TAttackData & c_rData);
-	void SaveMotionAttackData(FILE * File, int iTabCount, const TMotionAttackData & c_rData);
-	void SaveCollisionData(FILE * File, int iTabCount, const TCollisionData & c_rCollisionData);
-	void SaveEffectData(FILE * File, int iTabCount, const TAttachingEffectData & c_rEffectData);
-	void SaveObjectData(FILE * File, int iTabCount, const TAttachingObjectData & c_rObjectData);
+	void SaveAttackData(FILE* File, int iTabCount, const TAttackData& c_rData);
+	void SaveMotionAttackData(FILE* File, int iTabCount, const TMotionAttackData& c_rData);
+	void SaveCollisionData(FILE* File, int iTabCount, const TCollisionData& c_rCollisionData);
+	void SaveEffectData(FILE* File, int iTabCount, const TAttachingEffectData& c_rEffectData);
+	void SaveObjectData(FILE* File, int iTabCount, const TAttachingObjectData& c_rObjectData);
 
-	BOOL LoadAttackData(CTextFileLoader & rTextFileLoader, TAttackData * pData);
-	BOOL LoadMotionAttackData(CTextFileLoader & rTextFileLoader, TMotionAttackData * pData);
-	BOOL LoadCollisionData(CTextFileLoader & rTextFileLoader, TCollisionData * pCollisionData);
-	BOOL LoadEffectData(CTextFileLoader & rTextFileLoader, TAttachingEffectData * pEffectData);
-	BOOL LoadObjectData(CTextFileLoader & rTextFileLoader, TAttachingObjectData * pObjectData);
+	BOOL LoadAttackData(CTextFileLoader& rTextFileLoader, TAttackData* pData);
+	BOOL LoadMotionAttackData(CTextFileLoader& rTextFileLoader, TMotionAttackData* pData);
+	BOOL LoadCollisionData(CTextFileLoader& rTextFileLoader, TCollisionData* pCollisionData);
+	BOOL LoadEffectData(CTextFileLoader& rTextFileLoader, TAttachingEffectData* pEffectData);
+	BOOL LoadObjectData(CTextFileLoader& rTextFileLoader, TAttachingObjectData* pObjectData);
 
 	/////////////////////////////////////////////////////////////////////////////////
 	// Attaching Data
@@ -165,31 +165,27 @@ namespace NRaceData
 
 	typedef struct SAttachingData
 	{
-		SAttachingData() 
-			: dwType(0)
-			, isAttaching(false)
-			, dwAttachingModelIndex(0)
-			, pCollisionData(NULL)
-			, pEffectData(NULL)
-			, pObjectData(NULL)
-		{}
-		DWORD dwType;
+			SAttachingData()
+				: dwType(0), isAttaching(false), dwAttachingModelIndex(0), pCollisionData(NULL), pEffectData(NULL), pObjectData(NULL)
+			{
+			}
+			DWORD dwType;
 
-		BOOL isAttaching;
-		DWORD dwAttachingModelIndex;
-		std::string strAttachingBoneName;
+			BOOL isAttaching;
+			DWORD dwAttachingModelIndex;
+			std::string strAttachingBoneName;
 
-		TCollisionData * pCollisionData;
-		TAttachingEffectData * pEffectData;
-		TAttachingObjectData * pObjectData;
+			TCollisionData* pCollisionData;
+			TAttachingEffectData* pEffectData;
+			TAttachingObjectData* pObjectData;
 	} TAttachingData;
 
 	typedef std::vector<TAttachingData> TAttachingDataVector;
 
-	void SaveAttachingData(FILE * File, int iTabCount, const TAttachingDataVector & c_rAttachingDataVector);
-	BOOL LoadAttachingData(CTextFileLoader & rTextFileLoader, TAttachingDataVector * pAttachingDataVector);
+	void SaveAttachingData(FILE* File, int iTabCount, const TAttachingDataVector& c_rAttachingDataVector);
+	BOOL LoadAttachingData(CTextFileLoader& rTextFileLoader, TAttachingDataVector* pAttachingDataVector);
 
-	extern CDynamicPool<TCollisionData>			g_CollisionDataPool;
-	extern CDynamicPool<TAttachingEffectData>	g_EffectDataPool;
-	extern CDynamicPool<TAttachingObjectData>	g_ObjectDataPool;
+	extern CDynamicPool<TCollisionData> g_CollisionDataPool;
+	extern CDynamicPool<TAttachingEffectData> g_EffectDataPool;
+	extern CDynamicPool<TAttachingObjectData> g_ObjectDataPool;
 };

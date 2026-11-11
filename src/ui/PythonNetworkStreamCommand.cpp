@@ -7,63 +7,63 @@
 #include <Client/UI/AbstractChat.h>
 #include <Client/UI/InstanceBase.h>
 
-#define ishan(ch)		(((ch) & 0xE0) > 0x90)
-#define ishanasc(ch)	(isascii(ch) || ishan(ch))
-#define ishanalp(ch)	(isalpha(ch) || ishan(ch))
-#define isnhdigit(ch)	(!ishan(ch) && isdigit(ch))
-#define isnhspace(ch)	(!ishan(ch) && isspace(ch))
+#define ishan(ch) (((ch) & 0xE0) > 0x90)
+#define ishanasc(ch) (isascii(ch) || ishan(ch))
+#define ishanalp(ch) (isalpha(ch) || ishan(ch))
+#define isnhdigit(ch) (!ishan(ch) && isdigit(ch))
+#define isnhspace(ch) (!ishan(ch) && isspace(ch))
 
-#define LOWER(c)		(((c) >= 'A' && (c) <= 'Z') ? ((c) + ('a' - 'A')) : (c))
-#define UPPER(c)		(((c) >= 'a' && (c) <= 'z') ? ((c) + ('A' - 'a')) : (c))
+#define LOWER(c) (((c) >= 'A' && (c) <= 'Z') ? ((c) + ('a' - 'A')) : (c))
+#define UPPER(c) (((c) >= 'a' && (c) <= 'z') ? ((c) + ('A' - 'a')) : (c))
 
-void SkipSpaces(char **string)
+void SkipSpaces(char** string)
 {
-    for (; **string != '\0' && isnhspace((unsigned char) **string); ++(*string));
+	for (; **string != '\0' && isnhspace((unsigned char)**string); ++(*string));
 }
 
-char *OneArgument(char *argument, char *first_arg)
+char* OneArgument(char* argument, char* first_arg)
 {
-    char mark = FALSE;
+	char mark = FALSE;
 
-    if (!argument)
-    {
-        *first_arg = '\0';
-        return NULL;
-    }
+	if (!argument)
+	{
+		*first_arg = '\0';
+		return NULL;
+	}
 
-    SkipSpaces(&argument);
+	SkipSpaces(&argument);
 
-    while (*argument)
-    {
-        if (*argument == '\"')
-        {
-            mark = !mark;
-            ++argument;
-            continue;
-        }
+	while (*argument)
+	{
+		if (*argument == '\"')
+		{
+			mark = !mark;
+			++argument;
+			continue;
+		}
 
-        if (!mark && isnhspace((unsigned char) *argument))
-            break;
+		if (!mark && isnhspace((unsigned char)*argument))
+			break;
 
 		*(first_arg++) = LOWER(*argument);
 		++argument;
-    }
+	}
 
-    *first_arg = '\0';
+	*first_arg = '\0';
 
-    SkipSpaces(&argument);
-    return (argument);
+	SkipSpaces(&argument);
+	return (argument);
 }
 
-void AppendMonsterList(const CPythonNonPlayer::TMobTableList & c_rMobTableList, const char * c_szHeader, int iType)
+void AppendMonsterList(const CPythonNonPlayer::TMobTableList& c_rMobTableList, const char* c_szHeader, int iType)
 {
 	DWORD dwMonsterCount = 0;
 	std::string strMonsterList = c_szHeader;
 
 	CPythonNonPlayer::TMobTableList::const_iterator itor = c_rMobTableList.begin();
-	for (; itor!=c_rMobTableList.end(); ++itor)
+	for (; itor != c_rMobTableList.end(); ++itor)
 	{
-		const CPythonNonPlayer::TMobTable * c_pMobTable = *itor;
+		const CPythonNonPlayer::TMobTable* c_pMobTable = *itor;
 		if (iType == c_pMobTable->bRank)
 		{
 			if (dwMonsterCount != 0)
@@ -75,17 +75,17 @@ void AppendMonsterList(const CPythonNonPlayer::TMobTableList & c_rMobTableList, 
 	}
 	if (dwMonsterCount > 0)
 	{
-		IAbstractChat& rkChat=IAbstractChat::GetSingleton();
+		IAbstractChat& rkChat = IAbstractChat::GetSingleton();
 		rkChat.AppendChat(CHAT_TYPE_INFO, strMonsterList.c_str());
 	}
 }
 
-bool CPythonNetworkStream::ClientCommand(const char * c_szCommand)
+bool CPythonNetworkStream::ClientCommand(const char* c_szCommand)
 {
 	return false;
 }
 
-bool SplitToken(const char * c_szLine, CTokenVector * pstTokenVector, const char * c_szDelimeter = " ")
+bool SplitToken(const char* c_szLine, CTokenVector* pstTokenVector, const char* c_szDelimeter = " ")
 {
 	pstTokenVector->reserve(10);
 	pstTokenVector->clear();
@@ -110,7 +110,7 @@ bool SplitToken(const char * c_szLine, CTokenVector * pstTokenVector, const char
 
 			if (endPos < 0)
 				return false;
-			
+
 			basePos = endPos + 1;
 		}
 		else
@@ -129,20 +129,19 @@ bool SplitToken(const char * c_szLine, CTokenVector * pstTokenVector, const char
 	return true;
 }
 
-void CPythonNetworkStream::ServerCommand(char * c_szCommand)
+void CPythonNetworkStream::ServerCommand(char* c_szCommand)
 {
-	// #0000811: [M2EU] 콘솔창 기능 차단 
+	// #0000811: [M2EU] 콘솔창 기능 차단
 	if (strcmpi(c_szCommand, "ConsoleEnable") == 0)
 		return;
 
 	if (m_apoPhaseWnd[PHASE_WINDOW_GAME])
 	{
 		bool isTrue;
-		if (PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], 
-			"BINARY_ServerCommand_Run", 
-			Py_BuildValue("(s)", c_szCommand),
-			&isTrue
-		))
+		if (PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME],
+								  "BINARY_ServerCommand_Run",
+								  Py_BuildValue("(s)", c_szCommand),
+								  &isTrue))
 		{
 			if (isTrue)
 				return;
@@ -151,11 +150,10 @@ void CPythonNetworkStream::ServerCommand(char * c_szCommand)
 	else if (m_poSerCommandParserWnd)
 	{
 		bool isTrue;
-		if (PyCallClassMemberFunc(m_poSerCommandParserWnd, 
-			"BINARY_ServerCommand_Run", 
-			Py_BuildValue("(s)", c_szCommand),
-			&isTrue
-		))
+		if (PyCallClassMemberFunc(m_poSerCommandParserWnd,
+								  "BINARY_ServerCommand_Run",
+								  Py_BuildValue("(s)", c_szCommand),
+								  &isTrue))
 		{
 			if (isTrue)
 				return;
@@ -168,8 +166,8 @@ void CPythonNetworkStream::ServerCommand(char * c_szCommand)
 	if (TokenVector.empty())
 		return;
 
-	const char * szCmd = TokenVector[0].c_str();
-	
+	const char* szCmd = TokenVector[0].c_str();
+
 	if (!strcmpi(szCmd, "quit"))
 	{
 		PostQuitMessage(0);
@@ -182,13 +180,12 @@ void CPythonNetworkStream::ServerCommand(char * c_szCommand)
 			return;
 		}
 
-		//UINT uMoney= atoi(TokenVector[1].c_str());		
-		
+		// UINT uMoney= atoi(TokenVector[1].c_str());
 	}
 	// GIFT NOTIFY
 	else if (!strcmpi(szCmd, "gift"))
 	{
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "Gift_Show", Py_BuildValue("()")); 	
+		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "Gift_Show", Py_BuildValue("()"));
 	}
 	// CUBE
 	else if (!strcmpi(szCmd, "cube"))
@@ -264,7 +261,6 @@ void CPythonNetworkStream::ServerCommand(char * c_szCommand)
 			// 위 예시처럼 아이템이 다수인 경우 구분자 "@" 문자를 사용
 			// 0 5 125,1|126,2|127,2|123,5&555,5&555,4/120000 <- 이런식으로 서버에서 클라로 리스트를 줌
 
-
 			if (5 != TokenVector.size())
 			{
 				TraceError("CPythonNetworkStream::ServerCommand(c_szCommand=%s) - Strange Parameter Count : %d", c_szCommand, 5);
@@ -286,33 +282,31 @@ void CPythonNetworkStream::ServerCommand(char * c_szCommand)
 			return;
 		}
 
-		UINT uObserverCount= atoi(TokenVector[1].c_str());				
+		UINT uObserverCount = atoi(TokenVector[1].c_str());
 
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], 
-			"BINARY_BettingGuildWar_UpdateObserverCount", 
-			Py_BuildValue("(i)", uObserverCount)
-		);
+		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME],
+							  "BINARY_BettingGuildWar_UpdateObserverCount",
+							  Py_BuildValue("(i)", uObserverCount));
 	}
 	else if (!strcmpi(szCmd, "ObserverMode"))
-	{		
+	{
 		if (2 != TokenVector.size())
 		{
 			TraceError("CPythonNetworkStream::ServerCommand(c_szCommand=%s) - Strange Parameter Count : %s", c_szCommand);
 			return;
 		}
 
-		UINT uMode= atoi(TokenVector[1].c_str());
-		
-		IAbstractPlayer& rkPlayer=IAbstractPlayer::GetSingleton();
+		UINT uMode = atoi(TokenVector[1].c_str());
+
+		IAbstractPlayer& rkPlayer = IAbstractPlayer::GetSingleton();
 		rkPlayer.SetObserverMode(uMode ? true : false);
 
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], 
-			"BINARY_BettingGuildWar_SetObserverMode", 
-			Py_BuildValue("(i)", uMode)
-		);
+		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME],
+							  "BINARY_BettingGuildWar_SetObserverMode",
+							  Py_BuildValue("(i)", uMode));
 	}
 	else if (!strcmpi(szCmd, "ObserverTeamInfo"))
-	{		
+	{
 	}
 	else if (!strcmpi(szCmd, "StoneDetect"))
 	{
@@ -329,9 +323,9 @@ void CPythonNetworkStream::ServerCommand(char * c_szCommand)
 		fAngle = fmod(540.0f - fAngle, 360.0f);
 		Tracef("StoneDetect [VID:%d] [Distance:%d] [Angle:%d->%f]\n", dwVID, byDistance, atoi(TokenVector[3].c_str()), fAngle);
 
-		IAbstractCharacterManager& rkChrMgr=IAbstractCharacterManager::GetSingleton();
+		IAbstractCharacterManager& rkChrMgr = IAbstractCharacterManager::GetSingleton();
 
-		CInstanceBase * pInstance = rkChrMgr.GetInstancePtr(dwVID);
+		CInstanceBase* pInstance = rkChrMgr.GetInstancePtr(dwVID);
 		if (!pInstance)
 		{
 			TraceError("CPythonNetworkStream::ServerCommand(c_szCommand=%s) - Not Exist Instance", c_szCommand);
@@ -368,7 +362,7 @@ void CPythonNetworkStream::ServerCommand(char * c_szCommand)
 		}
 
 #ifdef _DEBUG
-		IAbstractChat& rkChat=IAbstractChat::GetSingleton();
+		IAbstractChat& rkChat = IAbstractChat::GetSingleton();
 		rkChat.AppendChat(CHAT_TYPE_INFO, c_szCommand);
 #endif
 	}
@@ -383,10 +377,10 @@ void CPythonNetworkStream::ServerCommand(char * c_szCommand)
 		DWORD dwConsumePerSec = atoi(TokenVector[1].c_str());
 		DWORD dwCurrentStamina = atoi(TokenVector[2].c_str());
 
-		IAbstractPlayer& rPlayer=IAbstractPlayer::GetSingleton();
+		IAbstractPlayer& rPlayer = IAbstractPlayer::GetSingleton();
 		rPlayer.StartStaminaConsume(dwConsumePerSec, dwCurrentStamina);
 	}
-	
+
 	else if (!strcmpi(szCmd, "StopStaminaConsume"))
 	{
 		if (2 != TokenVector.size())
@@ -397,18 +391,18 @@ void CPythonNetworkStream::ServerCommand(char * c_szCommand)
 
 		DWORD dwCurrentStamina = atoi(TokenVector[1].c_str());
 
-		IAbstractPlayer& rPlayer=IAbstractPlayer::GetSingleton();
+		IAbstractPlayer& rPlayer = IAbstractPlayer::GetSingleton();
 		rPlayer.StopStaminaConsume(dwCurrentStamina);
 	}
 	else if (!strcmpi(szCmd, "messenger_auth"))
 	{
-		const std::string & c_rstrName = TokenVector[1].c_str();
+		const std::string& c_rstrName = TokenVector[1].c_str();
 		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OnMessengerAddFriendQuestion", Py_BuildValue("(s)", c_rstrName.c_str()));
 	}
 	else if (!strcmpi(szCmd, "combo"))
 	{
 		int iFlag = atoi(TokenVector[1].c_str());
-		IAbstractPlayer& rPlayer=IAbstractPlayer::GetSingleton();
+		IAbstractPlayer& rPlayer = IAbstractPlayer::GetSingleton();
 		rPlayer.SetComboSkillFlag(iFlag);
 		m_bComboSkillFlag = iFlag ? true : false;
 	}
@@ -423,9 +417,9 @@ void CPythonNetworkStream::ServerCommand(char * c_szCommand)
 		int iVID1 = atoi(TokenVector[1].c_str());
 		int iVID2 = atoi(TokenVector[2].c_str());
 
-		IAbstractCharacterManager & rkChrMgr = IAbstractCharacterManager::GetSingleton();
-		CInstanceBase * pInstance1 = rkChrMgr.GetInstancePtr(iVID1);
-		CInstanceBase * pInstance2 = rkChrMgr.GetInstancePtr(iVID2);
+		IAbstractCharacterManager& rkChrMgr = IAbstractCharacterManager::GetSingleton();
+		CInstanceBase* pInstance1 = rkChrMgr.GetInstancePtr(iVID1);
+		CInstanceBase* pInstance2 = rkChrMgr.GetInstancePtr(iVID2);
 		if (pInstance1 && pInstance2)
 			pInstance1->ActDualEmotion(*pInstance2, CRaceMotionData::NAME_FRENCH_KISS_START, CRaceMotionData::NAME_FRENCH_KISS_START);
 	}
@@ -434,9 +428,9 @@ void CPythonNetworkStream::ServerCommand(char * c_szCommand)
 		int iVID1 = atoi(TokenVector[1].c_str());
 		int iVID2 = atoi(TokenVector[2].c_str());
 
-		IAbstractCharacterManager & rkChrMgr = IAbstractCharacterManager::GetSingleton();
-		CInstanceBase * pInstance1 = rkChrMgr.GetInstancePtr(iVID1);
-		CInstanceBase * pInstance2 = rkChrMgr.GetInstancePtr(iVID2);
+		IAbstractCharacterManager& rkChrMgr = IAbstractCharacterManager::GetSingleton();
+		CInstanceBase* pInstance1 = rkChrMgr.GetInstancePtr(iVID1);
+		CInstanceBase* pInstance2 = rkChrMgr.GetInstancePtr(iVID2);
 		if (pInstance1 && pInstance2)
 			pInstance1->ActDualEmotion(*pInstance2, CRaceMotionData::NAME_KISS_START, CRaceMotionData::NAME_KISS_START);
 	}
@@ -445,57 +439,57 @@ void CPythonNetworkStream::ServerCommand(char * c_szCommand)
 		int iVID1 = atoi(TokenVector[1].c_str());
 		int iVID2 = atoi(TokenVector[2].c_str());
 
-		IAbstractCharacterManager & rkChrMgr = IAbstractCharacterManager::GetSingleton();
-		CInstanceBase * pInstance1 = rkChrMgr.GetInstancePtr(iVID1);
-		CInstanceBase * pInstance2 = rkChrMgr.GetInstancePtr(iVID2);
+		IAbstractCharacterManager& rkChrMgr = IAbstractCharacterManager::GetSingleton();
+		CInstanceBase* pInstance1 = rkChrMgr.GetInstancePtr(iVID1);
+		CInstanceBase* pInstance2 = rkChrMgr.GetInstancePtr(iVID2);
 		if (pInstance1 && pInstance2)
 			pInstance1->ActDualEmotion(*pInstance2, CRaceMotionData::NAME_SLAP_HURT_START, CRaceMotionData::NAME_SLAP_HIT_START);
 	}
 	else if (!strcmpi(szCmd, "clap"))
 	{
 		int iVID = atoi(TokenVector[1].c_str());
-		IAbstractCharacterManager & rkChrMgr = IAbstractCharacterManager::GetSingleton();
-		CInstanceBase * pInstance = rkChrMgr.GetInstancePtr(iVID);
+		IAbstractCharacterManager& rkChrMgr = IAbstractCharacterManager::GetSingleton();
+		CInstanceBase* pInstance = rkChrMgr.GetInstancePtr(iVID);
 		if (pInstance)
 			pInstance->ActEmotion(CRaceMotionData::NAME_CLAP);
 	}
 	else if (!strcmpi(szCmd, "cheer1"))
 	{
 		int iVID = atoi(TokenVector[1].c_str());
-		IAbstractCharacterManager & rkChrMgr = IAbstractCharacterManager::GetSingleton();
-		CInstanceBase * pInstance = rkChrMgr.GetInstancePtr(iVID);
+		IAbstractCharacterManager& rkChrMgr = IAbstractCharacterManager::GetSingleton();
+		CInstanceBase* pInstance = rkChrMgr.GetInstancePtr(iVID);
 		if (pInstance)
 			pInstance->ActEmotion(CRaceMotionData::NAME_CHEERS_1);
 	}
 	else if (!strcmpi(szCmd, "cheer2"))
 	{
 		int iVID = atoi(TokenVector[1].c_str());
-		IAbstractCharacterManager & rkChrMgr = IAbstractCharacterManager::GetSingleton();
-		CInstanceBase * pInstance = rkChrMgr.GetInstancePtr(iVID);
+		IAbstractCharacterManager& rkChrMgr = IAbstractCharacterManager::GetSingleton();
+		CInstanceBase* pInstance = rkChrMgr.GetInstancePtr(iVID);
 		if (pInstance)
 			pInstance->ActEmotion(CRaceMotionData::NAME_CHEERS_2);
 	}
 	else if (!strcmpi(szCmd, "dance1"))
 	{
 		int iVID = atoi(TokenVector[1].c_str());
-		IAbstractCharacterManager & rkChrMgr = IAbstractCharacterManager::GetSingleton();
-		CInstanceBase * pInstance = rkChrMgr.GetInstancePtr(iVID);
+		IAbstractCharacterManager& rkChrMgr = IAbstractCharacterManager::GetSingleton();
+		CInstanceBase* pInstance = rkChrMgr.GetInstancePtr(iVID);
 		if (pInstance)
 			pInstance->ActEmotion(CRaceMotionData::NAME_DANCE_1);
 	}
 	else if (!strcmpi(szCmd, "dance2"))
 	{
 		int iVID = atoi(TokenVector[1].c_str());
-		IAbstractCharacterManager & rkChrMgr = IAbstractCharacterManager::GetSingleton();
-		CInstanceBase * pInstance = rkChrMgr.GetInstancePtr(iVID);
+		IAbstractCharacterManager& rkChrMgr = IAbstractCharacterManager::GetSingleton();
+		CInstanceBase* pInstance = rkChrMgr.GetInstancePtr(iVID);
 		if (pInstance)
 			pInstance->ActEmotion(CRaceMotionData::NAME_DANCE_2);
 	}
 	else if (!strcmpi(szCmd, "dig_motion"))
 	{
 		int iVID = atoi(TokenVector[1].c_str());
-		IAbstractCharacterManager & rkChrMgr = IAbstractCharacterManager::GetSingleton();
-		CInstanceBase * pInstance = rkChrMgr.GetInstancePtr(iVID);
+		IAbstractCharacterManager& rkChrMgr = IAbstractCharacterManager::GetSingleton();
+		CInstanceBase* pInstance = rkChrMgr.GetInstancePtr(iVID);
 		if (pInstance)
 			pInstance->ActEmotion(CRaceMotionData::NAME_DIG);
 	}
@@ -534,11 +528,11 @@ void CPythonNetworkStream::ServerCommand(char * c_szCommand)
 			int emotionIndex = f->second;
 
 			int iVID = atoi(TokenVector[1].c_str());
-			IAbstractCharacterManager & rkChrMgr = IAbstractCharacterManager::GetSingleton();
-			CInstanceBase * pInstance = rkChrMgr.GetInstancePtr(iVID);
+			IAbstractCharacterManager& rkChrMgr = IAbstractCharacterManager::GetSingleton();
+			CInstanceBase* pInstance = rkChrMgr.GetInstancePtr(iVID);
 
 			if (pInstance)
 				pInstance->ActEmotion(emotionIndex);
-		}		
+		}
 	}
 }

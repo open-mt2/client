@@ -10,15 +10,15 @@
 #include <Client/Game/PropertyManager.h>
 #include <Client/Game/Property.h>
 
-CDynamicPool<CArea::TObjectInstance>	CArea::ms_ObjectInstancePool;
-CDynamicPool<CAttributeInstance>		CArea::ms_AttributeInstancePool;
-CDynamicPool<CArea::TAmbienceInstance>	CArea::ms_AmbienceInstancePool;
-CDynamicPool<CDungeonBlock>				CArea::ms_DungeonBlockInstancePool;
-CDynamicPool<CArea>						CArea::ms_kPool;
+CDynamicPool<CArea::TObjectInstance> CArea::ms_ObjectInstancePool;
+CDynamicPool<CAttributeInstance> CArea::ms_AttributeInstancePool;
+CDynamicPool<CArea::TAmbienceInstance> CArea::ms_AmbienceInstancePool;
+CDynamicPool<CDungeonBlock> CArea::ms_DungeonBlockInstancePool;
+CDynamicPool<CArea> CArea::ms_kPool;
 
 void CArea::TObjectData::InitializeRotation()
 {
-	m_fYaw=m_fPitch=m_fRoll=0.0f;
+	m_fYaw = m_fPitch = m_fRoll = 0.0f;
 }
 
 CArea* CArea::New()
@@ -47,10 +47,10 @@ void CArea::__UpdateAniThingList()
 	{
 		CGraphicThingInstance* pkThingInst;
 
-		TThingInstanceVector::iterator i=m_ThingCloneInstaceVector.begin();
-		while (i!=m_ThingCloneInstaceVector.end())
+		TThingInstanceVector::iterator i = m_ThingCloneInstaceVector.begin();
+		while (i != m_ThingCloneInstaceVector.end())
 		{
-			pkThingInst=*i++;
+			pkThingInst = *i++;
 			if (pkThingInst->isShow())
 			{
 				pkThingInst->UpdateLODLevel();
@@ -61,27 +61,27 @@ void CArea::__UpdateAniThingList()
 	{
 		CGraphicThingInstance* pkThingInst;
 
-		TThingInstanceVector::iterator i=m_AniThingCloneInstanceVector.begin();
-		while (i!=m_AniThingCloneInstanceVector.end())
+		TThingInstanceVector::iterator i = m_AniThingCloneInstanceVector.begin();
+		while (i != m_AniThingCloneInstanceVector.end())
 		{
-			pkThingInst=*i++;
+			pkThingInst = *i++;
 			pkThingInst->Update();
 		}
-	}	
+	}
 }
 
 void CArea::__UpdateEffectList()
 {
-	//if (!CEffectManager::InstancePtr())
+	// if (!CEffectManager::InstancePtr())
 	//	return;
 
-	CEffectManager& rkEftMgr=CEffectManager::Instance();
+	CEffectManager& rkEftMgr = CEffectManager::Instance();
 
 	// Effect
 	TEffectInstanceIterator i;
 	for (i = m_EffectInstanceMap.begin(); i != m_EffectInstanceMap.end();)
 	{
-		CEffectInstance * pEffectInstance = i->second;
+		CEffectInstance* pEffectInstance = i->second;
 
 		pEffectInstance->Update();
 
@@ -97,7 +97,7 @@ void CArea::__UpdateEffectList()
 
 void CArea::Update()
 {
-	__UpdateAniThingList();		
+	__UpdateAniThingList();
 }
 
 void CArea::UpdateAroundAmbience(float fX, float fY, float fZ)
@@ -106,25 +106,25 @@ void CArea::UpdateAroundAmbience(float fX, float fY, float fZ)
 	TAmbienceInstanceVector::iterator i;
 	for (i = m_AmbienceCloneInstanceVector.begin(); i != m_AmbienceCloneInstanceVector.end(); ++i)
 	{
-		TAmbienceInstance * pInstance = *i;
+		TAmbienceInstance* pInstance = *i;
 		pInstance->__Update(fX, fY, fZ);
 	}
 }
 
 struct CArea_LessEffectInstancePtrRenderOrder
 {
-	bool operator() (CEffectInstance* pkLeft, CEffectInstance* pkRight)
-	{
-		return pkLeft->LessRenderOrder(pkRight);		
-	}
+		bool operator()(CEffectInstance* pkLeft, CEffectInstance* pkRight)
+		{
+			return pkLeft->LessRenderOrder(pkRight);
+		}
 };
 
 struct CArea_FEffectInstanceRender
 {
-	inline void operator () (CEffectInstance * pkEftInst)
-	{
-		pkEftInst->Render();
-	}
+		inline void operator()(CEffectInstance* pkEftInst)
+		{
+			pkEftInst->Render();
+		}
 };
 
 void CArea::RenderEffect()
@@ -135,14 +135,14 @@ void CArea::RenderEffect()
 	STATEMANAGER.SetTexture(0, NULL);
 	STATEMANAGER.SetTexture(1, NULL);
 
-	bool m_isDisableSortRendering=false;
+	bool m_isDisableSortRendering = false;
 
 	if (m_isDisableSortRendering)
-	{	
+	{
 		TEffectInstanceIterator i;
 		for (i = m_EffectInstanceMap.begin(); i != m_EffectInstanceMap.end();)
 		{
-			CEffectInstance * pEffectInstance = i->second;
+			CEffectInstance* pEffectInstance = i->second;
 			pEffectInstance->Render();
 			++i;
 		}
@@ -152,36 +152,41 @@ void CArea::RenderEffect()
 		static std::vector<CEffectInstance*> s_kVct_pkEftInstSort;
 		s_kVct_pkEftInstSort.clear();
 
-		TEffectInstanceMap& rkMap_pkEftInstSrc=m_EffectInstanceMap;
+		TEffectInstanceMap& rkMap_pkEftInstSrc = m_EffectInstanceMap;
 		TEffectInstanceMap::iterator i;
-		for (i=rkMap_pkEftInstSrc.begin(); i!=rkMap_pkEftInstSrc.end(); ++i)
+		for (i = rkMap_pkEftInstSrc.begin(); i != rkMap_pkEftInstSrc.end(); ++i)
 			s_kVct_pkEftInstSort.push_back(i->second);
 
 		std::sort(s_kVct_pkEftInstSort.begin(), s_kVct_pkEftInstSort.end(), CArea_LessEffectInstancePtrRenderOrder());
 		std::for_each(s_kVct_pkEftInstSort.begin(), s_kVct_pkEftInstSort.end(), CArea_FEffectInstanceRender());
-		
 	}
 }
 
-DWORD CArea::DEBUG_GetRenderedCRCNum() 
-{ return m_kRenderedThingInstanceCRCWithNumberVector.size(); }
+DWORD CArea::DEBUG_GetRenderedCRCNum()
+{
+	return m_kRenderedThingInstanceCRCWithNumberVector.size();
+}
 
-CArea::TCRCWithNumberVector & CArea::DEBUG_GetRenderedCRCWithNumVector() 
-{ return m_kRenderedThingInstanceCRCWithNumberVector; }
+CArea::TCRCWithNumberVector& CArea::DEBUG_GetRenderedCRCWithNumVector()
+{
+	return m_kRenderedThingInstanceCRCWithNumberVector;
+}
 
 DWORD CArea::DEBUG_GetRenderedGrapphicThingInstanceNum()
-{ return m_kRenderedGrapphicThingInstanceVector.size(); }
+{
+	return m_kRenderedGrapphicThingInstanceVector.size();
+}
 
 void CArea::CollectRenderingObject(std::vector<CGraphicThingInstance*>& rkVct_pkOpaqueThingInst)
 {
 	TThingInstanceVector::iterator i;
-	for (i=m_ThingCloneInstaceVector.begin(); i!=m_ThingCloneInstaceVector.end(); ++i)
+	for (i = m_ThingCloneInstaceVector.begin(); i != m_ThingCloneInstaceVector.end(); ++i)
 	{
-		CGraphicThingInstance* pkThingInst=*i;
+		CGraphicThingInstance* pkThingInst = *i;
 		if (pkThingInst->isShow())
 		{
 			if (!pkThingInst->HaveBlendThing())
-				rkVct_pkOpaqueThingInst.push_back(*i);	
+				rkVct_pkOpaqueThingInst.push_back(*i);
 		}
 	}
 }
@@ -189,41 +194,41 @@ void CArea::CollectRenderingObject(std::vector<CGraphicThingInstance*>& rkVct_pk
 void CArea::CollectBlendRenderingObject(std::vector<CGraphicThingInstance*>& rkVct_pkBlendThingInst)
 {
 	TThingInstanceVector::iterator i;
-	for (i=m_ThingCloneInstaceVector.begin(); i!=m_ThingCloneInstaceVector.end(); ++i)
+	for (i = m_ThingCloneInstaceVector.begin(); i != m_ThingCloneInstaceVector.end(); ++i)
 	{
-		CGraphicThingInstance* pkThingInst=*i;
+		CGraphicThingInstance* pkThingInst = *i;
 		if (pkThingInst->isShow())
 		{
 			if (pkThingInst->HaveBlendThing())
-				rkVct_pkBlendThingInst.push_back(*i);	
+				rkVct_pkBlendThingInst.push_back(*i);
 		}
 	}
 }
 
 void CArea::Render()
-{		
+{
 	{
 		CGraphicThingInstance* pkThingInst;
 
-		TThingInstanceVector::iterator i=m_AniThingCloneInstanceVector.begin();
-		while (i!=m_AniThingCloneInstanceVector.end())
+		TThingInstanceVector::iterator i = m_AniThingCloneInstanceVector.begin();
+		while (i != m_AniThingCloneInstanceVector.end())
 		{
-			pkThingInst=*i++;
+			pkThingInst = *i++;
 			pkThingInst->Deform();
 		}
 	}
 
 	CGraphicThingInstance* pkThingInst;
 
-	TThingInstanceVector::iterator i=m_ThingCloneInstaceVector.begin();
+	TThingInstanceVector::iterator i = m_ThingCloneInstaceVector.begin();
 
 	m_kRenderedThingInstanceCRCWithNumberVector.clear();
 	m_kRenderedGrapphicThingInstanceVector.clear();
 	TGraphicThingInstanceCRCMap::iterator aGraphicThingInstanceCRCMapIterator;
 
-	while (i!=m_ThingCloneInstaceVector.end())
+	while (i != m_ThingCloneInstaceVector.end())
 	{
-		pkThingInst=*i++;
+		pkThingInst = *i++;
 		if (pkThingInst->Render())
 		{
 			aGraphicThingInstanceCRCMapIterator = m_GraphicThingInstanceCRCMap.find(pkThingInst);
@@ -232,8 +237,8 @@ void CArea::Render()
 			m_kRenderedGrapphicThingInstanceVector.push_back(pkThingInst);
 
 			TCRCWithNumberVector::iterator aCRCWithNumberVectorIterator = std::find_if(m_kRenderedThingInstanceCRCWithNumberVector.begin(), m_kRenderedThingInstanceCRCWithNumberVector.end(), FFindIfCRC(dwCRC));
-			
-			if ( m_kRenderedThingInstanceCRCWithNumberVector.end() == aCRCWithNumberVectorIterator)
+
+			if (m_kRenderedThingInstanceCRCWithNumberVector.end() == aCRCWithNumberVectorIterator)
 			{
 				TCRCWithNumber aCRCWithNumber;
 				aCRCWithNumber.dwCRC = dwCRC;
@@ -242,14 +247,13 @@ void CArea::Render()
 			}
 			else
 			{
-				TCRCWithNumber & rCRCWithNumber = *aCRCWithNumberVectorIterator;
+				TCRCWithNumber& rCRCWithNumber = *aCRCWithNumberVectorIterator;
 				rCRCWithNumber.dwNumber += 1;
 			}
 		}
 	}
- 	std::sort(m_kRenderedThingInstanceCRCWithNumberVector.begin(), m_kRenderedThingInstanceCRCWithNumberVector.end(), CRCNumComp());
+	std::sort(m_kRenderedThingInstanceCRCWithNumberVector.begin(), m_kRenderedThingInstanceCRCWithNumberVector.end(), CRCNumComp());
 }
-
 
 void CArea::RenderCollision()
 {
@@ -262,21 +266,21 @@ void CArea::RenderCollision()
 	STATEMANAGER.SaveRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 	STATEMANAGER.SetRenderState(D3DRS_LIGHTING, FALSE);
 	STATEMANAGER.SetRenderState(D3DRS_TEXTUREFACTOR, 0xff000000);
-	STATEMANAGER.SetTextureStageState(0, D3DTSS_COLORARG1,	D3DTA_TEXTURE);
-	STATEMANAGER.SetTextureStageState(0, D3DTSS_COLOROP,	D3DTOP_SELECTARG1);
+	STATEMANAGER.SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+	STATEMANAGER.SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
 	STATEMANAGER.SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_DISABLE);
 	STATEMANAGER.SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_DISABLE);
 	STATEMANAGER.SetTextureStageState(1, D3DTSS_ALPHAOP, D3DTOP_DISABLE);
 
-	for(i=0;i<GetObjectInstanceCount();i++)
+	for (i = 0; i < GetObjectInstanceCount(); i++)
 	{
-		const TObjectInstance * po;
-		if (GetObjectInstancePointer(i,&po))
+		const TObjectInstance* po;
+		if (GetObjectInstancePointer(i, &po))
 		{
 			if (po->pTree && po->pTree->isShow())
 			{
 				DWORD j;
-				for(j=0;j<po->pTree->GetCollisionInstanceCount();j++)
+				for (j = 0; j < po->pTree->GetCollisionInstanceCount(); j++)
 				{
 					po->pTree->GetCollisionInstanceData(j)->Render();
 				}
@@ -284,7 +288,7 @@ void CArea::RenderCollision()
 			if (po->pThingInstance && po->pThingInstance->isShow())
 			{
 				DWORD j;
-				for(j=0;j<po->pThingInstance->GetCollisionInstanceCount();j++)
+				for (j = 0; j < po->pThingInstance->GetCollisionInstanceCount(); j++)
 				{
 					po->pThingInstance->GetCollisionInstanceData(j)->Render();
 				}
@@ -292,7 +296,7 @@ void CArea::RenderCollision()
 			if (po->pDungeonBlock && po->pDungeonBlock->isShow())
 			{
 				DWORD j;
-				for(j=0;j<po->pDungeonBlock->GetCollisionInstanceCount();j++)
+				for (j = 0; j < po->pDungeonBlock->GetCollisionInstanceCount(); j++)
 				{
 					po->pDungeonBlock->GetCollisionInstanceData(j)->Render();
 				}
@@ -315,7 +319,7 @@ void CArea::RenderAmbience()
 	TAmbienceInstanceVector::iterator itor = m_AmbienceCloneInstanceVector.begin();
 	for (; itor != m_AmbienceCloneInstanceVector.end(); ++itor)
 	{
-		TAmbienceInstance * pInstance = *itor;
+		TAmbienceInstance* pInstance = *itor;
 		pInstance->Render();
 	}
 	STATEMANAGER.SetTextureStageState(0, D3DTSS_COLORARG1, dwColorArg1);
@@ -324,16 +328,16 @@ void CArea::RenderAmbience()
 
 void CArea::RenderDungeon()
 {
-	STATEMANAGER.SetTextureStageState(0, D3DTSS_COLORARG1,	D3DTA_TEXTURE);
-	STATEMANAGER.SetTextureStageState(0, D3DTSS_COLOROP,	D3DTOP_SELECTARG1);
-	STATEMANAGER.SetTextureStageState(0, D3DTSS_ALPHAARG1,	D3DTA_TEXTURE);
-	STATEMANAGER.SetTextureStageState(0, D3DTSS_COLOROP,	D3DTOP_SELECTARG1);
-	STATEMANAGER.SetTextureStageState(1, D3DTSS_COLORARG1,	D3DTA_TEXTURE);
-	STATEMANAGER.SetTextureStageState(1, D3DTSS_COLORARG2,	D3DTA_CURRENT);
-	STATEMANAGER.SetTextureStageState(1, D3DTSS_COLOROP,	D3DTOP_MODULATE);
-	STATEMANAGER.SetTextureStageState(1, D3DTSS_ALPHAARG1,	D3DTA_TEXTURE);
-	STATEMANAGER.SetTextureStageState(1, D3DTSS_ALPHAARG2,	D3DTA_CURRENT);
-	STATEMANAGER.SetTextureStageState(1, D3DTSS_ALPHAOP,	D3DTOP_MODULATE);
+	STATEMANAGER.SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+	STATEMANAGER.SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
+	STATEMANAGER.SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+	STATEMANAGER.SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
+	STATEMANAGER.SetTextureStageState(1, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+	STATEMANAGER.SetTextureStageState(1, D3DTSS_COLORARG2, D3DTA_CURRENT);
+	STATEMANAGER.SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_MODULATE);
+	STATEMANAGER.SetTextureStageState(1, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+	STATEMANAGER.SetTextureStageState(1, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
+	STATEMANAGER.SetTextureStageState(1, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 
 #ifdef WORLD_EDITOR
 	bool bRenderTransparent = false;
@@ -351,14 +355,14 @@ void CArea::RenderDungeon()
 		STATEMANAGER.SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 		STATEMANAGER.SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
 
-		STATEMANAGER.SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE); 
-		STATEMANAGER.SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE); 
+		STATEMANAGER.SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+		STATEMANAGER.SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
 		STATEMANAGER.SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_TFACTOR);
-		STATEMANAGER.SetTextureStageState(1, D3DTSS_ALPHAOP, D3DTOP_MODULATE); 
-		STATEMANAGER.SetTextureStageState(1, D3DTSS_ALPHAARG1, D3DTA_TEXTURE); 
+		STATEMANAGER.SetTextureStageState(1, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+		STATEMANAGER.SetTextureStageState(1, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
 		STATEMANAGER.SetTextureStageState(1, D3DTSS_ALPHAARG2, D3DTA_TFACTOR);
 
-		STATEMANAGER.SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB( 128, 255, 0, 0) );		
+		STATEMANAGER.SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(128, 255, 0, 0));
 	}
 #endif
 
@@ -376,8 +380,8 @@ void CArea::RenderDungeon()
 	}
 #endif
 
-	STATEMANAGER.SetTextureStageState(1, D3DTSS_COLOROP,	D3DTOP_DISABLE);
-	STATEMANAGER.SetTextureStageState(1, D3DTSS_ALPHAOP,	D3DTOP_DISABLE);
+	STATEMANAGER.SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_DISABLE);
+	STATEMANAGER.SetTextureStageState(1, D3DTSS_ALPHAOP, D3DTOP_DISABLE);
 }
 
 void CArea::Refresh()
@@ -391,9 +395,9 @@ void CArea::Refresh()
 
 	TObjectInstanceVector::iterator it;
 
-	for(it = m_ObjectInstanceVector.begin();it!=m_ObjectInstanceVector.end();++it)
+	for (it = m_ObjectInstanceVector.begin(); it != m_ObjectInstanceVector.end(); ++it)
 	{
-		TObjectInstance * pObjectInstance = *it;
+		TObjectInstance* pObjectInstance = *it;
 
 		if (prt::PROPERTY_TYPE_TREE == pObjectInstance->dwType)
 		{
@@ -401,7 +405,7 @@ void CArea::Refresh()
 			{
 				m_TreeCloneInstaceVector.push_back(pObjectInstance->pTree);
 
-				const float * pfPosition;
+				const float* pfPosition;
 				pfPosition = pObjectInstance->pTree->GetPosition();
 				pObjectInstance->pTree->UpdateBoundingSphere();
 				pObjectInstance->pTree->UpdateCollisionData();
@@ -432,7 +436,7 @@ void CArea::Refresh()
 			if (pObjectInstance->pAttributeInstance)
 			{
 				pObjectInstance->pThingInstance->UpdateCollisionData(&pObjectInstance->pAttributeInstance->GetObjectPointer()->GetCollisionDataVector());
-  				pObjectInstance->pAttributeInstance->RefreshObject(pObjectInstance->pThingInstance->GetTransform());
+				pObjectInstance->pAttributeInstance->RefreshObject(pObjectInstance->pThingInstance->GetTransform());
 				pObjectInstance->pThingInstance->UpdateHeightInstance(pObjectInstance->pAttributeInstance);
 			}
 		}
@@ -453,7 +457,7 @@ void CArea::Refresh()
 			if (pObjectInstance->pAttributeInstance)
 			{
 				pObjectInstance->pDungeonBlock->UpdateCollisionData(&pObjectInstance->pAttributeInstance->GetObjectPointer()->GetCollisionDataVector());
-  				pObjectInstance->pAttributeInstance->RefreshObject(pObjectInstance->pDungeonBlock->GetTransform());
+				pObjectInstance->pAttributeInstance->RefreshObject(pObjectInstance->pDungeonBlock->GetTransform());
 				pObjectInstance->pDungeonBlock->UpdateHeightInstance(pObjectInstance->pAttributeInstance);
 			}
 		}
@@ -467,16 +471,16 @@ void CArea::__Load_BuildObjectInstances()
 
 	m_GraphicThingInstanceCRCMap.clear();
 
- 	std::sort(m_ObjectDataVector.begin(), m_ObjectDataVector.end(), ObjectDataComp());
+	std::sort(m_ObjectDataVector.begin(), m_ObjectDataVector.end(), ObjectDataComp());
 
-	DWORD i=0;
+	DWORD i = 0;
 	TObjectInstanceVector::iterator it;
-	for (it = m_ObjectInstanceVector.begin(); it!=m_ObjectInstanceVector.end();++it,++i)
+	for (it = m_ObjectInstanceVector.begin(); it != m_ObjectInstanceVector.end(); ++it, ++i)
 	{
 		*it = ms_ObjectInstancePool.Alloc();
 		(*it)->Clear();
 
-		const TObjectData * c_pObjectData;
+		const TObjectData* c_pObjectData;
 
 		if (!GetObjectDataPointer(i, &c_pObjectData))
 			continue;
@@ -485,7 +489,7 @@ void CArea::__Load_BuildObjectInstances()
 
 		// 최적화용
 		if ((*it)->dwType == prt::PROPERTY_TYPE_BUILDING)
-			m_GraphicThingInstanceCRCMap.insert(TGraphicThingInstanceCRCMap::value_type( (*it)->pThingInstance, c_pObjectData->dwCRC ) );
+			m_GraphicThingInstanceCRCMap.insert(TGraphicThingInstanceCRCMap::value_type((*it)->pThingInstance, c_pObjectData->dwCRC));
 	}
 
 	//////////
@@ -493,13 +497,13 @@ void CArea::__Load_BuildObjectInstances()
 	//////////
 }
 
-void CArea::__SetObjectInstance(TObjectInstance * pObjectInstance, const TObjectData * c_pData)
+void CArea::__SetObjectInstance(TObjectInstance* pObjectInstance, const TObjectData* c_pData)
 {
-	CProperty * pProperty;
+	CProperty* pProperty;
 	if (!CPropertyManager::Instance().Get(c_pData->dwCRC, &pProperty))
 		return;
 
-	const char * c_szPropertyType;
+	const char* c_szPropertyType;
 
 	if (!pProperty->GetString("PropertyType", &c_szPropertyType))
 		return;
@@ -528,35 +532,34 @@ void CArea::__SetObjectInstance(TObjectInstance * pObjectInstance, const TObject
 	}
 }
 
-void CArea::__SetObjectInstance_SetEffect(TObjectInstance * pObjectInstance, const TObjectData * c_pData, CProperty * pProperty)
+void CArea::__SetObjectInstance_SetEffect(TObjectInstance* pObjectInstance, const TObjectData* c_pData, CProperty* pProperty)
 {
 	prt::TPropertyEffect Data;
 	if (!prt::PropertyEffectStringToData(pProperty, &Data))
 		return;
 
 	pObjectInstance->dwType = prt::PROPERTY_TYPE_EFFECT;
-	pObjectInstance->dwEffectID = GetCaseCRC32(Data.strFileName.c_str(),Data.strFileName.size());
-	CEffectManager & rem = CEffectManager::Instance();
-	CEffectData * pData;
-	if (!rem.GetEffectData(pObjectInstance->dwEffectID,&pData))
+	pObjectInstance->dwEffectID = GetCaseCRC32(Data.strFileName.c_str(), Data.strFileName.size());
+	CEffectManager& rem = CEffectManager::Instance();
+	CEffectData* pData;
+	if (!rem.GetEffectData(pObjectInstance->dwEffectID, &pData))
 	{
 		if (!rem.RegisterEffect(Data.strFileName.c_str()))
 		{
 			pObjectInstance->dwEffectID = 0xffffffff;
-			TraceError("CArea::SetEffect effect register error %s\n",Data.strFileName.c_str());
+			TraceError("CArea::SetEffect effect register error %s\n", Data.strFileName.c_str());
 			return;
 		}
 	}
 
-	CEffectInstance * pEffectInstance;
+	CEffectInstance* pEffectInstance;
 	rem.CreateUnsafeEffectInstance(pObjectInstance->dwEffectID, &pEffectInstance);
 
 	D3DXMATRIX mat;
 	D3DXMatrixRotationYawPitchRoll(&mat,
-		D3DXToRadian(c_pData->m_fYaw),
-		D3DXToRadian(c_pData->m_fPitch),
-		D3DXToRadian(c_pData->m_fRoll)
-	);
+								   D3DXToRadian(c_pData->m_fYaw),
+								   D3DXToRadian(c_pData->m_fPitch),
+								   D3DXToRadian(c_pData->m_fRoll));
 
 	mat._41 = c_pData->Position.x;
 	mat._42 = c_pData->Position.y;
@@ -568,37 +571,36 @@ void CArea::__SetObjectInstance_SetEffect(TObjectInstance * pObjectInstance, con
 	m_EffectInstanceMap.insert(TEffectInstanceMap::value_type(pObjectInstance->dwEffectInstanceIndex, pEffectInstance));
 }
 
-void CArea::__SetObjectInstance_SetTree(TObjectInstance * pObjectInstance, const TObjectData * c_pData, CProperty * pProperty)
+void CArea::__SetObjectInstance_SetTree(TObjectInstance* pObjectInstance, const TObjectData* c_pData, CProperty* pProperty)
 {
-	const char * c_szTreeName;
+	const char* c_szTreeName;
 	if (!pProperty->GetString("TreeFile", &c_szTreeName))
 		return;
 
-	pObjectInstance->SetTree(		
+	pObjectInstance->SetTree(
 		c_pData->Position.x,
 		c_pData->Position.y,
 		c_pData->Position.z + c_pData->m_fHeightBias,
 		c_pData->dwCRC,
-		c_szTreeName
-	);
+		c_szTreeName);
 }
 
 void CArea::TObjectInstance::SetTree(float x, float y, float z, DWORD dwTreeCRC, const char* c_szTreeName)
 {
 	CSpeedTreeForest& rkForest = CSpeedTreeForest::Instance();
-	pTree=rkForest.CreateInstance(x, y, z, dwTreeCRC, c_szTreeName);
+	pTree = rkForest.CreateInstance(x, y, z, dwTreeCRC, c_szTreeName);
 	dwType = prt::PROPERTY_TYPE_TREE;
 }
 
-void CArea::__SetObjectInstance_SetBuilding(TObjectInstance * pObjectInstance, const TObjectData * c_pData, CProperty * pProperty)
+void CArea::__SetObjectInstance_SetBuilding(TObjectInstance* pObjectInstance, const TObjectData* c_pData, CProperty* pProperty)
 {
 	prt::TPropertyBuilding Data;
 	if (!prt::PropertyBuildingStringToData(pProperty, &Data))
 		return;
 
-	CResourceManager& rkResMgr=CResourceManager::Instance();
+	CResourceManager& rkResMgr = CResourceManager::Instance();
 
-	CGraphicThing * pThing = (CGraphicThing *)rkResMgr.GetResourcePointer(Data.strFileName.c_str());
+	CGraphicThing* pThing = (CGraphicThing*)rkResMgr.GetResourcePointer(Data.strFileName.c_str());
 	if (!pThing)
 	{
 		TraceError("CArea::SetBuilding: Failed to get resource: %s", Data.strFileName.c_str());
@@ -630,18 +632,18 @@ void CArea::__SetObjectInstance_SetBuilding(TObjectInstance * pObjectInstance, c
 			pObjectInstance->pThingInstance->SetPortal(j, c_pData->abyPortalID[j]);
 
 	{
-		std::string stSrcModelFileName=Data.strFileName;
+		std::string stSrcModelFileName = Data.strFileName;
 		std::string stLODModelFileName;
 
 		char szLODModelFileNameEnd[256];
-		for (UINT uLODIndex=1; uLODIndex<=3; ++uLODIndex)
+		for (UINT uLODIndex = 1; uLODIndex <= 3; ++uLODIndex)
 		{
 			sprintf(szLODModelFileNameEnd, "_lod_%.2d.gr2", uLODIndex);
 			stLODModelFileName = CFileNameHelper::NoExtension(stSrcModelFileName) + szLODModelFileNameEnd;
 			if (!rkResMgr.IsFileExist(stLODModelFileName.c_str()))
 				break;
 
-			CGraphicThing* pLODModelThing = (CGraphicThing *)rkResMgr.GetResourcePointer(stLODModelFileName.c_str());
+			CGraphicThing* pLODModelThing = (CGraphicThing*)rkResMgr.GetResourcePointer(stLODModelFileName.c_str());
 			if (!pLODModelThing)
 				break;
 
@@ -661,23 +663,22 @@ void CArea::__SetObjectInstance_SetBuilding(TObjectInstance * pObjectInstance, c
 	pObjectInstance->pThingInstance->SetRotation(
 		c_pData->m_fYaw,
 		c_pData->m_fPitch,
-		c_pData->m_fRoll
-	);
+		c_pData->m_fRoll);
 	pObjectInstance->isShadowFlag = Data.isShadowFlag;
 	pObjectInstance->pThingInstance->RegisterBoundingSphere();
 	__LoadAttribute(pObjectInstance, Data.strAttributeDataFileName.c_str());
 	pThing->Release();
 }
 
-void CArea::__SetObjectInstance_SetAmbience(TObjectInstance * pObjectInstance, const TObjectData * c_pData, CProperty * pProperty)
+void CArea::__SetObjectInstance_SetAmbience(TObjectInstance* pObjectInstance, const TObjectData* c_pData, CProperty* pProperty)
 {
 	pObjectInstance->pAmbienceInstance = ms_AmbienceInstancePool.Alloc();
- 	if (!prt::PropertyAmbienceStringToData(pProperty, &pObjectInstance->pAmbienceInstance->AmbienceData))
+	if (!prt::PropertyAmbienceStringToData(pProperty, &pObjectInstance->pAmbienceInstance->AmbienceData))
 		return;
 
 	pObjectInstance->dwType = prt::PROPERTY_TYPE_AMBIENCE;
 
-	TAmbienceInstance * pAmbienceInstance = pObjectInstance->pAmbienceInstance;
+	TAmbienceInstance* pAmbienceInstance = pObjectInstance->pAmbienceInstance;
 	pAmbienceInstance->fx = c_pData->Position.x;
 	pAmbienceInstance->fy = c_pData->Position.y;
 	pAmbienceInstance->fz = c_pData->Position.z + c_pData->m_fHeightBias;
@@ -698,7 +699,7 @@ void CArea::__SetObjectInstance_SetAmbience(TObjectInstance * pObjectInstance, c
 	}
 }
 
-void CArea::__SetObjectInstance_SetDungeonBlock(TObjectInstance * pObjectInstance, const TObjectData * c_pData, CProperty * pProperty)
+void CArea::__SetObjectInstance_SetDungeonBlock(TObjectInstance* pObjectInstance, const TObjectData* c_pData, CProperty* pProperty)
 {
 	prt::TPropertyDungeonBlock Data;
 	if (!prt::PropertyDungeonBlockStringToData(pProperty, &Data))
@@ -718,8 +719,7 @@ void CArea::__SetObjectInstance_SetDungeonBlock(TObjectInstance * pObjectInstanc
 	pObjectInstance->pDungeonBlock->SetRotation(
 		c_pData->m_fYaw,
 		c_pData->m_fPitch,
-		c_pData->m_fRoll
-	);
+		c_pData->m_fRoll);
 	pObjectInstance->pDungeonBlock->Update();
 	pObjectInstance->pDungeonBlock->BuildBoundingSphere();
 	pObjectInstance->pDungeonBlock->RegisterBoundingSphere();
@@ -729,20 +729,19 @@ void CArea::__SetObjectInstance_SetDungeonBlock(TObjectInstance * pObjectInstanc
 	__LoadAttribute(pObjectInstance, Data.strAttributeDataFileName.c_str());
 }
 
-
-void CArea::__LoadAttribute(TObjectInstance * pObjectInstance, const char * c_szAttributeFileName)
+void CArea::__LoadAttribute(TObjectInstance* pObjectInstance, const char* c_szAttributeFileName)
 {
 	if (!c_szAttributeFileName || !*c_szAttributeFileName)
 		return;
 
 	// OBB를 사용한 충돌 정보 자동 생성.
 	const bool bFileExist = CResourceManager::Instance().IsFileExist(c_szAttributeFileName);
-	
-	CAttributeData * pAttributeData = (CAttributeData *) CResourceManager::Instance().GetResourcePointer(c_szAttributeFileName);
+
+	CAttributeData* pAttributeData = (CAttributeData*)CResourceManager::Instance().GetResourcePointer(c_szAttributeFileName);
 	if (!pAttributeData)
 		return;
 
-	CAttributeInstance * pAttrInstance = ms_AttributeInstancePool.Alloc();
+	CAttributeInstance* pAttrInstance = ms_AttributeInstancePool.Alloc();
 	pAttrInstance->Clear();
 	pAttrInstance->SetObjectPointer(pAttributeData);
 
@@ -751,8 +750,9 @@ void CArea::__LoadAttribute(TObjectInstance * pObjectInstance, const char * c_sz
 		std::string attrFileName(c_szAttributeFileName);
 
 		// TODO: Not UTF-8 safe string tolower()
-		std::transform(attrFileName.begin(), attrFileName.end(), attrFileName.begin(), [](unsigned char c) { return std::tolower(c); });
-		
+		std::transform(attrFileName.begin(), attrFileName.end(), attrFileName.begin(), [](unsigned char c)
+					   { return std::tolower(c); });
+
 		const bool bIsDungeonObject = (std::string::npos != attrFileName.find("/dungeon/")) || (std::string::npos != attrFileName.find("\\dungeon\\"));
 
 		// NOTE: dungeon 오브젝트는 Dummy Collision을 자동으로 생성하지 않도록 함 (던전의 경우 더미 컬리전때문에 문제가 된 경우가 수차례 있었음. 이렇게 하기로 그래픽 팀과 협의 완료)
@@ -765,7 +765,7 @@ void CArea::__LoadAttribute(TObjectInstance * pObjectInstance, const char * c_sz
 				D3DXVECTOR3 v3Min, v3Max;
 
 				object->GetBoundingAABB(v3Min, v3Max);
-				
+
 				CStaticCollisionData collision;
 				collision.dwType = COLLISION_TYPE_OBB;
 				D3DXQuaternionRotationYawPitchRoll(&collision.quatRotation, object->GetYaw(), object->GetPitch(), object->GetRoll());
@@ -793,13 +793,12 @@ void CArea::__LoadAttribute(TObjectInstance * pObjectInstance, const char * c_sz
 	}
 }
 
-
 /*
 void CArea::__LoadAttribute(TObjectInstance * pObjectInstance, const char * c_szAttributeFileName)
 {
 	// AABB를 사용한 충돌 정보 자동 생성.
 	const bool bFileExist = CResourceManager::Instance().IsFileExist(c_szAttributeFileName);
-	
+
 	CAttributeData * pAttributeData = (CAttributeData *) CResourceManager::Instance().GetResourcePointer(c_szAttributeFileName);
 
 	CAttributeInstance * pAttrInstance = ms_AttributeInstancePool.Alloc();
@@ -828,7 +827,7 @@ void CArea::__LoadAttribute(TObjectInstance * pObjectInstance, const char * c_sz
 				collision.fDimensions[0] = vDelta.x * 0.5f; // v3Min, v3Max를 구하기 위한 가로, 세로, 높이의 절반값 저장
 				collision.fDimensions[1] = vDelta.y * 0.5f;
 				collision.fDimensions[2] = vDelta.z * 0.5f;
-				
+
 
 				pAttributeData->AddCollisionData(collision);
 			}
@@ -851,7 +850,7 @@ void CArea::__LoadAttribute(TObjectInstance * pObjectInstance, const char * c_sz
 {
 	// Sphere를 사용한 충돌 정보 자동 생성.
 	const bool bFileExist = CResourceManager::Instance().IsFileExist(c_szAttributeFileName);
-	
+
 	CAttributeData * pAttributeData = (CAttributeData *) CResourceManager::Instance().GetResourcePointer(c_szAttributeFileName);
 
 	CAttributeInstance * pAttrInstance = ms_AttributeInstancePool.Alloc();
@@ -896,7 +895,7 @@ void CArea::__LoadAttribute(TObjectInstance * pObjectInstance, const char * c_sz
 
 */
 
-bool CArea::Load(const char * c_szPathName)
+bool CArea::Load(const char* c_szPathName)
 {
 	Clear();
 
@@ -906,11 +905,11 @@ bool CArea::Load(const char * c_szPathName)
 	__Load_LoadObject(strObjectDataFileName.c_str());
 	__Load_LoadAmbience(strAmbienceDataFileName.c_str());
 	__Load_BuildObjectInstances();
-	
+
 	return true;
 }
 
-bool CArea::__Load_LoadObject(const char * c_szFileName)
+bool CArea::__Load_LoadObject(const char* c_szFileName)
 {
 	CTokenVectorMap stTokenVectorMap;
 
@@ -932,11 +931,11 @@ bool CArea::__Load_LoadObject(const char * c_szFileName)
 		return false;
 	}
 
-	const std::string & c_rstrCount = stTokenVectorMap["objectcount"][0];
+	const std::string& c_rstrCount = stTokenVectorMap["objectcount"][0];
 
 	DWORD dwCount = atoi(c_rstrCount.c_str());
 
-	char szObjectName[32+1];
+	char szObjectName[32 + 1];
 
 	for (DWORD i = 0; i < dwCount; ++i)
 	{
@@ -945,32 +944,32 @@ bool CArea::__Load_LoadObject(const char * c_szFileName)
 		if (stTokenVectorMap.end() == stTokenVectorMap.find(szObjectName))
 			continue;
 
-		const CTokenVector & rVector = stTokenVectorMap[szObjectName];
+		const CTokenVector& rVector = stTokenVectorMap[szObjectName];
 
-		const std::string & c_rstrxPosition = rVector[0].c_str();
-		const std::string & c_rstryPosition = rVector[1].c_str();
-		const std::string & c_rstrzPosition = rVector[2].c_str();
-		const std::string & c_rstrCRC = rVector[3].c_str();
+		const std::string& c_rstrxPosition = rVector[0].c_str();
+		const std::string& c_rstryPosition = rVector[1].c_str();
+		const std::string& c_rstrzPosition = rVector[2].c_str();
+		const std::string& c_rstrCRC = rVector[3].c_str();
 
 		TObjectData ObjectData;
 		ZeroMemory(&ObjectData, sizeof(ObjectData));
 		ObjectData.Position.x = atof(c_rstrxPosition.c_str());
 		ObjectData.Position.y = atof(c_rstryPosition.c_str());
 		ObjectData.Position.z = atof(c_rstrzPosition.c_str());
-		ObjectData.dwCRC = atoi	(c_rstrCRC.c_str());
+		ObjectData.dwCRC = atoi(c_rstrCRC.c_str());
 
 		// 20041217.myevan.로테이션 공식 변경
-		ObjectData.InitializeRotation(); //ObjectData.m_fYaw = ObjectData.m_fPitch = ObjectData.m_fRoll = 0;
+		ObjectData.InitializeRotation(); // ObjectData.m_fYaw = ObjectData.m_fPitch = ObjectData.m_fRoll = 0;
 		if (rVector.size() > 4)
 		{
-			std::string::size_type s=rVector[4].find('#');
-			if (s!=rVector[4].npos)
+			std::string::size_type s = rVector[4].find('#');
+			if (s != rVector[4].npos)
 			{
-				ObjectData.m_fYaw = atoi(rVector[4].substr(0,s-1).c_str());
-				int p = s+1;
-				s = rVector[4].find('#',p);
-				ObjectData.m_fPitch = atoi(rVector[4].substr(p,s-1-p+1).c_str());
-				ObjectData.m_fRoll = atoi(rVector[4].substr(s+1).c_str());
+				ObjectData.m_fYaw = atoi(rVector[4].substr(0, s - 1).c_str());
+				int p = s + 1;
+				s = rVector[4].find('#', p);
+				ObjectData.m_fPitch = atoi(rVector[4].substr(p, s - 1 - p + 1).c_str());
+				ObjectData.m_fRoll = atoi(rVector[4].substr(s + 1).c_str());
 			}
 			else
 			{
@@ -979,7 +978,7 @@ bool CArea::__Load_LoadObject(const char * c_szFileName)
 				ObjectData.m_fRoll = atoi(rVector[4].c_str());
 			}
 		}
-		
+
 		ObjectData.m_fHeightBias = 0.0f;
 		if (rVector.size() > 5)
 		{
@@ -988,14 +987,14 @@ bool CArea::__Load_LoadObject(const char * c_szFileName)
 
 		if (rVector.size() > 6)
 		{
-			for (int portalIdx = 0; portalIdx < min(rVector.size()-6, PORTAL_ID_MAX_NUM); ++portalIdx)
+			for (int portalIdx = 0; portalIdx < min(rVector.size() - 6, PORTAL_ID_MAX_NUM); ++portalIdx)
 			{
-				ObjectData.abyPortalID[portalIdx] = atoi(rVector[6+portalIdx].c_str());
+				ObjectData.abyPortalID[portalIdx] = atoi(rVector[6 + portalIdx].c_str());
 			}
 		}
 
 		// If data is not inside property, then delete it.
-		CProperty * pProperty;
+		CProperty* pProperty;
 		if (!CPropertyManager::Instance().Get(ObjectData.dwCRC, &pProperty))
 		{
 			TraceError(" CArea::LoadObject Property(%u) Load ERROR", ObjectData.dwCRC);
@@ -1008,7 +1007,7 @@ bool CArea::__Load_LoadObject(const char * c_szFileName)
 	return true;
 }
 
-bool CArea::__Load_LoadAmbience(const char * c_szFileName)
+bool CArea::__Load_LoadAmbience(const char* c_szFileName)
 {
 	CTokenVectorMap stTokenVectorMap;
 
@@ -1030,11 +1029,11 @@ bool CArea::__Load_LoadAmbience(const char * c_szFileName)
 		return false;
 	}
 
-	const std::string & c_rstrCount = stTokenVectorMap["objectcount"][0];
+	const std::string& c_rstrCount = stTokenVectorMap["objectcount"][0];
 
 	DWORD dwCount = atoi(c_rstrCount.c_str());
 
-	char szObjectName[32+1];
+	char szObjectName[32 + 1];
 
 	for (DWORD i = 0; i < dwCount; ++i)
 	{
@@ -1043,20 +1042,20 @@ bool CArea::__Load_LoadAmbience(const char * c_szFileName)
 		if (stTokenVectorMap.end() == stTokenVectorMap.find(szObjectName))
 			continue;
 
-		const CTokenVector & rVector = stTokenVectorMap[szObjectName];
+		const CTokenVector& rVector = stTokenVectorMap[szObjectName];
 
-		const std::string & c_rstrxPosition = rVector[0].c_str();
-		const std::string & c_rstryPosition = rVector[1].c_str();
-		const std::string & c_rstrzPosition = rVector[2].c_str();
-		const std::string & c_rstrCRC = rVector[3].c_str();
-		const std::string & c_rstrRange = rVector[4].c_str();
+		const std::string& c_rstrxPosition = rVector[0].c_str();
+		const std::string& c_rstryPosition = rVector[1].c_str();
+		const std::string& c_rstrzPosition = rVector[2].c_str();
+		const std::string& c_rstrCRC = rVector[3].c_str();
+		const std::string& c_rstrRange = rVector[4].c_str();
 
 		TObjectData ObjectData;
 		ZeroMemory(&ObjectData, sizeof(ObjectData));
 		ObjectData.Position.x = atof(c_rstrxPosition.c_str());
 		ObjectData.Position.y = atof(c_rstryPosition.c_str());
 		ObjectData.Position.z = atof(c_rstrzPosition.c_str());
-		ObjectData.dwCRC = atoi	(c_rstrCRC.c_str());
+		ObjectData.dwCRC = atoi(c_rstrCRC.c_str());
 		ObjectData.dwRange = atoi(c_rstrRange.c_str());
 
 		// 20041217.myevan.로테이션 초기화
@@ -1066,12 +1065,12 @@ bool CArea::__Load_LoadAmbience(const char * c_szFileName)
 
 		if (rVector.size() >= 6)
 		{
-			const std::string & c_rstrPercentage = rVector[5].c_str();
+			const std::string& c_rstrPercentage = rVector[5].c_str();
 			ObjectData.fMaxVolumeAreaPercentage = atof(c_rstrPercentage.c_str());
 		}
 
 		// If data is not inside property, then delete it.
-		CProperty * pProperty;
+		CProperty* pProperty;
 		if (!CPropertyManager::Instance().Get(ObjectData.dwCRC, &pProperty))
 		{
 			TraceError(" CArea::LoadAmbience Property(%d) Load ERROR", ObjectData.dwCRC);
@@ -1099,7 +1098,7 @@ DWORD CArea::GetObjectDataCount()
 	return m_ObjectDataVector.size();
 }
 
-bool CArea::GetObjectDataPointer(DWORD dwIndex, const TObjectData ** ppObjectData) const
+bool CArea::GetObjectDataPointer(DWORD dwIndex, const TObjectData** ppObjectData) const
 {
 	if (!CheckObjectIndex(dwIndex))
 	{
@@ -1116,7 +1115,7 @@ const DWORD CArea::GetObjectInstanceCount() const
 	return m_ObjectInstanceVector.size();
 }
 
-const bool CArea::GetObjectInstancePointer(const DWORD & dwIndex, const TObjectInstance ** ppObjectInstance) const
+const bool CArea::GetObjectInstancePointer(const DWORD& dwIndex, const TObjectInstance** ppObjectInstance) const
 {
 	if (dwIndex >= m_ObjectInstanceVector.size())
 		return false;
@@ -1145,12 +1144,12 @@ void CArea::AddShowingPortalID(int iNum)
 
 void CArea::RefreshPortal()
 {
-	std::set<TObjectInstance *> kSet_ShowingObjectInstance;
+	std::set<TObjectInstance*> kSet_ShowingObjectInstance;
 	kSet_ShowingObjectInstance.clear();
 	for (DWORD i = 0; i < m_ObjectDataVector.size(); ++i)
 	{
-		TObjectData & rData = m_ObjectDataVector[i];
-		TObjectInstance * pInstance = m_ObjectInstanceVector[i];
+		TObjectData& rData = m_ObjectDataVector[i];
+		TObjectInstance* pInstance = m_ObjectInstanceVector[i];
 
 		for (int j = 0; j < PORTAL_ID_MAX_NUM; ++j)
 		{
@@ -1173,9 +1172,9 @@ void CArea::RefreshPortal()
 	m_DungeonBlockCloneInstanceVector.clear();
 
 	TObjectInstanceVector::iterator it;
-	for(it = m_ObjectInstanceVector.begin(); it != m_ObjectInstanceVector.end(); ++it)
+	for (it = m_ObjectInstanceVector.begin(); it != m_ObjectInstanceVector.end(); ++it)
 	{
-		TObjectInstance * pObjectInstance = *it;
+		TObjectInstance* pObjectInstance = *it;
 
 		if (m_bPortalEnable)
 		{
@@ -1207,7 +1206,7 @@ void CArea::Clear()
 {
 	// Real Instances
 	TObjectInstanceVector::iterator it;
-	for (it = m_ObjectInstanceVector.begin();it!=m_ObjectInstanceVector.end();++it)
+	for (it = m_ObjectInstanceVector.begin(); it != m_ObjectInstanceVector.end(); ++it)
 		__Clear_DestroyObjectInstance(*it);
 
 	m_ObjectDataVector.clear();
@@ -1227,25 +1226,25 @@ void CArea::Clear()
 	m_bPortalEnable = FALSE;
 	ClearPortal();
 
-	CEffectManager& rkEftMgr=CEffectManager::Instance();
+	CEffectManager& rkEftMgr = CEffectManager::Instance();
 
 	TEffectInstanceIterator i;
 	for (i = m_EffectInstanceMap.begin(); i != m_EffectInstanceMap.end(); ++i)
 	{
-		CEffectInstance * pEffectInstance = i->second;
-		rkEftMgr.DestroyUnsafeEffectInstance(pEffectInstance);		
+		CEffectInstance* pEffectInstance = i->second;
+		rkEftMgr.DestroyUnsafeEffectInstance(pEffectInstance);
 	}
 	m_EffectInstanceMap.clear();
 }
 
-void CArea::__Clear_DestroyObjectInstance(TObjectInstance * pObjectInstance)
+void CArea::__Clear_DestroyObjectInstance(TObjectInstance* pObjectInstance)
 {
-	if (pObjectInstance->dwEffectInstanceIndex!=0xffffffff)
+	if (pObjectInstance->dwEffectInstanceIndex != 0xffffffff)
 	{
-		TEffectInstanceIterator f= m_EffectInstanceMap.find(pObjectInstance->dwEffectInstanceIndex);
-		if (m_EffectInstanceMap.end()!=f)
+		TEffectInstanceIterator f = m_EffectInstanceMap.find(pObjectInstance->dwEffectInstanceIndex);
+		if (m_EffectInstanceMap.end() != f)
 		{
-			CEffectInstance * pEffectInstance = f->second;
+			CEffectInstance* pEffectInstance = f->second;
 			m_EffectInstanceMap.erase(f);
 
 			if (CEffectManager::InstancePtr())
@@ -1287,20 +1286,19 @@ void CArea::__Clear_DestroyObjectInstance(TObjectInstance * pObjectInstance)
 	}
 
 	pObjectInstance->Clear();
-	
+
 	ms_ObjectInstancePool.Free(pObjectInstance);
 }
 
-
 //////////////////////////////////////////////////////////////////////////
 // Coordination 관련
-void CArea::GetCoordinate(unsigned short * usCoordX, unsigned short * usCoordY)
+void CArea::GetCoordinate(unsigned short* usCoordX, unsigned short* usCoordY)
 {
 	*usCoordX = m_wX;
 	*usCoordY = m_wY;
 }
 
-void CArea::SetCoordinate(const unsigned short & usCoordX, const unsigned short & usCoordY)
+void CArea::SetCoordinate(const unsigned short& usCoordX, const unsigned short& usCoordY)
 {
 	m_wX = usCoordX;
 	m_wY = usCoordY;
@@ -1308,9 +1306,9 @@ void CArea::SetCoordinate(const unsigned short & usCoordX, const unsigned short 
 
 //////////////////////////////////////////////////////////////////////////
 
-void CArea::SetMapOutDoor(CMapOutdoor * pOwnerOutdoorMap)
+void CArea::SetMapOutDoor(CMapOutdoor* pOwnerOutdoorMap)
 {
-	m_pOwnerOutdoorMap=pOwnerOutdoorMap;
+	m_pOwnerOutdoorMap = pOwnerOutdoorMap;
 }
 
 CArea::CArea()
@@ -1337,7 +1335,7 @@ void CArea::TAmbienceInstance::__Update(float fxCenter, float fyCenter, float fz
 
 void CArea::TAmbienceInstance::UpdateOnceSound(float fxCenter, float fyCenter, float fzCenter)
 {
-	float fDistance = sqrtf((fx - fxCenter)*(fx - fxCenter) + (fy - fyCenter)*(fy - fyCenter) + (fz - fzCenter)*(fz - fzCenter));
+	float fDistance = sqrtf((fx - fxCenter) * (fx - fxCenter) + (fy - fyCenter) * (fy - fyCenter) + (fz - fzCenter) * (fz - fzCenter));
 	if (DWORD(fDistance) < dwRange)
 	{
 		if (-1 == iPlaySoundIndex)
@@ -1345,9 +1343,9 @@ void CArea::TAmbienceInstance::UpdateOnceSound(float fxCenter, float fyCenter, f
 			if (AmbienceData.AmbienceSoundVector.empty())
 				return;
 
-			const char * c_szFileName = AmbienceData.AmbienceSoundVector[0].c_str();
+			const char* c_szFileName = AmbienceData.AmbienceSoundVector[0].c_str();
 			iPlaySoundIndex = CSoundManager::Instance().PlayAmbienceSound3D(fx, fy, fz, c_szFileName);
-//			Tracef(" %d : OncePlay [%f] : %s\n", iPlaySoundIndex, fDistance, c_szFileName);
+			//			Tracef(" %d : OncePlay [%f] : %s\n", iPlaySoundIndex, fDistance, c_szFileName);
 		}
 	}
 	else
@@ -1358,7 +1356,7 @@ void CArea::TAmbienceInstance::UpdateOnceSound(float fxCenter, float fyCenter, f
 
 void CArea::TAmbienceInstance::UpdateStepSound(float fxCenter, float fyCenter, float fzCenter)
 {
-	float fDistance = sqrtf((fx - fxCenter)*(fx - fxCenter) + (fy - fyCenter)*(fy - fyCenter) + (fz - fzCenter)*(fz - fzCenter));
+	float fDistance = sqrtf((fx - fxCenter) * (fx - fxCenter) + (fy - fyCenter) * (fy - fyCenter) + (fz - fzCenter) * (fz - fzCenter));
 	if (DWORD(fDistance) < dwRange)
 	{
 		float fcurTime = CTimer::Instance().GetCurrentSecond();
@@ -1368,9 +1366,9 @@ void CArea::TAmbienceInstance::UpdateStepSound(float fxCenter, float fyCenter, f
 			if (AmbienceData.AmbienceSoundVector.empty())
 				return;
 
-			const char * c_szFileName = AmbienceData.AmbienceSoundVector[0].c_str();
+			const char* c_szFileName = AmbienceData.AmbienceSoundVector[0].c_str();
 			iPlaySoundIndex = CSoundManager::Instance().PlayAmbienceSound3D(fx, fy, fz, c_szFileName);
-//			Tracef(" %d : StepPlay [%f] : %s\n", iPlaySoundIndex, fDistance, c_szFileName);
+			//			Tracef(" %d : StepPlay [%f] : %s\n", iPlaySoundIndex, fDistance, c_szFileName);
 
 			fNextPlayTime = CTimer::Instance().GetCurrentSecond();
 			fNextPlayTime += AmbienceData.fPlayInterval + frandom(0.0f, AmbienceData.fPlayIntervalVariation);
@@ -1385,7 +1383,7 @@ void CArea::TAmbienceInstance::UpdateStepSound(float fxCenter, float fyCenter, f
 
 void CArea::TAmbienceInstance::UpdateLoopSound(float fxCenter, float fyCenter, float fzCenter)
 {
-	float fDistance = sqrtf((fx - fxCenter)*(fx - fxCenter) + (fy - fyCenter)*(fy - fyCenter) + (fz - fzCenter)*(fz - fzCenter));
+	float fDistance = sqrtf((fx - fxCenter) * (fx - fxCenter) + (fy - fyCenter) * (fy - fyCenter) + (fz - fzCenter) * (fz - fzCenter));
 	if (DWORD(fDistance) < dwRange)
 	{
 		if (-1 == iPlaySoundIndex)
@@ -1393,14 +1391,14 @@ void CArea::TAmbienceInstance::UpdateLoopSound(float fxCenter, float fyCenter, f
 			if (AmbienceData.AmbienceSoundVector.empty())
 				return;
 
-			const char * c_szFileName = AmbienceData.AmbienceSoundVector[0].c_str();
+			const char* c_szFileName = AmbienceData.AmbienceSoundVector[0].c_str();
 			iPlaySoundIndex = CSoundManager::Instance().PlayAmbienceSound3D(fx, fy, fz, c_szFileName, 0);
-//			Tracef(" %d : LoopPlay [%f] : %s\n", iPlaySoundIndex, fDistance, c_szFileName);
+			//			Tracef(" %d : LoopPlay [%f] : %s\n", iPlaySoundIndex, fDistance, c_szFileName);
 		}
 
 		if (-1 != iPlaySoundIndex)
 		{
-//			Tracef("%d : %f\n", iPlaySoundIndex, __GetVolumeFromDistance(fDistance));
+			//			Tracef("%d : %f\n", iPlaySoundIndex, __GetVolumeFromDistance(fDistance));
 			CSoundManager::Instance().UpdateAmbienceSound3D(iPlaySoundIndex, fx, fy, fz);
 			CSoundManager::Instance().SetSoundVolume3D(iPlaySoundIndex, __GetVolumeFromDistance(fDistance));
 		}
@@ -1409,7 +1407,7 @@ void CArea::TAmbienceInstance::UpdateLoopSound(float fxCenter, float fyCenter, f
 	{
 		if (-1 != iPlaySoundIndex)
 		{
-//			Tracef(" %d : LoopStop\n", iPlaySoundIndex);
+			//			Tracef(" %d : LoopStop\n", iPlaySoundIndex);
 			CSoundManager::Instance().StopSound3D(iPlaySoundIndex);
 			iPlaySoundIndex = -1;
 		}
@@ -1431,7 +1429,7 @@ void CArea::TAmbienceInstance::Render()
 {
 	float fBoxSize = 10.0f;
 	STATEMANAGER.SetRenderState(D3DRS_TEXTUREFACTOR, 0xff00ff00);
-	RenderCube(fx-fBoxSize, fy-fBoxSize, fz-fBoxSize, fx+fBoxSize, fy+fBoxSize, fz+fBoxSize);
+	RenderCube(fx - fBoxSize, fy - fBoxSize, fz - fBoxSize, fx + fBoxSize, fy + fBoxSize, fz + fBoxSize);
 	STATEMANAGER.SetRenderState(D3DRS_TEXTUREFACTOR, 0xffffffff);
 	RenderSphere(NULL, fx, fy, fz, float(dwRange) * fMaxVolumeAreaPercentage, D3DFILL_POINT);
 	RenderSphere(NULL, fx, fy, fz, float(dwRange), D3DFILL_POINT);
@@ -1440,10 +1438,10 @@ void CArea::TAmbienceInstance::Render()
 
 	for (int i = 0; i < 4; ++i)
 	{
-		float fxAdd = cosf(float(i) * D3DX_PI/4.0f) * float(dwRange) / 2.0f;
-		float fyAdd = sinf(float(i) * D3DX_PI/4.0f) * float(dwRange) / 2.0f;
+		float fxAdd = cosf(float(i) * D3DX_PI / 4.0f) * float(dwRange) / 2.0f;
+		float fyAdd = sinf(float(i) * D3DX_PI / 4.0f) * float(dwRange) / 2.0f;
 
-		if (i%2)
+		if (i % 2)
 		{
 			fxAdd /= 2.0f;
 			fyAdd /= 2.0f;

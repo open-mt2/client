@@ -16,23 +16,23 @@ class CPythonSafeBox : public CSingleton<CPythonSafeBox>
 		virtual ~CPythonSafeBox();
 
 		void OpenSafeBox(int iSize);
-		void SetItemData(DWORD dwSlotIndex, const TItemData & rItemData);
+		void SetItemData(DWORD dwSlotIndex, const TItemData& rItemData);
 		void DelItemData(DWORD dwSlotIndex);
 
 		void SetMoney(DWORD dwMoney);
 		DWORD GetMoney();
-		
+
 		BOOL GetSlotItemID(DWORD dwSlotIndex, DWORD* pdwItemID);
 
 		int GetCurrentSafeBoxSize();
-		BOOL GetItemDataPtr(DWORD dwSlotIndex, TItemData ** ppInstance);
+		BOOL GetItemDataPtr(DWORD dwSlotIndex, TItemData** ppInstance);
 
 		// MALL
 		void OpenMall(int iSize);
-		void SetMallItemData(DWORD dwSlotIndex, const TItemData & rItemData);
+		void SetMallItemData(DWORD dwSlotIndex, const TItemData& rItemData);
 		void DelMallItemData(DWORD dwSlotIndex);
-		BOOL GetMallItemDataPtr(DWORD dwSlotIndex, TItemData ** ppInstance);
-		BOOL GetSlotMallItemID(DWORD dwSlotIndex, DWORD * pdwItemID);
+		BOOL GetMallItemDataPtr(DWORD dwSlotIndex, TItemData** ppInstance);
+		BOOL GetSlotMallItemID(DWORD dwSlotIndex, DWORD* pdwItemID);
 		DWORD GetMallSize();
 
 	protected:

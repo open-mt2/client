@@ -12,25 +12,25 @@
 namespace
 {
 
-struct RecordingGraphic
-{
-	int depthClears = 0;
-	int fullClears = 0;
-	float r = -1.0f;
-	float g = -1.0f;
-	float b = -1.0f;
-	float a = -1.0f;
-
-	void ClearDepthBuffer() { ++depthClears; }
-	void Clear() { ++fullClears; }
-	void SetClearColor(float red, float green, float blue, float alpha = 1.0f)
+	struct RecordingGraphic
 	{
-		r = red;
-		g = green;
-		b = blue;
-		a = alpha;
-	}
-};
+			int depthClears = 0;
+			int fullClears = 0;
+			float r = -1.0f;
+			float g = -1.0f;
+			float b = -1.0f;
+			float a = -1.0f;
+
+			void ClearDepthBuffer() { ++depthClears; }
+			void Clear() { ++fullClears; }
+			void SetClearColor(float red, float green, float blue, float alpha = 1.0f)
+			{
+				r = red;
+				g = green;
+				b = blue;
+				a = alpha;
+			}
+	};
 
 } // namespace
 
