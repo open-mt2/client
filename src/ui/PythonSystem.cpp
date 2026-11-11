@@ -4,6 +4,8 @@
 
 #include <SDL2/SDL.h>
 
+#include <cstring>
+
 #define DEFAULT_VALUE_ALWAYS_SHOW_NAME true
 
 void CPythonSystem::SetInterfaceHandler(PyObject* poHandler)
@@ -259,7 +261,9 @@ void CPythonSystem::SetSaveID(int iValue, const char* c_szSaveID)
 		return;
 
 	m_Config.isSaveID = iValue;
-	strncpy(m_Config.SaveID, c_szSaveID, sizeof(m_Config.SaveID) - 1);
+	const size_t saveIdLength = strnlen(c_szSaveID, sizeof(m_Config.SaveID) - 1);
+	memcpy(m_Config.SaveID, c_szSaveID, saveIdLength);
+	m_Config.SaveID[saveIdLength] = '\0';
 }
 
 CPythonSystem::TConfig* CPythonSystem::GetConfig()
@@ -443,7 +447,11 @@ bool CPythonSystem::LoadConfig()
 		else if (!stricmp(command, "IS_SAVE_ID"))
 			m_Config.isSaveID = atoi(value);
 		else if (!stricmp(command, "SAVE_ID"))
-			snprintf(m_Config.SaveID, sizeof(m_Config.SaveID), "%s", value);
+		{
+			const size_t saveIdLength = strnlen(value, sizeof(m_Config.SaveID) - 1);
+			memcpy(m_Config.SaveID, value, saveIdLength);
+			m_Config.SaveID[saveIdLength] = '\0';
+		}
 		else if (!stricmp(command, "PRE_LOADING_DELAY_TIME"))
 			g_iLoadingDelayTime = atoi(value);
 		else if (!stricmp(command, "WINDOWED"))

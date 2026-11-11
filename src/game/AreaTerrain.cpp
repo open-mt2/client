@@ -921,6 +921,9 @@ CTerrainPatch* CTerrain::GetTerrainPatchPtr(BYTE byPatchNumX, BYTE byPatchNumY)
 
 void CTerrain::_CalculateTerrainPatch(BYTE byPatchNumX, BYTE byPatchNumY)
 {
+	if (!m_awRawHeightMap || !m_acNormalMap || !m_abyWaterMap)
+		return;
+
 	DWORD dwPatchNum = byPatchNumY * PATCH_XCOUNT + byPatchNumX;
 
 	CTerrainPatch& rkTerrainPatch = m_TerrainPatchList[dwPatchNum];
