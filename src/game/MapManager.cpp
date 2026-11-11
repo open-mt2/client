@@ -253,8 +253,8 @@ void CMapManager::BeginEnvironment()
 			float fDensity = 0.00015f;
 			DWORD dwDensity;
 			memcpy(&dwDensity, &fDensity, sizeof(dwDensity));
-			STATEMANAGER.SetRenderState(D3DRS_FOGVERTEXMODE, D3DFOG_EXP);   // pixel fog
-			STATEMANAGER.SetRenderState(D3DRS_FOGDENSITY, dwDensity);	   // vertex fog
+			STATEMANAGER.SetRenderState(D3DRS_FOGVERTEXMODE, D3DFOG_EXP); // pixel fog
+			STATEMANAGER.SetRenderState(D3DRS_FOGDENSITY, dwDensity);	  // vertex fog
 		}
 		else
 		{
