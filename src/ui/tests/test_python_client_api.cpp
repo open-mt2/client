@@ -7,14 +7,14 @@
 #include <cstdio>
 #include <vector>
 
-// Defined by UserInterface.cpp for the client executable, which is not linked
+// Defined by Context.cpp for the client executable, which is not linked
 // into this library-only test.  The shipping client initialises it to false.
 bool __IS_TEST_SERVER_MODE__ = false;
 
 namespace
 {
 
-	// Mirrors the registration order in RunMainScript() (UserInterface.cpp) minus
+	// Mirrors the registration order in PythonRuntime::RegisterModules() minus
 	// the pack/script loading that needs game assets.  If a module is added there,
 	// add it here and regenerate the snapshot.
 	void RegisterClientModules()
@@ -57,7 +57,7 @@ namespace
 
 	// Every module the client registers, in alphabetical order so the snapshot is
 	// easy to review.  grpThing is registered by EterPythonLib's own test but not
-	// by RunMainScript(), so it is deliberately absent here.
+	// by PythonRuntime, so it is deliberately absent here.
 	const char* kClientModules[] = {
 		"ServerStateChecker",
 		"app",
@@ -99,7 +99,7 @@ namespace
 } // namespace
 
 // TA.6: boot the full client interpreter headless, register every module from
-// RunMainScript() and pin the exposed API surface.
+// PythonRuntime and pin the exposed API surface.
 int main(int argc, char** argv)
 {
 	TEST_ASSERT_MSG(argc == 2, "usage: test_python_client_api <golden>");

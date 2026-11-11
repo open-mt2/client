@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Platform/Platform.h>
+#include <Client/Application/Context.h>
 
 #include <memory>
 #include <string>
@@ -9,6 +9,8 @@ class CPythonApplication;
 
 namespace Neoeter
 {
+	class CommandLine;
+
 	class Application
 	{
 		public:
@@ -22,20 +24,11 @@ namespace Neoeter
 			int Run(const std::string& commandLine);
 
 		private:
-			enum class CommandLineResult
-			{
-				Launch,
-				ExitSuccess,
-				ExitFailure,
-			};
-
 			void Initialize();
-			CommandLineResult ProcessCommandLine(const std::string& commandLine);
-			bool ValidateLaunch(const std::string& commandLine) const;
-			int RunGame(const std::string& commandLine);
+			int RunGame(const CommandLine& arguments);
 			void Shutdown();
 
-			HINSTANCE m_hInstance;
+			Context m_context;
 			std::unique_ptr<CPythonApplication> m_pythonApplication;
 	};
 }

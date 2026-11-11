@@ -15,9 +15,14 @@ target_include_directories(client_application
         $<INSTALL_INTERFACE:include>
 )
 
+if(PYTHON_INCLUDE_DIRS)
+    target_include_directories(client_application SYSTEM PRIVATE ${PYTHON_INCLUDE_DIRS})
+endif()
+
 target_link_libraries(client_application
     PUBLIC
         client_ui
+        client_utils
 )
 
 if(DEFINED OPENMT2_CLIENT_VERSION)

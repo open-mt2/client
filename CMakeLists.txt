@@ -111,6 +111,10 @@ if(CLIENT_STANDALONE)
             message(WARNING "Neoeter package version ${Neoeter_VERSION} does not match the requested release ${NEOETER_VERSION}")
         endif()
     else()
+        if(NOT NEOETER_VERSION MATCHES "^[0-9]+\\.[0-9]+\\.[0-9]+")
+            unset(NEOETER_VERSION CACHE)
+        endif()
+
         FetchContent_Declare(neoeter
             GIT_REPOSITORY https://github.com/open-mt2/neoeter.git
             GIT_TAG ${NEOETER_GIT_TAG})
@@ -131,7 +135,7 @@ if(CLIENT_STANDALONE)
 endif()
 
 # The browser stub has no dependencies; the UI links both.
-foreach(_package IN ITEMS webbrowser game ui application)
+foreach(_package IN ITEMS webbrowser game ui utils application)
     if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/${_package}/CMakeLists.txt")
         add_subdirectory("src/${_package}" "${CMAKE_BINARY_DIR}/src/${_package}")
     else()
