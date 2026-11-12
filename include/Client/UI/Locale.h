@@ -22,9 +22,6 @@ const char* LocaleService_GetLocalePath();
 BOOL LocaleService_IsLeadByte(const char chByte);
 int LocaleService_StringCompareCI(LPCSTR szStringLeft, LPCSTR szStringRight, size_t sizeLength);
 
-unsigned LocaleService_GetLastExp(int level);
-int LocaleService_GetSkillPower(unsigned level);
-
 // CHEONMA
 void LocaleService_SetCHEONMA(bool isEnable);
 bool LocaleService_IsCHEONMA();

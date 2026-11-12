@@ -2,6 +2,7 @@
 #include <Client/UI/PythonGuild.h>
 #include <Client/UI/AbstractPlayer.h>
 #include <Client/UI/MarkManager.h>
+#include <Client/Game/Balance.h>
 
 std::map<DWORD, DWORD> g_GuildSkillSlotToIndexMap;
 
@@ -473,7 +474,7 @@ PyObject* guildGetGuildExperience(PyObject* poSelf, PyObject* poArgs)
 	if (rGuildInfo.dwGuildLevel >= GULID_MAX_LEVEL)
 		return Py_BuildValue("ii", 0, 0);
 
-	unsigned lastExp = LocaleService_GetLastExp(rGuildInfo.dwGuildLevel);
+	unsigned lastExp = GetGuildLevelExp(rGuildInfo.dwGuildLevel);
 
 	return Py_BuildValue("ii", rGuildInfo.dwCurrentExperience, lastExp - rGuildInfo.dwCurrentExperience);
 }
