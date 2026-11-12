@@ -3,7 +3,6 @@
 //
 #include <Client/UI/StdAfx.h>
 #include <Client/UI/InstanceBase.h>
-#include <Client/UI/resource.h>
 #include <Client/UI/PythonTextTail.h>
 #include <Client/UI/PythonCharacterManager.h>
 #include <Client/UI/PythonGuild.h>
@@ -715,7 +714,7 @@ void CPythonTextTail::SetItemTextTailOwner(DWORD dwVID, const char* c_szName)
 		}
 
 		std::string strName = c_szName;
-		static const std::string& strOwnership = ApplicationStringTable_GetString(IDS_POSSESSIVE_MORPHENE) == "" ? "'s" : ApplicationStringTable_GetString(IDS_POSSESSIVE_MORPHENE);
+		static const std::string strOwnership("'s");
 		strName += strOwnership;
 
 		pTextTail->pOwnerTextInstance->SetTextPointer(ms_pFont);

@@ -78,11 +78,4 @@ void initsafebox();
 void initguild();
 void initMessenger();
 
-void ApplicationStringTable_Initialize(HINSTANCE hInstance);
-extern const std::string& ApplicationStringTable_GetString(DWORD dwID);
-extern const std::string& ApplicationStringTable_GetString(DWORD dwID, LPCSTR szKey);
-
-extern const char* ApplicationStringTable_GetStringz(DWORD dwID);
-extern const char* ApplicationStringTable_GetStringz(DWORD dwID, LPCSTR szKey);
-
 extern void ApplicationSetErrorString(const char* szErrorString);

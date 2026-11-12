@@ -61,11 +61,13 @@ namespace Neoeter
 		return Run(commandLine);
 	}
 
+	/**
+	 * OpenMT2 Client Application Entry point
+	 * Initialize components
+	 * Parses CLI arguments
+	 */
 	int Application::Run(const std::string& commandLine)
 	{
-		if (commandLine.find("--hackshield") != std::string::npos)
-			return 0;
-
 		Initialize();
 
 		CommandLine arguments(commandLine);
@@ -93,7 +95,6 @@ namespace Neoeter
 	{
 		Context::EnableDebugHeapChecks();
 
-		ApplicationStringTable_Initialize(m_context.Instance());
 		LocaleService_LoadConfig("locale.cfg");
 		SetDefaultCodePage(LocaleService_GetCodePage());
 

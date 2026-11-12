@@ -2,13 +2,6 @@
 // Microsoft Visual C++ generated include file.
 // Used by UserInterface.rc
 //
-#define IDS_APP_NAME 1
-#define IDS_POSSESSIVE_MORPHENE 2
-#define IDS_WARN_BAD_DRIVER 3
-#define IDS_WARN_NO_TNL 4
-#define IDS_ERR_CANNOT_READ_FILE 5
-#define IDS_ERR_NOT_LATEST_FILE 6
-#define IDS_ERR_MUST_LAUNCH_FROM_PATCHER 7
 #define IDI_OPENMT2 100
 #define IDD_COLOR_DIALOG 101
 #define IDC_CURSOR_NORMAL 102
