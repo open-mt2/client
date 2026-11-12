@@ -1255,7 +1255,7 @@ bool CPythonNetworkStream::RecvChatPacket()
 	// 유럽 아랍 버전 처리
 	// "이름: 내용" 입력을 "내용: 이름" 순서로 출력하기 위해 탭(0x08)을 넣음
 	// 탭을 아랍어 기호로 처리해 (영어1) : (영어2) 로 입력되어도 (영어2) : (영어1) 로 출력하게 만든다
-	if (LocaleService_IsEUROPE() && GetDefaultCodePage() == 1256)
+	if (GetDefaultCodePage() == 1256)
 	{
 		char* p = strchr(buf, ':');
 		if (p && p[1] == ' ')
@@ -4063,29 +4063,17 @@ bool CPythonNetworkStream::SendClientVersionPacket()
 	filename = CFileNameHelper::NoPath(filename);
 	CFileNameHelper::ChangeDosPath(filename);
 
-	if (LocaleService_IsEUROPE() && false == LocaleService_IsYMIR())
-	{
-		TPacketCGClientVersion2 kVersionPacket;
-		kVersionPacket.header = HEADER_CG_CLIENT_VERSION2;
-		strncpy(kVersionPacket.filename, filename.c_str(), sizeof(kVersionPacket.filename) - 1);
-		strncpy(kVersionPacket.timestamp, "1215955205", sizeof(kVersionPacket.timestamp) - 1); // # python time.time 앞자리
-		// strncpy(kVersionPacket.timestamp, __TIMESTAMP__, sizeof(kVersionPacket.timestamp)-1); // old_string_ver
-		// strncpy(kVersionPacket.timestamp, "1218055205", sizeof(kVersionPacket.timestamp)-1); // new_future
-		// strncpy(kVersionPacket.timestamp, "1214055205", sizeof(kVersionPacket.timestamp)-1); // old_past
+	TPacketCGClientVersion2 kVersionPacket;
+	kVersionPacket.header = HEADER_CG_CLIENT_VERSION2;
+	strncpy(kVersionPacket.filename, filename.c_str(), sizeof(kVersionPacket.filename) - 1);
+	strncpy(kVersionPacket.timestamp, "1215955205", sizeof(kVersionPacket.timestamp) - 1); // # python time.time 앞자리
+	// strncpy(kVersionPacket.timestamp, __TIMESTAMP__, sizeof(kVersionPacket.timestamp)-1); // old_string_ver
+	// strncpy(kVersionPacket.timestamp, "1218055205", sizeof(kVersionPacket.timestamp)-1); // new_future
+	// strncpy(kVersionPacket.timestamp, "1214055205", sizeof(kVersionPacket.timestamp)-1); // old_past
 
-		if (!Send(sizeof(kVersionPacket), &kVersionPacket))
-			Tracef("SendClientReportPacket Error");
-	}
-	else
-	{
-		TPacketCGClientVersion kVersionPacket;
-		kVersionPacket.header = HEADER_CG_CLIENT_VERSION;
-		strncpy(kVersionPacket.filename, filename.c_str(), sizeof(kVersionPacket.filename) - 1);
-		strncpy(kVersionPacket.timestamp, __TIMESTAMP__, sizeof(kVersionPacket.timestamp) - 1);
+	if (!Send(sizeof(kVersionPacket), &kVersionPacket))
+		Tracef("SendClientReportPacket Error");
 
-		if (!Send(sizeof(kVersionPacket), &kVersionPacket))
-			Tracef("SendClientReportPacket Error");
-	}
 	return SendSequence();
 }
 

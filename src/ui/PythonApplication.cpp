@@ -1063,19 +1063,6 @@ bool LoadLocaleData(const char* localePath)
 		Tracenf("CPythonApplication - CPythonNetworkStream::LoadInsultList(%s)", szInsultList);
 	}
 
-	if (LocaleService_IsYMIR())
-	{
-		char szEmpireTextConvFile[256];
-		for (DWORD dwEmpireID = 1; dwEmpireID <= 3; ++dwEmpireID)
-		{
-			sprintf(szEmpireTextConvFile, "%s/lang%d.cvt", localePath, dwEmpireID);
-			if (!rkNetStream.LoadConvertTable(dwEmpireID, szEmpireTextConvFile))
-			{
-				TraceError("LoadLocaleData - CPythonNetworkStream::LoadConvertTable(%d, %s) FAILURE", dwEmpireID, szEmpireTextConvFile);
-			}
-		}
-	}
-
 	return true;
 }
 // END_OF_SUPPORT_NEW_KOREA_SERVER

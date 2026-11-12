@@ -237,45 +237,14 @@ void CPythonTextTail::ArrangeTextTail()
 
 			fxAdd = 8.0f;
 
-			if (LocaleService_IsEUROPE()) // 독일어는 명칭이 길어 오른정렬
-			{
-				if (GetDefaultCodePage() == CP_ARABIC)
-				{
-					pTitle->SetPosition(pTextTail->x - (iNameWidth / 2) - iTitleWidth - 4.0f, pTextTail->y, pTextTail->z);
-				}
-				else
-				{
-					pTitle->SetPosition(pTextTail->x - (iNameWidth / 2), pTextTail->y, pTextTail->z);
-				}
-			}
-			else
-			{
-				pTitle->SetPosition(pTextTail->x - (iNameWidth / 2) - fxAdd, pTextTail->y, pTextTail->z);
-			}
+			pTitle->SetPosition(pTextTail->x - (iNameWidth / 2) - fxAdd, pTextTail->y, pTextTail->z);
 			pTitle->Update();
 
 			// Level 위치 업데이트
 			CGraphicTextInstance* pLevel = pTextTail->pLevelTextInstance;
 			if (pLevel)
 			{
-				int iLevelWidth, iLevelHeight;
-				pLevel->GetTextSize(&iLevelWidth, &iLevelHeight);
-
-				if (LocaleService_IsEUROPE()) // 독일어는 명칭이 길어 오른정렬
-				{
-					if (GetDefaultCodePage() == CP_ARABIC)
-					{
-						pLevel->SetPosition(pTextTail->x - (iNameWidth / 2) - iLevelWidth - iTitleWidth - 8.0f, pTextTail->y, pTextTail->z);
-					}
-					else
-					{
-						pLevel->SetPosition(pTextTail->x - (iNameWidth / 2) - iTitleWidth, pTextTail->y, pTextTail->z);
-					}
-				}
-				else
-				{
-					pLevel->SetPosition(pTextTail->x - (iNameWidth / 2) - fxAdd - iTitleWidth, pTextTail->y, pTextTail->z);
-				}
+				pLevel->SetPosition(pTextTail->x - (iNameWidth / 2) - fxAdd - iTitleWidth, pTextTail->y, pTextTail->z);
 
 				pLevel->Update();
 			}
@@ -288,24 +257,7 @@ void CPythonTextTail::ArrangeTextTail()
 			CGraphicTextInstance* pLevel = pTextTail->pLevelTextInstance;
 			if (pLevel)
 			{
-				int iLevelWidth, iLevelHeight;
-				pLevel->GetTextSize(&iLevelWidth, &iLevelHeight);
-
-				if (LocaleService_IsEUROPE()) // 독일어는 명칭이 길어 오른정렬
-				{
-					if (GetDefaultCodePage() == CP_ARABIC)
-					{
-						pLevel->SetPosition(pTextTail->x - (iNameWidth / 2) - iLevelWidth - 4.0f, pTextTail->y, pTextTail->z);
-					}
-					else
-					{
-						pLevel->SetPosition(pTextTail->x - (iNameWidth / 2), pTextTail->y, pTextTail->z);
-					}
-				}
-				else
-				{
-					pLevel->SetPosition(pTextTail->x - (iNameWidth / 2) - fxAdd, pTextTail->y, pTextTail->z);
-				}
+				pLevel->SetPosition(pTextTail->x - (iNameWidth / 2) - fxAdd, pTextTail->y, pTextTail->z);
 
 				pLevel->Update();
 			}
@@ -899,10 +851,7 @@ void CPythonTextTail::AttachTitle(DWORD dwVID, const char* c_szName, const D3DXC
 		prTitle->SetTextPointer(ms_pFont);
 		prTitle->SetOutline(true);
 
-		if (LocaleService_IsEUROPE())
-			prTitle->SetHorizonalAlign(CGraphicTextInstance::HORIZONTAL_ALIGN_RIGHT);
-		else
-			prTitle->SetHorizonalAlign(CGraphicTextInstance::HORIZONTAL_ALIGN_CENTER);
+		prTitle->SetHorizonalAlign(CGraphicTextInstance::HORIZONTAL_ALIGN_CENTER);
 		prTitle->SetVerticalAlign(CGraphicTextInstance::VERTICAL_ALIGN_BOTTOM);
 	}
 

@@ -34,13 +34,7 @@ bool CAccountConnector::Connect(const char* c_szAddr, int iPort, const char* c_s
 	__OfflineState_Set();
 
 	// CHINA_CRYPT_KEY
-	if (LocaleService_IsYMIR())
-	{
-	}
-	else
-	{
-		__BuildClientKey_20050304Myevan();
-	}
+	__BuildClientKey_20050304Myevan();
 	// END_OF_CHINA_CRYPT_KEY
 
 	return CNetworkStream::Connect(c_szAccountAddr, iAccountPort);

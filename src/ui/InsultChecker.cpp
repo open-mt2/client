@@ -1,6 +1,19 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/UI/InsultChecker.h>
 
+namespace
+{
+	bool IsLeadByte(char chByte)
+	{
+		return (((unsigned char)chByte) & 0x80) != 0;
+	}
+
+	int CompareNoCase(const char* szStringLeft, const char* szStringRight, size_t sizeLength)
+	{
+		return strnicmp(szStringLeft, szStringRight, sizeLength);
+	}
+}
+
 CInsultChecker& CInsultChecker::GetSingleton()
 {
 	static CInsultChecker s_kInsultChecker;
@@ -33,7 +46,7 @@ bool CInsultChecker::__GetInsultLength(const char* c_szWord, UINT* puInsultLen)
 	{
 		std::string& rstInsult = *i;
 
-		int ret = LocaleService_StringCompareCI(c_szWord, rstInsult.c_str(), rstInsult.length());
+		int ret = CompareNoCase(c_szWord, rstInsult.c_str(), rstInsult.length());
 		if (0 == ret)
 		{
 			*puInsultLen = rstInsult.length();
@@ -64,7 +77,7 @@ void CInsultChecker::FilterInsult(char* szLine, UINT uLineLen)
 		}
 		else
 		{
-			if (LocaleService_IsLeadByte(bChr))
+			if (IsLeadByte(bChr))
 				uPos += 2;
 			else
 				uPos++;

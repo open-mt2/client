@@ -1,28 +1,16 @@
 #pragma once
 
-#define LOCALE_SERVICE_EUROPE
+#include <Neoeter/Platform/Locale/CodePageId.h>
 
 #define ENABLE_COSTUME_SYSTEM
 #define ENABLE_ENERGY_SYSTEM
 #define ENABLE_DRAGON_SOUL_SYSTEM
 #define ENABLE_NEW_EQUIPMENT_SYSTEM
 
-bool LocaleService_IsYMIR();
-bool LocaleService_IsJAPAN();
-bool LocaleService_IsENGLISH();
-bool LocaleService_IsHONGKONG();
-bool LocaleService_IsTAIWAN();
-bool LocaleService_IsNEWCIBN();
-bool LocaleService_IsEUROPE();
+inline unsigned LocaleService_GetCodePage() { return CP_LATIN; }
+inline const char* LocaleService_GetName() { return "EUROPE"; }
+inline const char* LocaleService_GetLocaleName() { return "en"; }
+inline const char* LocaleService_GetLocalePath() { return "locale/en"; }
 
-unsigned LocaleService_GetCodePage();
-const char* LocaleService_GetName();
-const char* LocaleService_GetLocaleName();
-const char* LocaleService_GetLocalePath();
-BOOL LocaleService_IsLeadByte(const char chByte);
-int LocaleService_StringCompareCI(LPCSTR szStringLeft, LPCSTR szStringRight, size_t sizeLength);
-
-// CHEONMA
-void LocaleService_SetCHEONMA(bool isEnable);
-bool LocaleService_IsCHEONMA();
-// END_OF_CHEONMA
+inline void LocaleService_SetCHEONMA(bool) {}
+inline bool LocaleService_IsCHEONMA() { return false; }

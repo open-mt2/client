@@ -110,13 +110,6 @@ bool __GetExeCRC(DWORD& r_dwProcCRC, DWORD& r_dwFileCRC)
 
 void BuildProcessCRC()
 {
-	if (LocaleService_IsHONGKONG() || LocaleService_IsTAIWAN())
-	{
-		memset(abCRCMagicCube, 0, sizeof(abCRCMagicCube));
-		bMagicCubeIdx = 0;
-		return;
-	}
-
 	DWORD dwProcCRC, dwFileCRC;
 
 	if (__GetExeCRC(dwProcCRC, dwFileCRC))
