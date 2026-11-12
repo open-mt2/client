@@ -1,13 +1,6 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/UI/Locale.h>
-#include <Client/UI/PythonApplication.h>
-#include <Client/UI/resource.h>
-#include <Neoeter/Platform/Base/CRC32.h>
-#include <Neoeter/IO/EterPackManager.h>
 #include <Neoeter/Platform/Locale/Japanese.h>
-#ifndef OPENMT2_PLATFORM_LINUX
-#include <windowsx.h>
-#endif
 
 const char* LSS_YMIR = "YMIR";
 const char* LSS_JAPAN = "JAPAN";
@@ -16,36 +9,13 @@ const char* LSS_HONGKONG = "HONGKONG";
 const char* LSS_TAIWAN = "TAIWAN";
 const char* LSS_NEWCIBN = "NEWCIBN";
 const char* LSS_EUROPE = "EUROPE";
-const char* LSS_GLOBAL = "GLOBAL";
 
 static bool IS_CHEONMA = false;
 
-char MULTI_LOCALE_SERVICE[256] = "EUROPE";
-char MULTI_LOCALE_PATH[512] = "locale/en";
-char MULTI_LOCALE_NAME[256] = "en";
-int MULTI_LOCALE_CODE = 1252;
-
-void LocaleService_LoadConfig(const char* fileName)
-{
-	FILE* fp = fopen(fileName, "rt");
-
-	if (fp)
-	{
-		char line[256];
-		char name[256];
-		int code;
-		if (fgets(line, sizeof(line) - 1, fp))
-		{
-			line[sizeof(line) - 1] = '\0';
-			sscanf(line, "%d %s", &code, name);
-
-			MULTI_LOCALE_CODE = code;
-			strcpy(MULTI_LOCALE_NAME, name);
-			snprintf(MULTI_LOCALE_PATH, sizeof(MULTI_LOCALE_PATH), "locale/%s", MULTI_LOCALE_NAME);
-		}
-		fclose(fp);
-	}
-}
+const char* LocaleService_GetName() { return LSS_EUROPE; }
+const char* LocaleService_GetLocaleName() { return "en"; }
+const char* LocaleService_GetLocalePath() { return "locale/en"; }
+unsigned LocaleService_GetCodePage() { return CP_LATIN; }
 
 unsigned LocaleService_GetLastExp(int level)
 {
@@ -232,214 +202,6 @@ bool LocaleService_IsCHEONMA()
 }
 
 // END_OF_CHEONMA
-
-#if defined(LOCALE_SERVICE_EUROPE) || defined(LOCALE_SERVICE_BRAZIL) || defined(LOCALE_SERVICE_CANADA) || defined(LOCALE_SERVICE_SINGAPORE) || defined(LOCALE_SERVICE_VIETNAM) || defined(LOCALE_SERVICE_TAIWAN) || defined(LOCALE_SERVICE_NEWCIBN)
-#define _LSS_USE_LOCALE_CFG 1
-#define _LSS_SERVICE_NAME LSS_EUROPE
-#elif defined(LOCALE_SERVICE_ITALY)
-#define _LSS_SERVICE_NAME LSS_ITALY
-#define _LSS_SERVICE_CODEPAGE CP_LATIN
-#define _LSS_SERVICE_LOCALE_NAME "it"
-#define _LSS_SERVICE_LOCALE_PATH "locale/it"
-#elif defined(LOCALE_SERVICE_ENGLISH)
-#define _LSS_SERVICE_NAME LSS_ENGLISH
-#define _LSS_SERVICE_CODEPAGE CP_LATIN
-#define _LSS_SERVICE_LOCALE_NAME "english"
-#define _LSS_SERVICE_LOCALE_PATH "locale/english"
-#elif defined(LOCALE_SERVICE_JAPAN)
-#define _LSS_SERVICE_NAME LSS_JAPAN
-#define _LSS_SERVICE_CODEPAGE CP_JAPANESE
-#define _LSS_SERVICE_LOCALE_NAME "japan"
-#define _LSS_SERVICE_LOCALE_PATH "locale/japan"
-#elif defined(LOCALE_SERVICE_YMIR)
-#define _LSS_SERVICE_NAME LSS_YMIR
-#define _LSS_SERVICE_CODEPAGE CP_HANGUL
-#define _LSS_SERVICE_LOCALE_NAME "ymir"
-#define _LSS_SERVICE_LOCALE_PATH "locale/ymir"
-#elif defined(LOCALE_SERVICE_HONGKONG)
-#define _LSS_SERVICE_NAME LSS_HONGKONG
-#define _LSS_SERVICE_CODEPAGE CP_CHINESE_TRAD
-#define _LSS_SERVICE_LOCALE_NAME "hongkong"
-#define _LSS_SERVICE_LOCALE_PATH "locale/hongkong"
-#elif defined(LOCALE_SERVICE_TAIWAN)
-#define _LSS_SERVICE_NAME LSS_TAIWAN
-#define _LSS_SERVICE_CODEPAGE CP_CHINESE_TRAD
-#define _LSS_SERVICE_LOCALE_NAME "taiwan"
-#define _LSS_SERVICE_LOCALE_PATH "locale/taiwan"
-#elif defined(LOCALE_SERVICE_NEWCIBN)
-#define _LSS_SERVICE_NAME LSS_NEWCIBN
-#define _LSS_SERVICE_CODEPAGE CP_CHINESE_SIMPLE
-#define _LSS_SERVICE_LOCALE_NAME "newcibn"
-#define _LSS_SERVICE_LOCALE_PATH "locale/newcibn"
-#endif
-
-#if defined(_LSS_USE_LOCALE_CFG)
-#if defined(_LSS_SERVICE_NAME)
-const char* LocaleService_GetName() { return _LSS_SERVICE_NAME; }
-#else
-const char* LocaleService_GetName() { return MULTI_LOCALE_SERVICE; }
-#endif
-unsigned int LocaleService_GetCodePage() { return MULTI_LOCALE_CODE; }
-const char* LocaleService_GetLocaleName() { return MULTI_LOCALE_NAME; }
-const char* LocaleService_GetLocalePath() { return MULTI_LOCALE_PATH; }
-#elif defined(_LSS_SERVICE_NAME)
-const char* LocaleService_GetName() { return _LSS_SERVICE_NAME; }
-unsigned int LocaleService_GetCodePage() { return _LSS_SERVICE_CODEPAGE; }
-const char* LocaleService_GetLocaleName() { return _LSS_SERVICE_LOCALE_NAME; }
-const char* LocaleService_GetLocalePath() { return _LSS_SERVICE_LOCALE_PATH; }
-#endif
-
-void LocaleService_ForceSetLocale(const char* name, const char* localePath)
-{
-	strcpy(MULTI_LOCALE_NAME, name);
-	strcpy(MULTI_LOCALE_PATH, localePath);
-}
-
-#if defined(LOCALE_SERVICE_GLOBAL)
-struct SLOCALEDATA
-{
-		const char* szServiceName;
-		const char* szLocaleName;
-		WORD wCodePage;
-} gs_stLocaleData[] = {
-	{LSS_YMIR, "ymir", 949},		 // Korea
-	{LSS_EUROPE, "de", 1252},		 // GameForge (Germany)
-	{LSS_EUROPE, "en", 1252},		 // GameForge (United Kingdom)
-	{LSS_EUROPE, "us", 1252},		 // GameForge (USA)
-	{LSS_EUROPE, "es", 1252},		 // GameForge (Spain)
-	{LSS_EUROPE, "it", 1252},		 // GameForge (Italy)
-	{LSS_EUROPE, "fr", 1252},		 // GameForge (France)
-	{LSS_EUROPE, "pt", 1252},		 // GameForge (Portugal)
-	{LSS_EUROPE, "tr", 1253},		 // GameForge (Greece)
-	{LSS_EUROPE, "pl", 1250},		 // GameForge (Poland)
-	{LSS_EUROPE, "tr", 1254},		 // GameForge (Turkey)
-	{LSS_EUROPE, "dk", 1252},		 // GameForge (Demmark)
-	{LSS_EUROPE, "ae", 1256},		 // GameForge (United Arab Emirate)
-	{LSS_EUROPE, "mx", 1252},		 // GameForge (Mexico)
-	{LSS_EUROPE, "nl", 1252},		 // GameForge (Netherlands)
-	{LSS_EUROPE, "cz", 1252},		 // GameForge (Czech Republic)
-	{LSS_EUROPE, "ru", 1251},		 // GameForge (Russian Federation)
-	{LSS_EUROPE, "hu", 1250},		 // GameForge (Hungary)
-	{LSS_EUROPE, "ro", 1250},		 // GameForge (Romania)
-	{LSS_EUROPE, "ca", 1252},		 // Z8Games (Canada)
-	{LSS_EUROPE, "sg", 1252},		 // TEC (Singapore)
-	{LSS_JAPAN, "japan", 932},		 // Japan
-	{LSS_EUROPE, "br", 1252},		 // OnGame (Brazil)
-	{LSS_HONGKONG, "hongkong", 950}, // HongKong & Taiwan
-	{LSS_NEWCIBN, "newcibn", 936},	 // CIBN (Free world)
-	{LSS_ENGLISH, "english", 949},	 // English (Obsoleted)
-	{LSS_YMIR, "kr", 949},			 // Korea (Obsoleted)
-	{NULL, NULL, 0, NULL}};
-
-const char* LocaleService_GetName()
-{
-	return MULTI_LOCALE_SERVICE;
-}
-
-unsigned int LocaleService_GetCodePage()
-{
-	return MULTI_LOCALE_CODE;
-}
-
-const char* LocaleService_GetLocaleName()
-{
-	return MULTI_LOCALE_NAME;
-}
-
-const char* LocaleService_GetLocalePath()
-{
-	return MULTI_LOCALE_PATH;
-}
-
-static int gs_iLocale = -1;
-
-LRESULT CALLBACK SelectDlgProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-	switch (uMsg)
-	{
-		case WM_INITDIALOG:
-		{
-			char szLocalePath[256], szDisplayName[256];
-			for (int i = 0; gs_stLocaleData[i].szServiceName; i++)
-			{
-				sprintf(szLocalePath, "locale/%s/item_proto", gs_stLocaleData[i].szLocaleName);
-				if (CEterPackManager::Instance().isExist(szLocalePath))
-				{
-					sprintf(szDisplayName, "%s (%s, %d)", gs_stLocaleData[i].szLocaleName, gs_stLocaleData[i].szServiceName, gs_stLocaleData[i].wCodePage);
-					int iIndex = ListBox_AddString(GetDlgItem(hDlg, IDC_LOCALE_LIST), szDisplayName);
-					ListBox_SetItemData(GetDlgItem(hDlg, IDC_LOCALE_LIST), iIndex, i);
-				}
-			}
-			return TRUE;
-		}
-		case WM_COMMAND:
-			switch (LOWORD(wParam))
-			{
-				case IDC_LOCALE_LIST:
-				{
-					int iSelected = ListBox_GetCurSel(GetDlgItem(hDlg, IDC_LOCALE_LIST));
-					switch (HIWORD(wParam))
-					{
-						case LBN_SELCHANGE:
-							gs_iLocale = ListBox_GetItemData(GetDlgItem(hDlg, IDC_LOCALE_LIST), iSelected);
-							break;
-						case LBN_DBLCLK:
-							gs_iLocale = ListBox_GetItemData(GetDlgItem(hDlg, IDC_LOCALE_LIST), iSelected);
-							::EndDialog(hDlg, 0);
-							break;
-					}
-					break;
-				}
-				case IDC_START:
-				{
-					::EndDialog(hDlg, 0);
-					break;
-				}
-				case IDC_EXIT:
-				{
-					gs_iLocale = -1;
-					::EndDialog(hDlg, 0);
-					break;
-				}
-			}
-			return FALSE;
-	}
-	return FALSE;
-}
-
-bool LocaleService_LoadGlobal(HINSTANCE hInstance)
-{
-	int nFoundLocales = 0;
-	char szLocalePath[256];
-
-	for (int i = 0; gs_stLocaleData[i].szServiceName; i++)
-	{
-		sprintf(szLocalePath, "locale/%s/item_proto", gs_stLocaleData[i].szLocaleName);
-		if (CEterPackManager::Instance().isExist(szLocalePath))
-		{
-			nFoundLocales++;
-			if (gs_iLocale == -1)
-				gs_iLocale = i;
-		}
-	}
-	if (gs_iLocale < 0)
-		return false;
-	if (nFoundLocales > 1)
-		::DialogBox(hInstance, MAKEINTRESOURCE(IDD_SELECT_LOCALE), NULL, (DLGPROC)SelectDlgProc);
-	if (gs_iLocale < 0)
-		return false;
-	strcpy(MULTI_LOCALE_SERVICE, gs_stLocaleData[gs_iLocale].szServiceName);
-	strcpy(MULTI_LOCALE_NAME, gs_stLocaleData[gs_iLocale].szLocaleName);
-	snprintf(MULTI_LOCALE_PATH, sizeof(MULTI_LOCALE_PATH), "locale/%s", gs_stLocaleData[gs_iLocale].szLocaleName);
-	MULTI_LOCALE_CODE = gs_stLocaleData[gs_iLocale].wCodePage;
-	return true;
-}
-#else
-bool LocaleService_LoadGlobal(HINSTANCE hInstance)
-{
-	return false;
-}
-#endif
 
 bool LocaleService_IsYMIR() { return (stricmp(LocaleService_GetName(), LSS_YMIR) == 0) || (stricmp(LocaleService_GetLocaleName(), "ymir") == 0); }
 bool LocaleService_IsJAPAN() { return (stricmp(LocaleService_GetName(), LSS_JAPAN) == 0) || (stricmp(LocaleService_GetLocaleName(), "japan") == 0); }

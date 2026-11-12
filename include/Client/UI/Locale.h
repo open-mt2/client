@@ -22,9 +22,6 @@ const char* LocaleService_GetLocalePath();
 BOOL LocaleService_IsLeadByte(const char chByte);
 int LocaleService_StringCompareCI(LPCSTR szStringLeft, LPCSTR szStringRight, size_t sizeLength);
 
-void LocaleService_ForceSetLocale(const char* name, const char* localePath);
-void LocaleService_LoadConfig(const char* fileName);
-bool LocaleService_LoadGlobal(HINSTANCE hInstance);
 unsigned LocaleService_GetLastExp(int level);
 int LocaleService_GetSkillPower(unsigned level);
 

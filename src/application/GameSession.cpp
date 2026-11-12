@@ -45,9 +45,6 @@ namespace Neoeter
 
 		LoadingScreen_Show();
 
-		if (LocaleService_LoadGlobal(m_context.Instance()))
-			SetDefaultCodePage(LocaleService_GetCodePage());
-
 		CPythonBackground::Instance().Initialize();
 
 		LoadingScreen_Show();

@@ -95,7 +95,6 @@ namespace Neoeter
 	{
 		Context::EnableDebugHeapChecks();
 
-		LocaleService_LoadConfig("locale.cfg");
 		SetDefaultCodePage(LocaleService_GetCodePage());
 
 		if (Context::IsDebug() || Context::IsLinux())

@@ -227,7 +227,7 @@ PyObject* appForceSetLocale(PyObject* poSelf, PyObject* poArgs)
 	if (!PyTuple_GetString(poArgs, 1, &szLocalePath))
 		return Py_BuildException();
 
-	LocaleService_ForceSetLocale(szName, szLocalePath);
+	Tracenf("ForceSetLocale(%s, %s) ignored: the client locale is fixed to English", szName, szLocalePath);
 
 	return Py_BuildNone();
 }

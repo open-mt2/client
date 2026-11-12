@@ -53,15 +53,6 @@ namespace Neoeter
 				PrintVersionBanner();
 				quit = true;
 			}
-			else if (strcmp(argument, "--force-set-locale") == 0)
-			{
-				if (m_count <= i + 2)
-					return Result::InvalidArguments;
-
-				const char* localeName = m_argv[++i];
-				const char* localePath = m_argv[++i];
-				LocaleService_ForceSetLocale(localeName, localePath);
-			}
 		}
 
 		return quit ? Result::ExitSuccess : Result::Continue;
