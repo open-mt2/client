@@ -112,7 +112,7 @@ class CMapManager : public CScreen, public IPhysicsWorld
 		const TEnvironmentData* m_pBaseEnvironmentData;
 		TEnvironmentData m_kDayNightEnvironmentData;
 		DWORD m_dwLastDayNightUpdate;
-		DWORD m_dwLastDayNightSkyUpdate;
+		float m_fDayNightHour;
 		bool m_bDayNightApplied;
 		bool m_bEnvironmentLightingPushed;
 		SDayNightTint m_kLastDayNightTint;

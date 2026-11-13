@@ -11,6 +11,8 @@
 
 #include <Client/Game/PropertyLoader.h>
 
+#include <cmath>
+
 //////////////////////////////////////////////////////////////////////////
 // 기본 함수
 //////////////////////////////////////////////////////////////////////////
@@ -31,20 +33,53 @@ CMapOutdoor& CMapManager::GetMapOutdoorRef()
 
 namespace
 {
+	const float DAY_NIGHT_TRANSITION_SECONDS = 0.12f;
+	const float DAY_NIGHT_MAX_HOURS_PER_SECOND = 12.0f;
+	const float DAY_NIGHT_TINT_EPSILON = 0.0005f;
+
+	bool IsClose(float left, float right)
+	{
+		return std::fabs(left - right) < DAY_NIGHT_TINT_EPSILON;
+	}
+
 	bool IsSameDayNightTint(const SDayNightTint& left, const SDayNightTint& right)
 	{
-		return left.sun.r == right.sun.r && left.sun.g == right.sun.g && left.sun.b == right.sun.b &&
-			   left.ambient.r == right.ambient.r && left.ambient.g == right.ambient.g && left.ambient.b == right.ambient.b &&
-			   left.fog.r == right.fog.r && left.fog.g == right.fog.g && left.fog.b == right.fog.b &&
-			   left.sky.r == right.sky.r && left.sky.g == right.sky.g && left.sky.b == right.sky.b &&
-			   left.flare == right.flare;
+		return IsClose(left.sun.r, right.sun.r) && IsClose(left.sun.g, right.sun.g) && IsClose(left.sun.b, right.sun.b) &&
+			   IsClose(left.ambient.r, right.ambient.r) && IsClose(left.ambient.g, right.ambient.g) && IsClose(left.ambient.b, right.ambient.b) &&
+			   IsClose(left.fog.r, right.fog.r) && IsClose(left.fog.g, right.fog.g) && IsClose(left.fog.b, right.fog.b) &&
+			   IsClose(left.sky.r, right.sky.r) && IsClose(left.sky.g, right.sky.g) && IsClose(left.sky.b, right.sky.b) &&
+			   IsClose(left.flare, right.flare);
+	}
+
+	float NormalizeDayNightHour(float fHour)
+	{
+		while (fHour < 0.0f)
+			fHour += 24.0f;
+		while (fHour >= 24.0f)
+			fHour -= 24.0f;
+		return fHour;
+	}
+
+	float AdvanceDayNightHour(float fCurrent, float fTarget, float fDeltaTime)
+	{
+		const float fDelta = NormalizeDayNightHour(fTarget - fCurrent + 12.0f) - 12.0f;
+		if (std::fabs(fDelta) < 0.001f)
+			return fTarget;
+
+		float fStep = fDelta * (1.0f - std::exp(-fDeltaTime / DAY_NIGHT_TRANSITION_SECONDS));
+
+		const float fMaxStep = DAY_NIGHT_MAX_HOURS_PER_SECOND * fDeltaTime;
+		if (std::fabs(fStep) > fMaxStep)
+			fStep = (fStep < 0.0f) ? -fMaxStep : fMaxStep;
+
+		return NormalizeDayNightHour(fCurrent + fStep);
 	}
 }
 
 CMapManager::CMapManager() : mc_pcurEnvironmentData(NULL),
 							 m_pBaseEnvironmentData(NULL),
 							 m_dwLastDayNightUpdate(0),
-							 m_dwLastDayNightSkyUpdate(0),
+							 m_fDayNightHour(0.0f),
 							 m_bDayNightApplied(false),
 							 m_bEnvironmentLightingPushed(false),
 							 m_bLastDayNightTintValid(false)
@@ -194,6 +229,8 @@ bool CMapManager::UpdateMap(float fx, float fy, float fz)
 	if (!m_pkMap)
 		return false;
 
+	UpdateDayNight();
+
 	CMapOutdoor& rkMap = GetMapOutdoorRef();
 	return rkMap.Update(fx, -fy, fz);
 }
@@ -251,8 +288,6 @@ void CMapManager::BeginEnvironment()
 
 	if (!mc_pcurEnvironmentData)
 		return;
-
-	UpdateDayNight();
 
 	CMapOutdoor& rkMap = GetMapOutdoorRef();
 
@@ -355,7 +390,6 @@ void CMapManager::SetEnvironmentDataPtr(const TEnvironmentData* c_pEnvironmentDa
 	m_bDayNightApplied = false;
 	m_bLastDayNightTintValid = false;
 	m_dwLastDayNightUpdate = 0;
-	m_dwLastDayNightSkyUpdate = 0;
 	mc_pcurEnvironmentData = &m_kDayNightEnvironmentData;
 
 	Tracef("DayNight environment updated");
@@ -383,7 +417,6 @@ void CMapManager::ResetEnvironmentDataPtr(const TEnvironmentData* c_pEnvironment
 	m_bDayNightApplied = false;
 	m_bLastDayNightTintValid = false;
 	m_dwLastDayNightUpdate = 0;
-	m_dwLastDayNightSkyUpdate = 0;
 	mc_pcurEnvironmentData = &m_kDayNightEnvironmentData;
 
 	Tracef("DayNight environment reset");
@@ -402,7 +435,16 @@ void CMapManager::UpdateDayNight()
 		if (!m_bDayNightApplied)
 			return;
 
+		const float fFogNearDistance = m_kDayNightEnvironmentData.m_fFogNearDistance;
+		const float fFogFarDistance = m_kDayNightEnvironmentData.m_fFogFarDistance;
+		const D3DXVECTOR3 v3SkyBoxScale = m_kDayNightEnvironmentData.v3SkyBoxScale;
+
 		m_kDayNightEnvironmentData = *m_pBaseEnvironmentData;
+
+		m_kDayNightEnvironmentData.m_fFogNearDistance = fFogNearDistance;
+		m_kDayNightEnvironmentData.m_fFogFarDistance = fFogFarDistance;
+		m_kDayNightEnvironmentData.v3SkyBoxScale = v3SkyBoxScale;
+
 		m_bDayNightApplied = false;
 		m_bLastDayNightTintValid = false;
 
@@ -412,31 +454,39 @@ void CMapManager::UpdateDayNight()
 		return;
 	}
 
+	const DWORD dwNow = CTimer::Instance().GetCurrentMillisecond();
+
+	if (!m_bDayNightApplied)
+	{
+		m_fDayNightHour = DayNight_GetHour();
+		m_dwLastDayNightUpdate = dwNow;
+	}
+	else
+	{
+		const float fDeltaTime = static_cast<float>(dwNow - m_dwLastDayNightUpdate) / 1000.0f;
+		m_dwLastDayNightUpdate = dwNow;
+		m_fDayNightHour = AdvanceDayNightHour(m_fDayNightHour, DayNight_GetHour(), fDeltaTime);
+	}
+
 	SDayNightTint kTint;
-	DayNight_ComputeTint(DayNight_GetHour(), kTint);
+	DayNight_ComputeTint(m_fDayNightHour, kTint);
 
 	if (m_bDayNightApplied && m_bLastDayNightTintValid && IsSameDayNightTint(kTint, m_kLastDayNightTint))
 		return;
 
-	const bool bFirstApply = !m_bDayNightApplied;
-
-	const DWORD dwNow = CTimer::Instance().GetCurrentMillisecond();
-	if (!bFirstApply && dwNow - m_dwLastDayNightUpdate < 250)
-		return;
-
-	m_dwLastDayNightUpdate = dwNow;
+	const float fFogNearDistance = m_kDayNightEnvironmentData.m_fFogNearDistance;
+	const float fFogFarDistance = m_kDayNightEnvironmentData.m_fFogFarDistance;
+	const D3DXVECTOR3 v3SkyBoxScale = m_kDayNightEnvironmentData.v3SkyBoxScale;
 
 	DayNight_Apply(kTint, *m_pBaseEnvironmentData, m_kDayNightEnvironmentData);
+
+	m_kDayNightEnvironmentData.m_fFogNearDistance = fFogNearDistance;
+	m_kDayNightEnvironmentData.m_fFogFarDistance = fFogFarDistance;
+	m_kDayNightEnvironmentData.v3SkyBoxScale = v3SkyBoxScale;
+
 	m_kLastDayNightTint = kTint;
 	m_bLastDayNightTintValid = true;
 	m_bDayNightApplied = true;
-
-	if (!bFirstApply && dwNow - m_dwLastDayNightSkyUpdate < 1000)
-		return;
-
-	m_dwLastDayNightSkyUpdate = dwNow;
-
-	Tracef("DayNight sky refresh at hour %.2f", DayNight_GetHour());
 
 	CMapOutdoor& rkMap = GetMapOutdoorRef();
 	rkMap.RefreshEnvironmentSky();
@@ -453,17 +503,12 @@ void CMapManager::SetDayNightEnabled(bool bEnabled)
 	DayNight_SetEnabled(bEnabled);
 	m_bLastDayNightTintValid = false;
 	m_dwLastDayNightUpdate = 0;
-	m_dwLastDayNightSkyUpdate = 0;
 	UpdateDayNight();
 }
 
 void CMapManager::SetTimeOfDay(float fHour)
 {
 	DayNight_SetHour(fHour);
-	m_bDayNightApplied = false;
-	m_bLastDayNightTintValid = false;
-	m_dwLastDayNightUpdate = 0;
-	m_dwLastDayNightSkyUpdate = 0;
 	UpdateDayNight();
 }
 
@@ -477,7 +522,6 @@ void CMapManager::RefreshDayNight()
 	m_bDayNightApplied = false;
 	m_bLastDayNightTintValid = false;
 	m_dwLastDayNightUpdate = 0;
-	m_dwLastDayNightSkyUpdate = 0;
 	UpdateDayNight();
 }
 
