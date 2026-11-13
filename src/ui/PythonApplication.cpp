@@ -1,6 +1,7 @@
 #include <Client/UI/StdAfx.h>
 #include <SDL2/SDL.h>
 #include <Client/UI/SdlCursor.h>
+#include <Client/UI/QuitRequest.h>
 #include <Client/UI/FrameClear.h>
 #include <Neoeter/Platform/Base/error.h>
 #include <Neoeter/Render/Camera.h>
@@ -162,12 +163,12 @@ void CPythonApplication::Abort()
 	TraceError("============================================================================================================");
 	TraceError("Abort!!!!\n\n");
 
-	PostQuitMessage(0);
+	Client_RequestQuit();
 }
 
 void CPythonApplication::Exit()
 {
-	PostQuitMessage(0);
+	Client_RequestQuit();
 }
 
 bool PERF_CHECKER_RENDER_GAME = false;
