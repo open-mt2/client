@@ -9,6 +9,7 @@
 #include <Neoeter/Render/Camera.h>
 #include <Neoeter/Render/AttributeInstance.h>
 #include <Client/Game/AreaTerrain.h>
+#include <Client/Game/Lighting.h>
 #include <Neoeter/Model/Grn/Material.h>
 #include <Client/WebBrowser/CWebBrowser.h>
 
@@ -180,26 +181,34 @@ bool PERF_CHECKER_RENDER_GAME = false;
 
 void CPythonApplication::InitializeDebugRows()
 {
-	Neoeter::Debug::AddRow("Client", [] { return std::string(OPENMT2_CLIENT_VERSION); });
+	Neoeter::Debug::AddRow("Client", []
+						   { return std::string(OPENMT2_CLIENT_VERSION); });
 
-	Neoeter::Debug::AddRow("Neoeter", [] { return std::string(Neoeter::GetVersionString()); });
+	Neoeter::Debug::AddRow("Neoeter", []
+						   { return std::string(Neoeter::GetVersionString()); });
 
-	Neoeter::Debug::AddRow("Render FPS", [] {
-		return std::to_string(CPythonApplication::Instance().GetRenderFPS());
-	});
+	Neoeter::Debug::AddRow("Render FPS", []
+						   { return std::to_string(CPythonApplication::Instance().GetRenderFPS()); });
 
-	Neoeter::Debug::AddRow("Frame", [] {
+	Neoeter::Debug::AddRow("Frame", []
+						   {
 		const long tenths = static_cast<long>(CPythonApplication::Instance().GetAveRenderTime() * 10.0f + 0.5f);
-		return std::to_string(tenths / 10) + "." + std::to_string(tenths % 10) + " ms";
-	});
+		return std::to_string(tenths / 10) + "." + std::to_string(tenths % 10) + " ms"; });
 
-	Neoeter::Debug::AddRow("Update FPS", [] {
-		return std::to_string(CPythonApplication::Instance().GetUpdateFPS());
-	});
+	Neoeter::Debug::AddRow("Update FPS", []
+						   { return std::to_string(CPythonApplication::Instance().GetUpdateFPS()); });
 
-	Neoeter::Debug::AddRow("Faces", [] {
-		return std::to_string(CPythonApplication::Instance().m_pyGraphic.GetFaceCount());
-	});
+	Neoeter::Debug::AddRow("Faces", []
+						   { return std::to_string(CPythonApplication::Instance().m_pyGraphic.GetFaceCount()); });
+
+	Neoeter::Debug::AddSlider(
+		"Hour",
+		0.0f,
+		24.0f,
+		[]
+		{ return DayNight_GetHour(); },
+		[](float fHour)
+		{ DayNight_SetHour(fHour); });
 }
 
 void CPythonApplication::RenderGame()
