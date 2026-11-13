@@ -113,6 +113,9 @@ class CMapManager : public CScreen, public IPhysicsWorld
 		TEnvironmentData m_kDayNightEnvironmentData;
 		DWORD m_dwLastDayNightUpdate;
 		float m_fDayNightHour;
+		D3DXCOLOR m_kDayNightFogColor;
+		D3DXCOLOR m_kDayNightTargetFog;
+		bool m_bDayNightFogColorValid;
 		bool m_bDayNightApplied;
 		bool m_bEnvironmentLightingPushed;
 		SDayNightTint m_kLastDayNightTint;

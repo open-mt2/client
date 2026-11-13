@@ -56,16 +56,16 @@ namespace
 	};
 
 	const TDayNightKey s_dayNightKeys[] = {
-		{0.0f, {0.55f, 0.58f, 0.72f}, {0.65f, 0.65f, 0.72f}, {0.42f, 0.46f, 0.58f}, {0.32f, 0.36f, 0.50f}, 0.0f},
-		{4.5f, {0.55f, 0.58f, 0.72f}, {0.65f, 0.65f, 0.72f}, {0.42f, 0.46f, 0.58f}, {0.32f, 0.36f, 0.50f}, 0.0f},
+		{0.0f, {0.34f, 0.38f, 0.52f}, {0.42f, 0.45f, 0.56f}, {0.26f, 0.30f, 0.43f}, {0.16f, 0.20f, 0.34f}, 0.0f},
+		{4.5f, {0.34f, 0.38f, 0.52f}, {0.42f, 0.45f, 0.56f}, {0.26f, 0.30f, 0.43f}, {0.16f, 0.20f, 0.34f}, 0.0f},
 		{6.0f, {1.00f, 0.68f, 0.45f}, {0.85f, 0.72f, 0.62f}, {1.00f, 0.72f, 0.50f}, {1.00f, 0.62f, 0.42f}, 0.7f},
 		{7.5f, {1.00f, 0.95f, 0.90f}, {1.00f, 0.96f, 0.92f}, {1.00f, 0.96f, 0.92f}, {1.00f, 0.96f, 0.92f}, 1.0f},
 		{12.0f, {1.00f, 1.00f, 1.00f}, {1.00f, 1.00f, 1.00f}, {1.00f, 1.00f, 1.00f}, {1.00f, 1.00f, 1.00f}, 1.0f},
 		{16.5f, {1.00f, 0.95f, 0.90f}, {1.00f, 0.96f, 0.92f}, {1.00f, 0.96f, 0.92f}, {1.00f, 0.96f, 0.92f}, 1.0f},
 		{18.0f, {1.00f, 0.70f, 0.45f}, {0.90f, 0.74f, 0.62f}, {1.00f, 0.70f, 0.48f}, {1.00f, 0.58f, 0.40f}, 0.7f},
-		{19.5f, {0.65f, 0.60f, 0.70f}, {0.75f, 0.70f, 0.78f}, {0.55f, 0.52f, 0.62f}, {0.45f, 0.43f, 0.55f}, 0.15f},
-		{21.0f, {0.55f, 0.58f, 0.72f}, {0.65f, 0.65f, 0.72f}, {0.42f, 0.46f, 0.58f}, {0.32f, 0.36f, 0.50f}, 0.0f},
-		{24.0f, {0.55f, 0.58f, 0.72f}, {0.65f, 0.65f, 0.72f}, {0.42f, 0.46f, 0.58f}, {0.32f, 0.36f, 0.50f}, 0.0f},
+		{19.5f, {0.48f, 0.45f, 0.56f}, {0.58f, 0.55f, 0.65f}, {0.42f, 0.40f, 0.50f}, {0.30f, 0.29f, 0.42f}, 0.15f},
+		{21.0f, {0.34f, 0.38f, 0.52f}, {0.42f, 0.45f, 0.56f}, {0.26f, 0.30f, 0.43f}, {0.16f, 0.20f, 0.34f}, 0.0f},
+		{24.0f, {0.34f, 0.38f, 0.52f}, {0.42f, 0.45f, 0.56f}, {0.26f, 0.30f, 0.43f}, {0.16f, 0.20f, 0.34f}, 0.0f},
 	};
 
 	const int s_dayNightKeyCount = static_cast<int>(sizeof(s_dayNightKeys) / sizeof(s_dayNightKeys[0]));
@@ -283,6 +283,9 @@ void DayNight_Apply(const SDayNightTint& c_rkTint, const TEnvironmentData& c_rkB
 		MultiplyColor(rkOut.DirLights[i].Ambient, ambient);
 	}
 
+	MultiplyColor(rkOut.Material.Ambient, ambient);
+	MultiplyColor(rkOut.Material.Emissive, sun);
+
 	if (!Lighting_IsTerrainEnabled())
 		MultiplyColor(rkOut.Material.Diffuse, sun);
 
@@ -301,4 +304,16 @@ void DayNight_Apply(const SDayNightTint& c_rkTint, const TEnvironmentData& c_rkB
 	rkOut.fLensFlareMaxBrightness *= c_rkTint.flare;
 	if (c_rkTint.flare < 0.01f)
 		rkOut.bLensFlareEnable = FALSE;
+
+	if (!rkOut.bSkyBoxTextureRenderMode && !rkOut.SkyBoxGradientColorVector.empty())
+	{
+		size_t horizon = static_cast<size_t>(rkOut.bySkyBoxGradientLevelUpper);
+		if (horizon >= rkOut.SkyBoxGradientColorVector.size())
+			horizon = rkOut.SkyBoxGradientColorVector.size() - 1;
+
+		const TColor& c_rkHorizonColor = rkOut.SkyBoxGradientColorVector[horizon].m_FirstColor;
+		rkOut.FogColor.r = c_rkHorizonColor.r;
+		rkOut.FogColor.g = c_rkHorizonColor.g;
+		rkOut.FogColor.b = c_rkHorizonColor.b;
+	}
 }

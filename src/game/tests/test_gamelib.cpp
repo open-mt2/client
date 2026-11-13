@@ -164,6 +164,8 @@ namespace
 		base.DirLights[ENV_DIRLIGHT_BACKGROUND].Diffuse = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 		base.DirLights[ENV_DIRLIGHT_CHARACTER].Ambient = D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f);
 		base.Material.Diffuse = D3DCOLORVALUE{1.0f, 1.0f, 1.0f, 1.0f};
+		base.Material.Ambient = D3DCOLORVALUE{0.88f, 0.85f, 0.78f, 1.0f};
+		base.Material.Emissive = D3DCOLORVALUE{0.32f, 0.32f, 0.41f, 1.0f};
 		base.FogColor = D3DXCOLOR(0.8f, 0.9f, 1.0f, 1.0f);
 		base.LensFlareBrightnessColor = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 		base.fLensFlareMaxBrightness = 1.0f;
@@ -178,7 +180,22 @@ namespace
 		DayNight_Apply(night, base, out);
 		assert(out.DirLights[ENV_DIRLIGHT_BACKGROUND].Diffuse.r < 1.0f);
 		assert(out.FogColor.b < 1.0f);
+		assert(out.Material.Ambient.r < 0.88f);
+		assert(out.Material.Emissive.r < 0.32f);
 		assert(out.fLensFlareMaxBrightness < 0.01f);
+
+		TEnvironmentData skyBase = base;
+		skyBase.bSkyBoxTextureRenderMode = FALSE;
+		skyBase.bySkyBoxGradientLevelUpper = 1;
+		skyBase.SkyBoxGradientColorVector.resize(2);
+		skyBase.SkyBoxGradientColorVector[1].m_FirstColor = TColor(0.8f, 0.3f, 0.2f, 1.0f);
+		skyBase.SkyBoxGradientColorVector[1].m_SecondColor = TColor(0.9f, 0.4f, 0.3f, 1.0f);
+
+		TEnvironmentData skyOut;
+		DayNight_Apply(noon, skyBase, skyOut);
+		assert(std::fabs(skyOut.FogColor.r - 0.8f) < 1e-4f);
+		assert(std::fabs(skyOut.FogColor.g - 0.3f) < 1e-4f);
+		assert(std::fabs(skyOut.FogColor.b - 0.2f) < 1e-4f);
 
 		DayNight_SetHour(18.5f);
 		assert(DayNight_IsHourFrozen());

@@ -35,11 +35,28 @@ namespace
 {
 	const float DAY_NIGHT_TRANSITION_SECONDS = 0.12f;
 	const float DAY_NIGHT_MAX_HOURS_PER_SECOND = 12.0f;
+	const float DAY_NIGHT_FOG_TRANSITION_SECONDS = 0.25f;
 	const float DAY_NIGHT_TINT_EPSILON = 0.0005f;
 
 	bool IsClose(float left, float right)
 	{
 		return std::fabs(left - right) < DAY_NIGHT_TINT_EPSILON;
+	}
+
+	bool IsSameColor(const D3DXCOLOR& left, const D3DXCOLOR& right)
+	{
+		return IsClose(left.r, right.r) && IsClose(left.g, right.g) && IsClose(left.b, right.b) && IsClose(left.a, right.a);
+	}
+
+	void BlendColor(D3DXCOLOR& rkCurrent, const D3DXCOLOR& c_rkTarget, float fBlend)
+	{
+		rkCurrent.r += (c_rkTarget.r - rkCurrent.r) * fBlend;
+		rkCurrent.g += (c_rkTarget.g - rkCurrent.g) * fBlend;
+		rkCurrent.b += (c_rkTarget.b - rkCurrent.b) * fBlend;
+		rkCurrent.a += (c_rkTarget.a - rkCurrent.a) * fBlend;
+
+		if (IsSameColor(rkCurrent, c_rkTarget))
+			rkCurrent = c_rkTarget;
 	}
 
 	bool IsSameDayNightTint(const SDayNightTint& left, const SDayNightTint& right)
@@ -80,6 +97,7 @@ CMapManager::CMapManager() : mc_pcurEnvironmentData(NULL),
 							 m_pBaseEnvironmentData(NULL),
 							 m_dwLastDayNightUpdate(0),
 							 m_fDayNightHour(0.0f),
+							 m_bDayNightFogColorValid(false),
 							 m_bDayNightApplied(false),
 							 m_bEnvironmentLightingPushed(false),
 							 m_bLastDayNightTintValid(false)
@@ -447,6 +465,7 @@ void CMapManager::UpdateDayNight()
 
 		m_bDayNightApplied = false;
 		m_bLastDayNightTintValid = false;
+		m_bDayNightFogColorValid = false;
 
 		CMapOutdoor& rkMap = GetMapOutdoorRef();
 		rkMap.RefreshEnvironmentSky();
@@ -456,6 +475,8 @@ void CMapManager::UpdateDayNight()
 
 	const DWORD dwNow = CTimer::Instance().GetCurrentMillisecond();
 
+	float fDeltaTime = 0.0f;
+
 	if (!m_bDayNightApplied)
 	{
 		m_fDayNightHour = DayNight_GetHour();
@@ -463,7 +484,7 @@ void CMapManager::UpdateDayNight()
 	}
 	else
 	{
-		const float fDeltaTime = static_cast<float>(dwNow - m_dwLastDayNightUpdate) / 1000.0f;
+		fDeltaTime = static_cast<float>(dwNow - m_dwLastDayNightUpdate) / 1000.0f;
 		m_dwLastDayNightUpdate = dwNow;
 		m_fDayNightHour = AdvanceDayNightHour(m_fDayNightHour, DayNight_GetHour(), fDeltaTime);
 	}
@@ -471,22 +492,43 @@ void CMapManager::UpdateDayNight()
 	SDayNightTint kTint;
 	DayNight_ComputeTint(m_fDayNightHour, kTint);
 
-	if (m_bDayNightApplied && m_bLastDayNightTintValid && IsSameDayNightTint(kTint, m_kLastDayNightTint))
+	const bool bTintChanged = !(m_bDayNightApplied && m_bLastDayNightTintValid && IsSameDayNightTint(kTint, m_kLastDayNightTint));
+
+	if (bTintChanged)
+	{
+		const float fFogNearDistance = m_kDayNightEnvironmentData.m_fFogNearDistance;
+		const float fFogFarDistance = m_kDayNightEnvironmentData.m_fFogFarDistance;
+		const D3DXVECTOR3 v3SkyBoxScale = m_kDayNightEnvironmentData.v3SkyBoxScale;
+
+		DayNight_Apply(kTint, *m_pBaseEnvironmentData, m_kDayNightEnvironmentData);
+
+		m_kDayNightEnvironmentData.m_fFogNearDistance = fFogNearDistance;
+		m_kDayNightEnvironmentData.m_fFogFarDistance = fFogFarDistance;
+		m_kDayNightEnvironmentData.v3SkyBoxScale = v3SkyBoxScale;
+
+		m_kDayNightTargetFog = m_kDayNightEnvironmentData.FogColor;
+		m_kLastDayNightTint = kTint;
+		m_bLastDayNightTintValid = true;
+		m_bDayNightApplied = true;
+	}
+
+	if (!m_bDayNightFogColorValid)
+	{
+		m_kDayNightFogColor = m_kDayNightTargetFog;
+		m_bDayNightFogColorValid = true;
+	}
+
+	bool bFogChanged = !IsSameColor(m_kDayNightFogColor, m_kDayNightTargetFog);
+	if (bFogChanged)
+	{
+		const float fBlend = 1.0f - std::exp(-fDeltaTime / DAY_NIGHT_FOG_TRANSITION_SECONDS);
+		BlendColor(m_kDayNightFogColor, m_kDayNightTargetFog, fBlend);
+	}
+
+	if (!bTintChanged && !bFogChanged)
 		return;
 
-	const float fFogNearDistance = m_kDayNightEnvironmentData.m_fFogNearDistance;
-	const float fFogFarDistance = m_kDayNightEnvironmentData.m_fFogFarDistance;
-	const D3DXVECTOR3 v3SkyBoxScale = m_kDayNightEnvironmentData.v3SkyBoxScale;
-
-	DayNight_Apply(kTint, *m_pBaseEnvironmentData, m_kDayNightEnvironmentData);
-
-	m_kDayNightEnvironmentData.m_fFogNearDistance = fFogNearDistance;
-	m_kDayNightEnvironmentData.m_fFogFarDistance = fFogFarDistance;
-	m_kDayNightEnvironmentData.v3SkyBoxScale = v3SkyBoxScale;
-
-	m_kLastDayNightTint = kTint;
-	m_bLastDayNightTintValid = true;
-	m_bDayNightApplied = true;
+	m_kDayNightEnvironmentData.FogColor = m_kDayNightFogColor;
 
 	CMapOutdoor& rkMap = GetMapOutdoorRef();
 	rkMap.RefreshEnvironmentSky();
