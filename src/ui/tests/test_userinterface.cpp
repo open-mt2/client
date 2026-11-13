@@ -4,7 +4,9 @@
 #include <Client/UI/PythonSystem.h>
 #include <Client/UI/Packet.h>
 #include <Client/UI/GameType.h>
+#include <Client/UI/QuitRequest.h>
 #include <Neoeter/Audio/SoundManager.h>
+#include <Neoeter/Render/SdlPlatform.h>
 #include <cassert>
 #include <cstdio>
 #include <cstring>
@@ -184,6 +186,20 @@ namespace
 		std::printf("[PASS] test_packet_structure_alignment\n");
 	}
 
+	void test_request_quit()
+	{
+		Platform_GetQuitRequested().store(false);
+		assert(!Platform_IsQuitRequested());
+
+		Client_RequestQuit();
+		assert(Platform_IsQuitRequested());
+
+		Platform_GetQuitRequested().store(false);
+		assert(!Platform_IsQuitRequested());
+
+		std::printf("[PASS] test_request_quit\n");
+	}
+
 } // anonymous namespace
 
 int main()
@@ -196,6 +212,7 @@ int main()
 	test_python_system_keeps_requested_window_size();
 	test_show_cursor_counter();
 	test_packet_structure_alignment();
+	test_request_quit();
 	std::printf("All UserInterface smoke tests passed successfully!\n");
 	return 0;
 }

@@ -1,6 +1,7 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/UI/PythonApplication.h>
 #include <Client/UI/SdlCursor.h>
+#include <Client/UI/QuitRequest.h>
 #include <Neoeter/Render/Camera.h>
 #include <Client/WebBrowser/CWebBrowser.h>
 
@@ -242,7 +243,7 @@ LRESULT CPythonApplication::WindowProcedure(HWND hWnd, UINT uiMsg, WPARAM wParam
 
 		case WM_CLOSE:
 #ifdef _DEBUG
-			PostQuitMessage(0);
+			Client_RequestQuit();
 #else
 			RunPressExitKey();
 #endif

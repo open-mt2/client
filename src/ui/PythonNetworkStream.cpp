@@ -3,6 +3,7 @@
 
 #include <Client/UI/PythonNetworkStream.h>
 #include <Client/UI/Packet.h>
+#include <Client/UI/QuitRequest.h>
 #include <Client/UI/NetworkActorManager.h>
 
 #include <Client/UI/GuildMarkDownloader.h>
@@ -225,7 +226,7 @@ void CPythonNetworkStream::AbsoluteExitGame()
 
 void CPythonNetworkStream::AbsoluteExitApplication()
 {
-	PostQuitMessage(0);
+	Client_RequestQuit();
 }
 
 bool CPythonNetworkStream::__IsNotPing()
@@ -521,7 +522,7 @@ bool CPythonNetworkStream::CheckPacket(TPacketHeader* pRetHeader)
 		TraceError("Unknown packet header: %d, last: %d %d", header, g_iLastPacket[0], g_iLastPacket[1]);
 		ClearRecvBuffer();
 
-		PostQuitMessage(0);
+		Client_RequestQuit();
 		return false;
 	}
 

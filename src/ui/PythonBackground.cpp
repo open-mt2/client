@@ -14,6 +14,7 @@
 #include <Client/UI/PythonNetworkStream.h>
 #include <Client/UI/PythonMiniMap.h>
 #include <Client/UI/PythonSystem.h>
+#include <Client/UI/QuitRequest.h>
 
 std::string g_strEffectName = "d:/ymir work/effect/etc/direction/direction_land.mse";
 
@@ -757,7 +758,7 @@ void CPythonBackground::Warp(DWORD dwX, DWORD dwY)
 	if (!LoadMap(rMapInfo.m_strName, float(dwX - rMapInfo.m_dwBaseX), float(dwY - rMapInfo.m_dwBaseY), 0))
 	{
 		// LOAD_MAP_ERROR_HANDLING
-		PostQuitMessage(0);
+		Client_RequestQuit();
 		// END_OF_LOAD_MAP_ERROR_HANDLING
 		return;
 	}

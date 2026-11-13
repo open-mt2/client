@@ -1,6 +1,7 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/UI/PythonNetworkStream.h>
 #include <Client/UI/PythonNonPlayer.h>
+#include <Client/UI/QuitRequest.h>
 #include <Client/UI/AbstractApplication.h>
 #include <Client/UI/AbstractPlayer.h>
 #include <Client/UI/AbstractCharacterManager.h>
@@ -170,7 +171,7 @@ void CPythonNetworkStream::ServerCommand(char* c_szCommand)
 
 	if (!strcmpi(szCmd, "quit"))
 	{
-		PostQuitMessage(0);
+		Client_RequestQuit();
 	}
 	else if (!strcmpi(szCmd, "BettingMoney"))
 	{
