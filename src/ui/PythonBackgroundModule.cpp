@@ -161,6 +161,70 @@ PyObject* backgroundSetBackgroundDirLight(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildNone();
 }
 
+PyObject* backgroundSetLightingMode(PyObject* poSelf, PyObject* poArgs)
+{
+	char* pszMode;
+	if (!PyTuple_GetString(poArgs, 0, &pszMode))
+		return Py_BadArgument();
+
+	CPythonBackground& rkBG = CPythonBackground::Instance();
+	return Py_BuildValue("i", rkBG.SetLightingMode(pszMode) ? 1 : 0);
+}
+
+PyObject* backgroundGetLightingMode(PyObject* poSelf, PyObject* poArgs)
+{
+	CPythonBackground& rkBG = CPythonBackground::Instance();
+	return Py_BuildValue("s", rkBG.GetLightingMode());
+}
+
+PyObject* backgroundSetDayNightEnabled(PyObject* poSelf, PyObject* poArgs)
+{
+	int bEnabled;
+	if (!PyTuple_GetInteger(poArgs, 0, &bEnabled))
+		return Py_BadArgument();
+
+	CPythonBackground& rkBG = CPythonBackground::Instance();
+	rkBG.SetDayNightEnabled(bEnabled != 0);
+	return Py_BuildNone();
+}
+
+PyObject* backgroundIsDayNightEnabled(PyObject* poSelf, PyObject* poArgs)
+{
+	CPythonBackground& rkBG = CPythonBackground::Instance();
+	return Py_BuildValue("i", rkBG.IsDayNightEnabled() ? 1 : 0);
+}
+
+PyObject* backgroundSetTimeOfDay(PyObject* poSelf, PyObject* poArgs)
+{
+	float fHour;
+	if (!PyTuple_GetFloat(poArgs, 0, &fHour))
+		return Py_BadArgument();
+
+	CPythonBackground& rkBG = CPythonBackground::Instance();
+	rkBG.SetTimeOfDay(fHour);
+	return Py_BuildNone();
+}
+
+PyObject* backgroundGetTimeOfDay(PyObject* poSelf, PyObject* poArgs)
+{
+	CPythonBackground& rkBG = CPythonBackground::Instance();
+	return Py_BuildValue("f", rkBG.GetTimeOfDay());
+}
+
+PyObject* backgroundChangeToDay(PyObject* poSelf, PyObject* poArgs)
+{
+	CPythonBackground& rkBG = CPythonBackground::Instance();
+	rkBG.ChangeToDay();
+	return Py_BuildNone();
+}
+
+PyObject* backgroundChangeToNight(PyObject* poSelf, PyObject* poArgs)
+{
+	CPythonBackground& rkBG = CPythonBackground::Instance();
+	rkBG.ChangeToNight();
+	return Py_BuildNone();
+}
+
 PyObject* backgroundInitialize(PyObject* poSelf, PyObject* poArgs)
 {
 	CPythonBackground& rkBG = CPythonBackground::Instance();
@@ -544,6 +608,14 @@ void initBackground()
 			{"EndEnvironment", backgroundEndEnvironemt, METH_VARARGS, NULL},
 			{"SetCharacterDirLight", backgroundSetCharacterDirLight, METH_VARARGS, NULL},
 			{"SetBackgroundDirLight", backgroundSetBackgroundDirLight, METH_VARARGS, NULL},
+			{"SetLightingMode", backgroundSetLightingMode, METH_VARARGS, NULL},
+			{"GetLightingMode", backgroundGetLightingMode, METH_VARARGS, NULL},
+			{"SetDayNightEnabled", backgroundSetDayNightEnabled, METH_VARARGS, NULL},
+			{"IsDayNightEnabled", backgroundIsDayNightEnabled, METH_VARARGS, NULL},
+			{"SetTimeOfDay", backgroundSetTimeOfDay, METH_VARARGS, NULL},
+			{"GetTimeOfDay", backgroundGetTimeOfDay, METH_VARARGS, NULL},
+			{"ChangeToDay", backgroundChangeToDay, METH_VARARGS, NULL},
+			{"ChangeToNight", backgroundChangeToNight, METH_VARARGS, NULL},
 
 			{"Initialize", backgroundInitialize, METH_VARARGS, NULL},
 			{"Update", backgroundUpdate, METH_VARARGS, NULL},

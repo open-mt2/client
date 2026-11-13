@@ -339,37 +339,59 @@ void CMapOutdoor::SetEnvironmentSkyBox()
 	m_SkyBox.SetCloudScrollSpeed(mc_pEnvironmentData->v2CloudSpeed);
 	m_SkyBox.Refresh();
 
-	// Temporary
+	ApplyEnvironmentSkyColors();
+	m_SkyBox.StartTransition();
+}
+
+void CMapOutdoor::ApplyEnvironmentSkyColors()
+{
+	if (!mc_pEnvironmentData)
+		return;
+
 	m_SkyBox.SetCloudColor(mc_pEnvironmentData->CloudGradientColor, mc_pEnvironmentData->CloudGradientColor, 1);
 
-	if (!mc_pEnvironmentData->SkyBoxGradientColorVector.empty())
+	if (mc_pEnvironmentData->SkyBoxGradientColorVector.empty())
+		return;
+
+	TVectorGradientColor kGradientColorVector = mc_pEnvironmentData->SkyBoxGradientColorVector;
+
+	if (mc_pEnvironmentData->bFogEnable)
 	{
-		TVectorGradientColor kGradientColorVector = mc_pEnvironmentData->SkyBoxGradientColorVector;
+		TColor kFogColor(mc_pEnvironmentData->FogColor.r,
+						 mc_pEnvironmentData->FogColor.g,
+						 mc_pEnvironmentData->FogColor.b,
+						 mc_pEnvironmentData->FogColor.a);
+		int iHorizonEdge = int(mc_pEnvironmentData->bySkyBoxGradientLevelUpper);
+		int iGradientCount = int(kGradientColorVector.size());
 
-		if (mc_pEnvironmentData->bFogEnable)
+		for (int i = 0; i < iGradientCount; ++i)
 		{
-			TColor kFogColor(mc_pEnvironmentData->FogColor.r,
-							 mc_pEnvironmentData->FogColor.g,
-							 mc_pEnvironmentData->FogColor.b,
-							 mc_pEnvironmentData->FogColor.a);
-			int iHorizonEdge = int(mc_pEnvironmentData->bySkyBoxGradientLevelUpper);
-			int iGradientCount = int(kGradientColorVector.size());
+			float fFirstRate = __GetSkyFogBlendRate(i, iHorizonEdge);
+			float fSecondRate = __GetSkyFogBlendRate(i + 1, iHorizonEdge);
 
-			for (int i = 0; i < iGradientCount; ++i)
-			{
-				float fFirstRate = __GetSkyFogBlendRate(i, iHorizonEdge);
-				float fSecondRate = __GetSkyFogBlendRate(i + 1, iHorizonEdge);
-
-				__BlendSkyGradientColor(kGradientColorVector[i].m_FirstColor, kFogColor, fFirstRate);
-				__BlendSkyGradientColor(kGradientColorVector[i].m_SecondColor, kFogColor, fSecondRate);
-			}
+			__BlendSkyGradientColor(kGradientColorVector[i].m_FirstColor, kFogColor, fFirstRate);
+			__BlendSkyGradientColor(kGradientColorVector[i].m_SecondColor, kFogColor, fSecondRate);
 		}
-
-		m_SkyBox.SetSkyColor(kGradientColorVector, kGradientColorVector, 1);
 	}
-	// Temporary
 
+	m_SkyBox.SetSkyColor(kGradientColorVector, kGradientColorVector, 1);
+}
+
+void CMapOutdoor::RefreshEnvironmentSky()
+{
+	ApplyEnvironmentSkyColors();
 	m_SkyBox.StartTransition();
+}
+
+void CMapOutdoor::RefreshEnvironmentLensFlare()
+{
+	if (!mc_pEnvironmentData)
+		return;
+
+	m_LensFlare.CharacterizeFlare(mc_pEnvironmentData->bLensFlareEnable == 1 ? true : false,
+								  mc_pEnvironmentData->bMainFlareEnable == 1 ? true : false,
+								  mc_pEnvironmentData->fLensFlareMaxBrightness,
+								  mc_pEnvironmentData->LensFlareBrightnessColor);
 }
 
 void CMapOutdoor::SetEnvironmentLensFlare()

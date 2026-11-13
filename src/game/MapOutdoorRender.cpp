@@ -1,11 +1,13 @@
 #include <Client/Game/StdAfx.h>
 #include <Client/Game/MapOutdoor.h>
+#include <Client/Game/Lighting.h>
 #include <Client/Game/TerrainPatch.h>
 #include <Client/Game/AreaTerrain.h>
 #include <Client/Game/TerrainQuadtree.h>
 
 #include <Neoeter/Render/Camera.h>
 #include <Neoeter/Render/StateManager.h>
+#include <Neoeter/Render/RenderOptions.h>
 
 #define MAX_RENDER_SPALT 150
 
@@ -44,11 +46,18 @@ void CMapOutdoor::RenderTerrain()
 	// 거리순 정렬
 	std::sort(m_PatchVector.begin(), m_PatchVector.end());
 
+	const bool bTerrainLighting = Lighting_IsTerrainEnabled();
+	if (!bTerrainLighting)
+		Neoeter::Render::PushLightingDisabled();
+
 	// 그리기 위한 벡터 세팅
 	if (CTerrainPatch::SOFTWARE_TRANSFORM_PATCH_ENABLE)
 		__RenderTerrain_RenderSoftwareTransformPatch();
 	else
 		__RenderTerrain_RenderHardwareTransformPatch();
+
+	if (!bTerrainLighting)
+		Neoeter::Render::PopLightingDisabled();
 }
 
 void CMapOutdoor::__RenderTerrain_RecurseRenderQuadTree(CTerrainQuadtreeNode* Node, bool bCullCheckNeed)
@@ -234,8 +243,34 @@ void CMapOutdoor::RenderCloud()
 
 void CMapOutdoor::RenderTree()
 {
-	if (IsVisiblePart(PART_TREE))
-		CSpeedTreeForest::Instance().Render();
+	if (!IsVisiblePart(PART_TREE))
+		return;
+
+	const bool bFillLight = Lighting_IsEnabled() && mc_pEnvironmentData != NULL;
+	if (bFillLight)
+	{
+		const D3DLIGHT9& c_rkSun = mc_pEnvironmentData->DirLights[ENV_DIRLIGHT_BACKGROUND];
+		const float fStrength = Lighting_GetTreeFillStrength();
+
+		D3DLIGHT9 kFillLight;
+		memset(&kFillLight, 0, sizeof(kFillLight));
+		kFillLight.Type = D3DLIGHT_DIRECTIONAL;
+		kFillLight.Direction = D3DXVECTOR3(-c_rkSun.Direction.x, -c_rkSun.Direction.y, -c_rkSun.Direction.z);
+		kFillLight.Diffuse = D3DXCOLOR(c_rkSun.Diffuse.r * fStrength,
+									   c_rkSun.Diffuse.g * fStrength,
+									   c_rkSun.Diffuse.b * fStrength,
+									   1.0f);
+		kFillLight.Specular = D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f);
+		kFillLight.Ambient = D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f);
+
+		STATEMANAGER.SetLight(7, &kFillLight);
+		ms_lpd3dDevice->LightEnable(7, TRUE);
+	}
+
+	CSpeedTreeForest::Instance().Render();
+
+	if (bFillLight)
+		ms_lpd3dDevice->LightEnable(7, FALSE);
 }
 
 void CMapOutdoor::SetInverseViewAndDynamicShaodwMatrices()

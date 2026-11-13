@@ -103,6 +103,9 @@ class CMapOutdoor : public CMapBase
 		void SetEnvironmentScreenFilter();
 		void SetEnvironmentSkyBox();
 		void SetEnvironmentLensFlare();
+		void RefreshEnvironmentSky();
+		void RefreshEnvironmentLensFlare();
+		void ApplyEnvironmentSkyColors();
 
 		void CreateCharacterShadowTexture();
 		void ReleaseCharacterShadowTexture();

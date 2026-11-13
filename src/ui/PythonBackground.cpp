@@ -7,6 +7,7 @@
 #include <Neoeter/Render/Camera.h>
 #include <Neoeter/IO/EterPackManager.h>
 #include <Client/Game/MapOutdoor.h>
+#include <Client/Game/Lighting.h>
 #include <Client/Game/PropertyLoader.h>
 
 #include <Client/UI/PythonBackground.h>
@@ -812,14 +813,51 @@ const char* CPythonBackground::GetWarpMapName()
 	return m_strMapName.c_str();
 }
 
+bool CPythonBackground::SetLightingMode(const char* c_szMode)
+{
+	if (!Lighting_SetModeByName(c_szMode))
+		return false;
+
+	RefreshDayNight();
+
+	return true;
+}
+
+const char* CPythonBackground::GetLightingMode()
+{
+	return Lighting_GetModeName();
+}
+
+void CPythonBackground::SetDayNightEnabled(bool bEnabled)
+{
+	CMapManager::SetDayNightEnabled(bEnabled);
+}
+
+bool CPythonBackground::IsDayNightEnabled()
+{
+	return DayNight_IsEnabled();
+}
+
+void CPythonBackground::SetTimeOfDay(float fHour)
+{
+	CMapManager::SetTimeOfDay(fHour);
+}
+
+float CPythonBackground::GetTimeOfDay()
+{
+	return DayNight_GetHour();
+}
+
 void CPythonBackground::ChangeToDay()
 {
 	m_iDayMode = DAY_MODE_LIGHT;
+	SetTimeOfDay(12.0f);
 }
 
 void CPythonBackground::ChangeToNight()
 {
 	m_iDayMode = DAY_MODE_DARK;
+	SetTimeOfDay(22.0f);
 }
 
 void CPythonBackground::EnableSnowEnvironment()
