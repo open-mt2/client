@@ -1,6 +1,7 @@
 #pragma once
 
 class CMapBase;
+#include <Client/Game/Lighting.h>
 #include <Client/Game/MapOutdoor.h>
 #include <Client/Game/PropertyManager.h>
 
@@ -61,6 +62,12 @@ class CMapManager : public CScreen, public IPhysicsWorld
 		void BeginEnvironment();
 		void EndEnvironment();
 
+		bool IsDayNightEnabled();
+		void SetDayNightEnabled(bool bEnabled);
+		void SetTimeOfDay(float fHour);
+		float GetTimeOfDay();
+		void RefreshDayNight();
+
 		void BlendEnvironmentData(const TEnvironmentData* c_pEnvironmentData, int iTransitionTime);
 
 		void GetCurrentEnvironmentData(const TEnvironmentData** c_ppEnvironmentData);
@@ -102,6 +109,16 @@ class CMapManager : public CScreen, public IPhysicsWorld
 		//////////////////////////////////////////////////////////////////////////
 		TEnvironmentDataMap m_EnvironmentDataMap;
 		const TEnvironmentData* mc_pcurEnvironmentData;
+		const TEnvironmentData* m_pBaseEnvironmentData;
+		TEnvironmentData m_kDayNightEnvironmentData;
+		DWORD m_dwLastDayNightUpdate;
+		DWORD m_dwLastDayNightSkyUpdate;
+		bool m_bDayNightApplied;
+		bool m_bEnvironmentLightingPushed;
+		SDayNightTint m_kLastDayNightTint;
+		bool m_bLastDayNightTintValid;
+
+		void UpdateDayNight();
 
 		//////////////////////////////////////////////////////////////////////////
 		// Map

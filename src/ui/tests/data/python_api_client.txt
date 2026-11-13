@@ -270,6 +270,8 @@ module	app
   testSetSpecularColor	callable
 module	background
   BeginEnvironment	callable
+  ChangeToDay	callable
+  ChangeToNight	callable
   DISTANCE0	int	0
   DISTANCE1	int	1
   DISTANCE2	int	2
@@ -285,14 +287,17 @@ module	background
   GetDistanceSetInfo	callable
   GetFarClip	callable
   GetHeight	callable
+  GetLightingMode	callable
   GetPickingPoint	callable
   GetRenderShadowTime	callable
   GetRenderedGraphicThingInstanceNum	callable
   GetRenderedSplatNum	callable
   GetShadowMapColor	callable
+  GetTimeOfDay	callable
   GlobalPositionToLocalPosition	callable
   GlobalPositionToMapInfo	callable
   Initialize	callable
+  IsDayNightEnabled	callable
   IsSoftwareTiling	callable
   LoadMap	callable
   PART_CLOUD	int	2
@@ -330,10 +335,13 @@ module	background
   SetBGLoading	callable
   SetBackgroundDirLight	callable
   SetCharacterDirLight	callable
+  SetDayNightEnabled	callable
   SetEnvironmentData	callable
+  SetLightingMode	callable
   SetRenderSort	callable
   SetShadowLevel	callable
   SetSplatLimit	callable
+  SetTimeOfDay	callable
   SetTransparentTree	callable
   SetViewDistanceSet	callable
   SetVisiblePart	callable

@@ -103,6 +103,13 @@ class CPythonBackground : public CMapManager, public CSingleton<CPythonBackgroun
 		void SetCharacterDirLight();
 		void SetBackgroundDirLight();
 
+		bool SetLightingMode(const char* c_szMode);
+		const char* GetLightingMode();
+		void SetDayNightEnabled(bool bEnabled);
+		bool IsDayNightEnabled();
+		void SetTimeOfDay(float fHour);
+		float GetTimeOfDay();
+
 		void ChangeToDay();
 		void ChangeToNight();
 		void EnableSnowEnvironment();

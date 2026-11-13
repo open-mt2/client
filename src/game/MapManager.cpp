@@ -1,9 +1,13 @@
 #include <Client/Game/StdAfx.h>
 #include <Neoeter/Render/StateManager.h>
 #include <Neoeter/IO/EterPackManager.h>
+#include <Neoeter/Platform/Base/Timer.h>
 
 #include <Client/Game/MapManager.h>
 #include <Client/Game/MapOutdoor.h>
+#include <Client/Game/Lighting.h>
+
+#include <Neoeter/Render/RenderOptions.h>
 
 #include <Client/Game/PropertyLoader.h>
 
@@ -25,12 +29,34 @@ CMapOutdoor& CMapManager::GetMapOutdoorRef()
 	return *m_pkMap;
 }
 
-CMapManager::CMapManager() : mc_pcurEnvironmentData(NULL)
+namespace
+{
+	bool IsSameDayNightTint(const SDayNightTint& left, const SDayNightTint& right)
+	{
+		return left.sun.r == right.sun.r && left.sun.g == right.sun.g && left.sun.b == right.sun.b &&
+			   left.ambient.r == right.ambient.r && left.ambient.g == right.ambient.g && left.ambient.b == right.ambient.b &&
+			   left.fog.r == right.fog.r && left.fog.g == right.fog.g && left.fog.b == right.fog.b &&
+			   left.sky.r == right.sky.r && left.sky.g == right.sky.g && left.sky.b == right.sky.b &&
+			   left.flare == right.flare;
+	}
+}
+
+CMapManager::CMapManager() : mc_pcurEnvironmentData(NULL),
+							 m_pBaseEnvironmentData(NULL),
+							 m_dwLastDayNightUpdate(0),
+							 m_dwLastDayNightSkyUpdate(0),
+							 m_bDayNightApplied(false),
+							 m_bEnvironmentLightingPushed(false),
+							 m_bLastDayNightTintValid(false)
 {
 	m_pkMap = NULL;
 	m_isSoftwareTilingEnableReserved = false;
 
-	//	Initialize();
+	Lighting_Initialize();
+	DayNight_Initialize();
+
+	Tracef("Lighting mode: %s, day/night: %s, hour: %.2f", Lighting_GetModeName(),
+		   DayNight_IsEnabled() ? "on" : "off", DayNight_GetHour());
 }
 
 CMapManager::~CMapManager()
@@ -51,6 +77,10 @@ void CMapManager::ReserveSoftwareTilingEnable(bool isEnable)
 void CMapManager::Initialize()
 {
 	mc_pcurEnvironmentData = NULL;
+	m_pBaseEnvironmentData = NULL;
+	m_bDayNightApplied = false;
+	m_bEnvironmentLightingPushed = false;
+	m_bLastDayNightTintValid = false;
 	__LoadMapInfoVector();
 }
 
@@ -222,9 +252,14 @@ void CMapManager::BeginEnvironment()
 	if (!mc_pcurEnvironmentData)
 		return;
 
+	UpdateDayNight();
+
 	CMapOutdoor& rkMap = GetMapOutdoorRef();
 
-	// Light always on
+	m_bEnvironmentLightingPushed = !Lighting_IsEnabled();
+	if (m_bEnvironmentLightingPushed)
+		Neoeter::Render::PushLightingDisabled();
+
 	STATEMANAGER.SaveRenderState(D3DRS_LIGHTING, TRUE);
 
 	// Fog
@@ -280,6 +315,12 @@ void CMapManager::BeginEnvironment()
 
 void CMapManager::EndEnvironment()
 {
+	if (m_bEnvironmentLightingPushed)
+	{
+		Neoeter::Render::PopLightingDisabled();
+		m_bEnvironmentLightingPushed = false;
+	}
+
 	if (!mc_pcurEnvironmentData)
 		return;
 
@@ -309,9 +350,18 @@ void CMapManager::SetEnvironmentDataPtr(const TEnvironmentData* c_pEnvironmentDa
 
 	CMapOutdoor& rkMap = GetMapOutdoorRef();
 
-	mc_pcurEnvironmentData = c_pEnvironmentData;
+	m_pBaseEnvironmentData = c_pEnvironmentData;
+	m_kDayNightEnvironmentData = *c_pEnvironmentData;
+	m_bDayNightApplied = false;
+	m_bLastDayNightTintValid = false;
+	m_dwLastDayNightUpdate = 0;
+	m_dwLastDayNightSkyUpdate = 0;
+	mc_pcurEnvironmentData = &m_kDayNightEnvironmentData;
+
+	Tracef("DayNight environment updated");
 
 	rkMap.SetEnvironmentDataPtr(mc_pcurEnvironmentData);
+	UpdateDayNight();
 }
 
 void CMapManager::ResetEnvironmentDataPtr(const TEnvironmentData* c_pEnvironmentData)
@@ -328,8 +378,107 @@ void CMapManager::ResetEnvironmentDataPtr(const TEnvironmentData* c_pEnvironment
 
 	CMapOutdoor& rkMap = GetMapOutdoorRef();
 
-	mc_pcurEnvironmentData = c_pEnvironmentData;
+	m_pBaseEnvironmentData = c_pEnvironmentData;
+	m_kDayNightEnvironmentData = *c_pEnvironmentData;
+	m_bDayNightApplied = false;
+	m_bLastDayNightTintValid = false;
+	m_dwLastDayNightUpdate = 0;
+	m_dwLastDayNightSkyUpdate = 0;
+	mc_pcurEnvironmentData = &m_kDayNightEnvironmentData;
+
+	Tracef("DayNight environment reset");
+
 	rkMap.ResetEnvironmentDataPtr(mc_pcurEnvironmentData);
+	UpdateDayNight();
+}
+
+void CMapManager::UpdateDayNight()
+{
+	if (!m_pkMap || !m_pBaseEnvironmentData)
+		return;
+
+	if (!DayNight_IsEnabled())
+	{
+		if (!m_bDayNightApplied)
+			return;
+
+		m_kDayNightEnvironmentData = *m_pBaseEnvironmentData;
+		m_bDayNightApplied = false;
+		m_bLastDayNightTintValid = false;
+
+		CMapOutdoor& rkMap = GetMapOutdoorRef();
+		rkMap.RefreshEnvironmentSky();
+		rkMap.RefreshEnvironmentLensFlare();
+		return;
+	}
+
+	SDayNightTint kTint;
+	DayNight_ComputeTint(DayNight_GetHour(), kTint);
+
+	if (m_bDayNightApplied && m_bLastDayNightTintValid && IsSameDayNightTint(kTint, m_kLastDayNightTint))
+		return;
+
+	const bool bFirstApply = !m_bDayNightApplied;
+
+	const DWORD dwNow = CTimer::Instance().GetCurrentMillisecond();
+	if (!bFirstApply && dwNow - m_dwLastDayNightUpdate < 250)
+		return;
+
+	m_dwLastDayNightUpdate = dwNow;
+
+	DayNight_Apply(kTint, *m_pBaseEnvironmentData, m_kDayNightEnvironmentData);
+	m_kLastDayNightTint = kTint;
+	m_bLastDayNightTintValid = true;
+	m_bDayNightApplied = true;
+
+	if (!bFirstApply && dwNow - m_dwLastDayNightSkyUpdate < 1000)
+		return;
+
+	m_dwLastDayNightSkyUpdate = dwNow;
+
+	Tracef("DayNight sky refresh at hour %.2f", DayNight_GetHour());
+
+	CMapOutdoor& rkMap = GetMapOutdoorRef();
+	rkMap.RefreshEnvironmentSky();
+	rkMap.RefreshEnvironmentLensFlare();
+}
+
+bool CMapManager::IsDayNightEnabled()
+{
+	return DayNight_IsEnabled();
+}
+
+void CMapManager::SetDayNightEnabled(bool bEnabled)
+{
+	DayNight_SetEnabled(bEnabled);
+	m_bLastDayNightTintValid = false;
+	m_dwLastDayNightUpdate = 0;
+	m_dwLastDayNightSkyUpdate = 0;
+	UpdateDayNight();
+}
+
+void CMapManager::SetTimeOfDay(float fHour)
+{
+	DayNight_SetHour(fHour);
+	m_bDayNightApplied = false;
+	m_bLastDayNightTintValid = false;
+	m_dwLastDayNightUpdate = 0;
+	m_dwLastDayNightSkyUpdate = 0;
+	UpdateDayNight();
+}
+
+float CMapManager::GetTimeOfDay()
+{
+	return DayNight_GetHour();
+}
+
+void CMapManager::RefreshDayNight()
+{
+	m_bDayNightApplied = false;
+	m_bLastDayNightTintValid = false;
+	m_dwLastDayNightUpdate = 0;
+	m_dwLastDayNightSkyUpdate = 0;
+	UpdateDayNight();
 }
 
 void CMapManager::BlendEnvironmentData(const TEnvironmentData* c_pEnvironmentData, int iTransitionTime)
@@ -353,6 +502,8 @@ bool CMapManager::RegisterEnvironmentData(DWORD dwIndex, const char* c_szFileNam
 	}
 	else
 	{
+		if (m_pBaseEnvironmentData == f->second)
+			m_pBaseEnvironmentData = NULL;
 		delete f->second;
 		f->second = pEnvironmentData;
 	}

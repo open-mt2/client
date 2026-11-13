@@ -1,5 +1,6 @@
 #include <Client/Game/StdAfx.h>
 #include <Client/Game/GameUtil.h>
+#include <Client/Game/Lighting.h>
 #include <Client/Game/ItemManager.h>
 #include <Client/Game/RaceManager.h>
 #include <Client/Game/PropertyManager.h>
@@ -115,6 +116,77 @@ namespace
 		std::printf("[PASS] test_actor_instance_basics\n");
 	}
 
+	void test_lighting_modes()
+	{
+		assert(Lighting_SetModeByName("full"));
+		assert(Lighting_GetMode() == LIGHTING_MODE_FULL);
+		assert(Lighting_IsEnabled());
+		assert(Lighting_IsTerrainEnabled());
+		assert(std::strcmp(Lighting_GetModeName(), "full") == 0);
+
+		assert(Lighting_SetModeByName("models"));
+		assert(Lighting_IsEnabled());
+		assert(!Lighting_IsTerrainEnabled());
+
+		assert(Lighting_SetModeByName("off"));
+		assert(!Lighting_IsEnabled());
+		assert(!Lighting_IsTerrainEnabled());
+
+		assert(!Lighting_SetModeByName("bogus"));
+		assert(std::strcmp(Lighting_GetModeName(), "off") == 0);
+
+		std::printf("[PASS] test_lighting_modes\n");
+	}
+
+	void test_day_night_curve()
+	{
+		SDayNightTint noon;
+		DayNight_ComputeTint(12.0f, noon);
+		assert(std::fabs(noon.sun.r - 1.0f) < 1e-4f);
+		assert(std::fabs(noon.ambient.g - 1.0f) < 1e-4f);
+		assert(std::fabs(noon.fog.b - 1.0f) < 1e-4f);
+		assert(std::fabs(noon.sky.r - 1.0f) < 1e-4f);
+		assert(std::fabs(noon.flare - 1.0f) < 1e-4f);
+
+		SDayNightTint night;
+		DayNight_ComputeTint(22.0f, night);
+		assert(night.sun.r < noon.sun.r);
+		assert(night.ambient.g < noon.ambient.g);
+		assert(night.fog.b < noon.fog.b);
+		assert(night.sky.r < noon.sky.r);
+		assert(night.flare < 0.01f);
+
+		SDayNightTint dusk;
+		DayNight_ComputeTint(18.0f, dusk);
+		assert(dusk.sun.r > dusk.sun.b);
+
+		TEnvironmentData base;
+		base.DirLights[ENV_DIRLIGHT_BACKGROUND].Diffuse = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+		base.DirLights[ENV_DIRLIGHT_CHARACTER].Ambient = D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f);
+		base.Material.Diffuse = D3DCOLORVALUE{1.0f, 1.0f, 1.0f, 1.0f};
+		base.FogColor = D3DXCOLOR(0.8f, 0.9f, 1.0f, 1.0f);
+		base.LensFlareBrightnessColor = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+		base.fLensFlareMaxBrightness = 1.0f;
+
+		TEnvironmentData out;
+		DayNight_Apply(noon, base, out);
+		assert(std::fabs(out.DirLights[ENV_DIRLIGHT_BACKGROUND].Diffuse.r - 1.0f) < 1e-4f);
+		assert(std::fabs(out.DirLights[ENV_DIRLIGHT_CHARACTER].Ambient.g - 0.5f) < 1e-4f);
+		assert(std::fabs(out.FogColor.b - 1.0f) < 1e-4f);
+		assert(std::fabs(out.fLensFlareMaxBrightness - 1.0f) < 1e-4f);
+
+		DayNight_Apply(night, base, out);
+		assert(out.DirLights[ENV_DIRLIGHT_BACKGROUND].Diffuse.r < 1.0f);
+		assert(out.FogColor.b < 1.0f);
+		assert(out.fLensFlareMaxBrightness < 0.01f);
+
+		DayNight_SetHour(18.5f);
+		assert(DayNight_IsHourFrozen());
+		assert(std::fabs(DayNight_GetHour() - 18.5f) < 1e-4f);
+
+		std::printf("[PASS] test_day_night_curve\n");
+	}
+
 } // namespace
 
 int main()
@@ -124,6 +196,8 @@ int main()
 	test_race_manager();
 	test_property_manager();
 	test_actor_instance_basics();
+	test_lighting_modes();
+	test_day_night_curve();
 
 	std::printf("All GameLib smoke tests passed successfully!\n");
 	return 0;
