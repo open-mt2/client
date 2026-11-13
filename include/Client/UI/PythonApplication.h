@@ -281,6 +281,8 @@ class CPythonApplication : public CMSApplication, public CInputKeyboard, public 
 
 		void OnCameraUpdate();
 
+		void InitializeDebugRows();
+
 		void OnUIUpdate();
 		void OnUIRender();
 
@@ -361,6 +363,9 @@ class CPythonApplication : public CMSApplication, public CInputKeyboard, public 
 		D3DXVECTOR3 m_v3CenterPosition;
 
 		unsigned int m_iFPS;
+		bool m_isDebugLeftButtonCaptured;
+		bool m_isDebugRightButtonCaptured;
+		bool m_isDebugMiddleButtonCaptured;
 		float m_fAveRenderTime;
 		DWORD m_dwCurRenderTime;
 		DWORD m_dwCurUpdateTime;

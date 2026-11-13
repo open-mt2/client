@@ -4,6 +4,8 @@
 #include <Client/UI/QuitRequest.h>
 #include <Client/UI/FrameClear.h>
 #include <Neoeter/Platform/Base/error.h>
+#include <Neoeter/Platform/Base/Version.h>
+#include <Neoeter/Debug/Debug.h>
 #include <Neoeter/Render/Camera.h>
 #include <Neoeter/Render/AttributeInstance.h>
 #include <Client/Game/AreaTerrain.h>
@@ -40,6 +42,9 @@ CPythonApplication::CPythonApplication() : m_poMouseHandler(NULL),
 										   m_fGlobalElapsedTime(0.0f),
 										   m_dwUpdateFPS(0),
 										   m_dwRenderFPS(0),
+										   m_isDebugLeftButtonCaptured(false),
+										   m_isDebugRightButtonCaptured(false),
+										   m_isDebugMiddleButtonCaptured(false),
 										   m_dwFaceCount(0),
 										   m_dwLButtonDownTime(0),
 										   m_bCursorVisible(TRUE),
@@ -172,6 +177,30 @@ void CPythonApplication::Exit()
 }
 
 bool PERF_CHECKER_RENDER_GAME = false;
+
+void CPythonApplication::InitializeDebugRows()
+{
+	Neoeter::Debug::AddRow("Client", [] { return std::string(OPENMT2_CLIENT_VERSION); });
+
+	Neoeter::Debug::AddRow("Neoeter", [] { return std::string(Neoeter::GetVersionString()); });
+
+	Neoeter::Debug::AddRow("Render FPS", [] {
+		return std::to_string(CPythonApplication::Instance().GetRenderFPS());
+	});
+
+	Neoeter::Debug::AddRow("Frame", [] {
+		const long tenths = static_cast<long>(CPythonApplication::Instance().GetAveRenderTime() * 10.0f + 0.5f);
+		return std::to_string(tenths / 10) + "." + std::to_string(tenths % 10) + " ms";
+	});
+
+	Neoeter::Debug::AddRow("Update FPS", [] {
+		return std::to_string(CPythonApplication::Instance().GetUpdateFPS());
+	});
+
+	Neoeter::Debug::AddRow("Faces", [] {
+		return std::to_string(CPythonApplication::Instance().m_pyGraphic.GetFaceCount());
+	});
+}
 
 void CPythonApplication::RenderGame()
 {
@@ -724,6 +753,9 @@ bool CPythonApplication::Process()
 				m_pyGraphic.SetInterfaceRenderState();
 
 				OnUIRender();
+
+				Neoeter::Debug::Draw();
+
 				OnMouseRender();
 				/////////////////////
 
@@ -1413,6 +1445,8 @@ bool CPythonApplication::Create(PyObject* poSelf, const char* c_szName, int widt
 	m_LightManager.Initialize();
 
 	CGraphicImageInstance::CreateSystem(32);
+
+	InitializeDebugRows();
 
 	// 백업
 	STICKYKEYS sStickKeys;
