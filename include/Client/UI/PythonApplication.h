@@ -177,6 +177,7 @@ class CPythonApplication : public CMSApplication, public CInputKeyboard, public 
 
 		void SafeSetCapture();
 		void SafeReleaseCapture();
+		void ResetMouseCapture();
 
 		BOOL SetCursorNum(int iCursorNum);
 		void SetCursorVisible(BOOL bFlag, bool bLiarCursorOn = false);
@@ -375,6 +376,9 @@ class CPythonApplication : public CMSApplication, public CInputKeyboard, public 
 		DWORD m_dwHeight;
 		int m_iCameraBaseWidth;
 		int m_iCameraBaseHeight;
+		bool m_isUIResolutionReloadPending;
+		int m_iPendingWidth;
+		int m_iPendingHeight;
 
 	protected:
 		// Time

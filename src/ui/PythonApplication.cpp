@@ -63,6 +63,9 @@ CPythonApplication::CPythonApplication() : m_poMouseHandler(NULL),
 	m_dwHeight = 600;
 	m_iCameraBaseWidth = 0;
 	m_iCameraBaseHeight = 0;
+	m_isUIResolutionReloadPending = false;
+	m_iPendingWidth = 0;
+	m_iPendingHeight = 0;
 
 	ms_pInstance = this;
 	m_isWindowFullScreenEnable = FALSE;
@@ -1252,6 +1255,10 @@ void CPythonApplication::SetResolution(int width, int height)
 {
 	if (width <= 0 || height <= 0)
 		return;
+
+	m_isUIResolutionReloadPending = true;
+	m_iPendingWidth = width;
+	m_iPendingHeight = height;
 
 	if (m_isWindowed)
 		SetSize(width, height);

@@ -48,9 +48,24 @@ void CPythonApplication::OnSizeChange(int width, int height)
 
 	UI::CWindowManager& rkWndMgr = UI::CWindowManager::Instance();
 	rkWndMgr.SetResolution(width, height);
+	rkWndMgr.SetScreenSize(width, height);
 
-	if (rkWndMgr.GetScreenWidth() <= 0 || rkWndMgr.GetScreenHeight() <= 0)
-		rkWndMgr.SetScreenSize(width, height);
+	if (m_isUIResolutionReloadPending && width == m_iPendingWidth && height == m_iPendingHeight)
+	{
+		m_isUIResolutionReloadPending = false;
+
+		m_pySystem.ReloadInterface();
+
+		rkWndMgr.ResetCapture();
+		ResetMouseCapture();
+		m_isDebugLeftButtonCaptured = false;
+		m_isDebugRightButtonCaptured = false;
+		m_isDebugMiddleButtonCaptured = false;
+
+		CCamera* pkCmrCur = CCameraManager::Instance().GetCurrentCamera();
+		if (pkCmrCur)
+			pkCmrCur->EndDrag();
+	}
 }
 
 void CPythonApplication::OnMouseMiddleButtonDown(int x, int y)

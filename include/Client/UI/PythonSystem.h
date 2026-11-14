@@ -90,6 +90,7 @@ class CPythonSystem : public CSingleton<CPythonSystem>
 		bool LoadConfig();
 		bool SaveConfig();
 		void ApplyConfig();
+		void ReloadInterface();
 		void SetConfig(TConfig* set_config);
 		TConfig* GetConfig();
 		void ChangeSystem();

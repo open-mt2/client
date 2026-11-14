@@ -28,6 +28,13 @@ void CPythonApplication::SafeReleaseCapture()
 	}
 }
 
+void CPythonApplication::ResetMouseCapture()
+{
+	gs_nMouseCaptureRef = 0;
+	SDL_CaptureMouse(SDL_FALSE);
+	ReleaseCapture();
+}
+
 LRESULT CPythonApplication::WindowProcedure(HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam)
 {
 	const int c_DoubleClickTime = 300;

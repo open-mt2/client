@@ -637,6 +637,52 @@ void CPythonSystem::ApplyConfig() // 이전 설정과 현재 설정을 비교해
 	ChangeSystem();
 }
 
+void CPythonSystem::ReloadInterface()
+{
+	if (!m_poInterfaceHandler)
+		return;
+
+	if (!PyObject_HasAttrString(m_poInterfaceHandler, "Close") ||
+		!PyObject_HasAttrString(m_poInterfaceHandler, "MakeInterface"))
+		return;
+
+	PyObject* pResult = PyObject_CallMethod(m_poInterfaceHandler, const_cast<char*>("Close"), NULL);
+	if (pResult)
+		Py_DECREF(pResult);
+	else
+	{
+		TraceError("CPythonSystem::ReloadInterface: Close failed");
+		PyErr_Clear();
+	}
+
+	pResult = PyObject_CallMethod(m_poInterfaceHandler, const_cast<char*>("__init__"), NULL);
+	if (pResult)
+		Py_DECREF(pResult);
+	else
+	{
+		TraceError("CPythonSystem::ReloadInterface: __init__ failed");
+		PyErr_Clear();
+	}
+
+	pResult = PyObject_CallMethod(m_poInterfaceHandler, const_cast<char*>("MakeInterface"), NULL);
+	if (pResult)
+		Py_DECREF(pResult);
+	else
+	{
+		TraceError("CPythonSystem::ReloadInterface: MakeInterface failed");
+		PyErr_Clear();
+	}
+
+	if (PyObject_HasAttrString(m_poInterfaceHandler, "ShowDefaultWindows"))
+	{
+		pResult = PyObject_CallMethod(m_poInterfaceHandler, const_cast<char*>("ShowDefaultWindows"), NULL);
+		if (pResult)
+			Py_DECREF(pResult);
+		else
+			PyErr_Clear();
+	}
+}
+
 void CPythonSystem::ChangeSystem()
 {
 	// Shadow
