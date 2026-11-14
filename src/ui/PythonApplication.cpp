@@ -1307,6 +1307,8 @@ bool CPythonApplication::CreateStartupWindow()
 
 bool CPythonApplication::Create(PyObject* poSelf, const char* c_szName, int width, int height, int Windowed)
 {
+	m_pySystem.GetConfig()->is_software_cursor = false;
+
 	int cfgWidth = m_pySystem.GetWidth();
 	int cfgHeight = m_pySystem.GetHeight();
 	if (cfgWidth > 0) width = cfgWidth;
@@ -1434,15 +1436,6 @@ bool CPythonApplication::Create(PyObject* poSelf, const char* c_szName, int widt
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	// Cursor
-	if (!CreateCursors())
-	{
-		// PyErr_SetString(PyExc_RuntimeError, "CMSWindow::Cursors Create Error");
-		TraceError("CMSWindow::Cursors Create Error");
-		SET_EXCEPTION("CREATE_CURSOR");
-		return false;
-	}
-
 	if (!m_pySystem.IsNoSoundCard())
 	{
 		// Sound
@@ -1465,6 +1458,13 @@ bool CPythonApplication::Create(PyObject* poSelf, const char* c_szName, int widt
 	// Device
 	if (!CreateDevice(width, height, Windowed, m_pySystem.GetBPP(), m_pySystem.GetFrequency()))
 		return false;
+
+	if (!CreateCursors())
+	{
+		TraceError("CMSWindow::Cursors Create Error");
+		SET_EXCEPTION("CREATE_CURSOR");
+		return false;
+	}
 
 	GrannyCreateSharedDeformBuffer();
 

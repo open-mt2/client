@@ -173,6 +173,7 @@ class CPythonApplication : public CMSApplication, public CInputKeyboard, public 
 		void UpdateClientRect();
 
 		bool CreateCursors();
+		bool CreateOfficialCursors();
 		void DestroyCursors();
 
 		void SafeSetCapture();

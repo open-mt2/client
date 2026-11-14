@@ -123,12 +123,6 @@ void CPythonApplication::OnMouseWheel(int nLen)
 
 void CPythonApplication::OnMouseMove(int x, int y)
 {
-#if defined(_WIN32)
-	int deltaX = 0;
-	int deltaY = 0;
-	SDL_GetRelativeMouseState(&deltaX, &deltaY);
-#endif
-
 	CCameraManager& rkCmrMgr = CCameraManager::Instance();
 	CCamera* pkCmrCur = rkCmrMgr.GetCurrentCamera();
 
@@ -146,18 +140,6 @@ void CPythonApplication::OnMouseMove(int x, int y)
 					SetCursorVisible(TRUE);
 			}
 		}
-#if defined(_WIN32)
-		else
-		{
-			if (m_pyBackground.IsMapReady())
-				pkCmrCur->DragRelative(deltaX, deltaY);
-
-			RECT rcDrag;
-			GetClientRect(&rcDrag);
-			UI::CWindowManager::Instance().SetResolution(rcDrag.right - rcDrag.left, rcDrag.bottom - rcDrag.top);
-			return;
-		}
-#endif
 	}
 
 	if (Neoeter::Debug::WantsMouseAt(x, y))
@@ -168,7 +150,6 @@ void CPythonApplication::OnMouseMove(int x, int y)
 		return;
 	}
 
-#if !defined(_WIN32)
 	POINT Point;
 	if (pkCmrCur)
 	{
@@ -179,7 +160,6 @@ void CPythonApplication::OnMouseMove(int x, int y)
 			Platform_WarpMouse(Point.x, Point.y);
 		}
 	}
-#endif
 
 	RECT rcWnd;
 	GetClientRect(&rcWnd);
@@ -343,8 +323,20 @@ void CPythonApplication::OnMouseUpdate()
 #endif // _DEBUG
 
 	UI::CWindowManager& rkWndMgr = UI::CWindowManager::Instance();
-	long lx, ly;
+	long lx = 0;
+	long ly = 0;
 	rkWndMgr.GetMousePosition(lx, ly);
+
+	CCamera* pkCmrCur = CCameraManager::Instance().GetCurrentCamera();
+	if (pkCmrCur && pkCmrCur->IsDraging())
+	{
+		int anchorX = 0;
+		int anchorY = 0;
+		pkCmrCur->GetDragAnchor(&anchorX, &anchorY);
+		lx = anchorX;
+		ly = anchorY;
+	}
+
 	PyCallClassMemberFunc(m_poMouseHandler, "Update", Py_BuildValue("(ii)", lx, ly));
 }
 
