@@ -201,7 +201,9 @@ class CActorInstance : public IActorInstance, public IFlyTargetableObject
 				int iBoneIndex;
 				DWORD dwModelIndex;
 				D3DXMATRIX matTranslation;
+				D3DXMATRIX matAttachTransform;
 				BOOL isAttaching;
+				BOOL bUseAttachTransform;
 
 				int iLifeType;
 				DWORD dwEndTime;
@@ -581,6 +583,7 @@ class CActorInstance : public IActorInstance, public IFlyTargetableObject
 		bool __IsLeftHandWeapon(DWORD type);
 		bool __IsRightHandWeapon(DWORD type);
 		bool __IsWeaponTrace(DWORD weaponType);
+		bool __GetWeaponAttachTransform(DWORD dwPartIndex, D3DXMATRIX* pMat);
 
 	protected:
 		void __InitializeMovement();

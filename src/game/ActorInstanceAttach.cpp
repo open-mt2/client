@@ -9,6 +9,8 @@
 
 BOOL USE_WEAPON_SPECULAR = TRUE;
 
+static const DWORD c_dwRaceAssassinMale = 5;
+
 BOOL USE_VIETNAM_CONVERT_WEAPON_VNUM = FALSE;
 
 DWORD Vietnam_ConvertWeaponVnum(DWORD vnum)
@@ -271,6 +273,31 @@ bool CActorInstance::__IsWeaponTrace(DWORD weaponType)
 	}
 }
 
+bool CActorInstance::__GetWeaponAttachTransform(DWORD dwPartIndex, D3DXMATRIX* pMat)
+{
+	if (CRaceData::PART_WEAPON != dwPartIndex || c_dwRaceAssassinMale != GetRace())
+		return false;
+
+	DWORD dwWeapon = GetPartItemID(CRaceData::PART_WEAPON);
+	CItemData* pItemData;
+	if (!CItemManager::Instance().GetItemDataPointer(dwWeapon, &pItemData))
+		return false;
+
+	switch (pItemData->GetWeaponType())
+	{
+		case CItemData::WEAPON_DAGGER:
+			D3DXMatrixRotationX(pMat, D3DXToRadian(180.0f));
+			return true;
+
+		case CItemData::WEAPON_SWORD:
+			D3DXMatrixRotationY(pMat, D3DXToRadian(180.0f));
+			return true;
+
+		default:
+			return false;
+	}
+}
+
 void CActorInstance::AttachWeapon(DWORD dwItemIndex, DWORD dwParentPartIndex, DWORD dwPartIndex)
 {
 	if (dwPartIndex >= CRaceData::PART_MAX_NUM)
@@ -338,7 +365,13 @@ void CActorInstance::AttachWeapon(DWORD dwParentPartIndex, DWORD dwPartIndex, CI
 	}
 
 	SetModelInstance(dwPartIndex, dwPartIndex, 0);
-	AttachModelInstance(dwParentPartIndex, szBoneName, dwPartIndex);
+
+	D3DXMATRIX matAttachTransform;
+	const D3DXMATRIX* c_pAttachTransform = NULL;
+	if (__GetWeaponAttachTransform(dwPartIndex, &matAttachTransform))
+		c_pAttachTransform = &matAttachTransform;
+
+	AttachModelInstance(dwParentPartIndex, szBoneName, dwPartIndex, c_pAttachTransform);
 
 	// 20041208.myevan.무기스펙큘러(값옷은 SetShape에서 직접 해준다.)
 	if (USE_WEAPON_SPECULAR)
@@ -398,6 +431,8 @@ DWORD CActorInstance::AttachEffectByID(DWORD dwParentPartIndex, const char* c_ps
 	ae.dwModelIndex = dwParentPartIndex;
 	ae.dwEffectIndex = CEffectManager::Instance().GetEmptyIndex();
 	ae.isAttaching = TRUE;
+	ae.bUseAttachTransform = FALSE;
+	D3DXMatrixIdentity(&ae.matAttachTransform);
 	if (c_pv3Position)
 	{
 		D3DXMatrixTranslation(&ae.matTranslation, c_pv3Position->x, c_pv3Position->y, c_pv3Position->z);
@@ -422,6 +457,14 @@ DWORD CActorInstance::AttachEffectByID(DWORD dwParentPartIndex, const char* c_ps
 		else
 		{
 			ae.iBoneIndex = iBoneIndex;
+
+			const char* c_szWeaponBoneName;
+			if (m_pkCurRaceData && GetAttachingBoneName(CRaceData::PART_WEAPON, &c_szWeaponBoneName) &&
+				0 == strcmp(c_pszBoneName, c_szWeaponBoneName))
+			{
+				if (__GetWeaponAttachTransform(CRaceData::PART_WEAPON, &ae.matAttachTransform))
+					ae.bUseAttachTransform = TRUE;
+			}
 		}
 	}
 	else
@@ -595,6 +638,9 @@ void CActorInstance::RefreshActorInstance()
 						ae.dwModelIndex = j;
 						ae.dwEffectIndex = CEffectManager::Instance().GetEmptyIndex();
 						ae.isAttaching = TRUE;
+						ae.bUseAttachTransform = FALSE;
+						D3DXMatrixIdentity(&ae.matTranslation);
+						D3DXMatrixIdentity(&ae.matAttachTransform);
 						CEffectManager::Instance().CreateEffectInstance(ae.dwEffectIndex, dwCRC);
 
 						int iBoneIndex;
@@ -688,7 +734,10 @@ void CActorInstance::UpdateAttachingInstances()
 					if (GetBoneMatrix(it->dwModelIndex, it->iBoneIndex, &pBoneMat))
 					{
 						D3DXMATRIX matTransform;
-						matTransform = *pBoneMat;
+						if (it->bUseAttachTransform)
+							matTransform = it->matAttachTransform * (*pBoneMat);
+						else
+							matTransform = *pBoneMat;
 						matTransform *= it->matTranslation;
 						matTransform *= m_worldMatrix;
 						rkEftMgr.SetEffectInstanceGlobalMatrix(matTransform);
