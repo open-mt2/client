@@ -13,6 +13,7 @@ static int gs_nMouseCaptureRef = 0;
 
 void CPythonApplication::SafeSetCapture()
 {
+	SDL_CaptureMouse(SDL_TRUE);
 	SetCapture(m_hWnd);
 	gs_nMouseCaptureRef++;
 }
@@ -21,7 +22,10 @@ void CPythonApplication::SafeReleaseCapture()
 {
 	gs_nMouseCaptureRef--;
 	if (gs_nMouseCaptureRef == 0)
+	{
+		SDL_CaptureMouse(SDL_FALSE);
 		ReleaseCapture();
+	}
 }
 
 LRESULT CPythonApplication::WindowProcedure(HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam)
@@ -120,11 +124,8 @@ LRESULT CPythonApplication::WindowProcedure(HWND hWnd, UINT uiMsg, WPARAM wParam
 		case WM_LBUTTONUP:
 			m_dwLButtonUpTime = ELTimer_GetMSec();
 
-			if (hWnd == GetCapture() || !GetCapture())
-			{
-				SafeReleaseCapture();
-				OnMouseLeftButtonUp(short(LOWORD(lParam)), short(HIWORD(lParam)));
-			}
+			SafeReleaseCapture();
+			OnMouseLeftButtonUp(short(LOWORD(lParam)), short(HIWORD(lParam)));
 			return 0;
 
 		case WM_MBUTTONDOWN:
@@ -135,13 +136,9 @@ LRESULT CPythonApplication::WindowProcedure(HWND hWnd, UINT uiMsg, WPARAM wParam
 			break;
 
 		case WM_MBUTTONUP:
-			if (GetCapture() == hWnd || !GetCapture())
-			{
-				SafeReleaseCapture();
+			SafeReleaseCapture();
 
-				UI::CWindowManager::Instance().RunMouseMiddleButtonUp(short(LOWORD(lParam)), short(HIWORD(lParam)));
-				//				OnMouseMiddleButtonUp(short(LOWORD(lParam)), short(HIWORD(lParam)));
-			}
+			UI::CWindowManager::Instance().RunMouseMiddleButtonUp(short(LOWORD(lParam)), short(HIWORD(lParam)));
 			break;
 
 		case WM_RBUTTONDOWN:
@@ -150,12 +147,9 @@ LRESULT CPythonApplication::WindowProcedure(HWND hWnd, UINT uiMsg, WPARAM wParam
 			return 0;
 
 		case WM_RBUTTONUP:
-			if (hWnd == GetCapture() || !GetCapture())
-			{
-				SafeReleaseCapture();
+			SafeReleaseCapture();
 
-				OnMouseRightButtonUp(short(LOWORD(lParam)), short(HIWORD(lParam)));
-			}
+			OnMouseRightButtonUp(short(LOWORD(lParam)), short(HIWORD(lParam)));
 			return 0;
 
 		case 0x20a:

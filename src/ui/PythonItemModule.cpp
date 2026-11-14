@@ -435,10 +435,13 @@ PyObject* itemRender(PyObject* poSelf, PyObject* poArgs)
 
 PyObject* itemUpdate(PyObject* poSelf, PyObject* poArgs)
 {
-	IAbstractApplication& rkApp = IAbstractApplication::GetSingleton();
+	long lMouseX = 0;
+	long lMouseY = 0;
+	UI::CWindowManager::Instance().GetMousePosition(lMouseX, lMouseY);
 
 	POINT ptMouse;
-	rkApp.GetMousePosition(&ptMouse);
+	ptMouse.x = lMouseX;
+	ptMouse.y = lMouseY;
 
 	CPythonItem::Instance().Update(ptMouse);
 	return Py_BuildNone();

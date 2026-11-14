@@ -49,13 +49,10 @@ void CPythonPlayer::NEW_SetMouseCameraState(int eMBS)
 	{
 		if (MBS_PRESS == eMBS)
 		{
-			UI::CWindowManager& rkWndMgr = UI::CWindowManager::Instance();
+			POINT ptMouse;
+			rkApp.GetMousePosition(&ptMouse);
 
-			long lMouseX;
-			long lMouseY;
-			rkWndMgr.GetMousePosition(lMouseX, lMouseY);
-
-			pkCmrCur->BeginDrag(lMouseX, lMouseY);
+			pkCmrCur->BeginDrag(ptMouse.x, ptMouse.y);
 
 			if (!rkBG.IsMapReady())
 				return;

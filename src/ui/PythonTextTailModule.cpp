@@ -57,7 +57,7 @@ PyObject* textTailGetPosition(PyObject* poSelf, PyObject* poArgs)
 		if (pkInstMain)
 		{
 			const D3DXVECTOR3& c_rv3Position = pkInstMain->GetGraphicThingInstanceRef().GetPosition();
-			CPythonGraphic::Instance().ProjectPosition(c_rv3Position.x, c_rv3Position.y, c_rv3Position.z, &x, &y);
+			CPythonGraphic::Instance().ProjectPositionUI(c_rv3Position.x, c_rv3Position.y, c_rv3Position.z, &x, &y);
 		}
 	}
 

@@ -134,6 +134,14 @@ void CPythonTextTail::UpdateTextTail(TTextTail* pTextTail)
 							   &pTextTail->y,
 							   &pTextTail->z);
 
+	const long uiWidth = UI::CWindowManager::Instance().GetScreenWidth();
+	const long uiHeight = UI::CWindowManager::Instance().GetScreenHeight();
+	if (uiWidth > 0 && uiHeight > 0)
+	{
+		pTextTail->x *= float(uiWidth) / float(rpyGraphic.GetBackBufferWidth());
+		pTextTail->y *= float(uiHeight) / float(rpyGraphic.GetBackBufferHeight());
+	}
+
 	pTextTail->x = floorf(pTextTail->x);
 	pTextTail->y = floorf(pTextTail->y);
 

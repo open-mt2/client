@@ -867,6 +867,14 @@ PyObject* chrGetProjectPosition(PyObject* poSelf, PyObject* poArgs)
 							   PixelPosition.z + float(iHeight),
 							   &fx, &fy, &fz);
 
+	const long uiWidth = UI::CWindowManager::Instance().GetScreenWidth();
+	const long uiHeight = UI::CWindowManager::Instance().GetScreenHeight();
+	if (uiWidth > 0 && uiHeight > 0)
+	{
+		fx *= float(uiWidth) / float(rpyGraphic.GetBackBufferWidth());
+		fy *= float(uiHeight) / float(rpyGraphic.GetBackBufferHeight());
+	}
+
 	if (1 == int(fz))
 		return Py_BuildValue("ii", -100, -100);
 

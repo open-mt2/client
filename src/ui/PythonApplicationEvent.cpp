@@ -10,7 +10,16 @@ void CPythonApplication::OnCameraUpdate()
 	{
 		CCamera* pkCameraMgr = CCameraManager::Instance().GetCurrentCamera();
 		if (pkCameraMgr)
+		{
+			if (m_iCameraBaseWidth > 0 && m_iCameraBaseHeight > 0 && m_dwWidth > 0 && m_dwHeight > 0)
+			{
+				pkCameraMgr->SetMouseDragScale(
+					float(m_iCameraBaseWidth) / float(m_dwWidth),
+					float(m_iCameraBaseHeight) / float(m_dwHeight));
+			}
+
 			pkCameraMgr->Update();
+		}
 	}
 }
 
@@ -28,9 +37,20 @@ void CPythonApplication::OnUIRender()
 
 void CPythonApplication::OnSizeChange(int width, int height)
 {
+	if (m_iCameraBaseWidth <= 0 || m_iCameraBaseHeight <= 0)
+	{
+		m_iCameraBaseWidth = width;
+		m_iCameraBaseHeight = height;
+	}
+
+	m_dwWidth = static_cast<DWORD>(width);
+	m_dwHeight = static_cast<DWORD>(height);
+
 	UI::CWindowManager& rkWndMgr = UI::CWindowManager::Instance();
 	rkWndMgr.SetResolution(width, height);
-	rkWndMgr.SetScreenSize(width, height);
+
+	if (rkWndMgr.GetScreenWidth() <= 0 || rkWndMgr.GetScreenHeight() <= 0)
+		rkWndMgr.SetScreenSize(width, height);
 }
 
 void CPythonApplication::OnMouseMiddleButtonDown(int x, int y)
@@ -88,10 +108,44 @@ void CPythonApplication::OnMouseWheel(int nLen)
 
 void CPythonApplication::OnMouseMove(int x, int y)
 {
+#if defined(_WIN32)
+	int deltaX = 0;
+	int deltaY = 0;
+	SDL_GetRelativeMouseState(&deltaX, &deltaY);
+#endif
+
 	CCameraManager& rkCmrMgr = CCameraManager::Instance();
 	CCamera* pkCmrCur = rkCmrMgr.GetCurrentCamera();
 
-	if (!(pkCmrCur && pkCmrCur->IsDraging()) && Neoeter::Debug::WantsMouseAt(x, y))
+	if (pkCmrCur && pkCmrCur->IsDraging())
+	{
+		const Uint32 buttons = SDL_GetGlobalMouseState(NULL, NULL);
+		if (!(buttons & (SDL_BUTTON_LMASK | SDL_BUTTON_MMASK | SDL_BUTTON_RMASK)))
+		{
+			pkCmrCur->EndDrag();
+
+			if (m_pyBackground.IsMapReady())
+			{
+				SetCursorNum(NORMAL);
+				if (CURSOR_MODE_HARDWARE == GetCursorMode())
+					SetCursorVisible(TRUE);
+			}
+		}
+#if defined(_WIN32)
+		else
+		{
+			if (m_pyBackground.IsMapReady())
+				pkCmrCur->DragRelative(deltaX, deltaY);
+
+			RECT rcDrag;
+			GetClientRect(&rcDrag);
+			UI::CWindowManager::Instance().SetResolution(rcDrag.right - rcDrag.left, rcDrag.bottom - rcDrag.top);
+			return;
+		}
+#endif
+	}
+
+	if (Neoeter::Debug::WantsMouseAt(x, y))
 	{
 		if (CURSOR_MODE_SOFTWARE == GetCursorMode())
 			UI::CWindowManager::Instance().RunMouseMove(x, y);
@@ -99,6 +153,7 @@ void CPythonApplication::OnMouseMove(int x, int y)
 		return;
 	}
 
+#if !defined(_WIN32)
 	POINT Point;
 	if (pkCmrCur)
 	{
@@ -109,6 +164,7 @@ void CPythonApplication::OnMouseMove(int x, int y)
 			Platform_WarpMouse(Point.x, Point.y);
 		}
 	}
+#endif
 
 	RECT rcWnd;
 	GetClientRect(&rcWnd);
@@ -121,7 +177,8 @@ void CPythonApplication::OnMouseMove(int x, int y)
 
 void CPythonApplication::OnMouseLeftButtonDown(int x, int y)
 {
-	if (Neoeter::Debug::WantsMouseAt(x, y))
+	const bool debugWantsMouse = Neoeter::Debug::WantsMouseAt(x, y);
+	if (debugWantsMouse)
 	{
 		m_isDebugLeftButtonCaptured = true;
 		return;
@@ -155,7 +212,8 @@ void CPythonApplication::OnMouseLeftButtonDoubleClick(int x, int y)
 
 void CPythonApplication::OnMouseRightButtonDown(int x, int y)
 {
-	if (Neoeter::Debug::WantsMouseAt(x, y))
+	const bool debugWantsMouse = Neoeter::Debug::WantsMouseAt(x, y);
+	if (debugWantsMouse)
 	{
 		m_isDebugRightButtonCaptured = true;
 		return;

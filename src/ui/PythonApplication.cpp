@@ -61,6 +61,8 @@ CPythonApplication::CPythonApplication() : m_poMouseHandler(NULL),
 	CTimer::Instance().UseCustomTime();
 	m_dwWidth = 800;
 	m_dwHeight = 600;
+	m_iCameraBaseWidth = 0;
+	m_iCameraBaseHeight = 0;
 
 	ms_pInstance = this;
 	m_isWindowFullScreenEnable = FALSE;
@@ -209,6 +211,46 @@ void CPythonApplication::InitializeDebugRows()
 		{ return DayNight_GetHour(); },
 		[](float fHour)
 		{ DayNight_SetHour(fHour); });
+
+	Neoeter::Debug::AddCombo(
+		"Resolution",
+		[]
+		{
+			std::vector<std::string> labels;
+			CPythonSystem& system = CPythonSystem::Instance();
+			for (int index = 0; index < system.GetResolutionCount(); ++index)
+			{
+				DWORD width = 0;
+				DWORD height = 0;
+				DWORD bpp = 0;
+				if (!system.GetResolution(index, &width, &height, &bpp))
+					continue;
+				labels.push_back(std::to_string(width) + " x " + std::to_string(height) + " (" + std::to_string(bpp) + " bpp)");
+			}
+			return labels;
+		},
+		[]
+		{
+			CPythonSystem& system = CPythonSystem::Instance();
+			return system.GetResolutionIndex(CPythonApplication::Instance().GetWidth(), CPythonApplication::Instance().GetHeight(), system.GetBPP());
+		},
+		[](int index)
+		{
+			CPythonSystem& system = CPythonSystem::Instance();
+			DWORD width = 0;
+			DWORD height = 0;
+			DWORD bpp = 0;
+			if (!system.GetResolution(index, &width, &height, &bpp))
+				return;
+
+			CPythonSystem::TConfig config = *system.GetConfig();
+			config.width = width;
+			config.height = height;
+			config.bpp = bpp;
+			system.SetConfig(&config);
+
+			CPythonApplication::Instance().SetResolution(static_cast<int>(width), static_cast<int>(height));
+		});
 }
 
 void CPythonApplication::RenderGame()
@@ -366,10 +408,11 @@ void CPythonApplication::RenderGame()
 void CPythonApplication::UpdateGame()
 {
 	DWORD t1 = ELTimer_GetMSec();
-	POINT ptMouse;
-	GetMousePosition(&ptMouse);
+	long lMouseX = 0;
+	long lMouseY = 0;
+	m_kWndMgr.GetMousePosition(lMouseX, lMouseY);
 
-	CGraphicTextInstance::Hyperlink_UpdateMousePos(ptMouse.x, ptMouse.y);
+	CGraphicTextInstance::Hyperlink_UpdateMousePos(lMouseX, lMouseY);
 
 	DWORD t2 = ELTimer_GetMSec();
 
@@ -402,6 +445,10 @@ void CPythonApplication::UpdateGame()
 	DWORD t8 = ELTimer_GetMSec();
 	m_FlyingManager.Update();
 	DWORD t9 = ELTimer_GetMSec();
+
+	POINT ptMouse;
+	ptMouse.x = lMouseX;
+	ptMouse.y = lMouseY;
 	m_pyItem.Update(ptMouse);
 	DWORD t10 = ELTimer_GetMSec();
 	m_pyPlayer.Update();
@@ -1199,6 +1246,20 @@ bool CPythonApplication::SetWindowFullscreen(bool enabled, int width, int height
 		Platform_SetWindowResolution(actualWidth, actualHeight);
 
 	return true;
+}
+
+void CPythonApplication::SetResolution(int width, int height)
+{
+	if (width <= 0 || height <= 0)
+		return;
+
+	if (m_isWindowed)
+		SetSize(width, height);
+	else if (!SetWindowFullscreen(true, width, height))
+	{
+		m_isWindowed = true;
+		SetSize(width, height);
+	}
 }
 
 void CPythonApplication::MinimizeWindow()

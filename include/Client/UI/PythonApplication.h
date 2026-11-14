@@ -310,6 +310,7 @@ class CPythonApplication : public CMSApplication, public CInputKeyboard, public 
 		void __UpdateCamera();
 
 		bool SetWindowFullscreen(bool enabled, int width, int height);
+		void SetResolution(int width, int height);
 		void MinimizeWindow();
 
 	protected:
@@ -372,6 +373,8 @@ class CPythonApplication : public CMSApplication, public CInputKeyboard, public 
 		DWORD m_dwLoad;
 		DWORD m_dwWidth;
 		DWORD m_dwHeight;
+		int m_iCameraBaseWidth;
+		int m_iCameraBaseHeight;
 
 	protected:
 		// Time
