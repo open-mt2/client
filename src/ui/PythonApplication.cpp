@@ -6,6 +6,7 @@
 #include <Neoeter/Platform/Base/error.h>
 #include <Neoeter/Platform/Base/Version.h>
 #include <Neoeter/Debug/Debug.h>
+#include <Client/UI/DebugPacksPanel.h>
 #include <Neoeter/Render/Camera.h>
 #include <Neoeter/Render/AttributeInstance.h>
 #include <Client/Game/AreaTerrain.h>
@@ -186,6 +187,10 @@ bool PERF_CHECKER_RENDER_GAME = false;
 
 void CPythonApplication::InitializeDebugRows()
 {
+#if defined(NEOETER_DEBUG_UI)
+	DebugPacksPanel_Initialize();
+#endif
+
 	Neoeter::Debug::AddRow("Client", []
 						   { return std::string(OPENMT2_CLIENT_VERSION); });
 

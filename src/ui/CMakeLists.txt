@@ -103,6 +103,12 @@ target_link_libraries(client_ui
     $<$<PLATFORM_ID:Windows>:strmiids>
 )
 
+if(TARGET imgui)
+    target_link_libraries(client_ui PRIVATE imgui)
+elseif(TARGET Neoeter::ImGui)
+    target_link_libraries(client_ui PRIVATE Neoeter::ImGui)
+endif()
+
 if(UNIX)
     target_compile_definitions(client_ui PUBLIC
         OPENMT2_PLATFORM_LINUX=1
