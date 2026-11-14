@@ -7,6 +7,7 @@
 #include <Client/Game/MapOutdoor.h>
 #include <Client/Game/TerrainPatch.h>
 #include <Client/Game/AreaTerrain.h>
+#include <Client/Game/ScreenDepthOfField.h>
 
 // #define USE_LEVEL
 //  unsigned int uiNumSplat;
@@ -355,8 +356,14 @@ void CMapOutdoor::ApplyEnvironmentSkyColors()
 
 	TVectorGradientColor kGradientColorVector = mc_pEnvironmentData->SkyBoxGradientColorVector;
 
-	if (mc_pEnvironmentData->bFogEnable)
+	CScreenDepthOfField& rkDepthOfField = CScreenDepthOfField::Instance();
+	const bool bDepthOfField = rkDepthOfField.IsEnabled();
+	const bool bSkyFog = bDepthOfField ? rkDepthOfField.IsFogEnabled() : mc_pEnvironmentData->bFogEnable;
+
+	if (bSkyFog)
 	{
+		const float fSkyFogStrength = bDepthOfField ? rkDepthOfField.GetSkyFogStrength() : 1.0f;
+
 		TColor kFogColor(mc_pEnvironmentData->FogColor.r,
 						 mc_pEnvironmentData->FogColor.g,
 						 mc_pEnvironmentData->FogColor.b,
@@ -366,8 +373,8 @@ void CMapOutdoor::ApplyEnvironmentSkyColors()
 
 		for (int i = 0; i < iGradientCount; ++i)
 		{
-			float fFirstRate = __GetSkyFogBlendRate(i, iHorizonEdge);
-			float fSecondRate = __GetSkyFogBlendRate(i + 1, iHorizonEdge);
+			float fFirstRate = __GetSkyFogBlendRate(i, iHorizonEdge) * fSkyFogStrength;
+			float fSecondRate = __GetSkyFogBlendRate(i + 1, iHorizonEdge) * fSkyFogStrength;
 
 			__BlendSkyGradientColor(kGradientColorVector[i].m_FirstColor, kFogColor, fFirstRate);
 			__BlendSkyGradientColor(kGradientColorVector[i].m_SecondColor, kFogColor, fSecondRate);

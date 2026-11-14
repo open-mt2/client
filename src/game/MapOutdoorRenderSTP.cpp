@@ -2,6 +2,7 @@
 #include <Client/Game/MapOutdoor.h>
 #include <Client/Game/TerrainPatch.h>
 #include <Client/Game/TerrainQuadtree.h>
+#include <Client/Game/ScreenDepthOfField.h>
 
 #include <Neoeter/Render/Camera.h>
 #include <Neoeter/Render/StateManager.h>
@@ -30,6 +31,13 @@ void CMapOutdoor::__RenderTerrain_RenderSoftwareTransformPatch()
 
 	std::vector<std::pair<float, long>>::iterator far_it = std::upper_bound(m_PatchVector.begin(), m_PatchVector.end(), fog_far);
 	std::vector<std::pair<float, long>>::iterator near_it = std::upper_bound(m_PatchVector.begin(), m_PatchVector.end(), fog_near);
+
+	CScreenDepthOfField& rkDepthOfField = CScreenDepthOfField::Instance();
+	if (rkDepthOfField.IsEnabled() && !rkDepthOfField.IsFogEnabled())
+	{
+		near_it = m_PatchVector.end();
+		far_it = m_PatchVector.end();
+	}
 
 	WORD wPrimitiveCount;
 	D3DPRIMITIVETYPE ePrimitiveType;

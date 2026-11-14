@@ -73,6 +73,8 @@ class CPythonBackground : public CMapManager, public CSingleton<CPythonBackgroun
 		void SetViewDistanceSet(int eNum, float fFarClip);
 		void SetFogDistance(float fFogDistance);
 		float GetFarClip();
+		float GetRenderDistance();
+		void SetRenderDistance(float fFarClip);
 
 		DWORD GetRenderShadowTime();
 		void GetDistanceSetInfo(int* peNum, float* pfStart, float* pfEnd, float* pfFarClip);

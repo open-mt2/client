@@ -208,6 +208,39 @@ float CPythonBackground::GetFarClip()
 	return m_ViewDistanceSet[m_eViewDistanceNum].m_fFarClip;
 }
 
+float CPythonBackground::GetRenderDistance()
+{
+	if (!IsMapReady())
+		return 25600.0f;
+
+	return GetFarClip();
+}
+
+void CPythonBackground::SetRenderDistance(float fFarClip)
+{
+	if (!IsMapReady())
+		return;
+
+	if (fFarClip < 1000.0f)
+		fFarClip = 1000.0f;
+
+	int eNum = 0;
+	float fStart = 0.0f;
+	float fEnd = 0.0f;
+	float fOldFarClip = 0.0f;
+	GetDistanceSetInfo(&eNum, &fStart, &fEnd, &fOldFarClip);
+
+	SetViewDistanceSet(eNum, fFarClip);
+
+	TEnvironmentData* pEnvironmentData = (TEnvironmentData*)mc_pcurEnvironmentData;
+	if (pEnvironmentData)
+	{
+		pEnvironmentData->v3SkyBoxScale = D3DXVECTOR3(fFarClip * 0.6f, fFarClip * 0.6f, fFarClip * 0.6f);
+	}
+
+	GetMapOutdoorRef().SetEnvironmentSkyBox();
+}
+
 void CPythonBackground::GetDistanceSetInfo(int* peNum, float* pfStart, float* pfEnd, float* pfFarClip)
 {
 	if (!m_pkMap)

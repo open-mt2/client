@@ -7,10 +7,12 @@
 #include <Neoeter/Platform/Base/Version.h>
 #include <Neoeter/Debug/Debug.h>
 #include <Client/UI/DebugPacksPanel.h>
+#include <Client/UI/GraphicsOptionsPanel.h>
 #include <Neoeter/Render/Camera.h>
 #include <Neoeter/Render/AttributeInstance.h>
 #include <Client/Game/AreaTerrain.h>
 #include <Client/Game/Lighting.h>
+#include <Client/Game/ScreenDepthOfField.h>
 #include <Neoeter/Model/Grn/Material.h>
 #include <Client/WebBrowser/CWebBrowser.h>
 
@@ -189,6 +191,7 @@ void CPythonApplication::InitializeDebugRows()
 {
 #if defined(NEOETER_DEBUG_UI)
 	DebugPacksPanel_Initialize();
+	GraphicsOptionsPanel_Initialize();
 #endif
 
 	Neoeter::Debug::AddRow("Client", []
@@ -279,6 +282,7 @@ void CPythonApplication::RenderGame()
 
 		m_pyGraphic.SetGameRenderState();
 		m_pyGraphic.PushState();
+		CScreenDepthOfField::Instance().BeginScene(100.0f, fFarClip);
 
 		{
 			long lx, ly;
@@ -315,6 +319,8 @@ void CPythonApplication::RenderGame()
 
 		m_pyBackground.RenderAfterLensFlare();
 
+		CScreenDepthOfField::Instance().EndScene();
+
 		return;
 	}
 
@@ -336,6 +342,7 @@ void CPythonApplication::RenderGame()
 	float fFarClip = m_pyBackground.GetFarClip();
 
 	m_pyGraphic.SetPerspective(30.0f, fAspect, 100.0, fFarClip);
+	CScreenDepthOfField::Instance().BeginScene(100.0f, fFarClip);
 
 	DWORD t5 = ELTimer_GetMSec();
 
@@ -381,6 +388,7 @@ void CPythonApplication::RenderGame()
 	DWORD t17 = ELTimer_GetMSec();
 	m_pyBackground.RenderAfterLensFlare();
 	DWORD t18 = ELTimer_GetMSec();
+	CScreenDepthOfField::Instance().EndScene();
 	DWORD tEnd = ELTimer_GetMSec();
 
 	if (GetAsyncKeyState(VK_Z))

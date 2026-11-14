@@ -6,6 +6,7 @@
 #include <Client/Game/MapManager.h>
 #include <Client/Game/MapOutdoor.h>
 #include <Client/Game/Lighting.h>
+#include <Client/Game/ScreenDepthOfField.h>
 
 #include <Neoeter/Render/RenderOptions.h>
 
@@ -315,8 +316,13 @@ void CMapManager::BeginEnvironment()
 
 	STATEMANAGER.SaveRenderState(D3DRS_LIGHTING, TRUE);
 
+	CScreenDepthOfField& rkDepthOfField = CScreenDepthOfField::Instance();
+	const bool bDepthOfField = rkDepthOfField.IsEnabled();
+	const bool bDepthOfFieldFog = bDepthOfField && rkDepthOfField.IsFogEnabled();
+	const bool bFogEnable = bDepthOfField ? bDepthOfFieldFog : mc_pcurEnvironmentData->bFogEnable;
+
 	// Fog
-	STATEMANAGER.SaveRenderState(D3DRS_FOGENABLE, mc_pcurEnvironmentData->bFogEnable);
+	STATEMANAGER.SaveRenderState(D3DRS_FOGENABLE, bFogEnable);
 
 	// Material
 	STATEMANAGER.SetMaterial(&mc_pcurEnvironmentData->Material);
@@ -331,12 +337,29 @@ void CMapManager::BeginEnvironment()
 	else
 		ms_lpd3dDevice->LightEnable(0, FALSE);
 
-	if (mc_pcurEnvironmentData->bFogEnable)
+	if (bFogEnable)
 	{
 		DWORD dwFogColor = mc_pcurEnvironmentData->FogColor;
 		STATEMANAGER.SetRenderState(D3DRS_FOGCOLOR, dwFogColor);
 
-		if (mc_pcurEnvironmentData->bDensityFog)
+		if (bDepthOfFieldFog)
+		{
+			const float fFogNear = rkDepthOfField.GetFogNear();
+			const float fFogFar = rkDepthOfField.GetFogFar();
+
+			TEnvironmentData* pEnvironmentData = (TEnvironmentData*)mc_pcurEnvironmentData;
+			pEnvironmentData->m_fFogNearDistance = fFogNear;
+			pEnvironmentData->m_fFogFarDistance = fFogFar;
+
+			DWORD dwFogNear, dwFogFar;
+			memcpy(&dwFogNear, &fFogNear, sizeof(dwFogNear));
+			memcpy(&dwFogFar, &fFogFar, sizeof(dwFogFar));
+			STATEMANAGER.SetRenderState(D3DRS_FOGVERTEXMODE, D3DFOG_LINEAR);
+			STATEMANAGER.SetRenderState(D3DRS_RANGEFOGENABLE, TRUE);
+			STATEMANAGER.SetRenderState(D3DRS_FOGSTART, dwFogNear);
+			STATEMANAGER.SetRenderState(D3DRS_FOGEND, dwFogFar);
+		}
+		else if (mc_pcurEnvironmentData->bDensityFog)
 		{
 			float fDensity = 0.00015f;
 			DWORD dwDensity;
