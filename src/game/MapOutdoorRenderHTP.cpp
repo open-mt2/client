@@ -105,7 +105,7 @@ void CMapOutdoor::__RenderTerrain_RenderHardwareTransformPatch()
 	if (rkDepthOfField.IsEnabled() && !rkDepthOfField.IsFogEnabled())
 		far_it = m_PatchVector.end();
 
-	// NOTE: Word Editor 툴에서는 fog far보다 멀리있는 물체를 텍스쳐 없이 그리는 작업을 하지 않음
+		// NOTE: Word Editor 툴에서는 fog far보다 멀리있는 물체를 텍스쳐 없이 그리는 작업을 하지 않음
 #ifdef WORLD_EDITOR
 	near_it = m_PatchVector.begin();
 	far_it = m_PatchVector.end();

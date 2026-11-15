@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(Client VERSION 0.1.5 LANGUAGES C CXX)
+project(Client VERSION 0.1.7 LANGUAGES C CXX)
 
 set(OPENMT2_CLIENT_VERSION "${PROJECT_VERSION}")
 
