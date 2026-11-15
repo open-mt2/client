@@ -342,10 +342,17 @@ void CMapManager::BeginEnvironment()
 		DWORD dwFogColor = mc_pcurEnvironmentData->FogColor;
 		STATEMANAGER.SetRenderState(D3DRS_FOGCOLOR, dwFogColor);
 
+		const float fMaxFogDistance = (ms_fFarY > 0.0f) ? ms_fFarY : 25600.0f;
+
 		if (bDepthOfFieldFog)
 		{
-			const float fFogNear = rkDepthOfField.GetFogNear();
-			const float fFogFar = rkDepthOfField.GetFogFar();
+			float fFogNear = rkDepthOfField.GetFogNear();
+			float fFogFar = rkDepthOfField.GetFogFar();
+
+			if (fFogFar > fMaxFogDistance)
+				fFogFar = fMaxFogDistance;
+			if (fFogNear >= fFogFar)
+				fFogNear = fFogFar * 0.5f;
 
 			TEnvironmentData* pEnvironmentData = (TEnvironmentData*)mc_pcurEnvironmentData;
 			pEnvironmentData->m_fFogNearDistance = fFogNear;
@@ -369,13 +376,17 @@ void CMapManager::BeginEnvironment()
 		}
 		else
 		{
-			CSpeedTreeForest& rkForest = CSpeedTreeForest::Instance();
-			rkForest.SetFog(
-				mc_pcurEnvironmentData->GetFogNearDistance(),
-				mc_pcurEnvironmentData->GetFogFarDistance());
-
 			float fFogNear = mc_pcurEnvironmentData->GetFogNearDistance();
 			float fFogFar = mc_pcurEnvironmentData->GetFogFarDistance();
+
+			if (fFogFar > fMaxFogDistance)
+				fFogFar = fMaxFogDistance;
+			if (fFogNear >= fFogFar)
+				fFogNear = fFogFar * 0.5f;
+
+			CSpeedTreeForest& rkForest = CSpeedTreeForest::Instance();
+			rkForest.SetFog(fFogNear, fFogFar);
+
 			DWORD dwFogNear, dwFogFar;
 			memcpy(&dwFogNear, &fFogNear, sizeof(dwFogNear));
 			memcpy(&dwFogFar, &fFogFar, sizeof(dwFogFar));

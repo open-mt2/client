@@ -491,6 +491,12 @@ void CMapOutdoor::__SoftwareTransformPatch_BuildPipeline(SoftwareTransformPatch_
 		rkTPRS.m_dwFogColor = mc_pEnvironmentData->FogColor;
 		rkTPRS.m_fFogNearDistance = mc_pEnvironmentData->GetFogNearDistance();
 		rkTPRS.m_fFogFarDistance = mc_pEnvironmentData->GetFogFarDistance();
+
+		const float fMaxFogDistance = (ms_fFarY > 0.0f) ? ms_fFarY : 25600.0f;
+		if (rkTPRS.m_fFogFarDistance > fMaxFogDistance)
+			rkTPRS.m_fFogFarDistance = fMaxFogDistance;
+		if (rkTPRS.m_fFogNearDistance >= rkTPRS.m_fFogFarDistance)
+			rkTPRS.m_fFogNearDistance = rkTPRS.m_fFogFarDistance * 0.5f;
 	}
 	else
 	{

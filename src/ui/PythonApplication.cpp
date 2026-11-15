@@ -914,31 +914,45 @@ bool CPythonApplication::Process()
 					m_dwFaceAccTime += m_dwCurRenderTime;
 
 					m_fFaceSpd = (m_dwFaceAccCount / m_dwFaceAccTime);
+				}
 
-					// 거리 자동 조절
-					if (-1 == m_iForceSightRange)
+				// 거리 자동 조절
+				if (-1 == m_iForceSightRange)
+				{
+					float fTargetViewDistance = 25600.0f;
+
+					if (dwCurFaceCount > 5000)
 					{
-						static float s_fAveRenderTime = 16.0f;
-						float fRatio = 0.3f;
-						s_fAveRenderTime = (s_fAveRenderTime * (100.0f - fRatio) + max(16.0f, m_dwCurRenderTime) * fRatio) / 100.0f;
-
-						float fFar = 25600.0f;
-						float fNear = MIN_FOG;
-						double dbAvePow = double(1000.0f / s_fAveRenderTime);
-						double dbMaxPow = 60.0;
-						float fDistance = max(fNear + (fFar - fNear) * (dbAvePow) / dbMaxPow, fNear);
-						m_pyBackground.SetViewDistanceSet(0, fDistance);
+						const float fFar = 25600.0f;
+						const float fNear = MIN_FOG;
+						const float fAveRenderTime = (m_fAveRenderTime > 0.0f) ? m_fAveRenderTime : 16.0f;
+						const double dbAvePow = double(1000.0f / max(16.0f, fAveRenderTime));
+						const double dbMaxPow = 60.0;
+						fTargetViewDistance = fMIN(fNear + (fFar - fNear) * float(dbAvePow / dbMaxPow), fFar);
 					}
-					// 거리 강제 설정시
-					else
+
+					static DWORD s_dwLastViewDistanceUpdate = 0;
+					static float s_fAppliedViewDistance = 0.0f;
+
+					if (s_fAppliedViewDistance <= 0.0f)
+						s_fAppliedViewDistance = m_pyBackground.GetFarClip();
+
+					const DWORD dwViewDistanceNow = ELTimer_GetMSec();
+					if (dwViewDistanceNow - s_dwLastViewDistanceUpdate >= 1000)
 					{
-						m_pyBackground.SetViewDistanceSet(0, float(m_iForceSightRange));
+						s_dwLastViewDistanceUpdate = dwViewDistanceNow;
+
+						if (fabs(fTargetViewDistance - s_fAppliedViewDistance) >= 512.0f)
+						{
+							s_fAppliedViewDistance = fTargetViewDistance;
+							m_pyBackground.SetViewDistanceSet(0, fTargetViewDistance);
+						}
 					}
 				}
+				// 거리 강제 설정시
 				else
 				{
-					// 10000 폴리곤 보다 적을때는 가장 멀리 보이게 한다
-					m_pyBackground.SetViewDistanceSet(0, 25600.0f);
+					m_pyBackground.SetViewDistanceSet(0, float(m_iForceSightRange));
 				}
 
 				++s_dwRenderFrameCount;

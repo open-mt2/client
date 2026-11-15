@@ -224,6 +224,15 @@ void CPythonBackground::SetRenderDistance(float fFarClip)
 	if (fFarClip < 1000.0f)
 		fFarClip = 1000.0f;
 
+	CMapOutdoor& rkMap = GetMapOutdoorRef();
+	const long lViewRadius = rkMap.GetViewRadius();
+	if (lViewRadius > 0)
+	{
+		const float fMaxFarClip = float(lViewRadius) * CTerrainImpl::CELLSCALE;
+		if (fFarClip > fMaxFarClip)
+			fFarClip = fMaxFarClip;
+	}
+
 	int eNum = 0;
 	float fStart = 0.0f;
 	float fEnd = 0.0f;
@@ -238,7 +247,7 @@ void CPythonBackground::SetRenderDistance(float fFarClip)
 		pEnvironmentData->v3SkyBoxScale = D3DXVECTOR3(fFarClip * 0.6f, fFarClip * 0.6f, fFarClip * 0.6f);
 	}
 
-	GetMapOutdoorRef().SetEnvironmentSkyBox();
+	rkMap.SetEnvironmentSkyBox();
 }
 
 void CPythonBackground::GetDistanceSetInfo(int* peNum, float* pfStart, float* pfEnd, float* pfFarClip)

@@ -6,6 +6,7 @@
 
 #include <Client/Game/ScreenDepthOfField.h>
 #include <Client/UI/PythonBackground.h>
+#include <Client/UI/PythonApplication.h>
 
 #include <Neoeter/Debug/Debug.h>
 
@@ -83,8 +84,10 @@ namespace
 		if (ImGui::SliderFloat("Render Distance", &fRenderDistance, 2000.0f, 50000.0f, "%.0f"))
 		{
 			rkBackground.SetRenderDistance(fRenderDistance);
-			if (rkDepthOfField.GetFogFar() > fRenderDistance)
-				rkDepthOfField.SetFogFar(fRenderDistance);
+			const float fAppliedRenderDistance = rkBackground.GetRenderDistance();
+			CPythonApplication::Instance().SetForceSightRange(int(fAppliedRenderDistance));
+			if (rkDepthOfField.GetFogFar() > fAppliedRenderDistance)
+				rkDepthOfField.SetFogFar(fAppliedRenderDistance);
 		}
 
 		ImGui::End();
