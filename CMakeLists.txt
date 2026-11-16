@@ -134,6 +134,14 @@ if(CLIENT_STANDALONE)
     set(BUILD_TESTING ${BUILD_TESTING_SAVED} CACHE BOOL "" FORCE)
 endif()
 
+# The packages gate their test directories on BUILD_TESTS, which only this
+# top-level project defines.
+if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+    option(BUILD_TESTING "Build client tests" ON)
+    set(BUILD_TESTS ${BUILD_TESTING})
+    enable_testing()
+endif()
+
 # The browser stub has no dependencies; the UI links both.
 foreach(_package IN ITEMS webbrowser game ui utils application)
     if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/${_package}/CMakeLists.txt")
