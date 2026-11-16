@@ -2,8 +2,6 @@ name: client
 
 on:
   push:
-    branches: [main]
-    tags: ["v*"]
   pull_request:
   workflow_dispatch:
     inputs:
@@ -43,6 +41,82 @@ jobs:
         run: |
           clang-format --version
           clang-format --dry-run --Werror $(git ls-files '*.cpp' '*.h' '*.c' '*.cc')
+
+  test:
+    name: Test
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            build-essential \
+            cmake \
+            ninja-build \
+            pkg-config \
+            libsdl2-dev \
+            libfreetype-dev \
+            libfontconfig1-dev \
+            liblzo2-dev \
+            libzip-dev \
+            zlib1g-dev \
+            libgl-dev \
+            libegl-dev \
+            libjpeg-dev \
+            libssl-dev \
+            libbz2-dev \
+            libreadline-dev \
+            libsqlite3-dev \
+            libffi-dev \
+            liblzma-dev \
+            libncurses-dev
+
+      - name: Cache Python 2.7
+        id: python-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/python2.7
+          key: python-2.7.18-${{ runner.os }}-${{ runner.arch }}
+
+      - name: Build Python 2.7
+        if: steps.python-cache.outputs.cache-hit != 'true'
+        run: |
+          curl -fsSL --retry 3 -o /tmp/Python-2.7.18.tgz \
+            https://www.python.org/ftp/python/2.7.18/Python-2.7.18.tgz
+          tar -xzf /tmp/Python-2.7.18.tgz -C /tmp
+          cd /tmp/Python-2.7.18
+          export LD_LIBRARY_PATH="${PWD}${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+          ./configure \
+            --prefix="${HOME}/python2.7" \
+            --enable-shared \
+            --enable-unicode=ucs4 \
+            --with-ensurepip=no
+          make -j"$(nproc)"
+          make altinstall
+
+      - name: Set up Python 2.7
+        run: |
+          echo "PYTHON_LIBRARY=${HOME}/python2.7/lib/libpython2.7.so" >> "$GITHUB_ENV"
+          echo "PYTHON_INCLUDE_DIR=${HOME}/python2.7/include/python2.7" >> "$GITHUB_ENV"
+          echo "LD_LIBRARY_PATH=${HOME}/python2.7/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}" >> "$GITHUB_ENV"
+
+      - name: Configure
+        run: |
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DBUILD_TESTING=ON \
+            -DPYTHON_LIBRARY="${PYTHON_LIBRARY}" \
+            -DPYTHON_INCLUDE_DIR="${PYTHON_INCLUDE_DIR}"
+
+      - name: Build
+        run: cmake --build build --parallel "$(nproc)"
+
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
 
   build:
     name: Build client
