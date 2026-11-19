@@ -26,7 +26,7 @@
 #include <Client/UI/PythonSkill.h>
 #include <Client/UI/PythonSystem.h>
 // #include "PythonNetworkDatagram.h"
-#include <Client/UI/PythonNetworkStream.h>
+#include <Client/Session/PythonNetworkStream.h>
 #include <Client/UI/PythonCharacterManager.h>
 #include <Client/UI/PythonQuest.h>
 #include <Client/UI/PythonMessenger.h>

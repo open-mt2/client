@@ -1,7 +1,7 @@
 #include <Client/UI/StdAfx.h>
 #include <Neoeter/Render/NetPacketHeaderMap.h>
 
-#include <Client/UI/PythonNetworkStream.h>
+#include <Client/Session/PythonNetworkStream.h>
 #include <Client/UI/Packet.h>
 #include <Client/UI/QuitRequest.h>
 #include <Client/UI/NetworkActorManager.h>

@@ -6,7 +6,7 @@
 
 #include <Client/UI/InsultChecker.h>
 
-#include <Client/UI/Packet.h>
+#include <Client/Protocol/Wire.h>
 #include <Client/Protocol/Decode.h>
 
 class CInstanceBase;

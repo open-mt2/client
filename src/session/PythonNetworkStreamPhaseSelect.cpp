@@ -1,5 +1,5 @@
 #include <Client/UI/StdAfx.h>
-#include <Client/UI/PythonNetworkStream.h>
+#include <Client/Session/PythonNetworkStream.h>
 #include <Client/UI/Packet.h>
 
 extern DWORD g_adwEncryptKey[4];

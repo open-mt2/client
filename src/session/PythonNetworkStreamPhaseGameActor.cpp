@@ -1,5 +1,5 @@
 #include <Client/UI/StdAfx.h>
-#include <Client/UI/PythonNetworkStream.h>
+#include <Client/Session/PythonNetworkStream.h>
 #include <Client/UI/NetworkActorManager.h>
 #include <Client/UI/PythonBackground.h>
 

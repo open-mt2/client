@@ -2,7 +2,7 @@
 #include <Client/UI/PythonPlayerEventHandler.h>
 #include <Client/UI/PythonPlayer.h>
 #include <Client/UI/PythonCharacterManager.h>
-#include <Client/UI/PythonNetworkStream.h>
+#include <Client/Session/PythonNetworkStream.h>
 
 CPythonPlayerEventHandler& CPythonPlayerEventHandler::GetSingleton()
 {

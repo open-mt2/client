@@ -1,7 +1,7 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/UI/PythonPlayer.h>
 #include <Client/UI/PythonTextTail.h>
-#include <Client/UI/PythonNetworkStream.h>
+#include <Client/Session/PythonNetworkStream.h>
 #include <Client/UI/InstanceBase.h>
 #include <Client/UI/PythonChat.h>
 #include <Client/UI/PythonGuild.h>

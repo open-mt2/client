@@ -1,7 +1,7 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/UI/PythonShop.h>
 
-#include <Client/UI/PythonNetworkStream.h>
+#include <Client/Session/PythonNetworkStream.h>
 
 // BOOL CPythonShop::GetSlotItemID(DWORD dwSlotPos, DWORD* pdwItemID)
 //{

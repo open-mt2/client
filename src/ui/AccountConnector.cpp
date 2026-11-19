@@ -1,7 +1,7 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/UI/AccountConnector.h>
 #include <Client/UI/Packet.h>
-#include <Client/UI/PythonNetworkStream.h>
+#include <Client/Session/PythonNetworkStream.h>
 #include <Neoeter/Platform/Base/tea.h>
 #include <Neoeter/IO/EterPackManager.h>
 

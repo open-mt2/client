@@ -3,7 +3,7 @@
 #include <Client/Game/ActorInstance.h>
 #include <Client/Game/FlyHandler.h>
 
-#include <Client/UI/PythonNetworkStream.h>
+#include <Client/Session/PythonNetworkStream.h>
 #include <Client/UI/InstanceBase.h>
 
 class CPythonPlayerEventHandler : public CActorInstance::IEventHandler

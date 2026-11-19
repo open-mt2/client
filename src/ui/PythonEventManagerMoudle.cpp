@@ -1,6 +1,6 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/UI/PythonEventManager.h>
-#include <Client/UI/PythonNetworkStream.h>
+#include <Client/Session/PythonNetworkStream.h>
 
 PyObject* eventRegisterEventSet(PyObject* poSelf, PyObject* poArgs)
 {

@@ -1,5 +1,5 @@
 #include <Client/UI/StdAfx.h>
-#include <Client/UI/PythonNetworkStream.h>
+#include <Client/Session/PythonNetworkStream.h>
 // #include "PythonNetworkDatagram.h"
 #include <Client/UI/AccountConnector.h>
 #include <Client/UI/PythonGuild.h>

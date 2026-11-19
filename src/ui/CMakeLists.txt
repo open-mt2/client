@@ -63,6 +63,7 @@ file(GLOB_RECURSE USERINTERFACE_SOURCES CONFIGURE_DEPENDS
 list(FILTER USERINTERFACE_SOURCES EXCLUDE REGEX "/tests/")
 
 add_library(client_ui STATIC ${USERINTERFACE_SOURCES})
+target_sources(client_ui PRIVATE $<TARGET_OBJECTS:client_session>)
 add_library(Client::UI ALIAS client_ui)
 
 target_include_directories(client_ui
