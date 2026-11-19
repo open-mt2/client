@@ -142,7 +142,7 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
     enable_testing()
 endif()
 
-foreach(_package IN ITEMS game ui utils application)
+foreach(_package IN ITEMS protocol game ui utils application)
     if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/${_package}/CMakeLists.txt")
         add_subdirectory("src/${_package}" "${CMAKE_BINARY_DIR}/src/${_package}")
     else()
