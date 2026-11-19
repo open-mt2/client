@@ -5,6 +5,7 @@
 namespace
 {
 	constexpr uint8_t kQuickSlotAddHeader = 28;
+	constexpr uint8_t kQuickSlotDelHeader = 29;
 	constexpr uint8_t kItemOwnershipHeader = 31;
 	constexpr uint8_t kTargetHeader = 63;
 
@@ -16,6 +17,12 @@ namespace
 			uint8_t position;
 			uint8_t type;
 			uint8_t slotPosition;
+	};
+
+	struct WireQuickSlotDel
+	{
+			uint8_t header;
+			uint8_t position;
 	};
 
 	struct WireItemOwnership
@@ -35,6 +42,7 @@ namespace
 #pragma pack(pop)
 
 	static_assert(sizeof(WireQuickSlotAdd) == 4, "quickslot add wire size");
+	static_assert(sizeof(WireQuickSlotDel) == 2, "quickslot del wire size");
 	static_assert(sizeof(WireItemOwnership) == 30, "item ownership wire size");
 	static_assert(sizeof(WireTarget) == 6, "target wire size");
 
@@ -56,6 +64,17 @@ namespace
 			return false;
 
 		*value = protocol::QuickSlotAddValue{wire.position, wire.type, wire.slotPosition};
+		return true;
+	}
+
+	bool DecodeQuickSlotDel(const void* bytes, std::size_t size, protocol::Value* value)
+	{
+		WireQuickSlotDel wire;
+
+		if (!ReadWire(bytes, size, kQuickSlotDelHeader, &wire))
+			return false;
+
+		*value = protocol::QuickSlotDelValue{wire.position};
 		return true;
 	}
 
@@ -92,6 +111,9 @@ namespace
 			case kQuickSlotAddHeader:
 				return DecodeQuickSlotAdd(bytes, size, value);
 
+			case kQuickSlotDelHeader:
+				return DecodeQuickSlotDel(bytes, size, value);
+
 			case kItemOwnershipHeader:
 				return DecodeItemOwnership(bytes, size, value);
 
@@ -105,6 +127,7 @@ namespace
 
 	const protocol::SizeEntry kSizeTable[] = {
 		{kQuickSlotAddHeader, sizeof(WireQuickSlotAdd)},
+		{kQuickSlotDelHeader, sizeof(WireQuickSlotDel)},
 		{kItemOwnershipHeader, sizeof(WireItemOwnership)},
 		{kTargetHeader, sizeof(WireTarget)},
 	};
