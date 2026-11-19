@@ -24,8 +24,13 @@ namespace protocol
 			T Get() const
 			{
 				static_assert(std::is_trivially_copyable<T>::value, "wire value must be trivially copyable");
+				static_assert(sizeof(T) <= kMaxPacketSize, "wire value exceeds the packet buffer");
 
 				T value = {};
+
+				if (sizeof(T) != size)
+					return value;
+
 				std::memcpy(&value, bytes.data(), sizeof(T));
 				return value;
 			}
