@@ -134,13 +134,6 @@ class CPythonApplication : public CMSApplication, public CInputKeyboard, public 
 		virtual ~CPythonApplication();
 
 	public:
-		void ShowWebPage(const char* c_szURL, const RECT& c_rcWebPage);
-		void MoveWebPage(const RECT& c_rcWebPage);
-		void HideWebPage();
-
-		bool IsWebPageMode();
-
-	public:
 		void NotifyHack(const char* c_szFormat, ...);
 		void GetInfo(UINT eInfo, std::string* pstInfo);
 		void GetMousePosition(POINT* ppt);

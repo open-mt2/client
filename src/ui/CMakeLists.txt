@@ -14,7 +14,7 @@ endif()
 if(USERINTERFACE_STANDALONE)
     include(FetchContent)
 
-    foreach(dep EterBase:pkg_eterbase EterLocale:pkg_eterlocale EterPack:pkg_eterpack EterImageLib:pkg_eterimagelib SphereLib:pkg_spherelib client_webbrowser:pkg_cwebbrowser EterLib:pkg_eterlib MilesLib:pkg_mileslib EterGrnLib:pkg_etergrnlib SpeedTreeLib:pkg_speedtreelib PRTerrainLib:pkg_prterrainlib EffectLib:pkg_effectlib neoeter_python_host:pkg_scriptlib neoeter_python_bindings:pkg_eterpythonlib client_game:pkg_gamelib)
+    foreach(dep EterBase:pkg_eterbase EterLocale:pkg_eterlocale EterPack:pkg_eterpack EterImageLib:pkg_eterimagelib SphereLib:pkg_spherelib EterLib:pkg_eterlib MilesLib:pkg_mileslib EterGrnLib:pkg_etergrnlib SpeedTreeLib:pkg_speedtreelib PRTerrainLib:pkg_prterrainlib EffectLib:pkg_effectlib neoeter_python_host:pkg_scriptlib neoeter_python_bindings:pkg_eterpythonlib client_game:pkg_gamelib)
         string(REPLACE ":" ";" dep_list ${dep})
         list(GET dep_list 0 dep_name)
         list(GET dep_list 1 dep_repo)
@@ -90,7 +90,6 @@ target_link_libraries(client_ui
         neoeter_model_grn
         neoeter_audio
         neoeter_render
-        client_webbrowser
         neoeter_platform_math
         neoeter_image
         neoeter_io

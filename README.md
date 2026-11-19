@@ -4,7 +4,7 @@ Game layer of the OpenMT2 client: game data, the UI and the `openmt2`
 executable.
 
 The executable is built at `build/openmt2` (CMake target `openmt2`). Headers are included as
-`<Client/Game/...>`, `<Client/UI/...>` and `<Client/WebBrowser/...>`; the engine
+`<Client/Game/...>` and `<Client/UI/...>`; the engine
 and Python bridge keep their `<Neoeter/...>` roots.
 
 Game assets (`bin/`) are devkit-owned and are not committed here.

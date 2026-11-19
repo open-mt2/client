@@ -3,7 +3,7 @@ project(Client VERSION 0.1.8 LANGUAGES C CXX)
 
 set(OPENMT2_CLIENT_VERSION "${PROJECT_VERSION}")
 
-# Game layer: GameLib + UserInterface + CWebBrowser. One header root, one
+# Game layer: GameLib + UserInterface. One header root, one
 # directory per package. Depends on neoeter and neoeter-python.
 
 set(CMAKE_CXX_STANDARD 17)
@@ -142,8 +142,7 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
     enable_testing()
 endif()
 
-# The browser stub has no dependencies; the UI links both.
-foreach(_package IN ITEMS webbrowser game ui utils application)
+foreach(_package IN ITEMS game ui utils application)
     if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/${_package}/CMakeLists.txt")
         add_subdirectory("src/${_package}" "${CMAKE_BINARY_DIR}/src/${_package}")
     else()

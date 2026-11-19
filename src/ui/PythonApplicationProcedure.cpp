@@ -3,7 +3,6 @@
 #include <Client/UI/SdlCursor.h>
 #include <Client/UI/QuitRequest.h>
 #include <Neoeter/Render/Camera.h>
-#include <Client/WebBrowser/CWebBrowser.h>
 
 #ifndef OPENMT2_PLATFORM_LINUX
 #include <winuser.h>
@@ -160,14 +159,7 @@ LRESULT CPythonApplication::WindowProcedure(HWND hWnd, UINT uiMsg, WPARAM wParam
 			return 0;
 
 		case 0x20a:
-			if (WebBrowser_IsVisible())
-			{
-				// 웹브라우저 상태일때는 휠 작동 안되도록 처리
-			}
-			else
-			{
-				OnMouseWheel(short(HIWORD(wParam)));
-			}
+			OnMouseWheel(short(HIWORD(wParam)));
 			break;
 
 		case WM_SIZE:

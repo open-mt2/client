@@ -14,7 +14,6 @@
 #include <Client/Game/Lighting.h>
 #include <Client/Game/ScreenDepthOfField.h>
 #include <Neoeter/Model/Grn/Material.h>
-#include <Client/WebBrowser/CWebBrowser.h>
 
 #include <Client/UI/resource.h>
 #include <Client/UI/PythonApplication.h>
@@ -1684,8 +1683,6 @@ void CPythonApplication::Clear()
 
 void CPythonApplication::Destroy()
 {
-	WebBrowser_Destroy();
-
 	// SphereMap
 	CGrannyMaterial::DestroySphereMap();
 

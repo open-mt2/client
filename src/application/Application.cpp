@@ -10,7 +10,6 @@
 #include <Client/UI/Locale.h>
 #include <Client/UI/PythonApplication.h>
 #include <Client/Utils/PythonUtils.h>
-#include <Client/WebBrowser/CWebBrowser.h>
 #include <Neoeter/IO/EterPackManager.h>
 #include <Neoeter/Platform/Base/Debug.h>
 #include <Neoeter/Platform/Base/lzo.h>
@@ -105,8 +104,6 @@ namespace Neoeter
 
 	int Application::RunGame(const CommandLine& arguments)
 	{
-		WebBrowser_Startup(m_context.Instance());
-
 		static CLZO s_lzo;
 		static CEterPackManager s_eterPackManager;
 
@@ -145,7 +142,6 @@ namespace Neoeter
 
 	void Application::Shutdown()
 	{
-		WebBrowser_Cleanup();
 		::CoUninitialize();
 		m_pythonApplication.reset();
 	}
