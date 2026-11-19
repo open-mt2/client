@@ -12,13 +12,17 @@ void CPythonNetworkStream::HandShakePhase()
 	if (!CheckPacket(&header))
 		return;
 
+	if (protocol::Has(header))
+	{
+		if (DecodeProtocolPacket(header))
+			return;
+
+		RecvErrorPacket(header);
+		return;
+	}
+
 	switch (header)
 	{
-		case HEADER_GC_PHASE:
-			if (RecvPhasePacket())
-				return;
-			break;
-
 		case HEADER_GC_HANDSHAKE:
 		{
 			if (!Recv(sizeof(TPacketGCHandshake), &m_HandshakeData))
@@ -46,10 +50,6 @@ void CPythonNetworkStream::HandShakePhase()
 			return;
 		}
 		break;
-		case HEADER_GC_PING:
-			RecvPingPacket();
-			return;
-			break;
 	}
 
 	RecvErrorPacket(header);
@@ -110,11 +110,9 @@ bool CPythonNetworkStream::RecvHandshakePacket()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvHandshakeOKPacket()
+bool CPythonNetworkStream::RecvHandshakeOKPacket(const protocol::Packet& value)
 {
-	TPacketGCBlank kBlankPacket;
-	if (!Recv(sizeof(TPacketGCBlank), &kBlankPacket))
-		return false;
+	const TPacketGCBlank kBlankPacket = value.Get<TPacketGCBlank>();
 
 	DWORD dwDelta = ELTimer_GetMSec() - m_kServerTimeSync.m_dwChangeClientTime;
 	ELTimer_SetServerMSec(m_kServerTimeSync.m_dwChangeServerTime + dwDelta);

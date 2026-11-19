@@ -95,59 +95,6 @@ void CPythonNetworkStream::LoadingPhase()
 
 	switch (header)
 	{
-		case HEADER_GC_PHASE:
-			if (RecvPhasePacket())
-				return;
-			break;
-
-		case HEADER_GC_MAIN_CHARACTER:
-			if (RecvMainCharacter())
-				return;
-			break;
-
-		// SUPPORT_BGM
-		case HEADER_GC_MAIN_CHARACTER2_EMPIRE:
-			if (RecvMainCharacter2_EMPIRE())
-				return;
-			break;
-
-		case HEADER_GC_MAIN_CHARACTER3_BGM:
-			if (RecvMainCharacter3_BGM())
-				return;
-			break;
-
-		case HEADER_GC_MAIN_CHARACTER4_BGM_VOL:
-			if (RecvMainCharacter4_BGM_VOL())
-				return;
-			break;
-
-			// END_OF_SUPPORT_BGM
-
-		case HEADER_GC_CHARACTER_UPDATE:
-			if (RecvCharacterUpdatePacket())
-				return;
-			break;
-
-		case HEADER_GC_PLAYER_POINTS:
-			if (__RecvPlayerPoints())
-				return;
-			break;
-
-		case HEADER_GC_PLAYER_POINT_CHANGE:
-			if (RecvPointChange())
-				return;
-			break;
-
-		case HEADER_GC_ITEM_SET:
-			if (RecvItemSetPacket())
-				return;
-			break;
-
-		case HEADER_GC_PING:
-			if (RecvPingPacket())
-				return;
-			break;
-
 		default:
 			GamePhase();
 			return;
@@ -181,11 +128,9 @@ void CPythonNetworkStream::SetLoadingPhase()
 	__DirectEnterMode_Initialize();
 }
 
-bool CPythonNetworkStream::RecvMainCharacter()
+bool CPythonNetworkStream::RecvMainCharacter(const protocol::Packet& value)
 {
-	TPacketGCMainCharacter MainChrPacket;
-	if (!Recv(sizeof(TPacketGCMainCharacter), &MainChrPacket))
-		return false;
+	TPacketGCMainCharacter MainChrPacket = value.Get<TPacketGCMainCharacter>();
 
 	m_dwMainActorVID = MainChrPacket.dwVID;
 	m_dwMainActorRace = MainChrPacket.wRaceNum;
@@ -207,11 +152,9 @@ bool CPythonNetworkStream::RecvMainCharacter()
 }
 
 // SUPPORT_BGM
-bool CPythonNetworkStream::RecvMainCharacter2_EMPIRE()
+bool CPythonNetworkStream::RecvMainCharacter2_EMPIRE(const protocol::Packet& value)
 {
-	TPacketGCMainCharacter2_EMPIRE mainChrPacket;
-	if (!Recv(sizeof(mainChrPacket), &mainChrPacket))
-		return false;
+	TPacketGCMainCharacter2_EMPIRE mainChrPacket = value.Get<TPacketGCMainCharacter2_EMPIRE>();
 
 	m_dwMainActorVID = mainChrPacket.dwVID;
 	m_dwMainActorRace = mainChrPacket.wRaceNum;
@@ -232,11 +175,9 @@ bool CPythonNetworkStream::RecvMainCharacter2_EMPIRE()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvMainCharacter3_BGM()
+bool CPythonNetworkStream::RecvMainCharacter3_BGM(const protocol::Packet& value)
 {
-	TPacketGCMainCharacter3_BGM mainChrPacket;
-	if (!Recv(sizeof(mainChrPacket), &mainChrPacket))
-		return false;
+	TPacketGCMainCharacter3_BGM mainChrPacket = value.Get<TPacketGCMainCharacter3_BGM>();
 
 	m_dwMainActorVID = mainChrPacket.dwVID;
 	m_dwMainActorRace = mainChrPacket.wRaceNum;
@@ -259,11 +200,9 @@ bool CPythonNetworkStream::RecvMainCharacter3_BGM()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvMainCharacter4_BGM_VOL()
+bool CPythonNetworkStream::RecvMainCharacter4_BGM_VOL(const protocol::Packet& value)
 {
-	TPacketGCMainCharacter4_BGM_VOL mainChrPacket;
-	if (!Recv(sizeof(mainChrPacket), &mainChrPacket))
-		return false;
+	TPacketGCMainCharacter4_BGM_VOL mainChrPacket = value.Get<TPacketGCMainCharacter4_BGM_VOL>();
 
 	m_dwMainActorVID = mainChrPacket.dwVID;
 	m_dwMainActorRace = mainChrPacket.wRaceNum;
@@ -311,12 +250,9 @@ float CPythonNetworkStream::GetFieldMusicVolume()
 }
 // END_OF_SUPPORT_BGM
 
-bool CPythonNetworkStream::__RecvPlayerPoints()
+bool CPythonNetworkStream::__RecvPlayerPoints(const protocol::Packet& value)
 {
-	TPacketGCPoints PointsPacket;
-
-	if (!Recv(sizeof(TPacketGCPoints), &PointsPacket))
-		return false;
+	TPacketGCPoints PointsPacket = value.Get<TPacketGCPoints>();
 
 	for (DWORD i = 0; i < POINT_MAX_NUM; ++i)
 		CPythonPlayer::Instance().SetStatus(i, PointsPacket.points[i]);

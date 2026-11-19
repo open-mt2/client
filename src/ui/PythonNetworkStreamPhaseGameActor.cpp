@@ -75,11 +75,9 @@ bool IsInvisibleRace(WORD raceNum)
 
 static SNetworkActorData s_kNetActorData;
 
-bool CPythonNetworkStream::RecvCharacterAppendPacket()
+bool CPythonNetworkStream::RecvCharacterAppendPacket(const protocol::Packet& value)
 {
-	TPacketGCCharacterAdd chrAddPacket;
-	if (!Recv(sizeof(chrAddPacket), &chrAddPacket))
-		return false;
+	TPacketGCCharacterAdd chrAddPacket = value.Get<TPacketGCCharacterAdd>();
 
 	__GlobalPositionToLocalPosition(chrAddPacket.x, chrAddPacket.y);
 
@@ -140,11 +138,9 @@ bool CPythonNetworkStream::RecvCharacterAppendPacket()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvCharacterAdditionalInfo()
+bool CPythonNetworkStream::RecvCharacterAdditionalInfo(const protocol::Packet& value)
 {
-	TPacketGCCharacterAdditionalInfo chrInfoPacket;
-	if (!Recv(sizeof(chrInfoPacket), &chrInfoPacket))
-		return false;
+	TPacketGCCharacterAdditionalInfo chrInfoPacket = value.Get<TPacketGCCharacterAdditionalInfo>();
 
 	SNetworkActorData kNetActorData = s_kNetActorData;
 	if (IsInvisibleRace(kNetActorData.m_dwRace))
@@ -173,12 +169,10 @@ bool CPythonNetworkStream::RecvCharacterAdditionalInfo()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvCharacterAppendPacketNew()
+bool CPythonNetworkStream::RecvCharacterAppendPacketNew(const protocol::Packet& value)
 {
 	TraceError("TPacketGCCharacterAdd2 is an unwritten packet.");
-	TPacketGCCharacterAdd2 chrAddPacket;
-	if (!Recv(sizeof(chrAddPacket), &chrAddPacket))
-		return false;
+	TPacketGCCharacterAdd2 chrAddPacket = value.Get<TPacketGCCharacterAdd2>();
 	if (IsInvisibleRace(chrAddPacket.wRaceNum))
 		return true;
 
@@ -210,11 +204,9 @@ bool CPythonNetworkStream::RecvCharacterAppendPacketNew()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvCharacterUpdatePacket()
+bool CPythonNetworkStream::RecvCharacterUpdatePacket(const protocol::Packet& value)
 {
-	TPacketGCCharacterUpdate chrUpdatePacket;
-	if (!Recv(sizeof(chrUpdatePacket), &chrUpdatePacket))
-		return false;
+	TPacketGCCharacterUpdate chrUpdatePacket = value.Get<TPacketGCCharacterUpdate>();
 
 	SNetworkUpdateActorData kNetUpdateActorData;
 	kNetUpdateActorData.m_dwGuildID = chrUpdatePacket.dwGuildID;
@@ -235,11 +227,9 @@ bool CPythonNetworkStream::RecvCharacterUpdatePacket()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvCharacterUpdatePacketNew()
+bool CPythonNetworkStream::RecvCharacterUpdatePacketNew(const protocol::Packet& value)
 {
-	TPacketGCCharacterUpdate2 chrUpdatePacket;
-	if (!Recv(sizeof(chrUpdatePacket), &chrUpdatePacket))
-		return false;
+	TPacketGCCharacterUpdate2 chrUpdatePacket = value.Get<TPacketGCCharacterUpdate2>();
 
 	SNetworkUpdateActorData kNetUpdateActorData;
 	kNetUpdateActorData.m_dwGuildID = chrUpdatePacket.dwGuildID;
@@ -325,15 +315,9 @@ void CPythonNetworkStream::__RecvCharacterUpdatePacket(SNetworkUpdateActorData* 
 	}
 }
 
-bool CPythonNetworkStream::RecvCharacterDeletePacket()
+bool CPythonNetworkStream::RecvCharacterDeletePacket(const protocol::Packet& value)
 {
-	TPacketGCCharacterDelete chrDelPacket;
-
-	if (!Recv(sizeof(chrDelPacket), &chrDelPacket))
-	{
-		TraceError("CPythonNetworkStream::RecvCharacterDeletePacket - Recv Error");
-		return false;
-	}
+	TPacketGCCharacterDelete chrDelPacket = value.Get<TPacketGCCharacterDelete>();
 
 	m_rokNetActorMgr->RemoveActor(chrDelPacket.dwVID);
 
@@ -346,14 +330,9 @@ bool CPythonNetworkStream::RecvCharacterDeletePacket()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvCharacterMovePacket()
+bool CPythonNetworkStream::RecvCharacterMovePacket(const protocol::Packet& value)
 {
-	TPacketGCMove kMovePacket;
-	if (!Recv(sizeof(TPacketGCMove), &kMovePacket))
-	{
-		Tracen("CPythonNetworkStream::RecvCharacterMovePacket - PACKET READ ERROR");
-		return false;
-	}
+	TPacketGCMove kMovePacket = value.Get<TPacketGCMove>();
 
 	__GlobalPositionToLocalPosition(kMovePacket.lX, kMovePacket.lY);
 
@@ -372,12 +351,9 @@ bool CPythonNetworkStream::RecvCharacterMovePacket()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvOwnerShipPacket()
+bool CPythonNetworkStream::RecvOwnerShipPacket(const protocol::Packet& value)
 {
-	TPacketGCOwnership kPacketOwnership;
-
-	if (!Recv(sizeof(kPacketOwnership), &kPacketOwnership))
-		return false;
+	TPacketGCOwnership kPacketOwnership = value.Get<TPacketGCOwnership>();
 
 	m_rokNetActorMgr->SetActorOwner(kPacketOwnership.dwOwnerVID, kPacketOwnership.dwVictimVID);
 
@@ -422,12 +398,10 @@ bool CPythonNetworkStream::RecvSyncPositionPacket()
 }
 
 /*
-bool CPythonNetworkStream::RecvCharacterAppendPacket()
+bool CPythonNetworkStream::RecvCharacterAppendPacket(const protocol::Packet& value)
 {
-	TPacketGCCharacterAdd chrAddPacket;
+	TPacketGCCharacterAdd chrAddPacket = value.Get<TPacketGCCharacterAdd>();
 
-	if (!Recv(sizeof(chrAddPacket), &chrAddPacket))
-		return false;
 
 	__GlobalPositionToLocalPosition(chrAddPacket.lX, chrAddPacket.lY);
 

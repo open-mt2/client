@@ -11,61 +11,17 @@ void CPythonNetworkStream::LoginPhase()
 	if (!CheckPacket(&header))
 		return;
 
+	if (protocol::Has(header))
+	{
+		if (DecodeProtocolPacket(header))
+			return;
+
+		RecvErrorPacket(header);
+		return;
+	}
+
 	switch (header)
 	{
-		case HEADER_GC_PHASE:
-			if (RecvPhasePacket())
-				return;
-			break;
-
-		case HEADER_GC_LOGIN_SUCCESS3:
-			if (__RecvLoginSuccessPacket3())
-				return;
-			break;
-		case HEADER_GC_LOGIN_SUCCESS4:
-			if (__RecvLoginSuccessPacket4())
-				return;
-			break;
-
-		case HEADER_GC_LOGIN_FAILURE:
-			if (__RecvLoginFailurePacket())
-				return;
-			break;
-
-		case HEADER_GC_EMPIRE:
-			if (__RecvEmpirePacket())
-				return;
-			break;
-
-		case HEADER_GC_CHINA_MATRIX_CARD:
-			if (__RecvChinaMatrixCardPacket())
-				return;
-			break;
-
-		case HEADER_GC_RUNUP_MATRIX_QUIZ:
-			if (__RecvRunupMatrixQuizPacket())
-				return;
-			break;
-
-		case HEADER_GC_NEWCIBN_PASSPOD_REQUEST:
-			if (__RecvNEWCIBNPasspodRequestPacket())
-				return;
-			break;
-		case HEADER_GC_NEWCIBN_PASSPOD_FAILURE:
-			if (__RecvNEWCIBNPasspodFailurePacket())
-				return;
-			break;
-
-		case HEADER_GC_LOGIN_KEY:
-			if (__RecvLoginKeyPacket())
-				return;
-			break;
-
-		case HEADER_GC_PING:
-			if (RecvPingPacket())
-				return;
-			break;
-
 		default:
 			if (RecvDefaultPacket(header))
 				return;
@@ -121,22 +77,17 @@ void CPythonNetworkStream::SetLoginPhase()
 	}
 }
 
-bool CPythonNetworkStream::__RecvEmpirePacket()
+bool CPythonNetworkStream::__RecvEmpirePacket(const protocol::Packet& value)
 {
-	TPacketGCEmpire kPacketEmpire;
-	if (!Recv(sizeof(kPacketEmpire), &kPacketEmpire))
-		return false;
+	TPacketGCEmpire kPacketEmpire = value.Get<TPacketGCEmpire>();
 
 	m_dwEmpireID = kPacketEmpire.bEmpire;
 	return true;
 }
 
-bool CPythonNetworkStream::__RecvLoginSuccessPacket3()
+bool CPythonNetworkStream::__RecvLoginSuccessPacket3(const protocol::Packet& value)
 {
-	TPacketGCLoginSuccess3 kPacketLoginSuccess;
-
-	if (!Recv(sizeof(kPacketLoginSuccess), &kPacketLoginSuccess))
-		return false;
+	TPacketGCLoginSuccess3 kPacketLoginSuccess = value.Get<TPacketGCLoginSuccess3>();
 
 	for (int i = 0; i < PLAYER_PER_ACCOUNT3; ++i)
 	{
@@ -159,12 +110,9 @@ bool CPythonNetworkStream::__RecvLoginSuccessPacket3()
 	return true;
 }
 
-bool CPythonNetworkStream::__RecvLoginSuccessPacket4()
+bool CPythonNetworkStream::__RecvLoginSuccessPacket4(const protocol::Packet& value)
 {
-	TPacketGCLoginSuccess4 kPacketLoginSuccess;
-
-	if (!Recv(sizeof(kPacketLoginSuccess), &kPacketLoginSuccess))
-		return false;
+	TPacketGCLoginSuccess4 kPacketLoginSuccess = value.Get<TPacketGCLoginSuccess4>();
 
 	for (int i = 0; i < PLAYER_PER_ACCOUNT4; ++i)
 	{
@@ -199,11 +147,9 @@ void CPythonNetworkStream::OnConnectFailure()
 	}
 }
 
-bool CPythonNetworkStream::__RecvLoginFailurePacket()
+bool CPythonNetworkStream::__RecvLoginFailurePacket(const protocol::Packet& value)
 {
-	TPacketGCLoginFailure packet_failure;
-	if (!Recv(sizeof(TPacketGCLoginFailure), &packet_failure))
-		return false;
+	TPacketGCLoginFailure packet_failure = value.Get<TPacketGCLoginFailure>();
 
 	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_LOGIN], "OnLoginFailure", Py_BuildValue("(s)", packet_failure.szStatus));
 #ifdef _DEBUG
@@ -279,11 +225,9 @@ bool CPythonNetworkStream::SendLoginPacketNew(const char* c_szName, const char* 
 	return true;
 }
 
-bool CPythonNetworkStream::__RecvRunupMatrixQuizPacket()
+bool CPythonNetworkStream::__RecvRunupMatrixQuizPacket(const protocol::Packet& value)
 {
-	TPacketGCRunupMatrixQuiz kMatrixQuizPacket;
-	if (!Recv(sizeof(TPacketGCRunupMatrixQuiz), &kMatrixQuizPacket))
-		return false;
+	TPacketGCRunupMatrixQuiz kMatrixQuizPacket = value.Get<TPacketGCRunupMatrixQuiz>();
 
 	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_LOGIN], "BINARY_OnRunupMatrixQuiz", Py_BuildValue("(s)", kMatrixQuizPacket.szQuiz));
 	return true;
@@ -303,21 +247,17 @@ bool CPythonNetworkStream::SendRunupMatrixAnswerPacket(const char* c_szMatrixCar
 	return SendSequence();
 }
 
-bool CPythonNetworkStream::__RecvNEWCIBNPasspodRequestPacket()
+bool CPythonNetworkStream::__RecvNEWCIBNPasspodRequestPacket(const protocol::Packet& value)
 {
-	TPacketGCNEWCIBNPasspodRequest kRequestPacket;
-	if (!Recv(sizeof(kRequestPacket), &kRequestPacket))
-		return false;
+	TPacketGCNEWCIBNPasspodRequest kRequestPacket = value.Get<TPacketGCNEWCIBNPasspodRequest>();
 
 	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_LOGIN], "BINARY_OnNEWCIBNPasspodRequest", Py_BuildValue("()"));
 	return true;
 }
 
-bool CPythonNetworkStream::__RecvNEWCIBNPasspodFailurePacket()
+bool CPythonNetworkStream::__RecvNEWCIBNPasspodFailurePacket(const protocol::Packet& value)
 {
-	TPacketGCNEWCIBNPasspodFailure kFailurePacket;
-	if (!Recv(sizeof(kFailurePacket), &kFailurePacket))
-		return false;
+	TPacketGCNEWCIBNPasspodFailure kFailurePacket = value.Get<TPacketGCNEWCIBNPasspodFailure>();
 
 	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_LOGIN], "BINARY_OnNEWCIBNPasspodFailure", Py_BuildValue("()"));
 	return true;
@@ -358,11 +298,9 @@ bool CPythonNetworkStream::SendChinaMatrixCardPacket(const char* c_szMatrixCardS
 #define ROW(rows, i) ((rows >> ((4 - i - 1) * 8)) & 0x000000FF)
 #define COL(cols, i) ((cols >> ((4 - i - 1) * 8)) & 0x000000FF)
 
-bool CPythonNetworkStream::__RecvChinaMatrixCardPacket()
+bool CPythonNetworkStream::__RecvChinaMatrixCardPacket(const protocol::Packet& value)
 {
-	TPacketGCChinaMatrixCard kMatrixCardPacket;
-	if (!Recv(sizeof(TPacketGCChinaMatrixCard), &kMatrixCardPacket))
-		return false;
+	TPacketGCChinaMatrixCard kMatrixCardPacket = value.Get<TPacketGCChinaMatrixCard>();
 
 	PyObject* pyValue = Py_BuildValue("(iiiiiiii)", ROW(kMatrixCardPacket.dwRows, 0),
 									  ROW(kMatrixCardPacket.dwRows, 1),
@@ -376,11 +314,9 @@ bool CPythonNetworkStream::__RecvChinaMatrixCardPacket()
 	return true;
 }
 
-bool CPythonNetworkStream::__RecvLoginKeyPacket()
+bool CPythonNetworkStream::__RecvLoginKeyPacket(const protocol::Packet& value)
 {
-	TPacketGCLoginKey kLoginKeyPacket;
-	if (!Recv(sizeof(TPacketGCLoginKey), &kLoginKeyPacket))
-		return false;
+	TPacketGCLoginKey kLoginKeyPacket = value.Get<TPacketGCLoginKey>();
 
 	m_dwLoginKey = kLoginKeyPacket.dwLoginKey;
 	m_isWaitLoginKey = FALSE;

@@ -422,39 +422,143 @@ bool CPythonNetworkStream::CheckPacket(TPacketHeader* pRetHeader)
 	return true;
 }
 
+bool CPythonNetworkStream::DispatchProtocolPacket(const protocol::Packet& value)
+{
+	using Handler = bool (CPythonNetworkStream::*)(const protocol::Packet&);
+
+	struct FEntry
+	{
+			uint8_t header;
+			Handler handler;
+	};
+
+	static const FEntry entries[] = {
+		{HEADER_GC_QUICKSLOT_ADD, &CPythonNetworkStream::RecvQuickSlotAddPacket},
+		{HEADER_GC_QUICKSLOT_DEL, &CPythonNetworkStream::RecvQuickSlotDelPacket},
+		{HEADER_GC_ITEM_OWNERSHIP, &CPythonNetworkStream::RecvItemOwnership},
+		{HEADER_GC_TARGET, &CPythonNetworkStream::RecvTargetPacket},
+		{HEADER_GC_ADD_FLY_TARGETING, &CPythonNetworkStream::RecvAddFlyTargetingPacket},
+		{HEADER_GC_AFFECT_ADD, &CPythonNetworkStream::RecvAffectAddPacket},
+		{HEADER_GC_AFFECT_REMOVE, &CPythonNetworkStream::RecvAffectRemovePacket},
+		{HEADER_GC_CHANGE_NAME, &CPythonNetworkStream::__RecvChangeName},
+		{HEADER_GC_CHANGE_SKILL_GROUP, &CPythonNetworkStream::RecvChangeSkillGroupPacket},
+		{HEADER_GC_CHANGE_SPEED, &CPythonNetworkStream::RecvChangeSpeedPacket},
+		{HEADER_GC_CHANNEL, &CPythonNetworkStream::RecvChannelPacket},
+		{HEADER_GC_CHARACTER_ADD, &CPythonNetworkStream::RecvCharacterAppendPacket},
+		{HEADER_GC_CHARACTER_ADD2, &CPythonNetworkStream::RecvCharacterAppendPacketNew},
+		{HEADER_GC_CHARACTER_DEL, &CPythonNetworkStream::RecvCharacterDeletePacket},
+		{HEADER_GC_CHARACTER_MOVE, &CPythonNetworkStream::RecvCharacterMovePacket},
+		{HEADER_GC_CHARACTER_POSITION, &CPythonNetworkStream::RecvCharacterPositionPacket},
+		{HEADER_GC_CHARACTER_UPDATE, &CPythonNetworkStream::RecvCharacterUpdatePacket},
+		{HEADER_GC_CHARACTER_UPDATE2, &CPythonNetworkStream::RecvCharacterUpdatePacketNew},
+		{HEADER_GC_CHAR_ADDITIONAL_INFO, &CPythonNetworkStream::RecvCharacterAdditionalInfo},
+		{HEADER_GC_CHINA_MATRIX_CARD, &CPythonNetworkStream::__RecvChinaMatrixCardPacket},
+		{HEADER_GC_CREATE_FLY, &CPythonNetworkStream::RecvCreateFlyPacket},
+		{HEADER_GC_DAMAGE_INFO, &CPythonNetworkStream::RecvDamageInfoPacket},
+		{HEADER_GC_DEAD, &CPythonNetworkStream::RecvDeadPacket},
+		{HEADER_GC_DIG_MOTION, &CPythonNetworkStream::RecvDigMotionPacket},
+		{HEADER_GC_DRAGON_SOUL_REFINE, &CPythonNetworkStream::RecvDragonSoulRefine},
+		{HEADER_GC_EMPIRE, &CPythonNetworkStream::__RecvEmpirePacket},
+		{HEADER_GC_EXCHANGE, &CPythonNetworkStream::RecvExchangePacket},
+		{HEADER_GC_FISHING, &CPythonNetworkStream::RecvFishing},
+		{HEADER_GC_FLY_TARGETING, &CPythonNetworkStream::RecvFlyTargetingPacket},
+		{HEADER_GC_HANDSHAKE_OK, &CPythonNetworkStream::RecvHandshakeOKPacket},
+		{HEADER_GC_ITEM_GROUND_ADD, &CPythonNetworkStream::RecvItemGroundAddPacket},
+		{HEADER_GC_ITEM_GROUND_DEL, &CPythonNetworkStream::RecvItemGroundDelPacket},
+		{HEADER_GC_ITEM_SET, &CPythonNetworkStream::RecvItemSetPacket},
+		{HEADER_GC_ITEM_SET2, &CPythonNetworkStream::RecvItemSetPacket2},
+		{HEADER_GC_ITEM_UPDATE, &CPythonNetworkStream::RecvItemUpdatePacket},
+		{HEADER_GC_ITEM_USE, &CPythonNetworkStream::RecvItemUsePacket},
+		{HEADER_GC_LOGIN_FAILURE, &CPythonNetworkStream::__RecvLoginFailurePacket},
+		{HEADER_GC_LOGIN_KEY, &CPythonNetworkStream::__RecvLoginKeyPacket},
+		{HEADER_GC_LOGIN_SUCCESS3, &CPythonNetworkStream::__RecvLoginSuccessPacket3},
+		{HEADER_GC_LOGIN_SUCCESS4, &CPythonNetworkStream::__RecvLoginSuccessPacket4},
+		{HEADER_GC_LOVER_INFO, &CPythonNetworkStream::RecvLoverInfoPacket},
+		{HEADER_GC_LOVE_POINT_UPDATE, &CPythonNetworkStream::RecvLovePointUpdatePacket},
+		{HEADER_GC_MAIN_CHARACTER, &CPythonNetworkStream::RecvMainCharacter},
+		{HEADER_GC_MAIN_CHARACTER2_EMPIRE, &CPythonNetworkStream::RecvMainCharacter2_EMPIRE},
+		{HEADER_GC_MAIN_CHARACTER3_BGM, &CPythonNetworkStream::RecvMainCharacter3_BGM},
+		{HEADER_GC_MAIN_CHARACTER4_BGM_VOL, &CPythonNetworkStream::RecvMainCharacter4_BGM_VOL},
+		{HEADER_GC_MALL_DEL, &CPythonNetworkStream::RecvMallItemDelPacket},
+		{HEADER_GC_MALL_OPEN, &CPythonNetworkStream::RecvMallOpenPacket},
+		{HEADER_GC_MALL_SET, &CPythonNetworkStream::RecvMallItemSetPacket},
+		{HEADER_GC_MOTION, &CPythonNetworkStream::RecvMotionPacket},
+		{HEADER_GC_MOUNT, &CPythonNetworkStream::RecvMountPacket},
+		{HEADER_GC_NEWCIBN_PASSPOD_FAILURE, &CPythonNetworkStream::__RecvNEWCIBNPasspodFailurePacket},
+		{HEADER_GC_NEWCIBN_PASSPOD_REQUEST, &CPythonNetworkStream::__RecvNEWCIBNPasspodRequestPacket},
+		{HEADER_GC_OWNERSHIP, &CPythonNetworkStream::RecvOwnerShipPacket},
+		{HEADER_GC_PARTY_ADD, &CPythonNetworkStream::RecvPartyAdd},
+		{HEADER_GC_PARTY_INVITE, &CPythonNetworkStream::RecvPartyInvite},
+		{HEADER_GC_PARTY_LINK, &CPythonNetworkStream::RecvPartyLink},
+		{HEADER_GC_PARTY_PARAMETER, &CPythonNetworkStream::RecvPartyParameter},
+		{HEADER_GC_PARTY_REMOVE, &CPythonNetworkStream::RecvPartyRemove},
+		{HEADER_GC_PARTY_UNLINK, &CPythonNetworkStream::RecvPartyUnlink},
+		{HEADER_GC_PARTY_UPDATE, &CPythonNetworkStream::RecvPartyUpdate},
+		{HEADER_GC_PHASE, &CPythonNetworkStream::RecvPhasePacket},
+		{HEADER_GC_PING, &CPythonNetworkStream::RecvPingPacket},
+		{HEADER_GC_PLAYER_CREATE_FAILURE, &CPythonNetworkStream::__RecvPlayerCreateFailurePacket},
+		{HEADER_GC_PLAYER_CREATE_SUCCESS, &CPythonNetworkStream::__RecvPlayerCreateSuccessPacket},
+		{HEADER_GC_PLAYER_DELETE_SUCCESS, &CPythonNetworkStream::__RecvPlayerDestroySuccessPacket},
+		{HEADER_GC_PLAYER_DELETE_WRONG_SOCIAL_ID, &CPythonNetworkStream::__RecvPlayerDestroyFailurePacket},
+		{HEADER_GC_PLAYER_POINTS, &CPythonNetworkStream::__RecvPlayerPoints},
+		{HEADER_GC_PLAYER_POINT_CHANGE, &CPythonNetworkStream::RecvPointChange},
+		{HEADER_GC_PVP, &CPythonNetworkStream::RecvPVPPacket},
+		{HEADER_GC_QUEST_CONFIRM, &CPythonNetworkStream::RecvQuestConfirmPacket},
+		{HEADER_GC_QUICKSLOT_SWAP, &CPythonNetworkStream::RecvQuickSlotMovePacket},
+		{HEADER_GC_REFINE_INFORMATION, &CPythonNetworkStream::RecvRefineInformationPacket},
+		{HEADER_GC_REFINE_INFORMATION_NEW, &CPythonNetworkStream::RecvRefineInformationPacketNew},
+		{HEADER_GC_REQUEST_MAKE_GUILD, &CPythonNetworkStream::RecvRequestMakeGuild},
+		{HEADER_GC_RUNUP_MATRIX_QUIZ, &CPythonNetworkStream::__RecvRunupMatrixQuizPacket},
+		{HEADER_GC_SAFEBOX_DEL, &CPythonNetworkStream::RecvSafeBoxDelPacket},
+		{HEADER_GC_SAFEBOX_MONEY_CHANGE, &CPythonNetworkStream::RecvSafeBoxMoneyChangePacket},
+		{HEADER_GC_SAFEBOX_SET, &CPythonNetworkStream::RecvSafeBoxSetPacket},
+		{HEADER_GC_SAFEBOX_SIZE, &CPythonNetworkStream::RecvSafeBoxSizePacket},
+		{HEADER_GC_SAFEBOX_WRONG_PASSWORD, &CPythonNetworkStream::RecvSafeBoxWrongPasswordPacket},
+		{HEADER_GC_SEPCIAL_EFFECT, &CPythonNetworkStream::RecvSpecialEffect},
+		{HEADER_GC_SHOP_SIGN, &CPythonNetworkStream::RecvShopSignPacket},
+		{HEADER_GC_SKILL_LEVEL, &CPythonNetworkStream::RecvSkillLevel},
+		{HEADER_GC_SKILL_LEVEL_NEW, &CPythonNetworkStream::RecvSkillLevelNew},
+		{HEADER_GC_SPECIFIC_EFFECT, &CPythonNetworkStream::RecvSpecificEffect},
+		{HEADER_GC_STUN, &CPythonNetworkStream::RecvStunPacket},
+		{HEADER_GC_TARGET_CREATE_NEW, &CPythonNetworkStream::RecvTargetCreatePacketNew},
+		{HEADER_GC_TARGET_DELETE, &CPythonNetworkStream::RecvTargetDeletePacket},
+		{HEADER_GC_TARGET_UPDATE, &CPythonNetworkStream::RecvTargetUpdatePacket},
+		{HEADER_GC_TIME, &CPythonNetworkStream::RecvTimePacket},
+		{HEADER_GC_VIEW_EQUIP, &CPythonNetworkStream::RecvViewEquipPacket},
+		{HEADER_GC_WALK_MODE, &CPythonNetworkStream::RecvWalkModePacket},
+		{HEADER_GC_WARP, &CPythonNetworkStream::RecvWarpPacket},
+	};
+
+	for (const FEntry& entry : entries)
+	{
+		if (entry.header == value.header)
+			return (this->*entry.handler)(value);
+	}
+
+	return false;
+}
+
 bool CPythonNetworkStream::DecodeProtocolPacket(TPacketHeader header)
 {
 	std::size_t size = 0;
 
-	if (!protocol::Size(header, &size) || size > protocol::kMaxWireSize)
+	if (!protocol::Size(header, &size) || size > protocol::kMaxPacketSize)
 		return false;
 
-	unsigned char bytes[protocol::kMaxWireSize];
+	std::array<uint8_t, protocol::kMaxPacketSize> bytes;
 
-	if (!Peek(static_cast<int>(size), bytes))
+	if (!Peek(static_cast<int>(size), bytes.data()))
 		return false;
 
-	protocol::Value value;
+	protocol::Packet value;
 
-	if (!protocol::Decode(header, bytes, size, &value))
+	if (!protocol::Decode(header, bytes.data(), size, &value))
 		return false;
 
 	if (!Recv(static_cast<int>(size)))
 		return false;
 
-	if (const auto* quickSlotAdd = std::get_if<protocol::QuickSlotAddValue>(&value))
-		return RecvQuickSlotAddPacket(*quickSlotAdd);
-
-	if (const auto* quickSlotDel = std::get_if<protocol::QuickSlotDelValue>(&value))
-		return RecvQuickSlotDelPacket(*quickSlotDel);
-
-	if (const auto* ownership = std::get_if<protocol::ItemOwnershipValue>(&value))
-		return RecvItemOwnership(*ownership);
-
-	if (const auto* target = std::get_if<protocol::TargetValue>(&value))
-		return RecvTargetPacket(*target);
-
-	return false;
+	return DispatchProtocolPacket(value);
 }
 
 bool CPythonNetworkStream::RecvErrorPacket(int header)
@@ -466,12 +570,9 @@ bool CPythonNetworkStream::RecvErrorPacket(int header)
 	return true;
 }
 
-bool CPythonNetworkStream::RecvPhasePacket()
+bool CPythonNetworkStream::RecvPhasePacket(const protocol::Packet& value)
 {
-	TPacketGCPhase packet_phase;
-
-	if (!Recv(sizeof(TPacketGCPhase), &packet_phase))
-		return false;
+	const TPacketGCPhase packet_phase = value.Get<TPacketGCPhase>();
 
 	switch (packet_phase.phase)
 	{
@@ -512,14 +613,11 @@ bool CPythonNetworkStream::RecvPhasePacket()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvPingPacket()
+bool CPythonNetworkStream::RecvPingPacket(const protocol::Packet& value)
 {
 	Tracef("recv ping packet.\n");
 
-	TPacketGCPing kPacketPing;
-
-	if (!Recv(sizeof(TPacketGCPing), &kPacketPing))
-		return false;
+	const TPacketGCPing kPacketPing = value.Get<TPacketGCPing>();
 
 	m_dwLastGamePingTime = ELTimer_GetMSec();
 

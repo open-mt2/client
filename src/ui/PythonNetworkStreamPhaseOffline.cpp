@@ -10,12 +10,13 @@ void CPythonNetworkStream::OffLinePhase()
 	if (!CheckPacket(&header))
 		return;
 
-	switch (header)
+	if (protocol::Has(header))
 	{
-		case HEADER_GC_PHASE:
-			if (RecvPhasePacket())
-				return;
-			break;
+		if (DecodeProtocolPacket(header))
+			return;
+
+		RecvErrorPacket(header);
+		return;
 	}
 
 	RecvErrorPacket(header);

@@ -41,74 +41,19 @@ void CPythonNetworkStream::SelectPhase()
 	if (!CheckPacket(&header))
 		return;
 
-	switch (header)
+	if (protocol::Has(header))
 	{
-		case HEADER_GC_PHASE:
-			if (RecvPhasePacket())
-				return;
-			break;
-
-		case HEADER_GC_EMPIRE:
-			if (__RecvEmpirePacket())
-				return;
-			break;
-
-		case HEADER_GC_LOGIN_SUCCESS3:
-			if (__RecvLoginSuccessPacket3())
-				return;
-			break;
-
-		case HEADER_GC_LOGIN_SUCCESS4:
-			if (__RecvLoginSuccessPacket4())
-				return;
-			break;
-
-		case HEADER_GC_PLAYER_CREATE_SUCCESS:
-			if (__RecvPlayerCreateSuccessPacket())
-				return;
-			break;
-
-		case HEADER_GC_PLAYER_CREATE_FAILURE:
-			if (__RecvPlayerCreateFailurePacket())
-				return;
-			break;
-
-		case HEADER_GC_PLAYER_DELETE_WRONG_SOCIAL_ID:
-			if (__RecvPlayerDestroyFailurePacket())
-				return;
-			break;
-
-		case HEADER_GC_PLAYER_DELETE_SUCCESS:
-			if (__RecvPlayerDestroySuccessPacket())
-				return;
-			break;
-
-		case HEADER_GC_CHANGE_NAME:
-			if (__RecvChangeName())
-				return;
-			break;
-
-		case HEADER_GC_HANDSHAKE:
-			RecvHandshakePacket();
+		if (DecodeProtocolPacket(header))
 			return;
-			break;
 
-		case HEADER_GC_HANDSHAKE_OK:
-			RecvHandshakeOKPacket();
-			return;
-			break;
+		RecvErrorPacket(header);
+		return;
+	}
 
-		case HEADER_GC_PLAYER_POINT_CHANGE:
-			TPacketGCPointChange PointChange;
-			Recv(sizeof(TPacketGCPointChange), &PointChange);
-			return;
-			break;
-
-		///////////////////////////////////////////////////////////////////////////////////////////
-		case HEADER_GC_PING:
-			if (RecvPingPacket())
-				return;
-			break;
+	if (HEADER_GC_HANDSHAKE == header)
+	{
+		RecvHandshakePacket();
+		return;
 	}
 
 	RecvErrorPacket(header);
@@ -202,12 +147,9 @@ bool CPythonNetworkStream::SendChangeNamePacket(BYTE index, const char* name)
 	return SendSequence();
 }
 
-bool CPythonNetworkStream::__RecvPlayerCreateSuccessPacket()
+bool CPythonNetworkStream::__RecvPlayerCreateSuccessPacket(const protocol::Packet& value)
 {
-	TPacketGCPlayerCreateSuccess kCreateSuccessPacket;
-
-	if (!Recv(sizeof(kCreateSuccessPacket), &kCreateSuccessPacket))
-		return false;
+	const TPacketGCPlayerCreateSuccess kCreateSuccessPacket = value.Get<TPacketGCPlayerCreateSuccess>();
 
 	if (kCreateSuccessPacket.bAccountCharacterSlot >= PLAYER_PER_ACCOUNT4)
 	{
@@ -221,23 +163,18 @@ bool CPythonNetworkStream::__RecvPlayerCreateSuccessPacket()
 	return true;
 }
 
-bool CPythonNetworkStream::__RecvPlayerCreateFailurePacket()
+bool CPythonNetworkStream::__RecvPlayerCreateFailurePacket(const protocol::Packet& value)
 {
-	TPacketGCCreateFailure packet;
-
-	if (!Recv(sizeof(TPacketGCCreateFailure), &packet))
-		return false;
+	const TPacketGCCreateFailure packet = value.Get<TPacketGCCreateFailure>();
 
 	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_CREATE], "OnCreateFailure", Py_BuildValue("(i)", packet.bType));
 	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_SELECT], "OnCreateFailure", Py_BuildValue("(i)", packet.bType));
 	return true;
 }
 
-bool CPythonNetworkStream::__RecvPlayerDestroySuccessPacket()
+bool CPythonNetworkStream::__RecvPlayerDestroySuccessPacket(const protocol::Packet& value)
 {
-	TPacketGCDestroyCharacterSuccess packet;
-	if (!Recv(sizeof(TPacketGCDestroyCharacterSuccess), &packet))
-		return false;
+	const TPacketGCDestroyCharacterSuccess packet = value.Get<TPacketGCDestroyCharacterSuccess>();
 
 	memset(&m_akSimplePlayerInfo[packet.account_index], 0, sizeof(m_akSimplePlayerInfo[packet.account_index]));
 	m_adwGuildID[packet.account_index] = 0;
@@ -247,21 +184,17 @@ bool CPythonNetworkStream::__RecvPlayerDestroySuccessPacket()
 	return true;
 }
 
-bool CPythonNetworkStream::__RecvPlayerDestroyFailurePacket()
+bool CPythonNetworkStream::__RecvPlayerDestroyFailurePacket(const protocol::Packet& value)
 {
-	TPacketGCBlank packet_blank;
-	if (!Recv(sizeof(TPacketGCBlank), &packet_blank))
-		return false;
+	const TPacketGCBlank packet_blank = value.Get<TPacketGCBlank>();
 
 	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_SELECT], "OnDeleteFailure", Py_BuildValue("()"));
 	return true;
 }
 
-bool CPythonNetworkStream::__RecvChangeName()
+bool CPythonNetworkStream::__RecvChangeName(const protocol::Packet& value)
 {
-	TPacketGCChangeName ChangeNamePacket;
-	if (!Recv(sizeof(TPacketGCChangeName), &ChangeNamePacket))
-		return false;
+	const TPacketGCChangeName ChangeNamePacket = value.Get<TPacketGCChangeName>();
 
 	for (int i = 0; i < PLAYER_PER_ACCOUNT4; ++i)
 	{

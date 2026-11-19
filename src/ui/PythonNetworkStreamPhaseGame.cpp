@@ -232,54 +232,8 @@ void CPythonNetworkStream::GamePhase()
 
 		switch (header)
 		{
-			case HEADER_GC_OBSERVER_ADD:
-				ret = RecvObserverAddPacket();
-				break;
-			case HEADER_GC_OBSERVER_REMOVE:
-				ret = RecvObserverRemovePacket();
-				break;
-			case HEADER_GC_OBSERVER_MOVE:
-				ret = RecvObserverMovePacket();
-				break;
-			case HEADER_GC_WARP:
-				ret = RecvWarpPacket();
-				break;
-
-			case HEADER_GC_PHASE:
-				ret = RecvPhasePacket();
-				return; // 도중에 Phase 가 바뀌면 일단 무조건 GamePhase 탈출 - [levites]
-				break;
-
-			case HEADER_GC_PVP:
-				ret = RecvPVPPacket();
-				break;
-
 			case HEADER_GC_DUEL_START:
 				ret = RecvDuelStartPacket();
-				break;
-
-			case HEADER_GC_CHARACTER_ADD:
-				ret = RecvCharacterAppendPacket();
-				break;
-
-			case HEADER_GC_CHAR_ADDITIONAL_INFO:
-				ret = RecvCharacterAdditionalInfo();
-				break;
-
-			case HEADER_GC_CHARACTER_ADD2:
-				ret = RecvCharacterAppendPacketNew();
-				break;
-
-			case HEADER_GC_CHARACTER_UPDATE:
-				ret = RecvCharacterUpdatePacket();
-				break;
-
-			case HEADER_GC_CHARACTER_UPDATE2:
-				ret = RecvCharacterUpdatePacketNew();
-				break;
-
-			case HEADER_GC_CHARACTER_DEL:
-				ret = RecvCharacterDeletePacket();
 				break;
 
 			case HEADER_GC_CHAT:
@@ -290,135 +244,20 @@ void CPythonNetworkStream::GamePhase()
 				ret = RecvSyncPositionPacket();
 				break;
 
-			case HEADER_GC_OWNERSHIP:
-				ret = RecvOwnerShipPacket();
-				break;
-
 			case HEADER_GC_WHISPER:
 				ret = RecvWhisperPacket();
-				break;
-
-			case HEADER_GC_CHARACTER_MOVE:
-				ret = RecvCharacterMovePacket();
-				break;
-
-			// Position
-			case HEADER_GC_CHARACTER_POSITION:
-				ret = RecvCharacterPositionPacket();
-				break;
-
-			// Battle Packet
-			case HEADER_GC_STUN:
-				ret = RecvStunPacket();
-				break;
-
-			case HEADER_GC_DEAD:
-				ret = RecvDeadPacket();
-				break;
-
-			case HEADER_GC_PLAYER_POINT_CHANGE:
-				ret = RecvPointChange();
-				break;
-
-			// item packet.
-			case HEADER_GC_ITEM_SET:
-				ret = RecvItemSetPacket();
-				break;
-
-			case HEADER_GC_ITEM_SET2:
-				ret = RecvItemSetPacket2();
-				break;
-
-			case HEADER_GC_ITEM_USE:
-				ret = RecvItemUsePacket();
-				break;
-
-			case HEADER_GC_ITEM_UPDATE:
-				ret = RecvItemUpdatePacket();
-				break;
-
-			case HEADER_GC_ITEM_GROUND_ADD:
-				ret = RecvItemGroundAddPacket();
-				break;
-
-			case HEADER_GC_ITEM_GROUND_DEL:
-				ret = RecvItemGroundDelPacket();
-				break;
-
-			case HEADER_GC_QUICKSLOT_SWAP:
-				ret = RecvQuickSlotMovePacket();
-				break;
-
-			case HEADER_GC_MOTION:
-				ret = RecvMotionPacket();
 				break;
 
 			case HEADER_GC_SHOP:
 				ret = RecvShopPacket();
 				break;
 
-			case HEADER_GC_SHOP_SIGN:
-				ret = RecvShopSignPacket();
-				break;
-
-			case HEADER_GC_EXCHANGE:
-				ret = RecvExchangePacket();
-				break;
-
 			case HEADER_GC_QUEST_INFO:
 				ret = RecvQuestInfoPacket();
 				break;
 
-			case HEADER_GC_REQUEST_MAKE_GUILD:
-				ret = RecvRequestMakeGuild();
-				break;
-
-			case HEADER_GC_PING:
-				ret = RecvPingPacket();
-				break;
-
 			case HEADER_GC_SCRIPT:
 				ret = RecvScriptPacket();
-				break;
-
-			case HEADER_GC_QUEST_CONFIRM:
-				ret = RecvQuestConfirmPacket();
-				break;
-
-			case HEADER_GC_DAMAGE_INFO:
-				ret = RecvDamageInfoPacket();
-				break;
-
-			case HEADER_GC_MOUNT:
-				ret = RecvMountPacket();
-				break;
-
-			case HEADER_GC_CHANGE_SPEED:
-				ret = RecvChangeSpeedPacket();
-				break;
-
-			case HEADER_GC_PLAYER_POINTS:
-				ret = __RecvPlayerPoints();
-				break;
-
-			case HEADER_GC_CREATE_FLY:
-				ret = RecvCreateFlyPacket();
-				break;
-
-			case HEADER_GC_FLY_TARGETING:
-				ret = RecvFlyTargetingPacket();
-				break;
-
-			case HEADER_GC_ADD_FLY_TARGETING:
-				ret = RecvAddFlyTargetingPacket();
-				break;
-
-			case HEADER_GC_SKILL_LEVEL:
-				ret = RecvSkillLevel();
-				break;
-
-			case HEADER_GC_SKILL_LEVEL_NEW:
-				ret = RecvSkillLevelNew();
 				break;
 
 			case HEADER_GC_MESSENGER:
@@ -429,96 +268,12 @@ void CPythonNetworkStream::GamePhase()
 				ret = RecvGuild();
 				break;
 
-			case HEADER_GC_PARTY_INVITE:
-				ret = RecvPartyInvite();
-				break;
-
-			case HEADER_GC_PARTY_ADD:
-				ret = RecvPartyAdd();
-				break;
-
-			case HEADER_GC_PARTY_UPDATE:
-				ret = RecvPartyUpdate();
-				break;
-
-			case HEADER_GC_PARTY_REMOVE:
-				ret = RecvPartyRemove();
-				break;
-
-			case HEADER_GC_PARTY_LINK:
-				ret = RecvPartyLink();
-				break;
-
-			case HEADER_GC_PARTY_UNLINK:
-				ret = RecvPartyUnlink();
-				break;
-
-			case HEADER_GC_PARTY_PARAMETER:
-				ret = RecvPartyParameter();
-				break;
-
-			case HEADER_GC_SAFEBOX_SET:
-				ret = RecvSafeBoxSetPacket();
-				break;
-
-			case HEADER_GC_SAFEBOX_DEL:
-				ret = RecvSafeBoxDelPacket();
-				break;
-
-			case HEADER_GC_SAFEBOX_WRONG_PASSWORD:
-				ret = RecvSafeBoxWrongPasswordPacket();
-				break;
-
-			case HEADER_GC_SAFEBOX_SIZE:
-				ret = RecvSafeBoxSizePacket();
-				break;
-
-			case HEADER_GC_SAFEBOX_MONEY_CHANGE:
-				ret = RecvSafeBoxMoneyChangePacket();
-				break;
-
-			case HEADER_GC_FISHING:
-				ret = RecvFishing();
-				break;
-
 			case HEADER_GC_DUNGEON:
 				ret = RecvDungeon();
 				break;
 
-			case HEADER_GC_TIME:
-				ret = RecvTimePacket();
-				break;
-
-			case HEADER_GC_WALK_MODE:
-				ret = RecvWalkModePacket();
-				break;
-
-			case HEADER_GC_CHANGE_SKILL_GROUP:
-				ret = RecvChangeSkillGroupPacket();
-				break;
-
-			case HEADER_GC_REFINE_INFORMATION:
-				ret = RecvRefineInformationPacket();
-				break;
-
-			case HEADER_GC_REFINE_INFORMATION_NEW:
-				ret = RecvRefineInformationPacketNew();
-				break;
-
-			case HEADER_GC_SEPCIAL_EFFECT:
-				ret = RecvSpecialEffect();
-				break;
-
 			case HEADER_GC_NPC_POSITION:
 				ret = RecvNPCList();
-				break;
-
-			case HEADER_GC_CHANNEL:
-				ret = RecvChannelPacket();
-				break;
-
-			case HEADER_GC_VIEW_EQUIP:
-				ret = RecvViewEquipPacket();
 				break;
 
 			case HEADER_GC_LAND_LIST:
@@ -529,66 +284,9 @@ void CPythonNetworkStream::GamePhase()
 				//	ret = RecvTargetCreatePacket();
 				//	break;
 
-			case HEADER_GC_TARGET_CREATE_NEW:
-				ret = RecvTargetCreatePacketNew();
-				break;
-
-			case HEADER_GC_TARGET_UPDATE:
-				ret = RecvTargetUpdatePacket();
-				break;
-
-			case HEADER_GC_TARGET_DELETE:
-				ret = RecvTargetDeletePacket();
-				break;
-
-			case HEADER_GC_AFFECT_ADD:
-				ret = RecvAffectAddPacket();
-				break;
-
-			case HEADER_GC_AFFECT_REMOVE:
-				ret = RecvAffectRemovePacket();
-				break;
-
-			case HEADER_GC_MALL_OPEN:
-				ret = RecvMallOpenPacket();
-				break;
-
-			case HEADER_GC_MALL_SET:
-				ret = RecvMallItemSetPacket();
-				break;
-
-			case HEADER_GC_MALL_DEL:
-				ret = RecvMallItemDelPacket();
-				break;
-
-			case HEADER_GC_LOVER_INFO:
-				ret = RecvLoverInfoPacket();
-				break;
-
-			case HEADER_GC_LOVE_POINT_UPDATE:
-				ret = RecvLovePointUpdatePacket();
-				break;
-
-			case HEADER_GC_DIG_MOTION:
-				ret = RecvDigMotionPacket();
-				break;
-
 			case HEADER_GC_HANDSHAKE:
 				RecvHandshakePacket();
 				return;
-				break;
-
-			case HEADER_GC_HANDSHAKE_OK:
-				RecvHandshakeOKPacket();
-				return;
-				break;
-
-			case HEADER_GC_SPECIFIC_EFFECT:
-				ret = RecvSpecificEffect();
-				break;
-
-			case HEADER_GC_DRAGON_SOUL_REFINE:
-				ret = RecvDragonSoulRefine();
 				break;
 
 			default:
@@ -877,12 +575,9 @@ bool CPythonNetworkStream::RecvObserverMovePacket()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvWarpPacket()
+bool CPythonNetworkStream::RecvWarpPacket(const protocol::Packet& value)
 {
-	TPacketGCWarp kWarpPacket;
-
-	if (!Recv(sizeof(kWarpPacket), &kWarpPacket))
-		return false;
+	TPacketGCWarp kWarpPacket = value.Get<TPacketGCWarp>();
 
 	__DirectEnterMode_Set(m_dwSelectedCharacterIndex);
 
@@ -928,11 +623,9 @@ bool CPythonNetworkStream::RecvDuelStartPacket()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvPVPPacket()
+bool CPythonNetworkStream::RecvPVPPacket(const protocol::Packet& value)
 {
-	TPacketGCPVP kPVPPacket;
-	if (!Recv(sizeof(kPVPPacket), &kPVPPacket))
-		return false;
+	TPacketGCPVP kPVPPacket = value.Get<TPacketGCPVP>();
 
 	CPythonCharacterManager& rkChrMgr = CPythonCharacterManager::Instance();
 	CPythonPlayer& rkPlayer = CPythonPlayer::Instance();
@@ -1414,15 +1107,9 @@ bool CPythonNetworkStream::SendWhisperPacket(const char* name, const char* c_szC
 	return SendSequence();
 }
 
-bool CPythonNetworkStream::RecvPointChange()
+bool CPythonNetworkStream::RecvPointChange(const protocol::Packet& value)
 {
-	TPacketGCPointChange PointChange;
-
-	if (!Recv(sizeof(TPacketGCPointChange), &PointChange))
-	{
-		Tracen("Recv Point Change Packet Error");
-		return false;
-	}
+	TPacketGCPointChange PointChange = value.Get<TPacketGCPointChange>();
 
 	CPythonCharacterManager& rkChrMgr = CPythonCharacterManager::Instance();
 	rkChrMgr.ShowPointEffect(PointChange.Type, PointChange.dwVID);
@@ -1486,15 +1173,9 @@ bool CPythonNetworkStream::RecvPointChange()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvStunPacket()
+bool CPythonNetworkStream::RecvStunPacket(const protocol::Packet& value)
 {
-	TPacketGCStun StunPacket;
-
-	if (!Recv(sizeof(StunPacket), &StunPacket))
-	{
-		Tracen("CPythonNetworkStream::RecvStunPacket Error");
-		return false;
-	}
+	TPacketGCStun StunPacket = value.Get<TPacketGCStun>();
 
 	// Tracef("RecvStunPacket %d\n", StunPacket.vid);
 
@@ -1512,14 +1193,9 @@ bool CPythonNetworkStream::RecvStunPacket()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvDeadPacket()
+bool CPythonNetworkStream::RecvDeadPacket(const protocol::Packet& value)
 {
-	TPacketGCDead DeadPacket;
-	if (!Recv(sizeof(DeadPacket), &DeadPacket))
-	{
-		Tracen("CPythonNetworkStream::RecvDeadPacket Error");
-		return false;
-	}
+	TPacketGCDead DeadPacket = value.Get<TPacketGCDead>();
 
 	CPythonCharacterManager& rkChrMgr = CPythonCharacterManager::Instance();
 	CInstanceBase* pkChrInstSel = rkChrMgr.GetInstancePtr(DeadPacket.vid);
@@ -1574,12 +1250,9 @@ bool CPythonNetworkStream::SendOnClickPacket(DWORD vid)
 	return SendSequence();
 }
 
-bool CPythonNetworkStream::RecvCharacterPositionPacket()
+bool CPythonNetworkStream::RecvCharacterPositionPacket(const protocol::Packet& value)
 {
-	TPacketGCPosition PositionPacket;
-
-	if (!Recv(sizeof(TPacketGCPosition), &PositionPacket))
-		return false;
+	TPacketGCPosition PositionPacket = value.Get<TPacketGCPosition>();
 
 	CInstanceBase* pChrInstance = CPythonCharacterManager::Instance().GetInstancePtr(PositionPacket.vid);
 
@@ -1591,12 +1264,9 @@ bool CPythonNetworkStream::RecvCharacterPositionPacket()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvMotionPacket()
+bool CPythonNetworkStream::RecvMotionPacket(const protocol::Packet& value)
 {
-	TPacketGCMotion MotionPacket;
-
-	if (!Recv(sizeof(TPacketGCMotion), &MotionPacket))
-		return false;
+	TPacketGCMotion MotionPacket = value.Get<TPacketGCMotion>();
 
 	CInstanceBase* pMainInstance = CPythonCharacterManager::Instance().GetInstancePtr(MotionPacket.vid);
 
@@ -1718,12 +1388,9 @@ bool CPythonNetworkStream::RecvShopPacket()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvExchangePacket()
+bool CPythonNetworkStream::RecvExchangePacket(const protocol::Packet& value)
 {
-	TPacketGCExchange exchange_packet;
-
-	if (!Recv(sizeof(exchange_packet), &exchange_packet))
-		return false;
+	TPacketGCExchange exchange_packet = value.Get<TPacketGCExchange>();
 
 	switch (exchange_packet.subheader)
 	{
@@ -1958,28 +1625,18 @@ bool CPythonNetworkStream::RecvQuestInfoPacket()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvQuestConfirmPacket()
+bool CPythonNetworkStream::RecvQuestConfirmPacket(const protocol::Packet& value)
 {
-	TPacketGCQuestConfirm kQuestConfirmPacket;
-	if (!Recv(sizeof(kQuestConfirmPacket), &kQuestConfirmPacket))
-	{
-		Tracen("RecvQuestConfirmPacket Error");
-		return false;
-	}
+	TPacketGCQuestConfirm kQuestConfirmPacket = value.Get<TPacketGCQuestConfirm>();
 
 	PyObject* poArg = Py_BuildValue("(sii)", kQuestConfirmPacket.msg, kQuestConfirmPacket.timeout, kQuestConfirmPacket.requestPID);
 	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_OnQuestConfirm", poArg);
 	return true;
 }
 
-bool CPythonNetworkStream::RecvRequestMakeGuild()
+bool CPythonNetworkStream::RecvRequestMakeGuild(const protocol::Packet& value)
 {
-	TPacketGCBlank blank;
-	if (!Recv(sizeof(blank), &blank))
-	{
-		Tracen("RecvRequestMakeGuild Packet Error");
-		return false;
-	}
+	TPacketGCBlank blank = value.Get<TPacketGCBlank>();
 
 	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "AskGuildName", Py_BuildValue("()"));
 
@@ -2266,14 +1923,9 @@ bool CPythonNetworkStream::RecvSkillCoolTimeEnd()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvSkillLevel()
+bool CPythonNetworkStream::RecvSkillLevel(const protocol::Packet& value)
 {
-	TPacketGCSkillLevel packet;
-	if (!Recv(sizeof(TPacketGCSkillLevel), &packet))
-	{
-		Tracen("CPythonNetworkStream::RecvSkillLevel - RecvError");
-		return false;
-	}
+	TPacketGCSkillLevel packet = value.Get<TPacketGCSkillLevel>();
 
 	DWORD dwSlotIndex;
 
@@ -2290,15 +1942,9 @@ bool CPythonNetworkStream::RecvSkillLevel()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvSkillLevelNew()
+bool CPythonNetworkStream::RecvSkillLevelNew(const protocol::Packet& value)
 {
-	TPacketGCSkillLevelNew packet;
-
-	if (!Recv(sizeof(TPacketGCSkillLevelNew), &packet))
-	{
-		Tracen("CPythonNetworkStream::RecvSkillLevelNew - RecvError");
-		return false;
-	}
+	TPacketGCSkillLevelNew packet = value.Get<TPacketGCSkillLevelNew>();
 
 	CPythonPlayer& rkPlayer = CPythonPlayer::Instance();
 
@@ -2324,15 +1970,9 @@ bool CPythonNetworkStream::RecvSkillLevelNew()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvDamageInfoPacket()
+bool CPythonNetworkStream::RecvDamageInfoPacket(const protocol::Packet& value)
 {
-	TPacketGCDamageInfo DamageInfoPacket;
-
-	if (!Recv(sizeof(TPacketGCDamageInfo), &DamageInfoPacket))
-	{
-		Tracen("Recv Target Packet Error");
-		return false;
-	}
+	TPacketGCDamageInfo DamageInfoPacket = value.Get<TPacketGCDamageInfo>();
 
 	CInstanceBase* pInstTarget = CPythonCharacterManager::Instance().GetInstancePtr(DamageInfoPacket.dwVID);
 	bool bSelf = (pInstTarget == CPythonCharacterManager::Instance().GetMainInstancePtr());
@@ -2347,18 +1987,20 @@ bool CPythonNetworkStream::RecvDamageInfoPacket()
 
 	return true;
 }
-bool CPythonNetworkStream::RecvTargetPacket(const protocol::TargetValue& value)
+bool CPythonNetworkStream::RecvTargetPacket(const protocol::Packet& value)
 {
+	const TPacketGCTarget target = value.Get<TPacketGCTarget>();
+
 	CInstanceBase* pInstPlayer = CPythonCharacterManager::Instance().GetMainInstancePtr();
-	CInstanceBase* pInstTarget = CPythonCharacterManager::Instance().GetInstancePtr(value.vid);
+	CInstanceBase* pInstTarget = CPythonCharacterManager::Instance().GetInstancePtr(target.vid);
 	if (pInstPlayer && pInstTarget)
 	{
 		if (!pInstTarget->IsDead())
 		{
 			if (pInstTarget->IsPC() || pInstTarget->IsBuilding())
-				PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "CloseTargetBoardIfDifferent", Py_BuildValue("(i)", value.vid));
+				PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "CloseTargetBoardIfDifferent", Py_BuildValue("(i)", target.vid));
 			else if (pInstPlayer->CanViewTargetHP(*pInstTarget))
-				PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "SetHPTargetBoard", Py_BuildValue("(ii)", value.vid, value.hpPercent));
+				PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "SetHPTargetBoard", Py_BuildValue("(ii)", target.vid, target.hpPercent));
 			else
 				PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "CloseTargetBoard", Py_BuildValue("()"));
 
@@ -2373,15 +2015,9 @@ bool CPythonNetworkStream::RecvTargetPacket(const protocol::TargetValue& value)
 	return true;
 }
 
-bool CPythonNetworkStream::RecvMountPacket()
+bool CPythonNetworkStream::RecvMountPacket(const protocol::Packet& value)
 {
-	TPacketGCMount MountPacket;
-
-	if (!Recv(sizeof(TPacketGCMount), &MountPacket))
-	{
-		Tracen("Recv Mount Packet Error");
-		return false;
-	}
+	TPacketGCMount MountPacket = value.Get<TPacketGCMount>();
 
 	CInstanceBase* pInstance = CPythonCharacterManager::Instance().GetInstancePtr(MountPacket.vid);
 
@@ -2407,15 +2043,9 @@ bool CPythonNetworkStream::RecvMountPacket()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvChangeSpeedPacket()
+bool CPythonNetworkStream::RecvChangeSpeedPacket(const protocol::Packet& value)
 {
-	TPacketGCChangeSpeed SpeedPacket;
-
-	if (!Recv(sizeof(TPacketGCChangeSpeed), &SpeedPacket))
-	{
-		Tracen("Recv Speed Packet Error");
-		return false;
-	}
+	TPacketGCChangeSpeed SpeedPacket = value.Get<TPacketGCChangeSpeed>();
 
 	CInstanceBase* pInstance = CPythonCharacterManager::Instance().GetInstancePtr(SpeedPacket.vid);
 
@@ -2476,11 +2106,9 @@ bool CPythonNetworkStream::SendSpecial(int nLen, void* pvBuf)
 	return Send(nLen, pvBuf);
 }
 
-bool CPythonNetworkStream::RecvAddFlyTargetingPacket()
+bool CPythonNetworkStream::RecvAddFlyTargetingPacket(const protocol::Packet& value)
 {
-	TPacketGCFlyTargeting kPacket;
-	if (!Recv(sizeof(kPacket), &kPacket))
-		return false;
+	TPacketGCFlyTargeting kPacket = value.Get<TPacketGCFlyTargeting>();
 
 	__GlobalPositionToLocalPosition(kPacket.lX, kPacket.lY);
 
@@ -2514,11 +2142,9 @@ bool CPythonNetworkStream::RecvAddFlyTargetingPacket()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvFlyTargetingPacket()
+bool CPythonNetworkStream::RecvFlyTargetingPacket(const protocol::Packet& value)
 {
-	TPacketGCFlyTargeting kPacket;
-	if (!Recv(sizeof(kPacket), &kPacket))
-		return false;
+	TPacketGCFlyTargeting kPacket = value.Get<TPacketGCFlyTargeting>();
 
 	__GlobalPositionToLocalPosition(kPacket.lX, kPacket.lY);
 
@@ -2611,11 +2237,9 @@ bool CPythonNetworkStream::SendFlyTargetingPacket(DWORD dwTargetVID, const TPixe
 	return SendSequence();
 }
 
-bool CPythonNetworkStream::RecvCreateFlyPacket()
+bool CPythonNetworkStream::RecvCreateFlyPacket(const protocol::Packet& value)
 {
-	TPacketGCCreateFly kPacket;
-	if (!Recv(sizeof(TPacketGCCreateFly), &kPacket))
-		return false;
+	TPacketGCCreateFly kPacket = value.Get<TPacketGCCreateFly>();
 
 	CFlyingManager& rkFlyMgr = CFlyingManager::Instance();
 	CPythonCharacterManager& rkChrMgr = CPythonCharacterManager::Instance();
@@ -2829,11 +2453,9 @@ bool CPythonNetworkStream::SendPartyParameterPacket(BYTE byDistributeMode)
 	return SendSequence();
 }
 
-bool CPythonNetworkStream::RecvPartyInvite()
+bool CPythonNetworkStream::RecvPartyInvite(const protocol::Packet& value)
 {
-	TPacketGCPartyInvite kPartyInvitePacket;
-	if (!Recv(sizeof(kPartyInvitePacket), &kPartyInvitePacket))
-		return false;
+	TPacketGCPartyInvite kPartyInvitePacket = value.Get<TPacketGCPartyInvite>();
 
 	CInstanceBase* pInstance = CPythonCharacterManager::Instance().GetInstancePtr(kPartyInvitePacket.leader_pid);
 	if (!pInstance)
@@ -2848,11 +2470,9 @@ bool CPythonNetworkStream::RecvPartyInvite()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvPartyAdd()
+bool CPythonNetworkStream::RecvPartyAdd(const protocol::Packet& value)
 {
-	TPacketGCPartyAdd kPartyAddPacket;
-	if (!Recv(sizeof(kPartyAddPacket), &kPartyAddPacket))
-		return false;
+	TPacketGCPartyAdd kPartyAddPacket = value.Get<TPacketGCPartyAdd>();
 
 	CPythonPlayer::Instance().AppendPartyMember(kPartyAddPacket.pid, kPartyAddPacket.name);
 	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "AddPartyMember", Py_BuildValue("(is)", kPartyAddPacket.pid, kPartyAddPacket.name));
@@ -2861,11 +2481,9 @@ bool CPythonNetworkStream::RecvPartyAdd()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvPartyUpdate()
+bool CPythonNetworkStream::RecvPartyUpdate(const protocol::Packet& value)
 {
-	TPacketGCPartyUpdate kPartyUpdatePacket;
-	if (!Recv(sizeof(kPartyUpdatePacket), &kPartyUpdatePacket))
-		return false;
+	TPacketGCPartyUpdate kPartyUpdatePacket = value.Get<TPacketGCPartyUpdate>();
 
 	CPythonPlayer::TPartyMemberInfo* pPartyMemberInfo;
 	if (!CPythonPlayer::Instance().GetPartyMemberPtr(kPartyUpdatePacket.pid, &pPartyMemberInfo))
@@ -2894,11 +2512,9 @@ bool CPythonNetworkStream::RecvPartyUpdate()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvPartyRemove()
+bool CPythonNetworkStream::RecvPartyRemove(const protocol::Packet& value)
 {
-	TPacketGCPartyRemove kPartyRemovePacket;
-	if (!Recv(sizeof(kPartyRemovePacket), &kPartyRemovePacket))
-		return false;
+	TPacketGCPartyRemove kPartyRemovePacket = value.Get<TPacketGCPartyRemove>();
 
 	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RemovePartyMember", Py_BuildValue("(i)", kPartyRemovePacket.pid));
 	Tracef(" >> RecvPartyRemove : %d\n", kPartyRemovePacket.pid);
@@ -2906,11 +2522,9 @@ bool CPythonNetworkStream::RecvPartyRemove()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvPartyLink()
+bool CPythonNetworkStream::RecvPartyLink(const protocol::Packet& value)
 {
-	TPacketGCPartyLink kPartyLinkPacket;
-	if (!Recv(sizeof(kPartyLinkPacket), &kPartyLinkPacket))
-		return false;
+	TPacketGCPartyLink kPartyLinkPacket = value.Get<TPacketGCPartyLink>();
 
 	CPythonPlayer::Instance().LinkPartyMember(kPartyLinkPacket.pid, kPartyLinkPacket.vid);
 	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "LinkPartyMember", Py_BuildValue("(ii)", kPartyLinkPacket.pid, kPartyLinkPacket.vid));
@@ -2919,11 +2533,9 @@ bool CPythonNetworkStream::RecvPartyLink()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvPartyUnlink()
+bool CPythonNetworkStream::RecvPartyUnlink(const protocol::Packet& value)
 {
-	TPacketGCPartyUnlink kPartyUnlinkPacket;
-	if (!Recv(sizeof(kPartyUnlinkPacket), &kPartyUnlinkPacket))
-		return false;
+	TPacketGCPartyUnlink kPartyUnlinkPacket = value.Get<TPacketGCPartyUnlink>();
 
 	CPythonPlayer::Instance().UnlinkPartyMember(kPartyUnlinkPacket.pid);
 
@@ -2941,11 +2553,9 @@ bool CPythonNetworkStream::RecvPartyUnlink()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvPartyParameter()
+bool CPythonNetworkStream::RecvPartyParameter(const protocol::Packet& value)
 {
-	TPacketGCPartyParameter kPartyParameterPacket;
-	if (!Recv(sizeof(kPartyParameterPacket), &kPartyParameterPacket))
-		return false;
+	TPacketGCPartyParameter kPartyParameterPacket = value.Get<TPacketGCPartyParameter>();
 
 	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "ChangePartyParameter", Py_BuildValue("(i)", kPartyParameterPacket.bDistributeMode));
 	Tracef(" >> RecvPartyParameter : %d\n", kPartyParameterPacket.bDistributeMode);
@@ -3686,11 +3296,9 @@ bool CPythonNetworkStream::SendGiveItemPacket(DWORD dwTargetVID, TItemPos ItemPo
 	return SendSequence();
 }
 
-bool CPythonNetworkStream::RecvFishing()
+bool CPythonNetworkStream::RecvFishing(const protocol::Packet& value)
 {
-	TPacketGCFishing FishingPacket;
-	if (!Recv(sizeof(FishingPacket), &FishingPacket))
-		return false;
+	TPacketGCFishing FishingPacket = value.Get<TPacketGCFishing>();
 
 	CInstanceBase* pFishingInstance = NULL;
 	if (FISHING_SUBHEADER_GC_FISH != FishingPacket.subheader)
@@ -3814,11 +3422,9 @@ bool CPythonNetworkStream::SendBuildPrivateShopPacket(const char* c_szName, cons
 	return SendSequence();
 }
 
-bool CPythonNetworkStream::RecvShopSignPacket()
+bool CPythonNetworkStream::RecvShopSignPacket(const protocol::Packet& value)
 {
-	TPacketGCShopSign p;
-	if (!Recv(sizeof(TPacketGCShopSign), &p))
-		return false;
+	TPacketGCShopSign p = value.Get<TPacketGCShopSign>();
 
 	CPythonPlayer& rkPlayer = CPythonPlayer::Instance();
 
@@ -3845,11 +3451,9 @@ bool CPythonNetworkStream::RecvShopSignPacket()
 }
 /////////////////////////////////////////////////////////////////////////
 
-bool CPythonNetworkStream::RecvTimePacket()
+bool CPythonNetworkStream::RecvTimePacket(const protocol::Packet& value)
 {
-	TPacketGCTime TimePacket;
-	if (!Recv(sizeof(TimePacket), &TimePacket))
-		return false;
+	TPacketGCTime TimePacket = value.Get<TPacketGCTime>();
 
 	IAbstractApplication& rkApp = IAbstractApplication::GetSingleton();
 	rkApp.SetServerTime(TimePacket.time);
@@ -3857,11 +3461,9 @@ bool CPythonNetworkStream::RecvTimePacket()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvWalkModePacket()
+bool CPythonNetworkStream::RecvWalkModePacket(const protocol::Packet& value)
 {
-	TPacketGCWalkMode WalkModePacket;
-	if (!Recv(sizeof(WalkModePacket), &WalkModePacket))
-		return false;
+	TPacketGCWalkMode WalkModePacket = value.Get<TPacketGCWalkMode>();
 
 	CInstanceBase* pInstance = CPythonCharacterManager::Instance().GetInstancePtr(WalkModePacket.vid);
 	if (pInstance)
@@ -3879,11 +3481,9 @@ bool CPythonNetworkStream::RecvWalkModePacket()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvChangeSkillGroupPacket()
+bool CPythonNetworkStream::RecvChangeSkillGroupPacket(const protocol::Packet& value)
 {
-	TPacketGCChangeSkillGroup ChangeSkillGroup;
-	if (!Recv(sizeof(ChangeSkillGroup), &ChangeSkillGroup))
-		return false;
+	TPacketGCChangeSkillGroup ChangeSkillGroup = value.Get<TPacketGCChangeSkillGroup>();
 
 	m_dwMainActorSkillGroup = ChangeSkillGroup.skill_group;
 
@@ -3925,11 +3525,9 @@ bool CPythonNetworkStream::SendSelectItemPacket(DWORD dwItemPos)
 	return SendSequence();
 }
 
-bool CPythonNetworkStream::RecvRefineInformationPacket()
+bool CPythonNetworkStream::RecvRefineInformationPacket(const protocol::Packet& value)
 {
-	TPacketGCRefineInformation kRefineInfoPacket;
-	if (!Recv(sizeof(kRefineInfoPacket), &kRefineInfoPacket))
-		return false;
+	TPacketGCRefineInformation kRefineInfoPacket = value.Get<TPacketGCRefineInformation>();
 
 	TRefineTable& rkRefineTable = kRefineInfoPacket.refine_table;
 	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME],
@@ -3956,11 +3554,9 @@ bool CPythonNetworkStream::RecvRefineInformationPacket()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvRefineInformationPacketNew()
+bool CPythonNetworkStream::RecvRefineInformationPacketNew(const protocol::Packet& value)
 {
-	TPacketGCRefineInformationNew kRefineInfoPacket;
-	if (!Recv(sizeof(kRefineInfoPacket), &kRefineInfoPacket))
-		return false;
+	TPacketGCRefineInformationNew kRefineInfoPacket = value.Get<TPacketGCRefineInformationNew>();
 
 	TRefineTable& rkRefineTable = kRefineInfoPacket.refine_table;
 	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME],
@@ -4063,11 +3659,9 @@ bool CPythonNetworkStream::SendClientVersionPacket()
 	return SendSequence();
 }
 
-bool CPythonNetworkStream::RecvAffectAddPacket()
+bool CPythonNetworkStream::RecvAffectAddPacket(const protocol::Packet& value)
 {
-	TPacketGCAffectAdd kAffectAdd;
-	if (!Recv(sizeof(kAffectAdd), &kAffectAdd))
-		return false;
+	TPacketGCAffectAdd kAffectAdd = value.Get<TPacketGCAffectAdd>();
 
 	TPacketAffectElement& rkElement = kAffectAdd.elem;
 	if (rkElement.bPointIdxApplyOn == POINT_ENERGY)
@@ -4080,33 +3674,27 @@ bool CPythonNetworkStream::RecvAffectAddPacket()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvAffectRemovePacket()
+bool CPythonNetworkStream::RecvAffectRemovePacket(const protocol::Packet& value)
 {
-	TPacketGCAffectRemove kAffectRemove;
-	if (!Recv(sizeof(kAffectRemove), &kAffectRemove))
-		return false;
+	TPacketGCAffectRemove kAffectRemove = value.Get<TPacketGCAffectRemove>();
 
 	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_NEW_RemoveAffect", Py_BuildValue("(ii)", kAffectRemove.dwType, kAffectRemove.bApplyOn));
 
 	return true;
 }
 
-bool CPythonNetworkStream::RecvChannelPacket()
+bool CPythonNetworkStream::RecvChannelPacket(const protocol::Packet& value)
 {
-	TPacketGCChannel kChannelPacket;
-	if (!Recv(sizeof(kChannelPacket), &kChannelPacket))
-		return false;
+	TPacketGCChannel kChannelPacket = value.Get<TPacketGCChannel>();
 
 	// Tracef(" >> CPythonNetworkStream::RecvChannelPacket(channel=%d)\n", kChannelPacket.channel);
 
 	return true;
 }
 
-bool CPythonNetworkStream::RecvViewEquipPacket()
+bool CPythonNetworkStream::RecvViewEquipPacket(const protocol::Packet& value)
 {
-	TPacketGCViewEquip kViewEquipPacket;
-	if (!Recv(sizeof(kViewEquipPacket), &kViewEquipPacket))
-		return false;
+	TPacketGCViewEquip kViewEquipPacket = value.Get<TPacketGCViewEquip>();
 
 	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OpenEquipmentDialog", Py_BuildValue("(i)", kViewEquipPacket.dwVID));
 
@@ -4192,11 +3780,9 @@ bool CPythonNetworkStream::RecvTargetCreatePacket()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvTargetCreatePacketNew()
+bool CPythonNetworkStream::RecvTargetCreatePacketNew(const protocol::Packet& value)
 {
-	TPacketGCTargetCreateNew kTargetCreate;
-	if (!Recv(sizeof(kTargetCreate), &kTargetCreate))
-		return false;
+	TPacketGCTargetCreateNew kTargetCreate = value.Get<TPacketGCTargetCreateNew>();
 
 	CPythonMiniMap& rkpyMiniMap = CPythonMiniMap::Instance();
 	CPythonBackground& rkpyBG = CPythonBackground::Instance();
@@ -4221,11 +3807,9 @@ bool CPythonNetworkStream::RecvTargetCreatePacketNew()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvTargetUpdatePacket()
+bool CPythonNetworkStream::RecvTargetUpdatePacket(const protocol::Packet& value)
 {
-	TPacketGCTargetUpdate kTargetUpdate;
-	if (!Recv(sizeof(kTargetUpdate), &kTargetUpdate))
-		return false;
+	TPacketGCTargetUpdate kTargetUpdate = value.Get<TPacketGCTargetUpdate>();
 
 	CPythonMiniMap& rkpyMiniMap = CPythonMiniMap::Instance();
 	rkpyMiniMap.UpdateTarget(kTargetUpdate.lID, kTargetUpdate.lX, kTargetUpdate.lY);
@@ -4243,11 +3827,9 @@ bool CPythonNetworkStream::RecvTargetUpdatePacket()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvTargetDeletePacket()
+bool CPythonNetworkStream::RecvTargetDeletePacket(const protocol::Packet& value)
 {
-	TPacketGCTargetDelete kTargetDelete;
-	if (!Recv(sizeof(kTargetDelete), &kTargetDelete))
-		return false;
+	TPacketGCTargetDelete kTargetDelete = value.Get<TPacketGCTargetDelete>();
 
 	CPythonMiniMap& rkpyMiniMap = CPythonMiniMap::Instance();
 	rkpyMiniMap.DeleteTarget(kTargetDelete.lID);
@@ -4262,11 +3844,9 @@ bool CPythonNetworkStream::RecvTargetDeletePacket()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvLoverInfoPacket()
+bool CPythonNetworkStream::RecvLoverInfoPacket(const protocol::Packet& value)
 {
-	TPacketGCLoverInfo kLoverInfo;
-	if (!Recv(sizeof(kLoverInfo), &kLoverInfo))
-		return false;
+	TPacketGCLoverInfo kLoverInfo = value.Get<TPacketGCLoverInfo>();
 
 	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_LoverInfo", Py_BuildValue("(si)", kLoverInfo.szName, kLoverInfo.byLovePoint));
 #ifdef _DEBUG
@@ -4275,11 +3855,9 @@ bool CPythonNetworkStream::RecvLoverInfoPacket()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvLovePointUpdatePacket()
+bool CPythonNetworkStream::RecvLovePointUpdatePacket(const protocol::Packet& value)
 {
-	TPacketGCLovePointUpdate kLovePointUpdate;
-	if (!Recv(sizeof(kLovePointUpdate), &kLovePointUpdate))
-		return false;
+	TPacketGCLovePointUpdate kLovePointUpdate = value.Get<TPacketGCLovePointUpdate>();
 
 	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_UpdateLovePoint", Py_BuildValue("(i)", kLovePointUpdate.byLovePoint));
 #ifdef _DEBUG
@@ -4288,11 +3866,9 @@ bool CPythonNetworkStream::RecvLovePointUpdatePacket()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvDigMotionPacket()
+bool CPythonNetworkStream::RecvDigMotionPacket(const protocol::Packet& value)
 {
-	TPacketGCDigMotion kDigMotion;
-	if (!Recv(sizeof(kDigMotion), &kDigMotion))
-		return false;
+	TPacketGCDigMotion kDigMotion = value.Get<TPacketGCDigMotion>();
 
 #ifdef _DEBUG
 	Tracef(" Dig Motion [%d/%d]\n", kDigMotion.vid, kDigMotion.count);

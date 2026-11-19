@@ -69,11 +69,9 @@ bool CPythonNetworkStream::SendSafeBoxItemMovePacket(BYTE bySourcePos, BYTE byTa
 	return SendSequence();
 }
 
-bool CPythonNetworkStream::RecvSafeBoxSetPacket()
+bool CPythonNetworkStream::RecvSafeBoxSetPacket(const protocol::Packet& value)
 {
-	TPacketGCItemSet2 kItemSet;
-	if (!Recv(sizeof(kItemSet), &kItemSet))
-		return false;
+	TPacketGCItemSet2 kItemSet = value.Get<TPacketGCItemSet2>();
 
 	TItemData kItemData;
 	kItemData.vnum = kItemSet.vnum;
@@ -92,11 +90,9 @@ bool CPythonNetworkStream::RecvSafeBoxSetPacket()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvSafeBoxDelPacket()
+bool CPythonNetworkStream::RecvSafeBoxDelPacket(const protocol::Packet& value)
 {
-	TPacketGCItemDel kItemDel;
-	if (!Recv(sizeof(kItemDel), &kItemDel))
-		return false;
+	TPacketGCItemDel kItemDel = value.Get<TPacketGCItemDel>();
 
 	CPythonSafeBox::Instance().DelItemData(kItemDel.pos);
 
@@ -105,23 +101,18 @@ bool CPythonNetworkStream::RecvSafeBoxDelPacket()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvSafeBoxWrongPasswordPacket()
+bool CPythonNetworkStream::RecvSafeBoxWrongPasswordPacket(const protocol::Packet& value)
 {
-	TPacketGCSafeboxWrongPassword kSafeboxWrongPassword;
-
-	if (!Recv(sizeof(kSafeboxWrongPassword), &kSafeboxWrongPassword))
-		return false;
+	TPacketGCSafeboxWrongPassword kSafeboxWrongPassword = value.Get<TPacketGCSafeboxWrongPassword>();
 
 	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OnSafeBoxError", Py_BuildValue("()"));
 
 	return true;
 }
 
-bool CPythonNetworkStream::RecvSafeBoxSizePacket()
+bool CPythonNetworkStream::RecvSafeBoxSizePacket(const protocol::Packet& value)
 {
-	TPacketGCSafeboxSize kSafeBoxSize;
-	if (!Recv(sizeof(kSafeBoxSize), &kSafeBoxSize))
-		return false;
+	TPacketGCSafeboxSize kSafeBoxSize = value.Get<TPacketGCSafeboxSize>();
 
 	CPythonSafeBox::Instance().OpenSafeBox(kSafeBoxSize.bSize);
 	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OpenSafeboxWindow", Py_BuildValue("(i)", kSafeBoxSize.bSize));
@@ -129,11 +120,9 @@ bool CPythonNetworkStream::RecvSafeBoxSizePacket()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvSafeBoxMoneyChangePacket()
+bool CPythonNetworkStream::RecvSafeBoxMoneyChangePacket(const protocol::Packet& value)
 {
-	TPacketGCSafeboxMoneyChange kMoneyChange;
-	if (!Recv(sizeof(kMoneyChange), &kMoneyChange))
-		return false;
+	TPacketGCSafeboxMoneyChange kMoneyChange = value.Get<TPacketGCSafeboxMoneyChange>();
 
 	CPythonSafeBox::Instance().SetMoney(kMoneyChange.dwMoney);
 	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshSafeboxMoney", Py_BuildValue("()"));
@@ -160,22 +149,18 @@ bool CPythonNetworkStream::SendMallCheckoutPacket(BYTE byMallPos, TItemPos Inven
 	return SendSequence();
 }
 
-bool CPythonNetworkStream::RecvMallOpenPacket()
+bool CPythonNetworkStream::RecvMallOpenPacket(const protocol::Packet& value)
 {
-	TPacketGCMallOpen kMallOpen;
-	if (!Recv(sizeof(kMallOpen), &kMallOpen))
-		return false;
+	TPacketGCMallOpen kMallOpen = value.Get<TPacketGCMallOpen>();
 
 	CPythonSafeBox::Instance().OpenMall(kMallOpen.bSize);
 	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OpenMallWindow", Py_BuildValue("(i)", kMallOpen.bSize));
 
 	return true;
 }
-bool CPythonNetworkStream::RecvMallItemSetPacket()
+bool CPythonNetworkStream::RecvMallItemSetPacket(const protocol::Packet& value)
 {
-	TPacketGCItemSet2 kItemSet;
-	if (!Recv(sizeof(kItemSet), &kItemSet))
-		return false;
+	TPacketGCItemSet2 kItemSet = value.Get<TPacketGCItemSet2>();
 
 	TItemData kItemData;
 	kItemData.vnum = kItemSet.vnum;
@@ -193,11 +178,9 @@ bool CPythonNetworkStream::RecvMallItemSetPacket()
 
 	return true;
 }
-bool CPythonNetworkStream::RecvMallItemDelPacket()
+bool CPythonNetworkStream::RecvMallItemDelPacket(const protocol::Packet& value)
 {
-	TPacketGCItemDel kItemDel;
-	if (!Recv(sizeof(kItemDel), &kItemDel))
-		return false;
+	TPacketGCItemDel kItemDel = value.Get<TPacketGCItemDel>();
 
 	CPythonSafeBox::Instance().DelMallItemData(kItemDel.pos);
 
@@ -211,12 +194,9 @@ bool CPythonNetworkStream::RecvMallItemDelPacket()
 
 // Item
 // Recieve
-bool CPythonNetworkStream::RecvItemSetPacket()
+bool CPythonNetworkStream::RecvItemSetPacket(const protocol::Packet& value)
 {
-	TPacketGCItemSet packet_item_set;
-
-	if (!Recv(sizeof(TPacketGCItemSet), &packet_item_set))
-		return false;
+	TPacketGCItemSet packet_item_set = value.Get<TPacketGCItemSet>();
 
 	TItemData kItemData;
 	kItemData.vnum = packet_item_set.vnum;
@@ -235,12 +215,9 @@ bool CPythonNetworkStream::RecvItemSetPacket()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvItemSetPacket2()
+bool CPythonNetworkStream::RecvItemSetPacket2(const protocol::Packet& value)
 {
-	TPacketGCItemSet2 packet_item_set;
-
-	if (!Recv(sizeof(TPacketGCItemSet2), &packet_item_set))
-		return false;
+	TPacketGCItemSet2 packet_item_set = value.Get<TPacketGCItemSet2>();
 
 	TItemData kItemData;
 	kItemData.vnum = packet_item_set.vnum;
@@ -263,23 +240,17 @@ bool CPythonNetworkStream::RecvItemSetPacket2()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvItemUsePacket()
+bool CPythonNetworkStream::RecvItemUsePacket(const protocol::Packet& value)
 {
-	TPacketGCItemUse packet_item_use;
-
-	if (!Recv(sizeof(TPacketGCItemUse), &packet_item_use))
-		return false;
+	TPacketGCItemUse packet_item_use = value.Get<TPacketGCItemUse>();
 
 	__RefreshInventoryWindow();
 	return true;
 }
 
-bool CPythonNetworkStream::RecvItemUpdatePacket()
+bool CPythonNetworkStream::RecvItemUpdatePacket(const protocol::Packet& value)
 {
-	TPacketGCItemUpdate packet_item_update;
-
-	if (!Recv(sizeof(TPacketGCItemUpdate), &packet_item_update))
-		return false;
+	TPacketGCItemUpdate packet_item_update = value.Get<TPacketGCItemUpdate>();
 
 	IAbstractPlayer& rkPlayer = IAbstractPlayer::GetSingleton();
 	rkPlayer.SetItemCount(packet_item_update.Cell, packet_item_update.count);
@@ -292,12 +263,9 @@ bool CPythonNetworkStream::RecvItemUpdatePacket()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvItemGroundAddPacket()
+bool CPythonNetworkStream::RecvItemGroundAddPacket(const protocol::Packet& value)
 {
-	TPacketGCItemGroundAdd packet_item_ground_add;
-
-	if (!Recv(sizeof(TPacketGCItemGroundAdd), &packet_item_ground_add))
-		return false;
+	TPacketGCItemGroundAdd packet_item_ground_add = value.Get<TPacketGCItemGroundAdd>();
 
 	__GlobalPositionToLocalPosition(packet_item_ground_add.lX, packet_item_ground_add.lY);
 
@@ -309,49 +277,49 @@ bool CPythonNetworkStream::RecvItemGroundAddPacket()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvItemOwnership(const protocol::ItemOwnershipValue& value)
+bool CPythonNetworkStream::RecvItemOwnership(const protocol::Packet& value)
 {
-	CPythonItem::Instance().SetOwnership(value.vid, value.name.data());
+	TPacketGCItemOwnership ownership = value.Get<TPacketGCItemOwnership>();
+
+	CPythonItem::Instance().SetOwnership(ownership.vid, ownership.name);
 	return true;
 }
 
-bool CPythonNetworkStream::RecvItemGroundDelPacket()
+bool CPythonNetworkStream::RecvItemGroundDelPacket(const protocol::Packet& value)
 {
-	TPacketGCItemGroundDel packet_item_ground_del;
-
-	if (!Recv(sizeof(TPacketGCItemGroundDel), &packet_item_ground_del))
-		return false;
+	TPacketGCItemGroundDel packet_item_ground_del = value.Get<TPacketGCItemGroundDel>();
 
 	CPythonItem::Instance().DeleteItem(packet_item_ground_del.vid);
 	return true;
 }
 
-bool CPythonNetworkStream::RecvQuickSlotAddPacket(const protocol::QuickSlotAddValue& value)
+bool CPythonNetworkStream::RecvQuickSlotAddPacket(const protocol::Packet& value)
 {
+	TPacketGCQuickSlotAdd packet = value.Get<TPacketGCQuickSlotAdd>();
+
 	IAbstractPlayer& rkPlayer = IAbstractPlayer::GetSingleton();
-	rkPlayer.AddQuickSlot(value.position, static_cast<char>(value.type), static_cast<char>(value.slotPosition));
+	rkPlayer.AddQuickSlot(packet.position, static_cast<char>(packet.type), static_cast<char>(packet.slotPosition));
 
 	__RefreshInventoryWindow();
 
 	return true;
 }
 
-bool CPythonNetworkStream::RecvQuickSlotDelPacket(const protocol::QuickSlotDelValue& value)
+bool CPythonNetworkStream::RecvQuickSlotDelPacket(const protocol::Packet& value)
 {
+	TPacketGCQuickSlotDel packet = value.Get<TPacketGCQuickSlotDel>();
+
 	IAbstractPlayer& rkPlayer = IAbstractPlayer::GetSingleton();
-	rkPlayer.DeleteQuickSlot(value.position);
+	rkPlayer.DeleteQuickSlot(packet.position);
 
 	__RefreshInventoryWindow();
 
 	return true;
 }
 
-bool CPythonNetworkStream::RecvQuickSlotMovePacket()
+bool CPythonNetworkStream::RecvQuickSlotMovePacket(const protocol::Packet& value)
 {
-	TPacketGCQuickSlotSwap packet_quick_slot_swap;
-
-	if (!Recv(sizeof(TPacketGCQuickSlotSwap), &packet_quick_slot_swap))
-		return false;
+	TPacketGCQuickSlotSwap packet_quick_slot_swap = value.Get<TPacketGCQuickSlotSwap>();
 
 	IAbstractPlayer& rkPlayer = IAbstractPlayer::GetSingleton();
 	rkPlayer.MoveQuickSlot(packet_quick_slot_swap.pos, packet_quick_slot_swap.change_pos);
@@ -745,11 +713,9 @@ bool CPythonNetworkStream::SendQuickSlotMovePacket(BYTE pos, BYTE change_pos)
 	return SendSequence();
 }
 
-bool CPythonNetworkStream::RecvSpecialEffect()
+bool CPythonNetworkStream::RecvSpecialEffect(const protocol::Packet& value)
 {
-	TPacketGCSpecialEffect kSpecialEffect;
-	if (!Recv(sizeof(kSpecialEffect), &kSpecialEffect))
-		return false;
+	TPacketGCSpecialEffect kSpecialEffect = value.Get<TPacketGCSpecialEffect>();
 
 	DWORD effect = -1;
 	bool bPlayPotionSound = false; // 포션을 먹을 경우는 포션 사운드를 출력하자.!!
@@ -869,11 +835,9 @@ bool CPythonNetworkStream::RecvSpecialEffect()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvSpecificEffect()
+bool CPythonNetworkStream::RecvSpecificEffect(const protocol::Packet& value)
 {
-	TPacketGCSpecificEffect kSpecificEffect;
-	if (!Recv(sizeof(kSpecificEffect), &kSpecificEffect))
-		return false;
+	TPacketGCSpecificEffect kSpecificEffect = value.Get<TPacketGCSpecificEffect>();
 
 	CInstanceBase* pInstance = CPythonCharacterManager::Instance().GetInstancePtr(kSpecificEffect.vid);
 	// EFFECT_TEMP
@@ -886,12 +850,9 @@ bool CPythonNetworkStream::RecvSpecificEffect()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvDragonSoulRefine()
+bool CPythonNetworkStream::RecvDragonSoulRefine(const protocol::Packet& value)
 {
-	TPacketGCDragonSoulRefine kDragonSoul;
-
-	if (!Recv(sizeof(kDragonSoul), &kDragonSoul))
-		return false;
+	TPacketGCDragonSoulRefine kDragonSoul = value.Get<TPacketGCDragonSoulRefine>();
 
 	switch (kDragonSoul.bSubType)
 	{

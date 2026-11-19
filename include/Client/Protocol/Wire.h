@@ -2650,4 +2650,32 @@ typedef struct SChannelStatus
 		uint8_t bStatus;
 } TChannelStatus;
 
+typedef struct packet_quickslot_add
+{
+		uint8_t header;
+		uint8_t position;
+		uint8_t type;
+		uint8_t slotPosition;
+} TPacketGCQuickSlotAdd;
+
+typedef struct packet_quickslot_del
+{
+		uint8_t header;
+		uint8_t position;
+} TPacketGCQuickSlotDel;
+
+typedef struct packet_item_ownership
+{
+		uint8_t header;
+		uint32_t vid;
+		char name[protocol::kCharacterNameMaxLen + 1];
+} TPacketGCItemOwnership;
+
+typedef struct packet_target
+{
+		uint8_t header;
+		uint32_t vid;
+		uint8_t hpPercent;
+} TPacketGCTarget;
+
 #pragma pack(pop)
