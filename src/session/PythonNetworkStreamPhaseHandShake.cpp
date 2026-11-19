@@ -112,8 +112,6 @@ bool CPythonNetworkStream::RecvHandshakePacket()
 
 bool CPythonNetworkStream::RecvHandshakeOKPacket(const protocol::Packet& value)
 {
-	const TPacketGCBlank kBlankPacket = value.Get<TPacketGCBlank>();
-
 	DWORD dwDelta = ELTimer_GetMSec() - m_kServerTimeSync.m_dwChangeClientTime;
 	ELTimer_SetServerMSec(m_kServerTimeSync.m_dwChangeServerTime + dwDelta);
 

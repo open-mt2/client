@@ -617,8 +617,6 @@ bool CPythonNetworkStream::RecvPingPacket(const protocol::Packet& value)
 {
 	Tracef("recv ping packet.\n");
 
-	const TPacketGCPing kPacketPing = value.Get<TPacketGCPing>();
-
 	m_dwLastGamePingTime = ELTimer_GetMSec();
 
 	TPacketCGPong kPacketPong;

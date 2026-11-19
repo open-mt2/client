@@ -576,8 +576,6 @@ void CScreenDepthOfField::__DrawFocusRestore()
 	if (fOuter <= 1.0f)
 		return;
 
-	const float fInvWidth = 1.0f / (float)m_iWidth;
-	const float fInvHeight = 1.0f / (float)m_iHeight;
 	const float fInvMaskSize = 1.0f / (2.0f * fOuter);
 
 	STATEMANAGER.SetTexture(0, m_lpSceneTexture);

@@ -249,16 +249,12 @@ bool CPythonNetworkStream::SendRunupMatrixAnswerPacket(const char* c_szMatrixCar
 
 bool CPythonNetworkStream::__RecvNEWCIBNPasspodRequestPacket(const protocol::Packet& value)
 {
-	TPacketGCNEWCIBNPasspodRequest kRequestPacket = value.Get<TPacketGCNEWCIBNPasspodRequest>();
-
 	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_LOGIN], "BINARY_OnNEWCIBNPasspodRequest", Py_BuildValue("()"));
 	return true;
 }
 
 bool CPythonNetworkStream::__RecvNEWCIBNPasspodFailurePacket(const protocol::Packet& value)
 {
-	TPacketGCNEWCIBNPasspodFailure kFailurePacket = value.Get<TPacketGCNEWCIBNPasspodFailure>();
-
 	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_LOGIN], "BINARY_OnNEWCIBNPasspodFailure", Py_BuildValue("()"));
 	return true;
 }

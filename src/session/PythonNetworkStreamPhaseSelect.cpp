@@ -186,8 +186,6 @@ bool CPythonNetworkStream::__RecvPlayerDestroySuccessPacket(const protocol::Pack
 
 bool CPythonNetworkStream::__RecvPlayerDestroyFailurePacket(const protocol::Packet& value)
 {
-	const TPacketGCBlank packet_blank = value.Get<TPacketGCBlank>();
-
 	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_SELECT], "OnDeleteFailure", Py_BuildValue("()"));
 	return true;
 }

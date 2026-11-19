@@ -39,15 +39,15 @@ float c_fDefaultCameraPitchSpeed = 1.5f;
 float c_fDefaultCameraZoomSpeed = 0.05f;
 
 CPythonApplication::CPythonApplication() : m_poMouseHandler(NULL),
+										   m_isDebugLeftButtonCaptured(false),
+										   m_isDebugRightButtonCaptured(false),
+										   m_isDebugMiddleButtonCaptured(false),
 										   m_fAveRenderTime(0.0f),
 										   m_dwLastIdleTime(0),
 										   m_fGlobalTime(0.0f),
 										   m_fGlobalElapsedTime(0.0f),
 										   m_dwUpdateFPS(0),
 										   m_dwRenderFPS(0),
-										   m_isDebugLeftButtonCaptured(false),
-										   m_isDebugRightButtonCaptured(false),
-										   m_isDebugMiddleButtonCaptured(false),
 										   m_dwFaceCount(0),
 										   m_dwLButtonDownTime(0),
 										   m_bCursorVisible(TRUE),

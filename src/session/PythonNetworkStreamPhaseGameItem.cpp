@@ -103,8 +103,6 @@ bool CPythonNetworkStream::RecvSafeBoxDelPacket(const protocol::Packet& value)
 
 bool CPythonNetworkStream::RecvSafeBoxWrongPasswordPacket(const protocol::Packet& value)
 {
-	TPacketGCSafeboxWrongPassword kSafeboxWrongPassword = value.Get<TPacketGCSafeboxWrongPassword>();
-
 	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OnSafeBoxError", Py_BuildValue("()"));
 
 	return true;
@@ -242,8 +240,6 @@ bool CPythonNetworkStream::RecvItemSetPacket2(const protocol::Packet& value)
 
 bool CPythonNetworkStream::RecvItemUsePacket(const protocol::Packet& value)
 {
-	TPacketGCItemUse packet_item_use = value.Get<TPacketGCItemUse>();
-
 	__RefreshInventoryWindow();
 	return true;
 }

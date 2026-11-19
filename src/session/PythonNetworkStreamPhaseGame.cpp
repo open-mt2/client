@@ -1636,8 +1636,6 @@ bool CPythonNetworkStream::RecvQuestConfirmPacket(const protocol::Packet& value)
 
 bool CPythonNetworkStream::RecvRequestMakeGuild(const protocol::Packet& value)
 {
-	TPacketGCBlank blank = value.Get<TPacketGCBlank>();
-
 	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "AskGuildName", Py_BuildValue("()"));
 
 	return true;
@@ -3685,8 +3683,6 @@ bool CPythonNetworkStream::RecvAffectRemovePacket(const protocol::Packet& value)
 
 bool CPythonNetworkStream::RecvChannelPacket(const protocol::Packet& value)
 {
-	TPacketGCChannel kChannelPacket = value.Get<TPacketGCChannel>();
-
 	// Tracef(" >> CPythonNetworkStream::RecvChannelPacket(channel=%d)\n", kChannelPacket.channel);
 
 	return true;
@@ -3895,7 +3891,10 @@ bool CPythonNetworkStream::SendDragonSoulRefinePacket(BYTE bRefineType, TItemPos
 	TPacketCGDragonSoulRefine pk;
 	pk.header = HEADER_CG_DRAGON_SOUL_REFINE;
 	pk.bSubType = bRefineType;
-	memcpy(pk.ItemGrid, pos, sizeof(TItemPos) * DS_REFINE_WINDOW_MAX_NUM);
+
+	for (int i = 0; i < DS_REFINE_WINDOW_MAX_NUM; ++i)
+		pk.ItemGrid[i] = pos[i];
+
 	if (!Send(sizeof(pk), &pk))
 	{
 		return false;
