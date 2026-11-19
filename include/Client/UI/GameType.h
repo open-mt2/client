@@ -1,5 +1,6 @@
 #pragma once
 #include <Client/Game/ItemData.h>
+#include <Client/Protocol/Types.h>
 
 struct SAffects
 {
@@ -192,6 +193,15 @@ typedef struct SItemPos
 			window_type = _window_type;
 			cell = _cell;
 		}
+		SItemPos(const protocol::ItemPos& pos)
+		{
+			window_type = pos.window_type;
+			cell = pos.cell;
+		}
+		operator protocol::ItemPos() const
+		{
+			return protocol::ItemPos(window_type, cell);
+		}
 
 		// 기존에 cell의 형을 보면 BYTE가 대부분이지만, oi
 		// 어떤 부분은 int, 어떤 부분은 WORD로 되어있어,
@@ -297,8 +307,8 @@ const float c_fRunDistance = 310.0f;
 
 enum
 {
-	ITEM_SOCKET_SLOT_MAX_NUM = 3,
-	ITEM_ATTRIBUTE_SLOT_MAX_NUM = 7,
+	ITEM_SOCKET_SLOT_MAX_NUM = protocol::kItemSocketSlotMaxNum,
+	ITEM_ATTRIBUTE_SLOT_MAX_NUM = protocol::kItemAttributeSlotMaxNum,
 };
 
 #pragma pack(push)

@@ -5,9 +5,10 @@
 #include <cstdint>
 #include <variant>
 
+#include <Client/Protocol/Types.h>
+
 namespace protocol
 {
-	constexpr std::size_t kCharacterNameMaxLen = 24;
 	constexpr std::size_t kMaxWireSize = 32;
 
 	struct QuickSlotAddValue
