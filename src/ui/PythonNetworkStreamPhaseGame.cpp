@@ -220,6 +220,16 @@ void CPythonNetworkStream::GamePhase()
 		DWORD timeBeginPacket = timeGetTime();
 #endif
 
+		if (protocol::Has(header))
+		{
+			ret = DecodeProtocolPacket(header);
+
+			if (!ret)
+				break;
+
+			continue;
+		}
+
 		switch (header)
 		{
 			case HEADER_GC_OBSERVER_ADD:
@@ -335,18 +345,6 @@ void CPythonNetworkStream::GamePhase()
 				ret = RecvItemGroundDelPacket();
 				break;
 
-			case HEADER_GC_ITEM_OWNERSHIP:
-				ret = RecvItemOwnership();
-				break;
-
-			case HEADER_GC_QUICKSLOT_ADD:
-				ret = RecvQuickSlotAddPacket();
-				break;
-
-			case HEADER_GC_QUICKSLOT_DEL:
-				ret = RecvQuickSlotDelPacket();
-				break;
-
 			case HEADER_GC_QUICKSLOT_SWAP:
 				ret = RecvQuickSlotMovePacket();
 				break;
@@ -385,10 +383,6 @@ void CPythonNetworkStream::GamePhase()
 
 			case HEADER_GC_QUEST_CONFIRM:
 				ret = RecvQuestConfirmPacket();
-				break;
-
-			case HEADER_GC_TARGET:
-				ret = RecvTargetPacket();
 				break;
 
 			case HEADER_GC_DAMAGE_INFO:
@@ -2353,26 +2347,18 @@ bool CPythonNetworkStream::RecvDamageInfoPacket()
 
 	return true;
 }
-bool CPythonNetworkStream::RecvTargetPacket()
+bool CPythonNetworkStream::RecvTargetPacket(const protocol::TargetValue& value)
 {
-	TPacketGCTarget TargetPacket;
-
-	if (!Recv(sizeof(TPacketGCTarget), &TargetPacket))
-	{
-		Tracen("Recv Target Packet Error");
-		return false;
-	}
-
 	CInstanceBase* pInstPlayer = CPythonCharacterManager::Instance().GetMainInstancePtr();
-	CInstanceBase* pInstTarget = CPythonCharacterManager::Instance().GetInstancePtr(TargetPacket.dwVID);
+	CInstanceBase* pInstTarget = CPythonCharacterManager::Instance().GetInstancePtr(value.vid);
 	if (pInstPlayer && pInstTarget)
 	{
 		if (!pInstTarget->IsDead())
 		{
 			if (pInstTarget->IsPC() || pInstTarget->IsBuilding())
-				PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "CloseTargetBoardIfDifferent", Py_BuildValue("(i)", TargetPacket.dwVID));
+				PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "CloseTargetBoardIfDifferent", Py_BuildValue("(i)", value.vid));
 			else if (pInstPlayer->CanViewTargetHP(*pInstTarget))
-				PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "SetHPTargetBoard", Py_BuildValue("(ii)", TargetPacket.dwVID, TargetPacket.bHPPercent));
+				PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "SetHPTargetBoard", Py_BuildValue("(ii)", value.vid, value.hpPercent));
 			else
 				PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "CloseTargetBoard", Py_BuildValue("()"));
 

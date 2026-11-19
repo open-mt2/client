@@ -78,10 +78,7 @@ class CMainPacketHeaderMap : public CNetworkPacketHeaderMap
 
 			Set(HEADER_GC_ITEM_GROUND_ADD, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCItemGroundAdd), STATIC_SIZE_PACKET));
 			Set(HEADER_GC_ITEM_GROUND_DEL, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCItemGroundDel), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_ITEM_OWNERSHIP, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCItemOwnership), STATIC_SIZE_PACKET));
 
-			Set(HEADER_GC_QUICKSLOT_ADD, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCQuickSlotAdd), STATIC_SIZE_PACKET));
-			Set(HEADER_GC_QUICKSLOT_DEL, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCQuickSlotDel), STATIC_SIZE_PACKET));
 			Set(HEADER_GC_QUICKSLOT_SWAP, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCQuickSlotSwap), STATIC_SIZE_PACKET));
 
 			Set(HEADER_GC_WHISPER, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCWhisper), STATIC_SIZE_PACKET));
@@ -98,7 +95,6 @@ class CMainPacketHeaderMap : public CNetworkPacketHeaderMap
 			Set(HEADER_GC_SCRIPT, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCScript), DYNAMIC_SIZE_PACKET));
 			Set(HEADER_GC_QUEST_CONFIRM, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCQuestConfirm), STATIC_SIZE_PACKET));
 
-			Set(HEADER_GC_TARGET, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCTarget), STATIC_SIZE_PACKET));
 			Set(HEADER_GC_MOUNT, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCMount), STATIC_SIZE_PACKET));
 
 			Set(HEADER_GC_CHANGE_SPEED, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCChangeSpeed), STATIC_SIZE_PACKET));
@@ -174,6 +170,12 @@ class CMainPacketHeaderMap : public CNetworkPacketHeaderMap
 
 			Set(HEADER_GC_SPECIFIC_EFFECT, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCSpecificEffect), STATIC_SIZE_PACKET));
 			Set(HEADER_GC_DRAGON_SOUL_REFINE, CNetworkPacketHeaderMap::TPacketType(sizeof(TPacketGCDragonSoulRefine), STATIC_SIZE_PACKET));
+
+			std::size_t protocolPacketCount = 0;
+			const protocol::SizeEntry* protocolPackets = protocol::SizeTable(&protocolPacketCount);
+
+			for (std::size_t i = 0; i < protocolPacketCount; ++i)
+				Set(protocolPackets[i].header, CNetworkPacketHeaderMap::TPacketType(protocolPackets[i].size, STATIC_SIZE_PACKET));
 		}
 };
 
@@ -564,6 +566,41 @@ bool CPythonNetworkStream::CheckPacket(TPacketHeader* pRetHeader)
 	// Tracenf("header %d size %d", header, PacketType.iPacketSize);
 	// Tracenf("header %d size %d outputpos[%d] security %u", header, PacketType.iPacketSize, m_recvBufOutputPos, IsSecurityMode());
 	return true;
+}
+
+bool CPythonNetworkStream::DecodeProtocolPacket(TPacketHeader header)
+{
+	std::size_t size = 0;
+
+	if (!protocol::Size(header, &size) || size > protocol::kMaxWireSize)
+		return false;
+
+	unsigned char bytes[protocol::kMaxWireSize];
+
+	if (!Peek(static_cast<int>(size), bytes))
+		return false;
+
+	protocol::Value value;
+
+	if (!protocol::Decode(header, bytes, size, &value))
+		return false;
+
+	if (!Recv(static_cast<int>(size)))
+		return false;
+
+	if (const auto* quickSlotAdd = std::get_if<protocol::QuickSlotAddValue>(&value))
+		return RecvQuickSlotAddPacket(*quickSlotAdd);
+
+	if (const auto* quickSlotDel = std::get_if<protocol::QuickSlotDelValue>(&value))
+		return RecvQuickSlotDelPacket(*quickSlotDel);
+
+	if (const auto* ownership = std::get_if<protocol::ItemOwnershipValue>(&value))
+		return RecvItemOwnership(*ownership);
+
+	if (const auto* target = std::get_if<protocol::TargetValue>(&value))
+		return RecvTargetPacket(*target);
+
+	return false;
 }
 
 bool CPythonNetworkStream::RecvErrorPacket(int header)

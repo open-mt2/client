@@ -1769,26 +1769,6 @@ typedef struct packet_ground_del_item
 		DWORD vid;
 } TPacketGCItemGroundDel;
 
-typedef struct packet_item_ownership
-{
-		BYTE bHeader;
-		DWORD dwVID;
-		char szName[CHARACTER_NAME_MAX_LEN + 1];
-} TPacketGCItemOwnership;
-
-typedef struct packet_quickslot_add
-{
-		BYTE header;
-		BYTE pos;
-		TQuickSlot slot;
-} TPacketGCQuickSlotAdd;
-
-typedef struct packet_quickslot_del
-{
-		BYTE header;
-		BYTE pos;
-} TPacketGCQuickSlotDel;
-
 typedef struct packet_quickslot_swap
 {
 		BYTE header;
@@ -1895,13 +1875,6 @@ typedef struct packet_script
 		BYTE skin;
 		WORD src_size;
 } TPacketGCScript;
-
-typedef struct packet_target
-{
-		BYTE header;
-		DWORD dwVID;
-		BYTE bHPPercent;
-} TPacketGCTarget;
 
 typedef struct packet_damage_info
 {

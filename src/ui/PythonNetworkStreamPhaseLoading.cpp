@@ -85,6 +85,14 @@ void CPythonNetworkStream::LoadingPhase()
 	if (!CheckPacket(&header))
 		return;
 
+	if (protocol::Has(header))
+	{
+		if (!DecodeProtocolPacket(header))
+			RecvErrorPacket(header);
+
+		return;
+	}
+
 	switch (header)
 	{
 		case HEADER_GC_PHASE:
@@ -137,11 +145,6 @@ void CPythonNetworkStream::LoadingPhase()
 
 		case HEADER_GC_PING:
 			if (RecvPingPacket())
-				return;
-			break;
-
-		case HEADER_GC_QUICKSLOT_ADD:
-			if (RecvQuickSlotAddPacket())
 				return;
 			break;
 

@@ -309,14 +309,9 @@ bool CPythonNetworkStream::RecvItemGroundAddPacket()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvItemOwnership()
+bool CPythonNetworkStream::RecvItemOwnership(const protocol::ItemOwnershipValue& value)
 {
-	TPacketGCItemOwnership p;
-
-	if (!Recv(sizeof(TPacketGCItemOwnership), &p))
-		return false;
-
-	CPythonItem::Instance().SetOwnership(p.dwVID, p.szName);
+	CPythonItem::Instance().SetOwnership(value.vid, value.name.data());
 	return true;
 }
 
@@ -331,30 +326,20 @@ bool CPythonNetworkStream::RecvItemGroundDelPacket()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvQuickSlotAddPacket()
+bool CPythonNetworkStream::RecvQuickSlotAddPacket(const protocol::QuickSlotAddValue& value)
 {
-	TPacketGCQuickSlotAdd packet_quick_slot_add;
-
-	if (!Recv(sizeof(TPacketGCQuickSlotAdd), &packet_quick_slot_add))
-		return false;
-
 	IAbstractPlayer& rkPlayer = IAbstractPlayer::GetSingleton();
-	rkPlayer.AddQuickSlot(packet_quick_slot_add.pos, packet_quick_slot_add.slot.Type, packet_quick_slot_add.slot.Position);
+	rkPlayer.AddQuickSlot(value.position, static_cast<char>(value.type), static_cast<char>(value.slotPosition));
 
 	__RefreshInventoryWindow();
 
 	return true;
 }
 
-bool CPythonNetworkStream::RecvQuickSlotDelPacket()
+bool CPythonNetworkStream::RecvQuickSlotDelPacket(const protocol::QuickSlotDelValue& value)
 {
-	TPacketGCQuickSlotDel packet_quick_slot_del;
-
-	if (!Recv(sizeof(TPacketGCQuickSlotDel), &packet_quick_slot_del))
-		return false;
-
 	IAbstractPlayer& rkPlayer = IAbstractPlayer::GetSingleton();
-	rkPlayer.DeleteQuickSlot(packet_quick_slot_del.pos);
+	rkPlayer.DeleteQuickSlot(value.position);
 
 	__RefreshInventoryWindow();
 

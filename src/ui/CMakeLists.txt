@@ -81,6 +81,7 @@ endif()
 
 target_link_libraries(client_ui
     PUBLIC
+        client_protocol
         client_game
         neoeter_python_bindings
         neoeter_python_host

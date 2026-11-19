@@ -7,6 +7,7 @@
 #include <Client/UI/InsultChecker.h>
 
 #include <Client/UI/Packet.h>
+#include <Client/Protocol/Decode.h>
 
 class CInstanceBase;
 class CNetworkActorManager;
@@ -385,6 +386,7 @@ class CPythonNetworkStream : public CNetworkStream, public CSingleton<CPythonNet
 		bool RecvPingPacket();
 		bool RecvDefaultPacket(int header);
 		bool RecvPhasePacket();
+		bool DecodeProtocolPacket(TPacketHeader header);
 
 		// Login Phase
 		bool __RecvLoginSuccessPacket3();
@@ -444,11 +446,11 @@ class CPythonNetworkStream : public CNetworkStream, public CSingleton<CPythonNet
 		bool RecvItemUpdatePacket(); // Alarm to python
 		bool RecvItemGroundAddPacket();
 		bool RecvItemGroundDelPacket();
-		bool RecvItemOwnership();
+		bool RecvItemOwnership(const protocol::ItemOwnershipValue& value);
 
-		bool RecvQuickSlotAddPacket();	// Alarm to python
-		bool RecvQuickSlotDelPacket();	// Alarm to python
-		bool RecvQuickSlotMovePacket(); // Alarm to python
+		bool RecvQuickSlotAddPacket(const protocol::QuickSlotAddValue& value); // Alarm to python
+		bool RecvQuickSlotDelPacket(const protocol::QuickSlotDelValue& value); // Alarm to python
+		bool RecvQuickSlotMovePacket();										   // Alarm to python
 
 		bool RecvCharacterPositionPacket();
 		bool RecvMotionPacket();
@@ -469,7 +471,7 @@ class CPythonNetworkStream : public CNetworkStream, public CSingleton<CPythonNet
 		bool RecvSkillCoolTimeEnd();
 
 		// Target
-		bool RecvTargetPacket();
+		bool RecvTargetPacket(const protocol::TargetValue& value);
 		bool RecvViewEquipPacket();
 		bool RecvDamageInfoPacket();
 
