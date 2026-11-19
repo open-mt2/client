@@ -2,6 +2,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <ctime>
 
 #include <Client/Protocol/Types.h>
 
@@ -2559,7 +2560,7 @@ typedef struct packet_state
 		uint8_t bRot;
 		uint32_t dwVID;
 		uint32_t dwTime;
-		TPixelPosition kPPos;
+		protocol::Vector3 kPPos;
 } TPacketCCState;
 
 // AUTOBAN

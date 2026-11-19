@@ -40,10 +40,18 @@ namespace protocol
 	struct SizeEntry
 	{
 			uint8_t header;
-			uint8_t size;
+			std::size_t size;
+			bool dynamic;
 	};
 
+	// True when a decoder exists for the header.
 	bool Has(uint8_t header);
+
+	// True when the header is in the size registry, decoded or not.
+	bool IsRegistered(uint8_t header);
+
+	// True when the header carries a variable-length body.
+	bool IsDynamic(uint8_t header);
 
 	bool Size(uint8_t header, std::size_t* size);
 

@@ -314,18 +314,6 @@ enum
 #pragma pack(push)
 #pragma pack(1)
 
-typedef struct SQuickSlot
-{
-		BYTE Type;
-		BYTE Position;
-} TQuickSlot;
-
-typedef struct TPlayerItemAttribute
-{
-		BYTE bType;
-		short sValue;
-} TPlayerItemAttribute;
-
 typedef struct packet_item
 {
 		DWORD vnum;
@@ -335,16 +323,6 @@ typedef struct packet_item
 		LONG alSockets[ITEM_SOCKET_SLOT_MAX_NUM];
 		TPlayerItemAttribute aAttr[ITEM_ATTRIBUTE_SLOT_MAX_NUM];
 } TItemData;
-
-typedef struct packet_shop_item
-{
-		DWORD vnum;
-		DWORD price;
-		BYTE count;
-		BYTE display_pos;
-		LONG alSockets[ITEM_SOCKET_SLOT_MAX_NUM];
-		TPlayerItemAttribute aAttr[ITEM_ATTRIBUTE_SLOT_MAX_NUM];
-} TShopItemData;
 
 #pragma pack(pop)
 

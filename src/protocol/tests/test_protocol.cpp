@@ -42,7 +42,7 @@ namespace
 
 		std::size_t count = 0;
 		protocol::SizeTable(&count);
-		TEST_ASSERT(count == 4);
+		TEST_ASSERT(count == 109);
 
 		std::size_t size = 0;
 		TEST_ASSERT(protocol::Size(kQuickSlotAdd, &size) && size == 4);

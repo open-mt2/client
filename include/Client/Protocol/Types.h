@@ -30,5 +30,36 @@ namespace protocol
 				return (window_type < rhs.window_type) || (window_type == rhs.window_type && cell < rhs.cell);
 			}
 	};
+
+	struct Vector3
+	{
+			float x;
+			float y;
+			float z;
+	};
 #pragma pack(pop)
 }
+
+#pragma pack(push, 1)
+typedef struct SQuickSlot
+{
+		uint8_t Type;
+		uint8_t Position;
+} TQuickSlot;
+
+typedef struct TPlayerItemAttribute
+{
+		uint8_t bType;
+		int16_t sValue;
+} TPlayerItemAttribute;
+
+typedef struct packet_shop_item
+{
+		uint32_t vnum;
+		uint32_t price;
+		uint8_t count;
+		uint8_t display_pos;
+		int32_t alSockets[protocol::kItemSocketSlotMaxNum];
+		TPlayerItemAttribute aAttr[protocol::kItemAttributeSlotMaxNum];
+} TShopItemData;
+#pragma pack(pop)
