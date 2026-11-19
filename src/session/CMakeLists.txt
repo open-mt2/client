@@ -14,15 +14,19 @@ target_include_directories(client_session
         ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-find_package(PythonLibs 2.7 QUIET)
-if(NOT PYTHON_INCLUDE_DIRS)
-    find_path(PYTHON_INCLUDE_DIRS NAMES Python.h
-        HINTS
-            ${CMAKE_CURRENT_SOURCE_DIR}/../../extern/include/python2.7
-            ${CMAKE_CURRENT_SOURCE_DIR}/../extern/include/python2.7
-            /usr/include/python2.7
-    )
-endif()
+find_library(PYTHON_LIBRARIES NAMES python2.7 python27 libpython2.7 libpython27
+    HINTS
+        ${CMAKE_CURRENT_SOURCE_DIR}/../../extern/lib
+        ${CMAKE_CURRENT_SOURCE_DIR}/../extern/lib
+        ${CMAKE_CURRENT_SOURCE_DIR}/extern/lib
+)
+find_path(PYTHON_INCLUDE_DIRS NAMES Python.h
+    HINTS
+        ${PYTHON_INCLUDE_DIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}/../../extern/include/python2.7
+        ${CMAKE_CURRENT_SOURCE_DIR}/../extern/include/python2.7
+        /usr/include/python2.7
+)
 target_include_directories(client_session SYSTEM PRIVATE ${PYTHON_INCLUDE_DIRS})
 
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../../extern/include")
