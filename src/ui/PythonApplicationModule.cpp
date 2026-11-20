@@ -9,6 +9,28 @@ BOOL bVisibleNotice = true;
 BOOL bTestServerFlag = FALSE;
 int TWOHANDED_WEWAPON_ATT_SPEED_DECREASE_VALUE = 0;
 
+// Packs still call the in-game browser exports; the browser itself is gone, so
+// these stay as no-ops until the pack calls are removed.
+PyObject* appIsWebPageMode(PyObject* poSelf, PyObject* poArgs)
+{
+	return Py_BuildValue("i", 0);
+}
+
+PyObject* appShowWebPage(PyObject* poSelf, PyObject* poArgs)
+{
+	return Py_BuildNone();
+}
+
+PyObject* appMoveWebPage(PyObject* poSelf, PyObject* poArgs)
+{
+	return Py_BuildNone();
+}
+
+PyObject* appHideWebPage(PyObject* poSelf, PyObject* poArgs)
+{
+	return Py_BuildNone();
+}
+
 PyObject* appEnablePerformanceTime(PyObject* poSelf, PyObject* poArgs)
 {
 	char* szMode;
@@ -1168,6 +1190,10 @@ void initapp()
 
 			{"GetRandom", appGetRandom, METH_VARARGS, NULL},
 			{"RunPythonFile", appRunPythonFile, METH_VARARGS, NULL},
+			{"IsWebPageMode", appIsWebPageMode, METH_VARARGS, NULL},
+			{"ShowWebPage", appShowWebPage, METH_VARARGS, NULL},
+			{"MoveWebPage", appMoveWebPage, METH_VARARGS, NULL},
+			{"HideWebPage", appHideWebPage, METH_VARARGS, NULL},
 			{"IsPressed", appIsPressed, METH_VARARGS, NULL},
 			{"SetCursor", appSetCursor, METH_VARARGS, NULL},
 			{"GetCursor", appGetCursor, METH_VARARGS, NULL},

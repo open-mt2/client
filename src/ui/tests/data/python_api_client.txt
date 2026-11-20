@@ -177,6 +177,7 @@ module	app
   HSIZE	int	12
   HVSIZE	int	14
   HideCursor	callable
+  HideWebPage	callable
   INFO_ACTOR	int	0
   INFO_EFFECT	int	1
   INFO_ITEM	int	2
@@ -192,11 +193,13 @@ module	app
   IsShowCursor	callable
   IsTestStage	callable
   IsVisibleNotice	callable
+  IsWebPageMode	callable
   LoadCameraSetting	callable
   LoadLocaleAddr	callable
   LoadLocaleData	callable
   Loop	callable
   MAGIC	int	8
+  MoveWebPage	callable
   MoviePitchCamera	callable
   MovieResetCamera	callable
   MovieRotateCamera	callable
@@ -247,6 +250,7 @@ module	app
   SetVisibleNotice	callable
   SetWeaponSpecularEnable	callable
   ShowCursor	callable
+  ShowWebPage	callable
   Sleep	callable
   TALK	int	3
   TARGET	int	2
