@@ -4,7 +4,7 @@
 
 #include <Client/UI/PythonGuild.h>
 #include <Client/UI/PythonCharacterManager.h>
-#include <Client/UI/PythonPlayer.h>
+#include <Client/Player/PythonPlayer.h>
 #include <Client/UI/PythonBackground.h>
 #include <Client/UI/PythonMiniMap.h>
 #include <Client/UI/PythonTextTail.h>

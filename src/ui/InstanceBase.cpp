@@ -2,7 +2,7 @@
 #include <Client/UI/InstanceBase.h>
 #include <Client/UI/PythonBackground.h>
 #include <Client/UI/PythonNonPlayer.h>
-#include <Client/UI/PythonPlayer.h>
+#include <Client/Player/PythonPlayer.h>
 #include <Client/UI/PythonCharacterManager.h>
 #include <Client/UI/AbstractPlayer.h>
 #include <Client/UI/AbstractApplication.h>

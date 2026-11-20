@@ -1,6 +1,6 @@
 #include <Client/UI/StdAfx.h>
-#include <Client/UI/PythonPlayer.h>
-#include <Client/UI/PythonPlayerEventHandler.h>
+#include <Client/Player/PythonPlayer.h>
+#include <Client/Player/PythonPlayerEventHandler.h>
 #include <Client/UI/PythonApplication.h>
 #include <Neoeter/Render/Camera.h>
 #include <Neoeter/Platform/Base/Timer.h>

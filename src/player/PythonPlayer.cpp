@@ -1,5 +1,5 @@
 #include <Client/UI/StdAfx.h>
-#include <Client/UI/PythonPlayerEventHandler.h>
+#include <Client/Player/PythonPlayerEventHandler.h>
 #include <Client/UI/PythonApplication.h>
 #include <Client/UI/PythonItem.h>
 #include <Client/Game/Balance.h>

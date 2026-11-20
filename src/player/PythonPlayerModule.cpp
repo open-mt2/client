@@ -1,5 +1,5 @@
 #include <Client/UI/StdAfx.h>
-#include <Client/UI/PythonPlayer.h>
+#include <Client/Player/PythonPlayer.h>
 #include <Client/UI/PythonApplication.h>
 
 extern const DWORD c_iSkillIndex_Tongsol = 121;

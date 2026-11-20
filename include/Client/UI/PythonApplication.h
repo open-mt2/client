@@ -14,7 +14,7 @@
 #include <Neoeter/Audio/SoundManager.h>
 
 #include <Client/UI/PythonEventManager.h>
-#include <Client/UI/PythonPlayer.h>
+#include <Client/Player/PythonPlayer.h>
 #include <Client/UI/PythonNonPlayer.h>
 #include <Client/UI/PythonMiniMap.h>
 #include <Client/UI/PythonIME.h>

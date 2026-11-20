@@ -1,5 +1,5 @@
 #include <Client/UI/StdAfx.h>
-#include <Client/UI/PythonPlayer.h>
+#include <Client/Player/PythonPlayer.h>
 #include <Client/UI/PythonTextTail.h>
 #include <Client/Session/PythonNetworkStream.h>
 #include <Client/UI/InstanceBase.h>

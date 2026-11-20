@@ -3,7 +3,7 @@
 #include <Client/UI/PythonTextTail.h>
 #include <Client/UI/AbstractApplication.h>
 #include <Client/UI/AbstractPlayer.h>
-#include <Client/UI/PythonPlayer.h>
+#include <Client/Player/PythonPlayer.h>
 #include <Client/UI/PythonSystem.h>
 
 #include <Neoeter/Effect/EffectManager.h>
