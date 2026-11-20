@@ -675,8 +675,8 @@ namespace
 			ImGui::TableNextColumn();
 			ImGui::BeginChild("ResourceList", ImVec2(0.0f, contentHeight), true);
 			{
-				char filter[256];
-				std::snprintf(filter, sizeof(filter), "%s", gs_state.filter.c_str());
+				char filter[256] = {};
+				snprintf(filter, sizeof(filter), "%s", gs_state.filter.c_str());
 
 				ImGui::SetNextItemWidth(-1.0f);
 				if (ImGui::InputTextWithHint("##resourcefilter", "Filter resources", filter, sizeof(filter)))
