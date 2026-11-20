@@ -31,7 +31,7 @@ inline void Platform_SetCursorHandle(HANDLE handle)
 
 // SDL_ShowCursor returns the previous 0/1 state, not the Win32 reference
 // counter; callers must not drive a do/while loop with it.
-inline int Platform_ShowCursorFlag(BOOL show)
+inline int Platform_ShowCursorFlag(int32_t show)
 {
 	return SDL_ShowCursor(show ? SDL_ENABLE : SDL_DISABLE);
 }

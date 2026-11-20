@@ -63,7 +63,7 @@ namespace Neoeter
 
 	bool GameSession::Prepare()
 	{
-		const DWORD randomSeed = time(NULL) + DWORD((uintptr_t)GetCurrentProcess());
+		const uint32_t randomSeed = time(NULL) + uint32_t((uintptr_t)GetCurrentProcess());
 		srandom(randomSeed);
 		srand(random());
 
@@ -74,7 +74,7 @@ namespace Neoeter
 		g_isScreenShotKey = true;
 #endif
 #ifdef LOCALE_SERVICE_VIETNAM_MILD
-		extern BOOL USE_VIETNAM_CONVERT_WEAPON_VNUM;
+		extern int32_t USE_VIETNAM_CONVERT_WEAPON_VNUM;
 		USE_VIETNAM_CONVERT_WEAPON_VNUM = true;
 #endif
 

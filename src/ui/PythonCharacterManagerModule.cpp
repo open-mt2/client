@@ -76,7 +76,7 @@ PyObject* chrmgrGetPickedVID(PyObject* poSelf, PyObject* poArgs)
 {
 	CPythonCharacterManager& rkChrMgr = CPythonCharacterManager::Instance();
 
-	DWORD dwPickedActorID;
+	uint32_t dwPickedActorID;
 	if (rkChrMgr.OLD_GetPickedInstanceVID(&dwPickedActorID))
 		return Py_BuildValue("i", dwPickedActorID);
 	else
@@ -98,8 +98,8 @@ PyObject* chrmgrGetVIDInfo(PyObject* poSelf, PyObject* poArgs)
 		TPixelPosition kPPosInst;
 		pkInstBase->NEW_GetPixelPosition(&kPPosInst);
 
-		LONG xInst = kPPosInst.x;
-		LONG yInst = kPPosInst.y;
+		int32_t xInst = kPPosInst.x;
+		int32_t yInst = kPPosInst.y;
 
 		CPythonBackground& rkBG = CPythonBackground::Instance();
 		rkBG.LocalPositionToGlobalPosition(xInst, yInst);
@@ -633,7 +633,7 @@ PyObject* chrmgrShowPointEffect(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildNone();
 }
 
-void CPythonCharacterManager::SCRIPT_SetAffect(DWORD dwVID, DWORD eState, BOOL isVisible)
+void CPythonCharacterManager::SCRIPT_SetAffect(uint32_t dwVID, uint32_t eState, int32_t isVisible)
 {
 	CInstanceBase* pkInstSel = (dwVID == 0xffffffff) ? GetSelectedInstancePtr() : GetInstancePtr(dwVID);
 	if (!pkInstSel)
@@ -661,7 +661,7 @@ PyObject* chrmgrSetAffect(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildNone();
 }
 
-void CPythonCharacterManager::SetEmoticon(DWORD dwVID, DWORD eState)
+void CPythonCharacterManager::SetEmoticon(uint32_t dwVID, uint32_t eState)
 {
 	CInstanceBase* pkInstSel = (dwVID == 0xffffffff) ? GetSelectedInstancePtr() : GetInstancePtr(dwVID);
 	if (!pkInstSel)
@@ -670,7 +670,7 @@ void CPythonCharacterManager::SetEmoticon(DWORD dwVID, DWORD eState)
 	pkInstSel->SetEmoticon(eState);
 }
 
-bool CPythonCharacterManager::IsPossibleEmoticon(DWORD dwVID)
+bool CPythonCharacterManager::IsPossibleEmoticon(uint32_t dwVID)
 {
 	CInstanceBase* pkInstSel = (dwVID == 0xffffffff) ? GetSelectedInstancePtr() : GetInstancePtr(dwVID);
 	if (!pkInstSel)

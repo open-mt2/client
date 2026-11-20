@@ -68,7 +68,7 @@ void CPythonIME::OnEscape()
 	//	IAbstractApplication::GetSingleton().RunIMEEscapeEvent();
 }
 
-bool CPythonIME::OnWM_CHAR(WPARAM wParam, LPARAM lParam)
+bool CPythonIME::OnWM_CHAR(uintptr_t wParam, intptr_t lParam)
 {
 	unsigned char c = (unsigned char)(wParam & 0xff);
 

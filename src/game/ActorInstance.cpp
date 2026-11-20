@@ -28,30 +28,30 @@ void CActorInstance::INSTANCEBASE_Transform()
 		m_bNeedUpdateCollision = TRUE;
 	}
 
-	// DWORD t2=ELTimer_GetMSec();
+	// uint32_t t2=ELTimer_GetMSec();
 	Update();
-	// DWORD t3=ELTimer_GetMSec();
+	// uint32_t t3=ELTimer_GetMSec();
 	TransformProcess();
-	// DWORD t4=ELTimer_GetMSec();
+	// uint32_t t4=ELTimer_GetMSec();
 	Transform();
-	// DWORD t5=ELTimer_GetMSec();
+	// uint32_t t5=ELTimer_GetMSec();
 	UpdatePointInstance();
-	// DWORD t6=ELTimer_GetMSec();
+	// uint32_t t6=ELTimer_GetMSec();
 	ShakeProcess();
-	// DWORD t7=ELTimer_GetMSec();
+	// uint32_t t7=ELTimer_GetMSec();
 	UpdateBoundingSphere();
-	// DWORD t8=ELTimer_GetMSec();
+	// uint32_t t8=ELTimer_GetMSec();
 	UpdateAttribute();
 }
 
 /*
 void CActorInstance::TEMP_Update()
 {
-	//DWORD t1=ELTimer_GetMSec();
+	//uint32_t t1=ELTimer_GetMSec();
 	OnUpdate();
-	//DWORD t2=ELTimer_GetMSec();
+	//uint32_t t2=ELTimer_GetMSec();
 	UpdateBoundingSphere();
-	//DWORD t3=ELTimer_GetMSec();
+	//uint32_t t3=ELTimer_GetMSec();
 
 #ifdef __PERFORMANCE_CHECKER__
 	{
@@ -75,24 +75,24 @@ void CActorInstance::TEMP_Update()
 void CActorInstance::OnUpdate()
 {
 #ifdef __PERFORMANCE_CHECKER__
-	DWORD t1 = ELTimer_GetMSec();
+	uint32_t t1 = ELTimer_GetMSec();
 #endif
 	if (!IsParalysis())
 		CGraphicThingInstance::OnUpdate();
 #ifdef __PERFORMANCE_CHECKER__
-	DWORD t2 = ELTimer_GetMSec();
+	uint32_t t2 = ELTimer_GetMSec();
 #endif
 
 	UpdateAttachingInstances();
 
 #ifdef __PERFORMANCE_CHECKER__
-	DWORD t3 = ELTimer_GetMSec();
+	uint32_t t3 = ELTimer_GetMSec();
 #endif
 
 	__BlendAlpha_Update();
 
 #ifdef __PERFORMANCE_CHECKER__
-	DWORD t4 = ELTimer_GetMSec();
+	uint32_t t4 = ELTimer_GetMSec();
 	{
 		static FILE* fp = fopen("perf_actor_update2.txt", "w");
 
@@ -159,7 +159,7 @@ float CActorInstance::__GetAttackSpeed()
 	return m_fAtkSpd;
 }
 
-WORD CActorInstance::__GetCurrentComboType()
+uint16_t CActorInstance::__GetCurrentComboType()
 {
 	if (IsBowMode())
 		return 0;
@@ -171,7 +171,7 @@ WORD CActorInstance::__GetCurrentComboType()
 	return m_wcurComboType;
 }
 
-void CActorInstance::SetComboType(WORD wComboType)
+void CActorInstance::SetComboType(uint16_t wComboType)
 {
 	m_wcurComboType = wComboType;
 }
@@ -219,18 +219,18 @@ void CActorInstance::Stop(float fBlendingTime)
 	SetLoopMotion(CRaceMotionData::NAME_WAIT, fBlendingTime);
 }
 
-void CActorInstance::SetOwner(DWORD dwOwnerVID)
+void CActorInstance::SetOwner(uint32_t dwOwnerVID)
 {
 	m_fOwnerBaseTime = GetLocalTime();
 	m_dwOwnerVID = dwOwnerVID;
 }
 
-void CActorInstance::SetActorType(UINT eType)
+void CActorInstance::SetActorType(uint32_t eType)
 {
 	m_eActorType = eType;
 }
 
-UINT CActorInstance::GetActorType() const
+uint32_t CActorInstance::GetActorType() const
 {
 	return m_eActorType;
 }
@@ -385,52 +385,52 @@ void CActorInstance::Die()
 	m_isRealDead = TRUE;
 }
 
-BOOL CActorInstance::IsSleep()
+int32_t CActorInstance::IsSleep()
 {
 	return m_isSleep;
 }
 
-BOOL CActorInstance::IsParalysis()
+int32_t CActorInstance::IsParalysis()
 {
 	return m_isParalysis;
 }
 
-BOOL CActorInstance::IsFaint()
+int32_t CActorInstance::IsFaint()
 {
 	return m_isFaint;
 }
 
-BOOL CActorInstance::IsResistFallen()
+int32_t CActorInstance::IsResistFallen()
 {
 	return m_isResistFallen;
 }
 
-BOOL CActorInstance::IsMoving()
+int32_t CActorInstance::IsMoving()
 {
 	return __IsMoveMotion();
 }
 
-BOOL CActorInstance::IsWaiting()
+int32_t CActorInstance::IsWaiting()
 {
 	return __IsWaitMotion();
 }
 
-BOOL CActorInstance::IsDead()
+int32_t CActorInstance::IsDead()
 {
 	return m_isRealDead;
 }
 
-BOOL CActorInstance::IsKnockDown()
+int32_t CActorInstance::IsKnockDown()
 {
 	return __IsKnockDownMotion();
 }
 
-BOOL CActorInstance::IsDamage()
+int32_t CActorInstance::IsDamage()
 {
 	return __IsDamageMotion();
 }
 
-BOOL CActorInstance::IsAttacked()
+int32_t CActorInstance::IsAttacked()
 {
 	if (IsPushing())
 		return TRUE;
@@ -459,7 +459,7 @@ void CActorInstance::__AccumulationMovement(float fRot)
 {
 	// NOTE - 일단은 WAIT로 미끄러짐 방지
 	//        추후에는 RaceMotionData가 이동되는 모션인지에 대한 Flag를 갖고 있게끔 한다. - [levites]
-	WORD motion = __GetCurrentMotionIndex();
+	uint16_t motion = __GetCurrentMotionIndex();
 	if (CRaceMotionData::NAME_WAIT == motion ||
 		CRaceMotionData::NAME_INTRO_WAIT == motion ||
 		CRaceMotionData::NAME_INTRO_SELECTED == motion ||
@@ -571,7 +571,7 @@ void CActorInstance::Revive()
 	__InitializeCollisionData();
 }
 
-BOOL CActorInstance::IsStun()
+int32_t CActorInstance::IsStun()
 {
 	return m_isStun;
 }
@@ -597,7 +597,7 @@ void CActorInstance::SetRunMode()
 
 MOTION_KEY CActorInstance::GetNormalAttackIndex()
 {
-	WORD wMotionIndex;
+	uint16_t wMotionIndex;
 	m_pkCurRaceData->GetNormalAttackIndex(GetMotionMode(), &wMotionIndex);
 
 	return MAKE_MOTION_KEY(GetMotionMode(), wMotionIndex);
@@ -636,7 +636,7 @@ void CActorInstance::AdjustDynamicCollisionMovement(const CActorInstance* c_pAct
 	if (isAttacking())
 		return;
 
-	UINT uActorType = c_pActorInstance->GetActorType();
+	uint32_t uActorType = c_pActorInstance->GetActorType();
 	if ((uActorType == TYPE_BUILDING) || (uActorType == TYPE_OBJECT) || (uActorType == TYPE_DOOR) || (uActorType == TYPE_STONE))
 	{
 		BlockMovement();
@@ -648,7 +648,7 @@ void CActorInstance::AdjustDynamicCollisionMovement(const CActorInstance* c_pAct
 			for (; itMain != m_BodyPointInstanceList.end(); ++itMain)
 			{
 				CDynamicSphereInstanceVector & c_rMainSphereVector = (*itMain).SphereInstanceVector;
-				for (DWORD i = 0; i < c_rMainSphereVector.size(); ++i)
+				for (uint32_t i = 0; i < c_rMainSphereVector.size(); ++i)
 				{
 					CDynamicSphereInstance & c_rMainSphere = c_rMainSphereVector[i];
 					c_rMainSphere.v3Position =c_rMainSphere.v3LastPosition;
@@ -666,7 +666,7 @@ void CActorInstance::AdjustDynamicCollisionMovement(const CActorInstance* c_pAct
 		for (; itMain != m_BodyPointInstanceList.end(); ++itMain)
 		{
 			CDynamicSphereInstanceVector& c_rMainSphereVector = (*itMain).SphereInstanceVector;
-			for (DWORD i = 0; i < c_rMainSphereVector.size(); ++i)
+			for (uint32_t i = 0; i < c_rMainSphereVector.size(); ++i)
 			{
 				CDynamicSphereInstance& c_rMainSphere = c_rMainSphereVector[i];
 
@@ -717,7 +717,7 @@ void CActorInstance::__AdjustCollisionMovement(const CGraphicObjectInstance* c_p
 	for (; itMain != m_BodyPointInstanceList.end(); ++itMain)
 	{
 		CDynamicSphereInstanceVector& c_rMainSphereVector = (*itMain).SphereInstanceVector;
-		for (DWORD i = 0; i < c_rMainSphereVector.size(); ++i)
+		for (uint32_t i = 0; i < c_rMainSphereVector.size(); ++i)
 		{
 			CDynamicSphereInstance& c_rMainSphere = c_rMainSphereVector[i];
 
@@ -751,7 +751,7 @@ void CActorInstance::__AdjustCollisionMovement(const CGraphicObjectInstance* c_p
 	}
 }
 
-BOOL CActorInstance::IsMovement()
+int32_t CActorInstance::IsMovement()
 {
 	if (m_pkHorse)
 		if (m_pkHorse->IsMovement())

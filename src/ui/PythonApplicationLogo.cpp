@@ -50,11 +50,11 @@ int CPythonApplication::OnLogoOpen(char* szName)
 	}
 
 	// Set GraphBuilder / SampleGrabber
-	if (FAILED(CoCreateInstance(CLSID_FilterGraph, NULL, CLSCTX_INPROC_SERVER, IID_IGraphBuilder, (VOID**)(&m_pGraphBuilder))))
+	if (FAILED(CoCreateInstance(CLSID_FilterGraph, NULL, CLSCTX_INPROC_SERVER, IID_IGraphBuilder, (void**)(&m_pGraphBuilder))))
 	{
 		return 0;
 	}
-	if (FAILED(CoCreateInstance(CLSID_SampleGrabber, NULL, CLSCTX_INPROC_SERVER, IID_IBaseFilter, (VOID**)&m_pFilterSG)))
+	if (FAILED(CoCreateInstance(CLSID_SampleGrabber, NULL, CLSCTX_INPROC_SERVER, IID_IBaseFilter, (void**)&m_pFilterSG)))
 	{
 		return 0;
 	}
@@ -68,7 +68,7 @@ int CPythonApplication::OnLogoOpen(char* szName)
 	ZeroMemory(&mediaType, sizeof(mediaType));
 	mediaType.majortype = MEDIATYPE_Video;
 	mediaType.subtype = MEDIASUBTYPE_RGB32;
-	if (FAILED(m_pFilterSG->QueryInterface(IID_ISampleGrabber, (VOID**)&m_pSampleGrabber)))
+	if (FAILED(m_pFilterSG->QueryInterface(IID_ISampleGrabber, (void**)&m_pSampleGrabber)))
 	{
 		return 0;
 	}
@@ -78,7 +78,7 @@ int CPythonApplication::OnLogoOpen(char* szName)
 	}
 
 	// Render File
-	WCHAR wFileName[MAX_PATH];
+	wchar_t wFileName[MAX_PATH];
 	MultiByteToWideChar(CP_ACP, 0, szName, -1, wFileName, MAX_PATH);
 	if (FAILED(m_pGraphBuilder->RenderFile(wFileName, NULL)))
 	{
@@ -89,13 +89,13 @@ int CPythonApplication::OnLogoOpen(char* szName)
 	m_pGraphBuilder->AddSourceFilter(wFileName, L"Source", &pSrc);
 
 	// Media Control
-	if (FAILED(m_pGraphBuilder->QueryInterface(IID_IMediaControl, (VOID**)&m_pMediaCtrl)))
+	if (FAILED(m_pGraphBuilder->QueryInterface(IID_IMediaControl, (void**)&m_pMediaCtrl)))
 	{
 		return 0;
 	}
 
 	// Video Window
-	if (FAILED(m_pGraphBuilder->QueryInterface(IID_IVideoWindow, (VOID**)&m_pVideoWnd)))
+	if (FAILED(m_pGraphBuilder->QueryInterface(IID_IVideoWindow, (void**)&m_pVideoWnd)))
 	{
 		return 0;
 	}
@@ -105,13 +105,13 @@ int CPythonApplication::OnLogoOpen(char* szName)
 	}
 
 	// Basic Video
-	if (FAILED(m_pGraphBuilder->QueryInterface(IID_IBasicVideo, (VOID**)&m_pBasicVideo)))
+	if (FAILED(m_pGraphBuilder->QueryInterface(IID_IBasicVideo, (void**)&m_pBasicVideo)))
 	{
 		return 0;
 	}
 
 	// Media Event
-	if (FAILED(m_pGraphBuilder->QueryInterface(IID_IMediaEventEx, (VOID**)&m_pMediaEvent)))
+	if (FAILED(m_pGraphBuilder->QueryInterface(IID_IMediaEventEx, (void**)&m_pMediaEvent)))
 	{
 		return 0;
 	}
@@ -137,7 +137,7 @@ int CPythonApplication::OnLogoUpdate()
 	// GetVersionEx(&osvi);
 
 	//// windows xp 이하인 버전은 logo skip.
-	////	m_pSampleGrabber->GetCurrentBuffer(&m_lBufferSize,  (LONG*)m_pCaptureBuffer) fail 나기 때문.
+	////	m_pSampleGrabber->GetCurrentBuffer(&m_lBufferSize,  (int32_t*)m_pCaptureBuffer) fail 나기 때문.
 	// if (osvi.dwMajorVersion <= 5)
 	//{
 	//	return 0;
@@ -148,8 +148,8 @@ int CPythonApplication::OnLogoUpdate()
 		return 0;
 	}
 
-	BYTE* pBuffer = m_pCaptureBuffer;
-	LONG lBufferSize = m_lBufferSize;
+	uint8_t* pBuffer = m_pCaptureBuffer;
+	int32_t lBufferSize = m_lBufferSize;
 
 	// 재생이 안됬을 경우 재생.
 	if (!m_bLogoPlay)
@@ -161,17 +161,17 @@ int CPythonApplication::OnLogoUpdate()
 	// 읽어온 버퍼가 0인경우 버퍼를 재할당.
 	if (lBufferSize == 0)
 	{
-		m_pSampleGrabber->GetCurrentBuffer(&m_lBufferSize, NULL);
+		m_pSampleGrabber->GetCurrentBuffer(reinterpret_cast<LONG*>(&m_lBufferSize), NULL);
 
 		SAFE_DELETE_ARRAY(m_pCaptureBuffer);
-		m_pCaptureBuffer = new BYTE[m_lBufferSize];
+		m_pCaptureBuffer = new uint8_t[m_lBufferSize];
 		pBuffer = m_pCaptureBuffer;
 		lBufferSize = m_lBufferSize;
 	}
 
 	// 영상 로딩중에 Update되는 경우, 버퍼 얻기에 실패하는 경우가 많다.
 	// 실패하더라도 완전히 종료되는 경우는 아니므로, 실행을 중단하지는 않는다.
-	if (FAILED(m_pSampleGrabber->GetCurrentBuffer(&m_lBufferSize, (LONG*)m_pCaptureBuffer)))
+	if (FAILED(m_pSampleGrabber->GetCurrentBuffer(reinterpret_cast<LONG*>(&m_lBufferSize), reinterpret_cast<LONG*>(m_pCaptureBuffer))))
 	{
 		m_bLogoError = true;
 
@@ -181,10 +181,10 @@ int CPythonApplication::OnLogoUpdate()
 
 		// 실패한 경우에는 텍스쳐를 까맣게 비운다.
 		tex->LockRect(0, &rt, 0, 0);
-		BYTE* destb = static_cast<byte*>(rt.pBits);
+		uint8_t* destb = static_cast<byte*>(rt.pBits);
 		for (int a = 0; a < 4; a += 4)
 		{
-			BYTE* dest = &destb[a];
+			uint8_t* dest = &destb[a];
 			dest[0] = 0;
 			dest[1] = 0;
 			dest[2] = 0;
@@ -228,11 +228,11 @@ int CPythonApplication::OnLogoUpdate()
 	ZeroMemory(&rt, sizeof(rt));
 
 	tex->LockRect(0, &rt, 0, 0);
-	BYTE* destb = static_cast<byte*>(rt.pBits);
+	uint8_t* destb = static_cast<byte*>(rt.pBits);
 	for (int a = 0; a < lBufferSize; a += 4)
 	{
-		BYTE* src = &m_pCaptureBuffer[a];
-		BYTE* dest = &destb[a];
+		uint8_t* src = &m_pCaptureBuffer[a];
+		uint8_t* dest = &destb[a];
 		dest[0] = src[0];
 		dest[1] = src[1];
 		dest[2] = src[2];
@@ -242,7 +242,7 @@ int CPythonApplication::OnLogoUpdate()
 
 	// 영상의 상태 체크 (종료되었는지)
 	long evCode;
-	LONG_PTR param1, param2;
+	intptr_t param1, param2;
 	while (SUCCEEDED(m_pMediaEvent->GetEvent(&evCode, &param1, &param2, 0)))
 	{
 		switch (evCode)

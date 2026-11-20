@@ -17,7 +17,7 @@ void NRaceData::DestroySystem()
 
 /////////////////////////////////////////////////////////////////////////////////
 // Character Attaching Collision Data
-BOOL NRaceData::LoadAttackData(CTextFileLoader& rTextFileLoader, TAttackData* pData)
+int32_t NRaceData::LoadAttackData(CTextFileLoader& rTextFileLoader, TAttackData* pData)
 {
 	if (!rTextFileLoader.GetTokenInteger("attacktype", &pData->iAttackType))
 	{
@@ -77,7 +77,7 @@ bool NRaceData::THitData::Load(CTextFileLoader& rTextFileLoader)
 	return true;
 }
 
-BOOL NRaceData::LoadMotionAttackData(CTextFileLoader& rTextFileLoader, TMotionAttackData* pData)
+int32_t NRaceData::LoadMotionAttackData(CTextFileLoader& rTextFileLoader, TMotionAttackData* pData)
 {
 	if (!LoadAttackData(rTextFileLoader, pData))
 		return FALSE;
@@ -92,7 +92,7 @@ BOOL NRaceData::LoadMotionAttackData(CTextFileLoader& rTextFileLoader, TMotionAt
 
 	pData->HitDataContainer.clear();
 
-	DWORD dwHitDataCount;
+	uint32_t dwHitDataCount;
 	if (!rTextFileLoader.GetTokenDoubleWord("hitdatacount", &dwHitDataCount))
 	{
 		pData->HitDataContainer.push_back(SHitData());
@@ -102,7 +102,7 @@ BOOL NRaceData::LoadMotionAttackData(CTextFileLoader& rTextFileLoader, TMotionAt
 	}
 	else
 	{
-		for (DWORD i = 0; i < dwHitDataCount; ++i)
+		for (uint32_t i = 0; i < dwHitDataCount; ++i)
 		{
 			if (!rTextFileLoader.SetChildNode(i))
 				return FALSE;
@@ -119,18 +119,18 @@ BOOL NRaceData::LoadMotionAttackData(CTextFileLoader& rTextFileLoader, TMotionAt
 	return TRUE;
 }
 
-BOOL NRaceData::LoadCollisionData(CTextFileLoader& rTextFileLoader, TCollisionData* pCollisionData)
+int32_t NRaceData::LoadCollisionData(CTextFileLoader& rTextFileLoader, TCollisionData* pCollisionData)
 {
 	if (!rTextFileLoader.GetTokenInteger("collisiontype", &pCollisionData->iCollisionType))
 		return false;
 
-	DWORD dwSphereDataCount;
+	uint32_t dwSphereDataCount;
 	if (!rTextFileLoader.GetTokenDoubleWord("spheredatacount", &dwSphereDataCount))
 		return false;
 
 	pCollisionData->SphereDataVector.clear();
 	pCollisionData->SphereDataVector.resize(dwSphereDataCount);
-	for (DWORD i = 0; i < dwSphereDataCount; ++i)
+	for (uint32_t i = 0; i < dwSphereDataCount; ++i)
 	{
 		TSphereData& r = pCollisionData->SphereDataVector[i].GetAttribute();
 
@@ -161,7 +161,7 @@ void NRaceData::SaveObjectData(FILE* File, int iTabCount, const TAttachingObject
 	PrintfTabs(File, iTabCount, "ObjectScriptName     \"%s\"\n", c_rObjectData.strFileName.c_str());
 }
 
-BOOL NRaceData::LoadEffectData(CTextFileLoader& rTextFileLoader, TAttachingEffectData* pEffectData)
+int32_t NRaceData::LoadEffectData(CTextFileLoader& rTextFileLoader, TAttachingEffectData* pEffectData)
 {
 	if (!rTextFileLoader.GetTokenString("effectscriptname", &pEffectData->strFileName))
 		return false;
@@ -185,7 +185,7 @@ BOOL NRaceData::LoadEffectData(CTextFileLoader& rTextFileLoader, TAttachingEffec
 	return true;
 }
 
-BOOL NRaceData::LoadObjectData(CTextFileLoader& rTextFileLoader, TAttachingObjectData* pObjectData)
+int32_t NRaceData::LoadObjectData(CTextFileLoader& rTextFileLoader, TAttachingObjectData* pObjectData)
 {
 	if (!rTextFileLoader.GetTokenString("objectscriptname", &pObjectData->strFileName))
 		return false;
@@ -211,7 +211,7 @@ void NRaceData::SaveMotionAttackData(FILE* File, int iTabCount, const TMotionAtt
 	PrintfTabs(File, iTabCount, "MotionType           %d\n", c_rData.iMotionType);
 	PrintfTabs(File, iTabCount, "HitDataCount         %d\n", c_rData.HitDataContainer.size());
 
-	DWORD dwHitDataNumber = 0;
+	uint32_t dwHitDataNumber = 0;
 	THitDataContainer::const_iterator itor = c_rData.HitDataContainer.begin();
 	for (; itor != c_rData.HitDataContainer.end(); ++itor, ++dwHitDataNumber)
 	{
@@ -248,7 +248,7 @@ void NRaceData::SaveCollisionData(FILE* File, int iTabCount, const TCollisionDat
 
 	PrintfTabs(File, iTabCount, "SphereDataCount      %d\n", c_rSphereDataVector.size());
 
-	for (DWORD i = 0; i < c_rSphereDataVector.size(); ++i)
+	for (uint32_t i = 0; i < c_rSphereDataVector.size(); ++i)
 	{
 		const TSphereData& c_rAttr = c_rSphereDataVector[i].GetAttribute();
 
@@ -272,12 +272,12 @@ void NRaceData::SaveCollisionData(FILE* File, int iTabCount, const TCollisionDat
 // Attaching Data
 void NRaceData::SaveAttachingData(FILE* File, int iTabCount, const TAttachingDataVector& c_rAttachingDataVector)
 {
-	DWORD dwAttachingDataCount = c_rAttachingDataVector.size();
+	uint32_t dwAttachingDataCount = c_rAttachingDataVector.size();
 
 	PrintfTabs(File, iTabCount, "AttachingDataCount       %d\n", dwAttachingDataCount);
 	PrintfTabs(File, iTabCount, "\n");
 
-	for (DWORD i = 0; i < dwAttachingDataCount; ++i)
+	for (uint32_t i = 0; i < dwAttachingDataCount; ++i)
 	{
 		const NRaceData::TAttachingData& c_rAttachingData = c_rAttachingDataVector[i];
 
@@ -312,16 +312,16 @@ void NRaceData::SaveAttachingData(FILE* File, int iTabCount, const TAttachingDat
 	}
 }
 
-BOOL NRaceData::LoadAttachingData(CTextFileLoader& rTextFileLoader, TAttachingDataVector* pAttachingDataVector)
+int32_t NRaceData::LoadAttachingData(CTextFileLoader& rTextFileLoader, TAttachingDataVector* pAttachingDataVector)
 {
-	DWORD dwDataCount;
+	uint32_t dwDataCount;
 	if (!rTextFileLoader.GetTokenDoubleWord("attachingdatacount", &dwDataCount))
 		return false;
 
 	pAttachingDataVector->clear();
 	pAttachingDataVector->resize(dwDataCount);
 
-	for (DWORD i = 0; i < dwDataCount; ++i)
+	for (uint32_t i = 0; i < dwDataCount; ++i)
 	{
 		NRaceData::TAttachingData& rAttachingData = pAttachingDataVector->at(i);
 		if (!rTextFileLoader.SetChildNode("attachingdata", i))

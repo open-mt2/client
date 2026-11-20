@@ -8,7 +8,7 @@ unsigned GetGuildLevelExp(int level)
 	if (level < 0 || level >= GUILD_LEVEL_MAX)
 		return 0;
 
-	static const DWORD GUILD_EXP_LIST[GUILD_LEVEL_MAX + 1] =
+	static const uint32_t GUILD_EXP_LIST[GUILD_LEVEL_MAX + 1] =
 		{
 			0,		   // 0
 			6000UL,	   // 1

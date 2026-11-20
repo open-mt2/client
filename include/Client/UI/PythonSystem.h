@@ -28,12 +28,12 @@ class CPythonSystem : public CSingleton<CPythonSystem>
 
 		typedef struct SResolution
 		{
-				DWORD width;
-				DWORD height;
-				DWORD bpp; // bits per pixel (high-color = 16bpp, true-color = 32bpp)
+				uint32_t width;
+				uint32_t height;
+				uint32_t bpp; // bits per pixel (high-color = 16bpp, true-color = 32bpp)
 
-				DWORD frequency[20];
-				BYTE frequency_count;
+				uint32_t frequency[20];
+				uint8_t frequency_count;
 		} TResolution;
 
 		typedef struct SWindowStatus
@@ -48,18 +48,18 @@ class CPythonSystem : public CSingleton<CPythonSystem>
 
 		typedef struct SConfig
 		{
-				DWORD width;
-				DWORD height;
-				DWORD bpp;
-				DWORD frequency;
+				uint32_t width;
+				uint32_t height;
+				uint32_t bpp;
+				uint32_t frequency;
 
 				bool is_software_cursor;
 				bool is_object_culling;
 				int iDistance;
 				int iShadowLevel;
 
-				FLOAT music_volume;
-				BYTE voice_volume;
+				float music_volume;
+				uint8_t voice_volume;
 
 				int gamma;
 
@@ -70,7 +70,7 @@ class CPythonSystem : public CSingleton<CPythonSystem>
 				bool bDecompressDDS;
 				bool bNoSoundCard;
 				bool bUseDefaultIME;
-				BYTE bSoftwareTiling;
+				uint8_t bSoftwareTiling;
 				bool bViewChat;
 				bool bAlwaysShowName;
 				bool bShowDamage;
@@ -101,10 +101,10 @@ class CPythonSystem : public CSingleton<CPythonSystem>
 		bool isInterfaceConfig();
 		const TWindowStatus& GetWindowStatusReference(int iIndex);
 
-		DWORD GetWidth();
-		DWORD GetHeight();
-		DWORD GetBPP();
-		DWORD GetFrequency();
+		uint32_t GetWidth();
+		uint32_t GetHeight();
+		uint32_t GetBPP();
+		uint32_t GetFrequency();
 		bool IsSoftwareCursor();
 		bool IsWindowed();
 		bool IsViewChat();
@@ -134,10 +134,10 @@ class CPythonSystem : public CSingleton<CPythonSystem>
 
 		int GetResolutionCount();
 		int GetFrequencyCount(int index);
-		bool GetResolution(int index, OUT DWORD* width, OUT DWORD* height, OUT DWORD* bpp);
-		bool GetFrequency(int index, int freq_index, OUT DWORD* frequncy);
-		int GetResolutionIndex(DWORD width, DWORD height, DWORD bpp);
-		int GetFrequencyIndex(int res_index, DWORD frequency);
+		bool GetResolution(int index, OUT uint32_t* width, OUT uint32_t* height, OUT uint32_t* bpp);
+		bool GetFrequency(int index, int freq_index, OUT uint32_t* frequncy);
+		int GetResolutionIndex(uint32_t width, uint32_t height, uint32_t bpp);
+		int GetFrequencyIndex(int res_index, uint32_t frequency);
 		bool isViewCulling();
 
 		// Sound

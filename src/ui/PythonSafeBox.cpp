@@ -7,14 +7,14 @@ void CPythonSafeBox::OpenSafeBox(int iSize)
 	m_ItemInstanceVector.clear();
 	m_ItemInstanceVector.resize(SAFEBOX_SLOT_X_COUNT * iSize);
 
-	for (DWORD i = 0; i < m_ItemInstanceVector.size(); ++i)
+	for (uint32_t i = 0; i < m_ItemInstanceVector.size(); ++i)
 	{
 		TItemData& rInstance = m_ItemInstanceVector[i];
 		ZeroMemory(&rInstance, sizeof(rInstance));
 	}
 }
 
-void CPythonSafeBox::SetItemData(DWORD dwSlotIndex, const TItemData& rItemInstance)
+void CPythonSafeBox::SetItemData(uint32_t dwSlotIndex, const TItemData& rItemInstance)
 {
 	if (dwSlotIndex >= m_ItemInstanceVector.size())
 	{
@@ -25,7 +25,7 @@ void CPythonSafeBox::SetItemData(DWORD dwSlotIndex, const TItemData& rItemInstan
 	m_ItemInstanceVector[dwSlotIndex] = rItemInstance;
 }
 
-void CPythonSafeBox::DelItemData(DWORD dwSlotIndex)
+void CPythonSafeBox::DelItemData(uint32_t dwSlotIndex)
 {
 	if (dwSlotIndex >= m_ItemInstanceVector.size())
 	{
@@ -37,12 +37,12 @@ void CPythonSafeBox::DelItemData(DWORD dwSlotIndex)
 	ZeroMemory(&rInstance, sizeof(rInstance));
 }
 
-void CPythonSafeBox::SetMoney(DWORD dwMoney)
+void CPythonSafeBox::SetMoney(uint32_t dwMoney)
 {
 	m_dwMoney = dwMoney;
 }
 
-DWORD CPythonSafeBox::GetMoney()
+uint32_t CPythonSafeBox::GetMoney()
 {
 	return m_dwMoney;
 }
@@ -52,7 +52,7 @@ int CPythonSafeBox::GetCurrentSafeBoxSize()
 	return m_ItemInstanceVector.size();
 }
 
-BOOL CPythonSafeBox::GetSlotItemID(DWORD dwSlotIndex, DWORD* pdwItemID)
+int32_t CPythonSafeBox::GetSlotItemID(uint32_t dwSlotIndex, uint32_t* pdwItemID)
 {
 	if (dwSlotIndex >= m_ItemInstanceVector.size())
 	{
@@ -65,7 +65,7 @@ BOOL CPythonSafeBox::GetSlotItemID(DWORD dwSlotIndex, DWORD* pdwItemID)
 	return TRUE;
 }
 
-BOOL CPythonSafeBox::GetItemDataPtr(DWORD dwSlotIndex, TItemData** ppInstance)
+int32_t CPythonSafeBox::GetItemDataPtr(uint32_t dwSlotIndex, TItemData** ppInstance)
 {
 	if (dwSlotIndex >= m_ItemInstanceVector.size())
 	{
@@ -83,14 +83,14 @@ void CPythonSafeBox::OpenMall(int iSize)
 	m_MallItemInstanceVector.clear();
 	m_MallItemInstanceVector.resize(SAFEBOX_SLOT_X_COUNT * iSize);
 
-	for (DWORD i = 0; i < m_MallItemInstanceVector.size(); ++i)
+	for (uint32_t i = 0; i < m_MallItemInstanceVector.size(); ++i)
 	{
 		TItemData& rInstance = m_MallItemInstanceVector[i];
 		ZeroMemory(&rInstance, sizeof(rInstance));
 	}
 }
 
-void CPythonSafeBox::SetMallItemData(DWORD dwSlotIndex, const TItemData& rItemData)
+void CPythonSafeBox::SetMallItemData(uint32_t dwSlotIndex, const TItemData& rItemData)
 {
 	if (dwSlotIndex >= m_MallItemInstanceVector.size())
 	{
@@ -101,7 +101,7 @@ void CPythonSafeBox::SetMallItemData(DWORD dwSlotIndex, const TItemData& rItemDa
 	m_MallItemInstanceVector[dwSlotIndex] = rItemData;
 }
 
-void CPythonSafeBox::DelMallItemData(DWORD dwSlotIndex)
+void CPythonSafeBox::DelMallItemData(uint32_t dwSlotIndex)
 {
 	if (dwSlotIndex >= m_MallItemInstanceVector.size())
 	{
@@ -113,7 +113,7 @@ void CPythonSafeBox::DelMallItemData(DWORD dwSlotIndex)
 	ZeroMemory(&rInstance, sizeof(rInstance));
 }
 
-BOOL CPythonSafeBox::GetMallItemDataPtr(DWORD dwSlotIndex, TItemData** ppInstance)
+int32_t CPythonSafeBox::GetMallItemDataPtr(uint32_t dwSlotIndex, TItemData** ppInstance)
 {
 	if (dwSlotIndex >= m_MallItemInstanceVector.size())
 	{
@@ -126,7 +126,7 @@ BOOL CPythonSafeBox::GetMallItemDataPtr(DWORD dwSlotIndex, TItemData** ppInstanc
 	return TRUE;
 }
 
-BOOL CPythonSafeBox::GetSlotMallItemID(DWORD dwSlotIndex, DWORD* pdwItemID)
+int32_t CPythonSafeBox::GetSlotMallItemID(uint32_t dwSlotIndex, uint32_t* pdwItemID)
 {
 	if (dwSlotIndex >= m_MallItemInstanceVector.size())
 	{
@@ -139,7 +139,7 @@ BOOL CPythonSafeBox::GetSlotMallItemID(DWORD dwSlotIndex, DWORD* pdwItemID)
 	return TRUE;
 }
 
-DWORD CPythonSafeBox::GetMallSize()
+uint32_t CPythonSafeBox::GetMallSize()
 {
 	return m_MallItemInstanceVector.size();
 }

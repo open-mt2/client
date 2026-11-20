@@ -7,16 +7,16 @@
 #include <Client/Game/RaceData.h>
 #include <Client/Game/WeaponTrace.h>
 
-BOOL USE_WEAPON_SPECULAR = TRUE;
+int32_t USE_WEAPON_SPECULAR = TRUE;
 
-static const DWORD c_dwRaceAssassinMale = 5;
+static const uint32_t c_dwRaceAssassinMale = 5;
 
-BOOL USE_VIETNAM_CONVERT_WEAPON_VNUM = FALSE;
+int32_t USE_VIETNAM_CONVERT_WEAPON_VNUM = FALSE;
 
-DWORD Vietnam_ConvertWeaponVnum(DWORD vnum)
+uint32_t Vietnam_ConvertWeaponVnum(uint32_t vnum)
 {
-	DWORD base = vnum / 10 * 10;
-	DWORD rest = vnum % 10;
+	uint32_t base = vnum / 10 * 10;
+	uint32_t rest = vnum % 10;
 	switch (base)
 	{
 		case 10:
@@ -230,17 +230,17 @@ DWORD Vietnam_ConvertWeaponVnum(DWORD vnum)
 	return base + rest;
 }
 
-DWORD CActorInstance::AttachSmokeEffect(DWORD eSmoke)
+uint32_t CActorInstance::AttachSmokeEffect(uint32_t eSmoke)
 {
 	if (!m_pkCurRaceData)
 		return 0;
 
-	DWORD dwSmokeEffectID = m_pkCurRaceData->GetSmokeEffectID(eSmoke);
+	uint32_t dwSmokeEffectID = m_pkCurRaceData->GetSmokeEffectID(eSmoke);
 
 	return AttachEffectByID(0, m_pkCurRaceData->GetSmokeBone().c_str(), dwSmokeEffectID);
 }
 
-bool CActorInstance::__IsLeftHandWeapon(DWORD type)
+bool CActorInstance::__IsLeftHandWeapon(uint32_t type)
 {
 	if (CItemData::WEAPON_DAGGER == type || (CItemData::WEAPON_FAN == type && __IsMountingHorse()))
 		return true;
@@ -250,7 +250,7 @@ bool CActorInstance::__IsLeftHandWeapon(DWORD type)
 		return false;
 }
 
-bool CActorInstance::__IsRightHandWeapon(DWORD type)
+bool CActorInstance::__IsRightHandWeapon(uint32_t type)
 {
 	if (CItemData::WEAPON_DAGGER == type || (CItemData::WEAPON_FAN == type && __IsMountingHorse()))
 		return true;
@@ -260,7 +260,7 @@ bool CActorInstance::__IsRightHandWeapon(DWORD type)
 		return true;
 }
 
-bool CActorInstance::__IsWeaponTrace(DWORD weaponType)
+bool CActorInstance::__IsWeaponTrace(uint32_t weaponType)
 {
 	switch (weaponType)
 	{
@@ -273,12 +273,12 @@ bool CActorInstance::__IsWeaponTrace(DWORD weaponType)
 	}
 }
 
-bool CActorInstance::__GetWeaponAttachTransform(DWORD dwPartIndex, D3DXMATRIX* pMat)
+bool CActorInstance::__GetWeaponAttachTransform(uint32_t dwPartIndex, D3DXMATRIX* pMat)
 {
 	if (CRaceData::PART_WEAPON != dwPartIndex || c_dwRaceAssassinMale != GetRace())
 		return false;
 
-	DWORD dwWeapon = GetPartItemID(CRaceData::PART_WEAPON);
+	uint32_t dwWeapon = GetPartItemID(CRaceData::PART_WEAPON);
 	CItemData* pItemData;
 	if (!CItemManager::Instance().GetItemDataPointer(dwWeapon, &pItemData))
 		return false;
@@ -298,7 +298,7 @@ bool CActorInstance::__GetWeaponAttachTransform(DWORD dwPartIndex, D3DXMATRIX* p
 	}
 }
 
-void CActorInstance::AttachWeapon(DWORD dwItemIndex, DWORD dwParentPartIndex, DWORD dwPartIndex)
+void CActorInstance::AttachWeapon(uint32_t dwItemIndex, uint32_t dwParentPartIndex, uint32_t dwPartIndex)
 {
 	if (dwPartIndex >= CRaceData::PART_MAX_NUM)
 		return;
@@ -329,12 +329,12 @@ void CActorInstance::AttachWeapon(DWORD dwItemIndex, DWORD dwParentPartIndex, DW
 		AttachWeapon(dwParentPartIndex, CRaceData::PART_WEAPON_LEFT, pItemData);
 }
 
-BOOL CActorInstance::GetAttachingBoneName(DWORD dwPartIndex, const char** c_pszBoneName)
+int32_t CActorInstance::GetAttachingBoneName(uint32_t dwPartIndex, const char** c_pszBoneName)
 {
 	return m_pkCurRaceData->GetAttachingBoneName(dwPartIndex, c_pszBoneName);
 }
 
-void CActorInstance::AttachWeapon(DWORD dwParentPartIndex, DWORD dwPartIndex, CItemData* pItemData)
+void CActorInstance::AttachWeapon(uint32_t dwParentPartIndex, uint32_t dwPartIndex, CItemData* pItemData)
 {
 	//	assert(m_pkCurRaceData);
 	if (!pItemData)
@@ -354,7 +354,7 @@ void CActorInstance::AttachWeapon(DWORD dwParentPartIndex, DWORD dwPartIndex, CI
 		RegisterModelThing(dwPartIndex, pItemData->GetModelThing());
 	}
 
-	for (DWORD i = 0; i < pItemData->GetLODModelThingCount(); ++i)
+	for (uint32_t i = 0; i < pItemData->GetLODModelThingCount(); ++i)
 	{
 		CGraphicThing* pThing;
 
@@ -393,7 +393,7 @@ void CActorInstance::AttachWeapon(DWORD dwParentPartIndex, DWORD dwPartIndex, CI
 	}
 }
 
-void CActorInstance::DettachEffect(DWORD dwEID)
+void CActorInstance::DettachEffect(uint32_t dwEID)
 {
 	std::list<TAttachingEffect>::iterator i = m_AttachingEffectList.begin();
 
@@ -413,17 +413,17 @@ void CActorInstance::DettachEffect(DWORD dwEID)
 	}
 }
 
-DWORD CActorInstance::AttachEffectByName(DWORD dwParentPartIndex, const char* c_pszBoneName, const char* c_pszEffectName)
+uint32_t CActorInstance::AttachEffectByName(uint32_t dwParentPartIndex, const char* c_pszBoneName, const char* c_pszEffectName)
 {
 	std::string str;
-	DWORD dwCRC;
+	uint32_t dwCRC;
 	StringPath(c_pszEffectName, str);
 	dwCRC = GetCaseCRC32(str.c_str(), str.length());
 
 	return AttachEffectByID(dwParentPartIndex, c_pszBoneName, dwCRC);
 }
 
-DWORD CActorInstance::AttachEffectByID(DWORD dwParentPartIndex, const char* c_pszBoneName, DWORD dwEffectID, const D3DXVECTOR3* c_pv3Position)
+uint32_t CActorInstance::AttachEffectByID(uint32_t dwParentPartIndex, const char* c_pszBoneName, uint32_t dwEffectID, const D3DXVECTOR3* c_pv3Position)
 {
 	TAttachingEffect ae;
 	ae.iLifeType = EFFECT_LIFE_INFINITE;
@@ -492,7 +492,7 @@ void CActorInstance::RefreshActorInstance()
 	m_DefendingPointInstanceList.clear();
 
 	// Base
-	for (DWORD i = 0; i < m_pkCurRaceData->GetAttachingDataCount(); ++i)
+	for (uint32_t i = 0; i < m_pkCurRaceData->GetAttachingDataCount(); ++i)
 	{
 		const NRaceData::TAttachingData* c_pAttachingData;
 
@@ -530,7 +530,7 @@ void CActorInstance::RefreshActorInstance()
 			case NRaceData::ATTACHING_DATA_TYPE_EFFECT:
 				//				if (!m_bEffectInitialized)
 				//				{
-				//					DWORD dwCRC;
+				//					uint32_t dwCRC;
 				//					StringPath(c_pAttachingData->pEffectData->strFileName);
 				//					dwCRC = GetCaseCRC32(c_pAttachingData->pEffectData->strFileName.c_str(),c_pAttachingData->pEffectData->strFileName.length());
 				//
@@ -580,7 +580,7 @@ void CActorInstance::RefreshActorInstance()
 		}
 	}
 
-	for (DWORD j = 0; j < CRaceData::PART_MAX_NUM; ++j)
+	for (uint32_t j = 0; j < CRaceData::PART_MAX_NUM; ++j)
 	{
 		if (0 == m_adwPartItemID[j])
 			continue;
@@ -589,7 +589,7 @@ void CActorInstance::RefreshActorInstance()
 		if (!CItemManager::Instance().GetItemDataPointer(m_adwPartItemID[j], &pItemData))
 			return;
 
-		for (DWORD k = 0; k < pItemData->GetAttachingDataCount(); ++k)
+		for (uint32_t k = 0; k < pItemData->GetAttachingDataCount(); ++k)
 		{
 			const NRaceData::TAttachingData* c_pAttachingData;
 
@@ -628,7 +628,7 @@ void CActorInstance::RefreshActorInstance()
 				case NRaceData::ATTACHING_DATA_TYPE_EFFECT:
 					if (!m_bEffectInitialized)
 					{
-						DWORD dwCRC;
+						uint32_t dwCRC;
 						StringPath(c_pAttachingData->pEffectData->strFileName);
 						dwCRC = GetCaseCRC32(c_pAttachingData->pEffectData->strFileName.c_str(), c_pAttachingData->pEffectData->strFileName.length());
 
@@ -700,7 +700,7 @@ void CActorInstance::UpdateAttachingInstances()
 	CEffectManager& rkEftMgr = CEffectManager::Instance();
 
 	std::list<TAttachingEffect>::iterator it;
-	DWORD dwCurrentTime = CTimer::Instance().GetCurrentMillisecond();
+	uint32_t dwCurrentTime = CTimer::Instance().GetCurrentMillisecond();
 	for (it = m_AttachingEffectList.begin(); it != m_AttachingEffectList.end();)
 	{
 		if (EFFECT_LIFE_WITH_MOTION == it->iLifeType)

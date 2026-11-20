@@ -368,66 +368,66 @@ class CItemData
 #pragma pack(1)
 		typedef struct SItemLimit
 		{
-				BYTE bType;
-				LONG lValue;
+				uint8_t bType;
+				int32_t lValue;
 		} TItemLimit;
 
 		typedef struct SItemApply
 		{
-				BYTE bType;
-				LONG lValue;
+				uint8_t bType;
+				int32_t lValue;
 		} TItemApply;
 
 		typedef struct SItemTable
 		{
-				DWORD dwVnum;
-				DWORD dwVnumRange;
+				uint32_t dwVnum;
+				uint32_t dwVnumRange;
 				char szName[ITEM_NAME_MAX_LEN + 1];
 				char szLocaleName[ITEM_NAME_MAX_LEN + 1];
-				BYTE bType;
-				BYTE bSubType;
+				uint8_t bType;
+				uint8_t bSubType;
 
-				BYTE bWeight;
-				BYTE bSize;
+				uint8_t bWeight;
+				uint8_t bSize;
 
-				DWORD dwAntiFlags;
-				DWORD dwFlags;
-				DWORD dwWearFlags;
-				DWORD dwImmuneFlag;
+				uint32_t dwAntiFlags;
+				uint32_t dwFlags;
+				uint32_t dwWearFlags;
+				uint32_t dwImmuneFlag;
 
-				DWORD dwIBuyItemPrice;
-				DWORD dwISellItemPrice;
+				uint32_t dwIBuyItemPrice;
+				uint32_t dwISellItemPrice;
 
 				TItemLimit aLimits[ITEM_LIMIT_MAX_NUM];
 				TItemApply aApplies[ITEM_APPLY_MAX_NUM];
-				LONG alValues[ITEM_VALUES_MAX_NUM];
-				LONG alSockets[ITEM_SOCKET_MAX_NUM];
-				DWORD dwRefinedVnum;
-				WORD wRefineSet;
-				BYTE bAlterToMagicItemPct;
-				BYTE bSpecular;
-				BYTE bGainSocketPct;
+				int32_t alValues[ITEM_VALUES_MAX_NUM];
+				int32_t alSockets[ITEM_SOCKET_MAX_NUM];
+				uint32_t dwRefinedVnum;
+				uint16_t wRefineSet;
+				uint8_t bAlterToMagicItemPct;
+				uint8_t bSpecular;
+				uint8_t bGainSocketPct;
 		} TItemTable;
 
 //		typedef struct SItemTable
 //		{
-//			DWORD       dwVnum;
+//			uint32_t       dwVnum;
 //			char        szItemName[ITEM_NAME_MAX_LEN + 1];
-//			BYTE        bType;
-//			BYTE        bSubType;
-//			BYTE        bSize;
-//			DWORD       dwAntiFlags;
-//			DWORD       dwFlags;
-//			DWORD       dwWearFlags;
-//			DWORD       dwIBuyItemPrice;
-//			DWORD		dwISellItemPrice;
+//			uint8_t        bType;
+//			uint8_t        bSubType;
+//			uint8_t        bSize;
+//			uint32_t       dwAntiFlags;
+//			uint32_t       dwFlags;
+//			uint32_t       dwWearFlags;
+//			uint32_t       dwIBuyItemPrice;
+//			uint32_t		dwISellItemPrice;
 //			TItemLimit  aLimits[ITEM_LIMIT_MAX_NUM];
 //			TItemApply  aApplies[ITEM_APPLY_MAX_NUM];
 //			long        alValues[ITEM_VALUES_MAX_NUM];
 //			long        alSockets[ITEM_SOCKET_MAX_NUM];
-//			DWORD       dwRefinedVnum;
-//			BYTE		bSpecular;
-//			DWORD		dwIconNumber;
+//			uint32_t       dwRefinedVnum;
+//			uint8_t		bSpecular;
+//			uint32_t		dwIconNumber;
 //		} TItemTable;
 #pragma pack(pop)
 
@@ -444,50 +444,50 @@ class CItemData
 		CGraphicThing* GetDropModelThing();
 		CGraphicSubImage* GetIconImage();
 
-		DWORD GetLODModelThingCount();
-		BOOL GetLODModelThingPointer(DWORD dwIndex, CGraphicThing** ppModelThing);
+		uint32_t GetLODModelThingCount();
+		int32_t GetLODModelThingPointer(uint32_t dwIndex, CGraphicThing** ppModelThing);
 
-		DWORD GetAttachingDataCount();
-		BOOL GetCollisionDataPointer(DWORD dwIndex, const NRaceData::TAttachingData** c_ppAttachingData);
-		BOOL GetAttachingDataPointer(DWORD dwIndex, const NRaceData::TAttachingData** c_ppAttachingData);
+		uint32_t GetAttachingDataCount();
+		int32_t GetCollisionDataPointer(uint32_t dwIndex, const NRaceData::TAttachingData** c_ppAttachingData);
+		int32_t GetAttachingDataPointer(uint32_t dwIndex, const NRaceData::TAttachingData** c_ppAttachingData);
 
 		/////
 		const TItemTable* GetTable() const;
-		DWORD GetIndex() const;
+		uint32_t GetIndex() const;
 		const char* GetName() const;
 		const char* GetDescription() const;
 		const char* GetSummary() const;
-		BYTE GetType() const;
-		BYTE GetSubType() const;
-		UINT GetRefine() const;
+		uint8_t GetType() const;
+		uint8_t GetSubType() const;
+		uint32_t GetRefine() const;
 		const char* GetUseTypeString() const;
-		DWORD GetWeaponType() const;
-		BYTE GetSize() const;
-		BOOL IsAntiFlag(DWORD dwFlag) const;
-		BOOL IsFlag(DWORD dwFlag) const;
-		BOOL IsWearableFlag(DWORD dwFlag) const;
-		BOOL HasNextGrade() const;
-		DWORD GetWearFlags() const;
-		DWORD GetIBuyItemPrice() const;
-		DWORD GetISellItemPrice() const;
-		BOOL GetLimit(BYTE byIndex, TItemLimit* pItemLimit) const;
-		BOOL GetApply(BYTE byIndex, TItemApply* pItemApply) const;
-		LONG GetValue(BYTE byIndex) const;
-		LONG GetSocket(BYTE byIndex) const;
-		LONG SetSocket(BYTE byIndex, DWORD value);
+		uint32_t GetWeaponType() const;
+		uint8_t GetSize() const;
+		int32_t IsAntiFlag(uint32_t dwFlag) const;
+		int32_t IsFlag(uint32_t dwFlag) const;
+		int32_t IsWearableFlag(uint32_t dwFlag) const;
+		int32_t HasNextGrade() const;
+		uint32_t GetWearFlags() const;
+		uint32_t GetIBuyItemPrice() const;
+		uint32_t GetISellItemPrice() const;
+		int32_t GetLimit(uint8_t byIndex, TItemLimit* pItemLimit) const;
+		int32_t GetApply(uint8_t byIndex, TItemApply* pItemApply) const;
+		int32_t GetValue(uint8_t byIndex) const;
+		int32_t GetSocket(uint8_t byIndex) const;
+		int32_t SetSocket(uint8_t byIndex, uint32_t value);
 		int GetSocketCount() const;
-		DWORD GetIconNumber() const;
+		uint32_t GetIconNumber() const;
 
-		UINT GetSpecularPoweru() const;
+		uint32_t GetSpecularPoweru() const;
 		float GetSpecularPowerf() const;
 
 		/////
 
-		BOOL IsEquipment() const;
+		int32_t IsEquipment() const;
 
 		/////
 
-		// BOOL LoadItemData(const char * c_szFileName);
+		// int32_t LoadItemData(const char * c_szFileName);
 		void SetDefaultItemData(const char* c_szIconFileName, const char* c_szModelFileName = NULL);
 		void SetItemTableData(TItemTable* pItemTable);
 
@@ -511,7 +511,7 @@ class CItemData
 		std::vector<CGraphicThing*> m_pLODModelThingVector;
 
 		NRaceData::TAttachingDataVector m_AttachingDataVector;
-		DWORD m_dwVnum;
+		uint32_t m_dwVnum;
 		TItemTable m_ItemTable;
 
 	public:

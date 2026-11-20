@@ -58,7 +58,7 @@ char* OneArgument(char* argument, char* first_arg)
 
 void AppendMonsterList(const CPythonNonPlayer::TMobTableList& c_rMobTableList, const char* c_szHeader, int iType)
 {
-	DWORD dwMonsterCount = 0;
+	uint32_t dwMonsterCount = 0;
 	std::string strMonsterList = c_szHeader;
 
 	CPythonNonPlayer::TMobTableList::const_iterator itor = c_rMobTableList.begin();
@@ -94,7 +94,7 @@ bool SplitToken(const char* c_szLine, CTokenVector* pstTokenVector, const char* 
 	std::string stToken;
 	std::string strLine = c_szLine;
 
-	DWORD basePos = 0;
+	uint32_t basePos = 0;
 
 	do
 	{
@@ -181,7 +181,7 @@ void CPythonNetworkStream::ServerCommand(char* c_szCommand)
 			return;
 		}
 
-		// UINT uMoney= atoi(TokenVector[1].c_str());
+		// uint32_t uMoney= atoi(TokenVector[1].c_str());
 	}
 	// GIFT NOTIFY
 	else if (!strcmpi(szCmd, "gift"))
@@ -205,7 +205,7 @@ void CPythonNetworkStream::ServerCommand(char* c_szCommand)
 				return;
 			}
 
-			DWORD npcVNUM = (DWORD)atoi(TokenVector[2].c_str());
+			uint32_t npcVNUM = (uint32_t)atoi(TokenVector[2].c_str());
 			PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_Cube_Open", Py_BuildValue("(i)", npcVNUM));
 		}
 		else if ("close" == TokenVector[1])
@@ -220,9 +220,9 @@ void CPythonNetworkStream::ServerCommand(char* c_szCommand)
 				return;
 			}
 
-			UINT gold = atoi(TokenVector[2].c_str());
-			UINT itemVnum = atoi(TokenVector[3].c_str());
-			UINT count = atoi(TokenVector[4].c_str());
+			uint32_t gold = atoi(TokenVector[2].c_str());
+			uint32_t itemVnum = atoi(TokenVector[3].c_str());
+			uint32_t count = atoi(TokenVector[4].c_str());
 			PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_Cube_UpdateInfo", Py_BuildValue("(iii)", gold, itemVnum, count));
 		}
 		else if ("success" == TokenVector[1])
@@ -233,8 +233,8 @@ void CPythonNetworkStream::ServerCommand(char* c_szCommand)
 				return;
 			}
 
-			UINT itemVnum = atoi(TokenVector[2].c_str());
-			UINT count = atoi(TokenVector[3].c_str());
+			uint32_t itemVnum = atoi(TokenVector[2].c_str());
+			uint32_t count = atoi(TokenVector[3].c_str());
 			PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_Cube_Succeed", Py_BuildValue("(ii)", itemVnum, count));
 		}
 		else if ("fail" == TokenVector[1])
@@ -251,7 +251,7 @@ void CPythonNetworkStream::ServerCommand(char* c_szCommand)
 				return;
 			}
 
-			DWORD npcVNUM = (DWORD)atoi(TokenVector[2].c_str());
+			uint32_t npcVNUM = (uint32_t)atoi(TokenVector[2].c_str());
 
 			PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_Cube_ResultList", Py_BuildValue("(is)", npcVNUM, TokenVector[4].c_str()));
 		}
@@ -268,8 +268,8 @@ void CPythonNetworkStream::ServerCommand(char* c_szCommand)
 				return;
 			}
 
-			UINT requestStartIndex = (UINT)atoi(TokenVector[2].c_str());
-			UINT resultCount = (UINT)atoi(TokenVector[3].c_str());
+			uint32_t requestStartIndex = (uint32_t)atoi(TokenVector[2].c_str());
+			uint32_t resultCount = (uint32_t)atoi(TokenVector[3].c_str());
 
 			PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_Cube_MaterialInfo", Py_BuildValue("(iis)", requestStartIndex, resultCount, TokenVector[4].c_str()));
 		}
@@ -283,7 +283,7 @@ void CPythonNetworkStream::ServerCommand(char* c_szCommand)
 			return;
 		}
 
-		UINT uObserverCount = atoi(TokenVector[1].c_str());
+		uint32_t uObserverCount = atoi(TokenVector[1].c_str());
 
 		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME],
 							  "BINARY_BettingGuildWar_UpdateObserverCount",
@@ -297,7 +297,7 @@ void CPythonNetworkStream::ServerCommand(char* c_szCommand)
 			return;
 		}
 
-		UINT uMode = atoi(TokenVector[1].c_str());
+		uint32_t uMode = atoi(TokenVector[1].c_str());
 
 		IAbstractPlayer& rkPlayer = IAbstractPlayer::GetSingleton();
 		rkPlayer.SetObserverMode(uMode ? true : false);
@@ -318,8 +318,8 @@ void CPythonNetworkStream::ServerCommand(char* c_szCommand)
 		}
 
 		// vid distance(1-3) angle(0-360)
-		DWORD dwVID = atoi(TokenVector[1].c_str());
-		BYTE byDistance = atoi(TokenVector[2].c_str());
+		uint32_t dwVID = atoi(TokenVector[1].c_str());
+		uint8_t byDistance = atoi(TokenVector[2].c_str());
 		float fAngle = atof(TokenVector[3].c_str());
 		fAngle = fmod(540.0f - fAngle, 360.0f);
 		Tracef("StoneDetect [VID:%d] [Distance:%d] [Angle:%d->%f]\n", dwVID, byDistance, atoi(TokenVector[3].c_str()), fAngle);
@@ -375,8 +375,8 @@ void CPythonNetworkStream::ServerCommand(char* c_szCommand)
 			return;
 		}
 
-		DWORD dwConsumePerSec = atoi(TokenVector[1].c_str());
-		DWORD dwCurrentStamina = atoi(TokenVector[2].c_str());
+		uint32_t dwConsumePerSec = atoi(TokenVector[1].c_str());
+		uint32_t dwCurrentStamina = atoi(TokenVector[2].c_str());
 
 		IAbstractPlayer& rPlayer = IAbstractPlayer::GetSingleton();
 		rPlayer.StartStaminaConsume(dwConsumePerSec, dwCurrentStamina);
@@ -390,7 +390,7 @@ void CPythonNetworkStream::ServerCommand(char* c_szCommand)
 			return;
 		}
 
-		DWORD dwCurrentStamina = atoi(TokenVector[1].c_str());
+		uint32_t dwCurrentStamina = atoi(TokenVector[1].c_str());
 
 		IAbstractPlayer& rPlayer = IAbstractPlayer::GetSingleton();
 		rPlayer.StopStaminaConsume(dwCurrentStamina);

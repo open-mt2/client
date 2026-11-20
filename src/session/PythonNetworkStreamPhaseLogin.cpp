@@ -158,7 +158,7 @@ bool CPythonNetworkStream::__RecvLoginFailurePacket(const protocol::Packet& valu
 	return true;
 }
 
-bool CPythonNetworkStream::SendDirectEnterPacket(const char* c_szID, const char* c_szPassword, UINT uChrSlot)
+bool CPythonNetworkStream::SendDirectEnterPacket(const char* c_szID, const char* c_szPassword, uint32_t uChrSlot)
 {
 	TPacketCGDirectEnter kPacketDirectEnter;
 	kPacketDirectEnter.bHeader = HEADER_CG_DIRECT_ENTER;
@@ -204,8 +204,8 @@ bool CPythonNetworkStream::SendLoginPacketNew(const char* c_szName, const char* 
 	strncpy(LoginPacket.name, c_szName, sizeof(LoginPacket.name) - 1);
 	LoginPacket.name[ID_MAX_NUM] = '\0';
 
-	extern DWORD g_adwEncryptKey[4];
-	for (DWORD i = 0; i < 4; ++i)
+	extern uint32_t g_adwEncryptKey[4];
+	for (uint32_t i = 0; i < 4; ++i)
 		LoginPacket.adwClientKey[i] = g_adwEncryptKey[i];
 
 	if (!Send(sizeof(LoginPacket), &LoginPacket))

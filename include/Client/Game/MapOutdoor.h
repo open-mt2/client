@@ -95,11 +95,11 @@ class CMapOutdoor : public CMapBase
 		void SetVisiblePart(int ePart, bool isVisible);
 		void SetSplatLimit(int iSplatNum);
 		std::vector<int>& GetRenderedSplatNum(int* piPatch, int* piSplat, float* pfSplatRatio);
-		CArea::TCRCWithNumberVector& GetRenderedGraphicThingInstanceNum(DWORD* pdwGraphicThingInstanceNum, DWORD* pdwCRCNum);
+		CArea::TCRCWithNumberVector& GetRenderedGraphicThingInstanceNum(uint32_t* pdwGraphicThingInstanceNum, uint32_t* pdwCRCNum);
 
 		bool LoadSetting(const char* c_szFileName);
 
-		void ApplyLight(DWORD dwVersion, const D3DLIGHT9& c_rkLight);
+		void ApplyLight(uint32_t dwVersion, const D3DLIGHT9& c_rkLight);
 		void SetEnvironmentScreenFilter();
 		void SetEnvironmentSkyBox();
 		void SetEnvironmentLensFlare();
@@ -109,7 +109,7 @@ class CMapOutdoor : public CMapBase
 
 		void CreateCharacterShadowTexture();
 		void ReleaseCharacterShadowTexture();
-		void SetShadowTextureSize(WORD size);
+		void SetShadowTextureSize(uint16_t size);
 
 		bool BeginRenderCharacterShadowToTexture();
 		void EndRenderCharacterShadowToTexture();
@@ -149,7 +149,7 @@ class CMapOutdoor : public CMapBase
 		void SetDrawShadow(bool bDrawShadow);
 		void SetDrawCharacterShadow(bool bDrawChrShadow);
 
-		DWORD GetShadowMapColor(float fx, float fy);
+		uint32_t GetShadowMapColor(float fx, float fy);
 
 	protected:
 		bool __PickTerrainHeight(float& fPos, const D3DXVECTOR3& v3Start, const D3DXVECTOR3& v3End, float fStep, float fRayRange, float fLimitRange, D3DXVECTOR3* pv3Pick);
@@ -157,11 +157,11 @@ class CMapOutdoor : public CMapBase
 		virtual void __ClearGarvage();
 		virtual void __UpdateGarvage();
 
-		virtual bool LoadTerrain(WORD wTerrainCoordX, WORD wTerrainCoordY, WORD wCellCoordX, WORD wCellCoordY);
-		virtual bool LoadArea(WORD wAreaCoordX, WORD wAreaCoordY, WORD wCellCoordX, WORD wCellCoordY);
+		virtual bool LoadTerrain(uint16_t wTerrainCoordX, uint16_t wTerrainCoordY, uint16_t wCellCoordX, uint16_t wCellCoordY);
+		virtual bool LoadArea(uint16_t wAreaCoordX, uint16_t wAreaCoordY, uint16_t wCellCoordX, uint16_t wCellCoordY);
 		virtual void UpdateAreaList(long lCenterX, long lCenterY);
-		bool isTerrainLoaded(WORD wX, WORD wY);
-		bool isAreaLoaded(WORD wX, WORD wY);
+		bool isTerrainLoaded(uint16_t wX, uint16_t wY);
+		bool isAreaLoaded(uint16_t wX, uint16_t wY);
 
 		void AssignTerrainPtr(); // 현재 좌표에서 주위(ex. 3x3)에 있는 것들의 포인터를 연결한다. (업데이트 시 불려짐)
 
@@ -172,12 +172,12 @@ class CMapOutdoor : public CMapBase
 		// New
 		//////////////////////////////////////////////////////////////////////////
 		// 여러가지 맵들을 얻는다.
-		void GetHeightMap(const BYTE& c_rucTerrainNum, WORD** pwHeightMap);
-		void GetNormalMap(const BYTE& c_rucTerrainNum, char** pucNormalMap);
+		void GetHeightMap(const uint8_t& c_rucTerrainNum, uint16_t** pwHeightMap);
+		void GetNormalMap(const uint8_t& c_rucTerrainNum, char** pucNormalMap);
 
 		// Water
-		void GetWaterMap(const BYTE& c_rucTerrainNum, BYTE** pucWaterMap);
-		void GetWaterHeight(BYTE byTerrainNum, BYTE byWaterNum, long* plWaterHeight);
+		void GetWaterMap(const uint8_t& c_rucTerrainNum, uint8_t** pucWaterMap);
+		void GetWaterHeight(uint8_t byTerrainNum, uint8_t byWaterNum, long* plWaterHeight);
 
 		//////////////////////////////////////////////////////////////////////////
 		// Terrain
@@ -198,20 +198,20 @@ class CMapOutdoor : public CMapBase
 		TOutdoorMapCoordinate m_PrevCoordinate; // 현재의 좌표
 		TOutdoorMapCoordinateMap m_EntryPointMap;
 
-		WORD m_wPatchCount;
+		uint16_t m_wPatchCount;
 
 		//////////////////////////////////////////////////////////////////////////
 		// Index Buffer
 #ifdef WORLD_EDITOR
-		WORD* m_pwIndices; /* temp Index buffer */
+		uint16_t* m_pwIndices; /* temp Index buffer */
 
 		CGraphicIndexBuffer m_IndexBuffer;
-		WORD m_wNumIndices;
+		uint16_t m_wNumIndices;
 #else
-		WORD* m_pwaIndices[TERRAINPATCH_LODMAX];
+		uint16_t* m_pwaIndices[TERRAINPATCH_LODMAX];
 
 		CGraphicIndexBuffer m_IndexBuffer[TERRAINPATCH_LODMAX];
-		WORD m_wNumIndices[TERRAINPATCH_LODMAX];
+		uint16_t m_wNumIndices[TERRAINPATCH_LODMAX];
 #endif
 		virtual void DestroyTerrain();
 
@@ -226,27 +226,27 @@ class CMapOutdoor : public CMapBase
 
 		//////////////////////////////////////////////////////////////////////////
 		// Index Buffer
-		void ADDLvl1TL(WORD* pIndices, WORD& rwCount, const WORD& c_rwCurCount, const BYTE& c_rucNumLineWarp);
-		void ADDLvl1T(WORD* pIndices, WORD& rwCount, const WORD& c_rwCurCount, const BYTE& c_rucNumLineWarp);
-		void ADDLvl1TR(WORD* pIndices, WORD& rwCount, const WORD& c_rwCurCount, const BYTE& c_rucNumLineWarp);
-		void ADDLvl1L(WORD* pIndices, WORD& rwCount, const WORD& c_rwCurCount, const BYTE& c_rucNumLineWarp);
-		void ADDLvl1R(WORD* pIndices, WORD& rwCount, const WORD& c_rwCurCount, const BYTE& c_rucNumLineWarp);
-		void ADDLvl1BL(WORD* pIndices, WORD& rwCount, const WORD& c_rwCurCount, const BYTE& c_rucNumLineWarp);
-		void ADDLvl1B(WORD* pIndices, WORD& rwCount, const WORD& c_rwCurCount, const BYTE& c_rucNumLineWarp);
-		void ADDLvl1BR(WORD* pIndices, WORD& rwCount, const WORD& c_rwCurCount, const BYTE& c_rucNumLineWarp);
-		void ADDLvl1M(WORD* pIndices, WORD& rwCount, const WORD& c_rwCurCount, const BYTE& c_rucNumLineWarp);
-		void ADDLvl2TL(WORD* pIndices, WORD& rwCount, const WORD& c_rwCurCount, const BYTE& c_rucNumLineWarp);
-		void ADDLvl2T(WORD* pIndices, WORD& rwCount, const WORD& c_rwCurCount, const BYTE& c_rucNumLineWarp);
-		void ADDLvl2TR(WORD* pIndices, WORD& rwCount, const WORD& c_rwCurCount, const BYTE& c_rucNumLineWarp);
-		void ADDLvl2L(WORD* pIndices, WORD& rwCount, const WORD& c_rwCurCount, const BYTE& c_rucNumLineWarp);
-		void ADDLvl2R(WORD* pIndices, WORD& rwCount, const WORD& c_rwCurCount, const BYTE& c_rucNumLineWarp);
-		void ADDLvl2BL(WORD* pIndices, WORD& rwCount, const WORD& c_rwCurCount, const BYTE& c_rucNumLineWarp);
-		void ADDLvl2B(WORD* pIndices, WORD& rwCount, const WORD& c_rwCurCount, const BYTE& c_rucNumLineWarp);
-		void ADDLvl2BR(WORD* pIndices, WORD& rwCount, const WORD& c_rwCurCount, const BYTE& c_rucNumLineWarp);
-		void ADDLvl2M(WORD* pIndices, WORD& rwCount, const WORD& c_rwCurCount, const BYTE& c_rucNumLineWarp);
+		void ADDLvl1TL(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp);
+		void ADDLvl1T(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp);
+		void ADDLvl1TR(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp);
+		void ADDLvl1L(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp);
+		void ADDLvl1R(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp);
+		void ADDLvl1BL(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp);
+		void ADDLvl1B(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp);
+		void ADDLvl1BR(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp);
+		void ADDLvl1M(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp);
+		void ADDLvl2TL(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp);
+		void ADDLvl2T(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp);
+		void ADDLvl2TR(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp);
+		void ADDLvl2L(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp);
+		void ADDLvl2R(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp);
+		void ADDLvl2BL(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp);
+		void ADDLvl2B(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp);
+		void ADDLvl2BR(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp);
+		void ADDLvl2M(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp);
 
 	public:
-		BOOL GetTerrainPointer(BYTE c_ucTerrainNum, CTerrain** ppTerrain);
+		int32_t GetTerrainPointer(uint8_t c_ucTerrainNum, CTerrain** ppTerrain);
 		float GetTerrainHeight(float fx, float fy);
 		bool GetWaterHeight(int iX, int iY, long* plWaterHeight);
 		bool GetNormal(int ix, int iy, D3DXVECTOR3* pv3Normal);
@@ -284,10 +284,10 @@ class CMapOutdoor : public CMapBase
 		bool __IsInShadowReceiverList(CGraphicObjectInstance* pkObjInstTest);
 		bool __IsInPCBlockerList(CGraphicObjectInstance* pkObjInstTest);
 
-		void ConvertToMapCoords(float fx, float fy, int* iCellX, int* iCellY, BYTE* pucSubCellX, BYTE* pucSubCellY, WORD* pwTerrainNumX, WORD* pwTerrainNumY);
+		void ConvertToMapCoords(float fx, float fy, int* iCellX, int* iCellY, uint8_t* pucSubCellX, uint8_t* pucSubCellY, uint16_t* pwTerrainNumX, uint16_t* pwTerrainNumY);
 
 	public:
-		BOOL GetAreaPointer(const BYTE c_ucAreaNum, CArea** ppArea);
+		int32_t GetAreaPointer(const uint8_t c_ucAreaNum, CArea** ppArea);
 		void RenderArea(bool bRenderAmbience = true);
 		void RenderBlendArea();
 		void RenderDungeon();
@@ -301,17 +301,17 @@ class CMapOutdoor : public CMapBase
 		//////////////////////////////////////////////////////////////////////////
 		float GetHeight(float* pPos);
 		bool GetBrushColor(float fX, float fY, float* pLowColor, float* pHighColor);
-		bool isAttrOn(float fX, float fY, BYTE byAttr);
-		bool GetAttr(float fX, float fY, BYTE* pbyAttr);
-		bool isAttrOn(int iX, int iY, BYTE byAttr);
-		bool GetAttr(int iX, int iY, BYTE* pbyAttr);
+		bool isAttrOn(float fX, float fY, uint8_t byAttr);
+		bool GetAttr(float fX, float fY, uint8_t* pbyAttr);
+		bool isAttrOn(int iX, int iY, uint8_t byAttr);
+		bool GetAttr(int iX, int iY, uint8_t* pbyAttr);
 
 		void SetMaterialDiffuse(float fr, float fg, float fb);
 		void SetMaterialAmbient(float fr, float fg, float fb);
 		void SetTerrainMaterial(const PR_MATERIAL* pMaterial);
 
-		bool GetTerrainNum(float fx, float fy, BYTE* pbyTerrainNum);
-		bool GetTerrainNumFromCoord(WORD wCoordX, WORD wCoordY, BYTE* pbyTerrainNum);
+		bool GetTerrainNum(float fx, float fy, uint8_t* pbyTerrainNum);
+		bool GetTerrainNumFromCoord(uint16_t wCoordX, uint16_t wCoordY, uint8_t* pbyTerrainNum);
 
 	protected:
 		//////////////////////////////////////////////////////////////////////////
@@ -335,7 +335,7 @@ class CMapOutdoor : public CMapBase
 		struct TPatchDrawStruct
 		{
 				float fDistance;
-				BYTE byTerrainNum;
+				uint8_t byTerrainNum;
 				long lPatchNum;
 				CTerrainPatchProxy* pTerrainPatchProxy;
 
@@ -346,7 +346,7 @@ class CMapOutdoor : public CMapBase
 		};
 
 	public:
-		typedef std::vector<BYTE> TTerrainNumVector;
+		typedef std::vector<uint8_t> TTerrainNumVector;
 		struct FSortPatchDrawStructWithTerrainNum
 		{
 				static TTerrainNumVector m_TerrainNumVector;
@@ -357,7 +357,7 @@ class CMapOutdoor : public CMapBase
 
 				bool operator()(const TPatchDrawStruct& lhs, const TPatchDrawStruct& rhs)
 				{
-					DWORD lhsTerrainNumOrder = 0, rhsTerrainNumOrder = 0;
+					uint32_t lhsTerrainNumOrder = 0, rhsTerrainNumOrder = 0;
 					bool blhsOrderFound = false;
 					bool brhsOrderFound = false;
 
@@ -404,9 +404,9 @@ class CMapOutdoor : public CMapBase
 
 		void SetPatchDrawVector();
 
-		void NEW_DrawWireFrame(CTerrainPatchProxy* pTerrainPatchProxy, WORD wPrimitiveCount, D3DPRIMITIVETYPE ePrimitiveType);
+		void NEW_DrawWireFrame(CTerrainPatchProxy* pTerrainPatchProxy, uint16_t wPrimitiveCount, D3DPRIMITIVETYPE ePrimitiveType);
 
-		void DrawWireFrame(long patchnum, WORD wPrimitiveCount, D3DPRIMITIVETYPE ePrimitiveType);
+		void DrawWireFrame(long patchnum, uint16_t wPrimitiveCount, D3DPRIMITIVETYPE ePrimitiveType);
 		void DrawWater(long patchnum);
 
 		bool m_bDrawWireFrame;
@@ -434,7 +434,7 @@ class CMapOutdoor : public CMapBase
 		LPDIRECT3DSURFACE9 m_lpCharacterShadowMapRenderTargetSurface;
 		LPDIRECT3DSURFACE9 m_lpCharacterShadowMapDepthSurface;
 		D3DVIEWPORT9 m_ShadowMapViewport;
-		WORD m_wShadowMapSize;
+		uint16_t m_wShadowMapSize;
 
 		// Backup Device Context
 		LPDIRECT3DSURFACE9 m_lpBackupRenderTargetSurface;
@@ -458,7 +458,7 @@ class CMapOutdoor : public CMapBase
 
 	protected:
 		void SetIndexBuffer();
-		void SelectIndexBuffer(BYTE byLODLevel, WORD* pwPrimitiveCount, D3DPRIMITIVETYPE* pePrimitiveType);
+		void SelectIndexBuffer(uint8_t byLODLevel, uint16_t* pwPrimitiveCount, D3DPRIMITIVETYPE* pePrimitiveType);
 
 		D3DXMATRIX m_matWorldForCommonUse;
 		D3DXMATRIX m_matViewInverse;
@@ -548,7 +548,7 @@ class CMapOutdoor : public CMapBase
 		float __GetFogDistance();
 
 	protected:
-		DWORD m_dwVisiblePartFlags;
+		uint32_t m_dwVisiblePartFlags;
 
 		int m_iRenderedSplatNumSqSum;
 		int m_iRenderedSplatNum;
@@ -563,8 +563,8 @@ class CMapOutdoor : public CMapBase
 		int m_iPatchTerrainVertexSize;
 		int m_iPatchWaterVertexSize;
 
-		DWORD m_dwRenderedCRCNum;
-		DWORD m_dwRenderedGraphicThingInstanceNum;
+		uint32_t m_dwRenderedCRCNum;
+		uint32_t m_dwRenderedGraphicThingInstanceNum;
 
 		std::list<RECT> m_rkList_kGuildArea;
 
@@ -578,8 +578,8 @@ class CMapOutdoor : public CMapBase
 		void __RenderTerrain_RenderHardwareTransformPatch();
 
 	protected:
-		void __HardwareTransformPatch_RenderPatchSplat(long patchnum, WORD wPrimitiveCount, D3DPRIMITIVETYPE ePrimitiveType);
-		void __HardwareTransformPatch_RenderPatchNone(long patchnum, WORD wPrimitiveCount, D3DPRIMITIVETYPE ePrimitiveType);
+		void __HardwareTransformPatch_RenderPatchSplat(long patchnum, uint16_t wPrimitiveCount, D3DPRIMITIVETYPE ePrimitiveType);
+		void __HardwareTransformPatch_RenderPatchNone(long patchnum, uint16_t wPrimitiveCount, D3DPRIMITIVETYPE ePrimitiveType);
 
 	protected:
 		struct SoftwareTransformPatch_SData
@@ -592,9 +592,9 @@ class CMapOutdoor : public CMapBase
 
 				IDirect3DVertexBuffer9* m_pkVBSplat[SPLAT_VB_NUM];
 				IDirect3DVertexBuffer9* m_pkVBNone[NONE_VB_NUM];
-				DWORD m_dwSplatPos;
-				DWORD m_dwNonePos;
-				DWORD m_dwLightVersion;
+				uint32_t m_dwSplatPos;
+				uint32_t m_dwNonePos;
+				uint32_t m_dwLightVersion;
 		} m_kSTPD;
 
 		struct SoftwareTransformPatch_SRenderState
@@ -605,7 +605,7 @@ class CMapOutdoor : public CMapBase
 				D3DLIGHT9 m_kLight;
 				D3DMATERIAL9 m_kMtrl;
 				D3DXVECTOR3 m_v3Player;
-				DWORD m_dwFogColor;
+				uint32_t m_dwFogColor;
 				float m_fScreenHalfWidth;
 				float m_fScreenHalfHeight;
 
@@ -624,8 +624,8 @@ class CMapOutdoor : public CMapBase
 		struct SoftwareTransformPatch_STLVertex
 		{
 				D3DXVECTOR4 kPosition;
-				DWORD dwDiffuse;
-				DWORD dwFog;
+				uint32_t dwDiffuse;
+				uint32_t dwFog;
 				D3DXVECTOR2 kTexTile;
 				D3DXVECTOR2 kTexAlpha;
 				D3DXVECTOR2 kTexStaticShadow;
@@ -633,14 +633,14 @@ class CMapOutdoor : public CMapBase
 		};
 
 		void __SoftwareTransformPatch_ApplyRenderState();
-		void __SoftwareTransformPatch_RestoreRenderState(DWORD dwFogEnable);
+		void __SoftwareTransformPatch_RestoreRenderState(uint32_t dwFogEnable);
 
 		void __SoftwareTransformPatch_Initialize();
 		bool __SoftwareTransformPatch_Create();
 		void __SoftwareTransformPatch_Destroy();
 		void __SoftwareTransformPatch_BuildPipeline(SoftwareTransformPatch_SRenderState& rkTPRS);
 		void __SoftwareTransformPatch_BuildPipeline_BuildFogFuncTable(SoftwareTransformPatch_SRenderState& rkTPRS);
-		bool __SoftwareTransformPatch_SetTransform(SoftwareTransformPatch_SRenderState& rkTPRS, SoftwareTransformPatch_STLVertex* akTransVertex, CTerrainPatchProxy& rkTerrainPatchProxy, UINT uTerrainX, UINT uTerrainY, bool isFogEnable, bool isDynamicShadow);
+		bool __SoftwareTransformPatch_SetTransform(SoftwareTransformPatch_SRenderState& rkTPRS, SoftwareTransformPatch_STLVertex* akTransVertex, CTerrainPatchProxy& rkTerrainPatchProxy, uint32_t uTerrainX, uint32_t uTerrainY, bool isFogEnable, bool isDynamicShadow);
 
 		bool __SoftwareTransformPatch_SetSplatStream(SoftwareTransformPatch_STLVertex* akTransVertex);
 		bool __SoftwareTransformPatch_SetShadowStream(SoftwareTransformPatch_STLVertex* akTransVertex);
@@ -652,8 +652,8 @@ class CMapOutdoor : public CMapBase
 		void __SoftwareTransformPatch_RestoreFogShadowRenderState();
 		void __SoftwareTransformPatch_ApplyDynamicShadowRenderState();
 		void __SoftwareTransformPatch_RestoreDynamicShadowRenderState();
-		void __SoftwareTransformPatch_RenderPatchSplat(SoftwareTransformPatch_SRenderState& rkTPRS, long patchnum, WORD wPrimitiveCount, D3DPRIMITIVETYPE ePrimitiveType, bool isFogEnable);
-		void __SoftwareTransformPatch_RenderPatchNone(SoftwareTransformPatch_SRenderState& rkTPRS, long patchnum, WORD wPrimitiveCount, D3DPRIMITIVETYPE ePrimitiveType);
+		void __SoftwareTransformPatch_RenderPatchSplat(SoftwareTransformPatch_SRenderState& rkTPRS, long patchnum, uint16_t wPrimitiveCount, D3DPRIMITIVETYPE ePrimitiveType, bool isFogEnable);
+		void __SoftwareTransformPatch_RenderPatchNone(SoftwareTransformPatch_SRenderState& rkTPRS, long patchnum, uint16_t wPrimitiveCount, D3DPRIMITIVETYPE ePrimitiveType);
 
 	protected:
 		std::vector<CGraphicObjectInstance*> m_ShadowReceiverVector;
@@ -688,16 +688,16 @@ class CMapOutdoor : public CMapBase
 		CMonsterAreaInfo* AddMonsterAreaInfo(long lOriginX, long lOriginY, long lSizeX, long lSizeY);
 		void RemoveAllMonsterAreaInfo();
 
-		DWORD GetMonsterAreaInfoCount() { return m_MonsterAreaInfoPtrVector.size(); }
-		bool GetMonsterAreaInfoFromVectorIndex(DWORD dwMonsterAreaInfoVectorIndex, CMonsterAreaInfo** ppMonsterAreaInfo);
+		uint32_t GetMonsterAreaInfoCount() { return m_MonsterAreaInfoPtrVector.size(); }
+		bool GetMonsterAreaInfoFromVectorIndex(uint32_t dwMonsterAreaInfoVectorIndex, CMonsterAreaInfo** ppMonsterAreaInfo);
 
 		CMonsterAreaInfo* AddNewMonsterAreaInfo(long lOriginX, long lOriginY, long lSizeX, long lSizeY,
 												CMonsterAreaInfo::EMonsterAreaInfoType eMonsterAreaInfoType,
-												DWORD dwVID, DWORD dwCount, CMonsterAreaInfo::EMonsterDir eMonsterDir);
+												uint32_t dwVID, uint32_t dwCount, CMonsterAreaInfo::EMonsterDir eMonsterDir);
 
 	public:
-		void GetBaseXY(DWORD* pdwBaseX, DWORD* pdwBaseY);
-		void SetBaseXY(DWORD dwBaseX, DWORD dwBaseY);
+		void GetBaseXY(uint32_t* pdwBaseX, uint32_t* pdwBaseY);
+		void SetBaseXY(uint32_t dwBaseX, uint32_t dwBaseY);
 
 		void SetTransparentTree(bool bTransparentTree) { m_bTransparentTree = bTransparentTree; }
 		void EnableTerrainOnlyForHeight(bool bFlag) { m_bEnableTerrainOnlyForHeight = bFlag; }
@@ -705,8 +705,8 @@ class CMapOutdoor : public CMapBase
 		bool IsEnablePortal() { return m_bEnablePortal; }
 
 	protected:
-		DWORD m_dwBaseX;
-		DWORD m_dwBaseY;
+		uint32_t m_dwBaseX;
+		uint32_t m_dwBaseY;
 
 		D3DXVECTOR3 m_v3Player;
 
@@ -732,12 +732,12 @@ class CMapOutdoor : public CMapBase
 
 		// Special Effect
 	private:
-		typedef std::map<DWORD, int> TSpecialEffectMap;
+		typedef std::map<uint32_t, int> TSpecialEffectMap;
 		TSpecialEffectMap m_kMap_dwID_iEffectID;
 
 	public:
-		void SpecialEffect_Create(DWORD dwID, float x, float y, float z, const char* c_szEffName);
-		void SpecialEffect_Delete(DWORD dwID);
+		void SpecialEffect_Create(uint32_t dwID, float x, float y, float z, const char* c_szEffName);
+		void SpecialEffect_Delete(uint32_t dwID);
 		void SpecialEffect_Destroy();
 
 	private:
@@ -745,7 +745,7 @@ class CMapOutdoor : public CMapBase
 		{
 				struct SItem
 				{
-						DWORD m_dwKey;
+						uint32_t m_dwKey;
 						float m_fHeight;
 				};
 

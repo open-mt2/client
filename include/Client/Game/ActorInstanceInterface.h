@@ -14,5 +14,5 @@ class IActorInstance : public CGraphicThingInstance
 		IActorInstance() {}
 		virtual ~IActorInstance() {}
 		virtual bool TestCollisionWithDynamicSphere(const CDynamicSphereInstance& dsi) = 0;
-		virtual DWORD GetVirtualID() = 0;
+		virtual uint32_t GetVirtualID() = 0;
 };

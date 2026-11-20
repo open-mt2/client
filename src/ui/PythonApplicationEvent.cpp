@@ -43,8 +43,8 @@ void CPythonApplication::OnSizeChange(int width, int height)
 		m_iCameraBaseHeight = height;
 	}
 
-	m_dwWidth = static_cast<DWORD>(width);
-	m_dwHeight = static_cast<DWORD>(height);
+	m_dwWidth = static_cast<uint32_t>(width);
+	m_dwHeight = static_cast<uint32_t>(height);
 
 	UI::CWindowManager& rkWndMgr = UI::CWindowManager::Instance();
 	rkWndMgr.SetResolution(width, height);

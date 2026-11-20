@@ -14,7 +14,7 @@ void CActorInstance::MotionEventProcess()
 	if (!m_pkCurRaceMotionData)
 		return;
 
-	for (DWORD i = 0; i < m_pkCurRaceMotionData->GetMotionEventDataCount(); ++i)
+	for (uint32_t i = 0; i < m_pkCurRaceMotionData->GetMotionEventDataCount(); ++i)
 	{
 		const CRaceMotionData::TMotionEventData* c_pData;
 		if (!m_pkCurRaceMotionData->GetMotionEventDataPointer(i, &c_pData))
@@ -24,7 +24,7 @@ void CActorInstance::MotionEventProcess()
 	}
 }
 
-void CActorInstance::SoundEventProcess(BOOL bCheckFrequency)
+void CActorInstance::SoundEventProcess(int32_t bCheckFrequency)
 {
 	if (!m_pkCurRaceMotionData)
 		return;
@@ -34,7 +34,7 @@ void CActorInstance::SoundEventProcess(BOOL bCheckFrequency)
 	rkSndMgr.UpdateSoundInstance(m_x, m_y, m_z, m_kCurMotNode.dwcurFrame, c_pkVct_kSndInst, bCheckFrequency);
 }
 
-void CActorInstance::MotionEventProcess(DWORD dwcurFrame, int iIndex, const CRaceMotionData::TMotionEventData* c_pData)
+void CActorInstance::MotionEventProcess(uint32_t dwcurFrame, int iIndex, const CRaceMotionData::TMotionEventData* c_pData)
 {
 	if (c_pData->dwFrame != dwcurFrame)
 		return;
@@ -95,7 +95,7 @@ void CActorInstance::__HideEvent()
 	SetAlphaValue(0.0f);
 }
 
-BOOL CActorInstance::__IsHiding()
+int32_t CActorInstance::__IsHiding()
 {
 	return m_isHiding;
 }
@@ -135,7 +135,7 @@ void CActorInstance::ProcessMotionEventEffectEvent(const CRaceMotionData::TMotio
 		else
 		{
 			int iBoneIndex;
-			DWORD dwPartIndex = 0;
+			uint32_t dwPartIndex = 0;
 			if (FindBoneIndex(dwPartIndex, c_pEffectData->strAttachingBoneName.c_str(), &iBoneIndex))
 			{
 				D3DXMATRIX* pBoneMat;
@@ -224,7 +224,7 @@ void CActorInstance::ProcessMotionEventSpecialAttacking(int iMotionEventIndex, c
 
 	m_kSplashArea.SphereInstanceVector.clear();
 	m_kSplashArea.SphereInstanceVector.resize(c_pAttackingData->CollisionData.SphereDataVector.size());
-	for (DWORD i = 0; i < c_pAttackingData->CollisionData.SphereDataVector.size(); ++i)
+	for (uint32_t i = 0; i < c_pAttackingData->CollisionData.SphereDataVector.size(); ++i)
 	{
 		const TSphereData& c_rSphereData = c_pAttackingData->CollisionData.SphereDataVector[i].GetAttribute();
 		CDynamicSphereInstance& rSphereInstance = m_kSplashArea.SphereInstanceVector[i];
@@ -268,7 +268,7 @@ void CActorInstance::ProcessMotionEventFly(const CRaceMotionData::TMotionEventDa
 		{
 			D3DXMATRIX* pBoneMat;
 			int iBoneIndex;
-			DWORD dwPartIndex = 0;
+			uint32_t dwPartIndex = 0;
 
 			if (FindBoneIndex(dwPartIndex, c_pFlyData->strAttachingBoneName.c_str(), &iBoneIndex))
 				if (GetBoneMatrix(dwPartIndex, iBoneIndex, &pBoneMat))

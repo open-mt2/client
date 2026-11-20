@@ -6,7 +6,7 @@
 
 static int recreate = false;
 
-void CMapOutdoor::SetShadowTextureSize(WORD size)
+void CMapOutdoor::SetShadowTextureSize(uint16_t size)
 {
 	if (m_wShadowMapSize != size)
 	{
@@ -68,7 +68,7 @@ void CMapOutdoor::ReleaseCharacterShadowTexture()
 	SAFE_RELEASE(m_lpCharacterShadowMapTexture);
 }
 
-DWORD dwLightEnable = FALSE;
+uint32_t dwLightEnable = FALSE;
 
 bool CMapOutdoor::BeginRenderCharacterShadowToTexture()
 {

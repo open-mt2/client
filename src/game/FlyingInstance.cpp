@@ -77,7 +77,7 @@ void CFlyingInstance::BuildAttachInstance()
 				CEffectManager& rem = CEffectManager::Instance();
 				TAttachEffectInstance aei;
 
-				DWORD dwCRC = GetCaseCRC32(rfad.strFilename.c_str(), rfad.strFilename.size());
+				uint32_t dwCRC = GetCaseCRC32(rfad.strFilename.c_str(), rfad.strFilename.size());
 
 				aei.iAttachIndex = i;
 				aei.dwEffectInstanceIndex = rem.GetEmptyIndex();
@@ -531,7 +531,7 @@ void CFlyingInstance::__Bomb()
 	if (!m_pData->m_dwBombEffectID)
 		return;
 
-	DWORD dwEmptyIndex = rkEftMgr.GetEmptyIndex();
+	uint32_t dwEmptyIndex = rkEftMgr.GetEmptyIndex();
 	rkEftMgr.CreateEffectInstance(dwEmptyIndex, m_pData->m_dwBombEffectID);
 
 	D3DXMATRIX m;

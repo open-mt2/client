@@ -45,14 +45,14 @@ struct SGuildMarkBlock
 		///////////////////////////////////////////////////////////////////////////////
 		Pixel m_apxBuf[SIZE]; // 실제 이미지
 
-		BYTE m_abCompBuf[MAX_COMP_SIZE]; // 압축된 데이터
-		size_t m_sizeCompBuf;			 // 압축된 크기
-		DWORD m_crc;					 // 압축된 데이터의 CRC
+		uint8_t m_abCompBuf[MAX_COMP_SIZE]; // 압축된 데이터
+		size_t m_sizeCompBuf;				// 압축된 크기
+		uint32_t m_crc;						// 압축된 데이터의 CRC
 
 		///////////////////////////////////////////////////////////////////////////////
-		DWORD GetCRC() const;
+		uint32_t GetCRC() const;
 
-		void CopyFrom(const BYTE* pbCompBuf, DWORD dwCompSize, DWORD crc);
+		void CopyFrom(const uint8_t* pbCompBuf, uint32_t dwCompSize, uint32_t crc);
 		void Compress(const Pixel* pxBuf);
 };
 
@@ -87,17 +87,17 @@ class CGuildMarkImage
 		bool Save(const char* c_szFileName);
 		bool Load(const char* c_szFileName);
 
-		void PutData(UINT x, UINT y, UINT width, UINT height, void* data);
-		void GetData(UINT x, UINT y, UINT width, UINT height, void* data);
+		void PutData(uint32_t x, uint32_t y, uint32_t width, uint32_t height, void* data);
+		void GetData(uint32_t x, uint32_t y, uint32_t width, uint32_t height, void* data);
 
-		bool SaveMark(DWORD posMark, BYTE* pbMarkImage);
-		bool DeleteMark(DWORD posMark);
-		bool SaveBlockFromCompressedData(DWORD posBlock, const BYTE* pbComp, DWORD dwCompSize); // 서버 -> 클라이언트
+		bool SaveMark(uint32_t posMark, uint8_t* pbMarkImage);
+		bool DeleteMark(uint32_t posMark);
+		bool SaveBlockFromCompressedData(uint32_t posBlock, const uint8_t* pbComp, uint32_t dwCompSize); // 서버 -> 클라이언트
 
-		DWORD GetEmptyPosition(); // 빈 마크 위치를 얻는다.
+		uint32_t GetEmptyPosition(); // 빈 마크 위치를 얻는다.
 
-		void GetBlockCRCList(DWORD* crcList);
-		void GetDiffBlocks(const DWORD* crcList, std::map<BYTE, const SGuildMarkBlock*>& mapDiffBlocks);
+		void GetBlockCRCList(uint32_t* crcList);
+		void GetDiffBlocks(const uint32_t* crcList, std::map<uint8_t, const SGuildMarkBlock*>& mapDiffBlocks);
 
 	private:
 		enum
@@ -111,7 +111,7 @@ class CGuildMarkImage
 
 		// BGRA pixels, WIDTH * HEIGHT * 4 bytes. Replaces the DevIL image
 		// handle the class used before T2.1.
-		std::vector<BYTE> m_pixels;
+		std::vector<uint8_t> m_pixels;
 };
 
 #endif

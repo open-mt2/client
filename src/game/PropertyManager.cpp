@@ -43,7 +43,7 @@ bool CPropertyManager::LoadReservedCRC(const char* c_pszFileName)
 
 	textFileLoader.Bind(data->size(), data->data());
 
-	for (DWORD i = 0; i < textFileLoader.GetLineCount(); ++i)
+	for (uint32_t i = 0; i < textFileLoader.GetLineCount(); ++i)
 	{
 		const char* pszLine = textFileLoader.GetLineString(i).c_str();
 
@@ -56,18 +56,18 @@ bool CPropertyManager::LoadReservedCRC(const char* c_pszFileName)
 	return true;
 }
 
-void CPropertyManager::ReserveCRC(DWORD dwCRC)
+void CPropertyManager::ReserveCRC(uint32_t dwCRC)
 {
 	m_ReservedCRCSet.insert(dwCRC);
 }
 
-DWORD CPropertyManager::GetUniqueCRC(const char* c_szSeed)
+uint32_t CPropertyManager::GetUniqueCRC(const char* c_szSeed)
 {
 	std::string stTmp = c_szSeed;
 
 	while (1)
 	{
-		DWORD dwCRC = GetCRC32(stTmp.c_str(), stTmp.length());
+		uint32_t dwCRC = GetCRC32(stTmp.c_str(), stTmp.length());
 
 		if (m_ReservedCRCSet.find(dwCRC) == m_ReservedCRCSet.end() &&
 			m_PropertyByCRCMap.find(dwCRC) == m_PropertyByCRCMap.end())
@@ -94,7 +94,7 @@ bool CPropertyManager::Register(const char* c_pszFileName, CProperty** ppPropert
 		return false;
 	}
 
-	DWORD dwCRC = pProperty->GetCRC();
+	uint32_t dwCRC = pProperty->GetCRC();
 
 	TPropertyCRCMap::iterator itor = m_PropertyByCRCMap.find(dwCRC);
 
@@ -121,7 +121,7 @@ bool CPropertyManager::Get(const char* c_pszFileName, CProperty** ppProperty)
 	return Register(c_pszFileName, ppProperty);
 }
 
-bool CPropertyManager::Get(DWORD dwCRC, CProperty** ppProperty)
+bool CPropertyManager::Get(uint32_t dwCRC, CProperty** ppProperty)
 {
 	TPropertyCRCMap::iterator itor = m_PropertyByCRCMap.find(dwCRC);
 

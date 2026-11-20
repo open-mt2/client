@@ -30,7 +30,7 @@ void CServerStateChecker::Create(PyObject* poWnd)
 	m_poWnd = poWnd;
 }
 
-void CServerStateChecker::AddChannel(UINT uServerIndex, const char* c_szAddr, UINT uPort)
+void CServerStateChecker::AddChannel(uint32_t uServerIndex, const char* c_szAddr, uint32_t uPort)
 {
 	TChannel c;
 	c.uServerIndex = uServerIndex;
@@ -59,7 +59,7 @@ void CServerStateChecker::Request()
 	m_kStream.SetSendBufferSize(1024);
 	m_kStream.SetRecvBufferSize(1024);
 
-	BYTE bHeader = HEADER_CG_STATE_CHECKER;
+	uint8_t bHeader = HEADER_CG_STATE_CHECKER;
 	if (!m_kStream.Send(sizeof(bHeader), &bHeader))
 	{
 		for (std::list<TChannel>::const_iterator it = m_lstChannel.begin(); it != m_lstChannel.end(); ++it)
@@ -75,7 +75,7 @@ void CServerStateChecker::Update()
 {
 	m_kStream.Process();
 
-	BYTE bHeader;
+	uint8_t bHeader;
 	if (!m_kStream.Recv(sizeof(bHeader), &bHeader))
 	{
 		return;

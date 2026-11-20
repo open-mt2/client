@@ -61,7 +61,7 @@ class CScreenDepthOfField : public CGraphicBase
 				float y;
 				float z;
 				float rhw;
-				DWORD color;
+				uint32_t color;
 				float u;
 				float v;
 		};
@@ -72,7 +72,7 @@ class CScreenDepthOfField : public CGraphicBase
 				float y;
 				float z;
 				float rhw;
-				DWORD color;
+				uint32_t color;
 				float u0;
 				float v0;
 				float u1;
@@ -90,7 +90,7 @@ class CScreenDepthOfField : public CGraphicBase
 		bool __PostProcessDepthOfField();
 
 		void __BindRenderTarget(IDirect3DSurface9* pColorSurface, IDirect3DSurface9* pDepthSurface, int iWidth, int iHeight);
-		void __DrawScreenQuad(IDirect3DTexture9* pTexture, int iWidth, int iHeight, float fY0, float fY1, float fUOffset, float fVOffset, DWORD dwTopColor, DWORD dwBottomColor);
+		void __DrawScreenQuad(IDirect3DTexture9* pTexture, int iWidth, int iHeight, float fY0, float fY1, float fUOffset, float fVOffset, uint32_t dwTopColor, uint32_t dwBottomColor);
 		void __BlurPass(IDirect3DTexture9* pSource, int iTargetIndex, int iPass, bool bHorizontal);
 		void __DownsampleScene();
 		void __Composite();

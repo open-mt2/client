@@ -5,8 +5,8 @@
 
 extern bool PERF_CHECKER_RENDER_GAME;
 extern D3DXCOLOR g_fSpecularColor;
-BOOL bVisibleNotice = true;
-BOOL bTestServerFlag = FALSE;
+int32_t bVisibleNotice = true;
+int32_t bTestServerFlag = FALSE;
 int TWOHANDED_WEWAPON_ATT_SPEED_DECREASE_VALUE = 0;
 
 // Packs still call the in-game browser exports; the browser itself is gone, so
@@ -51,11 +51,11 @@ PyObject* appEnablePerformanceTime(PyObject* poSelf, PyObject* poArgs)
 
 /////////////////////////////////////////////////////
 
-extern BOOL HAIR_COLOR_ENABLE;
-extern BOOL USE_ARMOR_SPECULAR;
-extern BOOL USE_WEAPON_SPECULAR;
-extern BOOL SKILL_EFFECT_UPGRADE_ENABLE;
-extern BOOL RIDE_HORSE_ENABLE;
+extern int32_t HAIR_COLOR_ENABLE;
+extern int32_t USE_ARMOR_SPECULAR;
+extern int32_t USE_WEAPON_SPECULAR;
+extern int32_t SKILL_EFFECT_UPGRADE_ENABLE;
+extern int32_t RIDE_HORSE_ENABLE;
 extern double g_specularSpd;
 
 // TEXTTAIL_LIVINGTIME_CONTROL
@@ -297,7 +297,7 @@ PyObject* appGetImageInfo(PyObject* poSelf, PyObject* poArgs)
 	uint32_t uHeight = 0;
 	uint32_t uFormat = 0;
 
-	BOOL canLoad = GetImageFileInfo(szFileName, &uWidth, &uHeight, &uFormat) ? TRUE : FALSE;
+	int32_t canLoad = GetImageFileInfo(szFileName, &uWidth, &uHeight, &uFormat) ? TRUE : FALSE;
 
 	return Py_BuildValue("iii", canLoad, uWidth, uHeight);
 }
@@ -984,12 +984,12 @@ class CTextLineLoader
 			m_kTextFileLoader.Bind(data->size(), data->data());
 		}
 
-		DWORD GetLineCount()
+		uint32_t GetLineCount()
 		{
 			return m_kTextFileLoader.GetLineCount();
 		}
 
-		const char* GetLine(DWORD dwIndex)
+		const char* GetLine(uint32_t dwIndex)
 		{
 			if (dwIndex >= GetLineCount())
 				return "";

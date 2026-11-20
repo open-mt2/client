@@ -6,7 +6,7 @@
 
 void CMapOutdoor::__RenderTerrain_RenderHardwareTransformPatch()
 {
-	DWORD dwFogColor;
+	uint32_t dwFogColor;
 	float fFogFarDistance;
 	float fFogNearDistance;
 	if (mc_pEnvironmentData)
@@ -111,17 +111,17 @@ void CMapOutdoor::__RenderTerrain_RenderHardwareTransformPatch()
 	far_it = m_PatchVector.end();
 #endif
 
-	WORD wPrimitiveCount;
+	uint16_t wPrimitiveCount;
 	D3DPRIMITIVETYPE ePrimitiveType;
 
-	BYTE byCUrrentLODLevel = 0;
+	uint8_t byCUrrentLODLevel = 0;
 
 	float fLODLevel1Distance = __GetNoFogDistance();
 	float fLODLevel2Distance = __GetFogDistance();
 
 	SelectIndexBuffer(0, &wPrimitiveCount, &ePrimitiveType);
 
-	DWORD dwFogEnable = STATEMANAGER.GetRenderState(D3DRS_FOGENABLE);
+	uint32_t dwFogEnable = STATEMANAGER.GetRenderState(D3DRS_FOGENABLE);
 	std::vector<std::pair<float, long>>::iterator it = m_PatchVector.begin();
 
 	// NOTE: 맵툴에서는 view ~ fog near 사이의 지형을 fog disabled 상태로 그리는 작업을 하지 않음.
@@ -256,7 +256,7 @@ void CMapOutdoor::__RenderTerrain_RenderHardwareTransformPatch()
 	//////////////////////////////////////////////////////////////////////////
 }
 
-void CMapOutdoor::__HardwareTransformPatch_RenderPatchSplat(long patchnum, WORD wPrimitiveCount, D3DPRIMITIVETYPE ePrimitiveType)
+void CMapOutdoor::__HardwareTransformPatch_RenderPatchSplat(long patchnum, uint16_t wPrimitiveCount, D3DPRIMITIVETYPE ePrimitiveType)
 {
 	assert(NULL != m_pTerrainPatchProxyList && "__HardwareTransformPatch_RenderPatchSplat");
 	CTerrainPatchProxy* pTerrainPatchProxy = &m_pTerrainPatchProxyList[patchnum];
@@ -268,7 +268,7 @@ void CMapOutdoor::__HardwareTransformPatch_RenderPatchSplat(long patchnum, WORD 
 	if (sPatchNum < 0)
 		return;
 
-	BYTE ucTerrainNum = pTerrainPatchProxy->GetTerrainNum();
+	uint8_t ucTerrainNum = pTerrainPatchProxy->GetTerrainNum();
 	if (0xFF == ucTerrainNum)
 		return;
 
@@ -276,13 +276,13 @@ void CMapOutdoor::__HardwareTransformPatch_RenderPatchSplat(long patchnum, WORD 
 	if (!GetTerrainPointer(ucTerrainNum, &pTerrain))
 		return;
 
-	DWORD dwFogColor;
+	uint32_t dwFogColor;
 	if (mc_pEnvironmentData)
 		dwFogColor = mc_pEnvironmentData->FogColor;
 	else
 		dwFogColor = 0xffffffff;
 
-	WORD wCoordX, wCoordY;
+	uint16_t wCoordX, wCoordY;
 	pTerrain->GetCoordinate(&wCoordX, &wCoordY);
 
 	TTerrainSplatPatch& rTerrainSplatPatch = pTerrain->GetTerrainSplatPatch();
@@ -319,7 +319,7 @@ void CMapOutdoor::__HardwareTransformPatch_RenderPatchSplat(long patchnum, WORD 
 	//	if (!m_bShowEntirePatchTextureCount && !(GetAsyncKeyState(VK_LCONTROL) & 0x8000) )
 	if (1)
 	{
-		for (DWORD j = 1; j < pTerrain->GetNumTextures(); ++j)
+		for (uint32_t j = 1; j < pTerrain->GetNumTextures(); ++j)
 		{
 			TTerainSplat& rSplat = rTerrainSplatPatch.Splats[j];
 
@@ -332,10 +332,10 @@ void CMapOutdoor::__HardwareTransformPatch_RenderPatchSplat(long patchnum, WORD 
 			++nRenderTextureCount;
 		}
 
-		DWORD dwTextureFactor = STATEMANAGER.GetRenderState(D3DRS_TEXTUREFACTOR);
+		uint32_t dwTextureFactor = STATEMANAGER.GetRenderState(D3DRS_TEXTUREFACTOR);
 
 		int TextureCountThreshold = 8;
-		DWORD dwTFactor = 0xFFFFFFFF;
+		uint32_t dwTFactor = 0xFFFFFFFF;
 
 		if (GetAsyncKeyState(VK_LSHIFT) & 0x8000)
 		{
@@ -386,7 +386,7 @@ void CMapOutdoor::__HardwareTransformPatch_RenderPatchSplat(long patchnum, WORD 
 			// 0번 텍스처
 			if (0 < rTerrainSplatPatch.PatchTileCount[sPatchNum][0])
 			{
-				DWORD dwTextureFactorFor0Texture = STATEMANAGER.GetRenderState(D3DRS_TEXTUREFACTOR);
+				uint32_t dwTextureFactorFor0Texture = STATEMANAGER.GetRenderState(D3DRS_TEXTUREFACTOR);
 				STATEMANAGER.SetRenderState(D3DRS_TEXTUREFACTOR, 0xFF88FF88);
 				STATEMANAGER.SaveTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TFACTOR);
 				STATEMANAGER.SaveTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
@@ -396,18 +396,18 @@ void CMapOutdoor::__HardwareTransformPatch_RenderPatchSplat(long patchnum, WORD 
 				STATEMANAGER.RestoreTextureStageState(0, D3DTSS_COLOROP);
 			}
 
-			for (DWORD j = 1; j < pTerrain->GetNumTextures(); ++j)
+			for (uint32_t j = 1; j < pTerrain->GetNumTextures(); ++j)
 			{
 				TTerainSplat& rSplat = rTerrainSplatPatch.Splats[j];
 
 				if (!rSplat.Active)
 					continue;
 
-				DWORD dwTextureCount = rTerrainSplatPatch.PatchTileCount[sPatchNum][j];
+				uint32_t dwTextureCount = rTerrainSplatPatch.PatchTileCount[sPatchNum][j];
 				if (dwTextureCount == 0)
 					continue;
 
-				DWORD dwTextureFactorForTextureBalance = 0xFFFFFFFF;
+				uint32_t dwTextureFactorForTextureBalance = 0xFFFFFFFF;
 
 				if (!(GetAsyncKeyState(VK_LSHIFT) & 0x8000))
 				{
@@ -464,7 +464,7 @@ void CMapOutdoor::__HardwareTransformPatch_RenderPatchSplat(long patchnum, WORD 
 	else
 	{
 		int TextureCountThreshold = 6;
-		DWORD dwTFactor = 0xFFFF00FF;
+		uint32_t dwTFactor = 0xFFFF00FF;
 
 		if (GetAsyncKeyState(VK_LSHIFT) & 0x8000)
 		{
@@ -495,7 +495,7 @@ void CMapOutdoor::__HardwareTransformPatch_RenderPatchSplat(long patchnum, WORD 
 			}
 		}
 
-		for (DWORD j = 1; j < pTerrain->GetNumTextures(); ++j)
+		for (uint32_t j = 1; j < pTerrain->GetNumTextures(); ++j)
 		{
 			TTerainSplat& rSplat = rTerrainSplatPatch.Splats[j];
 
@@ -505,7 +505,7 @@ void CMapOutdoor::__HardwareTransformPatch_RenderPatchSplat(long patchnum, WORD 
 			if (rTerrainSplatPatch.PatchTileCount[sPatchNum][j] == 0)
 				continue;
 
-			DWORD dwTextureFactor;
+			uint32_t dwTextureFactor;
 
 			if (nRenderTextureCount >= TextureCountThreshold)
 			{
@@ -546,7 +546,7 @@ void CMapOutdoor::__HardwareTransformPatch_RenderPatchSplat(long patchnum, WORD 
 
 #else
 	bool isFirst = true;
-	for (DWORD j = 1; j < pTerrain->GetNumTextures(); ++j)
+	for (uint32_t j = 1; j < pTerrain->GetNumTextures(); ++j)
 	{
 		TTerainSplat& rSplat = rTerrainSplatPatch.Splats[j];
 
@@ -678,7 +678,7 @@ void CMapOutdoor::__HardwareTransformPatch_RenderPatchSplat(long patchnum, WORD 
 	m_iRenderedSplatNumSqSum += iCurRenderedSplatNum * iCurRenderedSplatNum;
 }
 
-void CMapOutdoor::__HardwareTransformPatch_RenderPatchNone(long patchnum, WORD wPrimitiveCount, D3DPRIMITIVETYPE ePrimitiveType)
+void CMapOutdoor::__HardwareTransformPatch_RenderPatchNone(long patchnum, uint16_t wPrimitiveCount, D3DPRIMITIVETYPE ePrimitiveType)
 {
 	assert(NULL != m_pTerrainPatchProxyList && "__HardwareTransformPatch_RenderPatchNone");
 	CTerrainPatchProxy* pTerrainPatchProxy = &m_pTerrainPatchProxyList[patchnum];

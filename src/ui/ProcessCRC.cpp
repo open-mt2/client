@@ -3,7 +3,7 @@
 
 #ifdef OPENMT2_PLATFORM_LINUX
 
-bool GetExeCRC(DWORD& r_dwProcCRC, DWORD& r_dwFileCRC)
+bool GetExeCRC(uint32_t& r_dwProcCRC, uint32_t& r_dwFileCRC)
 {
 	r_dwProcCRC = 0;
 	r_dwFileCRC = 0;
@@ -11,15 +11,15 @@ bool GetExeCRC(DWORD& r_dwProcCRC, DWORD& r_dwFileCRC)
 }
 
 void BuildProcessCRC() {}
-BYTE GetProcessCRCMagicCubePiece() { return 0; }
+uint8_t GetProcessCRCMagicCubePiece() { return 0; }
 
 #else
 
 #include <tlhelp32.h>
 
-static BYTE abCRCMagicCube[8] = {0, 0, 0, 0, 0, 0, 0, 0};
-static BYTE abCRCXorTable[8] = {102, 30, 188, 44, 39, 201, 43, 5};
-static BYTE bMagicCubeIdx = 0;
+static uint8_t abCRCMagicCube[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+static uint8_t abCRCXorTable[8] = {102, 30, 188, 44, 39, 201, 43, 5};
+static uint8_t bMagicCubeIdx = 0;
 
 const char* stristr(const char* big, const char* little)
 {
@@ -46,7 +46,7 @@ bool GetProcessInformation(std::string& exeFileName, LPCVOID* ppvAddress)
 		memset(&me32, 0, sizeof(me32));
 		me32.dwSize = sizeof(MODULEENTRY32);
 
-		BOOL bRet = Module32First(hModuleSnap, &me32);
+		int32_t bRet = Module32First(hModuleSnap, &me32);
 
 		while (bRet)
 		{
@@ -70,20 +70,20 @@ bool GetProcessInformation(std::string& exeFileName, LPCVOID* ppvAddress)
 	return false;
 }
 
-DWORD GetProcessMemoryCRC(LPCVOID c_pvBaseAddress)
+uint32_t GetProcessMemoryCRC(LPCVOID c_pvBaseAddress)
 {
 	HANDLE hProcess = GetCurrentProcess();
 	char* pBuf = new char[1024 * 1024];
-	SIZE_T dwBytesRead;
+	size_t dwBytesRead;
 
-	BOOL bRet = ReadProcessMemory(hProcess, c_pvBaseAddress, pBuf, 1024 * 1024, &dwBytesRead);
+	int32_t bRet = ReadProcessMemory(hProcess, c_pvBaseAddress, pBuf, 1024 * 1024, &dwBytesRead);
 
 	if (!bRet && GetLastError() == ERROR_PARTIAL_COPY)
 		bRet = true;
 
 	if (bRet)
 	{
-		DWORD dwCRC = GetCRC32(pBuf, dwBytesRead);
+		uint32_t dwCRC = GetCRC32(pBuf, dwBytesRead);
 		delete[] pBuf;
 		return dwCRC;
 	}
@@ -92,7 +92,7 @@ DWORD GetProcessMemoryCRC(LPCVOID c_pvBaseAddress)
 	return 0;
 }
 
-bool __GetExeCRC(DWORD& r_dwProcCRC, DWORD& r_dwFileCRC)
+bool __GetExeCRC(uint32_t& r_dwProcCRC, uint32_t& r_dwFileCRC)
 {
 	std::string exeFileName;
 	LPCVOID c_pvBaseAddress;
@@ -110,26 +110,26 @@ bool __GetExeCRC(DWORD& r_dwProcCRC, DWORD& r_dwFileCRC)
 
 void BuildProcessCRC()
 {
-	DWORD dwProcCRC, dwFileCRC;
+	uint32_t dwProcCRC, dwFileCRC;
 
 	if (__GetExeCRC(dwProcCRC, dwFileCRC))
 	{
-		abCRCMagicCube[0] = BYTE(dwProcCRC & 0x000000ff);
-		abCRCMagicCube[1] = BYTE(dwFileCRC & 0x000000ff);
-		abCRCMagicCube[2] = BYTE((dwProcCRC & 0x0000ff00) >> 8);
-		abCRCMagicCube[3] = BYTE((dwFileCRC & 0x0000ff00) >> 8);
-		abCRCMagicCube[4] = BYTE((dwProcCRC & 0x00ff0000) >> 16);
-		abCRCMagicCube[5] = BYTE((dwFileCRC & 0x00ff0000) >> 16);
-		abCRCMagicCube[6] = BYTE((dwProcCRC & 0xff000000) >> 24);
-		abCRCMagicCube[7] = BYTE((dwFileCRC & 0xff000000) >> 24);
+		abCRCMagicCube[0] = uint8_t(dwProcCRC & 0x000000ff);
+		abCRCMagicCube[1] = uint8_t(dwFileCRC & 0x000000ff);
+		abCRCMagicCube[2] = uint8_t((dwProcCRC & 0x0000ff00) >> 8);
+		abCRCMagicCube[3] = uint8_t((dwFileCRC & 0x0000ff00) >> 8);
+		abCRCMagicCube[4] = uint8_t((dwProcCRC & 0x00ff0000) >> 16);
+		abCRCMagicCube[5] = uint8_t((dwFileCRC & 0x00ff0000) >> 16);
+		abCRCMagicCube[6] = uint8_t((dwProcCRC & 0xff000000) >> 24);
+		abCRCMagicCube[7] = uint8_t((dwFileCRC & 0xff000000) >> 24);
 
 		bMagicCubeIdx = 0;
 	}
 }
 
-BYTE GetProcessCRCMagicCubePiece()
+uint8_t GetProcessCRCMagicCubePiece()
 {
-	BYTE bPiece = BYTE(abCRCMagicCube[bMagicCubeIdx] ^ abCRCXorTable[bMagicCubeIdx]);
+	uint8_t bPiece = uint8_t(abCRCMagicCube[bMagicCubeIdx] ^ abCRCXorTable[bMagicCubeIdx]);
 
 	if (!(++bMagicCubeIdx & 7))
 		bMagicCubeIdx = 0;

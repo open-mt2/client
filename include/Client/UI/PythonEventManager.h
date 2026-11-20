@@ -114,7 +114,7 @@ class CPythonEventManager : public CSingleton<CPythonEventManager>
 				CGraphicTextInstance* pCurrentTextLine;
 				TScriptTextLineList ScriptTextLineList;
 
-				BOOL isConfirmWait;
+				int32_t isConfirmWait;
 				CGraphicTextInstance* pConfirmTimeTextLine;
 				int iConfirmEndTime;
 
@@ -183,10 +183,10 @@ class CPythonEventManager : public CSingleton<CPythonEventManager>
 
 	protected:
 		void __InitEventSet(TEventSet& rEventSet);
-		void __InsertLine(TEventSet& rEventSet, BOOL isCenter = FALSE, int iX_pos = 0);
+		void __InsertLine(TEventSet& rEventSet, int32_t isCenter = FALSE, int iX_pos = 0);
 		void __AddSpace(TEventSet& pEventSet, int iSpace);
 
-		DWORD GetEmptyEventSetSlot();
+		uint32_t GetEmptyEventSetSlot();
 
 		bool CheckEventSetIndex(int iIndex);
 
@@ -201,7 +201,7 @@ class CPythonEventManager : public CSingleton<CPythonEventManager>
 
 	protected:
 		TEventSetVector m_EventSetVector;
-		BOOL m_isQuestConfirmWait;
+		int32_t m_isQuestConfirmWait;
 
 	private:
 		CDynamicPool<TEventSet> m_EventSetPool;

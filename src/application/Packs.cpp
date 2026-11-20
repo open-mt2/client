@@ -64,14 +64,14 @@ namespace Neoeter
 		std::string texCachePackName;
 		CTokenVector tokens;
 
-		const DWORD lineCount = textLoader.GetLineCount();
+		const uint32_t lineCount = textLoader.GetLineCount();
 		if (lineCount < 2)
 		{
 			TraceError("Pack index '%s' is empty; the client will run without pack assets", fileName.c_str());
 			return true;
 		}
 
-		for (DWORD i = 0; i + 1 < lineCount; ++i)
+		for (uint32_t i = 0; i + 1 < lineCount; ++i)
 		{
 			textLoader.SplitLineByTab(i, &tokens);
 

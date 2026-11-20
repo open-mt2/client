@@ -11,7 +11,7 @@
 //////////////////////////////////////////////////////////////////////////
 // SafeBox
 
-bool CPythonNetworkStream::SendSafeBoxMoneyPacket(BYTE byState, DWORD dwMoney)
+bool CPythonNetworkStream::SendSafeBoxMoneyPacket(uint8_t byState, uint32_t dwMoney)
 {
 	assert(!"CPythonNetworkStream::SendSafeBoxMoneyPacket - \xBB\xE7\xBF\xEB\xC7\xCF\xC1\xF6 \xBE\xCA\xB4\xC2 \xC7\xD4\xBC\xF6");
 	return false;
@@ -26,7 +26,7 @@ bool CPythonNetworkStream::SendSafeBoxMoneyPacket(BYTE byState, DWORD dwMoney)
 	//	return SendSequence();
 }
 
-bool CPythonNetworkStream::SendSafeBoxCheckinPacket(TItemPos InventoryPos, BYTE bySafeBoxPos)
+bool CPythonNetworkStream::SendSafeBoxCheckinPacket(TItemPos InventoryPos, uint8_t bySafeBoxPos)
 {
 	__PlayInventoryItemDropSound(InventoryPos);
 
@@ -40,7 +40,7 @@ bool CPythonNetworkStream::SendSafeBoxCheckinPacket(TItemPos InventoryPos, BYTE 
 	return SendSequence();
 }
 
-bool CPythonNetworkStream::SendSafeBoxCheckoutPacket(BYTE bySafeBoxPos, TItemPos InventoryPos)
+bool CPythonNetworkStream::SendSafeBoxCheckoutPacket(uint8_t bySafeBoxPos, TItemPos InventoryPos)
 {
 	__PlaySafeBoxItemDropSound(bySafeBoxPos);
 
@@ -54,7 +54,7 @@ bool CPythonNetworkStream::SendSafeBoxCheckoutPacket(BYTE bySafeBoxPos, TItemPos
 	return SendSequence();
 }
 
-bool CPythonNetworkStream::SendSafeBoxItemMovePacket(BYTE bySourcePos, BYTE byTargetPos, BYTE byCount)
+bool CPythonNetworkStream::SendSafeBoxItemMovePacket(uint8_t bySourcePos, uint8_t byTargetPos, uint8_t byCount)
 {
 	__PlaySafeBoxItemDropSound(bySourcePos);
 
@@ -133,7 +133,7 @@ bool CPythonNetworkStream::RecvSafeBoxMoneyChangePacket(const protocol::Packet& 
 
 //////////////////////////////////////////////////////////////////////////
 // Mall
-bool CPythonNetworkStream::SendMallCheckoutPacket(BYTE byMallPos, TItemPos InventoryPos)
+bool CPythonNetworkStream::SendMallCheckoutPacket(uint8_t byMallPos, TItemPos InventoryPos)
 {
 	__PlayMallItemDropSound(byMallPos);
 
@@ -343,7 +343,7 @@ bool CPythonNetworkStream::SendShopEndPacket()
 	return SendSequence();
 }
 
-bool CPythonNetworkStream::SendShopBuyPacket(BYTE bPos)
+bool CPythonNetworkStream::SendShopBuyPacket(uint8_t bPos)
 {
 	if (!__CanActMainInstance())
 		return true;
@@ -358,14 +358,14 @@ bool CPythonNetworkStream::SendShopBuyPacket(BYTE bPos)
 		return false;
 	}
 
-	BYTE bCount = 1;
-	if (!Send(sizeof(BYTE), &bCount))
+	uint8_t bCount = 1;
+	if (!Send(sizeof(uint8_t), &bCount))
 	{
 		Tracef("SendShopBuyPacket Error\n");
 		return false;
 	}
 
-	if (!Send(sizeof(BYTE), &bPos))
+	if (!Send(sizeof(uint8_t), &bPos))
 	{
 		Tracef("SendShopBuyPacket Error\n");
 		return false;
@@ -374,7 +374,7 @@ bool CPythonNetworkStream::SendShopBuyPacket(BYTE bPos)
 	return SendSequence();
 }
 
-bool CPythonNetworkStream::SendShopSellPacket(BYTE bySlot)
+bool CPythonNetworkStream::SendShopSellPacket(uint8_t bySlot)
 {
 	if (!__CanActMainInstance())
 		return true;
@@ -388,7 +388,7 @@ bool CPythonNetworkStream::SendShopSellPacket(BYTE bySlot)
 		Tracef("SendShopSellPacket Error\n");
 		return false;
 	}
-	if (!Send(sizeof(BYTE), &bySlot))
+	if (!Send(sizeof(uint8_t), &bySlot))
 	{
 		Tracef("SendShopAddSellPacket Error\n");
 		return false;
@@ -397,7 +397,7 @@ bool CPythonNetworkStream::SendShopSellPacket(BYTE bySlot)
 	return SendSequence();
 }
 
-bool CPythonNetworkStream::SendShopSellPacketNew(BYTE bySlot, BYTE byCount)
+bool CPythonNetworkStream::SendShopSellPacketNew(uint8_t bySlot, uint8_t byCount)
 {
 	if (!__CanActMainInstance())
 		return true;
@@ -411,12 +411,12 @@ bool CPythonNetworkStream::SendShopSellPacketNew(BYTE bySlot, BYTE byCount)
 		Tracef("SendShopSellPacket Error\n");
 		return false;
 	}
-	if (!Send(sizeof(BYTE), &bySlot))
+	if (!Send(sizeof(uint8_t), &bySlot))
 	{
 		Tracef("SendShopAddSellPacket Error\n");
 		return false;
 	}
-	if (!Send(sizeof(BYTE), &byCount))
+	if (!Send(sizeof(uint8_t), &byCount))
 	{
 		Tracef("SendShopAddSellPacket Error\n");
 		return false;
@@ -489,7 +489,7 @@ bool CPythonNetworkStream::SendItemUseToItemPacket(TItemPos source_pos, TItemPos
 	return SendSequence();
 }
 
-bool CPythonNetworkStream::SendItemDropPacket(TItemPos pos, DWORD elk)
+bool CPythonNetworkStream::SendItemDropPacket(TItemPos pos, uint32_t elk)
 {
 	if (!__CanActMainInstance())
 		return true;
@@ -508,7 +508,7 @@ bool CPythonNetworkStream::SendItemDropPacket(TItemPos pos, DWORD elk)
 	return SendSequence();
 }
 
-bool CPythonNetworkStream::SendItemDropPacketNew(TItemPos pos, DWORD elk, DWORD count)
+bool CPythonNetworkStream::SendItemDropPacketNew(TItemPos pos, uint32_t elk, uint32_t count)
 {
 	if (!__CanActMainInstance())
 		return true;
@@ -537,7 +537,7 @@ bool CPythonNetworkStream::__IsEquipItemInSlot(TItemPos uSlotPos)
 void CPythonNetworkStream::__PlayInventoryItemUseSound(TItemPos uSlotPos)
 {
 	IAbstractPlayer& rkPlayer = IAbstractPlayer::GetSingleton();
-	DWORD dwItemID = rkPlayer.GetItemIndex(uSlotPos);
+	uint32_t dwItemID = rkPlayer.GetItemIndex(uSlotPos);
 
 	CPythonItem& rkItem = CPythonItem::Instance();
 	rkItem.PlayUseSound(dwItemID);
@@ -546,15 +546,15 @@ void CPythonNetworkStream::__PlayInventoryItemUseSound(TItemPos uSlotPos)
 void CPythonNetworkStream::__PlayInventoryItemDropSound(TItemPos uSlotPos)
 {
 	IAbstractPlayer& rkPlayer = IAbstractPlayer::GetSingleton();
-	DWORD dwItemID = rkPlayer.GetItemIndex(uSlotPos);
+	uint32_t dwItemID = rkPlayer.GetItemIndex(uSlotPos);
 
 	CPythonItem& rkItem = CPythonItem::Instance();
 	rkItem.PlayDropSound(dwItemID);
 }
 
-// void CPythonNetworkStream::__PlayShopItemDropSound(UINT uSlotPos)
+// void CPythonNetworkStream::__PlayShopItemDropSound(uint32_t uSlotPos)
 //{
-//	DWORD dwItemID;
+//	uint32_t dwItemID;
 //	CPythonShop& rkShop=CPythonShop::Instance();
 //	if (!rkShop.GetSlotItemID(uSlotPos, &dwItemID))
 //		return;
@@ -563,9 +563,9 @@ void CPythonNetworkStream::__PlayInventoryItemDropSound(TItemPos uSlotPos)
 //	rkItem.PlayDropSound(dwItemID);
 // }
 
-void CPythonNetworkStream::__PlaySafeBoxItemDropSound(UINT uSlotPos)
+void CPythonNetworkStream::__PlaySafeBoxItemDropSound(uint32_t uSlotPos)
 {
-	DWORD dwItemID;
+	uint32_t dwItemID;
 	CPythonSafeBox& rkSafeBox = CPythonSafeBox::Instance();
 	if (!rkSafeBox.GetSlotItemID(uSlotPos, &dwItemID))
 		return;
@@ -574,9 +574,9 @@ void CPythonNetworkStream::__PlaySafeBoxItemDropSound(UINT uSlotPos)
 	rkItem.PlayDropSound(dwItemID);
 }
 
-void CPythonNetworkStream::__PlayMallItemDropSound(UINT uSlotPos)
+void CPythonNetworkStream::__PlayMallItemDropSound(uint32_t uSlotPos)
 {
-	DWORD dwItemID;
+	uint32_t dwItemID;
 	CPythonSafeBox& rkSafeBox = CPythonSafeBox::Instance();
 	if (!rkSafeBox.GetSlotMallItemID(uSlotPos, &dwItemID))
 		return;
@@ -585,7 +585,7 @@ void CPythonNetworkStream::__PlayMallItemDropSound(UINT uSlotPos)
 	rkItem.PlayDropSound(dwItemID);
 }
 
-bool CPythonNetworkStream::SendItemMovePacket(TItemPos pos, TItemPos change_pos, BYTE num)
+bool CPythonNetworkStream::SendItemMovePacket(TItemPos pos, TItemPos change_pos, uint8_t num)
 {
 	if (!__CanActMainInstance())
 		return true;
@@ -631,7 +631,7 @@ bool CPythonNetworkStream::SendItemMovePacket(TItemPos pos, TItemPos change_pos,
 	return SendSequence();
 }
 
-bool CPythonNetworkStream::SendItemPickUpPacket(DWORD vid)
+bool CPythonNetworkStream::SendItemPickUpPacket(uint32_t vid)
 {
 	if (!__CanActMainInstance())
 		return true;
@@ -649,7 +649,7 @@ bool CPythonNetworkStream::SendItemPickUpPacket(DWORD vid)
 	return SendSequence();
 }
 
-bool CPythonNetworkStream::SendQuickSlotAddPacket(BYTE wpos, BYTE type, BYTE pos)
+bool CPythonNetworkStream::SendQuickSlotAddPacket(uint8_t wpos, uint8_t type, uint8_t pos)
 {
 	if (!__CanActMainInstance())
 		return true;
@@ -670,7 +670,7 @@ bool CPythonNetworkStream::SendQuickSlotAddPacket(BYTE wpos, BYTE type, BYTE pos
 	return SendSequence();
 }
 
-bool CPythonNetworkStream::SendQuickSlotDelPacket(BYTE pos)
+bool CPythonNetworkStream::SendQuickSlotDelPacket(uint8_t pos)
 {
 	if (!__CanActMainInstance())
 		return true;
@@ -689,7 +689,7 @@ bool CPythonNetworkStream::SendQuickSlotDelPacket(BYTE pos)
 	return SendSequence();
 }
 
-bool CPythonNetworkStream::SendQuickSlotMovePacket(BYTE pos, BYTE change_pos)
+bool CPythonNetworkStream::SendQuickSlotMovePacket(uint8_t pos, uint8_t change_pos)
 {
 	if (!__CanActMainInstance())
 		return true;
@@ -713,7 +713,7 @@ bool CPythonNetworkStream::RecvSpecialEffect(const protocol::Packet& value)
 {
 	TPacketGCSpecialEffect kSpecialEffect = value.Get<TPacketGCSpecialEffect>();
 
-	DWORD effect = -1;
+	uint32_t effect = -1;
 	bool bPlayPotionSound = false; // 포션을 먹을 경우는 포션 사운드를 출력하자.!!
 	bool bAttachEffect = true;	   // 캐리터에 붙는 어태치 이펙트와 일반 이펙트 구분.!!
 	switch (kSpecialEffect.type)

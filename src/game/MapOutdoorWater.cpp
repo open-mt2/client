@@ -72,8 +72,8 @@ void CMapOutdoor::RenderWater()
 	static float s_fWaterHeightCurrent = 0;
 	static float s_fWaterHeightBegin = 0;
 	static float s_fWaterHeightEnd = 0;
-	static DWORD s_dwLastHeightChangeTime = CTimer::Instance().GetCurrentMillisecond();
-	static DWORD s_dwBlendtime = 300;
+	static uint32_t s_dwLastHeightChangeTime = CTimer::Instance().GetCurrentMillisecond();
+	static uint32_t s_dwBlendtime = 300;
 
 	// 1.5초 마다 변경
 	if ((CTimer::Instance().GetCurrentMillisecond() - s_dwLastHeightChangeTime) > s_dwBlendtime)
@@ -158,7 +158,7 @@ void CMapOutdoor::DrawWater(long patchnum)
 	if (!pkVB->GetD3DVertexBuffer())
 		return;
 
-	UINT uPriCount = rkTerrainPatchProxy.GetWaterFaceCount();
+	uint32_t uPriCount = rkTerrainPatchProxy.GetWaterFaceCount();
 	if (!uPriCount)
 		return;
 

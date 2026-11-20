@@ -27,7 +27,7 @@ void CPythonItem::TGroundItemInstance::Clear()
 	CEffectManager::Instance().DestroyEffectInstance(dwEffectInstanceIndex);
 }
 
-void CPythonItem::TGroundItemInstance::__PlayDropSound(DWORD eItemType, const D3DXVECTOR3& c_rv3Pos)
+void CPythonItem::TGroundItemInstance::__PlayDropSound(uint32_t eItemType, const D3DXVECTOR3& c_rv3Pos)
 {
 	if (eItemType >= DROPSOUND_NUM)
 		return;
@@ -67,8 +67,8 @@ bool CPythonItem::TGroundItemInstance::Update()
 	}
 	else
 	{
-		DWORD time = CTimer::Instance().GetCurrentMillisecond() - dwStartTime;
-		DWORD etime = dwEndTime - CTimer::Instance().GetCurrentMillisecond();
+		uint32_t time = CTimer::Instance().GetCurrentMillisecond() - dwStartTime;
+		uint32_t etime = dwEndTime - CTimer::Instance().GetCurrentMillisecond();
 		float rate = time * 1.0f / (dwEndTime - dwStartTime);
 
 		D3DXVECTOR3 v3NewPosition = v3EndPosition;			  // = rate*(v3EndPosition - v3StartPosition) + v3StartPosition;
@@ -131,7 +131,7 @@ void CPythonItem::Render()
 	}
 }
 
-void CPythonItem::SetUseSoundFileName(DWORD eItemType, const std::string& c_rstFileName)
+void CPythonItem::SetUseSoundFileName(uint32_t eItemType, const std::string& c_rstFileName)
 {
 	if (eItemType >= USESOUND_NUM)
 		return;
@@ -141,7 +141,7 @@ void CPythonItem::SetUseSoundFileName(DWORD eItemType, const std::string& c_rstF
 	m_astUseSoundFileName[eItemType] = c_rstFileName;
 }
 
-void CPythonItem::SetDropSoundFileName(DWORD eItemType, const std::string& c_rstFileName)
+void CPythonItem::SetDropSoundFileName(uint32_t eItemType, const std::string& c_rstFileName)
 {
 	if (eItemType >= DROPSOUND_NUM)
 		return;
@@ -151,7 +151,7 @@ void CPythonItem::SetDropSoundFileName(DWORD eItemType, const std::string& c_rst
 	SGroundItemInstance::ms_astDropSoundFileName[eItemType] = c_rstFileName;
 }
 
-void CPythonItem::PlayUseSound(DWORD dwItemID)
+void CPythonItem::PlayUseSound(uint32_t dwItemID)
 {
 	// CItemManager& rkItemMgr=CItemManager::Instance();
 
@@ -159,7 +159,7 @@ void CPythonItem::PlayUseSound(DWORD dwItemID)
 	if (!CItemManager::Instance().GetItemDataPointer(dwItemID, &pkItemData))
 		return;
 
-	DWORD eItemType = __GetUseSoundType(*pkItemData);
+	uint32_t eItemType = __GetUseSoundType(*pkItemData);
 	if (eItemType == USESOUND_NONE)
 		return;
 	if (eItemType >= USESOUND_NUM)
@@ -168,7 +168,7 @@ void CPythonItem::PlayUseSound(DWORD dwItemID)
 	CSoundManager::Instance().PlaySound2D(m_astUseSoundFileName[eItemType].c_str());
 }
 
-void CPythonItem::PlayDropSound(DWORD dwItemID)
+void CPythonItem::PlayDropSound(uint32_t dwItemID)
 {
 	// CItemManager& rkItemMgr=CItemManager::Instance();
 
@@ -176,7 +176,7 @@ void CPythonItem::PlayDropSound(DWORD dwItemID)
 	if (!CItemManager::Instance().GetItemDataPointer(dwItemID, &pkItemData))
 		return;
 
-	DWORD eItemType = __GetDropSoundType(*pkItemData);
+	uint32_t eItemType = __GetDropSoundType(*pkItemData);
 	if (eItemType >= DROPSOUND_NUM)
 		return;
 
@@ -188,7 +188,7 @@ void CPythonItem::PlayUsePotionSound()
 	CSoundManager::Instance().PlaySound2D(m_astUseSoundFileName[USESOUND_POTION].c_str());
 }
 
-DWORD CPythonItem::__GetDropSoundType(const CItemData& c_rkItemData)
+uint32_t CPythonItem::__GetDropSoundType(const CItemData& c_rkItemData)
 {
 	switch (c_rkItemData.GetType())
 	{
@@ -228,7 +228,7 @@ DWORD CPythonItem::__GetDropSoundType(const CItemData& c_rkItemData)
 	return DROPSOUND_DEFAULT;
 }
 
-DWORD CPythonItem::__GetUseSoundType(const CItemData& c_rkItemData)
+uint32_t CPythonItem::__GetUseSoundType(const CItemData& c_rkItemData)
 {
 	switch (c_rkItemData.GetType())
 	{
@@ -285,7 +285,7 @@ DWORD CPythonItem::__GetUseSoundType(const CItemData& c_rkItemData)
 	return USESOUND_DEFAULT;
 }
 
-void CPythonItem::CreateItem(DWORD dwVirtualID, DWORD dwVirtualNumber, float x, float y, float z, bool bDrop)
+void CPythonItem::CreateItem(uint32_t dwVirtualID, uint32_t dwVirtualNumber, float x, float y, float z, bool bDrop)
 {
 	// CItemManager& rkItemMgr=CItemManager::Instance();
 
@@ -475,7 +475,7 @@ void CPythonItem::CreateItem(DWORD dwVirtualID, DWORD dwVirtualNumber, float x, 
 		&pGroundItemInstance->ThingInstance);
 }
 
-void CPythonItem::SetOwnership(DWORD dwVID, const char* c_pszName)
+void CPythonItem::SetOwnership(uint32_t dwVID, const char* c_pszName)
 {
 	TGroundItemInstanceMap::iterator itor = m_GroundItemInstanceMap.find(dwVID);
 
@@ -489,7 +489,7 @@ void CPythonItem::SetOwnership(DWORD dwVID, const char* c_pszName)
 	rkTextTail.SetItemTextTailOwner(dwVID, c_pszName);
 }
 
-bool CPythonItem::GetOwnership(DWORD dwVID, const char** c_pszName)
+bool CPythonItem::GetOwnership(uint32_t dwVID, const char** c_pszName)
 {
 	TGroundItemInstanceMap::iterator itor = m_GroundItemInstanceMap.find(dwVID);
 
@@ -517,7 +517,7 @@ void CPythonItem::DeleteAllItems()
 	m_GroundItemInstanceMap.clear();
 }
 
-void CPythonItem::DeleteItem(DWORD dwVirtualID)
+void CPythonItem::DeleteItem(uint32_t dwVirtualID)
 {
 	TGroundItemInstanceMap::iterator itor = m_GroundItemInstanceMap.find(dwVirtualID);
 	if (m_GroundItemInstanceMap.end() == itor)
@@ -532,10 +532,10 @@ void CPythonItem::DeleteItem(DWORD dwVirtualID)
 	CPythonTextTail::Instance().DeleteItemTextTail(dwVirtualID);
 }
 
-bool CPythonItem::GetCloseMoney(const TPixelPosition& c_rPixelPosition, DWORD* pdwItemID, DWORD dwDistance)
+bool CPythonItem::GetCloseMoney(const TPixelPosition& c_rPixelPosition, uint32_t* pdwItemID, uint32_t dwDistance)
 {
-	DWORD dwCloseItemID = 0;
-	DWORD dwCloseItemDistance = 1000 * 1000;
+	uint32_t dwCloseItemID = 0;
+	uint32_t dwCloseItemDistance = 1000 * 1000;
 
 	TGroundItemInstanceMap::iterator i;
 	for (i = m_GroundItemInstanceMap.begin(); i != m_GroundItemInstanceMap.end(); ++i)
@@ -545,9 +545,9 @@ bool CPythonItem::GetCloseMoney(const TPixelPosition& c_rPixelPosition, DWORD* p
 		if (pInstance->dwVirtualNumber != VNUM_MONEY)
 			continue;
 
-		DWORD dwxDistance = DWORD(c_rPixelPosition.x - pInstance->v3EndPosition.x);
-		DWORD dwyDistance = DWORD(c_rPixelPosition.y - (-pInstance->v3EndPosition.y));
-		DWORD dwDistance = DWORD(dwxDistance * dwxDistance + dwyDistance * dwyDistance);
+		uint32_t dwxDistance = uint32_t(c_rPixelPosition.x - pInstance->v3EndPosition.x);
+		uint32_t dwyDistance = uint32_t(c_rPixelPosition.y - (-pInstance->v3EndPosition.y));
+		uint32_t dwDistance = uint32_t(dwxDistance * dwxDistance + dwyDistance * dwyDistance);
 
 		if (dwxDistance * dwxDistance + dwyDistance * dwyDistance < dwCloseItemDistance)
 		{
@@ -564,19 +564,19 @@ bool CPythonItem::GetCloseMoney(const TPixelPosition& c_rPixelPosition, DWORD* p
 	return true;
 }
 
-bool CPythonItem::GetCloseItem(const TPixelPosition& c_rPixelPosition, DWORD* pdwItemID, DWORD dwDistance)
+bool CPythonItem::GetCloseItem(const TPixelPosition& c_rPixelPosition, uint32_t* pdwItemID, uint32_t dwDistance)
 {
-	DWORD dwCloseItemID = 0;
-	DWORD dwCloseItemDistance = 1000 * 1000;
+	uint32_t dwCloseItemID = 0;
+	uint32_t dwCloseItemDistance = 1000 * 1000;
 
 	TGroundItemInstanceMap::iterator i;
 	for (i = m_GroundItemInstanceMap.begin(); i != m_GroundItemInstanceMap.end(); ++i)
 	{
 		TGroundItemInstance* pInstance = i->second;
 
-		DWORD dwxDistance = DWORD(c_rPixelPosition.x - pInstance->v3EndPosition.x);
-		DWORD dwyDistance = DWORD(c_rPixelPosition.y - (-pInstance->v3EndPosition.y));
-		DWORD dwDistance = DWORD(dwxDistance * dwxDistance + dwyDistance * dwyDistance);
+		uint32_t dwxDistance = uint32_t(c_rPixelPosition.x - pInstance->v3EndPosition.x);
+		uint32_t dwyDistance = uint32_t(c_rPixelPosition.y - (-pInstance->v3EndPosition.y));
+		uint32_t dwDistance = uint32_t(dwxDistance * dwxDistance + dwyDistance * dwyDistance);
 
 		if (dwxDistance * dwxDistance + dwyDistance * dwyDistance < dwCloseItemDistance)
 		{
@@ -593,7 +593,7 @@ bool CPythonItem::GetCloseItem(const TPixelPosition& c_rPixelPosition, DWORD* pd
 	return true;
 }
 
-BOOL CPythonItem::GetGroundItemPosition(DWORD dwVirtualID, TPixelPosition* pPosition)
+int32_t CPythonItem::GetGroundItemPosition(uint32_t dwVirtualID, TPixelPosition* pPosition)
 {
 	TGroundItemInstanceMap::iterator itor = m_GroundItemInstanceMap.find(dwVirtualID);
 	if (m_GroundItemInstanceMap.end() == itor)
@@ -610,7 +610,7 @@ BOOL CPythonItem::GetGroundItemPosition(DWORD dwVirtualID, TPixelPosition* pPosi
 	return TRUE;
 }
 
-DWORD CPythonItem::__Pick(const POINT& c_rkPtMouse)
+uint32_t CPythonItem::__Pick(const POINT& c_rkPtMouse)
 {
 	float fu, fv, ft;
 
@@ -629,7 +629,7 @@ DWORD CPythonItem::__Pick(const POINT& c_rkPtMouse)
 	return rkTextTailMgr.Pick(c_rkPtMouse.x, c_rkPtMouse.y);
 }
 
-bool CPythonItem::GetPickedItemID(DWORD* pdwPickedItemID)
+bool CPythonItem::GetPickedItemID(uint32_t* pdwPickedItemID)
 {
 	if (INVALID_ID == m_dwPickedItemID)
 		return false;
@@ -638,7 +638,7 @@ bool CPythonItem::GetPickedItemID(DWORD* pdwPickedItemID)
 	return true;
 }
 
-DWORD CPythonItem::GetVirtualNumberOfGroundItem(DWORD dwVID)
+uint32_t CPythonItem::GetVirtualNumberOfGroundItem(uint32_t dwVID)
 {
 	TGroundItemInstanceMap::iterator itor = m_GroundItemInstanceMap.find(dwVID);
 
@@ -665,12 +665,12 @@ void CPythonItem::BuildNoGradeNameData(int iType)
 	*/
 }
 
-DWORD CPythonItem::GetNoGradeNameDataCount()
+uint32_t CPythonItem::GetNoGradeNameDataCount()
 {
 	return m_NoGradeNameItemData.size();
 }
 
-CItemData* CPythonItem::GetNoGradeNameDataPtr(DWORD dwIndex)
+CItemData* CPythonItem::GetNoGradeNameDataPtr(uint32_t dwIndex)
 {
 	if (dwIndex >= m_NoGradeNameItemData.size())
 		return NULL;

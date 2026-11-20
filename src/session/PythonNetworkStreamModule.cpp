@@ -8,7 +8,7 @@
 #include <Client/UI/AbstractPlayer.h>
 
 static std::string gs_stServerInfo;
-extern BOOL gs_bEmpireLanuageEnable;
+extern int32_t gs_bEmpireLanuageEnable;
 std::list<std::string> g_kList_strCommand;
 
 PyObject* netGetBettingGuildWarValue(PyObject* poSelf, PyObject* poArgs)
@@ -170,7 +170,7 @@ PyObject* netGetAccountCharacterSlotDataInteger(PyObject* poSelf, PyObject* poAr
 		return Py_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
-	UINT uResult = rkNetStream.GetAccountCharacterSlotDatau(nIndex, nType);
+	uint32_t uResult = rkNetStream.GetAccountCharacterSlotDatau(nIndex, nType);
 	return Py_BuildValue("i", uResult);
 }
 
@@ -444,7 +444,7 @@ PyObject* netSendSelectCharacterPacket(PyObject* poSelf, PyObject* poArgs)
 		return Py_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
-	rkNetStream.SendSelectCharacterPacket((BYTE)Index);
+	rkNetStream.SendSelectCharacterPacket((uint8_t)Index);
 	return Py_BuildNone();
 }
 
@@ -458,7 +458,7 @@ PyObject* netSendChangeNamePacket(PyObject* poSelf, PyObject* poArgs)
 		return Py_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
-	rkNetStream.SendChangeNamePacket((BYTE)iIndex, szName);
+	rkNetStream.SendChangeNamePacket((uint8_t)iIndex, szName);
 	return Py_BuildNone();
 }
 
@@ -516,7 +516,7 @@ PyObject* netSendCharacterPositionPacket(PyObject* poSelf, PyObject* poArgs)
 		return Py_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
-	rkNetStream.SendCharacterPositionPacket((BYTE)iPosition);
+	rkNetStream.SendCharacterPositionPacket((uint8_t)iPosition);
 	return Py_BuildNone();
 }
 
@@ -582,7 +582,7 @@ PyObject* netSendCreateCharacterPacket(PyObject* poSelf, PyObject* poArgs)
 		return Py_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
-	rkNetStream.SendCreateCharacterPacket((BYTE)index, name, (BYTE)job, (BYTE)shape, stat1, stat2, stat3, stat4);
+	rkNetStream.SendCreateCharacterPacket((uint8_t)index, name, (uint8_t)job, (uint8_t)shape, stat1, stat2, stat3, stat4);
 	return Py_BuildNone();
 }
 
@@ -600,7 +600,7 @@ PyObject* netSendDestroyCharacterPacket(PyObject* poSelf, PyObject* poArgs)
 		return Py_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
-	rkNetStream.SendDestroyCharacterPacket((BYTE)index, szPrivateCode);
+	rkNetStream.SendDestroyCharacterPacket((uint8_t)index, szPrivateCode);
 	return Py_BuildNone();
 }
 
@@ -742,7 +742,7 @@ PyObject* netSendElkDropPacket(PyObject* poSelf, PyObject* poArgs)
 		return Py_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
-	rkNetStream.SendItemDropPacket(TItemPos(RESERVED_WINDOW, 0), (DWORD)iElk);
+	rkNetStream.SendItemDropPacket(TItemPos(RESERVED_WINDOW, 0), (uint32_t)iElk);
 	return Py_BuildNone();
 }
 
@@ -753,7 +753,7 @@ PyObject* netSendGoldDropPacketNew(PyObject* poSelf, PyObject* poArgs)
 		return Py_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
-	rkNetStream.SendItemDropPacketNew(TItemPos(RESERVED_WINDOW, 0), (DWORD)iElk, 0);
+	rkNetStream.SendItemDropPacketNew(TItemPos(RESERVED_WINDOW, 0), (uint32_t)iElk, 0);
 	return Py_BuildNone();
 }
 
@@ -792,7 +792,7 @@ PyObject* netSendItemMovePacket(PyObject* poSelf, PyObject* poArgs)
 	}
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
-	rkNetStream.SendItemMovePacket(Cell, ChangeCell, (BYTE)num);
+	rkNetStream.SendItemMovePacket(Cell, ChangeCell, (uint8_t)num);
 	return Py_BuildNone();
 }
 
@@ -906,10 +906,10 @@ PyObject* netSendExchangeElkAddPacket(PyObject* poSelf, PyObject* poArgs)
 
 PyObject* netSendExchangeItemAddPacket(PyObject* poSelf, PyObject* poArgs)
 {
-	BYTE bWindowType;
+	uint8_t bWindowType;
 	if (!PyTuple_GetInteger(poArgs, 0, &bWindowType))
 		return Py_BuildException();
-	WORD wSlotIndex;
+	uint16_t wSlotIndex;
 	if (!PyTuple_GetInteger(poArgs, 1, &wSlotIndex))
 		return Py_BuildException();
 	int iDisplaySlotIndex;
@@ -928,7 +928,7 @@ PyObject* netSendExchangeItemDelPacket(PyObject* poSelf, PyObject* poArgs)
 		return Py_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
-	rkNetStream.SendExchangeItemDelPacket((BYTE)pos);
+	rkNetStream.SendExchangeItemDelPacket((uint8_t)pos);
 	return Py_BuildNone();
 }
 
@@ -1072,8 +1072,8 @@ PyObject* netSendPartyExitPacket(PyObject* poSelf, PyObject* poArgs)
 
 	CPythonNetworkStream& rns = CPythonNetworkStream::Instance();
 
-	DWORD dwVID = rPlayer.GetMainCharacterIndex();
-	DWORD dwPID;
+	uint32_t dwVID = rPlayer.GetMainCharacterIndex();
+	uint32_t dwPID;
 	if (rPlayer.PartyMemberVIDToPID(dwVID, &dwPID))
 		rns.SendPartyRemovePacket(dwPID);
 
@@ -1609,7 +1609,7 @@ PyObject* netSendGuildSymbol(PyObject* poSelf, PyObject* poArgs)
 	CNetworkAddress kAddress;
 	kAddress.Set(szIP, iPort);
 
-	UINT uiError;
+	uint32_t uiError;
 
 	CGuildMarkUploader& rkGuildMarkUploader = CGuildMarkUploader::Instance();
 	if (!rkGuildMarkUploader.ConnectToSendSymbol(kAddress, 0, 0, iGuildID, szFileName, &uiError))
@@ -1642,7 +1642,7 @@ PyObject* netRecvGuildSymbol(PyObject* poSelf, PyObject* poArgs)
 	CNetworkAddress kAddress;
 	kAddress.Set(szIP, iPort);
 
-	std::vector<DWORD> kVec_dwGuildID;
+	std::vector<uint32_t> kVec_dwGuildID;
 	kVec_dwGuildID.clear();
 	kVec_dwGuildID.push_back(iGuildID);
 

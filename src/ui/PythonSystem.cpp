@@ -58,7 +58,7 @@ void CPythonSystem::GetDisplaySettings()
 		if (DisplayMode.w < 800 || DisplayMode.h < 600)
 			continue;
 
-		DWORD bpp = SDL_BITSPERPIXEL(DisplayMode.format);
+		uint32_t bpp = SDL_BITSPERPIXEL(DisplayMode.format);
 		if (bpp == 0 || bpp == 24)
 			bpp = 32;
 		if (bpp != 16 && bpp != 32)
@@ -69,15 +69,15 @@ void CPythonSystem::GetDisplaySettings()
 		for (int i = 0; !check_res && i < m_ResolutionCount; ++i)
 		{
 			if (m_ResolutionList[i].bpp != bpp ||
-				m_ResolutionList[i].width != static_cast<DWORD>(DisplayMode.w) ||
-				m_ResolutionList[i].height != static_cast<DWORD>(DisplayMode.h))
+				m_ResolutionList[i].width != static_cast<uint32_t>(DisplayMode.w) ||
+				m_ResolutionList[i].height != static_cast<uint32_t>(DisplayMode.h))
 				continue;
 
 			int check_fre = false;
 
 			for (int j = 0; j < m_ResolutionList[i].frequency_count; ++j)
 			{
-				if (m_ResolutionList[i].frequency[j] == static_cast<DWORD>(DisplayMode.refresh_rate))
+				if (m_ResolutionList[i].frequency[j] == static_cast<uint32_t>(DisplayMode.refresh_rate))
 				{
 					check_fre = true;
 					break;
@@ -86,7 +86,7 @@ void CPythonSystem::GetDisplaySettings()
 
 			if (!check_fre)
 				if (m_ResolutionList[i].frequency_count < FREQUENCY_MAX_NUM)
-					m_ResolutionList[i].frequency[m_ResolutionList[i].frequency_count++] = static_cast<DWORD>(DisplayMode.refresh_rate);
+					m_ResolutionList[i].frequency[m_ResolutionList[i].frequency_count++] = static_cast<uint32_t>(DisplayMode.refresh_rate);
 
 			check_res = true;
 		}
@@ -95,10 +95,10 @@ void CPythonSystem::GetDisplaySettings()
 		{
 			if (m_ResolutionCount < RESOLUTION_MAX_NUM)
 			{
-				m_ResolutionList[m_ResolutionCount].width = static_cast<DWORD>(DisplayMode.w);
-				m_ResolutionList[m_ResolutionCount].height = static_cast<DWORD>(DisplayMode.h);
+				m_ResolutionList[m_ResolutionCount].width = static_cast<uint32_t>(DisplayMode.w);
+				m_ResolutionList[m_ResolutionCount].height = static_cast<uint32_t>(DisplayMode.h);
 				m_ResolutionList[m_ResolutionCount].bpp = bpp;
-				m_ResolutionList[m_ResolutionCount].frequency[0] = static_cast<DWORD>(DisplayMode.refresh_rate);
+				m_ResolutionList[m_ResolutionCount].frequency[0] = static_cast<uint32_t>(DisplayMode.refresh_rate);
 				m_ResolutionList[m_ResolutionCount].frequency_count = 1;
 
 				++m_ResolutionCount;
@@ -120,7 +120,7 @@ int CPythonSystem::GetFrequencyCount(int index)
 	return m_ResolutionList[index].frequency_count;
 }
 
-bool CPythonSystem::GetResolution(int index, OUT DWORD* width, OUT DWORD* height, OUT DWORD* bpp)
+bool CPythonSystem::GetResolution(int index, OUT uint32_t* width, OUT uint32_t* height, OUT uint32_t* bpp)
 {
 	if (index >= m_ResolutionCount)
 		return false;
@@ -131,7 +131,7 @@ bool CPythonSystem::GetResolution(int index, OUT DWORD* width, OUT DWORD* height
 	return true;
 }
 
-bool CPythonSystem::GetFrequency(int index, int freq_index, OUT DWORD* frequncy)
+bool CPythonSystem::GetFrequency(int index, int freq_index, OUT uint32_t* frequncy)
 {
 	if (index >= m_ResolutionCount)
 		return false;
@@ -143,9 +143,9 @@ bool CPythonSystem::GetFrequency(int index, int freq_index, OUT DWORD* frequncy)
 	return true;
 }
 
-int CPythonSystem::GetResolutionIndex(DWORD width, DWORD height, DWORD bit)
+int CPythonSystem::GetResolutionIndex(uint32_t width, uint32_t height, uint32_t bit)
 {
-	DWORD re_width, re_height, re_bit;
+	uint32_t re_width, re_height, re_bit;
 	int i = 0;
 
 	while (GetResolution(i, &re_width, &re_height, &re_bit))
@@ -160,9 +160,9 @@ int CPythonSystem::GetResolutionIndex(DWORD width, DWORD height, DWORD bit)
 	return 0;
 }
 
-int CPythonSystem::GetFrequencyIndex(int res_index, DWORD frequency)
+int CPythonSystem::GetFrequencyIndex(int res_index, uint32_t frequency)
 {
-	DWORD re_frequency;
+	uint32_t re_frequency;
 	int i = 0;
 
 	while (GetFrequency(res_index, i, &re_frequency))
@@ -176,20 +176,20 @@ int CPythonSystem::GetFrequencyIndex(int res_index, DWORD frequency)
 	return 0;
 }
 
-DWORD CPythonSystem::GetWidth()
+uint32_t CPythonSystem::GetWidth()
 {
 	return m_Config.width;
 }
 
-DWORD CPythonSystem::GetHeight()
+uint32_t CPythonSystem::GetHeight()
 {
 	return m_Config.height;
 }
-DWORD CPythonSystem::GetBPP()
+uint32_t CPythonSystem::GetBPP()
 {
 	return m_Config.bpp;
 }
-DWORD CPythonSystem::GetFrequency()
+uint32_t CPythonSystem::GetFrequency()
 {
 	return m_Config.frequency;
 }

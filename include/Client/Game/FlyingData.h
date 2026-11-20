@@ -26,7 +26,7 @@ class CFlyingData //: public CPooledObject<CFlyingData>
 				std::string strFilename;
 
 				bool bHasTail;
-				DWORD dwTailColor;
+				uint32_t dwTailColor;
 				float fTailLength;
 				float fTailSize;
 				bool bRectShape;
@@ -57,7 +57,7 @@ class CFlyingData //: public CPooledObject<CFlyingData>
 
 		void SetBombEffect(const char* szEffectName);
 
-		DWORD AttachFlyEffect(int iType, const std::string& strFilename, float fRoll, float fArg1, float fArg2);
+		uint32_t AttachFlyEffect(int iType, const std::string& strFilename, float fRoll, float fArg1, float fArg2);
 
 		TFlyingAttachData& GetAttachDataReference(int iIndex);
 		int GetAttachDataCount() { return m_AttachDataVector.size(); }
@@ -84,7 +84,7 @@ class CFlyingData //: public CPooledObject<CFlyingData>
 
 		float m_fBombRange;
 		std::string m_strBombEffectName;
-		DWORD m_dwBombEffectID;
+		uint32_t m_dwBombEffectID;
 
 		bool m_bIsHoming;
 		float m_fHomingMaxAngle;

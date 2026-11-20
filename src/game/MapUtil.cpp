@@ -125,7 +125,7 @@ bool Environment_Load(SEnvironmentData& envData, const char* envFileName)
 
 	if (textLoader.SetChildNode("filter"))
 	{
-		textLoader.GetTokenBoolean("enable", (BOOL*)&envData.bFilteringEnable);
+		textLoader.GetTokenBoolean("enable", (int32_t*)&envData.bFilteringEnable);
 		textLoader.GetTokenColor("color", &envData.FilteringColor);
 		textLoader.GetTokenByte("alphasrc", &envData.byFilteringAlphaSrc);
 		textLoader.GetTokenByte("alphadest", &envData.byFilteringAlphaDest);
@@ -134,7 +134,7 @@ bool Environment_Load(SEnvironmentData& envData, const char* envFileName)
 
 	if (textLoader.SetChildNode("skybox"))
 	{
-		textLoader.GetTokenBoolean("btexturerendermode", (BOOL*)&envData.bSkyBoxTextureRenderMode);
+		textLoader.GetTokenBoolean("btexturerendermode", (int32_t*)&envData.bSkyBoxTextureRenderMode);
 		textLoader.GetTokenVector3("scale", &envData.v3SkyBoxScale);
 		textLoader.GetTokenByte("gradientlevelupper", &envData.bySkyBoxGradientLevelUpper);
 		textLoader.GetTokenByte("gradientlevellower", &envData.bySkyBoxGradientLevelLower);
@@ -167,7 +167,7 @@ bool Environment_Load(SEnvironmentData& envData, const char* envFileName)
 				envData.CloudGradientColor.m_SecondColor.a = atof(pTokenVectorCloudColor->at(7).c_str());
 			}
 
-		BYTE byGradientCount = envData.bySkyBoxGradientLevelUpper + envData.bySkyBoxGradientLevelLower;
+		uint8_t byGradientCount = envData.bySkyBoxGradientLevelUpper + envData.bySkyBoxGradientLevelLower;
 		CTokenVector* pTokenVector;
 		if (textLoader.GetTokenVector("gradient", &pTokenVector))
 			if (0 == pTokenVector->size() % 8)
@@ -175,7 +175,7 @@ bool Environment_Load(SEnvironmentData& envData, const char* envFileName)
 				{
 					envData.SkyBoxGradientColorVector.clear();
 					envData.SkyBoxGradientColorVector.resize(byGradientCount);
-					for (DWORD i = 0; i < byGradientCount; ++i)
+					for (uint32_t i = 0; i < byGradientCount; ++i)
 					{
 						envData.SkyBoxGradientColorVector[i].m_FirstColor.r = atof(pTokenVector->at(i * 8 + 0).c_str());
 						envData.SkyBoxGradientColorVector[i].m_FirstColor.g = atof(pTokenVector->at(i * 8 + 1).c_str());
@@ -255,7 +255,7 @@ void CEaseOutInterpolation::Initialize()
 	m_fLastValue = 0.0f;
 }
 
-BOOL CEaseOutInterpolation::Setup(float fStart, float fEnd, float fTime)
+int32_t CEaseOutInterpolation::Setup(float fStart, float fEnd, float fTime)
 {
 	// for safety
 	if (fabs(fTime) < FLT_EPSILON)
@@ -289,7 +289,7 @@ void CEaseOutInterpolation::Interpolate(float fElapsedTime)
 	}
 }
 
-BOOL CEaseOutInterpolation::isPlaying()
+int32_t CEaseOutInterpolation::isPlaying()
 {
 	return m_fRemainingTime > 0.0f;
 }

@@ -10,53 +10,53 @@ struct SAffects
 		};
 
 		SAffects() : dwAffects(0) {}
-		SAffects(const DWORD& c_rAffects)
+		SAffects(const uint32_t& c_rAffects)
 		{
 			__SetAffects(c_rAffects);
 		}
-		SAffects& operator=(const DWORD& c_rAffects)
+		SAffects& operator=(const uint32_t& c_rAffects)
 		{
 			__SetAffects(c_rAffects);
 			return *this;
 		}
 
-		BOOL IsAffect(BYTE byIndex)
+		int32_t IsAffect(uint8_t byIndex)
 		{
 			return dwAffects & (1 << byIndex);
 		}
 
-		void __SetAffects(const DWORD& c_rAffects)
+		void __SetAffects(const uint32_t& c_rAffects)
 		{
 			dwAffects = c_rAffects;
 		}
 
-		DWORD dwAffects;
+		uint32_t dwAffects;
 };
 
 extern std::string g_strGuildSymbolPathName;
 
-const DWORD c_Name_Max_Length = 64;
-const DWORD c_FileName_Max_Length = 128;
-const DWORD c_Short_Name_Max_Length = 32;
+const uint32_t c_Name_Max_Length = 64;
+const uint32_t c_FileName_Max_Length = 128;
+const uint32_t c_Short_Name_Max_Length = 32;
 
-const DWORD c_Inventory_Page_Size = 5 * 9; // x*y
-const DWORD c_Inventory_Page_Count = 2;
-const DWORD c_ItemSlot_Count = c_Inventory_Page_Size * c_Inventory_Page_Count;
-const DWORD c_Equipment_Count = 12;
+const uint32_t c_Inventory_Page_Size = 5 * 9; // x*y
+const uint32_t c_Inventory_Page_Count = 2;
+const uint32_t c_ItemSlot_Count = c_Inventory_Page_Size * c_Inventory_Page_Count;
+const uint32_t c_Equipment_Count = 12;
 
-const DWORD c_Equipment_Start = c_ItemSlot_Count;
+const uint32_t c_Equipment_Start = c_ItemSlot_Count;
 
-const DWORD c_Equipment_Body = c_Equipment_Start + 0;
-const DWORD c_Equipment_Head = c_Equipment_Start + 1;
-const DWORD c_Equipment_Shoes = c_Equipment_Start + 2;
-const DWORD c_Equipment_Wrist = c_Equipment_Start + 3;
-const DWORD c_Equipment_Weapon = c_Equipment_Start + 4;
-const DWORD c_Equipment_Neck = c_Equipment_Start + 5;
-const DWORD c_Equipment_Ear = c_Equipment_Start + 6;
-const DWORD c_Equipment_Unique1 = c_Equipment_Start + 7;
-const DWORD c_Equipment_Unique2 = c_Equipment_Start + 8;
-const DWORD c_Equipment_Arrow = c_Equipment_Start + 9;
-const DWORD c_Equipment_Shield = c_Equipment_Start + 10;
+const uint32_t c_Equipment_Body = c_Equipment_Start + 0;
+const uint32_t c_Equipment_Head = c_Equipment_Start + 1;
+const uint32_t c_Equipment_Shoes = c_Equipment_Start + 2;
+const uint32_t c_Equipment_Wrist = c_Equipment_Start + 3;
+const uint32_t c_Equipment_Weapon = c_Equipment_Start + 4;
+const uint32_t c_Equipment_Neck = c_Equipment_Start + 5;
+const uint32_t c_Equipment_Ear = c_Equipment_Start + 6;
+const uint32_t c_Equipment_Unique1 = c_Equipment_Start + 7;
+const uint32_t c_Equipment_Unique2 = c_Equipment_Start + 8;
+const uint32_t c_Equipment_Arrow = c_Equipment_Start + 9;
+const uint32_t c_Equipment_Shield = c_Equipment_Start + 10;
 
 // 새로 추가된 신규 반지 & 벨트
 // 장착형 아이템에 할당할 수 있는 위치가 기존 장비, 채기랍 퀘스트 보상, 코스튬 시스템 등으로 인해서 공간이 잘려있다.
@@ -65,11 +65,11 @@ const DWORD c_Equipment_Shield = c_Equipment_Start + 10;
 // 정리하면, 기존 장비창들은 서버DB상 아이템 포지션이 90 ~ 102 이고,
 // 2013년 초에 새로 추가되는 슬롯들은 111 ~ 부터 시작한다. 착용 장비에서 최대로 사용할 수 있는 값은 121 까지이고, 122부터는 용혼석에서 사용한다.
 #ifdef ENABLE_NEW_EQUIPMENT_SYSTEM
-const DWORD c_New_Equipment_Start = c_Equipment_Start + 21;
-const DWORD c_New_Equipment_Count = 3;
-const DWORD c_Equipment_Ring1 = c_New_Equipment_Start + 0;
-const DWORD c_Equipment_Ring2 = c_New_Equipment_Start + 1;
-const DWORD c_Equipment_Belt = c_New_Equipment_Start + 2;
+const uint32_t c_New_Equipment_Start = c_Equipment_Start + 21;
+const uint32_t c_New_Equipment_Count = 3;
+const uint32_t c_Equipment_Ring1 = c_New_Equipment_Start + 0;
+const uint32_t c_Equipment_Ring2 = c_New_Equipment_Start + 1;
+const uint32_t c_Equipment_Belt = c_New_Equipment_Start + 2;
 ;
 #endif
 
@@ -102,42 +102,42 @@ enum EDragonSoulStepTypes
 };
 
 #ifdef ENABLE_COSTUME_SYSTEM
-const DWORD c_Costume_Slot_Start = c_Equipment_Start + 19; // [주의] 숫자(19) 하드코딩 주의. 현재 서버에서 코스츔 슬롯은 19부터임. 서버 common/length.h 파일의 EWearPositions 열거형 참고.
-const DWORD c_Costume_Slot_Body = c_Costume_Slot_Start + 0;
-const DWORD c_Costume_Slot_Hair = c_Costume_Slot_Start + 1;
-const DWORD c_Costume_Slot_Count = 2;
-const DWORD c_Costume_Slot_End = c_Costume_Slot_Start + c_Costume_Slot_Count;
+const uint32_t c_Costume_Slot_Start = c_Equipment_Start + 19; // [주의] 숫자(19) 하드코딩 주의. 현재 서버에서 코스츔 슬롯은 19부터임. 서버 common/length.h 파일의 EWearPositions 열거형 참고.
+const uint32_t c_Costume_Slot_Body = c_Costume_Slot_Start + 0;
+const uint32_t c_Costume_Slot_Hair = c_Costume_Slot_Start + 1;
+const uint32_t c_Costume_Slot_Count = 2;
+const uint32_t c_Costume_Slot_End = c_Costume_Slot_Start + c_Costume_Slot_Count;
 #endif
 
 // [주의] 숫자(32) 하드코딩 주의. 현재 서버에서 용혼석 슬롯은 32부터임.
 // 서버 common/length.h 파일의 EWearPositions 열거형이 32까지 확장될 것을 염두하고(32 이상은 확장 하기 힘들게 되어있음.),
 // 그 이후부터를 용혼석 장착 슬롯으로 사용.
-const DWORD c_Wear_Max = 32;
-const DWORD c_DragonSoul_Equip_Start = c_ItemSlot_Count + c_Wear_Max;
-const DWORD c_DragonSoul_Equip_Slot_Max = 6;
-const DWORD c_DragonSoul_Equip_End = c_DragonSoul_Equip_Start + c_DragonSoul_Equip_Slot_Max * DS_DECK_MAX_NUM;
+const uint32_t c_Wear_Max = 32;
+const uint32_t c_DragonSoul_Equip_Start = c_ItemSlot_Count + c_Wear_Max;
+const uint32_t c_DragonSoul_Equip_Slot_Max = 6;
+const uint32_t c_DragonSoul_Equip_End = c_DragonSoul_Equip_Start + c_DragonSoul_Equip_Slot_Max * DS_DECK_MAX_NUM;
 
 // NOTE: 2013년 2월 5일 현재... 용혼석 데크는 2개가 존재하는데, 향후 확장 가능성이 있어서 3개 데크 여유분을 할당 해 둠. 그 뒤 공간은 벨트 인벤토리로 사용
-const DWORD c_DragonSoul_Equip_Reserved_Count = c_DragonSoul_Equip_Slot_Max * 3;
+const uint32_t c_DragonSoul_Equip_Reserved_Count = c_DragonSoul_Equip_Slot_Max * 3;
 
 #ifdef ENABLE_NEW_EQUIPMENT_SYSTEM
 // 벨트 아이템이 제공하는 인벤토리
-const DWORD c_Belt_Inventory_Slot_Start = c_DragonSoul_Equip_End + c_DragonSoul_Equip_Reserved_Count;
-const DWORD c_Belt_Inventory_Width = 4;
-const DWORD c_Belt_Inventory_Height = 4;
-const DWORD c_Belt_Inventory_Slot_Count = c_Belt_Inventory_Width * c_Belt_Inventory_Height;
-const DWORD c_Belt_Inventory_Slot_End = c_Belt_Inventory_Slot_Start + c_Belt_Inventory_Slot_Count;
+const uint32_t c_Belt_Inventory_Slot_Start = c_DragonSoul_Equip_End + c_DragonSoul_Equip_Reserved_Count;
+const uint32_t c_Belt_Inventory_Width = 4;
+const uint32_t c_Belt_Inventory_Height = 4;
+const uint32_t c_Belt_Inventory_Slot_Count = c_Belt_Inventory_Width * c_Belt_Inventory_Height;
+const uint32_t c_Belt_Inventory_Slot_End = c_Belt_Inventory_Slot_Start + c_Belt_Inventory_Slot_Count;
 
-const DWORD c_Inventory_Count = c_Belt_Inventory_Slot_End;
+const uint32_t c_Inventory_Count = c_Belt_Inventory_Slot_End;
 #else
-const DWORD c_Inventory_Count = c_DragonSoul_Equip_End;
+const uint32_t c_Inventory_Count = c_DragonSoul_Equip_End;
 #endif
 
 // 용혼석 전용 인벤토리
-const DWORD c_DragonSoul_Inventory_Start = 0;
-const DWORD c_DragonSoul_Inventory_Box_Size = 32;
-const DWORD c_DragonSoul_Inventory_Count = CItemData::DS_SLOT_NUM_TYPES * DRAGON_SOUL_GRADE_MAX * c_DragonSoul_Inventory_Box_Size;
-const DWORD c_DragonSoul_Inventory_End = c_DragonSoul_Inventory_Start + c_DragonSoul_Inventory_Count;
+const uint32_t c_DragonSoul_Inventory_Start = 0;
+const uint32_t c_DragonSoul_Inventory_Box_Size = 32;
+const uint32_t c_DragonSoul_Inventory_Count = CItemData::DS_SLOT_NUM_TYPES * DRAGON_SOUL_GRADE_MAX * c_DragonSoul_Inventory_Box_Size;
+const uint32_t c_DragonSoul_Inventory_End = c_DragonSoul_Inventory_Start + c_DragonSoul_Inventory_Count;
 
 enum ESlotType
 {
@@ -181,14 +181,14 @@ enum EDSInventoryMaxNum
 
 typedef struct SItemPos
 {
-		BYTE window_type;
-		WORD cell;
+		uint8_t window_type;
+		uint16_t cell;
 		SItemPos()
 		{
 			window_type = INVENTORY;
 			cell = WORD_MAX;
 		}
-		SItemPos(BYTE _window_type, WORD _cell)
+		SItemPos(uint8_t _window_type, uint16_t _cell)
 		{
 			window_type = _window_type;
 			cell = _cell;
@@ -268,8 +268,8 @@ typedef struct SItemPos
 } TItemPos;
 #pragma pack(pop)
 
-const DWORD c_QuickBar_Line_Count = 3;
-const DWORD c_QuickBar_Slot_Count = 12;
+const uint32_t c_QuickBar_Line_Count = 3;
+const uint32_t c_QuickBar_Slot_Count = 12;
 
 const float c_Idle_WaitTime = 5.0f;
 
@@ -316,11 +316,11 @@ enum
 
 typedef struct packet_item
 {
-		DWORD vnum;
-		BYTE count;
-		DWORD flags;
-		DWORD anti_flags;
-		LONG alSockets[ITEM_SOCKET_SLOT_MAX_NUM];
+		uint32_t vnum;
+		uint8_t count;
+		uint32_t flags;
+		uint32_t anti_flags;
+		int32_t alSockets[ITEM_SOCKET_SLOT_MAX_NUM];
 		TPlayerItemAttribute aAttr[ITEM_ATTRIBUTE_SLOT_MAX_NUM];
 } TItemData;
 
@@ -345,5 +345,5 @@ CResource* DefaultItalicFont_GetResource();
 // END_OF_DEFAULT_FONT
 
 void SetGuildSymbolPath(const char* c_szPathName);
-const char* GetGuildSymbolFileName(DWORD dwGuildID);
-BYTE SlotTypeToInvenType(BYTE bSlotType);
+const char* GetGuildSymbolFileName(uint32_t dwGuildID);
+uint8_t SlotTypeToInvenType(uint8_t bSlotType);

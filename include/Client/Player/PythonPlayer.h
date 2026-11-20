@@ -80,17 +80,17 @@ class CPythonPlayer : public CSingleton<CPythonPlayer>, public IAbstractPlayer
 
 		typedef struct SSkillInstance
 		{
-				DWORD dwIndex;
+				uint32_t dwIndex;
 				int iType;
 				int iGrade;
 				int iLevel;
 				float fcurEfficientPercentage;
 				float fnextEfficientPercentage;
-				BOOL isCoolTime;
+				int32_t isCoolTime;
 
 				float fCoolTime;	 // NOTE : 쿨타임 중인 스킬 슬롯을
 				float fLastUsedTime; //        퀵창에 등록할 때 사용하는 변수
-				BOOL bActive;
+				int32_t bActive;
 		} TSkillInstance;
 
 		enum EKeyBoard_UD
@@ -124,19 +124,19 @@ class CPythonPlayer : public CSingleton<CPythonPlayer>, public IAbstractPlayer
 				long m_alPoint[POINT_MAX_NUM];
 				long lQuickPageIndex;
 
-				void SetPoint(UINT ePoint, long lPoint);
-				long GetPoint(UINT ePoint);
+				void SetPoint(uint32_t ePoint, long lPoint);
+				long GetPoint(uint32_t ePoint);
 		} TPlayerStatus;
 
 		typedef struct SPartyMemberInfo
 		{
-				SPartyMemberInfo(DWORD _dwPID, const char* c_szName) : dwVID(0), dwPID(_dwPID), strName(c_szName) {}
+				SPartyMemberInfo(uint32_t _dwPID, const char* c_szName) : dwVID(0), dwPID(_dwPID), strName(c_szName) {}
 
-				DWORD dwVID;
-				DWORD dwPID;
+				uint32_t dwVID;
+				uint32_t dwPID;
 				std::string strName;
-				BYTE byState;
-				BYTE byHPPercentage;
+				uint8_t byState;
+				uint8_t byHPPercentage;
 				short sAffects[PARTY_AFFECT_SLOT_MAX_NUM];
 		} TPartyMemberInfo;
 
@@ -197,7 +197,7 @@ class CPythonPlayer : public CSingleton<CPythonPlayer>, public IAbstractPlayer
 
 		void NEW_GetMainActorPosition(TPixelPosition* pkPPosActor);
 
-		bool RegisterEffect(DWORD dwEID, const char* c_szEftFileName, bool isCache);
+		bool RegisterEffect(uint32_t dwEID, const char* c_szEftFileName, bool isCache);
 
 		bool NEW_SetMouseState(int eMBType, int eMBState);
 		bool NEW_SetMouseFunc(int eMBType, int eMBFunc);
@@ -231,7 +231,7 @@ class CPythonPlayer : public CSingleton<CPythonPlayer>, public IAbstractPlayer
 		void SetDungeonDestinationPosition(int ix, int iy);
 		void AlarmHaveToGo();
 
-		CInstanceBase* NEW_FindActorPtr(DWORD dwVID);
+		CInstanceBase* NEW_FindActorPtr(uint32_t dwVID);
 		CInstanceBase* NEW_GetMainActorPtr();
 
 		// flying target set
@@ -242,18 +242,18 @@ class CPythonPlayer : public CSingleton<CPythonPlayer>, public IAbstractPlayer
 		void Update();
 
 		// Play Time
-		DWORD GetPlayTime();
-		void SetPlayTime(DWORD dwPlayTime);
+		uint32_t GetPlayTime();
+		void SetPlayTime(uint32_t dwPlayTime);
 
 		// System
 		void SetMainCharacterIndex(int iIndex);
 
-		DWORD GetMainCharacterIndex();
-		bool IsMainCharacterIndex(DWORD dwIndex);
-		DWORD GetGuildID();
-		void NotifyDeletingCharacterInstance(DWORD dwVID);
-		void NotifyCharacterDead(DWORD dwVID);
-		void NotifyCharacterUpdate(DWORD dwVID);
+		uint32_t GetMainCharacterIndex();
+		bool IsMainCharacterIndex(uint32_t dwIndex);
+		uint32_t GetGuildID();
+		void NotifyDeletingCharacterInstance(uint32_t dwVID);
+		void NotifyCharacterDead(uint32_t dwVID);
+		void NotifyCharacterUpdate(uint32_t dwVID);
 		void NotifyDeadMainCharacter();
 		void NotifyChangePKMode();
 
@@ -261,37 +261,37 @@ class CPythonPlayer : public CSingleton<CPythonPlayer>, public IAbstractPlayer
 		const char* GetName();
 		void SetName(const char* name);
 
-		void SetRace(DWORD dwRace);
-		DWORD GetRace();
+		void SetRace(uint32_t dwRace);
+		uint32_t GetRace();
 
-		void SetWeaponPower(DWORD dwMinPower, DWORD dwMaxPower, DWORD dwMinMagicPower, DWORD dwMaxMagicPower, DWORD dwAddPower);
-		void SetStatus(DWORD dwType, long lValue);
-		int GetStatus(DWORD dwType);
+		void SetWeaponPower(uint32_t dwMinPower, uint32_t dwMaxPower, uint32_t dwMinMagicPower, uint32_t dwMaxMagicPower, uint32_t dwAddPower);
+		void SetStatus(uint32_t dwType, long lValue);
+		int GetStatus(uint32_t dwType);
 
 		// Item
 		void MoveItemData(TItemPos SrcCell, TItemPos DstCell);
 		void SetItemData(TItemPos Cell, const TItemData& c_rkItemInst);
 		const TItemData* GetItemData(TItemPos Cell) const;
-		void SetItemCount(TItemPos Cell, BYTE byCount);
-		void SetItemMetinSocket(TItemPos Cell, DWORD dwMetinSocketIndex, DWORD dwMetinNumber);
-		void SetItemAttribute(TItemPos Cell, DWORD dwAttrIndex, BYTE byType, short sValue);
-		DWORD GetItemIndex(TItemPos Cell);
-		DWORD GetItemFlags(TItemPos Cell);
-		DWORD GetItemCount(TItemPos Cell);
-		DWORD GetItemCountByVnum(DWORD dwVnum);
-		DWORD GetItemMetinSocket(TItemPos Cell, DWORD dwMetinSocketIndex);
-		void GetItemAttribute(TItemPos Cell, DWORD dwAttrSlotIndex, BYTE* pbyType, short* psValue);
-		void SendClickItemPacket(DWORD dwIID);
+		void SetItemCount(TItemPos Cell, uint8_t byCount);
+		void SetItemMetinSocket(TItemPos Cell, uint32_t dwMetinSocketIndex, uint32_t dwMetinNumber);
+		void SetItemAttribute(TItemPos Cell, uint32_t dwAttrIndex, uint8_t byType, short sValue);
+		uint32_t GetItemIndex(TItemPos Cell);
+		uint32_t GetItemFlags(TItemPos Cell);
+		uint32_t GetItemCount(TItemPos Cell);
+		uint32_t GetItemCountByVnum(uint32_t dwVnum);
+		uint32_t GetItemMetinSocket(TItemPos Cell, uint32_t dwMetinSocketIndex);
+		void GetItemAttribute(TItemPos Cell, uint32_t dwAttrSlotIndex, uint8_t* pbyType, short* psValue);
+		void SendClickItemPacket(uint32_t dwIID);
 
-		void RequestAddLocalQuickSlot(DWORD dwLocalSlotIndex, DWORD dwWndType, DWORD dwWndItemPos);
-		void RequestAddToEmptyLocalQuickSlot(DWORD dwWndType, DWORD dwWndItemPos);
-		void RequestMoveGlobalQuickSlotToLocalQuickSlot(DWORD dwGlobalSrcSlotIndex, DWORD dwLocalDstSlotIndex);
-		void RequestDeleteGlobalQuickSlot(DWORD dwGlobalSlotIndex);
-		void RequestUseLocalQuickSlot(DWORD dwLocalSlotIndex);
-		DWORD LocalQuickSlotIndexToGlobalQuickSlotIndex(DWORD dwLocalSlotIndex);
+		void RequestAddLocalQuickSlot(uint32_t dwLocalSlotIndex, uint32_t dwWndType, uint32_t dwWndItemPos);
+		void RequestAddToEmptyLocalQuickSlot(uint32_t dwWndType, uint32_t dwWndItemPos);
+		void RequestMoveGlobalQuickSlotToLocalQuickSlot(uint32_t dwGlobalSrcSlotIndex, uint32_t dwLocalDstSlotIndex);
+		void RequestDeleteGlobalQuickSlot(uint32_t dwGlobalSlotIndex);
+		void RequestUseLocalQuickSlot(uint32_t dwLocalSlotIndex);
+		uint32_t LocalQuickSlotIndexToGlobalQuickSlotIndex(uint32_t dwLocalSlotIndex);
 
-		void GetGlobalQuickSlotData(DWORD dwGlobalSlotIndex, DWORD* pdwWndType, DWORD* pdwWndItemPos);
-		void GetLocalQuickSlotData(DWORD dwSlotPos, DWORD* pdwWndType, DWORD* pdwWndItemPos);
+		void GetGlobalQuickSlotData(uint32_t dwGlobalSlotIndex, uint32_t* pdwWndType, uint32_t* pdwWndItemPos);
+		void GetLocalQuickSlotData(uint32_t dwSlotPos, uint32_t* pdwWndType, uint32_t* pdwWndItemPos);
 		void RemoveQuickSlotByValue(int iType, int iPosition);
 
 		char IsItem(TItemPos SlotIndex);
@@ -312,63 +312,63 @@ class CPythonPlayer : public CSingleton<CPythonPlayer>, public IAbstractPlayer
 		void MoveQuickSlot(int Source, int Target);
 
 		// Skill
-		void SetSkill(DWORD dwSlotIndex, DWORD dwSkillIndex);
-		bool GetSkillSlotIndex(DWORD dwSkillIndex, DWORD* pdwSlotIndex);
-		int GetSkillIndex(DWORD dwSlotIndex);
-		int GetSkillGrade(DWORD dwSlotIndex);
-		int GetSkillLevel(DWORD dwSlotIndex);
-		float GetSkillCurrentEfficientPercentage(DWORD dwSlotIndex);
-		float GetSkillNextEfficientPercentage(DWORD dwSlotIndex);
-		void SetSkillLevel(DWORD dwSlotIndex, DWORD dwSkillLevel);
-		void SetSkillLevel_(DWORD dwSkillIndex, DWORD dwSkillGrade, DWORD dwSkillLevel);
-		BOOL IsToggleSkill(DWORD dwSlotIndex);
-		void ClickSkillSlot(DWORD dwSlotIndex);
-		void ChangeCurrentSkillNumberOnly(DWORD dwSlotIndex);
-		bool FindSkillSlotIndexBySkillIndex(DWORD dwSkillIndex, DWORD* pdwSkillSlotIndex);
+		void SetSkill(uint32_t dwSlotIndex, uint32_t dwSkillIndex);
+		bool GetSkillSlotIndex(uint32_t dwSkillIndex, uint32_t* pdwSlotIndex);
+		int GetSkillIndex(uint32_t dwSlotIndex);
+		int GetSkillGrade(uint32_t dwSlotIndex);
+		int GetSkillLevel(uint32_t dwSlotIndex);
+		float GetSkillCurrentEfficientPercentage(uint32_t dwSlotIndex);
+		float GetSkillNextEfficientPercentage(uint32_t dwSlotIndex);
+		void SetSkillLevel(uint32_t dwSlotIndex, uint32_t dwSkillLevel);
+		void SetSkillLevel_(uint32_t dwSkillIndex, uint32_t dwSkillGrade, uint32_t dwSkillLevel);
+		int32_t IsToggleSkill(uint32_t dwSlotIndex);
+		void ClickSkillSlot(uint32_t dwSlotIndex);
+		void ChangeCurrentSkillNumberOnly(uint32_t dwSlotIndex);
+		bool FindSkillSlotIndexBySkillIndex(uint32_t dwSkillIndex, uint32_t* pdwSkillSlotIndex);
 
-		void SetSkillCoolTime(DWORD dwSkillIndex);
-		void EndSkillCoolTime(DWORD dwSkillIndex);
+		void SetSkillCoolTime(uint32_t dwSkillIndex);
+		void EndSkillCoolTime(uint32_t dwSkillIndex);
 
-		float GetSkillCoolTime(DWORD dwSlotIndex);
-		float GetSkillElapsedCoolTime(DWORD dwSlotIndex);
-		BOOL IsSkillActive(DWORD dwSlotIndex);
-		BOOL IsSkillCoolTime(DWORD dwSlotIndex);
-		void UseGuildSkill(DWORD dwSkillSlotIndex);
-		bool AffectIndexToSkillSlotIndex(UINT uAffect, DWORD* pdwSkillSlotIndex);
-		bool AffectIndexToSkillIndex(DWORD dwAffectIndex, DWORD* pdwSkillIndex);
+		float GetSkillCoolTime(uint32_t dwSlotIndex);
+		float GetSkillElapsedCoolTime(uint32_t dwSlotIndex);
+		int32_t IsSkillActive(uint32_t dwSlotIndex);
+		int32_t IsSkillCoolTime(uint32_t dwSlotIndex);
+		void UseGuildSkill(uint32_t dwSkillSlotIndex);
+		bool AffectIndexToSkillSlotIndex(uint32_t uAffect, uint32_t* pdwSkillSlotIndex);
+		bool AffectIndexToSkillIndex(uint32_t dwAffectIndex, uint32_t* pdwSkillIndex);
 
-		void SetAffect(UINT uAffect);
-		void ResetAffect(UINT uAffect);
+		void SetAffect(uint32_t uAffect);
+		void ResetAffect(uint32_t uAffect);
 		void ClearAffects();
 
 		// Target
-		void SetTarget(DWORD dwVID, BOOL bForceChange = TRUE);
-		void OpenCharacterMenu(DWORD dwVictimActorID);
-		DWORD GetTargetVID();
+		void SetTarget(uint32_t dwVID, int32_t bForceChange = TRUE);
+		void OpenCharacterMenu(uint32_t dwVictimActorID);
+		uint32_t GetTargetVID();
 
 		// Party
 		void ExitParty();
-		void AppendPartyMember(DWORD dwPID, const char* c_szName);
-		void LinkPartyMember(DWORD dwPID, DWORD dwVID);
-		void UnlinkPartyMember(DWORD dwPID);
-		void UpdatePartyMemberInfo(DWORD dwPID, BYTE byState, BYTE byHPPercentage);
-		void UpdatePartyMemberAffect(DWORD dwPID, BYTE byAffectSlotIndex, short sAffectNumber);
-		void RemovePartyMember(DWORD dwPID);
-		bool IsPartyMemberByVID(DWORD dwVID);
+		void AppendPartyMember(uint32_t dwPID, const char* c_szName);
+		void LinkPartyMember(uint32_t dwPID, uint32_t dwVID);
+		void UnlinkPartyMember(uint32_t dwPID);
+		void UpdatePartyMemberInfo(uint32_t dwPID, uint8_t byState, uint8_t byHPPercentage);
+		void UpdatePartyMemberAffect(uint32_t dwPID, uint8_t byAffectSlotIndex, short sAffectNumber);
+		void RemovePartyMember(uint32_t dwPID);
+		bool IsPartyMemberByVID(uint32_t dwVID);
 		bool IsPartyMemberByName(const char* c_szName);
-		bool GetPartyMemberPtr(DWORD dwPID, TPartyMemberInfo** ppPartyMemberInfo);
-		bool PartyMemberPIDToVID(DWORD dwPID, DWORD* pdwVID);
-		bool PartyMemberVIDToPID(DWORD dwVID, DWORD* pdwPID);
-		bool IsSamePartyMember(DWORD dwVID1, DWORD dwVID2);
+		bool GetPartyMemberPtr(uint32_t dwPID, TPartyMemberInfo** ppPartyMemberInfo);
+		bool PartyMemberPIDToVID(uint32_t dwPID, uint32_t* pdwVID);
+		bool PartyMemberVIDToPID(uint32_t dwVID, uint32_t* pdwPID);
+		bool IsSamePartyMember(uint32_t dwVID1, uint32_t dwVID2);
 
 		// Fight
-		void RememberChallengeInstance(DWORD dwVID);
-		void RememberRevengeInstance(DWORD dwVID);
-		void RememberCantFightInstance(DWORD dwVID);
-		void ForgetInstance(DWORD dwVID);
-		bool IsChallengeInstance(DWORD dwVID);
-		bool IsRevengeInstance(DWORD dwVID);
-		bool IsCantFightInstance(DWORD dwVID);
+		void RememberChallengeInstance(uint32_t dwVID);
+		void RememberRevengeInstance(uint32_t dwVID);
+		void RememberCantFightInstance(uint32_t dwVID);
+		void ForgetInstance(uint32_t dwVID);
+		bool IsChallengeInstance(uint32_t dwVID);
+		bool IsRevengeInstance(uint32_t dwVID);
+		bool IsCantFightInstance(uint32_t dwVID);
 
 		// Private Shop
 		void OpenPrivateShop();
@@ -376,26 +376,26 @@ class CPythonPlayer : public CSingleton<CPythonPlayer>, public IAbstractPlayer
 		bool IsOpenPrivateShop();
 
 		// Stamina
-		void StartStaminaConsume(DWORD dwConsumePerSec, DWORD dwCurrentStamina);
-		void StopStaminaConsume(DWORD dwCurrentStamina);
+		void StartStaminaConsume(uint32_t dwConsumePerSec, uint32_t dwCurrentStamina);
+		void StopStaminaConsume(uint32_t dwCurrentStamina);
 
 		// PK Mode
-		DWORD GetPKMode();
+		uint32_t GetPKMode();
 
 		// Combo
-		void SetComboSkillFlag(BOOL bFlag);
+		void SetComboSkillFlag(int32_t bFlag);
 
 		// System
 		void SetMovableGroundDistance(float fDistance);
 
 		// Emotion
-		void ActEmotion(DWORD dwEmotionID);
+		void ActEmotion(uint32_t dwEmotionID);
 		void StartEmotionProcess();
 		void EndEmotionProcess();
 
 		// Function Only For Console System
-		BOOL __ToggleCoolTime();
-		BOOL __ToggleLevelLimit();
+		int32_t __ToggleCoolTime();
+		int32_t __ToggleLevelLimit();
 
 		__inline const SAutoPotionInfo& GetAutoPotionInfo(int type) const { return m_kAutoPotionInfo[type]; }
 		__inline SAutoPotionInfo& GetAutoPotionInfo(int type) { return m_kAutoPotionInfo[type]; }
@@ -405,44 +405,44 @@ class CPythonPlayer : public CSingleton<CPythonPlayer>, public IAbstractPlayer
 		TQuickSlot& __RefLocalQuickSlot(int SlotIndex);
 		TQuickSlot& __RefGlobalQuickSlot(int SlotIndex);
 
-		DWORD __GetLevelAtk();
-		DWORD __GetStatAtk();
-		DWORD __GetWeaponAtk(DWORD dwWeaponPower);
-		DWORD __GetTotalAtk(DWORD dwWeaponPower, DWORD dwRefineBonus);
-		DWORD __GetRaceStat();
-		DWORD __GetHitRate();
-		DWORD __GetEvadeRate();
+		uint32_t __GetLevelAtk();
+		uint32_t __GetStatAtk();
+		uint32_t __GetWeaponAtk(uint32_t dwWeaponPower);
+		uint32_t __GetTotalAtk(uint32_t dwWeaponPower, uint32_t dwRefineBonus);
+		uint32_t __GetRaceStat();
+		uint32_t __GetHitRate();
+		uint32_t __GetEvadeRate();
 
 		void __UpdateBattleStatus();
 
-		void __DeactivateSkillSlot(DWORD dwSlotIndex);
-		void __ActivateSkillSlot(DWORD dwSlotIndex);
+		void __DeactivateSkillSlot(uint32_t dwSlotIndex);
+		void __ActivateSkillSlot(uint32_t dwSlotIndex);
 
 		void __OnPressSmart(CInstanceBase& rkInstMain, bool isAuto);
 		void __OnClickSmart(CInstanceBase& rkInstMain, bool isAuto);
 
-		void __OnPressItem(CInstanceBase& rkInstMain, DWORD dwPickedItemID);
-		void __OnPressActor(CInstanceBase& rkInstMain, DWORD dwPickedActorID, bool isAuto);
+		void __OnPressItem(CInstanceBase& rkInstMain, uint32_t dwPickedItemID);
+		void __OnPressActor(CInstanceBase& rkInstMain, uint32_t dwPickedActorID, bool isAuto);
 		void __OnPressGround(CInstanceBase& rkInstMain, const TPixelPosition& c_rkPPosPickedGround);
 		void __OnPressScreen(CInstanceBase& rkInstMain);
 
-		void __OnClickActor(CInstanceBase& rkInstMain, DWORD dwPickedActorID, bool isAuto);
-		void __OnClickItem(CInstanceBase& rkInstMain, DWORD dwPickedItemID);
+		void __OnClickActor(CInstanceBase& rkInstMain, uint32_t dwPickedActorID, bool isAuto);
+		void __OnClickItem(CInstanceBase& rkInstMain, uint32_t dwPickedItemID);
 		void __OnClickGround(CInstanceBase& rkInstMain, const TPixelPosition& c_rkPPosPickedGround);
 
 		bool __IsMovableGroundDistance(CInstanceBase& rkInstMain, const TPixelPosition& c_rkPPosPickedGround);
 
 		bool __GetPickedActorPtr(CInstanceBase** pkInstPicked);
 
-		bool __GetPickedActorID(DWORD* pdwActorID);
-		bool __GetPickedItemID(DWORD* pdwItemID);
+		bool __GetPickedActorID(uint32_t* pdwActorID);
+		bool __GetPickedItemID(uint32_t* pdwItemID);
 		bool __GetPickedGroundPos(TPixelPosition* pkPPosPicked);
 
 		void __ClearReservedAction();
-		void __ReserveClickItem(DWORD dwItemID);
-		void __ReserveClickActor(DWORD dwActorID);
+		void __ReserveClickItem(uint32_t dwItemID);
+		void __ReserveClickActor(uint32_t dwActorID);
 		void __ReserveClickGround(const TPixelPosition& c_rkPPosPickedGround);
-		void __ReserveUseSkill(DWORD dwActorID, DWORD dwSkillSlotIndex, DWORD dwRange);
+		void __ReserveUseSkill(uint32_t dwActorID, uint32_t dwSkillSlotIndex, uint32_t dwRange);
 
 		void __ReserveProcess_ClickActor();
 
@@ -450,7 +450,7 @@ class CPythonPlayer : public CSingleton<CPythonPlayer>, public IAbstractPlayer
 		void __SendClickActorPacket(CInstanceBase& rkInstVictim);
 
 		void __ClearAutoAttackTargetActorID();
-		void __SetAutoAttackTargetActorID(DWORD dwActorID);
+		void __SetAutoAttackTargetActorID(uint32_t dwActorID);
 
 		void NEW_ShowEffect(int dwEID, TPixelPosition kPPosDst);
 
@@ -480,43 +480,43 @@ class CPythonPlayer : public CSingleton<CPythonPlayer>, public IAbstractPlayer
 		bool __CanAttack();
 		bool __CanChangeTarget();
 
-		bool __CheckSkillUsable(DWORD dwSlotIndex);
+		bool __CheckSkillUsable(uint32_t dwSlotIndex);
 		void __UseCurrentSkill();
-		void __UseChargeSkill(DWORD dwSkillSlotIndex);
-		bool __UseSkill(DWORD dwSlotIndex);
-		bool __CheckSpecialSkill(DWORD dwSkillIndex);
+		void __UseChargeSkill(uint32_t dwSkillSlotIndex);
+		bool __UseSkill(uint32_t dwSlotIndex);
+		bool __CheckSpecialSkill(uint32_t dwSkillIndex);
 
-		bool __CheckRestSkillCoolTime(DWORD dwSkillSlotIndex);
+		bool __CheckRestSkillCoolTime(uint32_t dwSkillSlotIndex);
 		bool __CheckShortLife(TSkillInstance& rkSkillInst, CPythonSkill::TSkillData& rkSkillData);
 		bool __CheckShortMana(TSkillInstance& rkSkillInst, CPythonSkill::TSkillData& rkSkillData);
 		bool __CheckShortArrow(TSkillInstance& rkSkillInst, CPythonSkill::TSkillData& rkSkillData);
 		bool __CheckDashAffect(CInstanceBase& rkInstMain);
 
-		void __SendUseSkill(DWORD dwSkillSlotIndex, DWORD dwTargetVID);
-		void __RunCoolTime(DWORD dwSkillSlotIndex);
+		void __SendUseSkill(uint32_t dwSkillSlotIndex, uint32_t dwTargetVID);
+		void __RunCoolTime(uint32_t dwSkillSlotIndex);
 
-		BYTE __GetSkillType(DWORD dwSkillSlotIndex);
+		uint8_t __GetSkillType(uint32_t dwSkillSlotIndex);
 
-		bool __IsReservedUseSkill(DWORD dwSkillSlotIndex);
+		bool __IsReservedUseSkill(uint32_t dwSkillSlotIndex);
 		bool __IsMeleeSkill(CPythonSkill::TSkillData& rkSkillData);
 		bool __IsChargeSkill(CPythonSkill::TSkillData& rkSkillData);
-		DWORD __GetSkillTargetRange(CPythonSkill::TSkillData& rkSkillData);
+		uint32_t __GetSkillTargetRange(CPythonSkill::TSkillData& rkSkillData);
 		bool __SearchNearTarget();
 		bool __IsUsingChargeSkill();
 
-		bool __ProcessEnemySkillTargetRange(CInstanceBase& rkInstMain, CInstanceBase& rkInstTarget, CPythonSkill::TSkillData& rkSkillData, DWORD dwSkillSlotIndex);
+		bool __ProcessEnemySkillTargetRange(CInstanceBase& rkInstMain, CInstanceBase& rkInstTarget, CPythonSkill::TSkillData& rkSkillData, uint32_t dwSkillSlotIndex);
 
 		// Item
 		bool __HasEnoughArrow();
-		bool __HasItem(DWORD dwItemID);
-		DWORD __GetPickableDistance();
+		bool __HasItem(uint32_t dwItemID);
+		uint32_t __GetPickableDistance();
 
 		// Target
 		CInstanceBase* __GetTargetActorPtr();
 		void __ClearTarget();
-		DWORD __GetTargetVID();
-		void __SetTargetVID(DWORD dwVID);
-		bool __IsSameTargetVID(DWORD dwVID);
+		uint32_t __GetTargetVID();
+		void __SetTargetVID(uint32_t dwVID);
+		bool __IsSameTargetVID(uint32_t dwVID);
 		bool __IsTarget();
 		bool __ChangeTargetToPickedInstance();
 
@@ -524,35 +524,35 @@ class CPythonPlayer : public CSingleton<CPythonPlayer>, public IAbstractPlayer
 		CInstanceBase* __GetAliveTargetInstancePtr();
 		CInstanceBase* __GetDeadTargetInstancePtr();
 
-		BOOL __IsRightButtonSkillMode();
+		int32_t __IsRightButtonSkillMode();
 
 		// Update
 		void __Update_AutoAttack();
 		void __Update_NotifyGuildAreaEvent();
 
 		// Emotion
-		BOOL __IsProcessingEmotion();
+		int32_t __IsProcessingEmotion();
 
 	protected:
 		PyObject* m_ppyGameWindow;
 
 		// Client Player Data
-		std::map<DWORD, DWORD> m_skillSlotDict;
+		std::map<uint32_t, uint32_t> m_skillSlotDict;
 		std::string m_stName;
-		DWORD m_dwMainCharacterIndex;
-		DWORD m_dwRace;
-		DWORD m_dwWeaponMinPower;
-		DWORD m_dwWeaponMaxPower;
-		DWORD m_dwWeaponMinMagicPower;
-		DWORD m_dwWeaponMaxMagicPower;
-		DWORD m_dwWeaponAddPower;
+		uint32_t m_dwMainCharacterIndex;
+		uint32_t m_dwRace;
+		uint32_t m_dwWeaponMinPower;
+		uint32_t m_dwWeaponMaxPower;
+		uint32_t m_dwWeaponMinMagicPower;
+		uint32_t m_dwWeaponMaxMagicPower;
+		uint32_t m_dwWeaponAddPower;
 
 		// Todo
-		DWORD m_dwSendingTargetVID;
+		uint32_t m_dwSendingTargetVID;
 		float m_fTargetUpdateTime;
 
 		// Attack
-		DWORD m_dwAutoAttackTargetVID;
+		uint32_t m_dwAutoAttackTargetVID;
 
 		// NEW_Move
 		EMode m_eReservedMode;
@@ -574,63 +574,63 @@ class CPythonPlayer : public CSingleton<CPythonPlayer>, public IAbstractPlayer
 
 		TPlayerStatus m_playerStatus;
 
-		UINT m_iComboOld;
-		DWORD m_dwVIDReserved;
-		DWORD m_dwIIDReserved;
+		uint32_t m_iComboOld;
+		uint32_t m_dwVIDReserved;
+		uint32_t m_dwIIDReserved;
 
-		DWORD m_dwcurSkillSlotIndex;
-		DWORD m_dwSkillSlotIndexReserved;
-		DWORD m_dwSkillRangeReserved;
+		uint32_t m_dwcurSkillSlotIndex;
+		uint32_t m_dwSkillSlotIndexReserved;
+		uint32_t m_dwSkillRangeReserved;
 
 		TPixelPosition m_kPPosInstPrev;
 		TPixelPosition m_kPPosReserved;
 
 		// Emotion
-		BOOL m_bisProcessingEmotion;
+		int32_t m_bisProcessingEmotion;
 
 		// Dungeon
-		BOOL m_isDestPosition;
+		int32_t m_isDestPosition;
 		int m_ixDestPos;
 		int m_iyDestPos;
 		int m_iLastAlarmTime;
 
 		// Party
-		std::map<DWORD, TPartyMemberInfo> m_PartyMemberMap;
+		std::map<uint32_t, TPartyMemberInfo> m_PartyMemberMap;
 
 		// PVP
-		std::set<DWORD> m_ChallengeInstanceSet;
-		std::set<DWORD> m_RevengeInstanceSet;
-		std::set<DWORD> m_CantFightInstanceSet;
+		std::set<uint32_t> m_ChallengeInstanceSet;
+		std::set<uint32_t> m_RevengeInstanceSet;
+		std::set<uint32_t> m_CantFightInstanceSet;
 
 		// Private Shop
 		bool m_isOpenPrivateShop;
 		bool m_isObserverMode;
 
 		// Stamina
-		BOOL m_isConsumingStamina;
+		int32_t m_isConsumingStamina;
 		float m_fCurrentStamina;
 		float m_fConsumeStaminaPerSec;
 
 		// Guild
-		DWORD m_inGuildAreaID;
+		uint32_t m_inGuildAreaID;
 
 		// System
-		BOOL m_sysIsCoolTime;
-		BOOL m_sysIsLevelLimit;
+		int32_t m_sysIsCoolTime;
+		int32_t m_sysIsLevelLimit;
 
 	protected:
 		// Game Cursor Data
 		TPixelPosition m_MovingCursorPosition;
 		float m_fMovingCursorSettingTime;
-		DWORD m_adwEffect[EFFECT_NUM];
+		uint32_t m_adwEffect[EFFECT_NUM];
 
-		DWORD m_dwVIDPicked;
-		DWORD m_dwIIDPicked;
+		uint32_t m_dwVIDPicked;
+		uint32_t m_dwIIDPicked;
 		int m_aeMBFButton[MBT_NUM];
 
-		DWORD m_dwTargetVID;
-		DWORD m_dwTargetEndTime;
-		DWORD m_dwPlayTime;
+		uint32_t m_dwTargetVID;
+		uint32_t m_dwTargetEndTime;
+		uint32_t m_dwPlayTime;
 
 		SAutoPotionInfo m_kAutoPotionInfo[AUTO_POTION_TYPE_NUM];
 
@@ -638,7 +638,7 @@ class CPythonPlayer : public CSingleton<CPythonPlayer>, public IAbstractPlayer
 		float MOVABLE_GROUND_DISTANCE;
 
 	private:
-		std::map<DWORD, DWORD> m_kMap_dwAffectIndexToSkillIndex;
+		std::map<uint32_t, uint32_t> m_kMap_dwAffectIndexToSkillIndex;
 };
 
 extern const int c_iFastestSendingCount;

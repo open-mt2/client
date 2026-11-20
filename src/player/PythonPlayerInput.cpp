@@ -14,7 +14,7 @@ const float c_fRotatingStepTime = 0.5f;
 const float c_fComboDistance = 250.0f;
 const float c_fClickDistance = 300.0f;
 
-DWORD CPythonPlayer::__GetPickableDistance()
+uint32_t CPythonPlayer::__GetPickableDistance()
 {
 	CInstanceBase* pkInstMain = NEW_GetMainActorPtr();
 	if (pkInstMain)
@@ -33,7 +33,7 @@ void CPythonPlayer::PickCloseMoney()
 	TPixelPosition kPPosMain;
 	pkInstMain->NEW_GetPixelPosition(&kPPosMain);
 
-	DWORD dwItemID;
+	uint32_t dwItemID;
 	CPythonItem& rkItem = CPythonItem::Instance();
 	if (!rkItem.GetCloseMoney(kPPosMain, &dwItemID, __GetPickableDistance()))
 		return;
@@ -50,7 +50,7 @@ void CPythonPlayer::PickCloseItem()
 	TPixelPosition kPPosMain;
 	pkInstMain->NEW_GetPixelPosition(&kPPosMain);
 
-	DWORD dwItemID;
+	uint32_t dwItemID;
 	CPythonItem& rkItem = CPythonItem::Instance();
 	if (!rkItem.GetCloseItem(kPPosMain, &dwItemID, __GetPickableDistance()))
 		return;
@@ -63,17 +63,17 @@ bool CPythonPlayer::__IsTarget()
 	return 0 != __GetTargetVID();
 }
 
-bool CPythonPlayer::__IsSameTargetVID(DWORD dwVID)
+bool CPythonPlayer::__IsSameTargetVID(uint32_t dwVID)
 {
 	return dwVID == __GetTargetVID();
 }
 
-DWORD CPythonPlayer::__GetTargetVID()
+uint32_t CPythonPlayer::__GetTargetVID()
 {
 	return m_dwTargetVID;
 }
 
-DWORD CPythonPlayer::GetTargetVID()
+uint32_t CPythonPlayer::GetTargetVID()
 {
 	return __GetTargetVID();
 }
@@ -83,7 +83,7 @@ CInstanceBase* CPythonPlayer::__GetTargetActorPtr()
 	return NEW_FindActorPtr(__GetTargetVID());
 }
 
-void CPythonPlayer::__SetTargetVID(DWORD dwVID)
+void CPythonPlayer::__SetTargetVID(uint32_t dwVID)
 {
 	m_dwTargetVID = dwVID;
 }
@@ -108,7 +108,7 @@ void CPythonPlayer::__ClearTarget()
 	CPythonNetworkStream::Instance().SendTargetPacket(0);
 }
 
-void CPythonPlayer::SetTarget(DWORD dwVID, BOOL bForceChange)
+void CPythonPlayer::SetTarget(uint32_t dwVID, int32_t bForceChange)
 {
 	CInstanceBase* pkInstMain = NEW_GetMainActorPtr();
 	if (!pkInstMain)
@@ -120,7 +120,7 @@ void CPythonPlayer::SetTarget(DWORD dwVID, BOOL bForceChange)
 		return;
 	}
 
-	DWORD dwCurrentTime = CTimer::Instance().GetCurrentMillisecond();
+	uint32_t dwCurrentTime = CTimer::Instance().GetCurrentMillisecond();
 
 	if (__IsSameTargetVID(dwVID))
 	{
@@ -182,7 +182,7 @@ void CPythonPlayer::SetTarget(DWORD dwVID, BOOL bForceChange)
 
 bool CPythonPlayer::__ChangeTargetToPickedInstance()
 {
-	DWORD dwVID;
+	uint32_t dwVID;
 	if (!CPythonCharacterManager::Instance().OLD_GetPickedInstanceVID(&dwVID))
 		return false;
 
@@ -230,7 +230,7 @@ CInstanceBase* CPythonPlayer::__GetAliveTargetInstancePtr()
 	return pkInstTarget;
 }
 
-void CPythonPlayer::OpenCharacterMenu(DWORD dwVictimActorID)
+void CPythonPlayer::OpenCharacterMenu(uint32_t dwVictimActorID)
 {
 	CInstanceBase* pkInstMain = CPythonPlayer::Instance().NEW_GetMainActorPtr();
 	if (!pkInstMain)
@@ -249,11 +249,11 @@ void CPythonPlayer::OpenCharacterMenu(DWORD dwVictimActorID)
 	PyCallClassMemberFunc(m_ppyGameWindow, "SetPCTargetBoard", Py_BuildValue("(is)", pkInstTarget->GetVirtualID(), pkInstTarget->GetNameString()));
 }
 
-void CPythonPlayer::__OnClickItem(CInstanceBase& rkInstMain, DWORD dwItemID)
+void CPythonPlayer::__OnClickItem(CInstanceBase& rkInstMain, uint32_t dwItemID)
 {
 }
 
-void CPythonPlayer::__OnClickActor(CInstanceBase& rkInstMain, DWORD dwPickedActorID, bool isAuto)
+void CPythonPlayer::__OnClickActor(CInstanceBase& rkInstMain, uint32_t dwPickedActorID, bool isAuto)
 {
 	// 만약 스킬을 써서 접근중이라면..
 	if (MODE_USE_SKILL == m_eReservedMode)
@@ -299,7 +299,7 @@ void CPythonPlayer::__OnClickActor(CInstanceBase& rkInstMain, DWORD dwPickedActo
 	return;
 }
 
-void CPythonPlayer::__OnPressActor(CInstanceBase& rkInstMain, DWORD dwPickedActorID, bool isAuto)
+void CPythonPlayer::__OnPressActor(CInstanceBase& rkInstMain, uint32_t dwPickedActorID, bool isAuto)
 {
 	// 만약 스킬을 써서 접근중이라면..
 	if (MODE_USE_SKILL == m_eReservedMode)
@@ -358,9 +358,9 @@ void CPythonPlayer::__OnPressActor(CInstanceBase& rkInstMain, DWORD dwPickedActo
 	rkInstMain.NEW_AttackToDestInstanceDirection(rkInstVictim, rkPlayerEventHandler.GetNormalBowAttackFlyEventHandler(&rkInstMain, &rkInstVictim));
 }
 
-void CPythonPlayer::__OnPressItem(CInstanceBase& rkInstMain, DWORD dwPickedItemID)
+void CPythonPlayer::__OnPressItem(CInstanceBase& rkInstMain, uint32_t dwPickedItemID)
 {
-	static DWORD s_dwLastPickItemID = 0;
+	static uint32_t s_dwLastPickItemID = 0;
 
 	if (s_dwLastPickItemID == dwPickedItemID)
 	{
@@ -506,7 +506,7 @@ bool CPythonPlayer::NEW_CancelFishing()
 
 	if (pkInstMain->IsFishing())
 	{
-		static DWORD s_dwLastCancelTime = 0;
+		static uint32_t s_dwLastCancelTime = 0;
 		if (CTimer::Instance().GetCurrentMillisecond() < s_dwLastCancelTime + 500)
 			return false;
 
@@ -813,13 +813,13 @@ void CPythonPlayer::__ClearReservedAction()
 	m_eReservedMode = MODE_NONE;
 }
 
-void CPythonPlayer::__ReserveClickItem(DWORD dwItemID)
+void CPythonPlayer::__ReserveClickItem(uint32_t dwItemID)
 {
 	m_eReservedMode = MODE_CLICK_ITEM;
 	m_dwIIDReserved = dwItemID;
 }
 
-void CPythonPlayer::__ReserveClickActor(DWORD dwActorID)
+void CPythonPlayer::__ReserveClickActor(uint32_t dwActorID)
 {
 	m_eReservedMode = MODE_CLICK_ACTOR;
 	m_dwVIDReserved = dwActorID;
@@ -832,7 +832,7 @@ void CPythonPlayer::__ReserveClickGround(const TPixelPosition& c_rkPPosPickedGro
 	m_fReservedDelayTime = 0.1f;
 }
 
-bool CPythonPlayer::__IsReservedUseSkill(DWORD dwSkillSlotIndex)
+bool CPythonPlayer::__IsReservedUseSkill(uint32_t dwSkillSlotIndex)
 {
 	if (MODE_USE_SKILL != m_eReservedMode)
 		return false;
@@ -843,7 +843,7 @@ bool CPythonPlayer::__IsReservedUseSkill(DWORD dwSkillSlotIndex)
 	return true;
 }
 
-void CPythonPlayer::__ReserveUseSkill(DWORD dwActorID, DWORD dwSkillSlotIndex, DWORD dwRange)
+void CPythonPlayer::__ReserveUseSkill(uint32_t dwActorID, uint32_t dwSkillSlotIndex, uint32_t dwRange)
 {
 	m_eReservedMode = MODE_USE_SKILL;
 	m_dwVIDReserved = dwActorID;
@@ -860,7 +860,7 @@ void CPythonPlayer::__ClearAutoAttackTargetActorID()
 	__SetAutoAttackTargetActorID(0);
 }
 
-void CPythonPlayer::__SetAutoAttackTargetActorID(DWORD dwVID)
+void CPythonPlayer::__SetAutoAttackTargetActorID(uint32_t dwVID)
 {
 	m_dwAutoAttackTargetVID = dwVID;
 }

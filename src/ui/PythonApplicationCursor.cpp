@@ -15,38 +15,38 @@ namespace
 			int hotY;
 	};
 
-	WORD ReadWord(const BYTE* p)
+	uint16_t ReadWord(const uint8_t* p)
 	{
-		return WORD(p[0] | (p[1] << 8));
+		return uint16_t(p[0] | (p[1] << 8));
 	}
 
-	void DecodeDXT3Block(const BYTE* pSrc, DWORD* pDst, int dstPitch)
+	void DecodeDXT3Block(const uint8_t* pSrc, uint32_t* pDst, int dstPitch)
 	{
 		unsigned long long alphaBits = 0;
 		for (int i = 0; i < 8; ++i)
 			alphaBits |= (unsigned long long)pSrc[i] << (i * 8);
 
-		const WORD color0 = ReadWord(pSrc + 8);
-		const WORD color1 = ReadWord(pSrc + 10);
+		const uint16_t color0 = ReadWord(pSrc + 8);
+		const uint16_t color1 = ReadWord(pSrc + 10);
 
-		const BYTE r0 = BYTE(((color0 >> 11) & 0x1f) * 255 / 31);
-		const BYTE g0 = BYTE(((color0 >> 5) & 0x3f) * 255 / 63);
-		const BYTE b0 = BYTE((color0 & 0x1f) * 255 / 31);
-		const BYTE r1 = BYTE(((color1 >> 11) & 0x1f) * 255 / 31);
-		const BYTE g1 = BYTE(((color1 >> 5) & 0x3f) * 255 / 63);
-		const BYTE b1 = BYTE((color1 & 0x1f) * 255 / 31);
+		const uint8_t r0 = uint8_t(((color0 >> 11) & 0x1f) * 255 / 31);
+		const uint8_t g0 = uint8_t(((color0 >> 5) & 0x3f) * 255 / 63);
+		const uint8_t b0 = uint8_t((color0 & 0x1f) * 255 / 31);
+		const uint8_t r1 = uint8_t(((color1 >> 11) & 0x1f) * 255 / 31);
+		const uint8_t g1 = uint8_t(((color1 >> 5) & 0x3f) * 255 / 63);
+		const uint8_t b1 = uint8_t((color1 & 0x1f) * 255 / 31);
 
-		const BYTE colors[4][3] =
+		const uint8_t colors[4][3] =
 			{
 				{r0, g0, b0},
 				{r1, g1, b1},
-				{BYTE((2 * r0 + r1) / 3), BYTE((2 * g0 + g1) / 3), BYTE((2 * b0 + b1) / 3)},
-				{BYTE((r0 + 2 * r1) / 3), BYTE((g0 + 2 * g1) / 3), BYTE((b0 + 2 * b1) / 3)},
+				{uint8_t((2 * r0 + r1) / 3), uint8_t((2 * g0 + g1) / 3), uint8_t((2 * b0 + b1) / 3)},
+				{uint8_t((r0 + 2 * r1) / 3), uint8_t((g0 + 2 * g1) / 3), uint8_t((b0 + 2 * b1) / 3)},
 			};
 
-		DWORD indices = 0;
+		uint32_t indices = 0;
 		for (int i = 0; i < 4; ++i)
-			indices |= DWORD(pSrc[12 + i]) << (i * 8);
+			indices |= uint32_t(pSrc[12 + i]) << (i * 8);
 
 		for (int y = 0; y < 4; ++y)
 		{
@@ -54,10 +54,10 @@ namespace
 			{
 				const int pixel = y * 4 + x;
 				const int colorIndex = (indices >> (pixel * 2)) & 0x3;
-				const BYTE alpha = BYTE(((alphaBits >> (pixel * 4)) & 0xf) * 17);
-				const BYTE* color = colors[colorIndex];
+				const uint8_t alpha = uint8_t(((alphaBits >> (pixel * 4)) & 0xf) * 17);
+				const uint8_t* color = colors[colorIndex];
 
-				pDst[y * dstPitch + x] = (DWORD(alpha) << 24) | (DWORD(color[0]) << 16) | (DWORD(color[1]) << 8) | color[2];
+				pDst[y * dstPitch + x] = (uint32_t(alpha) << 24) | (uint32_t(color[0]) << 16) | (uint32_t(color[1]) << 8) | color[2];
 			}
 		}
 	}
@@ -91,7 +91,7 @@ bool CPythonApplication::CreateOfficialCursors()
 	if (!data || data->size() < 128)
 		return false;
 
-	const BYTE* pFile = reinterpret_cast<const BYTE*>(data->data());
+	const uint8_t* pFile = reinterpret_cast<const uint8_t*>(data->data());
 	if (memcmp(pFile, "DDS ", 4) != 0 || memcmp(pFile + 84, "DXT3", 4) != 0)
 		return false;
 
@@ -108,14 +108,14 @@ bool CPythonApplication::CreateOfficialCursors()
 	if (data->size() < requiredSize)
 		return false;
 
-	std::vector<DWORD> atlas(size_t(width) * height, 0);
-	const BYTE* pBlocks = pFile + 128;
+	std::vector<uint32_t> atlas(size_t(width) * height, 0);
+	const uint8_t* pBlocks = pFile + 128;
 
 	for (int blockY = 0; blockY < height / 4; ++blockY)
 	{
 		for (int blockX = 0; blockX < width / 4; ++blockX)
 		{
-			DWORD pixels[4 * 4] = {};
+			uint32_t pixels[4 * 4] = {};
 			DecodeDXT3Block(pBlocks, pixels, 4);
 			pBlocks += 16;
 
@@ -141,8 +141,8 @@ bool CPythonApplication::CreateOfficialCursors()
 		bool hasAlpha = false;
 		for (int y = 0; y < 32; ++y)
 		{
-			DWORD* pDst = reinterpret_cast<DWORD*>(static_cast<BYTE*>(pSurface->pixels) + y * pSurface->pitch);
-			const DWORD* pSrc = &atlas[size_t(s_cells[i].y + y) * width + s_cells[i].x];
+			uint32_t* pDst = reinterpret_cast<uint32_t*>(static_cast<uint8_t*>(pSurface->pixels) + y * pSurface->pitch);
+			const uint32_t* pSrc = &atlas[size_t(s_cells[i].y + y) * width + s_cells[i].x];
 
 			for (int x = 0; x < 32; ++x)
 			{
@@ -231,7 +231,7 @@ void CPythonApplication::DestroyCursors()
 	}
 }
 
-void CPythonApplication::SetCursorVisible(BOOL bFlag, bool bLiarCursorOn)
+void CPythonApplication::SetCursorVisible(int32_t bFlag, bool bLiarCursorOn)
 {
 	m_bCursorVisible = bFlag;
 	m_bLiarCursorOn = bLiarCursorOn;
@@ -245,7 +245,7 @@ void CPythonApplication::SetCursorVisible(BOOL bFlag, bool bLiarCursorOn)
 	}
 }
 
-BOOL CPythonApplication::GetCursorVisible()
+int32_t CPythonApplication::GetCursorVisible()
 {
 	return m_bCursorVisible;
 }
@@ -260,7 +260,7 @@ int CPythonApplication::GetCursorMode()
 	return m_iCursorMode;
 }
 
-BOOL CPythonApplication::__IsContinuousChangeTypeCursor(int iCursorNum)
+int32_t CPythonApplication::__IsContinuousChangeTypeCursor(int iCursorNum)
 {
 	switch (iCursorNum)
 	{
@@ -277,7 +277,7 @@ BOOL CPythonApplication::__IsContinuousChangeTypeCursor(int iCursorNum)
 	return FALSE;
 }
 
-BOOL CPythonApplication::SetCursorNum(int iCursorNum)
+int32_t CPythonApplication::SetCursorNum(int iCursorNum)
 {
 	if (CURSOR_SHAPE_NORMAL == iCursorNum)
 	{

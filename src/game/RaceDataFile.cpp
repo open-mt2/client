@@ -7,7 +7,7 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-BOOL CRaceData::LoadRaceData(const char* c_szFileName)
+int32_t CRaceData::LoadRaceData(const char* c_szFileName)
 {
 	CTextFileLoader TextFileLoader;
 	if (!TextFileLoader.Load(c_szFileName))
@@ -35,9 +35,9 @@ BOOL CRaceData::LoadRaceData(const char* c_szFileName)
 			return FALSE;
 		}
 
-		UINT uLineCount = pSmokeTokenVector->size() / 2;
+		uint32_t uLineCount = pSmokeTokenVector->size() / 2;
 
-		for (UINT uLine = 0; uLine < uLineCount; ++uLine)
+		for (uint32_t uLine = 0; uLine < uLineCount; ++uLine)
 		{
 			int eSmoke = atoi(pSmokeTokenVector->at(uLine * 2 + 0).c_str());
 			if (eSmoke < 0 || eSmoke >= SMOKE_NUM)
@@ -48,7 +48,7 @@ BOOL CRaceData::LoadRaceData(const char* c_szFileName)
 
 			const std::string& c_rstrEffectFileName = pSmokeTokenVector->at(uLine * 2 + 1);
 
-			DWORD& rdwCRCEft = m_adwSmokeEffectID[eSmoke];
+			uint32_t& rdwCRCEft = m_adwSmokeEffectID[eSmoke];
 			if (!CEffectManager::Instance().RegisterEffect2(c_rstrEffectFileName.c_str(), &rdwCRCEft))
 			{
 				TraceError("CRaceData::RegisterEffect2(%s) ERROR", c_rstrEffectFileName.c_str());
@@ -61,11 +61,11 @@ BOOL CRaceData::LoadRaceData(const char* c_szFileName)
 	if (TextFileLoader.SetChildNode("shapedata"))
 	{
 		std::string strPathName;
-		DWORD dwShapeDataCount = 0;
+		uint32_t dwShapeDataCount = 0;
 		if (TextFileLoader.GetTokenString("pathname", &strPathName) &&
 			TextFileLoader.GetTokenDoubleWord("shapedatacount", &dwShapeDataCount))
 		{
-			for (DWORD i = 0; i < dwShapeDataCount; ++i)
+			for (uint32_t i = 0; i < dwShapeDataCount; ++i)
 			{
 				if (!TextFileLoader.SetChildNode("shapedata", i))
 				{
@@ -77,7 +77,7 @@ BOOL CRaceData::LoadRaceData(const char* c_szFileName)
 				TextFileLoader.GetTokenString("specialpath", &strPathName);
 				/////////////////////////
 
-				DWORD dwShapeIndex;
+				uint32_t dwShapeIndex;
 				if (!TextFileLoader.GetTokenDoubleWord("shapeindex", &dwShapeIndex))
 				{
 					continue;
@@ -131,12 +131,12 @@ BOOL CRaceData::LoadRaceData(const char* c_szFileName)
 	if (TextFileLoader.SetChildNode("hairdata"))
 	{
 		std::string strPathName;
-		DWORD dwHairDataCount = 0;
+		uint32_t dwHairDataCount = 0;
 		if (TextFileLoader.GetTokenString("pathname", &strPathName) &&
 			TextFileLoader.GetTokenDoubleWord("hairdatacount", &dwHairDataCount))
 		{
 
-			for (DWORD i = 0; i < dwHairDataCount; ++i)
+			for (uint32_t i = 0; i < dwHairDataCount; ++i)
 			{
 				if (!TextFileLoader.SetChildNode("hairdata", i))
 				{
@@ -148,7 +148,7 @@ BOOL CRaceData::LoadRaceData(const char* c_szFileName)
 				TextFileLoader.GetTokenString("specialpath", &strPathName);
 				/////////////////////////
 
-				DWORD dwShapeIndex;
+				uint32_t dwShapeIndex;
 				if (!TextFileLoader.GetTokenDoubleWord("hairindex", &dwShapeIndex))
 				{
 					continue;

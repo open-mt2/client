@@ -14,12 +14,12 @@ const int c_iMaxLineCount = 5;
 
 CDynamicPool<CPythonChat::SChatLine> CPythonChat::SChatLine::ms_kPool;
 
-void CPythonChat::SetChatColor(UINT eType, UINT r, UINT g, UINT b)
+void CPythonChat::SetChatColor(uint32_t eType, uint32_t r, uint32_t g, uint32_t b)
 {
 	if (eType >= CHAT_TYPE_MAX_NUM)
 		return;
 
-	DWORD dwColor = (0xff000000) | (r << 16) | (g << 8) | (b);
+	uint32_t dwColor = (0xff000000) | (r << 16) | (g << 8) | (b);
 	m_akD3DXClrChat[eType] = D3DXCOLOR(dwColor);
 }
 
@@ -41,7 +41,7 @@ void CPythonChat::SChatLine::DestroySystem()
 	ms_kPool.Destroy();
 }
 
-void CPythonChat::SChatLine::SetColor(DWORD dwID, DWORD dwColor)
+void CPythonChat::SChatLine::SetColor(uint32_t dwID, uint32_t dwColor)
 {
 	assert(dwID < CHAT_LINE_COLOR_ARRAY_MAX_NUM);
 
@@ -51,13 +51,13 @@ void CPythonChat::SChatLine::SetColor(DWORD dwID, DWORD dwColor)
 	aColor[dwID] = dwColor;
 }
 
-void CPythonChat::SChatLine::SetColorAll(DWORD dwColor)
+void CPythonChat::SChatLine::SetColorAll(uint32_t dwColor)
 {
 	for (int i = 0; i < CHAT_LINE_COLOR_ARRAY_MAX_NUM; ++i)
 		aColor[i] = dwColor;
 }
 
-D3DXCOLOR& CPythonChat::SChatLine::GetColorRef(DWORD dwID)
+D3DXCOLOR& CPythonChat::SChatLine::GetColorRef(uint32_t dwID)
 {
 	assert(dwID < CHAT_LINE_COLOR_ARRAY_MAX_NUM);
 
@@ -82,13 +82,13 @@ CPythonChat::SChatLine::~SChatLine()
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-int CPythonChat::CreateChatSet(DWORD dwID)
+int CPythonChat::CreateChatSet(uint32_t dwID)
 {
 	m_ChatSetMap.insert(std::make_pair(dwID, TChatSet()));
 	return dwID;
 }
 
-void CPythonChat::UpdateViewMode(DWORD dwID)
+void CPythonChat::UpdateViewMode(uint32_t dwID)
 {
 	IAbstractApplication& rApp = IAbstractApplication::GetSingleton();
 
@@ -140,7 +140,7 @@ void CPythonChat::UpdateViewMode(DWORD dwID)
 	}
 }
 
-void CPythonChat::UpdateEditMode(DWORD dwID)
+void CPythonChat::UpdateEditMode(uint32_t dwID)
 {
 	TChatSet* pChatSet = GetChatSetPtr(dwID);
 	if (!pChatSet)
@@ -181,7 +181,7 @@ void CPythonChat::UpdateEditMode(DWORD dwID)
 	}
 }
 
-void CPythonChat::UpdateLogMode(DWORD dwID)
+void CPythonChat::UpdateLogMode(uint32_t dwID)
 {
 	TChatSet* pChatSet = GetChatSetPtr(dwID);
 	if (!pChatSet)
@@ -201,7 +201,7 @@ void CPythonChat::UpdateLogMode(DWORD dwID)
 	}
 }
 
-void CPythonChat::Update(DWORD dwID)
+void CPythonChat::Update(uint32_t dwID)
 {
 	TChatSet* pChatSet = GetChatSetPtr(dwID);
 	if (!pChatSet)
@@ -220,7 +220,7 @@ void CPythonChat::Update(DWORD dwID)
 			break;
 	}
 
-	DWORD dwcurTime = CTimer::Instance().GetCurrentMillisecond();
+	uint32_t dwcurTime = CTimer::Instance().GetCurrentMillisecond();
 	for (TWaitChatList::iterator itor = m_WaitChatList.begin(); itor != m_WaitChatList.end();)
 	{
 		TWaitChat& rWaitChat = *itor;
@@ -238,7 +238,7 @@ void CPythonChat::Update(DWORD dwID)
 	}
 }
 
-void CPythonChat::Render(DWORD dwID)
+void CPythonChat::Render(uint32_t dwID)
 {
 	TChatLineList* pLineList = GetChatLineListPtr(dwID);
 	if (!pLineList)
@@ -251,7 +251,7 @@ void CPythonChat::Render(DWORD dwID)
 	}
 }
 
-void CPythonChat::SetBoardState(DWORD dwID, int iState)
+void CPythonChat::SetBoardState(uint32_t dwID, int iState)
 {
 	TChatSet* pChatSet = GetChatSetPtr(dwID);
 	if (!pChatSet)
@@ -260,7 +260,7 @@ void CPythonChat::SetBoardState(DWORD dwID, int iState)
 	pChatSet->m_iBoardState = iState;
 	ArrangeShowingChat(dwID);
 }
-void CPythonChat::SetPosition(DWORD dwID, int ix, int iy)
+void CPythonChat::SetPosition(uint32_t dwID, int ix, int iy)
 {
 	TChatSet* pChatSet = GetChatSetPtr(dwID);
 	if (!pChatSet)
@@ -269,7 +269,7 @@ void CPythonChat::SetPosition(DWORD dwID, int ix, int iy)
 	pChatSet->m_ix = ix;
 	pChatSet->m_iy = iy;
 }
-void CPythonChat::SetHeight(DWORD dwID, int iHeight)
+void CPythonChat::SetHeight(uint32_t dwID, int iHeight)
 {
 	TChatSet* pChatSet = GetChatSetPtr(dwID);
 	if (!pChatSet)
@@ -277,7 +277,7 @@ void CPythonChat::SetHeight(DWORD dwID, int iHeight)
 
 	pChatSet->m_iHeight = iHeight;
 }
-void CPythonChat::SetStep(DWORD dwID, int iStep)
+void CPythonChat::SetStep(uint32_t dwID, int iStep)
 {
 	TChatSet* pChatSet = GetChatSetPtr(dwID);
 	if (!pChatSet)
@@ -285,7 +285,7 @@ void CPythonChat::SetStep(DWORD dwID, int iStep)
 
 	pChatSet->m_iStep = iStep;
 }
-void CPythonChat::ToggleChatMode(DWORD dwID, int iMode)
+void CPythonChat::ToggleChatMode(uint32_t dwID, int iMode)
 {
 	TChatSet* pChatSet = GetChatSetPtr(dwID);
 	if (!pChatSet)
@@ -295,7 +295,7 @@ void CPythonChat::ToggleChatMode(DWORD dwID, int iMode)
 	// 	Tracef("ToggleChatMode : %d\n", iMode);
 	ArrangeShowingChat(dwID);
 }
-void CPythonChat::EnableChatMode(DWORD dwID, int iMode)
+void CPythonChat::EnableChatMode(uint32_t dwID, int iMode)
 {
 	TChatSet* pChatSet = GetChatSetPtr(dwID);
 	if (!pChatSet)
@@ -305,7 +305,7 @@ void CPythonChat::EnableChatMode(DWORD dwID, int iMode)
 	// 	Tracef("EnableChatMode : %d\n", iMode);
 	ArrangeShowingChat(dwID);
 }
-void CPythonChat::DisableChatMode(DWORD dwID, int iMode)
+void CPythonChat::DisableChatMode(uint32_t dwID, int iMode)
 {
 	TChatSet* pChatSet = GetChatSetPtr(dwID);
 	if (!pChatSet)
@@ -315,7 +315,7 @@ void CPythonChat::DisableChatMode(DWORD dwID, int iMode)
 	// 	Tracef("DisableChatMode : %d\n", iMode);
 	ArrangeShowingChat(dwID);
 }
-void CPythonChat::SetEndPos(DWORD dwID, float fPos)
+void CPythonChat::SetEndPos(uint32_t dwID, float fPos)
 {
 	TChatSet* pChatSet = GetChatSetPtr(dwID);
 	if (!pChatSet)
@@ -330,7 +330,7 @@ void CPythonChat::SetEndPos(DWORD dwID, float fPos)
 	}
 }
 
-int CPythonChat::GetVisibleLineCount(DWORD dwID)
+int CPythonChat::GetVisibleLineCount(uint32_t dwID)
 {
 	TChatLineList* pLineList = GetChatLineListPtr(dwID);
 	if (!pLineList)
@@ -339,7 +339,7 @@ int CPythonChat::GetVisibleLineCount(DWORD dwID)
 	return pLineList->size();
 }
 
-int CPythonChat::GetEditableLineCount(DWORD dwID)
+int CPythonChat::GetEditableLineCount(uint32_t dwID)
 {
 	TChatSet* pChatSet = GetChatSetPtr(dwID);
 	if (!pChatSet)
@@ -348,14 +348,14 @@ int CPythonChat::GetEditableLineCount(DWORD dwID)
 	return pChatSet->m_iHeight / pChatSet->m_iStep + 1;
 }
 
-int CPythonChat::GetLineCount(DWORD dwID)
+int CPythonChat::GetLineCount(uint32_t dwID)
 {
 	TChatSet* pChatSet = GetChatSetPtr(dwID);
 	if (!pChatSet)
 		return 0;
 
 	int iCount = 0;
-	for (DWORD i = 0; i < m_ChatLineDeque.size(); ++i)
+	for (uint32_t i = 0; i < m_ChatLineDeque.size(); ++i)
 	{
 		if (!pChatSet->CheckMode(m_ChatLineDeque[i]->iType))
 			continue;
@@ -366,7 +366,7 @@ int CPythonChat::GetLineCount(DWORD dwID)
 	return iCount;
 }
 
-int CPythonChat::GetLineStep(DWORD dwID)
+int CPythonChat::GetLineStep(uint32_t dwID)
 {
 	TChatSet* pChatSet = GetChatSetPtr(dwID);
 	if (!pChatSet)
@@ -375,7 +375,7 @@ int CPythonChat::GetLineStep(DWORD dwID)
 	return pChatSet->m_iStep;
 }
 
-CPythonChat::TChatLineList* CPythonChat::GetChatLineListPtr(DWORD dwID)
+CPythonChat::TChatLineList* CPythonChat::GetChatLineListPtr(uint32_t dwID)
 {
 	TChatSetMap::iterator itor = m_ChatSetMap.find(dwID);
 	if (m_ChatSetMap.end() == itor)
@@ -385,7 +385,7 @@ CPythonChat::TChatLineList* CPythonChat::GetChatLineListPtr(DWORD dwID)
 	return &(rChatSet.m_ShowingChatLineList);
 }
 
-CPythonChat::TChatSet* CPythonChat::GetChatSetPtr(DWORD dwID)
+CPythonChat::TChatSet* CPythonChat::GetChatSetPtr(uint32_t dwID)
 {
 	TChatSetMap::iterator itor = m_ChatSetMap.find(dwID);
 	if (m_ChatSetMap.end() == itor)
@@ -395,7 +395,7 @@ CPythonChat::TChatSet* CPythonChat::GetChatSetPtr(DWORD dwID)
 	return &rChatSet;
 }
 
-void CPythonChat::ArrangeShowingChat(DWORD dwID)
+void CPythonChat::ArrangeShowingChat(uint32_t dwID)
 {
 	TChatSet* pChatSet = GetChatSetPtr(dwID);
 	if (!pChatSet)
@@ -497,7 +497,7 @@ void CPythonChat::AppendChatWithDelay(int iType, const char* c_szChat, int iDela
 	m_WaitChatList.push_back(WaitChat);
 }
 
-DWORD CPythonChat::GetChatColor(int iType)
+uint32_t CPythonChat::GetChatColor(int iType)
 {
 	if (iType < CHAT_TYPE_MAX_NUM)
 	{
@@ -522,7 +522,7 @@ void CPythonChat::IgnoreCharacter(const char* c_szName)
 	}
 }
 
-BOOL CPythonChat::IsIgnoreCharacter(const char* c_szName)
+int32_t CPythonChat::IsIgnoreCharacter(const char* c_szName)
 {
 	TIgnoreCharacterSet::iterator itor = m_IgnoreCharacterSet.find(c_szName);
 
@@ -569,7 +569,7 @@ void CPythonChat::ClearWhisper(const char* c_szName)
 	}
 }
 
-BOOL CPythonChat::GetWhisper(const char* c_szName, CWhisper** ppWhisper)
+int32_t CPythonChat::GetWhisper(const char* c_szName, CWhisper** ppWhisper)
 {
 	TWhisperMap::iterator itor = m_WhisperMap.find(c_szName);
 
@@ -767,14 +767,14 @@ void CWhisper::Render(float fx, float fy)
 		iStartLine = iLineCount - 1;
 	}
 
-	RECT Rect = {(LONG)fx, (LONG)fy, (LONG)(fx + m_fWidth), (LONG)(fy + m_fHeight)};
+	RECT Rect = {(int32_t)fx, (int32_t)fy, (int32_t)(fx + m_fWidth), (int32_t)(fy + m_fHeight)};
 
 	for (int i = iStartLine; i >= 0; --i)
 	{
 		assert(i >= 0 && i < int(m_ChatLineDeque.size()));
 		TChatLine* pChatLine = m_ChatLineDeque[i];
 
-		WORD wLineCount = pChatLine->Instance.GetTextLineCount();
+		uint16_t wLineCount = pChatLine->Instance.GetTextLineCount();
 		fHeight -= wLineCount * m_fLineStep;
 
 		pChatLine->Instance.SetPosition(fx, fHeight);

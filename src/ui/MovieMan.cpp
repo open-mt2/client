@@ -12,8 +12,8 @@
 // run time and keep the SDK signature at the call site (T1.9).
 namespace
 {
-	typedef HRESULT(WINAPI* PFN_DirectDrawCreate)(GUID*, LPDIRECTDRAW*, IUnknown*);
-	HRESULT DirectDrawCreate_Load(GUID* guid, LPDIRECTDRAW* out, IUnknown* outer)
+	typedef int32_t(WINAPI* PFN_DirectDrawCreate)(GUID*, LPDIRECTDRAW*, IUnknown*);
+	int32_t DirectDrawCreate_Load(GUID* guid, LPDIRECTDRAW* out, IUnknown* outer)
 	{
 		static PFN_DirectDrawCreate fn = nullptr;
 		static bool tried = false;
@@ -35,7 +35,7 @@ namespace
 void CMovieMan::ClearToBlack() {}
 void CMovieMan::PlayLogo(const char* pcszName) {}
 void CMovieMan::PlayIntro() {}
-BOOL CMovieMan::PlayTutorial(LONG nIdx) { return TRUE; }
+int32_t CMovieMan::PlayTutorial(int32_t nIdx) { return TRUE; }
 
 #else
 
@@ -69,7 +69,7 @@ void CMovieMan::ClearToBlack()
 	EndPaint(window, &ps);
 }
 
-void CMovieMan::FillRect(RECT& fillRect, DWORD fillColor)
+void CMovieMan::FillRect(RECT& fillRect, uint32_t fillColor)
 {
 	assert(m_pPrimarySurface);
 
@@ -89,7 +89,7 @@ void CMovieMan::FillRect(RECT& fillRect, DWORD fillColor)
 	}
 }
 
-inline void CMovieMan::GDIFillRect(RECT& fillRect, DWORD fillColor)
+inline void CMovieMan::GDIFillRect(RECT& fillRect, uint32_t fillColor)
 {
 	HBRUSH fillBrush = CreateSolidBrush(
 		RGB((fillColor >> 16) & 255, (fillColor >> 8) & 255, fillColor & 255));
@@ -128,9 +128,9 @@ void CMovieMan::PlayIntro()
 	PlayMovie(INTRO_FILE, MOVIEMAN_SKIPPABLE_YES, MOVIEMAN_POSTEFFECT_FADEOUT, 0xFFFFFF);
 }
 
-BOOL CMovieMan::PlayTutorial(LONG nIdx)
+int32_t CMovieMan::PlayTutorial(int32_t nIdx)
 {
-	BOOL bRet = FALSE;
+	int32_t bRet = FALSE;
 	ClearToBlack();
 	switch (nIdx)
 	{
@@ -147,7 +147,7 @@ BOOL CMovieMan::PlayTutorial(LONG nIdx)
 	return bRet;
 }
 
-BOOL CMovieMan::PlayMovie(const char* cpFileName, const bool bSkipAllowed, const int nPostEffectID, const DWORD dwPostEffectData)
+int32_t CMovieMan::PlayMovie(const char* cpFileName, const bool bSkipAllowed, const int nPostEffectID, const uint32_t dwPostEffectData)
 {
 	HWND hWnd = CPythonApplication::Instance().GetWindowHandle();
 
@@ -175,7 +175,7 @@ BOOL CMovieMan::PlayMovie(const char* cpFileName, const bool bSkipAllowed, const
 	m_usingRGB32 = (ddsd.ddpfPixelFormat.dwRGBBitCount == 32);
 
 	IDirectDrawClipper* pDDClipper = NULL;
-	HRESULT hr = pDD->CreateClipper(0, &pDDClipper, NULL);
+	int32_t hr = pDD->CreateClipper(0, &pDDClipper, NULL);
 	if (SUCCEEDED(hr))
 	{
 		pDDClipper->SetHWnd(0, hWnd);
@@ -187,7 +187,7 @@ BOOL CMovieMan::PlayMovie(const char* cpFileName, const bool bSkipAllowed, const
 	if (SUCCEEDED(hr))
 	{
 		IMediaStream* pPrimaryVidStream = NULL;
-		HRESULT hr = pMMStream->GetMediaStream(MSPID_PrimaryVideo, &pPrimaryVidStream);
+		int32_t hr = pMMStream->GetMediaStream(MSPID_PrimaryVideo, &pPrimaryVidStream);
 		if (SUCCEEDED(hr))
 		{
 			IDirectDrawMediaStream* pDDStream = NULL;
@@ -334,12 +334,12 @@ void CMovieMan::CalcBackgroundRect(const RECT& movieRect, RECT& upperRect, RECT&
 //----------------------------------------------------------------------------------------------------
 // 특정 서피스에 Blocking으로 동영상을 그린다
 //
-HRESULT CMovieMan::RenderStreamToSurface(IDirectDrawSurface* pSurface, IDirectDrawMediaStream* pDDStream, IMultiMediaStream* pMMStream, bool bSkipAllowed, int nPostEffectID, DWORD dwPostEffectData)
+int32_t CMovieMan::RenderStreamToSurface(IDirectDrawSurface* pSurface, IDirectDrawMediaStream* pDDStream, IMultiMediaStream* pMMStream, bool bSkipAllowed, int nPostEffectID, uint32_t dwPostEffectData)
 {
 #define KEY_DOWN(vk) (GetAsyncKeyState(vk) & 0x8000)
 
 	IDirectDrawStreamSample* pSample = NULL;
-	HRESULT hr = pDDStream->CreateSample(pSurface, NULL, 0, &pSample);
+	int32_t hr = pDDStream->CreateSample(pSurface, NULL, 0, &pSample);
 	if (SUCCEEDED(hr))
 	{
 		// 최초 한번 검은색으로 배경을 칠해준다
@@ -382,25 +382,25 @@ HRESULT CMovieMan::RenderStreamToSurface(IDirectDrawSurface* pSurface, IDirectDr
 	return hr;
 }
 
-HRESULT CMovieMan::RenderFileToMMStream(const char* cpFilename, IMultiMediaStream** ppMMStream, IDirectDraw* pDD)
+int32_t CMovieMan::RenderFileToMMStream(const char* cpFilename, IMultiMediaStream** ppMMStream, IDirectDraw* pDD)
 {
 	IAMMultiMediaStream* pAMStream;
-	HRESULT hr = CoCreateInstance(CLSID_AMMultiMediaStream, NULL, CLSCTX_INPROC_SERVER, IID_IAMMultiMediaStream, (void**)&pAMStream);
+	int32_t hr = CoCreateInstance(CLSID_AMMultiMediaStream, NULL, CLSCTX_INPROC_SERVER, IID_IAMMultiMediaStream, (void**)&pAMStream);
 	if (FAILED(hr))
 	{
 		return hr;
 	}
 
-	WCHAR wPath[MAX_PATH + 1];
+	wchar_t wPath[MAX_PATH + 1];
 	MultiByteToWideChar(CP_ACP, 0, cpFilename, -1, wPath, MAX_PATH + 1);
 	//
-	WCHAR wsDir[MAX_PATH + 1];
+	wchar_t wsDir[MAX_PATH + 1];
 	::memset(wsDir, 0, sizeof(wsDir));
 	::GetCurrentDirectoryW(MAX_PATH, wsDir);
-	::wcsncat(wsDir, L"\\", sizeof(WCHAR) * 1);
-	::wcsncat(wsDir, wPath, sizeof(WCHAR) * ::wcsnlen(wPath, MAX_PATH));
+	::wcsncat(wsDir, L"\\", sizeof(wchar_t) * 1);
+	::wcsncat(wsDir, wPath, sizeof(wchar_t) * ::wcsnlen(wPath, MAX_PATH));
 	::memset(wPath, 0, sizeof(wPath));
-	::wcsncpy(wPath, wsDir, sizeof(WCHAR) * ::wcsnlen(wsDir, MAX_PATH));
+	::wcsncpy(wPath, wsDir, sizeof(wchar_t) * ::wcsnlen(wsDir, MAX_PATH));
 	//
 
 	pAMStream->Initialize(STREAMTYPE_READ, AMMSF_NOGRAPHTHREAD, NULL);
@@ -443,19 +443,19 @@ HRESULT CMovieMan::RenderFileToMMStream(const char* cpFilename, IMultiMediaStrea
 //----------------------------------------------------------------------------------------------------
 // 특정색으로 화면이 밝아지거나 어두워짐
 //
-HRESULT CMovieMan::RenderPostEffectFadeOut(IDirectDrawSurface* pSurface, int fadeOutDuration, DWORD fadeOutColor)
+int32_t CMovieMan::RenderPostEffectFadeOut(IDirectDrawSurface* pSurface, int fadeOutDuration, uint32_t fadeOutColor)
 {
 	// Lock 걸기 위해 초기화
 	DDSURFACEDESC lockedSurfaceDesc;
 
 	int* pCopiedSrcSurBuf = NULL;
-	LONG fadeBegin = GetTickCount();
+	int32_t fadeBegin = GetTickCount();
 	float fadeProgress = 0.0;
-	while ((fadeProgress = ((float)((LONG)GetTickCount()) - fadeBegin) / fadeOutDuration) < 1.0)
+	while ((fadeProgress = ((float)((int32_t)GetTickCount()) - fadeBegin) / fadeOutDuration) < 1.0)
 	{
 		ZeroMemory(&lockedSurfaceDesc, sizeof(lockedSurfaceDesc));
 		lockedSurfaceDesc.dwSize = sizeof(lockedSurfaceDesc);
-		HRESULT hr = pSurface->Lock(NULL, &lockedSurfaceDesc, DDLOCK_WAIT | DDLOCK_NOSYSLOCK | DDLOCK_READONLY, NULL);
+		int32_t hr = pSurface->Lock(NULL, &lockedSurfaceDesc, DDLOCK_WAIT | DDLOCK_NOSYSLOCK | DDLOCK_READONLY, NULL);
 		if (FAILED(hr))
 		{
 			return hr;
@@ -464,12 +464,12 @@ HRESULT CMovieMan::RenderPostEffectFadeOut(IDirectDrawSurface* pSurface, int fad
 		// 최초 1회에 서피스 복사하고 복사본에 FadeOut 처리한다
 		if (!pCopiedSrcSurBuf)
 		{
-			if (!(pCopiedSrcSurBuf = (int*)malloc((LONG)lockedSurfaceDesc.lPitch * m_movieHeight)))
+			if (!(pCopiedSrcSurBuf = (int*)malloc((int32_t)lockedSurfaceDesc.lPitch * m_movieHeight)))
 			{
 				pSurface->Unlock(lockedSurfaceDesc.lpSurface);
 				return E_OUTOFMEMORY;
 			}
-			CopyMemory(pCopiedSrcSurBuf, lockedSurfaceDesc.lpSurface, (LONG)lockedSurfaceDesc.lPitch * m_movieHeight);
+			CopyMemory(pCopiedSrcSurBuf, lockedSurfaceDesc.lpSurface, (int32_t)lockedSurfaceDesc.lPitch * m_movieHeight);
 		}
 
 		// 픽셀 플랏팅(32비트)
@@ -483,7 +483,7 @@ HRESULT CMovieMan::RenderPostEffectFadeOut(IDirectDrawSurface* pSurface, int fad
 		{
 			for (int x = 0; x < m_movieWidth; ++x)
 			{
-				DWORD srcPixel = *pSrcSurfaceBuf;
+				uint32_t srcPixel = *pSrcSurfaceBuf;
 				*pDestSurfaceBuf = RGB(
 					(srcPixel & 255) * (1 - fadeProgress) + fadeOutColorBlue,
 					((srcPixel >> 8) & 255) * (1 - fadeProgress) + fadeOutColorGreen,
@@ -531,8 +531,8 @@ HRESULT CMovieMan::RenderPostEffectFadeOut(IDirectDrawSurface* pSurface, int fad
 //----------------------------------------------------------------------------------------------------
 // MPEG-1 비디오 파일을 외부 코덱 간섭없이 렌더링하는 함수
 //
-HRESULT CMovieMan::BuildFilterGraphManually(
-	WCHAR* wpFilename,
+int32_t CMovieMan::BuildFilterGraphManually(
+	wchar_t* wpFilename,
 	IAMMultiMediaStream* pAMStream,
 	const GUID FAR clsidSplitter,
 	const GUID FAR clsidVideoCodec,
@@ -544,7 +544,7 @@ HRESULT CMovieMan::BuildFilterGraphManually(
 	assert(pGraphBuilder);
 
 	// #ifdef _DEBUG
-	//	DWORD dwRegister;
+	//	uint32_t dwRegister;
 	//	AddToRot(pGraphBuilder, &dwRegister);
 	// #endif
 
@@ -562,7 +562,7 @@ HRESULT CMovieMan::BuildFilterGraphManually(
 	if (!pVideoFilter && IsEqualGUID(clsidVideoCodec, CLSID_MP4VideoCodec))
 	{
 		// Create the DMO Wrapper filter.
-		HRESULT hr = CoCreateInstance(CLSID_DMOWrapperFilter, NULL, CLSCTX_INPROC, IID_IBaseFilter, (void**)&pVideoFilter);
+		int32_t hr = CoCreateInstance(CLSID_DMOWrapperFilter, NULL, CLSCTX_INPROC, IID_IBaseFilter, (void**)&pVideoFilter);
 		if (SUCCEEDED(hr))
 		{
 			IDMOWrapperFilter* pWrap;
@@ -595,7 +595,7 @@ HRESULT CMovieMan::BuildFilterGraphManually(
 	pSplitterFilter->EnumPins(&pEnumPins);
 	pEnumPins->Next(1, &pInPin, NULL);
 	pEnumPins->Release();
-	HRESULT hr = pGraphBuilder->Connect(pOutPin, pInPin);
+	int32_t hr = pGraphBuilder->Connect(pOutPin, pInPin);
 	pInPin->Release();
 	pOutPin->Release();
 	if (SUCCEEDED(hr))
@@ -673,7 +673,7 @@ HRESULT CMovieMan::BuildFilterGraphManually(
 }
 
 // #ifdef _DEBUG
-// HRESULT	CMovieMan::AddToRot(IGraphBuilder* pGraphBuilder, DWORD *pdwRegister)
+// int32_t	CMovieMan::AddToRot(IGraphBuilder* pGraphBuilder, uint32_t *pdwRegister)
 //{
 //	assert(pGraphBuilder);
 //
@@ -684,8 +684,8 @@ HRESULT CMovieMan::BuildFilterGraphManually(
 //	}
 //
 //	ZString monikerName;
-//	monikerName.Format(_T("FilterGraph %08x pid %08x"), (DWORD_PTR)pGraphBuilder, GetCurrentProcessId());
-//	HRESULT hr = CreateItemMoniker(L"!", monikerName, &pMoniker);
+//	monikerName.Format(_T("FilterGraph %08x pid %08x"), (uintptr_t)pGraphBuilder, GetCurrentProcessId());
+//	int32_t hr = CreateItemMoniker(L"!", monikerName, &pMoniker);
 //	if (SUCCEEDED(hr)) {
 //		hr = pROT->Register(ROTFLAGS_REGISTRATIONKEEPSALIVE, pGraphBuilder,
 //			pMoniker, pdwRegister);
@@ -695,7 +695,7 @@ HRESULT CMovieMan::BuildFilterGraphManually(
 //	return hr;
 // }
 //
-// void CMovieMan::RemoveFromRot(DWORD pdwRegister)
+// void CMovieMan::RemoveFromRot(uint32_t pdwRegister)
 //{
 //	IRunningObjectTable *pROT;
 //	if (SUCCEEDED(GetRunningObjectTable(0, &pROT))) {

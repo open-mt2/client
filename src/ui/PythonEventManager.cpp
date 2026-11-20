@@ -211,9 +211,9 @@ void CPythonEventManager::__ClearEventSetp(TEventSet* pEventSet)
 	m_EventSetPool.Free(pEventSet);
 }
 
-DWORD CPythonEventManager::GetEmptyEventSetSlot()
+uint32_t CPythonEventManager::GetEmptyEventSetSlot()
 {
-	for (DWORD i = 0; i < m_EventSetVector.size(); ++i)
+	for (uint32_t i = 0; i < m_EventSetVector.size(); ++i)
 	{
 		if (NULL == m_EventSetVector[i])
 		{
@@ -765,7 +765,7 @@ void CPythonEventManager::ProcessEventSet(TEventSet* pEventSet)
 		}
 		case EVENT_TYPE_END_CONFIRM_WAIT:
 		{
-			for (DWORD i = 0; i < m_EventSetVector.size(); ++i)
+			for (uint32_t i = 0; i < m_EventSetVector.size(); ++i)
 			{
 				if (NULL == m_EventSetVector[i])
 					continue;
@@ -910,7 +910,7 @@ void CPythonEventManager::SetVisibleStartLine(int iIndex, int iStartLine)
 
 	TEventSet* pEventSet = m_EventSetVector[iIndex];
 
-	if (DWORD(iStartLine) > pEventSet->ScriptTextLineList.size())
+	if (uint32_t(iStartLine) > pEventSet->ScriptTextLineList.size())
 		return;
 
 	pEventSet->iVisibleStartLine = iStartLine;
@@ -967,7 +967,7 @@ void CPythonEventManager::ClearLine(TEventSet* pEventSet)
 	__InsertLine(*pEventSet);
 }
 
-void CPythonEventManager::__InsertLine(TEventSet& rEventSet, BOOL isCenter, int iX_pos)
+void CPythonEventManager::__InsertLine(TEventSet& rEventSet, int32_t isCenter, int iX_pos)
 {
 	if (rEventSet.pCurrentTextLine)
 	{
@@ -1115,7 +1115,7 @@ bool CPythonEventManager::CheckEventSetIndex(int iIndex)
 	if (iIndex < 0)
 		return false;
 
-	if ((DWORD)iIndex >= m_EventSetVector.size())
+	if ((uint32_t)iIndex >= m_EventSetVector.size())
 		return false;
 
 	return true;

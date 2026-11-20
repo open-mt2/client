@@ -3,39 +3,39 @@
 #include <Neoeter/Platform/Base/tea.h>
 
 // CHINA_CRYPT_KEY
-DWORD g_adwEncryptKey[4];
-DWORD g_adwDecryptKey[4];
+uint32_t g_adwEncryptKey[4];
+uint32_t g_adwDecryptKey[4];
 
 #include <Client/UI/AccountConnector.h>
 
-inline const BYTE* GetKey_20050304Myevan()
+inline const uint8_t* GetKey_20050304Myevan()
 {
-	volatile static DWORD s_adwKey[1938];
+	volatile static uint32_t s_adwKey[1938];
 
-	volatile DWORD seed = 1491971513;
-	for (UINT i = 0; i < BYTE(seed); i++)
+	volatile uint32_t seed = 1491971513;
+	for (uint32_t i = 0; i < uint8_t(seed); i++)
 	{
 		seed ^= 2148941891;
 		seed += 3592385981;
 		s_adwKey[i] = seed;
 	}
 
-	return (const BYTE*)s_adwKey;
+	return (const uint8_t*)s_adwKey;
 }
 
 // #include <eterCrypt.h>
 
 void CAccountConnector::__BuildClientKey_20050304Myevan()
 {
-	const BYTE* c_pszKey = GetKey_20050304Myevan();
+	const uint8_t* c_pszKey = GetKey_20050304Myevan();
 	memcpy(g_adwEncryptKey, c_pszKey + 157, 16);
 
-	for (DWORD i = 0; i < 4; ++i)
+	for (uint32_t i = 0; i < 4; ++i)
 		g_adwEncryptKey[i] = random();
 
-	// LLP64: DWORD is unsigned long on Windows x64, TEA takes uint32_t.
+	// LLP64: uint32_t is unsigned long on Windows x64, TEA takes uint32_t.
 	tea_encrypt(reinterpret_cast<uint32_t*>(g_adwDecryptKey), reinterpret_cast<const uint32_t*>(g_adwEncryptKey), reinterpret_cast<const uint32_t*>(c_pszKey + 37), 16);
-	//	TEA_Encrypt((DWORD *) g_adwDecryptKey, (const DWORD *) g_adwEncryptKey, (const DWORD *) (c_pszKey+37), 16);
+	//	TEA_Encrypt((uint32_t *) g_adwDecryptKey, (const uint32_t *) g_adwEncryptKey, (const uint32_t *) (c_pszKey+37), 16);
 }
 // END_OF_CHINA_CRYPT_KEY
 

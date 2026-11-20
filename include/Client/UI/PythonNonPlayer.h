@@ -50,72 +50,72 @@ class CPythonNonPlayer : public CSingleton<CPythonNonPlayer>
 #pragma pack(1)
 		typedef struct SMobSkillLevel
 		{
-				DWORD dwVnum;
-				BYTE bLevel;
+				uint32_t dwVnum;
+				uint8_t bLevel;
 		} TMobSkillLevel;
 
 		typedef struct SMobTable
 		{
-				DWORD dwVnum;
+				uint32_t dwVnum;
 				char szName[CHARACTER_NAME_MAX_LEN + 1];
 				char szLocaleName[CHARACTER_NAME_MAX_LEN + 1];
 
-				BYTE bType;		  // Monster, NPC
-				BYTE bRank;		  // PAWN, KNIGHT, KING
-				BYTE bBattleType; // MELEE, etc..
-				BYTE bLevel;	  // Level
-				BYTE bSize;
+				uint8_t bType;		 // Monster, NPC
+				uint8_t bRank;		 // PAWN, KNIGHT, KING
+				uint8_t bBattleType; // MELEE, etc..
+				uint8_t bLevel;		 // Level
+				uint8_t bSize;
 
-				DWORD dwGoldMin;
-				DWORD dwGoldMax;
-				DWORD dwExp;
-				DWORD dwMaxHP;
-				BYTE bRegenCycle;
-				BYTE bRegenPercent;
-				WORD wDef;
+				uint32_t dwGoldMin;
+				uint32_t dwGoldMax;
+				uint32_t dwExp;
+				uint32_t dwMaxHP;
+				uint8_t bRegenCycle;
+				uint8_t bRegenPercent;
+				uint16_t wDef;
 
-				DWORD dwAIFlag;
-				DWORD dwRaceFlag;
-				DWORD dwImmuneFlag;
+				uint32_t dwAIFlag;
+				uint32_t dwRaceFlag;
+				uint32_t dwImmuneFlag;
 
-				BYTE bStr, bDex, bCon, bInt;
-				DWORD dwDamageRange[2];
+				uint8_t bStr, bDex, bCon, bInt;
+				uint32_t dwDamageRange[2];
 
 				short sAttackSpeed;
 				short sMovingSpeed;
-				BYTE bAggresiveHPPct;
-				WORD wAggressiveSight;
-				WORD wAttackRange;
+				uint8_t bAggresiveHPPct;
+				uint16_t wAggressiveSight;
+				uint16_t wAttackRange;
 
 				char cEnchants[MOB_ENCHANTS_MAX_NUM];
 				char cResists[MOB_RESISTS_MAX_NUM];
 
-				DWORD dwResurrectionVnum;
-				DWORD dwDropItemVnum;
+				uint32_t dwResurrectionVnum;
+				uint32_t dwDropItemVnum;
 
-				BYTE bMountCapacity;
-				BYTE bOnClickType;
+				uint8_t bMountCapacity;
+				uint8_t bOnClickType;
 
-				BYTE bEmpire;
+				uint8_t bEmpire;
 				char szFolder[64 + 1];
 				float fDamMultiply;
-				DWORD dwSummonVnum;
-				DWORD dwDrainSP;
-				DWORD dwMonsterColor;
-				DWORD dwPolymorphItemVnum;
+				uint32_t dwSummonVnum;
+				uint32_t dwDrainSP;
+				uint32_t dwMonsterColor;
+				uint32_t dwPolymorphItemVnum;
 
 				TMobSkillLevel Skills[MOB_SKILL_MAX_NUM];
 
-				BYTE bBerserkPoint;
-				BYTE bStoneSkinPoint;
-				BYTE bGodSpeedPoint;
-				BYTE bDeathBlowPoint;
-				BYTE bRevivePoint;
+				uint8_t bBerserkPoint;
+				uint8_t bStoneSkinPoint;
+				uint8_t bGodSpeedPoint;
+				uint8_t bDeathBlowPoint;
+				uint8_t bRevivePoint;
 		} TMobTable;
 #pragma pack(pop)
 
 		typedef std::list<TMobTable*> TMobTableList;
-		typedef std::map<DWORD, TMobTable*> TNonPlayerDataMap;
+		typedef std::map<uint32_t, TMobTable*> TNonPlayerDataMap;
 
 	public:
 		CPythonNonPlayer(void);
@@ -126,13 +126,13 @@ class CPythonNonPlayer : public CSingleton<CPythonNonPlayer>
 
 		bool LoadNonPlayerData(const char* c_szFileName);
 
-		const TMobTable* GetTable(DWORD dwVnum);
-		bool GetName(DWORD dwVnum, const char** c_pszName);
-		bool GetInstanceType(DWORD dwVnum, BYTE* pbType);
-		BYTE GetEventType(DWORD dwVnum);
-		BYTE GetEventTypeByVID(DWORD dwVID);
-		DWORD GetMonsterColor(DWORD dwVnum);
-		const char* GetMonsterName(DWORD dwVnum);
+		const TMobTable* GetTable(uint32_t dwVnum);
+		bool GetName(uint32_t dwVnum, const char** c_pszName);
+		bool GetInstanceType(uint32_t dwVnum, uint8_t* pbType);
+		uint8_t GetEventType(uint32_t dwVnum);
+		uint8_t GetEventTypeByVID(uint32_t dwVID);
+		uint32_t GetMonsterColor(uint32_t dwVnum);
+		const char* GetMonsterName(uint32_t dwVnum);
 
 		// Function for outer
 		void GetMatchableMobList(int iLevel, int iInterval, TMobTableList* pMobTableList);

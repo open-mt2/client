@@ -103,7 +103,7 @@ namespace
 		{HEADER_GC_SAFEBOX_MONEY_CHANGE, sizeof(TPacketGCSafeboxMoneyChange), false, true},
 		{HEADER_GC_FISHING, sizeof(TPacketGCFishing), false, true},
 		{HEADER_GC_DUNGEON, sizeof(TPacketGCDungeon), true, false},
-		// Set(HEADER_GC_SLOW_TIMER, CNetworkPacketHeaderMap::TPacketType(sizeof(BYTE), STATIC_SIZE_PACKET));, false},
+		// Set(HEADER_GC_SLOW_TIMER, CNetworkPacketHeaderMap::TPacketType(sizeof(uint8_t), STATIC_SIZE_PACKET));, false},
 		{HEADER_GC_TIME, sizeof(TPacketGCTime), false, true},
 		{HEADER_GC_WALK_MODE, sizeof(TPacketGCWalkMode), false, true},
 		{HEADER_GC_CHANGE_SKILL_GROUP, sizeof(TPacketGCChangeSkillGroup), false, true},

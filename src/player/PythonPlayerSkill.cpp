@@ -12,13 +12,13 @@ void CPythonPlayer::ClearAffects()
 	PyCallClassMemberFunc(m_ppyGameWindow, "ClearAffects", Py_BuildValue("()"));
 }
 
-void CPythonPlayer::SetAffect(UINT uAffect)
+void CPythonPlayer::SetAffect(uint32_t uAffect)
 {
 	PyCallClassMemberFunc(m_ppyGameWindow, "SetAffect", Py_BuildValue("(i)", uAffect));
 
 	/////
 
-	DWORD dwSkillIndex;
+	uint32_t dwSkillIndex;
 	if (!AffectIndexToSkillIndex(uAffect, &dwSkillIndex))
 		return;
 
@@ -29,19 +29,19 @@ void CPythonPlayer::SetAffect(UINT uAffect)
 	if (!pSkillData->IsToggleSkill())
 		return;
 
-	DWORD dwSkillSlotIndex;
+	uint32_t dwSkillSlotIndex;
 	if (!GetSkillSlotIndex(dwSkillIndex, &dwSkillSlotIndex))
 		return;
 
 	__ActivateSkillSlot(dwSkillSlotIndex);
 }
 
-void CPythonPlayer::ResetAffect(UINT uAffect)
+void CPythonPlayer::ResetAffect(uint32_t uAffect)
 {
 	// 2004.07.17.myevan.스킬 아닌 이펙트가 안 사라지는 문제
 	PyCallClassMemberFunc(m_ppyGameWindow, "ResetAffect", Py_BuildValue("(i)", uAffect));
 
-	DWORD dwSkillIndex;
+	uint32_t dwSkillIndex;
 	if (!AffectIndexToSkillIndex(uAffect, &dwSkillIndex))
 		return;
 
@@ -52,14 +52,14 @@ void CPythonPlayer::ResetAffect(UINT uAffect)
 	if (!pSkillData->IsToggleSkill())
 		return;
 
-	DWORD dwSkillSlotIndex;
+	uint32_t dwSkillSlotIndex;
 	if (!GetSkillSlotIndex(dwSkillIndex, &dwSkillSlotIndex))
 		return;
 
 	__DeactivateSkillSlot(dwSkillSlotIndex);
 }
 
-bool CPythonPlayer::FindSkillSlotIndexBySkillIndex(DWORD dwSkillIndex, DWORD* pdwSkillSlotIndex)
+bool CPythonPlayer::FindSkillSlotIndexBySkillIndex(uint32_t dwSkillIndex, uint32_t* pdwSkillSlotIndex)
 {
 	for (int i = 0; i < SKILL_MAX_NUM; ++i)
 	{
@@ -74,7 +74,7 @@ bool CPythonPlayer::FindSkillSlotIndexBySkillIndex(DWORD dwSkillIndex, DWORD* pd
 	return false;
 }
 
-void CPythonPlayer::ChangeCurrentSkillNumberOnly(DWORD dwSlotIndex)
+void CPythonPlayer::ChangeCurrentSkillNumberOnly(uint32_t dwSlotIndex)
 {
 	if (dwSlotIndex >= SKILL_MAX_NUM)
 		return;
@@ -105,7 +105,7 @@ void CPythonPlayer::ChangeCurrentSkillNumberOnly(DWORD dwSlotIndex)
 	}
 }
 
-void CPythonPlayer::ClickSkillSlot(DWORD dwSlotIndex)
+void CPythonPlayer::ClickSkillSlot(uint32_t dwSlotIndex)
 {
 	if (dwSlotIndex >= SKILL_MAX_NUM)
 		return;
@@ -163,7 +163,7 @@ void CPythonPlayer::ClickSkillSlot(DWORD dwSlotIndex)
 	}
 }
 
-bool CPythonPlayer::__CheckSkillUsable(DWORD dwSlotIndex)
+bool CPythonPlayer::__CheckSkillUsable(uint32_t dwSlotIndex)
 {
 	CInstanceBase* pkInstMain = NEW_GetMainActorPtr();
 	if (!pkInstMain)
@@ -319,7 +319,7 @@ bool CPythonPlayer::__CheckShortArrow(TSkillInstance& rkSkillInst, CPythonSkill:
 
 bool CPythonPlayer::__CheckShortMana(TSkillInstance& rkSkillInst, CPythonSkill::TSkillData& rkSkillData)
 {
-	extern const DWORD c_iSkillIndex_Summon;
+	extern const uint32_t c_iSkillIndex_Summon;
 	if (c_iSkillIndex_Summon == rkSkillInst.dwIndex)
 		return false;
 
@@ -356,14 +356,14 @@ bool CPythonPlayer::__CheckShortLife(TSkillInstance& rkSkillInst, CPythonSkill::
 	if (!rkSkillData.IsUseHPSkill())
 		return false;
 
-	DWORD dwNeedHP = rkSkillData.GetNeedSP(rkSkillInst.fcurEfficientPercentage);
+	uint32_t dwNeedHP = rkSkillData.GetNeedSP(rkSkillInst.fcurEfficientPercentage);
 	if (dwNeedHP <= GetStatus(POINT_HP))
 		return false;
 
 	return true;
 }
 
-bool CPythonPlayer::__CheckRestSkillCoolTime(DWORD dwSlotIndex)
+bool CPythonPlayer::__CheckRestSkillCoolTime(uint32_t dwSlotIndex)
 {
 	if (!m_sysIsCoolTime)
 		return false;
@@ -388,14 +388,14 @@ void CPythonPlayer::__UseCurrentSkill()
 	__UseSkill(m_dwcurSkillSlotIndex);
 }
 
-DWORD CPythonPlayer::__GetSkillTargetRange(CPythonSkill::TSkillData& rkSkillData)
+uint32_t CPythonPlayer::__GetSkillTargetRange(CPythonSkill::TSkillData& rkSkillData)
 {
 	return rkSkillData.GetTargetRange() + GetStatus(POINT_BOW_DISTANCE) * 100;
 }
 
-bool CPythonPlayer::__ProcessEnemySkillTargetRange(CInstanceBase& rkInstMain, CInstanceBase& rkInstTarget, CPythonSkill::TSkillData& rkSkillData, DWORD dwSkillSlotIndex)
+bool CPythonPlayer::__ProcessEnemySkillTargetRange(CInstanceBase& rkInstMain, CInstanceBase& rkInstTarget, CPythonSkill::TSkillData& rkSkillData, uint32_t dwSkillSlotIndex)
 {
-	DWORD dwSkillTargetRange = __GetSkillTargetRange(rkSkillData);
+	uint32_t dwSkillTargetRange = __GetSkillTargetRange(rkSkillData);
 	float fSkillTargetRange = float(dwSkillTargetRange);
 	if (fSkillTargetRange <= 0.0f)
 		return true;
@@ -456,7 +456,7 @@ bool CPythonPlayer::__CanUseSkill()
 	return pkInstMain->CanUseSkill();
 }
 
-bool CPythonPlayer::__UseSkill(DWORD dwSlotIndex)
+bool CPythonPlayer::__UseSkill(uint32_t dwSlotIndex)
 {
 	// PrivateShop
 	if (IsOpenPrivateShop())
@@ -554,7 +554,7 @@ bool CPythonPlayer::__UseSkill(DWORD dwSlotIndex)
 				}
 				else if (!pkInstMain->IsAttackableInstance(*pkInstTarget) && pkInstTarget->IsPC())
 				{
-					DWORD dwSkillRange = __GetSkillTargetRange(*pSkillData);
+					uint32_t dwSkillRange = __GetSkillTargetRange(*pSkillData);
 
 					if (dwSkillRange > 0)
 					{
@@ -652,7 +652,7 @@ bool CPythonPlayer::__UseSkill(DWORD dwSlotIndex)
 
 	if (pSkillData->CanChangeDirection())
 	{
-		DWORD dwPickedActorID;
+		uint32_t dwPickedActorID;
 		TPixelPosition kPPosPickedGround;
 
 		if (pkInstTarget && pkInstTarget != pkInstMain)
@@ -676,11 +676,11 @@ bool CPythonPlayer::__UseSkill(DWORD dwSlotIndex)
 	}
 
 	// 관격술 처리
-	DWORD dwTargetMaxCount = pSkillData->GetTargetCount(rkSkillInst.fcurEfficientPercentage);
-	DWORD dwRange = __GetSkillTargetRange(*pSkillData);
+	uint32_t dwTargetMaxCount = pSkillData->GetTargetCount(rkSkillInst.fcurEfficientPercentage);
+	uint32_t dwRange = __GetSkillTargetRange(*pSkillData);
 	if (dwTargetMaxCount > 0 && pkInstTarget)
 	{
-		DWORD dwTargetCount = 1;
+		uint32_t dwTargetCount = 1;
 		std::vector<CInstanceBase*> kVct_pkInstTarget;
 
 		if (pSkillData->IsFanRange())
@@ -753,8 +753,8 @@ bool CPythonPlayer::__UseSkill(DWORD dwSlotIndex)
 
 	if (!pSkillData->IsNoMotion())
 	{
-		DWORD dwMotionIndex = pSkillData->GetSkillMotionIndex(rkSkillInst.iGrade);
-		DWORD dwLoopCount = pSkillData->GetMotionLoopCount(rkSkillInst.fcurEfficientPercentage);
+		uint32_t dwMotionIndex = pSkillData->GetSkillMotionIndex(rkSkillInst.iGrade);
+		uint32_t dwLoopCount = pSkillData->GetMotionLoopCount(rkSkillInst.fcurEfficientPercentage);
 		if (!pkInstMain->NEW_UseSkill(rkSkillInst.dwIndex, dwMotionIndex, dwLoopCount, pSkillData->IsMovingSkill() ? true : false))
 		{
 			Tracenf("CPythonPlayer::__UseSkill(%d) - pkInstMain->NEW_UseSkill - ERROR", dwSlotIndex);
@@ -762,13 +762,13 @@ bool CPythonPlayer::__UseSkill(DWORD dwSlotIndex)
 		}
 	}
 
-	DWORD dwTargetVID = pkInstTarget ? pkInstTarget->GetVirtualID() : 0;
+	uint32_t dwTargetVID = pkInstTarget ? pkInstTarget->GetVirtualID() : 0;
 
 	__SendUseSkill(dwSlotIndex, dwTargetVID);
 	return true;
 }
 
-void CPythonPlayer::__SendUseSkill(DWORD dwSkillSlotIndex, DWORD dwTargetVID)
+void CPythonPlayer::__SendUseSkill(uint32_t dwSkillSlotIndex, uint32_t dwTargetVID)
 {
 	TSkillInstance& rkSkillInst = m_playerStatus.aSkill[dwSkillSlotIndex];
 
@@ -778,7 +778,7 @@ void CPythonPlayer::__SendUseSkill(DWORD dwSkillSlotIndex, DWORD dwTargetVID)
 	__RunCoolTime(dwSkillSlotIndex);
 }
 
-BYTE CPythonPlayer::__GetSkillType(DWORD dwSkillSlotIndex)
+uint8_t CPythonPlayer::__GetSkillType(uint32_t dwSkillSlotIndex)
 {
 	TSkillInstance& rkSkillInst = m_playerStatus.aSkill[dwSkillSlotIndex];
 
@@ -792,7 +792,7 @@ BYTE CPythonPlayer::__GetSkillType(DWORD dwSkillSlotIndex)
 	return pkSkillData->GetType();
 }
 
-void CPythonPlayer::__RunCoolTime(DWORD dwSkillSlotIndex)
+void CPythonPlayer::__RunCoolTime(uint32_t dwSkillSlotIndex)
 {
 	TSkillInstance& rkSkillInst = m_playerStatus.aSkill[dwSkillSlotIndex];
 
@@ -835,7 +835,7 @@ bool CPythonPlayer::__HasEnoughArrow()
 	return false;
 }
 
-bool CPythonPlayer::__HasItem(DWORD dwItemID)
+bool CPythonPlayer::__HasItem(uint32_t dwItemID)
 {
 	for (int i = 0; i < c_Inventory_Count; ++i)
 	{
@@ -851,17 +851,17 @@ bool CPythonPlayer::__HasItem(DWORD dwItemID)
 	return false;
 }
 
-extern const DWORD c_iSkillIndex_Tongsol;
-extern const DWORD c_iSkillIndex_Fishing;
-extern const DWORD c_iSkillIndex_Mining;
-extern const DWORD c_iSkillIndex_Making;
-extern const DWORD c_iSkillIndex_Combo;
-extern const DWORD c_iSkillIndex_Language1;
-extern const DWORD c_iSkillIndex_Language2;
-extern const DWORD c_iSkillIndex_Language3;
-extern const DWORD c_iSkillIndex_Polymorph;
+extern const uint32_t c_iSkillIndex_Tongsol;
+extern const uint32_t c_iSkillIndex_Fishing;
+extern const uint32_t c_iSkillIndex_Mining;
+extern const uint32_t c_iSkillIndex_Making;
+extern const uint32_t c_iSkillIndex_Combo;
+extern const uint32_t c_iSkillIndex_Language1;
+extern const uint32_t c_iSkillIndex_Language2;
+extern const uint32_t c_iSkillIndex_Language3;
+extern const uint32_t c_iSkillIndex_Polymorph;
 
-void CPythonPlayer::UseGuildSkill(DWORD dwSkillSlotIndex)
+void CPythonPlayer::UseGuildSkill(uint32_t dwSkillSlotIndex)
 {
 	CInstanceBase* pkInstMain = NEW_GetMainActorPtr();
 	if (!pkInstMain)
@@ -879,7 +879,7 @@ void CPythonPlayer::UseGuildSkill(DWORD dwSkillSlotIndex)
 
 	TSkillInstance& rkSkillInst = m_playerStatus.aSkill[dwSkillSlotIndex];
 
-	DWORD dwSkillIndex = rkSkillInst.dwIndex;
+	uint32_t dwSkillIndex = rkSkillInst.dwIndex;
 
 	CPythonSkill::TSkillData* pSkillData;
 	if (!CPythonSkill::Instance().GetSkillData(dwSkillIndex, &pSkillData))
@@ -900,7 +900,7 @@ void CPythonPlayer::UseGuildSkill(DWORD dwSkillSlotIndex)
 		}
 	}
 
-	DWORD dwMotionIndex = pSkillData->GetSkillMotionIndex();
+	uint32_t dwMotionIndex = pSkillData->GetSkillMotionIndex();
 	if (!pkInstMain->NEW_UseSkill(dwSkillIndex, dwMotionIndex, 1, false))
 	{
 		Tracenf("CPythonPlayer::UseGuildSkill(%d) - pkInstMain->NEW_UseSkill - ERROR", dwSkillIndex);
@@ -912,9 +912,9 @@ void CPythonPlayer::UseGuildSkill(DWORD dwSkillSlotIndex)
 	__RunCoolTime(dwSkillSlotIndex);
 }
 
-void CPythonPlayer::SetComboSkillFlag(BOOL bFlag)
+void CPythonPlayer::SetComboSkillFlag(int32_t bFlag)
 {
-	DWORD dwSlotIndex;
+	uint32_t dwSlotIndex;
 	if (!GetSkillSlotIndex(c_iSkillIndex_Combo, &dwSlotIndex))
 	{
 		Tracef("CPythonPlayer::SetComboSkillFlag(killIndex=%d) - Can't Find Slot Index\n", c_iSkillIndex_Combo);
@@ -946,7 +946,7 @@ void CPythonPlayer::SetComboSkillFlag(BOOL bFlag)
 	}
 }
 
-bool CPythonPlayer::__CheckSpecialSkill(DWORD dwSkillIndex)
+bool CPythonPlayer::__CheckSpecialSkill(uint32_t dwSkillIndex)
 {
 	CInstanceBase* pkInstMain = NEW_GetMainActorPtr();
 	if (!pkInstMain)
@@ -969,7 +969,7 @@ bool CPythonPlayer::__CheckSpecialSkill(DWORD dwSkillIndex)
 	// Combo
 	else if (c_iSkillIndex_Combo == dwSkillIndex)
 	{
-		DWORD dwSlotIndex;
+		uint32_t dwSlotIndex;
 		if (!GetSkillSlotIndex(dwSkillIndex, &dwSlotIndex))
 			return false;
 

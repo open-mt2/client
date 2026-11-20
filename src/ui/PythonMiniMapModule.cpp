@@ -121,7 +121,7 @@ PyObject* miniMapGetInfo(PyObject* poSelf, PyObject* poArgs)
 
 	std::string aString;
 	float fPosX, fPosY;
-	DWORD dwTextColor;
+	uint32_t dwTextColor;
 	bool bFind = CPythonMiniMap::Instance().GetPickedInstanceInfo(fScrrenX, fScrrenY, aString, &fPosX, &fPosY, &dwTextColor);
 	int iPosX, iPosY;
 	PR_FLOAT_TO_INT(fPosX, iPosX);
@@ -196,8 +196,8 @@ PyObject* miniMapGetAtlasInfo(PyObject* poSelf, PyObject* poArgs)
 	std::string aString = "";
 	float fPosX = 0.0f;
 	float fPosY = 0.0f;
-	DWORD dwTextColor = 0;
-	DWORD dwGuildID = 0;
+	uint32_t dwTextColor = 0;
+	uint32_t dwGuildID = 0;
 	bool bFind = CPythonMiniMap::Instance().GetAtlasInfo(fScrrenX, fScrrenY, aString, &fPosX, &fPosY, &dwTextColor, &dwGuildID);
 	int iPosX, iPosY;
 	PR_FLOAT_TO_INT(fPosX, iPosX);
@@ -253,7 +253,7 @@ PyObject* miniMapAddWayPoint(PyObject* poSelf, PyObject* poArgs)
 	if (!PyTuple_GetString(poArgs, 3, &buf))
 		return Py_BuildException();
 
-	CPythonMiniMap::Instance().AddWayPoint(CPythonMiniMap::TYPE_WAYPOINT, (DWORD)iID, fX, fY, buf);
+	CPythonMiniMap::Instance().AddWayPoint(CPythonMiniMap::TYPE_WAYPOINT, (uint32_t)iID, fX, fY, buf);
 
 	return Py_BuildNone();
 }
@@ -264,7 +264,7 @@ PyObject* miniMapRemoveWayPoint(PyObject* poSelf, PyObject* poArgs)
 	if (!PyTuple_GetInteger(poArgs, 0, &iID))
 		return Py_BuildException();
 
-	CPythonMiniMap::Instance().RemoveWayPoint((DWORD)iID);
+	CPythonMiniMap::Instance().RemoveWayPoint((uint32_t)iID);
 
 	return Py_BuildNone();
 }
@@ -293,7 +293,7 @@ PyObject* miniMapGetGuildAreaID(PyObject* poSelf, PyObject* poArgs)
 	if (!PyTuple_GetFloat(poArgs, 1, &fy))
 		return Py_BuildException();
 
-	DWORD dwGuildID = CPythonMiniMap::Instance().GetGuildAreaID(fx, fy);
+	uint32_t dwGuildID = CPythonMiniMap::Instance().GetGuildAreaID(fx, fy);
 	return Py_BuildValue("i", dwGuildID);
 }
 

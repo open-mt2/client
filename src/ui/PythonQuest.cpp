@@ -14,15 +14,15 @@ void CPythonQuest::RegisterQuestInstance(const SQuestInstance& c_rQuestInstance)
 
 struct FQuestInstanceCompare
 {
-		DWORD dwSearchIndex;
-		FQuestInstanceCompare(DWORD dwIndex) : dwSearchIndex(dwIndex) {}
+		uint32_t dwSearchIndex;
+		FQuestInstanceCompare(uint32_t dwIndex) : dwSearchIndex(dwIndex) {}
 		bool operator()(const CPythonQuest::SQuestInstance& rQuestInstance)
 		{
 			return dwSearchIndex == rQuestInstance.dwIndex;
 		}
 };
 
-void CPythonQuest::DeleteQuestInstance(DWORD dwIndex)
+void CPythonQuest::DeleteQuestInstance(uint32_t dwIndex)
 {
 	TQuestInstanceContainer::iterator itor = std::find_if(m_QuestInstanceContainer.begin(), m_QuestInstanceContainer.end(), FQuestInstanceCompare(dwIndex));
 	if (itor == m_QuestInstanceContainer.end())
@@ -31,13 +31,13 @@ void CPythonQuest::DeleteQuestInstance(DWORD dwIndex)
 	m_QuestInstanceContainer.erase(itor);
 }
 
-bool CPythonQuest::IsQuest(DWORD dwIndex)
+bool CPythonQuest::IsQuest(uint32_t dwIndex)
 {
 	TQuestInstanceContainer::iterator itor = std::find_if(m_QuestInstanceContainer.begin(), m_QuestInstanceContainer.end(), FQuestInstanceCompare(dwIndex));
 	return itor != m_QuestInstanceContainer.end();
 }
 
-void CPythonQuest::MakeQuest(DWORD dwIndex)
+void CPythonQuest::MakeQuest(uint32_t dwIndex)
 {
 	DeleteQuestInstance(dwIndex);
 	m_QuestInstanceContainer.push_back(SQuestInstance());
@@ -49,7 +49,7 @@ void CPythonQuest::MakeQuest(DWORD dwIndex)
 	rQuestInstance.iStartTime = int(CTimer::Instance().GetCurrentSecond());
 }
 
-void CPythonQuest::SetQuestTitle(DWORD dwIndex, const char* c_szTitle)
+void CPythonQuest::SetQuestTitle(uint32_t dwIndex, const char* c_szTitle)
 {
 	SQuestInstance* pQuestInstance;
 	if (!__GetQuestInstancePtr(dwIndex, &pQuestInstance))
@@ -58,7 +58,7 @@ void CPythonQuest::SetQuestTitle(DWORD dwIndex, const char* c_szTitle)
 	pQuestInstance->strTitle = c_szTitle;
 }
 
-void CPythonQuest::SetQuestClockName(DWORD dwIndex, const char* c_szClockName)
+void CPythonQuest::SetQuestClockName(uint32_t dwIndex, const char* c_szClockName)
 {
 	SQuestInstance* pQuestInstance;
 	if (!__GetQuestInstancePtr(dwIndex, &pQuestInstance))
@@ -67,7 +67,7 @@ void CPythonQuest::SetQuestClockName(DWORD dwIndex, const char* c_szClockName)
 	pQuestInstance->strClockName = c_szClockName;
 }
 
-void CPythonQuest::SetQuestCounterName(DWORD dwIndex, const char* c_szCounterName)
+void CPythonQuest::SetQuestCounterName(uint32_t dwIndex, const char* c_szCounterName)
 {
 	SQuestInstance* pQuestInstance;
 	if (!__GetQuestInstancePtr(dwIndex, &pQuestInstance))
@@ -76,7 +76,7 @@ void CPythonQuest::SetQuestCounterName(DWORD dwIndex, const char* c_szCounterNam
 	pQuestInstance->strCounterName = c_szCounterName;
 }
 
-void CPythonQuest::SetQuestClockValue(DWORD dwIndex, int iClockValue)
+void CPythonQuest::SetQuestClockValue(uint32_t dwIndex, int iClockValue)
 {
 	SQuestInstance* pQuestInstance;
 	if (!__GetQuestInstancePtr(dwIndex, &pQuestInstance))
@@ -86,7 +86,7 @@ void CPythonQuest::SetQuestClockValue(DWORD dwIndex, int iClockValue)
 	pQuestInstance->iStartTime = int(CTimer::Instance().GetCurrentSecond());
 }
 
-void CPythonQuest::SetQuestCounterValue(DWORD dwIndex, int iCounterValue)
+void CPythonQuest::SetQuestCounterValue(uint32_t dwIndex, int iCounterValue)
 {
 	SQuestInstance* pQuestInstance;
 	if (!__GetQuestInstancePtr(dwIndex, &pQuestInstance))
@@ -95,7 +95,7 @@ void CPythonQuest::SetQuestCounterValue(DWORD dwIndex, int iCounterValue)
 	pQuestInstance->iCounterValue = iCounterValue;
 }
 
-void CPythonQuest::SetQuestIconFileName(DWORD dwIndex, const char* c_szIconFileName)
+void CPythonQuest::SetQuestIconFileName(uint32_t dwIndex, const char* c_szIconFileName)
 {
 	SQuestInstance* pQuestInstance;
 	if (!__GetQuestInstancePtr(dwIndex, &pQuestInstance))
@@ -109,7 +109,7 @@ int CPythonQuest::GetQuestCount()
 	return m_QuestInstanceContainer.size();
 }
 
-bool CPythonQuest::GetQuestInstancePtr(DWORD dwArrayIndex, SQuestInstance** ppQuestInstance)
+bool CPythonQuest::GetQuestInstancePtr(uint32_t dwArrayIndex, SQuestInstance** ppQuestInstance)
 {
 	if (dwArrayIndex >= m_QuestInstanceContainer.size())
 		return false;
@@ -119,7 +119,7 @@ bool CPythonQuest::GetQuestInstancePtr(DWORD dwArrayIndex, SQuestInstance** ppQu
 	return true;
 }
 
-bool CPythonQuest::__GetQuestInstancePtr(DWORD dwQuestIndex, SQuestInstance** ppQuestInstance)
+bool CPythonQuest::__GetQuestInstancePtr(uint32_t dwQuestIndex, SQuestInstance** ppQuestInstance)
 {
 	TQuestInstanceContainer::iterator itor = std::find_if(m_QuestInstanceContainer.begin(), m_QuestInstanceContainer.end(), FQuestInstanceCompare(dwQuestIndex));
 	if (itor == m_QuestInstanceContainer.end())

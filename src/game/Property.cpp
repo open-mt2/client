@@ -29,7 +29,7 @@ CProperty::~CProperty()
 {
 }
 
-DWORD CProperty::GetCRC()
+uint32_t CProperty::GetCRC()
 {
 	return m_dwCRC;
 }
@@ -54,7 +54,7 @@ bool CProperty::GetString(const char* c_pszKey, const char** c_ppString)
 	return true;
 }
 
-DWORD CProperty::GetSize()
+uint32_t CProperty::GetSize()
 {
 	return m_stTokenMap.size();
 }
@@ -134,12 +134,12 @@ bool CProperty::ReadFromMemory(const void* c_pvData, int iLen, const char* c_psz
 {
 	const char* pcData = (const char*)c_pvData;
 
-	if (*(DWORD*)pcData != MAKEFOURCC('Y', 'P', 'R', 'T'))
+	if (*(uint32_t*)pcData != MAKEFOURCC('Y', 'P', 'R', 'T'))
 		return false;
 
-	pcData += sizeof(DWORD);
+	pcData += sizeof(uint32_t);
 
-	int headerLen = sizeof(DWORD);
+	int headerLen = sizeof(uint32_t);
 	if (*pcData == '\r' && *(pcData + 1) == '\n')
 	{
 		pcData += 2;
@@ -186,9 +186,9 @@ bool CProperty::ReadFromMemory(const void* c_pvData, int iLen, const char* c_psz
 		m_stCRC.assign(tmp);
 
 		CMemoryTextFileLoader textFileLoader;
-		textFileLoader.Bind(iLen - (sizeof(DWORD) + 2 + 14 + 2), pcData);
+		textFileLoader.Bind(iLen - (sizeof(uint32_t) + 2 + 14 + 2), pcData);
 
-		for (DWORD i = 0; i < textFileLoader.GetLineCount(); ++i)
+		for (uint32_t i = 0; i < textFileLoader.GetLineCount(); ++i)
 		{
 			if (!textFileLoader.SplitLine(i, &stTokenVector))
 				continue;
@@ -207,7 +207,7 @@ bool CProperty::ReadFromMemory(const void* c_pvData, int iLen, const char* c_psz
 	m_stCRC = textFileLoader.GetLineString(0);
 	m_dwCRC = atoi(m_stCRC.c_str());
 
-	for (DWORD i = 1; i < textFileLoader.GetLineCount(); ++i)
+	for (uint32_t i = 1; i < textFileLoader.GetLineCount(); ++i)
 	{
 		if (!textFileLoader.SplitLine(i, &stTokenVector))
 			continue;

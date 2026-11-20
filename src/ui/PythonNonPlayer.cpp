@@ -6,7 +6,7 @@
 
 bool CPythonNonPlayer::LoadNonPlayerData(const char* c_szFileName)
 {
-	static DWORD s_adwMobProtoKey[4] =
+	static uint32_t s_adwMobProtoKey[4] =
 		{
 			4813894,
 			18955,
@@ -19,9 +19,9 @@ bool CPythonNonPlayer::LoadNonPlayerData(const char* c_szFileName)
 	if (!CEterPackManager::Instance().Get(c_szFileName, data))
 		return false;
 
-	DWORD dwFourCC, dwElements, dwDataSize;
+	uint32_t dwFourCC, dwElements, dwDataSize;
 
-	data.read((char*)&dwFourCC, sizeof(DWORD));
+	data.read((char*)&dwFourCC, sizeof(uint32_t));
 	if (!data)
 		return false;
 
@@ -31,15 +31,15 @@ bool CPythonNonPlayer::LoadNonPlayerData(const char* c_szFileName)
 		return false;
 	}
 
-	data.read((char*)&dwElements, sizeof(DWORD));
+	data.read((char*)&dwElements, sizeof(uint32_t));
 	if (!data)
 		return false;
 
-	data.read((char*)&dwDataSize, sizeof(DWORD));
+	data.read((char*)&dwDataSize, sizeof(uint32_t));
 	if (!data)
 		return false;
 
-	auto pbData = std::make_shared<std::vector<BYTE>>(dwDataSize);
+	auto pbData = std::make_shared<std::vector<uint8_t>>(dwDataSize);
 
 	data.read((char*)pbData->data(), pbData->size());
 	if (!data)
@@ -59,7 +59,7 @@ bool CPythonNonPlayer::LoadNonPlayerData(const char* c_szFileName)
 	}
 
 	TMobTable* pTable = (TMobTable*)zObj.GetBuffer();
-	for (DWORD i = 0; i < dwElements; ++i, ++pTable)
+	for (uint32_t i = 0; i < dwElements; ++i, ++pTable)
 	{
 		TMobTable* pNonPlayerData = new TMobTable;
 
@@ -72,7 +72,7 @@ bool CPythonNonPlayer::LoadNonPlayerData(const char* c_szFileName)
 	return true;
 }
 
-bool CPythonNonPlayer::GetName(DWORD dwVnum, const char** c_pszName)
+bool CPythonNonPlayer::GetName(uint32_t dwVnum, const char** c_pszName)
 {
 	const TMobTable* p = GetTable(dwVnum);
 
@@ -84,7 +84,7 @@ bool CPythonNonPlayer::GetName(DWORD dwVnum, const char** c_pszName)
 	return true;
 }
 
-bool CPythonNonPlayer::GetInstanceType(DWORD dwVnum, BYTE* pbType)
+bool CPythonNonPlayer::GetInstanceType(uint32_t dwVnum, uint8_t* pbType)
 {
 	const TMobTable* p = GetTable(dwVnum);
 
@@ -97,7 +97,7 @@ bool CPythonNonPlayer::GetInstanceType(DWORD dwVnum, BYTE* pbType)
 	return true;
 }
 
-const CPythonNonPlayer::TMobTable* CPythonNonPlayer::GetTable(DWORD dwVnum)
+const CPythonNonPlayer::TMobTable* CPythonNonPlayer::GetTable(uint32_t dwVnum)
 {
 	TNonPlayerDataMap::iterator itor = m_NonPlayerDataMap.find(dwVnum);
 
@@ -107,7 +107,7 @@ const CPythonNonPlayer::TMobTable* CPythonNonPlayer::GetTable(DWORD dwVnum)
 	return itor->second;
 }
 
-BYTE CPythonNonPlayer::GetEventType(DWORD dwVnum)
+uint8_t CPythonNonPlayer::GetEventType(uint32_t dwVnum)
 {
 	const TMobTable* p = GetTable(dwVnum);
 
@@ -120,7 +120,7 @@ BYTE CPythonNonPlayer::GetEventType(DWORD dwVnum)
 	return p->bOnClickType;
 }
 
-BYTE CPythonNonPlayer::GetEventTypeByVID(DWORD dwVID)
+uint8_t CPythonNonPlayer::GetEventTypeByVID(uint32_t dwVID)
 {
 	CInstanceBase* pInstance = CPythonCharacterManager::Instance().GetInstancePtr(dwVID);
 
@@ -130,11 +130,11 @@ BYTE CPythonNonPlayer::GetEventTypeByVID(DWORD dwVID)
 		return ON_CLICK_EVENT_NONE;
 	}
 
-	WORD dwVnum = pInstance->GetVirtualNumber();
+	uint16_t dwVnum = pInstance->GetVirtualNumber();
 	return GetEventType(dwVnum);
 }
 
-const char* CPythonNonPlayer::GetMonsterName(DWORD dwVnum)
+const char* CPythonNonPlayer::GetMonsterName(uint32_t dwVnum)
 {
 	const CPythonNonPlayer::TMobTable* c_pTable = GetTable(dwVnum);
 	if (!c_pTable)
@@ -146,7 +146,7 @@ const char* CPythonNonPlayer::GetMonsterName(DWORD dwVnum)
 	return c_pTable->szLocaleName;
 }
 
-DWORD CPythonNonPlayer::GetMonsterColor(DWORD dwVnum)
+uint32_t CPythonNonPlayer::GetMonsterColor(uint32_t dwVnum)
 {
 	const CPythonNonPlayer::TMobTable* c_pTable = GetTable(dwVnum);
 	if (!c_pTable)

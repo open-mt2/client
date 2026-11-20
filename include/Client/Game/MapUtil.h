@@ -19,9 +19,9 @@ class CEaseOutInterpolation
 
 		void Initialize();
 
-		BOOL Setup(float fStart, float fEnd, float fTime);
+		int32_t Setup(float fStart, float fEnd, float fTime);
 		void Interpolate(float fElapsedTime);
-		BOOL isPlaying();
+		int32_t isPlaying();
 
 		float GetValue();
 		float GetChangingValue();

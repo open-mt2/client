@@ -22,12 +22,12 @@ void CPythonMessenger::OnFriendLogout(const char* c_szKey)
 		PyCallClassMemberFunc(m_poMessengerHandler, "OnLogout", Py_BuildValue("(is)", MESSENGER_GRUOP_INDEX_FRIEND, c_szKey));
 }
 
-BOOL CPythonMessenger::IsFriendByKey(const char* c_szKey)
+int32_t CPythonMessenger::IsFriendByKey(const char* c_szKey)
 {
 	return m_FriendNameMap.end() != m_FriendNameMap.find(c_szKey);
 }
 
-BOOL CPythonMessenger::IsFriendByName(const char* c_szName)
+int32_t CPythonMessenger::IsFriendByName(const char* c_szName)
 {
 	return IsFriendByKey(c_szName);
 }

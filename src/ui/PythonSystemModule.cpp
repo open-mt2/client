@@ -269,10 +269,10 @@ PyObject* systemSetConfig(PyObject* poSelf, PyObject* poArgs)
 	if (!PyTuple_GetInteger(poArgs, 8, &distance))
 		return Py_BuildException();
 
-	if (!CPythonSystem::Instance().GetResolution(res_index, (DWORD*)&width, (DWORD*)&height, (DWORD*)&bpp))
+	if (!CPythonSystem::Instance().GetResolution(res_index, (uint32_t*)&width, (uint32_t*)&height, (uint32_t*)&bpp))
 		return Py_BuildNone();
 
-	if (!CPythonSystem::Instance().GetFrequency(res_index, frequency_index, (DWORD*)&frequency))
+	if (!CPythonSystem::Instance().GetFrequency(res_index, frequency_index, (uint32_t*)&frequency))
 		return Py_BuildNone();
 
 	CPythonSystem::TConfig tmp;
@@ -324,7 +324,7 @@ PyObject* systemGetFrequencyCount(PyObject* poSelf, PyObject* poArgs)
 PyObject* systemGetResolution(PyObject* poSelf, PyObject* poArgs)
 {
 	int index;
-	DWORD width = 0, height = 0, bpp = 0;
+	uint32_t width = 0, height = 0, bpp = 0;
 
 	if (!PyTuple_GetInteger(poArgs, 0, &index))
 		return Py_BuildException();
@@ -342,7 +342,7 @@ PyObject* systemGetCurrentResolution(PyObject* poSelf, PyObject* poArgs)
 PyObject* systemGetFrequency(PyObject* poSelf, PyObject* poArgs)
 {
 	int index, frequency_index;
-	DWORD frequency = 0;
+	uint32_t frequency = 0;
 
 	if (!PyTuple_GetInteger(poArgs, 0, &index))
 		return Py_BuildException();

@@ -152,7 +152,7 @@ void CPythonApplication::NotifyHack(const char* c_szFormat, ...)
 	m_pyNetworkStream.NotifyHack(szBuf);
 }
 
-void CPythonApplication::GetInfo(UINT eInfo, std::string* pstInfo)
+void CPythonApplication::GetInfo(uint32_t eInfo, std::string* pstInfo)
 {
 	switch (eInfo)
 	{
@@ -230,9 +230,9 @@ void CPythonApplication::InitializeDebugRows()
 			CPythonSystem& system = CPythonSystem::Instance();
 			for (int index = 0; index < system.GetResolutionCount(); ++index)
 			{
-				DWORD width = 0;
-				DWORD height = 0;
-				DWORD bpp = 0;
+				uint32_t width = 0;
+				uint32_t height = 0;
+				uint32_t bpp = 0;
 				if (!system.GetResolution(index, &width, &height, &bpp))
 					continue;
 				labels.push_back(std::to_string(width) + " x " + std::to_string(height) + " (" + std::to_string(bpp) + " bpp)");
@@ -247,9 +247,9 @@ void CPythonApplication::InitializeDebugRows()
 		[](int index)
 		{
 			CPythonSystem& system = CPythonSystem::Instance();
-			DWORD width = 0;
-			DWORD height = 0;
-			DWORD bpp = 0;
+			uint32_t width = 0;
+			uint32_t height = 0;
+			uint32_t bpp = 0;
 			if (!system.GetResolution(index, &width, &height, &bpp))
 				return;
 
@@ -326,13 +326,13 @@ void CPythonApplication::RenderGame()
 	// if (GetAsyncKeyState(VK_Z))
 	//	STATEMANAGER.SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 
-	DWORD t1 = ELTimer_GetMSec();
+	uint32_t t1 = ELTimer_GetMSec();
 	m_kChrMgr.Deform();
-	DWORD t2 = ELTimer_GetMSec();
+	uint32_t t2 = ELTimer_GetMSec();
 	m_kEftMgr.Update();
-	DWORD t3 = ELTimer_GetMSec();
+	uint32_t t3 = ELTimer_GetMSec();
 	m_pyBackground.RenderCharacterShadowToTexture();
-	DWORD t4 = ELTimer_GetMSec();
+	uint32_t t4 = ELTimer_GetMSec();
 
 	m_pyGraphic.SetGameRenderState();
 	m_pyGraphic.PushState();
@@ -343,11 +343,11 @@ void CPythonApplication::RenderGame()
 	m_pyGraphic.SetPerspective(30.0f, fAspect, 100.0, fFarClip);
 	CScreenDepthOfField::Instance().BeginScene(100.0f, fFarClip);
 
-	DWORD t5 = ELTimer_GetMSec();
+	uint32_t t5 = ELTimer_GetMSec();
 
 	CCullingManager::Instance().Process();
 
-	DWORD t6 = ELTimer_GetMSec();
+	uint32_t t6 = ELTimer_GetMSec();
 
 	{
 		long lx, ly;
@@ -356,39 +356,39 @@ void CPythonApplication::RenderGame()
 	}
 
 	m_pyBackground.RenderSky();
-	DWORD t7 = ELTimer_GetMSec();
+	uint32_t t7 = ELTimer_GetMSec();
 	m_pyBackground.RenderBeforeLensFlare();
-	DWORD t8 = ELTimer_GetMSec();
+	uint32_t t8 = ELTimer_GetMSec();
 	m_pyBackground.RenderCloud();
-	DWORD t9 = ELTimer_GetMSec();
+	uint32_t t9 = ELTimer_GetMSec();
 	m_pyBackground.BeginEnvironment();
 	m_pyBackground.Render();
 
 	m_pyBackground.SetCharacterDirLight();
-	DWORD t10 = ELTimer_GetMSec();
+	uint32_t t10 = ELTimer_GetMSec();
 	m_kChrMgr.Render();
-	DWORD t11 = ELTimer_GetMSec();
+	uint32_t t11 = ELTimer_GetMSec();
 
 	m_pyBackground.SetBackgroundDirLight();
 	m_pyBackground.RenderWater();
-	DWORD t12 = ELTimer_GetMSec();
+	uint32_t t12 = ELTimer_GetMSec();
 	m_pyBackground.RenderEffect();
-	DWORD t13 = ELTimer_GetMSec();
+	uint32_t t13 = ELTimer_GetMSec();
 	m_pyBackground.EndEnvironment();
 	m_kEftMgr.Render();
-	DWORD t14 = ELTimer_GetMSec();
+	uint32_t t14 = ELTimer_GetMSec();
 	m_pyItem.Render();
-	DWORD t15 = ELTimer_GetMSec();
+	uint32_t t15 = ELTimer_GetMSec();
 	m_FlyingManager.Render();
-	DWORD t16 = ELTimer_GetMSec();
+	uint32_t t16 = ELTimer_GetMSec();
 	m_pyBackground.BeginEnvironment();
 	m_pyBackground.RenderPCBlocker();
 	m_pyBackground.EndEnvironment();
-	DWORD t17 = ELTimer_GetMSec();
+	uint32_t t17 = ELTimer_GetMSec();
 	m_pyBackground.RenderAfterLensFlare();
-	DWORD t18 = ELTimer_GetMSec();
+	uint32_t t18 = ELTimer_GetMSec();
 	CScreenDepthOfField::Instance().EndScene();
-	DWORD tEnd = ELTimer_GetMSec();
+	uint32_t tEnd = ELTimer_GetMSec();
 
 	if (GetAsyncKeyState(VK_Z))
 		STATEMANAGER.SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
@@ -422,14 +422,14 @@ void CPythonApplication::RenderGame()
 
 void CPythonApplication::UpdateGame()
 {
-	DWORD t1 = ELTimer_GetMSec();
+	uint32_t t1 = ELTimer_GetMSec();
 	long lMouseX = 0;
 	long lMouseY = 0;
 	m_kWndMgr.GetMousePosition(lMouseX, lMouseY);
 
 	CGraphicTextInstance::Hyperlink_UpdateMousePos(lMouseX, lMouseY);
 
-	DWORD t2 = ELTimer_GetMSec();
+	uint32_t t2 = ELTimer_GetMSec();
 
 	//!@# Alt+Tab 중 SetTransfor 에서 튕김 현상 해결을 위해 - [levites]
 	// if (m_isActivateWnd)
@@ -442,38 +442,38 @@ void CPythonApplication::UpdateGame()
 		s.BuildViewFrustum();
 	}
 
-	DWORD t3 = ELTimer_GetMSec();
+	uint32_t t3 = ELTimer_GetMSec();
 	TPixelPosition kPPosMainActor;
 	m_pyPlayer.NEW_GetMainActorPosition(&kPPosMainActor);
 
-	DWORD t4 = ELTimer_GetMSec();
+	uint32_t t4 = ELTimer_GetMSec();
 	m_pyBackground.Update(kPPosMainActor.x, kPPosMainActor.y, kPPosMainActor.z);
 
-	DWORD t5 = ELTimer_GetMSec();
+	uint32_t t5 = ELTimer_GetMSec();
 	m_GameEventManager.SetCenterPosition(kPPosMainActor.x, kPPosMainActor.y, kPPosMainActor.z);
 	m_GameEventManager.Update();
 
-	DWORD t6 = ELTimer_GetMSec();
+	uint32_t t6 = ELTimer_GetMSec();
 	m_kChrMgr.Update();
-	DWORD t7 = ELTimer_GetMSec();
+	uint32_t t7 = ELTimer_GetMSec();
 	m_kEftMgr.UpdateSound();
-	DWORD t8 = ELTimer_GetMSec();
+	uint32_t t8 = ELTimer_GetMSec();
 	m_FlyingManager.Update();
-	DWORD t9 = ELTimer_GetMSec();
+	uint32_t t9 = ELTimer_GetMSec();
 
 	POINT ptMouse;
 	ptMouse.x = lMouseX;
 	ptMouse.y = lMouseY;
 	m_pyItem.Update(ptMouse);
-	DWORD t10 = ELTimer_GetMSec();
+	uint32_t t10 = ELTimer_GetMSec();
 	m_pyPlayer.Update();
-	DWORD t11 = ELTimer_GetMSec();
+	uint32_t t11 = ELTimer_GetMSec();
 
 	// NOTE : Update 동안 위치 값이 바뀌므로 다시 얻어 옵니다 - [levites]
 	//        이 부분 때문에 메인 케릭터의 Sound가 이전 위치에서 플레이 되는 현상이 있었음.
 	m_pyPlayer.NEW_GetMainActorPosition(&kPPosMainActor);
 	SetCenterPosition(kPPosMainActor.x, kPPosMainActor.y, kPPosMainActor.z);
-	DWORD t12 = ELTimer_GetMSec();
+	uint32_t t12 = ELTimer_GetMSec();
 
 	if (PERF_CHECKER_RENDER_GAME)
 	{
@@ -498,7 +498,7 @@ void CPythonApplication::UpdateGame()
 	}
 }
 
-void CPythonApplication::SkipRenderBuffering(DWORD dwSleepMSec)
+void CPythonApplication::SkipRenderBuffering(uint32_t dwSleepMSec)
 {
 	m_dwBufSleepSkipTime = ELTimer_GetMSec() + dwSleepMSec;
 }
@@ -513,14 +513,14 @@ bool CPythonApplication::Process()
 	ELTimer_SetFrameMSec();
 
 	// 	m_Profiler.Clear();
-	DWORD dwStart = ELTimer_GetMSec();
+	uint32_t dwStart = ELTimer_GetMSec();
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////
-	static DWORD s_dwUpdateFrameCount = 0;
-	static DWORD s_dwRenderFrameCount = 0;
-	static DWORD s_dwFaceCount = 0;
-	static UINT s_uiLoad = 0;
-	static DWORD s_dwCheckTime = ELTimer_GetMSec();
+	static uint32_t s_dwUpdateFrameCount = 0;
+	static uint32_t s_dwRenderFrameCount = 0;
+	static uint32_t s_dwFaceCount = 0;
+	static uint32_t s_uiLoad = 0;
+	static uint32_t s_dwCheckTime = ELTimer_GetMSec();
 
 	if (ELTimer_GetMSec() - s_dwCheckTime > 1000)
 	{
@@ -532,7 +532,7 @@ bool CPythonApplication::Process()
 
 		s_dwCheckTime = ELTimer_GetMSec();
 
-		static DWORD s_dwLastLogTime = 0;
+		static uint32_t s_dwLastLogTime = 0;
 		if (s_dwCheckTime - s_dwLastLogTime >= 5000)
 		{
 			s_dwLastLogTime = s_dwCheckTime;
@@ -544,11 +544,11 @@ bool CPythonApplication::Process()
 	}
 
 	// Update Time
-	static BOOL s_bFrameSkip = false;
-	static UINT s_uiNextFrameTime = ELTimer_GetMSec();
+	static int32_t s_bFrameSkip = false;
+	static uint32_t s_uiNextFrameTime = ELTimer_GetMSec();
 
 #ifdef __PERFORMANCE_CHECK__
-	DWORD dwUpdateTime1 = ELTimer_GetMSec();
+	uint32_t dwUpdateTime1 = ELTimer_GetMSec();
 #endif
 	CTimer& rkTimer = CTimer::Instance();
 	rkTimer.Advance();
@@ -556,12 +556,12 @@ bool CPythonApplication::Process()
 	m_fGlobalTime = rkTimer.GetCurrentSecond();
 	m_fGlobalElapsedTime = rkTimer.GetElapsedSecond();
 
-	UINT uiFrameTime = rkTimer.GetElapsedMilliecond();
+	uint32_t uiFrameTime = rkTimer.GetElapsedMilliecond();
 	s_uiNextFrameTime += uiFrameTime; // 17 - 1초당 60fps기준.
 
-	DWORD updatestart = ELTimer_GetMSec();
+	uint32_t updatestart = ELTimer_GetMSec();
 #ifdef __PERFORMANCE_CHECK__
-	DWORD dwUpdateTime2 = ELTimer_GetMSec();
+	uint32_t dwUpdateTime2 = ELTimer_GetMSec();
 #endif
 	// Network I/O
 	m_pyNetworkStream.Process();
@@ -573,14 +573,14 @@ bool CPythonApplication::Process()
 	m_kAccountConnector.Process();
 
 #ifdef __PERFORMANCE_CHECK__
-	DWORD dwUpdateTime3 = ELTimer_GetMSec();
+	uint32_t dwUpdateTime3 = ELTimer_GetMSec();
 #endif
 	//////////////////////
 	// Input Process
 	// Keyboard
 	UpdateKeyboard();
 #ifdef __PERFORMANCE_CHECK__
-	DWORD dwUpdateTime4 = ELTimer_GetMSec();
+	uint32_t dwUpdateTime4 = ELTimer_GetMSec();
 #endif
 	// Mouse
 	POINT Point;
@@ -588,31 +588,31 @@ bool CPythonApplication::Process()
 	OnMouseMove(Point.x, Point.y);
 	//////////////////////
 #ifdef __PERFORMANCE_CHECK__
-	DWORD dwUpdateTime5 = ELTimer_GetMSec();
+	uint32_t dwUpdateTime5 = ELTimer_GetMSec();
 #endif
 	//!@# Alt+Tab 중 SetTransfor 에서 튕김 현상 해결을 위해 - [levites]
 	// if (m_isActivateWnd)
 	__UpdateCamera();
 #ifdef __PERFORMANCE_CHECK__
-	DWORD dwUpdateTime6 = ELTimer_GetMSec();
+	uint32_t dwUpdateTime6 = ELTimer_GetMSec();
 #endif
 	// Update Game Playing
 	CResourceManager::Instance().Update();
 #ifdef __PERFORMANCE_CHECK__
-	DWORD dwUpdateTime7 = ELTimer_GetMSec();
+	uint32_t dwUpdateTime7 = ELTimer_GetMSec();
 #endif
 	OnCameraUpdate();
 #ifdef __PERFORMANCE_CHECK__
-	DWORD dwUpdateTime8 = ELTimer_GetMSec();
+	uint32_t dwUpdateTime8 = ELTimer_GetMSec();
 #endif
 	OnMouseUpdate();
 #ifdef __PERFORMANCE_CHECK__
-	DWORD dwUpdateTime9 = ELTimer_GetMSec();
+	uint32_t dwUpdateTime9 = ELTimer_GetMSec();
 #endif
 	OnUIUpdate();
 
 #ifdef __PERFORMANCE_CHECK__
-	DWORD dwUpdateTime10 = ELTimer_GetMSec();
+	uint32_t dwUpdateTime10 = ELTimer_GetMSec();
 
 	if (dwUpdateTime10 - dwUpdateTime1 > 10)
 	{
@@ -636,8 +636,8 @@ bool CPythonApplication::Process()
 	// Update하는데 걸린시간.delta값
 	m_dwCurUpdateTime = ELTimer_GetMSec() - updatestart;
 
-	DWORD dwCurrentTime = ELTimer_GetMSec();
-	BOOL bCurrentLateUpdate = FALSE;
+	uint32_t dwCurrentTime = ELTimer_GetMSec();
+	int32_t bCurrentLateUpdate = FALSE;
 
 	s_bFrameSkip = false;
 
@@ -685,17 +685,17 @@ bool CPythonApplication::Process()
 #endif
 	/*
 	static bool s_isPrevFrameSkip=false;
-	static DWORD s_dwFrameSkipCount=0;
-	static DWORD s_dwFrameSkipEndTime=0;
+	static uint32_t s_dwFrameSkipCount=0;
+	static uint32_t s_dwFrameSkipEndTime=0;
 
-	static DWORD ERROR_FRAME_SKIP_COUNT = 60*5;
-	static DWORD ERROR_FRAME_SKIP_TIME = ERROR_FRAME_SKIP_COUNT*18;
+	static uint32_t ERROR_FRAME_SKIP_COUNT = 60*5;
+	static uint32_t ERROR_FRAME_SKIP_TIME = ERROR_FRAME_SKIP_COUNT*18;
 
-	//static DWORD MAX_FRAME_SKIP=0;
+	//static uint32_t MAX_FRAME_SKIP=0;
 
 	if (IsActive())
 	{
-	DWORD dwFrameSkipCurTime=ELTimer_GetMSec();
+	uint32_t dwFrameSkipCurTime=ELTimer_GetMSec();
 
 	if (s_bFrameSkip)
 	{
@@ -778,7 +778,7 @@ bool CPythonApplication::Process()
 
 		CGrannyMaterial::TranslateSpecularMatrix(g_specularSpd, g_specularSpd, 0.0f);
 
-		DWORD dwRenderStartTime = ELTimer_GetMSec();
+		uint32_t dwRenderStartTime = ELTimer_GetMSec();
 
 		bool canRender = true;
 
@@ -834,15 +834,15 @@ bool CPythonApplication::Process()
 
 				LoadingScreen_RenderFadeIn();
 
-				// DWORD t1 = ELTimer_GetMSec();
+				// uint32_t t1 = ELTimer_GetMSec();
 				m_pyGraphic.Show();
-				// DWORD t2 = ELTimer_GetMSec();
+				// uint32_t t2 = ELTimer_GetMSec();
 
-				DWORD dwRenderEndTime = ELTimer_GetMSec();
+				uint32_t dwRenderEndTime = ELTimer_GetMSec();
 
-				static DWORD s_dwRenderCheckTime = dwRenderEndTime;
-				static DWORD s_dwRenderRangeTime = 0;
-				static DWORD s_dwRenderRangeFrame = 0;
+				static uint32_t s_dwRenderCheckTime = dwRenderEndTime;
+				static uint32_t s_dwRenderRangeTime = 0;
+				static uint32_t s_dwRenderRangeFrame = 0;
 
 				m_dwCurRenderTime = dwRenderEndTime - dwRenderStartTime;
 				s_dwRenderRangeTime += m_dwCurRenderTime;
@@ -857,7 +857,7 @@ bool CPythonApplication::Process()
 					s_dwRenderRangeFrame = 0;
 				}
 
-				DWORD dwCurFaceCount = m_pyGraphic.GetFaceCount();
+				uint32_t dwCurFaceCount = m_pyGraphic.GetFaceCount();
 				m_pyGraphic.ResetFaceCount();
 				s_dwFaceCount += dwCurFaceCount;
 
@@ -885,7 +885,7 @@ bool CPythonApplication::Process()
 						if (s_fBufRenderTime > 100.0f)
 							s_fBufRenderTime = 100.0f;
 
-						DWORD dwBufRenderTime = s_fBufRenderTime;
+						uint32_t dwBufRenderTime = s_fBufRenderTime;
 
 						if (m_isWindowed)
 						{
@@ -930,13 +930,13 @@ bool CPythonApplication::Process()
 						fTargetViewDistance = fMIN(fNear + (fFar - fNear) * float(dbAvePow / dbMaxPow), fFar);
 					}
 
-					static DWORD s_dwLastViewDistanceUpdate = 0;
+					static uint32_t s_dwLastViewDistanceUpdate = 0;
 					static float s_fAppliedViewDistance = 0.0f;
 
 					if (s_fAppliedViewDistance <= 0.0f)
 						s_fAppliedViewDistance = m_pyBackground.GetFarClip();
 
-					const DWORD dwViewDistanceNow = ELTimer_GetMSec();
+					const uint32_t dwViewDistanceNow = ELTimer_GetMSec();
 					if (dwViewDistanceNow - s_dwLastViewDistanceUpdate >= 1000)
 					{
 						s_dwLastViewDistanceUpdate = dwViewDistanceNow;
@@ -1325,7 +1325,7 @@ bool CPythonApplication::CreateStartupWindow()
 #endif
 	Platform_SetWindowResolution(width, height);
 
-	UINT WindowMode = __GetWindowMode(true);
+	uint32_t WindowMode = __GetWindowMode(true);
 	return CMSWindow::Create(GetWindowTitle().c_str(), 4, 0, WindowMode,
 							 ::LoadIcon(GetInstance(), MAKEINTRESOURCE(IDI_OPENMT2)),
 							 IDC_CURSOR_NORMAL, width, height);
@@ -1372,7 +1372,7 @@ bool CPythonApplication::Create(PyObject* poSelf, const char* c_szName, int widt
 	Platform_SetWindowResolution(width, height);
 
 	// Window
-	UINT WindowMode = __GetWindowMode(Windowed ? true : false);
+	uint32_t WindowMode = __GetWindowMode(Windowed ? true : false);
 
 	if (bHasWindow)
 	{
@@ -1579,7 +1579,7 @@ bool CPythonApplication::Create(PyObject* poSelf, const char* c_szName, int widt
 	return true;
 }
 
-void CPythonApplication::SetGlobalCenterPosition(LONG x, LONG y)
+void CPythonApplication::SetGlobalCenterPosition(int32_t x, int32_t y)
 {
 	CPythonBackground& rkBG = CPythonBackground::Instance();
 	rkBG.GlobalPositionToLocalPosition(x, y);

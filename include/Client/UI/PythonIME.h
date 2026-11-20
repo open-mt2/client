@@ -25,7 +25,7 @@ class CPythonIME : public IIMEEventSink,
 		virtual void OnReturn();
 		virtual void OnEscape();
 
-		virtual bool OnWM_CHAR(WPARAM wParam, LPARAM lParam);
+		virtual bool OnWM_CHAR(uintptr_t wParam, intptr_t lParam);
 		virtual void OnUpdate();
 		virtual void OnChangeCodePage();
 		virtual void OnOpenCandidateList();

@@ -135,7 +135,7 @@ class CPythonApplication : public CMSApplication, public CInputKeyboard, public 
 
 	public:
 		void NotifyHack(const char* c_szFormat, ...);
-		void GetInfo(UINT eInfo, std::string* pstInfo);
+		void GetInfo(uint32_t eInfo, std::string* pstInfo);
 		void GetMousePosition(POINT* ppt);
 
 		static CPythonApplication& Instance()
@@ -152,7 +152,7 @@ class CPythonApplication : public CMSApplication, public CInputKeyboard, public 
 
 		void SetMinFog(float fMinFog);
 		void SetFrameSkip(bool isEnable);
-		void SkipRenderBuffering(DWORD dwSleepMSec);
+		void SkipRenderBuffering(uint32_t dwSleepMSec);
 
 		bool Create(PyObject* poSelf, const char* c_szName, int width, int height, int Windowed);
 		bool CreateStartupWindow();
@@ -173,9 +173,9 @@ class CPythonApplication : public CMSApplication, public CInputKeyboard, public 
 		void SafeReleaseCapture();
 		void ResetMouseCapture();
 
-		BOOL SetCursorNum(int iCursorNum);
-		void SetCursorVisible(BOOL bFlag, bool bLiarCursorOn = false);
-		BOOL GetCursorVisible();
+		int32_t SetCursorNum(int iCursorNum);
+		void SetCursorVisible(int32_t bFlag, bool bLiarCursorOn = false);
+		int32_t GetCursorVisible();
 		bool GetLiarCursorOn();
 		void SetCursorMode(int iMode);
 		int GetCursorMode();
@@ -186,7 +186,7 @@ class CPythonApplication : public CMSApplication, public CInputKeyboard, public 
 		int GetWidth();
 		int GetHeight();
 
-		void SetGlobalCenterPosition(LONG x, LONG y);
+		void SetGlobalCenterPosition(int32_t x, int32_t y);
 		void SetCenterPosition(float fx, float fy, float fz);
 		void GetCenterPosition(TPixelPosition* pPixelPosition);
 		void SetCamera(float Distance, float Pitch, float Rotation, float fDestinationHeight);
@@ -213,12 +213,12 @@ class CPythonApplication : public CMSApplication, public CInputKeyboard, public 
 
 		float GetFaceSpeed() { return m_fFaceSpd; }
 		float GetAveRenderTime() { return m_fAveRenderTime; }
-		DWORD GetCurRenderTime() { return m_dwCurRenderTime; }
-		DWORD GetCurUpdateTime() { return m_dwCurUpdateTime; }
-		DWORD GetUpdateFPS() { return m_dwUpdateFPS; }
-		DWORD GetRenderFPS() { return m_dwRenderFPS; }
-		DWORD GetLoad() { return m_dwLoad; }
-		DWORD GetFaceCount() { return m_dwFaceCount; }
+		uint32_t GetCurRenderTime() { return m_dwCurRenderTime; }
+		uint32_t GetCurUpdateTime() { return m_dwCurUpdateTime; }
+		uint32_t GetUpdateFPS() { return m_dwUpdateFPS; }
+		uint32_t GetRenderFPS() { return m_dwRenderFPS; }
+		uint32_t GetLoad() { return m_dwLoad; }
+		uint32_t GetFaceCount() { return m_dwFaceCount; }
 
 		void SetConnectData(const char* c_szIP, int iPort);
 		void GetConnectData(std::string& rstIP, int& riPort);
@@ -263,8 +263,8 @@ class CPythonApplication : public CMSApplication, public CInputKeyboard, public 
 		IMediaEventEx* m_pMediaEvent;	  // Media Event
 		IVideoWindow* m_pVideoWnd;		  // Video Window
 		IBasicVideo* m_pBasicVideo;
-		BYTE* m_pCaptureBuffer;			  // 영상 이미지를 캡처한 버퍼
-		LONG m_lBufferSize;				  // Video 버퍼 크기 변수
+		uint8_t* m_pCaptureBuffer;		  // 영상 이미지를 캡처한 버퍼
+		int32_t m_lBufferSize;			  // Video 버퍼 크기 변수
 		CGraphicImageTexture* m_pLogoTex; // 출력할 텍스쳐
 		bool m_bLogoError;				  // 영상 읽기 상태
 		bool m_bLogoPlay;
@@ -272,7 +272,7 @@ class CPythonApplication : public CMSApplication, public CInputKeyboard, public 
 		int m_nLeft, m_nRight, m_nTop, m_nBottom;
 
 	protected:
-		LRESULT WindowProcedure(HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam);
+		intptr_t WindowProcedure(HWND hWnd, uint32_t uiMsg, uintptr_t wParam, intptr_t lParam);
 
 		void OnCameraUpdate();
 
@@ -300,7 +300,7 @@ class CPythonApplication : public CMSApplication, public CInputKeyboard, public 
 
 		int CheckDeviceState();
 
-		BOOL __IsContinuousChangeTypeCursor(int iCursorNum);
+		int32_t __IsContinuousChangeTypeCursor(int iCursorNum);
 
 		void __UpdateCamera();
 
@@ -363,11 +363,11 @@ class CPythonApplication : public CMSApplication, public CInputKeyboard, public 
 		bool m_isDebugRightButtonCaptured;
 		bool m_isDebugMiddleButtonCaptured;
 		float m_fAveRenderTime;
-		DWORD m_dwCurRenderTime;
-		DWORD m_dwCurUpdateTime;
-		DWORD m_dwLoad;
-		DWORD m_dwWidth;
-		DWORD m_dwHeight;
+		uint32_t m_dwCurRenderTime;
+		uint32_t m_dwCurUpdateTime;
+		uint32_t m_dwLoad;
+		uint32_t m_dwWidth;
+		uint32_t m_dwHeight;
 		int m_iCameraBaseWidth;
 		int m_iCameraBaseHeight;
 		bool m_isUIResolutionReloadPending;
@@ -376,8 +376,8 @@ class CPythonApplication : public CMSApplication, public CInputKeyboard, public 
 
 	protected:
 		// Time
-		DWORD m_dwLastIdleTime;
-		DWORD m_dwStartLocalTime;
+		uint32_t m_dwLastIdleTime;
+		uint32_t m_dwStartLocalTime;
 		time_t m_tServerTime;
 		time_t m_tLocalStartTime;
 		float m_fGlobalTime;
@@ -403,29 +403,29 @@ class CPythonApplication : public CMSApplication, public CInputKeyboard, public 
 		SCameraPos m_kCmrPos;
 		SCameraSpeed m_kCmrSpd;
 
-		BOOL m_isSpecialCameraMode;
+		int32_t m_isSpecialCameraMode;
 		// Camera
 		/////////////////////////////////////////////////////////////
 
 		float m_fFaceSpd;
-		DWORD m_dwFaceSpdSum;
-		DWORD m_dwFaceSpdCount;
+		uint32_t m_dwFaceSpdSum;
+		uint32_t m_dwFaceSpdCount;
 
-		DWORD m_dwFaceAccCount;
-		DWORD m_dwFaceAccTime;
+		uint32_t m_dwFaceAccCount;
+		uint32_t m_dwFaceAccTime;
 
-		DWORD m_dwUpdateFPS;
-		DWORD m_dwRenderFPS;
-		DWORD m_dwFaceCount;
+		uint32_t m_dwUpdateFPS;
+		uint32_t m_dwRenderFPS;
+		uint32_t m_dwFaceCount;
 
-		DWORD m_dwLButtonDownTime;
-		DWORD m_dwLButtonUpTime;
+		uint32_t m_dwLButtonDownTime;
+		uint32_t m_dwLButtonUpTime;
 
 		typedef std::map<int, HANDLE> TCursorHandleMap;
 		TCursorHandleMap m_CursorHandleMap;
 		HANDLE m_hCurrentCursor;
 
-		BOOL m_bCursorVisible;
+		int32_t m_bCursorVisible;
 		bool m_bLiarCursorOn;
 		int m_iCursorMode;
 		bool m_isWindowed;
@@ -439,10 +439,10 @@ class CPythonApplication : public CMSApplication, public CInputKeyboard, public 
 
 		bool m_isMinimizedWnd;
 		bool m_isActivateWnd;
-		BOOL m_isWindowFullScreenEnable;
+		int32_t m_isWindowFullScreenEnable;
 
-		DWORD m_dwStickyKeysFlag;
-		DWORD m_dwBufSleepSkipTime;
+		uint32_t m_dwStickyKeysFlag;
+		uint32_t m_dwBufSleepSkipTime;
 		int m_iForceSightRange;
 
 	protected:

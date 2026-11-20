@@ -1198,7 +1198,7 @@ typedef struct command_player_create
 		uint16_t job;
 		uint8_t shape;
 		uint8_t CON;
-		uint8_t INT;
+		uint8_t int32_t;
 		uint8_t STR;
 		uint8_t DEX;
 } TPacketCGCreateCharacter;

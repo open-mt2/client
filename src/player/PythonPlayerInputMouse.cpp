@@ -127,8 +127,8 @@ void CPythonPlayer::NEW_SetMouseSmartState(int eMBS, bool isAuto)
 
 void CPythonPlayer::__OnPressSmart(CInstanceBase& rkInstMain, bool isAuto)
 {
-	DWORD dwPickedItemID;
-	DWORD dwPickedActorID;
+	uint32_t dwPickedItemID;
+	uint32_t dwPickedActorID;
 	TPixelPosition kPPosPickedGround;
 
 	bool isPickedItemID = __GetPickedItemID(&dwPickedItemID);
@@ -155,8 +155,8 @@ void CPythonPlayer::__OnPressSmart(CInstanceBase& rkInstMain, bool isAuto)
 
 void CPythonPlayer::__OnClickSmart(CInstanceBase& rkInstMain, bool isAuto)
 {
-	DWORD dwPickedItemID;
-	DWORD dwPickedActorID;
+	uint32_t dwPickedItemID;
+	uint32_t dwPickedActorID;
 	TPixelPosition kPPosPickedGround;
 	if (__GetPickedItemID(&dwPickedItemID))
 	{
@@ -383,7 +383,7 @@ void CPythonPlayer::NEW_RefreshMouseWalkingDirection()
 	m_iComboOld = pkInstMain->GetComboIndex();
 }
 
-BOOL CPythonPlayer::__IsRightButtonSkillMode()
+int32_t CPythonPlayer::__IsRightButtonSkillMode()
 {
 	return MBF_SKILL == m_aeMBFButton[MBT_RIGHT];
 }

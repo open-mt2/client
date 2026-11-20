@@ -332,14 +332,14 @@ void CMapManager::BeginEnvironment()
 	{
 		ms_lpd3dDevice->LightEnable(0, TRUE);
 
-		rkMap.ApplyLight((DWORD)(uintptr_t)mc_pcurEnvironmentData, mc_pcurEnvironmentData->DirLights[ENV_DIRLIGHT_BACKGROUND]);
+		rkMap.ApplyLight((uint32_t)(uintptr_t)mc_pcurEnvironmentData, mc_pcurEnvironmentData->DirLights[ENV_DIRLIGHT_BACKGROUND]);
 	}
 	else
 		ms_lpd3dDevice->LightEnable(0, FALSE);
 
 	if (bFogEnable)
 	{
-		DWORD dwFogColor = mc_pcurEnvironmentData->FogColor;
+		uint32_t dwFogColor = mc_pcurEnvironmentData->FogColor;
 		STATEMANAGER.SetRenderState(D3DRS_FOGCOLOR, dwFogColor);
 
 		const float fMaxFogDistance = (ms_fFarY > 0.0f) ? ms_fFarY : 25600.0f;
@@ -358,7 +358,7 @@ void CMapManager::BeginEnvironment()
 			pEnvironmentData->m_fFogNearDistance = fFogNear;
 			pEnvironmentData->m_fFogFarDistance = fFogFar;
 
-			DWORD dwFogNear, dwFogFar;
+			uint32_t dwFogNear, dwFogFar;
 			memcpy(&dwFogNear, &fFogNear, sizeof(dwFogNear));
 			memcpy(&dwFogFar, &fFogFar, sizeof(dwFogFar));
 			STATEMANAGER.SetRenderState(D3DRS_FOGVERTEXMODE, D3DFOG_LINEAR);
@@ -369,7 +369,7 @@ void CMapManager::BeginEnvironment()
 		else if (mc_pcurEnvironmentData->bDensityFog)
 		{
 			float fDensity = 0.00015f;
-			DWORD dwDensity;
+			uint32_t dwDensity;
 			memcpy(&dwDensity, &fDensity, sizeof(dwDensity));
 			STATEMANAGER.SetRenderState(D3DRS_FOGVERTEXMODE, D3DFOG_EXP); // pixel fog
 			STATEMANAGER.SetRenderState(D3DRS_FOGDENSITY, dwDensity);	  // vertex fog
@@ -387,7 +387,7 @@ void CMapManager::BeginEnvironment()
 			CSpeedTreeForest& rkForest = CSpeedTreeForest::Instance();
 			rkForest.SetFog(fFogNear, fFogFar);
 
-			DWORD dwFogNear, dwFogFar;
+			uint32_t dwFogNear, dwFogFar;
 			memcpy(&dwFogNear, &fFogNear, sizeof(dwFogNear));
 			memcpy(&dwFogFar, &fFogFar, sizeof(dwFogFar));
 			STATEMANAGER.SetRenderState(D3DRS_FOGVERTEXMODE, D3DFOG_LINEAR); // vertex fox
@@ -507,7 +507,7 @@ void CMapManager::UpdateDayNight()
 		return;
 	}
 
-	const DWORD dwNow = CTimer::Instance().GetCurrentMillisecond();
+	const uint32_t dwNow = CTimer::Instance().GetCurrentMillisecond();
 
 	float fDeltaTime = 0.0f;
 
@@ -605,7 +605,7 @@ void CMapManager::BlendEnvironmentData(const TEnvironmentData* c_pEnvironmentDat
 {
 }
 
-bool CMapManager::RegisterEnvironmentData(DWORD dwIndex, const char* c_szFileName)
+bool CMapManager::RegisterEnvironmentData(uint32_t dwIndex, const char* c_szFileName)
 {
 	TEnvironmentData* pEnvironmentData = AllocEnvironmentData();
 
@@ -635,7 +635,7 @@ void CMapManager::GetCurrentEnvironmentData(const TEnvironmentData** c_ppEnviron
 	*c_ppEnvironmentData = mc_pcurEnvironmentData;
 }
 
-bool CMapManager::GetEnvironmentData(DWORD dwIndex, const TEnvironmentData** c_ppEnvironmentData)
+bool CMapManager::GetEnvironmentData(uint32_t dwIndex, const TEnvironmentData** c_ppEnvironmentData)
 {
 	TEnvironmentDataMap::iterator itor = m_EnvironmentDataMap.find(dwIndex);
 
@@ -710,15 +710,15 @@ void CMapManager::DeleteEnvironmentData(TEnvironmentData* pEnvironmentData)
 	pEnvironmentData = NULL;
 }
 
-BOOL CMapManager::LoadEnvironmentData(const char* c_szFileName, TEnvironmentData* pEnvironmentData)
+int32_t CMapManager::LoadEnvironmentData(const char* c_szFileName, TEnvironmentData* pEnvironmentData)
 {
 	if (!pEnvironmentData)
 		return FALSE;
 
-	return (BOOL)Environment_Load(*pEnvironmentData, c_szFileName);
+	return (int32_t)Environment_Load(*pEnvironmentData, c_szFileName);
 }
 
-DWORD CMapManager::GetShadowMapColor(float fx, float fy)
+uint32_t CMapManager::GetShadowMapColor(float fx, float fy)
 {
 	if (!IsMapReady())
 		return 0xFFFFFFFF;
@@ -741,7 +741,7 @@ std::vector<int>& CMapManager::GetRenderedSplatNum(int* piPatch, int* piSplat, f
 	return rkMap.GetRenderedSplatNum(piPatch, piSplat, pfSplatRatio);
 }
 
-CArea::TCRCWithNumberVector& CMapManager::GetRenderedGraphicThingInstanceNum(DWORD* pdwGraphicThingInstanceNum, DWORD* pdwCRCNum)
+CArea::TCRCWithNumberVector& CMapManager::GetRenderedGraphicThingInstanceNum(uint32_t* pdwGraphicThingInstanceNum, uint32_t* pdwCRCNum)
 {
 	if (!m_pkMap)
 	{
@@ -773,7 +773,7 @@ bool CMapManager::isPhysicalCollision(const D3DXVECTOR3& c_rvCheckPosition)
 	return rkMap.isAttrOn(c_rvCheckPosition.x, -c_rvCheckPosition.y, CTerrainImpl::ATTRIBUTE_BLOCK);
 }
 
-bool CMapManager::isAttrOn(float fX, float fY, BYTE byAttr)
+bool CMapManager::isAttrOn(float fX, float fY, uint8_t byAttr)
 {
 	if (!IsMapReady())
 		return false;
@@ -782,7 +782,7 @@ bool CMapManager::isAttrOn(float fX, float fY, BYTE byAttr)
 	return rkMap.isAttrOn(fX, fY, byAttr);
 }
 
-bool CMapManager::GetAttr(float fX, float fY, BYTE* pbyAttr)
+bool CMapManager::GetAttr(float fX, float fY, uint8_t* pbyAttr)
 {
 	if (!IsMapReady())
 		return false;
@@ -791,7 +791,7 @@ bool CMapManager::GetAttr(float fX, float fY, BYTE* pbyAttr)
 	return rkMap.GetAttr(fX, fY, pbyAttr);
 }
 
-bool CMapManager::isAttrOn(int iX, int iY, BYTE byAttr)
+bool CMapManager::isAttrOn(int iX, int iY, uint8_t byAttr)
 {
 	if (!IsMapReady())
 		return false;
@@ -800,7 +800,7 @@ bool CMapManager::isAttrOn(int iX, int iY, BYTE byAttr)
 	return rkMap.isAttrOn(iX, iY, byAttr);
 }
 
-bool CMapManager::GetAttr(int iX, int iY, BYTE* pbyAttr)
+bool CMapManager::GetAttr(int iX, int iY, uint8_t* pbyAttr)
 {
 	if (!IsMapReady())
 		return false;
@@ -853,7 +853,7 @@ CMapOutdoor::ETerrainRenderSort CMapManager::GetTerrainRenderSort()
 	return rkMap.GetTerrainRenderSort();
 }
 
-void CMapManager::GetBaseXY(DWORD* pdwBaseX, DWORD* pdwBaseY)
+void CMapManager::GetBaseXY(uint32_t* pdwBaseX, uint32_t* pdwBaseY)
 {
 	if (!IsMapReady())
 	{
@@ -881,7 +881,7 @@ void CMapManager::__LoadMapInfoVector()
 	char szMapName[256];
 	int x, y;
 	int width, height;
-	for (UINT uLineIndex = 0; uLineIndex < textFileLoader.GetLineCount(); ++uLineIndex)
+	for (uint32_t uLineIndex = 0; uLineIndex < textFileLoader.GetLineCount(); ++uLineIndex)
 	{
 		const std::string& c_rstLine = textFileLoader.GetLineString(uLineIndex);
 		sscanf(c_rstLine.c_str(), "%s %d %d %d %d",

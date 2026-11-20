@@ -135,7 +135,7 @@ void CMapOutdoor::__RenderTerrain_AppendPatch(const D3DXVECTOR3& c_rv3Center, fl
 	m_PatchVector.push_back(std::make_pair(fDistance, lPatchNum));
 }
 
-void CMapOutdoor::ApplyLight(DWORD dwVersion, const D3DLIGHT9& c_rkLight)
+void CMapOutdoor::ApplyLight(uint32_t dwVersion, const D3DLIGHT9& c_rkLight)
 {
 	m_kSTPD.m_dwLightVersion = dwVersion;
 	STATEMANAGER.SetLight(0, &c_rkLight);
@@ -150,14 +150,14 @@ void CMapOutdoor::InitializeVisibleParts()
 // 2004. 2. 17. myevan. 특정 부분을 보이게 하거나 감추는 함수
 void CMapOutdoor::SetVisiblePart(int ePart, bool isVisible)
 {
-	DWORD dwMask = (1 << ePart);
+	uint32_t dwMask = (1 << ePart);
 	if (isVisible)
 	{
 		m_dwVisiblePartFlags |= dwMask;
 	}
 	else
 	{
-		DWORD dwReverseMask = ~dwMask;
+		uint32_t dwReverseMask = ~dwMask;
 		m_dwVisiblePartFlags &= dwReverseMask;
 	}
 }
@@ -165,7 +165,7 @@ void CMapOutdoor::SetVisiblePart(int ePart, bool isVisible)
 // 2004. 2. 17. myevan. 특정 부분이 보이는지 알아내는 함수
 bool CMapOutdoor::IsVisiblePart(int ePart)
 {
-	DWORD dwMask = (1 << ePart);
+	uint32_t dwMask = (1 << ePart);
 	if (dwMask & m_dwVisiblePartFlags)
 		return true;
 
@@ -187,7 +187,7 @@ std::vector<int>& CMapOutdoor::GetRenderedSplatNum(int* piPatch, int* piSplat, f
 	return m_RenderedTextureNumVector;
 }
 
-CArea::TCRCWithNumberVector& CMapOutdoor::GetRenderedGraphicThingInstanceNum(DWORD* pdwGraphicThingInstanceNum, DWORD* pdwCRCNum)
+CArea::TCRCWithNumberVector& CMapOutdoor::GetRenderedGraphicThingInstanceNum(uint32_t* pdwGraphicThingInstanceNum, uint32_t* pdwCRCNum)
 {
 	*pdwGraphicThingInstanceNum = m_dwRenderedGraphicThingInstanceNum;
 	*pdwCRCNum = m_dwRenderedCRCNum;
@@ -295,19 +295,19 @@ void CMapOutdoor::SetInverseViewAndDynamicShaodwMatrices()
 void CMapOutdoor::OnRender()
 {
 #ifdef __PERFORMANCE_CHECKER__
-	DWORD t1 = ELTimer_GetMSec();
+	uint32_t t1 = ELTimer_GetMSec();
 	SetInverseViewAndDynamicShaodwMatrices();
 
 	SetBlendOperation();
-	DWORD t2 = ELTimer_GetMSec();
+	uint32_t t2 = ELTimer_GetMSec();
 	RenderArea();
-	DWORD t3 = ELTimer_GetMSec();
+	uint32_t t3 = ELTimer_GetMSec();
 	if (!m_bEnableTerrainOnlyForHeight)
 		RenderTerrain();
-	DWORD t4 = ELTimer_GetMSec();
+	uint32_t t4 = ELTimer_GetMSec();
 	RenderTree();
-	DWORD t5 = ELTimer_GetMSec();
-	DWORD tEnd = ELTimer_GetMSec();
+	uint32_t t5 = ELTimer_GetMSec();
+	uint32_t tEnd = ELTimer_GetMSec();
 
 	if (tEnd - t1 < 7)
 		return;
@@ -496,7 +496,7 @@ void CMapOutdoor::RenderArea(bool bRenderAmbience)
 				CArea::TCRCWithNumberVector::iterator aIterator = rCRCWithNumberVector.begin();
 				while (aIterator != rCRCWithNumberVector.end())
 				{
-					DWORD dwCRC = (*aIterator++).dwCRC;
+					uint32_t dwCRC = (*aIterator++).dwCRC;
 
 					CArea::TCRCWithNumberVector::iterator aCRCWithNumberVectorIterator =
 						std::find_if(m_dwRenderedCRCWithNumberVector.begin(), m_dwRenderedCRCWithNumberVector.end(), CArea::FFindIfCRC(dwCRC));
@@ -685,7 +685,7 @@ void CMapOutdoor::RenderPCBlocker()
 #endif
 }
 
-void CMapOutdoor::SelectIndexBuffer(BYTE byLODLevel, WORD* pwPrimitiveCount, D3DPRIMITIVETYPE* pePrimitiveType)
+void CMapOutdoor::SelectIndexBuffer(uint8_t byLODLevel, uint16_t* pwPrimitiveCount, D3DPRIMITIVETYPE* pePrimitiveType)
 {
 #ifdef WORLD_EDITOR
 	*pwPrimitiveCount = m_wNumIndices - 2;
@@ -736,7 +736,7 @@ void CMapOutdoor::SetPatchDrawVector()
 			continue;
 		}
 
-		BYTE byTerrainNum = pTerrainPatchProxy->GetTerrainNum();
+		uint8_t byTerrainNum = pTerrainPatchProxy->GetTerrainNum();
 		if (0xFF == byTerrainNum)
 		{
 			++aDistancePatchVectorIterator;
@@ -780,18 +780,18 @@ struct FPatchNumMatch
 		{
 			m_lPatchNumToCheck = lPatchNum;
 		}
-		bool operator()(std::pair<long, BYTE> aPair)
+		bool operator()(std::pair<long, uint8_t> aPair)
 		{
 			return m_lPatchNumToCheck == aPair.first;
 		}
 };
 
-void CMapOutdoor::NEW_DrawWireFrame(CTerrainPatchProxy* pTerrainPatchProxy, WORD wPrimitiveCount, D3DPRIMITIVETYPE ePrimitiveType)
+void CMapOutdoor::NEW_DrawWireFrame(CTerrainPatchProxy* pTerrainPatchProxy, uint16_t wPrimitiveCount, D3DPRIMITIVETYPE ePrimitiveType)
 {
-	DWORD dwFillMode = STATEMANAGER.GetRenderState(D3DRS_FILLMODE);
+	uint32_t dwFillMode = STATEMANAGER.GetRenderState(D3DRS_FILLMODE);
 	STATEMANAGER.SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 
-	DWORD dwFogEnable = STATEMANAGER.GetRenderState(D3DRS_FOGENABLE);
+	uint32_t dwFogEnable = STATEMANAGER.GetRenderState(D3DRS_FOGENABLE);
 	STATEMANAGER.SetRenderState(D3DRS_FOGENABLE, FALSE);
 
 	STATEMANAGER.SetTexture(0, NULL);
@@ -808,7 +808,7 @@ void CMapOutdoor::NEW_DrawWireFrame(CTerrainPatchProxy* pTerrainPatchProxy, WORD
 	STATEMANAGER.SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
 }
 
-void CMapOutdoor::DrawWireFrame(long patchnum, WORD wPrimitiveCount, D3DPRIMITIVETYPE ePrimitiveType)
+void CMapOutdoor::DrawWireFrame(long patchnum, uint16_t wPrimitiveCount, D3DPRIMITIVETYPE ePrimitiveType)
 {
 	assert(NULL != m_pTerrainPatchProxyList && "CMapOutdoor::DrawWireFrame");
 
@@ -820,14 +820,14 @@ void CMapOutdoor::DrawWireFrame(long patchnum, WORD wPrimitiveCount, D3DPRIMITIV
 	long sPatchNum = pTerrainPatchProxy->GetPatchNum();
 	if (sPatchNum < 0)
 		return;
-	BYTE ucTerrainNum = pTerrainPatchProxy->GetTerrainNum();
+	uint8_t ucTerrainNum = pTerrainPatchProxy->GetTerrainNum();
 	if (0xFF == ucTerrainNum)
 		return;
 
-	DWORD dwFillMode = STATEMANAGER.GetRenderState(D3DRS_FILLMODE);
+	uint32_t dwFillMode = STATEMANAGER.GetRenderState(D3DRS_FILLMODE);
 	STATEMANAGER.SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 
-	DWORD dwFogEnable = STATEMANAGER.GetRenderState(D3DRS_FOGENABLE);
+	uint32_t dwFogEnable = STATEMANAGER.GetRenderState(D3DRS_FOGENABLE);
 	STATEMANAGER.SetRenderState(D3DRS_FOGENABLE, FALSE);
 
 	STATEMANAGER.SetTexture(0, NULL);
@@ -854,7 +854,7 @@ void CMapOutdoor::RenderMarkedArea()
 	m_matWorldForCommonUse._42 = 0.0f;
 	STATEMANAGER.SetTransform(D3DTS_WORLD, &m_matWorldForCommonUse);
 
-	WORD wPrimitiveCount;
+	uint16_t wPrimitiveCount;
 	D3DPRIMITIVETYPE eType;
 	SelectIndexBuffer(0, &wPrimitiveCount, &eType);
 
@@ -954,7 +954,7 @@ void CMapOutdoor::DrawPatchAttr(long patchnum)
 	if (sPatchNum < 0)
 		return;
 
-	BYTE ucTerrainNum = pTerrainPatchProxy->GetTerrainNum();
+	uint8_t ucTerrainNum = pTerrainPatchProxy->GetTerrainNum();
 	if (0xFF == ucTerrainNum)
 		return;
 
@@ -966,7 +966,7 @@ void CMapOutdoor::DrawPatchAttr(long patchnum)
 	if (!pTerrain->IsMarked())
 		return;
 
-	WORD wCoordX, wCoordY;
+	uint16_t wCoordX, wCoordY;
 	pTerrain->GetCoordinate(&wCoordX, &wCoordY);
 
 	m_matWorldForCommonUse._41 = -(float)(wCoordX * CTerrainImpl::XSIZE * CTerrainImpl::CELLSCALE);

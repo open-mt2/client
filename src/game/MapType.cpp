@@ -24,9 +24,9 @@ float SPixelPosition_CalculateDistanceSq3d(const TPixelPosition& c_rkPPosLeft, c
 namespace prt
 {
 
-	DWORD GetPropertyType(const char* c_szTypeName)
+	uint32_t GetPropertyType(const char* c_szTypeName)
 	{
-		for (DWORD i = 0; i < PROPERTY_TYPE_MAX_NUM; ++i)
+		for (uint32_t i = 0; i < PROPERTY_TYPE_MAX_NUM; ++i)
 		{
 			if (!strcmp(c_szPropertyTypeName[i], c_szTypeName))
 				return i;
@@ -35,7 +35,7 @@ namespace prt
 		return PROPERTY_TYPE_NONE;
 	}
 
-	const char* GetPropertyExtension(DWORD dwType)
+	const char* GetPropertyExtension(uint32_t dwType)
 	{
 		if (dwType >= PROPERTY_TYPE_MAX_NUM)
 			return c_szPropertyExtension[0];

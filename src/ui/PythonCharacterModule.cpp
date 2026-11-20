@@ -290,7 +290,7 @@ PyObject* chrUnselect(PyObject* poSelf, PyObject* poArgs)
 
 PyObject* chrPick(PyObject* poSelf, PyObject* poArgs)
 {
-	DWORD VirtualID = 0;
+	uint32_t VirtualID = 0;
 	if (CPythonCharacterManager::Instance().OLD_GetPickedInstanceVID(&VirtualID))
 		return Py_BuildValue("i", VirtualID);
 	else
@@ -319,7 +319,7 @@ PyObject* chrShow(PyObject* poSelf, PyObject* poArgs)
 
 PyObject* chrPickAll(PyObject* poSelf, PyObject* poArgs)
 {
-	DWORD VirtualID = CPythonCharacterManager::Instance().PickAll();
+	uint32_t VirtualID = CPythonCharacterManager::Instance().PickAll();
 	return Py_BuildValue("i", VirtualID);
 }
 
@@ -609,7 +609,7 @@ PyObject* chrSetLoopMotion(PyObject* poSelf, PyObject* poArgs)
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 	if (!pkInst)
 		return Py_BuildNone();
-	pkInst->SetLoopMotion(WORD(iMotionIndex));
+	pkInst->SetLoopMotion(uint16_t(iMotionIndex));
 
 	return Py_BuildNone();
 }
@@ -626,7 +626,7 @@ PyObject* chrBlendLoopMotion(PyObject* poSelf, PyObject* poArgs)
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 	if (!pkInst)
 		return Py_BuildNone();
-	pkInst->SetLoopMotion(WORD(iMotionIndex), fBlendTime);
+	pkInst->SetLoopMotion(uint16_t(iMotionIndex), fBlendTime);
 
 	return Py_BuildNone();
 }
@@ -646,7 +646,7 @@ PyObject* chrPushOnceMotion(PyObject* poSelf, PyObject* poArgs)
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 	if (!pkInst)
 		return Py_BuildNone();
-	pkInst->PushOnceMotion(WORD(iMotionIndex), fBlendTime);
+	pkInst->PushOnceMotion(uint16_t(iMotionIndex), fBlendTime);
 
 	return Py_BuildNone();
 }
@@ -666,7 +666,7 @@ PyObject* chrPushLoopMotion(PyObject* poSelf, PyObject* poArgs)
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 	if (!pkInst)
 		return Py_BuildNone();
-	pkInst->PushLoopMotion(WORD(iMotionIndex), fBlendTime);
+	pkInst->PushLoopMotion(uint16_t(iMotionIndex), fBlendTime);
 
 	return Py_BuildNone();
 }

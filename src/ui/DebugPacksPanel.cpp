@@ -376,8 +376,8 @@ namespace
 		D3DVIEWPORT9 viewport;
 		viewport.X = 0;
 		viewport.Y = 0;
-		viewport.Width = static_cast<DWORD>(width);
-		viewport.Height = static_cast<DWORD>(height);
+		viewport.Width = static_cast<uint32_t>(width);
+		viewport.Height = static_cast<uint32_t>(height);
 		viewport.MinZ = 0.0f;
 		viewport.MaxZ = 1.0f;
 		device->SetViewport(&viewport);

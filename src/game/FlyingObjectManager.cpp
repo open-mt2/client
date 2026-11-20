@@ -55,7 +55,7 @@ bool CFlyingManager::RegisterFlyingData(const char* c_szFilename)
 {
 	std::string s;
 	StringPath(c_szFilename, s);
-	DWORD dwRetCRC = GetCaseCRC32(s.c_str(), s.size());
+	uint32_t dwRetCRC = GetCaseCRC32(s.c_str(), s.size());
 
 	if (m_kMap_pkFlyData.find(dwRetCRC) != m_kMap_pkFlyData.end())
 	{
@@ -74,7 +74,7 @@ bool CFlyingManager::RegisterFlyingData(const char* c_szFilename)
 	return true;
 }
 
-bool CFlyingManager::RegisterFlyingData(const char* c_szFilename, DWORD& r_dwRetCRC)
+bool CFlyingManager::RegisterFlyingData(const char* c_szFilename, uint32_t& r_dwRetCRC)
 {
 	std::string s;
 	StringPath(c_szFilename, s);
@@ -98,7 +98,7 @@ bool CFlyingManager::RegisterFlyingData(const char* c_szFilename, DWORD& r_dwRet
 	return true;
 }
 
-CFlyingInstance* CFlyingManager::CreateFlyingInstanceFlyTarget(const DWORD dwID,
+CFlyingInstance* CFlyingManager::CreateFlyingInstanceFlyTarget(const uint32_t dwID,
 															   const D3DXVECTOR3& v3StartPosition,
 															   const CFlyTarget& cr_FlyTarget,
 															   bool canAttack)
@@ -146,9 +146,9 @@ void CFlyingManager::Render()
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-bool CFlyingManager::RegisterIndexedFlyData(DWORD dwIndex, BYTE byType, const char* c_szFileName)
+bool CFlyingManager::RegisterIndexedFlyData(uint32_t dwIndex, uint8_t byType, const char* c_szFileName)
 {
-	DWORD dwCRC;
+	uint32_t dwCRC;
 	if (!RegisterFlyingData(c_szFileName, dwCRC))
 	{
 		TraceError("CFlyingManager::RegisterIndexFlyData(dwIndex=%d, c_szFileName=%s) - Failed to load flying data file", dwIndex, c_szFileName);
@@ -163,7 +163,7 @@ bool CFlyingManager::RegisterIndexedFlyData(DWORD dwIndex, BYTE byType, const ch
 	return true;
 }
 
-void CFlyingManager::CreateIndexedFly(DWORD dwIndex, CActorInstance* pStartActor, CActorInstance* pEndActor)
+void CFlyingManager::CreateIndexedFly(uint32_t dwIndex, CActorInstance* pStartActor, CActorInstance* pEndActor)
 {
 	if (m_kMap_dwIndexFlyData.end() == m_kMap_dwIndexFlyData.find(dwIndex))
 	{

@@ -18,14 +18,14 @@ static std::unique_ptr<CGuildMarkImage> NewImage()
 	return std::unique_ptr<CGuildMarkImage>(new CGuildMarkImage());
 }
 
-static void FillMark(BYTE* data, BYTE seed)
+static void FillMark(uint8_t* data, uint8_t seed)
 {
 	for (int i = 0; i < SGuildMark::SIZE; ++i)
 	{
-		data[i * 4 + 0] = (BYTE)(seed + i);		// B
-		data[i * 4 + 1] = (BYTE)(seed + i + 1); // G
-		data[i * 4 + 2] = (BYTE)(seed + i + 2); // R
-		data[i * 4 + 3] = 0xFF;					// A
+		data[i * 4 + 0] = (uint8_t)(seed + i);	   // B
+		data[i * 4 + 1] = (uint8_t)(seed + i + 1); // G
+		data[i * 4 + 2] = (uint8_t)(seed + i + 2); // R
+		data[i * 4 + 3] = 0xFF;					   // A
 	}
 }
 
@@ -51,7 +51,7 @@ int main()
 
 	// Draw one mark, save, reload and compare the pixels.
 	{
-		BYTE mark[SGuildMark::SIZE * 4];
+		uint8_t mark[SGuildMark::SIZE * 4];
 		FillMark(mark, 7);
 
 		std::unique_ptr<CGuildMarkImage> image = NewImage();
@@ -64,10 +64,10 @@ int main()
 		std::unique_ptr<CGuildMarkImage> image = NewImage();
 		TEST_ASSERT(image->Load(kPath));
 
-		BYTE expected[SGuildMark::SIZE * 4];
+		uint8_t expected[SGuildMark::SIZE * 4];
 		FillMark(expected, 7);
 
-		BYTE actual[SGuildMark::SIZE * 4];
+		uint8_t actual[SGuildMark::SIZE * 4];
 		std::memset(actual, 0, sizeof(actual));
 		image->GetData(0, 0, SGuildMark::WIDTH, SGuildMark::HEIGHT, actual);
 
@@ -82,10 +82,10 @@ int main()
 		std::unique_ptr<CGuildMarkImage> image = NewImage();
 		TEST_ASSERT(image->Load(kPath));
 
-		BYTE blank[SGuildMark::SIZE * 4];
+		uint8_t blank[SGuildMark::SIZE * 4];
 		std::memset(blank, 0, sizeof(blank));
 
-		BYTE actual[SGuildMark::SIZE * 4];
+		uint8_t actual[SGuildMark::SIZE * 4];
 		std::memset(actual, 0xAA, sizeof(actual));
 		image->GetData(SGuildMark::WIDTH, 0, SGuildMark::WIDTH, SGuildMark::HEIGHT, actual);
 

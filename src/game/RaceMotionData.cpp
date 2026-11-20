@@ -5,7 +5,7 @@
 
 CDynamicPool<CRaceMotionData> CRaceMotionData::ms_kPool;
 
-void CRaceMotionData::CreateSystem(UINT uCapacity)
+void CRaceMotionData::CreateSystem(uint32_t uCapacity)
 {
 	ms_kPool.Create(uCapacity);
 }
@@ -27,7 +27,7 @@ void CRaceMotionData::Delete(CRaceMotionData* pkData)
 	ms_kPool.Free(pkData);
 }
 
-void CRaceMotionData::SetName(UINT eName)
+void CRaceMotionData::SetName(uint32_t eName)
 {
 	m_eName = eName;
 
@@ -137,7 +137,7 @@ void CRaceMotionData::SetName(UINT eName)
 			break;
 	}
 }
-void CRaceMotionData::SetType(UINT eType)
+void CRaceMotionData::SetType(uint32_t eType)
 {
 	m_eType = eType;
 
@@ -154,7 +154,7 @@ void CRaceMotionData::SetType(UINT eType)
 	}
 }
 
-UINT CRaceMotionData::GetType() const
+uint32_t CRaceMotionData::GetType() const
 {
 	return m_eType;
 }
@@ -180,7 +180,7 @@ void CRaceMotionData::SetMotionDuration(float fDuration)
 }
 
 // Combo
-BOOL CRaceMotionData::IsComboInputTimeData() const
+int32_t CRaceMotionData::IsComboInputTimeData() const
 {
 	return m_isComboMotion;
 }
@@ -204,7 +204,7 @@ float CRaceMotionData::GetComboInputEndTime() const
 }
 
 // Attacking
-BOOL CRaceMotionData::isAttackingMotion() const
+int32_t CRaceMotionData::isAttackingMotion() const
 {
 	return m_isAttackingMotion;
 }
@@ -220,19 +220,19 @@ const NRaceData::TMotionAttackData& CRaceMotionData::GetMotionAttackDataReferenc
 	return m_MotionAttackData;
 }
 
-BOOL CRaceMotionData::HasSplashMotionEvent() const
+int32_t CRaceMotionData::HasSplashMotionEvent() const
 {
 	return m_hasSplashEvent;
 }
 
 // Skill
-BOOL CRaceMotionData::IsCancelEnableSkill() const
+int32_t CRaceMotionData::IsCancelEnableSkill() const
 {
 	return m_bCancelEnableSkill;
 }
 
 // Loop
-BOOL CRaceMotionData::IsLoopMotion() const
+int32_t CRaceMotionData::IsLoopMotion() const
 {
 	return m_isLoopMotion;
 }
@@ -248,12 +248,12 @@ float CRaceMotionData::GetLoopEndTime() const
 }
 
 // Motion Event Data
-DWORD CRaceMotionData::GetMotionEventDataCount() const
+uint32_t CRaceMotionData::GetMotionEventDataCount() const
 {
 	return m_MotionEventDataVector.size();
 }
 
-BOOL CRaceMotionData::GetMotionEventDataPointer(BYTE byIndex, const CRaceMotionData::TMotionEventData** c_ppData) const
+int32_t CRaceMotionData::GetMotionEventDataPointer(uint8_t byIndex, const CRaceMotionData::TMotionEventData** c_ppData) const
 {
 	if (byIndex >= m_MotionEventDataVector.size())
 		return FALSE;
@@ -263,7 +263,7 @@ BOOL CRaceMotionData::GetMotionEventDataPointer(BYTE byIndex, const CRaceMotionD
 	return TRUE;
 }
 
-BOOL CRaceMotionData::GetMotionAttackingEventDataPointer(BYTE byIndex, const CRaceMotionData::TMotionAttackingEventData** c_ppData) const
+int32_t CRaceMotionData::GetMotionAttackingEventDataPointer(uint8_t byIndex, const CRaceMotionData::TMotionAttackingEventData** c_ppData) const
 {
 	if (byIndex >= m_MotionEventDataVector.size())
 		return FALSE;
@@ -279,7 +279,7 @@ BOOL CRaceMotionData::GetMotionAttackingEventDataPointer(BYTE byIndex, const CRa
 	return TRUE;
 }
 
-int CRaceMotionData::GetEventType(DWORD dwIndex) const
+int CRaceMotionData::GetEventType(uint32_t dwIndex) const
 {
 	if (dwIndex >= m_MotionEventDataVector.size())
 		return MOTION_EVENT_TYPE_NONE;
@@ -287,7 +287,7 @@ int CRaceMotionData::GetEventType(DWORD dwIndex) const
 	return m_MotionEventDataVector[dwIndex]->iType;
 }
 
-float CRaceMotionData::GetEventStartTime(DWORD dwIndex) const
+float CRaceMotionData::GetEventStartTime(uint32_t dwIndex) const
 {
 	if (dwIndex >= m_MotionEventDataVector.size())
 		return 0.0f;
@@ -345,7 +345,7 @@ bool CRaceMotionData::LoadMotionData(const char* c_szFileName)
 	}
 
 	std::string strNodeName;
-	for (DWORD i = 0; i < rkTextFileLoader.GetChildNodeCount(); ++i)
+	for (uint32_t i = 0; i < rkTextFileLoader.GetChildNodeCount(); ++i)
 	{
 		CTextFileLoader::CGotoChild GotoChild(&rkTextFileLoader, i);
 
@@ -387,7 +387,7 @@ bool CRaceMotionData::LoadMotionData(const char* c_szFileName)
 		}
 		else if (0 == strNodeName.compare("motioneventdata"))
 		{
-			DWORD dwMotionEventDataCount;
+			uint32_t dwMotionEventDataCount;
 
 			if (!rkTextFileLoader.GetTokenDoubleWord("motioneventdatacount", &dwMotionEventDataCount))
 				continue;
@@ -396,7 +396,7 @@ bool CRaceMotionData::LoadMotionData(const char* c_szFileName)
 
 			m_MotionEventDataVector.resize(dwMotionEventDataCount, NULL);
 
-			for (DWORD j = 0; j < m_MotionEventDataVector.size(); ++j)
+			for (uint32_t j = 0; j < m_MotionEventDataVector.size(); ++j)
 			{
 				if (!rkTextFileLoader.SetChildNode("event", j))
 					return false;
@@ -533,7 +533,7 @@ bool CRaceMotionData::SaveMotionData(const char* c_szFileName)
 		fprintf(File, "{\n");
 		fprintf(File, "    MotionEventDataCount     %d\n", m_MotionEventDataVector.size());
 
-		for (DWORD j = 0; j < m_MotionEventDataVector.size(); ++j)
+		for (uint32_t j = 0; j < m_MotionEventDataVector.size(); ++j)
 		{
 			TMotionEventData* c_pData = m_MotionEventDataVector[j];
 

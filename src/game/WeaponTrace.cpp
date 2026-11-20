@@ -356,7 +356,7 @@ void CWeaponTrace::SetTexture(const char* c_szFileName)
 	// m_lpTexture = pTexture->GetD3DTexture();
 }
 
-bool CWeaponTrace::SetWeaponInstance(CGraphicThingInstance* pInstance, DWORD dwModelIndex, const char* c_szBoneName)
+bool CWeaponTrace::SetWeaponInstance(CGraphicThingInstance* pInstance, uint32_t dwModelIndex, const char* c_szBoneName)
 {
 	pInstance->Update();
 	pInstance->DeformNoSkin();

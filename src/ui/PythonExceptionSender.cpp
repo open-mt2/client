@@ -3,7 +3,7 @@
 
 void CPythonExceptionSender::Send()
 {
-	// DWORD dwCRC32 = GetCaseCRC32(m_strExceptionString.c_str(), m_strExceptionString.length());
+	// uint32_t dwCRC32 = GetCaseCRC32(m_strExceptionString.c_str(), m_strExceptionString.length());
 	// if (m_kSet_dwSendedExceptionCRC.end() != m_kSet_dwSendedExceptionCRC.find(dwCRC32))
 	//	return;
 
@@ -16,7 +16,7 @@ void CPythonExceptionSender::Send()
 	//	Tracef(" CPythonExceptionSender::Send() - Invalid Socket");
 	// }
 
-	// DWORD arg = 1;
+	// uint32_t arg = 1;
 	// ioctlsocket(s, FIONBIO, &arg);	// Non-blocking mode
 
 	// char szServerAddr[256];

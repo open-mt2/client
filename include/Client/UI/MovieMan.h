@@ -44,7 +44,7 @@ class CMovieMan : public CSingleton<CMovieMan>
 		void ClearToBlack();
 		void PlayLogo(const char* pcszName);
 		void PlayIntro();
-		BOOL PlayTutorial(LONG nIdx);
+		int32_t PlayTutorial(int32_t nIdx);
 
 	private:
 		bool m_usingRGB32;
@@ -54,29 +54,29 @@ class CMovieMan : public CSingleton<CMovieMan>
 		IDirectDrawSurface* m_pPrimarySurface;
 		IBasicAudio* m_pBasicAudio;
 
-		void FillRect(RECT& fillRect, DWORD fillColor);
-		inline void GDIFillRect(RECT& fillRect, DWORD fillColor);
+		void FillRect(RECT& fillRect, uint32_t fillColor);
+		inline void GDIFillRect(RECT& fillRect, uint32_t fillColor);
 		inline void GDIBlt(IDirectDrawSurface* pSrcSurface, RECT* pDestRect);
 
 		void GetWindowRect(RECT& windowRect);
 		void CalcMovieRect(int srcWidth, int srcHeight, RECT& movieRect);
 		void CalcBackgroundRect(const RECT& movieRect, RECT& upperRect, RECT& lowerRect);
 
-		BOOL PlayMovie(const char* cpFileName, const bool bSkipAllowed = FALSE, const int nPostEffectID = 0, const DWORD dwPostEffectData = 0);
+		int32_t PlayMovie(const char* cpFileName, const bool bSkipAllowed = FALSE, const int nPostEffectID = 0, const uint32_t dwPostEffectData = 0);
 
-		HRESULT BuildFilterGraphManually(
-			WCHAR* wpFilename,
+		int32_t BuildFilterGraphManually(
+			wchar_t* wpFilename,
 			IAMMultiMediaStream* pAMStream,
 			const GUID FAR clsidSplitter,
 			const GUID FAR clsidVideoCodec,
 			const GUID FAR clsidAudioCodec);
 
-		HRESULT RenderFileToMMStream(const char* cpFilename, IMultiMediaStream** ppMMStream, IDirectDraw* pDD);
-		HRESULT RenderStreamToSurface(IDirectDrawSurface* pSurface, IDirectDrawMediaStream* pDDStream, IMultiMediaStream* pMMStream, bool bSkipAllowed, int nPostEffectID, DWORD dwPostEffectData);
-		HRESULT RenderPostEffectFadeOut(IDirectDrawSurface* pSurface, int fadeOutDuration, DWORD fadeOutColor);
+		int32_t RenderFileToMMStream(const char* cpFilename, IMultiMediaStream** ppMMStream, IDirectDraw* pDD);
+		int32_t RenderStreamToSurface(IDirectDrawSurface* pSurface, IDirectDrawMediaStream* pDDStream, IMultiMediaStream* pMMStream, bool bSkipAllowed, int nPostEffectID, uint32_t dwPostEffectData);
+		int32_t RenderPostEffectFadeOut(IDirectDrawSurface* pSurface, int fadeOutDuration, uint32_t fadeOutColor);
 
 		// #ifdef _DEBUG
-		//	HRESULT				AddToRot(IGraphBuilder* pGraphBuilder, DWORD *pdwRegister);
-		//	void				RemoveFromRot(DWORD pdwRegister);
+		//	int32_t				AddToRot(IGraphBuilder* pGraphBuilder, uint32_t *pdwRegister);
+		//	void				RemoveFromRot(uint32_t pdwRegister);
 		// #endif
 };

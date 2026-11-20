@@ -486,7 +486,7 @@ PyObject* itemDeleteItem(PyObject* poSelf, PyObject* poArgs)
 
 PyObject* itemPick(PyObject* poSelf, PyObject* poArgs)
 {
-	DWORD dwItemID;
+	uint32_t dwItemID;
 	if (CPythonItem::Instance().GetPickedItemID(&dwItemID))
 		return Py_BuildValue("i", dwItemID);
 	else

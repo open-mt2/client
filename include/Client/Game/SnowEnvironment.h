@@ -44,12 +44,12 @@ class CSnowEnvironment : public CScreen
 
 		D3DXVECTOR3 m_v3Center;
 
-		WORD m_wBlurTextureSize;
+		uint16_t m_wBlurTextureSize;
 		CGraphicImageInstance* m_pImageInstance;
 		std::vector<CSnowParticle*> m_kVct_pkParticleSnow;
 
-		DWORD m_dwParticleMaxNum;
-		BOOL m_bBlurEnable;
+		uint32_t m_dwParticleMaxNum;
+		int32_t m_bBlurEnable;
 
-		BOOL m_bSnowEnable;
+		int32_t m_bSnowEnable;
 };

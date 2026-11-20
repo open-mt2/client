@@ -198,7 +198,7 @@ class CRaceMotionData
 		static CRaceMotionData* New();
 		static void Delete(CRaceMotionData* pkData);
 
-		static void CreateSystem(UINT uCapacity);
+		static void CreateSystem(uint32_t uCapacity);
 		static void DestroySystem();
 
 	public:
@@ -208,10 +208,10 @@ class CRaceMotionData
 		void Initialize();
 		void Destroy();
 
-		void SetName(UINT eName);
+		void SetName(uint32_t eName);
 
-		UINT GetType() const; // 모션 타입 얻기
-		bool IsLock() const;  // 락된 모션 인가? (다른 모션에 캔슬되지 않음)
+		uint32_t GetType() const; // 모션 타입 얻기
+		bool IsLock() const;	  // 락된 모션 인가? (다른 모션에 캔슬되지 않음)
 
 		int GetLoopCount() const;
 
@@ -225,32 +225,32 @@ class CRaceMotionData
 		void SetAccumulationPosition(const TPixelPosition& c_rPos);
 		const TPixelPosition& GetAccumulationPosition() { return m_accumulationPosition; }
 
-		BOOL IsComboInputTimeData() const; // 콤보 입력 타이밍 데이터가 있는가?
+		int32_t IsComboInputTimeData() const; // 콤보 입력 타이밍 데이터가 있는가?
 
 		float GetComboInputStartTime() const;
 		float GetNextComboTime() const;
 		float GetComboInputEndTime() const;
 
 		// Attacking
-		BOOL isAttackingMotion() const;
+		int32_t isAttackingMotion() const;
 		const NRaceData::TMotionAttackData* GetMotionAttackDataPointer() const;
 		const NRaceData::TMotionAttackData& GetMotionAttackDataReference() const;
-		BOOL HasSplashMotionEvent() const;
+		int32_t HasSplashMotionEvent() const;
 
 		// Skill
-		BOOL IsCancelEnableSkill() const;
+		int32_t IsCancelEnableSkill() const;
 
 		// Loop
-		BOOL IsLoopMotion() const;
+		int32_t IsLoopMotion() const;
 		float GetLoopStartTime() const;
 		float GetLoopEndTime() const;
 
 		// Motion Event Data
-		DWORD GetMotionEventDataCount() const;
-		BOOL GetMotionEventDataPointer(BYTE byIndex, const CRaceMotionData::TMotionEventData** c_ppData) const;
-		BOOL GetMotionAttackingEventDataPointer(BYTE byIndex, const CRaceMotionData::TMotionAttackingEventData** c_ppMotionEventData) const;
-		int GetEventType(DWORD dwIndex) const;
-		float GetEventStartTime(DWORD dwIndex) const;
+		uint32_t GetMotionEventDataCount() const;
+		int32_t GetMotionEventDataPointer(uint8_t byIndex, const CRaceMotionData::TMotionEventData** c_ppData) const;
+		int32_t GetMotionAttackingEventDataPointer(uint8_t byIndex, const CRaceMotionData::TMotionAttackingEventData** c_ppMotionEventData) const;
+		int GetEventType(uint32_t dwIndex) const;
+		float GetEventStartTime(uint32_t dwIndex) const;
 
 		// Sound Data
 		const NSound::TSoundInstanceVector* GetSoundInstanceVectorPointer() const;
@@ -263,38 +263,38 @@ class CRaceMotionData
 		bool LoadSoundScriptData(const char* c_szFileName);
 
 	protected:
-		void SetType(UINT eType);
+		void SetType(uint32_t eType);
 
 	protected:
-		UINT m_eType;
-		UINT m_eName;
-		BOOL m_isLock;
+		uint32_t m_eType;
+		uint32_t m_eName;
+		int32_t m_isLock;
 		int m_iLoopCount;
 
 		std::string m_strMotionFileName;
 		std::string m_strSoundScriptDataFileName;
 		float m_fMotionDuration;
 
-		BOOL m_isAccumulationMotion;
+		int32_t m_isAccumulationMotion;
 		TPixelPosition m_accumulationPosition;
 
-		BOOL m_isComboMotion;
+		int32_t m_isComboMotion;
 		TComboInputData m_ComboInputData;
 
-		BOOL m_isLoopMotion;
+		int32_t m_isLoopMotion;
 		float m_fLoopStartTime;
 		float m_fLoopEndTime;
 
-		BOOL m_isAttackingMotion;
+		int32_t m_isAttackingMotion;
 		NRaceData::TMotionAttackData m_MotionAttackData;
 
-		BOOL m_bCancelEnableSkill;
+		int32_t m_bCancelEnableSkill;
 
 		TMotionEventDataVector m_MotionEventDataVector;
 		NSound::TSoundInstanceVector m_SoundInstanceVector;
 
 	private:
-		BOOL m_hasSplashEvent;
+		int32_t m_hasSplashEvent;
 
 	protected:
 		static CDynamicPool<CRaceMotionData> ms_kPool;

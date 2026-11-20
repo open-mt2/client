@@ -10,7 +10,7 @@ PyObject* nonplayerGetEventType(PyObject* poSelf, PyObject* poArgs)
 	if (!PyTuple_GetInteger(poArgs, 0, &iVirtualNumber))
 		return Py_BuildException();
 
-	BYTE iType = CPythonNonPlayer::Instance().GetEventType(iVirtualNumber);
+	uint8_t iType = CPythonNonPlayer::Instance().GetEventType(iVirtualNumber);
 
 	return Py_BuildValue("i", iType);
 }
@@ -21,7 +21,7 @@ PyObject* nonplayerGetEventTypeByVID(PyObject* poSelf, PyObject* poArgs)
 	if (!PyTuple_GetInteger(poArgs, 0, &iVirtualID))
 		return Py_BuildException();
 
-	BYTE iType = CPythonNonPlayer::Instance().GetEventTypeByVID(iVirtualID);
+	uint8_t iType = CPythonNonPlayer::Instance().GetEventTypeByVID(iVirtualID);
 
 	return Py_BuildValue("i", iType);
 }

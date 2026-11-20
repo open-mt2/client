@@ -19,14 +19,14 @@ class CProperty
 		void PutVector(const char* c_pszKey, const CTokenVector& c_rTokenVector);
 		void PutString(const char* c_pszKey, const char* c_pszString);
 
-		DWORD GetSize();
-		DWORD GetCRC();
+		uint32_t GetSize();
+		uint32_t GetCRC();
 
 	protected:
 		std::string m_stFileName;
 		std::string m_stCRC;
 		const char* mc_pFileName;
-		DWORD m_dwCRC;
+		uint32_t m_dwCRC;
 
 		CTokenVectorMap m_stTokenMap;
 };

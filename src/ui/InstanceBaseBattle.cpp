@@ -280,7 +280,7 @@ bool CInstanceBase::NEW_GetInstanceVectorInCircleRange(float fSkillDistance, std
 	return true;
 }
 
-BOOL CInstanceBase::NEW_IsClickableDistanceDestPixelPosition(const TPixelPosition& c_rkPPosDst)
+int32_t CInstanceBase::NEW_IsClickableDistanceDestPixelPosition(const TPixelPosition& c_rkPPosDst)
 {
 	float fDistance = NEW_GetDistanceFromDestPixelPosition(c_rkPPosDst);
 
@@ -290,7 +290,7 @@ BOOL CInstanceBase::NEW_IsClickableDistanceDestPixelPosition(const TPixelPositio
 	return TRUE;
 }
 
-BOOL CInstanceBase::NEW_IsClickableDistanceDestInstance(CInstanceBase& rkInstDst)
+int32_t CInstanceBase::NEW_IsClickableDistanceDestInstance(CInstanceBase& rkInstDst)
 {
 	float fDistance = 150.0f;
 
@@ -306,7 +306,7 @@ BOOL CInstanceBase::NEW_IsClickableDistanceDestInstance(CInstanceBase& rkInstDst
 	return m_GraphicThingInstance.IsClickableDistanceDestInstance(rkInstDst.m_GraphicThingInstance, fDistance);
 }
 
-bool CInstanceBase::NEW_UseSkill(UINT uSkill, UINT uMot, UINT uMotLoopCount, bool isMovingSkill)
+bool CInstanceBase::NEW_UseSkill(uint32_t uSkill, uint32_t uMot, uint32_t uMotLoopCount, bool isMovingSkill)
 {
 	if (IsDead())
 		return false;
@@ -457,14 +457,14 @@ void CInstanceBase::RunNormalAttack(float fAtkDirRot)
 	m_GraphicThingInstance.NormalAttack(fAtkDirRot);
 }
 
-void CInstanceBase::RunComboAttack(float fAtkDirRot, DWORD wMotionIndex)
+void CInstanceBase::RunComboAttack(float fAtkDirRot, uint32_t wMotionIndex)
 {
 	EndGoing();
 	m_GraphicThingInstance.ComboAttack(wMotionIndex, fAtkDirRot);
 }
 
 // 리턴값 TRUE가 무엇인가가 있다
-BOOL CInstanceBase::CheckAdvancing()
+int32_t CInstanceBase::CheckAdvancing()
 {
 #ifdef __MOVIE_MODE__
 	if (IsMovieMode())
@@ -499,10 +499,10 @@ BOOL CInstanceBase::CheckAdvancing()
 		return FALSE;
 	}
 
-	BOOL bUsingSkill = m_GraphicThingInstance.IsUsingSkill();
+	int32_t bUsingSkill = m_GraphicThingInstance.IsUsingSkill();
 
 	m_dwAdvActorVID = 0;
-	UINT uCollisionCount = 0;
+	uint32_t uCollisionCount = 0;
 
 	CPythonCharacterManager& rkChrMgr = CPythonCharacterManager::Instance();
 	for (CPythonCharacterManager::CharacterIterator i = rkChrMgr.CharacterInstanceBegin(); i != rkChrMgr.CharacterInstanceEnd(); ++i)
@@ -574,7 +574,7 @@ BOOL CInstanceBase::CheckAdvancing()
 	return FALSE;
 }
 
-BOOL CInstanceBase::CheckAttacking(CInstanceBase& rkInstVictim)
+int32_t CInstanceBase::CheckAttacking(CInstanceBase& rkInstVictim)
 {
 	if (IsInSafe())
 		return FALSE;
@@ -592,32 +592,32 @@ BOOL CInstanceBase::CheckAttacking(CInstanceBase& rkInstVictim)
 	return TRUE;
 }
 
-BOOL CInstanceBase::isNormalAttacking()
+int32_t CInstanceBase::isNormalAttacking()
 {
 	return m_GraphicThingInstance.isNormalAttacking();
 }
 
-BOOL CInstanceBase::isComboAttacking()
+int32_t CInstanceBase::isComboAttacking()
 {
 	return m_GraphicThingInstance.isComboAttacking();
 }
 
-BOOL CInstanceBase::IsUsingSkill()
+int32_t CInstanceBase::IsUsingSkill()
 {
 	return m_GraphicThingInstance.IsUsingSkill();
 }
 
-BOOL CInstanceBase::IsUsingMovingSkill()
+int32_t CInstanceBase::IsUsingMovingSkill()
 {
 	return m_GraphicThingInstance.IsUsingMovingSkill();
 }
 
-BOOL CInstanceBase::CanCancelSkill()
+int32_t CInstanceBase::CanCancelSkill()
 {
 	return m_GraphicThingInstance.CanCancelSkill();
 }
 
-BOOL CInstanceBase::CanAttackHorseLevel()
+int32_t CInstanceBase::CanAttackHorseLevel()
 {
 	if (!IsMountingHorse())
 		return FALSE;
@@ -625,7 +625,7 @@ BOOL CInstanceBase::CanAttackHorseLevel()
 	return m_kHorse.CanAttack();
 }
 
-bool CInstanceBase::IsAffect(UINT uAffect)
+bool CInstanceBase::IsAffect(uint32_t uAffect)
 {
 	return m_kAffectFlagContainer.IsSet(uAffect);
 }
@@ -635,7 +635,7 @@ MOTION_KEY CInstanceBase::GetNormalAttackIndex()
 	return m_GraphicThingInstance.GetNormalAttackIndex();
 }
 
-DWORD CInstanceBase::GetComboIndex()
+uint32_t CInstanceBase::GetComboIndex()
 {
 	return m_GraphicThingInstance.GetComboIndex();
 }
@@ -645,13 +645,13 @@ float CInstanceBase::GetAttackingElapsedTime()
 	return m_GraphicThingInstance.GetAttackingElapsedTime();
 }
 
-void CInstanceBase::ProcessHitting(DWORD dwMotionKey, CInstanceBase* pVictimInstance)
+void CInstanceBase::ProcessHitting(uint32_t dwMotionKey, CInstanceBase* pVictimInstance)
 {
 	assert(!"-_-" && "CInstanceBase::ProcessHitting");
 	// m_GraphicThingInstance.ProcessSucceedingAttacking(dwMotionKey, pVictimInstance->m_GraphicThingInstance);
 }
 
-void CInstanceBase::ProcessHitting(DWORD dwMotionKey, BYTE byEventIndex, CInstanceBase* pVictimInstance)
+void CInstanceBase::ProcessHitting(uint32_t dwMotionKey, uint8_t byEventIndex, CInstanceBase* pVictimInstance)
 {
 	assert(!"-_-" && "CInstanceBase::ProcessHitting");
 	// m_GraphicThingInstance.ProcessSucceedingAttacking(dwMotionKey, byEventIndex, pVictimInstance->m_GraphicThingInstance);

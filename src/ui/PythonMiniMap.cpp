@@ -13,9 +13,9 @@
 
 #include <Neoeter/Python/Bindings/PythonWindowManager.h>
 
-void CPythonMiniMap::AddObserver(DWORD dwVID, float fSrcX, float fSrcY)
+void CPythonMiniMap::AddObserver(uint32_t dwVID, float fSrcX, float fSrcY)
 {
-	std::map<DWORD, SObserver>::iterator f = m_kMap_dwVID_kObserver.find(dwVID);
+	std::map<uint32_t, SObserver>::iterator f = m_kMap_dwVID_kObserver.find(dwVID);
 	if (m_kMap_dwVID_kObserver.end() == f)
 	{
 		SObserver kObserver;
@@ -27,7 +27,7 @@ void CPythonMiniMap::AddObserver(DWORD dwVID, float fSrcX, float fSrcY)
 		kObserver.fDstY = fSrcY;
 		kObserver.fCurX = fSrcX;
 		kObserver.fCurY = fSrcY;
-		m_kMap_dwVID_kObserver.insert(std::map<DWORD, SObserver>::value_type(dwVID, kObserver));
+		m_kMap_dwVID_kObserver.insert(std::map<uint32_t, SObserver>::value_type(dwVID, kObserver));
 	}
 	else
 	{
@@ -43,9 +43,9 @@ void CPythonMiniMap::AddObserver(DWORD dwVID, float fSrcX, float fSrcY)
 	}
 }
 
-void CPythonMiniMap::MoveObserver(DWORD dwVID, float fDstX, float fDstY)
+void CPythonMiniMap::MoveObserver(uint32_t dwVID, float fDstX, float fDstY)
 {
-	std::map<DWORD, SObserver>::iterator f = m_kMap_dwVID_kObserver.find(dwVID);
+	std::map<uint32_t, SObserver>::iterator f = m_kMap_dwVID_kObserver.find(dwVID);
 	if (m_kMap_dwVID_kObserver.end() == f)
 		return;
 
@@ -58,7 +58,7 @@ void CPythonMiniMap::MoveObserver(DWORD dwVID, float fDstX, float fDstY)
 	rkObserver.fDstY = fDstY;
 }
 
-void CPythonMiniMap::RemoveObserver(DWORD dwVID)
+void CPythonMiniMap::RemoveObserver(uint32_t dwVID)
 {
 	m_kMap_dwVID_kObserver.erase(dwVID);
 }
@@ -69,7 +69,7 @@ void CPythonMiniMap::SetCenterPosition(float fCenterX, float fCenterY)
 	m_fCenterY = fCenterY;
 
 	CMapOutdoor& rkMap = CPythonBackground::Instance().GetMapOutdoorRef();
-	for (BYTE byTerrainNum = 0; byTerrainNum < AROUND_AREA_NUM; ++byTerrainNum)
+	for (uint8_t byTerrainNum = 0; byTerrainNum < AROUND_AREA_NUM; ++byTerrainNum)
 	{
 		m_lpMiniMapTexture[byTerrainNum] = NULL;
 		CTerrain* pTerrain;
@@ -165,9 +165,9 @@ void CPythonMiniMap::Update(float fCenterX, float fCenterY)
 	}
 
 	{
-		DWORD dwCurTime = ELTimer_GetMSec();
+		uint32_t dwCurTime = ELTimer_GetMSec();
 
-		std::map<DWORD, SObserver>::iterator i;
+		std::map<uint32_t, SObserver>::iterator i;
 		for (i = m_kMap_dwVID_kObserver.begin(); i != m_kMap_dwVID_kObserver.end(); ++i)
 		{
 			SObserver& rkObserver = i->second;
@@ -302,7 +302,7 @@ void CPythonMiniMap::Render(float fScreenX, float fScreenY)
 	STATEMANAGER.SetIndices(m_IndexBuffer.GetD3DIndexBuffer(), 0);
 	STATEMANAGER.SetTransform(D3DTS_WORLD, &m_matWorld);
 
-	for (BYTE byTerrainNum = 0; byTerrainNum < AROUND_AREA_NUM; ++byTerrainNum)
+	for (uint8_t byTerrainNum = 0; byTerrainNum < AROUND_AREA_NUM; ++byTerrainNum)
 	{
 		LPDIRECT3DTEXTURE9 pMiniMapTexture = m_lpMiniMapTexture[byTerrainNum];
 		STATEMANAGER.SetTexture(0, pMiniMapTexture);
@@ -386,7 +386,7 @@ void CPythonMiniMap::Render(float fScreenX, float fScreenY)
 			D3DXCOLOR c(CInstanceBase::GetIndexedNameColor(CInstanceBase::NAMECOLOR_PARTY)); //(m_MarkTypeToColorMap[TYPE_PARTY]);
 			D3DXCOLOR d(v, v, v, 1);
 			D3DXColorModulate(&c, &c, &d);
-			STATEMANAGER.SetRenderState(D3DRS_TEXTUREFACTOR, (DWORD)c);
+			STATEMANAGER.SetRenderState(D3DRS_TEXTUREFACTOR, (uint32_t)c);
 			aIterator = m_PartyPCPositionVector.begin();
 			while (aIterator != m_PartyPCPositionVector.end())
 			{
@@ -638,7 +638,7 @@ bool CPythonMiniMap::Create()
 		return false;
 	}
 
-	WORD pwIndices[54] =
+	uint16_t pwIndices[54] =
 		{
 			0, 1, 2, 2, 1, 3,
 			4, 5, 6, 6, 5, 7,
@@ -656,7 +656,7 @@ bool CPythonMiniMap::Create()
 
 	if (m_IndexBuffer.Lock(&pIndices))
 	{
-		memcpy(pIndices, pwIndices, 54 * sizeof(WORD));
+		memcpy(pIndices, pwIndices, 54 * sizeof(uint16_t));
 		m_IndexBuffer.Unlock();
 	}
 
@@ -696,7 +696,7 @@ void CPythonMiniMap::ClearAtlasMarkInfo()
 	m_AtlasWarpInfoVector.clear();
 }
 
-void CPythonMiniMap::RegisterAtlasMark(BYTE byType, const char* c_szName, long lx, long ly)
+void CPythonMiniMap::RegisterAtlasMark(uint8_t byType, const char* c_szName, long lx, long ly)
 {
 	TAtlasMarkInfo aAtlasMarkInfo;
 
@@ -730,7 +730,7 @@ void CPythonMiniMap::ClearGuildArea()
 	m_GuildAreaInfoVector.clear();
 }
 
-void CPythonMiniMap::RegisterGuildArea(DWORD dwID, DWORD dwGuildID, long x, long y, long width, long height)
+void CPythonMiniMap::RegisterGuildArea(uint32_t dwID, uint32_t dwGuildID, long x, long y, long width, long height)
 {
 	TGuildAreaInfo kGuildAreaInfo;
 	kGuildAreaInfo.dwGuildID = dwGuildID;
@@ -741,7 +741,7 @@ void CPythonMiniMap::RegisterGuildArea(DWORD dwID, DWORD dwGuildID, long x, long
 	m_GuildAreaInfoVector.push_back(kGuildAreaInfo);
 }
 
-DWORD CPythonMiniMap::GetGuildAreaID(DWORD x, DWORD y)
+uint32_t CPythonMiniMap::GetGuildAreaID(uint32_t x, uint32_t y)
 {
 	TGuildAreaInfoVectorIterator itor = m_GuildAreaInfoVector.begin();
 	for (; itor != m_GuildAreaInfoVector.end(); ++itor)
@@ -781,15 +781,15 @@ void CPythonMiniMap::UpdateTarget(int iID, int ix, int iy)
 		return;
 	if (iy < m_dwAtlasBaseY)
 		return;
-	if (ix > m_dwAtlasBaseX + DWORD(m_fAtlasMaxX))
+	if (ix > m_dwAtlasBaseX + uint32_t(m_fAtlasMaxX))
 		return;
-	if (iy > m_dwAtlasBaseY + DWORD(m_fAtlasMaxY))
+	if (iy > m_dwAtlasBaseY + uint32_t(m_fAtlasMaxY))
 		return;
 
 	__UpdateWayPoint(pkInfo, ix - int(m_dwAtlasBaseX), iy - int(m_dwAtlasBaseY));
 }
 
-void CPythonMiniMap::CreateTarget(int iID, const char* c_szName, DWORD dwVID)
+void CPythonMiniMap::CreateTarget(int iID, const char* c_szName, uint32_t dwVID)
 {
 	AddWayPoint(TYPE_TARGET, iID, 0.0f, 0.0f, c_szName, dwVID);
 }
@@ -825,7 +825,7 @@ void CPythonMiniMap::__LoadAtlasMarkInfo()
 
 	const std::string strType[TYPE_COUNT] = {"OPC", "OPCPVP", "OPCPVPSELF", "NPC", "MONSTER", "WARP", "WAYPOINT"};
 
-	for (DWORD i = 0; i < stTokenVectorMap.size(); ++i)
+	for (uint32_t i = 0; i < stTokenVectorMap.size(); ++i)
 	{
 		char szMarkInfoName[32 + 1];
 		_snprintf(szMarkInfoName, sizeof(szMarkInfoName), "%d", i);
@@ -845,7 +845,7 @@ void CPythonMiniMap::__LoadAtlasMarkInfo()
 		for (int i = 0; i < TYPE_COUNT; ++i)
 		{
 			if (0 == c_rstrType.compare(strType[i]))
-				aAtlasMarkInfo.m_byType = (BYTE)i;
+				aAtlasMarkInfo.m_byType = (uint8_t)i;
 		}
 		aAtlasMarkInfo.m_fX = atof(c_rstrPositionX.c_str());
 		aAtlasMarkInfo.m_fY = atof(c_rstrPositionY.c_str());
@@ -1052,7 +1052,7 @@ void CPythonMiniMap::RenderAtlas(float fScreenX, float fScreenY)
 	}
 }
 
-bool CPythonMiniMap::GetPickedInstanceInfo(float fScreenX, float fScreenY, std::string& rReturnName, float* pReturnPosX, float* pReturnPosY, DWORD* pdwTextColor)
+bool CPythonMiniMap::GetPickedInstanceInfo(float fScreenX, float fScreenY, std::string& rReturnName, float* pReturnPosX, float* pReturnPosY, uint32_t* pdwTextColor)
 {
 	float fDistanceFromMiniMapCenterX = fScreenX - m_fScreenX - m_fWidth * 0.5f;
 	float fDistanceFromMiniMapCenterY = fScreenY - m_fScreenY - m_fHeight * 0.5f;
@@ -1109,7 +1109,7 @@ bool CPythonMiniMap::GetPickedInstanceInfo(float fScreenX, float fScreenY, std::
 	return false;
 }
 
-bool CPythonMiniMap::GetAtlasInfo(float fScreenX, float fScreenY, std::string& rReturnString, float* pReturnPosX, float* pReturnPosY, DWORD* pdwTextColor, DWORD* pdwGuildID)
+bool CPythonMiniMap::GetAtlasInfo(float fScreenX, float fScreenY, std::string& rReturnString, float* pReturnPosX, float* pReturnPosY, uint32_t* pdwTextColor, uint32_t* pdwGuildID)
 {
 	float fRealX = (fScreenX - m_fAtlasScreenX) * (m_fAtlasMaxX / m_fAtlasImageSizeX);
 	float fRealY = (fScreenY - m_fAtlasScreenY) * (m_fAtlasMaxY / m_fAtlasImageSizeY);
@@ -1232,7 +1232,7 @@ bool CPythonMiniMap::GetAtlasSize(float* pfSizeX, float* pfSizeY)
 
 //////////////////////////////////////////////////////////////////////////
 // WayPoint
-void CPythonMiniMap::AddWayPoint(BYTE byType, DWORD dwID, float fX, float fY, std::string strText, DWORD dwChrVID)
+void CPythonMiniMap::AddWayPoint(uint8_t byType, uint32_t dwID, float fX, float fY, std::string strText, uint32_t dwChrVID)
 {
 	m_AtlasMarkInfoVectorIterator = m_AtlasWayPointInfoVector.begin();
 	while (m_AtlasMarkInfoVectorIterator != m_AtlasWayPointInfoVector.end())
@@ -1258,7 +1258,7 @@ void CPythonMiniMap::AddWayPoint(BYTE byType, DWORD dwID, float fX, float fY, st
 	m_AtlasWayPointInfoVector.push_back(aAtlasMarkInfo);
 }
 
-void CPythonMiniMap::RemoveWayPoint(DWORD dwID)
+void CPythonMiniMap::RemoveWayPoint(uint32_t dwID)
 {
 	m_AtlasMarkInfoVectorIterator = m_AtlasWayPointInfoVector.begin();
 	while (m_AtlasMarkInfoVectorIterator != m_AtlasWayPointInfoVector.end())
@@ -1273,7 +1273,7 @@ void CPythonMiniMap::RemoveWayPoint(DWORD dwID)
 	}
 }
 
-bool CPythonMiniMap::__GetWayPoint(DWORD dwID, TAtlasMarkInfo** ppkInfo)
+bool CPythonMiniMap::__GetWayPoint(uint32_t dwID, TAtlasMarkInfo** ppkInfo)
 {
 	TAtlasMarkInfoVectorIterator itor = m_AtlasWayPointInfoVector.begin();
 	for (; itor != m_AtlasWayPointInfoVector.end(); ++itor)

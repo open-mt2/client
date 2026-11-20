@@ -18,7 +18,7 @@ static HANDLE gs_evReqExit = NULL;
 static HANDLE gs_evResExit = NULL;
 static HANDLE gs_hThread = NULL;
 
-void ScanProcessList(std::map<DWORD, DWORD>& rkMap_crcProc, std::vector<CRCPair>* pkVct_crcPair)
+void ScanProcessList(std::map<uint32_t, uint32_t>& rkMap_crcProc, std::vector<CRCPair>* pkVct_crcPair)
 {
 	SYSTEM_INFO si;
 	memset(&si, 0, sizeof(si));
@@ -32,7 +32,7 @@ void ScanProcessList(std::map<DWORD, DWORD>& rkMap_crcProc, std::vector<CRCPair>
 
 	HANDLE process = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
 
-	BOOL bOK = Process32First(process, Entry);
+	int32_t bOK = Process32First(process, Entry);
 
 	while (bOK)
 	{
@@ -46,15 +46,15 @@ void ScanProcessList(std::map<DWORD, DWORD>& rkMap_crcProc, std::vector<CRCPair>
 				memset(&me32, 0, sizeof(me32));
 				me32.dwSize = sizeof(MODULEENTRY32);
 
-				BOOL bRet = Module32First(hModuleSnap, &me32);
+				int32_t bRet = Module32First(hModuleSnap, &me32);
 				while (bRet)
 				{
-					DWORD crcExtPath = GetCRC32((const char*)me32.szExePath, strlen(me32.szExePath));
+					uint32_t crcExtPath = GetCRC32((const char*)me32.szExePath, strlen(me32.szExePath));
 
-					std::map<DWORD, DWORD>::iterator f = rkMap_crcProc.find(crcExtPath);
+					std::map<uint32_t, uint32_t>::iterator f = rkMap_crcProc.find(crcExtPath);
 					if (rkMap_crcProc.end() == f)
 					{
-						DWORD crcProc = GetFileCRC32(me32.szExePath);
+						uint32_t crcProc = GetFileCRC32(me32.szExePath);
 						rkMap_crcProc.insert(std::make_pair(crcExtPath, crcProc));
 						pkVct_crcPair->push_back(std::make_pair(crcProc, (const char*)me32.szExePath));
 					}
@@ -106,9 +106,9 @@ bool ProcessScanner_PopProcessQueue(std::vector<CRCPair>* pkVct_crcPair)
 
 void ProcessScanner_Thread(void* pv)
 {
-	DWORD dwDelay = (rand() % 10) * 1000 + 1000 * 10;
+	uint32_t dwDelay = (rand() % 10) * 1000 + 1000 * 10;
 
-	std::map<DWORD, DWORD> kMap_crcProc;
+	std::map<uint32_t, uint32_t> kMap_crcProc;
 	std::vector<CRCPair> kVct_crcPair;
 
 	while (WAIT_OBJECT_0 != WaitForSingleObject(gs_evReqExit, dwDelay))

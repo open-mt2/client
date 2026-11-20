@@ -71,8 +71,8 @@ class CMapManager : public CScreen, public IPhysicsWorld
 		void BlendEnvironmentData(const TEnvironmentData* c_pEnvironmentData, int iTransitionTime);
 
 		void GetCurrentEnvironmentData(const TEnvironmentData** c_ppEnvironmentData);
-		bool RegisterEnvironmentData(DWORD dwIndex, const char* c_szFileName);
-		bool GetEnvironmentData(DWORD dwIndex, const TEnvironmentData** c_ppEnvironmentData);
+		bool RegisterEnvironmentData(uint32_t dwIndex, const char* c_szFileName);
+		bool GetEnvironmentData(uint32_t dwIndex, const TEnvironmentData** c_ppEnvironmentData);
 
 		// Portal
 		void RefreshPortal();
@@ -82,24 +82,24 @@ class CMapManager : public CScreen, public IPhysicsWorld
 		// External interface
 		void LoadProperty();
 
-		DWORD GetShadowMapColor(float fx, float fy);
+		uint32_t GetShadowMapColor(float fx, float fy);
 
 		// VICITM_COLLISION_TEST
 		virtual bool isPhysicalCollision(const D3DXVECTOR3& c_rvCheckPosition);
 		// VICITM_COLLISION_TEST_END
 
-		bool isAttrOn(float fX, float fY, BYTE byAttr);
-		bool GetAttr(float fX, float fY, BYTE* pbyAttr);
-		bool isAttrOn(int iX, int iY, BYTE byAttr);
-		bool GetAttr(int iX, int iY, BYTE* pbyAttr);
+		bool isAttrOn(float fX, float fY, uint8_t byAttr);
+		bool GetAttr(float fX, float fY, uint8_t* pbyAttr);
+		bool isAttrOn(int iX, int iY, uint8_t byAttr);
+		bool GetAttr(int iX, int iY, uint8_t* pbyAttr);
 
 		std::vector<int>& GetRenderedSplatNum(int* piPatch, int* piSplat, float* pfSplatRatio);
-		CArea::TCRCWithNumberVector& GetRenderedGraphicThingInstanceNum(DWORD* pdwGraphicThingInstanceNum, DWORD* pdwCRCNum);
+		CArea::TCRCWithNumberVector& GetRenderedGraphicThingInstanceNum(uint32_t* pdwGraphicThingInstanceNum, uint32_t* pdwCRCNum);
 
 	protected:
 		TEnvironmentData* AllocEnvironmentData();
 		void DeleteEnvironmentData(TEnvironmentData* pEnvironmentData);
-		BOOL LoadEnvironmentData(const char* c_szFileName, TEnvironmentData* pEnvironmentData);
+		int32_t LoadEnvironmentData(const char* c_szFileName, TEnvironmentData* pEnvironmentData);
 
 	protected:
 		CPropertyManager m_PropertyManager;
@@ -111,7 +111,7 @@ class CMapManager : public CScreen, public IPhysicsWorld
 		const TEnvironmentData* mc_pcurEnvironmentData;
 		const TEnvironmentData* m_pBaseEnvironmentData;
 		TEnvironmentData m_kDayNightEnvironmentData;
-		DWORD m_dwLastDayNightUpdate;
+		uint32_t m_dwLastDayNightUpdate;
 		float m_fDayNightHour;
 		D3DXCOLOR m_kDayNightFogColor;
 		D3DXCOLOR m_kDayNightTargetFog;
@@ -136,7 +136,7 @@ class CMapManager : public CScreen, public IPhysicsWorld
 		void SetTerrainRenderSort(CMapOutdoor::ETerrainRenderSort eTerrainRenderSort);
 		CMapOutdoor::ETerrainRenderSort GetTerrainRenderSort();
 
-		void GetBaseXY(DWORD* pdwBaseX, DWORD* pdwBaseY);
+		void GetBaseXY(uint32_t* pdwBaseX, uint32_t* pdwBaseY);
 
 	public:
 		void SetTransparentTree(bool bTransparenTree);
@@ -145,12 +145,12 @@ class CMapManager : public CScreen, public IPhysicsWorld
 		typedef struct
 		{
 				std::string m_strName;
-				DWORD m_dwBaseX;
-				DWORD m_dwBaseY;
-				DWORD m_dwSizeX;
-				DWORD m_dwSizeY;
-				DWORD m_dwEndX;
-				DWORD m_dwEndY;
+				uint32_t m_dwBaseX;
+				uint32_t m_dwBaseY;
+				uint32_t m_dwSizeX;
+				uint32_t m_dwSizeY;
+				uint32_t m_dwEndX;
+				uint32_t m_dwEndY;
 		} TMapInfo;
 		typedef std::vector<TMapInfo> TMapInfoVector;
 		typedef TMapInfoVector::iterator TMapInfoVectorIterator;

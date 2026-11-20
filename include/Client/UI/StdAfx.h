@@ -31,7 +31,7 @@
 #include <Client/UI/Locale.h>
 
 #include <Client/UI/GameType.h>
-extern DWORD __DEFAULT_CODE_PAGE__;
+extern uint32_t __DEFAULT_CODE_PAGE__;
 
 #define APP_NAME "Metin 2"
 

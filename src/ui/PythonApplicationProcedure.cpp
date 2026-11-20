@@ -34,7 +34,7 @@ void CPythonApplication::ResetMouseCapture()
 	ReleaseCapture();
 }
 
-LRESULT CPythonApplication::WindowProcedure(HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam)
+intptr_t CPythonApplication::WindowProcedure(HWND hWnd, uint32_t uiMsg, uintptr_t wParam, intptr_t lParam)
 {
 	const int c_DoubleClickTime = 300;
 	const int c_DoubleClickBox = 5;
@@ -171,8 +171,8 @@ LRESULT CPythonApplication::WindowProcedure(HWND hWnd, UINT uiMsg, WPARAM wParam
 					RECT rcWnd;
 					GetClientRect(&rcWnd);
 
-					UINT uWidth = rcWnd.right - rcWnd.left;
-					UINT uHeight = rcWnd.bottom - rcWnd.top;
+					uint32_t uWidth = rcWnd.right - rcWnd.left;
+					uint32_t uHeight = rcWnd.bottom - rcWnd.top;
 					m_grpDevice.ResizeBackBuffer(uWidth, uHeight);
 				}
 				break;
@@ -192,8 +192,8 @@ LRESULT CPythonApplication::WindowProcedure(HWND hWnd, UINT uiMsg, WPARAM wParam
 			RECT rcWnd;
 			GetClientRect(&rcWnd);
 
-			UINT uWidth = rcWnd.right - rcWnd.left;
-			UINT uHeight = rcWnd.bottom - rcWnd.top;
+			uint32_t uWidth = rcWnd.right - rcWnd.left;
+			uint32_t uHeight = rcWnd.bottom - rcWnd.top;
 			m_grpDevice.ResizeBackBuffer(uWidth, uHeight);
 			OnSizeChange(short(LOWORD(lParam)), short(HIWORD(lParam)));
 		}

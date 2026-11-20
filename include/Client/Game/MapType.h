@@ -39,8 +39,8 @@ namespace prt
 			".pra",
 			".prd"};
 
-	DWORD GetPropertyType(const char* c_szTypeName);
-	const char* GetPropertyExtension(DWORD dwType);
+	uint32_t GetPropertyType(const char* c_szTypeName);
+	const char* GetPropertyExtension(uint32_t dwType);
 
 	struct TPropertyTree
 	{
@@ -56,7 +56,7 @@ namespace prt
 			std::string strName;
 			std::string strFileName;
 			std::string strAttributeDataFileName;
-			BOOL isShadowFlag;
+			int32_t isShadowFlag;
 	};
 
 	struct TPropertyEffect
@@ -124,15 +124,15 @@ enum
 typedef struct SEnvironmentData
 {
 		// Light
-		BOOL bDirLightsEnable[ENV_DIRLIGHT_NUM];
+		int32_t bDirLightsEnable[ENV_DIRLIGHT_NUM];
 		D3DLIGHT9 DirLights[ENV_DIRLIGHT_NUM];
 
 		// Material
 		D3DMATERIAL9 Material;
 
 		// Fog
-		BOOL bFogEnable;
-		BOOL bDensityFog;
+		int32_t bFogEnable;
+		int32_t bDensityFog;
 
 		float m_fFogNearDistance;
 		float m_fFogFarDistance;
@@ -143,10 +143,10 @@ typedef struct SEnvironmentData
 		D3DXCOLOR FogColor;
 
 		// Filtering
-		BOOL bFilteringEnable;
+		int32_t bFilteringEnable;
 		D3DXCOLOR FilteringColor;
-		BYTE byFilteringAlphaSrc;
-		BYTE byFilteringAlphaDest;
+		uint8_t byFilteringAlphaSrc;
+		uint8_t byFilteringAlphaDest;
 
 		// Wind
 		float fWindStrength;
@@ -154,10 +154,10 @@ typedef struct SEnvironmentData
 
 		// SkyBox
 		D3DXVECTOR3 v3SkyBoxScale;
-		BOOL bSkyBoxTextureRenderMode;
+		int32_t bSkyBoxTextureRenderMode;
 
-		BYTE bySkyBoxGradientLevelUpper;
-		BYTE bySkyBoxGradientLevelLower;
+		uint8_t bySkyBoxGradientLevelUpper;
+		uint8_t bySkyBoxGradientLevelLower;
 
 		std::string strSkyBoxFaceFileName[6]; // order : front/back/left/right/top/bottom
 
@@ -171,18 +171,18 @@ typedef struct SEnvironmentData
 		std::vector<TGradientColor> SkyBoxGradientColorVector;
 
 		// LensFlare
-		BOOL bLensFlareEnable;
+		int32_t bLensFlareEnable;
 		D3DXCOLOR LensFlareBrightnessColor;
 		float fLensFlareMaxBrightness;
 
-		BOOL bMainFlareEnable;
+		int32_t bMainFlareEnable;
 		std::string strMainFlareTextureFileName;
 		float fMainFlareSize;
 
-		BOOL bReserve; // 외부에서 설정을 고치지 않음
+		int32_t bReserve; // 외부에서 설정을 고치지 않음
 } TEnvironmentData;
 
-typedef std::map<DWORD, TEnvironmentData*> TEnvironmentDataMap;
+typedef std::map<uint32_t, TEnvironmentData*> TEnvironmentDataMap;
 /////////////////////////////////////////////////////////////////
 
 typedef struct SScreenPosition

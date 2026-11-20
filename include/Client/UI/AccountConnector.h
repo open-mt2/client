@@ -55,19 +55,19 @@ class CAccountConnector : public CNetworkStream, public CSingleton<CAccountConne
 		bool __AuthState_RecvRunupMatrixQuiz();
 		bool __AuthState_RecvNEWCIBNPasspodRequest();
 
-		bool __AnalyzePacket(UINT uHeader, UINT uPacketSize, bool (CAccountConnector::*pfnDispatchPacket)());
+		bool __AnalyzePacket(uint32_t uHeader, uint32_t uPacketSize, bool (CAccountConnector::*pfnDispatchPacket)());
 		// TODO:  지금 현재는 임시다.  header뒤에 size 4byte가 무조건 온다는 가정임.
 		// 제대로 하려면  Packet System Refactoring해야 한다.
-		bool __AnalyzeVarSizePacket(UINT uHeader, bool (CAccountConnector::*pfnDispatchPacket)(int));
+		bool __AnalyzeVarSizePacket(uint32_t uHeader, bool (CAccountConnector::*pfnDispatchPacket)(int));
 
 	protected:
-		UINT m_eState;
+		uint32_t m_eState;
 		std::string m_strID;
 		std::string m_strPassword;
 
 		std::string m_strAddr;
 		int m_iPort;
-		BOOL m_isWaitKey;
+		int32_t m_isWaitKey;
 
 		PyObject* m_poHandler;
 

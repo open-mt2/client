@@ -162,7 +162,7 @@ void CArea::RenderEffect()
 	}
 }
 
-DWORD CArea::DEBUG_GetRenderedCRCNum()
+uint32_t CArea::DEBUG_GetRenderedCRCNum()
 {
 	return m_kRenderedThingInstanceCRCWithNumberVector.size();
 }
@@ -172,7 +172,7 @@ CArea::TCRCWithNumberVector& CArea::DEBUG_GetRenderedCRCWithNumVector()
 	return m_kRenderedThingInstanceCRCWithNumberVector;
 }
 
-DWORD CArea::DEBUG_GetRenderedGrapphicThingInstanceNum()
+uint32_t CArea::DEBUG_GetRenderedGrapphicThingInstanceNum()
 {
 	return m_kRenderedGrapphicThingInstanceVector.size();
 }
@@ -232,7 +232,7 @@ void CArea::Render()
 		if (pkThingInst->Render())
 		{
 			aGraphicThingInstanceCRCMapIterator = m_GraphicThingInstanceCRCMap.find(pkThingInst);
-			DWORD dwCRC = (*aGraphicThingInstanceCRCMapIterator).second;
+			uint32_t dwCRC = (*aGraphicThingInstanceCRCMapIterator).second;
 
 			m_kRenderedGrapphicThingInstanceVector.push_back(pkThingInst);
 
@@ -257,7 +257,7 @@ void CArea::Render()
 
 void CArea::RenderCollision()
 {
-	DWORD i;
+	uint32_t i;
 
 	STATEMANAGER.SetTexture(0, NULL);
 	STATEMANAGER.SetTexture(1, NULL);
@@ -279,7 +279,7 @@ void CArea::RenderCollision()
 		{
 			if (po->pTree && po->pTree->isShow())
 			{
-				DWORD j;
+				uint32_t j;
 				for (j = 0; j < po->pTree->GetCollisionInstanceCount(); j++)
 				{
 					po->pTree->GetCollisionInstanceData(j)->Render();
@@ -287,7 +287,7 @@ void CArea::RenderCollision()
 			}
 			if (po->pThingInstance && po->pThingInstance->isShow())
 			{
-				DWORD j;
+				uint32_t j;
 				for (j = 0; j < po->pThingInstance->GetCollisionInstanceCount(); j++)
 				{
 					po->pThingInstance->GetCollisionInstanceData(j)->Render();
@@ -295,7 +295,7 @@ void CArea::RenderCollision()
 			}
 			if (po->pDungeonBlock && po->pDungeonBlock->isShow())
 			{
-				DWORD j;
+				uint32_t j;
 				for (j = 0; j < po->pDungeonBlock->GetCollisionInstanceCount(); j++)
 				{
 					po->pDungeonBlock->GetCollisionInstanceData(j)->Render();
@@ -311,7 +311,7 @@ void CArea::RenderCollision()
 
 void CArea::RenderAmbience()
 {
-	DWORD dwColorArg1, dwColorOp;
+	uint32_t dwColorArg1, dwColorOp;
 	STATEMANAGER.GetTextureStageState(0, D3DTSS_COLORARG1, &dwColorArg1);
 	STATEMANAGER.GetTextureStageState(0, D3DTSS_COLOROP, &dwColorOp);
 	STATEMANAGER.SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TFACTOR);
@@ -342,8 +342,8 @@ void CArea::RenderDungeon()
 #ifdef WORLD_EDITOR
 	bool bRenderTransparent = false;
 
-	DWORD oldAlphaBlendState = 0;
-	DWORD oldZWriteenableState = 0;
+	uint32_t oldAlphaBlendState = 0;
+	uint32_t oldZWriteenableState = 0;
 
 	if (GetAsyncKeyState(VK_LSHIFT) & 0x8001)
 	{
@@ -471,7 +471,7 @@ void CArea::__Load_BuildObjectInstances()
 
 	std::sort(m_ObjectDataVector.begin(), m_ObjectDataVector.end(), ObjectDataComp());
 
-	DWORD i = 0;
+	uint32_t i = 0;
 	TObjectInstanceVector::iterator it;
 	for (it = m_ObjectInstanceVector.begin(); it != m_ObjectInstanceVector.end(); ++it, ++i)
 	{
@@ -583,7 +583,7 @@ void CArea::__SetObjectInstance_SetTree(TObjectInstance* pObjectInstance, const 
 		c_szTreeName);
 }
 
-void CArea::TObjectInstance::SetTree(float x, float y, float z, DWORD dwTreeCRC, const char* c_szTreeName)
+void CArea::TObjectInstance::SetTree(float x, float y, float z, uint32_t dwTreeCRC, const char* c_szTreeName)
 {
 	CSpeedTreeForest& rkForest = CSpeedTreeForest::Instance();
 	pTree = rkForest.CreateInstance(x, y, z, dwTreeCRC, c_szTreeName);
@@ -634,7 +634,7 @@ void CArea::__SetObjectInstance_SetBuilding(TObjectInstance* pObjectInstance, co
 		std::string stLODModelFileName;
 
 		char szLODModelFileNameEnd[256];
-		for (UINT uLODIndex = 1; uLODIndex <= 3; ++uLODIndex)
+		for (uint32_t uLODIndex = 1; uLODIndex <= 3; ++uLODIndex)
 		{
 			sprintf(szLODModelFileNameEnd, "_lod_%.2d.gr2", uLODIndex);
 			stLODModelFileName = CFileNameHelper::NoExtension(stSrcModelFileName) + szLODModelFileNameEnd;
@@ -931,11 +931,11 @@ bool CArea::__Load_LoadObject(const char* c_szFileName)
 
 	const std::string& c_rstrCount = stTokenVectorMap["objectcount"][0];
 
-	DWORD dwCount = atoi(c_rstrCount.c_str());
+	uint32_t dwCount = atoi(c_rstrCount.c_str());
 
 	char szObjectName[32 + 1];
 
-	for (DWORD i = 0; i < dwCount; ++i)
+	for (uint32_t i = 0; i < dwCount; ++i)
 	{
 		_snprintf(szObjectName, sizeof(szObjectName), "object%03d", i);
 
@@ -1028,11 +1028,11 @@ bool CArea::__Load_LoadAmbience(const char* c_szFileName)
 
 	const std::string& c_rstrCount = stTokenVectorMap["objectcount"][0];
 
-	DWORD dwCount = atoi(c_rstrCount.c_str());
+	uint32_t dwCount = atoi(c_rstrCount.c_str());
 
 	char szObjectName[32 + 1];
 
-	for (DWORD i = 0; i < dwCount; ++i)
+	for (uint32_t i = 0; i < dwCount; ++i)
 	{
 		_snprintf(szObjectName, sizeof(szObjectName), "object%03d", i);
 
@@ -1081,7 +1081,7 @@ bool CArea::__Load_LoadAmbience(const char* c_szFileName)
 
 //////////////////////////////////////////////////////////////////////////
 
-bool CArea::CheckObjectIndex(DWORD dwIndex) const
+bool CArea::CheckObjectIndex(uint32_t dwIndex) const
 {
 	if (dwIndex >= m_ObjectDataVector.size())
 		return false;
@@ -1089,12 +1089,12 @@ bool CArea::CheckObjectIndex(DWORD dwIndex) const
 	return true;
 }
 
-DWORD CArea::GetObjectDataCount()
+uint32_t CArea::GetObjectDataCount()
 {
 	return m_ObjectDataVector.size();
 }
 
-bool CArea::GetObjectDataPointer(DWORD dwIndex, const TObjectData** ppObjectData) const
+bool CArea::GetObjectDataPointer(uint32_t dwIndex, const TObjectData** ppObjectData) const
 {
 	if (!CheckObjectIndex(dwIndex))
 	{
@@ -1106,12 +1106,12 @@ bool CArea::GetObjectDataPointer(DWORD dwIndex, const TObjectData** ppObjectData
 	return true;
 }
 
-DWORD CArea::GetObjectInstanceCount() const
+uint32_t CArea::GetObjectInstanceCount() const
 {
 	return m_ObjectInstanceVector.size();
 }
 
-bool CArea::GetObjectInstancePointer(const DWORD& dwIndex, const TObjectInstance** ppObjectInstance) const
+bool CArea::GetObjectInstancePointer(const uint32_t& dwIndex, const TObjectInstance** ppObjectInstance) const
 {
 	if (dwIndex >= m_ObjectInstanceVector.size())
 		return false;
@@ -1120,7 +1120,7 @@ bool CArea::GetObjectInstancePointer(const DWORD& dwIndex, const TObjectInstance
 	return true;
 }
 
-void CArea::EnablePortal(BOOL bFlag)
+void CArea::EnablePortal(int32_t bFlag)
 {
 	if (m_bPortalEnable == bFlag)
 		return;
@@ -1142,14 +1142,14 @@ void CArea::RefreshPortal()
 {
 	std::set<TObjectInstance*> kSet_ShowingObjectInstance;
 	kSet_ShowingObjectInstance.clear();
-	for (DWORD i = 0; i < m_ObjectDataVector.size(); ++i)
+	for (uint32_t i = 0; i < m_ObjectDataVector.size(); ++i)
 	{
 		TObjectData& rData = m_ObjectDataVector[i];
 		TObjectInstance* pInstance = m_ObjectInstanceVector[i];
 
 		for (int j = 0; j < PORTAL_ID_MAX_NUM; ++j)
 		{
-			BYTE byPortalID = rData.abyPortalID[j];
+			uint8_t byPortalID = rData.abyPortalID[j];
 			if (0 == byPortalID)
 				break;
 
@@ -1332,7 +1332,7 @@ void CArea::TAmbienceInstance::__Update(float fxCenter, float fyCenter, float fz
 void CArea::TAmbienceInstance::UpdateOnceSound(float fxCenter, float fyCenter, float fzCenter)
 {
 	float fDistance = sqrtf((fx - fxCenter) * (fx - fxCenter) + (fy - fyCenter) * (fy - fyCenter) + (fz - fzCenter) * (fz - fzCenter));
-	if (DWORD(fDistance) < dwRange)
+	if (uint32_t(fDistance) < dwRange)
 	{
 		if (-1 == iPlaySoundIndex)
 		{
@@ -1353,7 +1353,7 @@ void CArea::TAmbienceInstance::UpdateOnceSound(float fxCenter, float fyCenter, f
 void CArea::TAmbienceInstance::UpdateStepSound(float fxCenter, float fyCenter, float fzCenter)
 {
 	float fDistance = sqrtf((fx - fxCenter) * (fx - fxCenter) + (fy - fyCenter) * (fy - fyCenter) + (fz - fzCenter) * (fz - fzCenter));
-	if (DWORD(fDistance) < dwRange)
+	if (uint32_t(fDistance) < dwRange)
 	{
 		float fcurTime = CTimer::Instance().GetCurrentSecond();
 
@@ -1380,7 +1380,7 @@ void CArea::TAmbienceInstance::UpdateStepSound(float fxCenter, float fyCenter, f
 void CArea::TAmbienceInstance::UpdateLoopSound(float fxCenter, float fyCenter, float fzCenter)
 {
 	float fDistance = sqrtf((fx - fxCenter) * (fx - fxCenter) + (fy - fyCenter) * (fy - fyCenter) + (fz - fzCenter) * (fz - fzCenter));
-	if (DWORD(fDistance) < dwRange)
+	if (uint32_t(fDistance) < dwRange)
 	{
 		if (-1 == iPlaySoundIndex)
 		{

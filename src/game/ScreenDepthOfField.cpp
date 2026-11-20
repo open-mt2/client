@@ -6,8 +6,8 @@
 
 #include <cmath>
 
-static const DWORD c_dwDofFVF = D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_TEX1;
-static const DWORD c_dwDofMaskFVF = D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_TEX2;
+static const uint32_t c_dwDofFVF = D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_TEX1;
+static const uint32_t c_dwDofMaskFVF = D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_TEX2;
 static const int c_iBlurPassCount = 3;
 static const int c_iBlurTapCount = 4;
 static const int c_iMaskTextureSize = 128;
@@ -313,7 +313,7 @@ void CScreenDepthOfField::__UpdateMaskTexture()
 
 	for (int y = 0; y < c_iMaskTextureSize; ++y)
 	{
-		BYTE* pRow = (BYTE*)kLockedRect.pBits + y * kLockedRect.Pitch;
+		uint8_t* pRow = (uint8_t*)kLockedRect.pBits + y * kLockedRect.Pitch;
 		const float fDy = ((float)y + 0.5f - fHalf) * fScale;
 
 		for (int x = 0; x < c_iMaskTextureSize; ++x)
@@ -328,9 +328,9 @@ void CScreenDepthOfField::__UpdateMaskTexture()
 				fT = 1.0f;
 
 			const float fAlpha = 1.0f - fT * fT * (3.0f - 2.0f * fT);
-			const BYTE byAlpha = (BYTE)(fAlpha * 255.0f);
+			const uint8_t byAlpha = (uint8_t)(fAlpha * 255.0f);
 
-			BYTE* pPixel = pRow + x * 4;
+			uint8_t* pPixel = pRow + x * 4;
 			pPixel[0] = 255;
 			pPixel[1] = 255;
 			pPixel[2] = 255;
@@ -500,7 +500,7 @@ void CScreenDepthOfField::__BindRenderTarget(IDirect3DSurface9* pColorSurface, I
 	ms_lpd3dDevice->SetViewport(&kViewport);
 }
 
-void CScreenDepthOfField::__DrawScreenQuad(IDirect3DTexture9* pTexture, int iWidth, int iHeight, float fY0, float fY1, float fUOffset, float fVOffset, DWORD dwTopColor, DWORD dwBottomColor)
+void CScreenDepthOfField::__DrawScreenQuad(IDirect3DTexture9* pTexture, int iWidth, int iHeight, float fY0, float fY1, float fUOffset, float fVOffset, uint32_t dwTopColor, uint32_t dwBottomColor)
 {
 	if (iWidth <= 0 || iHeight <= 0)
 		return;
@@ -553,7 +553,7 @@ void CScreenDepthOfField::__BlurPass(IDirect3DTexture9* pSource, int iTargetInde
 	const float fOffsetU = fRadius / (float)m_iWidth;
 	const float fOffsetV = fRadius / (float)m_iHeight;
 
-	const DWORD dwColor = D3DCOLOR_ARGB(64, 255, 255, 255);
+	const uint32_t dwColor = D3DCOLOR_ARGB(64, 255, 255, 255);
 
 	for (int iTap = 0; iTap < c_iBlurTapCount; ++iTap)
 	{
@@ -694,7 +694,7 @@ void CScreenDepthOfField::EndScene()
 	STATEMANAGER.GetTexture(0, &pOldTexture0);
 	STATEMANAGER.GetTexture(1, &pOldTexture1);
 
-	DWORD dwOldFVF = 0;
+	uint32_t dwOldFVF = 0;
 	STATEMANAGER.GetFVF(&dwOldFVF);
 
 	STATEMANAGER.SaveRenderState(D3DRS_ZENABLE, FALSE);

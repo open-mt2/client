@@ -13,7 +13,7 @@ class CPythonQuest : public CSingleton<CPythonQuest>
 					iStartTime = 0;
 				}
 
-				DWORD dwIndex;
+				uint32_t dwIndex;
 
 				std::string strIconFileName;
 				std::string strTitle;
@@ -35,24 +35,24 @@ class CPythonQuest : public CSingleton<CPythonQuest>
 		void Clear();
 
 		void RegisterQuestInstance(const SQuestInstance& c_rQuestInstance);
-		void DeleteQuestInstance(DWORD dwIndex);
+		void DeleteQuestInstance(uint32_t dwIndex);
 
-		bool IsQuest(DWORD dwIndex);
-		void MakeQuest(DWORD dwIndex);
+		bool IsQuest(uint32_t dwIndex);
+		void MakeQuest(uint32_t dwIndex);
 
-		void SetQuestTitle(DWORD dwIndex, const char* c_szTitle);
-		void SetQuestClockName(DWORD dwIndex, const char* c_szClockName);
-		void SetQuestCounterName(DWORD dwIndex, const char* c_szCounterName);
-		void SetQuestClockValue(DWORD dwIndex, int iClockValue);
-		void SetQuestCounterValue(DWORD dwIndex, int iCounterValue);
-		void SetQuestIconFileName(DWORD dwIndex, const char* c_szIconFileName);
+		void SetQuestTitle(uint32_t dwIndex, const char* c_szTitle);
+		void SetQuestClockName(uint32_t dwIndex, const char* c_szClockName);
+		void SetQuestCounterName(uint32_t dwIndex, const char* c_szCounterName);
+		void SetQuestClockValue(uint32_t dwIndex, int iClockValue);
+		void SetQuestCounterValue(uint32_t dwIndex, int iCounterValue);
+		void SetQuestIconFileName(uint32_t dwIndex, const char* c_szIconFileName);
 
 		int GetQuestCount();
-		bool GetQuestInstancePtr(DWORD dwArrayIndex, SQuestInstance** ppQuestInstance);
+		bool GetQuestInstancePtr(uint32_t dwArrayIndex, SQuestInstance** ppQuestInstance);
 
 	protected:
 		void __Initialize();
-		bool __GetQuestInstancePtr(DWORD dwQuestIndex, SQuestInstance** ppQuestInstance);
+		bool __GetQuestInstancePtr(uint32_t dwQuestIndex, SQuestInstance** ppQuestInstance);
 
 	protected:
 		TQuestInstanceContainer m_QuestInstanceContainer;

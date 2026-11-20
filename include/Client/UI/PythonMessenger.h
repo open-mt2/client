@@ -4,7 +4,7 @@ class CPythonMessenger : public CSingleton<CPythonMessenger>
 {
 	public:
 		typedef std::set<std::string> TFriendNameMap;
-		typedef std::map<std::string, BYTE> TGuildMemberStateMap;
+		typedef std::map<std::string, uint8_t> TGuildMemberStateMap;
 
 		enum EMessengerGroupIndex
 		{
@@ -22,8 +22,8 @@ class CPythonMessenger : public CSingleton<CPythonMessenger>
 		void RemoveFriend(const char* c_szKey);
 		void OnFriendLogin(const char* c_szKey);
 		void OnFriendLogout(const char* c_szKey);
-		BOOL IsFriendByKey(const char* c_szKey);
-		BOOL IsFriendByName(const char* c_szName);
+		int32_t IsFriendByKey(const char* c_szKey);
+		int32_t IsFriendByName(const char* c_szName);
 
 		// Guild
 		void AppendGuildMember(const char* c_szName);

@@ -25,7 +25,7 @@ class CTerrainQuadtreeNode
 		long PatchNum;
 		D3DXVECTOR3 center;
 		float radius;
-		BYTE m_byLODLevel;
+		uint8_t m_byLODLevel;
 };
 
 #endif // !defined(AFX_TERRAINQUADTREENODE_H__C788298F_1098_4CEE_B6F3_5975D618BBF3__INCLUDED_)

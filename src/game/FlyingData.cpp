@@ -70,7 +70,7 @@ CFlyingData::TFlyingAttachData& CFlyingData::GetAttachDataReference(int iIndex)
 	return m_AttachDataVector[iIndex];
 }
 
-DWORD CFlyingData::AttachFlyEffect(int iType, const std::string& strFilename, float fRoll, float fArg1, float fArg2)
+uint32_t CFlyingData::AttachFlyEffect(int iType, const std::string& strFilename, float fRoll, float fArg1, float fArg2)
 {
 	TFlyingAttachData fad = {};
 	fad.iType = FLY_ATTACH_EFFECT;
@@ -220,7 +220,7 @@ bool CFlyingData::LoadScriptFile(const char* c_szFilename)
 	if (!TextFileLoader.GetTokenVector3("acceleration", &m_v3Accel))
 		m_v3Accel = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
-	DWORD i;
+	uint32_t i;
 	for (i = 0; i < TextFileLoader.GetChildNodeCount(); i++)
 	{
 		CTextFileLoader::CGotoChild GotoChild(&TextFileLoader, i);

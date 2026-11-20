@@ -82,12 +82,12 @@ void SetGuildSymbolPath(const char* c_szPathName)
 	g_strGuildSymbolPathName += "/";
 }
 
-const char* GetGuildSymbolFileName(DWORD dwGuildID)
+const char* GetGuildSymbolFileName(uint32_t dwGuildID)
 {
 	return _getf("%s%03d.jpg", g_strGuildSymbolPathName.c_str(), dwGuildID);
 }
 
-BYTE c_aSlotTypeToInvenType[SLOT_TYPE_MAX] =
+uint8_t c_aSlotTypeToInvenType[SLOT_TYPE_MAX] =
 	{
 		RESERVED_WINDOW,	   // SLOT_TYPE_NONE
 		INVENTORY,			   // SLOT_TYPE_INVENTORY
@@ -103,7 +103,7 @@ BYTE c_aSlotTypeToInvenType[SLOT_TYPE_MAX] =
 		DRAGON_SOUL_INVENTORY, // SLOT_TYPE_DRAGON_SOUL_INVENTORY
 };
 
-BYTE SlotTypeToInvenType(BYTE bSlotType)
+uint8_t SlotTypeToInvenType(uint8_t bSlotType)
 {
 	if (bSlotType >= SLOT_TYPE_MAX)
 		return RESERVED_WINDOW;

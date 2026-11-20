@@ -351,8 +351,8 @@ PyObject* backgroundGetRenderedSplatNum(PyObject* poSelf, PyObject* poArgs)
 
 PyObject* backgroundGetRenderedGTINum(PyObject* poSelf, PyObject* poArgs)
 {
-	DWORD dwGraphicThingInstanceNum;
-	DWORD dwCRCNum;
+	uint32_t dwGraphicThingInstanceNum;
+	uint32_t dwCRCNum;
 
 	/*CArea::TCRCWithNumberVector & rCRCWithNumberVector = */
 	CPythonBackground::Instance().GetRenderedGraphicThingInstanceNum(&dwGraphicThingInstanceNum, &dwCRCNum);
@@ -382,7 +382,7 @@ PyObject* backgroundGetShadowMapcolor(PyObject* poSelf, PyObject* poArgs)
 	if (!PyTuple_GetFloat(poArgs, 1, &fy))
 		return Py_BadArgument();
 
-	DWORD dwColor = CPythonBackground::Instance().GetShadowMapColor(fx, fy);
+	uint32_t dwColor = CPythonBackground::Instance().GetShadowMapColor(fx, fy);
 	return Py_BuildValue("i", dwColor);
 }
 
@@ -514,8 +514,8 @@ PyObject* backgroundGlobalPositionToLocalPosition(PyObject* poSelf, PyObject* po
 	if (!PyTuple_GetInteger(poArgs, 1, &iY))
 		return Py_BadArgument();
 
-	LONG lX = iX;
-	LONG lY = iY;
+	int32_t lX = iX;
+	int32_t lY = iY;
 	CPythonBackground& rkBG = CPythonBackground::Instance();
 	rkBG.GlobalPositionToLocalPosition(lX, lY);
 
@@ -551,7 +551,7 @@ PyObject* backgroundWarpTest(PyObject* poSelf, PyObject* poArgs)
 	if (!PyTuple_GetInteger(poArgs, 1, &iY))
 		return Py_BadArgument();
 
-	CPythonBackground::Instance().Warp((DWORD)iX * 100, (DWORD)iY * 100);
+	CPythonBackground::Instance().Warp((uint32_t)iX * 100, (uint32_t)iY * 100);
 	return Py_BuildNone();
 }
 

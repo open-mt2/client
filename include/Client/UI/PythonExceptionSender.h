@@ -9,5 +9,5 @@ class CPythonExceptionSender : public IPythonExceptionSender
 		void Send();
 
 	protected:
-		std::set<DWORD> m_kSet_dwSendedExceptionCRC;
+		std::set<uint32_t> m_kSet_dwSendedExceptionCRC;
 };

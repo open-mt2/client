@@ -42,7 +42,7 @@ bool CGuildMarkUploader::__Save(const char* c_szFileName)
 	return true;
 }
 
-bool CGuildMarkUploader::__Load(const char* c_szFileName, UINT* peError)
+bool CGuildMarkUploader::__Load(const char* c_szFileName, uint32_t* peError)
 {
 	uint32_t width = 0;
 	uint32_t height = 0;
@@ -70,7 +70,7 @@ bool CGuildMarkUploader::__Load(const char* c_szFileName, UINT* peError)
 	return true;
 }
 
-bool CGuildMarkUploader::__LoadSymbol(const char* c_szFileName, UINT* peError)
+bool CGuildMarkUploader::__LoadSymbol(const char* c_szFileName, uint32_t* peError)
 {
 	uint32_t width = 0;
 	uint32_t height = 0;
@@ -104,7 +104,7 @@ bool CGuildMarkUploader::__LoadSymbol(const char* c_szFileName, UINT* peError)
 	m_dwSymbolBufSize = ftell(file);
 	fseek(file, 0, SEEK_SET);
 
-	m_pbySymbolBuf = new BYTE[m_dwSymbolBufSize];
+	m_pbySymbolBuf = new uint8_t[m_dwSymbolBufSize];
 	fread(m_pbySymbolBuf, m_dwSymbolBufSize, 1, file);
 
 	fclose(file);
@@ -115,7 +115,7 @@ bool CGuildMarkUploader::__LoadSymbol(const char* c_szFileName, UINT* peError)
 	return true;
 }
 
-bool CGuildMarkUploader::Connect(const CNetworkAddress& c_rkNetAddr, DWORD dwHandle, DWORD dwRandomKey, DWORD dwGuildID, const char* c_szFileName, UINT* peError)
+bool CGuildMarkUploader::Connect(const CNetworkAddress& c_rkNetAddr, uint32_t dwHandle, uint32_t dwRandomKey, uint32_t dwGuildID, const char* c_szFileName, uint32_t* peError)
 {
 	__OfflineState_Set();
 	SetRecvBufferSize(1024);
@@ -141,7 +141,7 @@ bool CGuildMarkUploader::Connect(const CNetworkAddress& c_rkNetAddr, DWORD dwHan
 	return true;
 }
 
-bool CGuildMarkUploader::ConnectToSendSymbol(const CNetworkAddress& c_rkNetAddr, DWORD dwHandle, DWORD dwRandomKey, DWORD dwGuildID, const char* c_szFileName, UINT* peError)
+bool CGuildMarkUploader::ConnectToSendSymbol(const CNetworkAddress& c_rkNetAddr, uint32_t dwHandle, uint32_t dwRandomKey, uint32_t dwGuildID, const char* c_szFileName, uint32_t* peError)
 {
 	__OfflineState_Set();
 	SetRecvBufferSize(1024);
@@ -350,9 +350,9 @@ bool CGuildMarkUploader::__LoginState_RecvPing()
 	return SendSequence();
 }
 
-bool CGuildMarkUploader::__AnalyzePacket(UINT uHeader, UINT uPacketSize, bool (CGuildMarkUploader::*pfnDispatchPacket)())
+bool CGuildMarkUploader::__AnalyzePacket(uint32_t uHeader, uint32_t uPacketSize, bool (CGuildMarkUploader::*pfnDispatchPacket)())
 {
-	BYTE bHeader;
+	uint8_t bHeader;
 	if (!Peek(sizeof(bHeader), &bHeader))
 		return true;
 

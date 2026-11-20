@@ -2,8 +2,8 @@
 #include <Client/Session/PythonNetworkStream.h>
 #include <Client/UI/Packet.h>
 
-extern DWORD g_adwEncryptKey[4];
-extern DWORD g_adwDecryptKey[4];
+extern uint32_t g_adwEncryptKey[4];
+extern uint32_t g_adwDecryptKey[4];
 
 // Select Character ---------------------------------------------------------------------------
 void CPythonNetworkStream::SetSelectPhase()
@@ -59,7 +59,7 @@ void CPythonNetworkStream::SelectPhase()
 	RecvErrorPacket(header);
 }
 
-bool CPythonNetworkStream::SendSelectEmpirePacket(DWORD dwEmpireID)
+bool CPythonNetworkStream::SendSelectEmpirePacket(uint32_t dwEmpireID)
 {
 	TPacketCGEmpire kPacketEmpire;
 	kPacketEmpire.bHeader = HEADER_CG_EMPIRE;
@@ -75,7 +75,7 @@ bool CPythonNetworkStream::SendSelectEmpirePacket(DWORD dwEmpireID)
 	return SendSequence();
 }
 
-bool CPythonNetworkStream::SendSelectCharacterPacket(BYTE Index)
+bool CPythonNetworkStream::SendSelectCharacterPacket(uint8_t Index)
 {
 	TPacketCGSelectCharacter SelectCharacterPacket;
 
@@ -91,7 +91,7 @@ bool CPythonNetworkStream::SendSelectCharacterPacket(BYTE Index)
 	return SendSequence();
 }
 
-bool CPythonNetworkStream::SendDestroyCharacterPacket(BYTE index, const char* szPrivateCode)
+bool CPythonNetworkStream::SendDestroyCharacterPacket(uint8_t index, const char* szPrivateCode)
 {
 	TPacketCGDestroyCharacter DestroyCharacterPacket;
 
@@ -108,7 +108,7 @@ bool CPythonNetworkStream::SendDestroyCharacterPacket(BYTE index, const char* sz
 	return SendSequence();
 }
 
-bool CPythonNetworkStream::SendCreateCharacterPacket(BYTE index, const char* name, BYTE job, BYTE shape, BYTE byCON, BYTE byINT, BYTE bySTR, BYTE byDEX)
+bool CPythonNetworkStream::SendCreateCharacterPacket(uint8_t index, const char* name, uint8_t job, uint8_t shape, uint8_t byCON, uint8_t byINT, uint8_t bySTR, uint8_t byDEX)
 {
 	TPacketCGCreateCharacter createCharacterPacket;
 
@@ -118,7 +118,7 @@ bool CPythonNetworkStream::SendCreateCharacterPacket(BYTE index, const char* nam
 	createCharacterPacket.job = job;
 	createCharacterPacket.shape = shape;
 	createCharacterPacket.CON = byCON;
-	createCharacterPacket.INT = byINT;
+	createCharacterPacket.int32_t = byINT;
 	createCharacterPacket.STR = bySTR;
 	createCharacterPacket.DEX = byDEX;
 
@@ -131,7 +131,7 @@ bool CPythonNetworkStream::SendCreateCharacterPacket(BYTE index, const char* nam
 	return SendSequence();
 }
 
-bool CPythonNetworkStream::SendChangeNamePacket(BYTE index, const char* name)
+bool CPythonNetworkStream::SendChangeNamePacket(uint8_t index, const char* name)
 {
 	TPacketCGChangeName ChangeNamePacket;
 	ChangeNamePacket.header = HEADER_CG_CHANGE_NAME;

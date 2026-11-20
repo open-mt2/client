@@ -61,8 +61,8 @@ class CPythonBackground : public CMapManager, public CSingleton<CPythonBackgroun
 		void Destroy();
 		void Create();
 
-		void GlobalPositionToLocalPosition(LONG& rGlobalX, LONG& rGlobalY);
-		void LocalPositionToGlobalPosition(LONG& rLocalX, LONG& rLocalY);
+		void GlobalPositionToLocalPosition(int32_t& rGlobalX, int32_t& rGlobalY);
+		void LocalPositionToGlobalPosition(int32_t& rLocalX, int32_t& rLocalY);
 
 		void EnableTerrainOnlyForHeight();
 		bool SetSplatLimit(int iSplatNum);
@@ -76,13 +76,13 @@ class CPythonBackground : public CMapManager, public CSingleton<CPythonBackgroun
 		float GetRenderDistance();
 		void SetRenderDistance(float fFarClip);
 
-		DWORD GetRenderShadowTime();
+		uint32_t GetRenderShadowTime();
 		void GetDistanceSetInfo(int* peNum, float* pfStart, float* pfEnd, float* pfFarClip);
 
 		bool GetPickingPoint(D3DXVECTOR3* v3IntersectPt);
 		bool GetPickingPointWithRay(const CRay& rRay, D3DXVECTOR3* v3IntersectPt);
 		bool GetPickingPointWithRayOnlyTerrain(const CRay& rRay, D3DXVECTOR3* v3IntersectPt);
-		BOOL GetLightDirection(D3DXVECTOR3& rv3LightDirection);
+		int32_t GetLightDirection(D3DXVECTOR3& rv3LightDirection);
 
 		void Update(float fCenterX, float fCenterY, float fCenterZ);
 
@@ -121,20 +121,20 @@ class CPythonBackground : public CMapManager, public CSingleton<CPythonBackgroun
 		void ClearGuildArea();
 		void RegisterGuildArea(int isx, int isy, int iex, int iey);
 
-		void CreateTargetEffect(DWORD dwID, DWORD dwChrVID);
-		void CreateTargetEffect(DWORD dwID, long lx, long ly);
-		void DeleteTargetEffect(DWORD dwID);
+		void CreateTargetEffect(uint32_t dwID, uint32_t dwChrVID);
+		void CreateTargetEffect(uint32_t dwID, long lx, long ly);
+		void DeleteTargetEffect(uint32_t dwID);
 
-		void CreateSpecialEffect(DWORD dwID, float fx, float fy, float fz, const char* c_szFileName);
-		void DeleteSpecialEffect(DWORD dwID);
+		void CreateSpecialEffect(uint32_t dwID, float fx, float fy, float fz, const char* c_szFileName);
+		void DeleteSpecialEffect(uint32_t dwID);
 
-		void Warp(DWORD dwX, DWORD dwY);
+		void Warp(uint32_t dwX, uint32_t dwY);
 
 		void VisibleGuildArea();
 		void DisableGuildArea();
 
 		void RegisterDungeonMapName(const char* c_szMapName);
-		TMapInfo* GlobalPositionToMapInfo(DWORD dwGlobalX, DWORD dwGlobalY);
+		TMapInfo* GlobalPositionToMapInfo(uint32_t dwGlobalX, uint32_t dwGlobalY);
 		const char* GetWarpMapName();
 
 	protected:
@@ -153,31 +153,31 @@ class CPythonBackground : public CMapManager, public CSingleton<CPythonBackgroun
 		int m_eShadowLevel;
 		int m_eViewDistanceNum;
 
-		BOOL m_bVisibleGuildArea;
+		int32_t m_bVisibleGuildArea;
 
-		DWORD m_dwRenderShadowTime;
+		uint32_t m_dwRenderShadowTime;
 
-		DWORD m_dwBaseX;
-		DWORD m_dwBaseY;
+		uint32_t m_dwBaseX;
+		uint32_t m_dwBaseY;
 
 		TVIEWDISTANCESET m_ViewDistanceSet[NUM_DISTANCE_SET];
 		float m_fFogDistance;
 
 		std::set<int> m_kSet_iShowingPortalID;
 		std::set<std::string> m_kSet_strDungeonMapName;
-		std::map<DWORD, DWORD> m_kMap_dwTargetID_dwChrID;
+		std::map<uint32_t, uint32_t> m_kMap_dwTargetID_dwChrID;
 
 		struct SReserveTargetEffect
 		{
 				int ilx;
 				int ily;
 		};
-		std::map<DWORD, SReserveTargetEffect> m_kMap_dwID_kReserveTargetEffect;
+		std::map<uint32_t, SReserveTargetEffect> m_kMap_dwID_kReserveTargetEffect;
 
 		struct FFindWarpMapName
 		{
-				DWORD m_dwX, m_dwY;
-				FFindWarpMapName(DWORD dwX, DWORD dwY)
+				uint32_t m_dwX, m_dwY;
+				FFindWarpMapName(uint32_t dwX, uint32_t dwY)
 				{
 					m_dwX = dwX;
 					m_dwY = dwY;

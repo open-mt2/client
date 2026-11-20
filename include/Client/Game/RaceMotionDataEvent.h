@@ -8,7 +8,7 @@ namespace NMotionEvent
 	typedef struct SMotionEventData
 	{
 			int iType;
-			DWORD dwFrame;
+			uint32_t dwFrame;
 			float fStartingTime;
 			float fDurationTime;
 
@@ -66,13 +66,13 @@ namespace NMotionEvent
 	// Effect
 	typedef struct SMotionEventDataEffect : public SMotionEventData
 	{
-			BOOL isAttaching;
-			BOOL isFollowing;
-			BOOL isIndependent;
+			int32_t isAttaching;
+			int32_t isFollowing;
+			int32_t isIndependent;
 			std::string strAttachingBoneName;
 			D3DXVECTOR3 v3EffectPosition;
 
-			DWORD dwEffectIndex;
+			uint32_t dwEffectIndex;
 			std::string strEffectFileName;
 
 			SMotionEventDataEffect() {}
@@ -114,12 +114,12 @@ namespace NMotionEvent
 	// Effect To Target
 	typedef struct SMotionEventDataEffectToTarget : public SMotionEventData
 	{
-			DWORD dwEffectIndex;
+			uint32_t dwEffectIndex;
 
 			std::string strEffectFileName;
 			D3DXVECTOR3 v3EffectPosition;
-			BOOL isFollowing;
-			BOOL isFishingEffect;
+			int32_t isFollowing;
+			int32_t isFishingEffect;
 
 			SMotionEventDataEffectToTarget() {}
 			virtual ~SMotionEventDataEffectToTarget() {}
@@ -158,11 +158,11 @@ namespace NMotionEvent
 	// Fly
 	typedef struct SMotionEventDataFly : public SMotionEventData
 	{
-			BOOL isAttaching;
+			int32_t isAttaching;
 			std::string strAttachingBoneName;
 			D3DXVECTOR3 v3FlyPosition;
 
-			DWORD dwFlyIndex;
+			uint32_t dwFlyIndex;
 			std::string strFlyFileName;
 
 			SMotionEventDataFly() {}
@@ -202,7 +202,7 @@ namespace NMotionEvent
 	{
 			NRaceData::TCollisionData CollisionData;
 			NRaceData::TAttackData AttackData;
-			BOOL isEnableHitProcess;
+			int32_t isEnableHitProcess;
 
 			SMotionEventDataAttack() {}
 			virtual ~SMotionEventDataAttack() {}

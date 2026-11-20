@@ -50,7 +50,7 @@ namespace
 		assert(pItem1 != nullptr);
 
 		CItemData* pFound = nullptr;
-		BOOL foundOk = itemMgr.GetItemDataPointer(1001, &pFound);
+		int32_t foundOk = itemMgr.GetItemDataPointer(1001, &pFound);
 		assert(foundOk && pFound == pItem1);
 
 		// Make another item
@@ -59,7 +59,7 @@ namespace
 		assert(pItem2 != pItem1);
 
 		// Select item
-		BOOL selectOk = itemMgr.SelectItemData(2002);
+		int32_t selectOk = itemMgr.SelectItemData(2002);
 		assert(selectOk);
 		assert(itemMgr.GetSelectedItemDataPointer() == pItem2);
 
@@ -81,7 +81,7 @@ namespace
 		raceMgr.CreateRace(2);
 
 		CRaceData* pRaceData1 = nullptr;
-		BOOL ok = raceMgr.GetRaceDataPointer(1, &pRaceData1);
+		int32_t ok = raceMgr.GetRaceDataPointer(1, &pRaceData1);
 		assert(ok && pRaceData1 != nullptr);
 
 		raceMgr.SelectRace(2);

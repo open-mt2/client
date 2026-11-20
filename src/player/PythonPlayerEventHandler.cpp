@@ -19,12 +19,12 @@ void CPythonPlayerEventHandler::OnClearAffects()
 	CPythonPlayer::Instance().ClearAffects();
 }
 
-void CPythonPlayerEventHandler::OnSetAffect(UINT uAffect)
+void CPythonPlayerEventHandler::OnSetAffect(uint32_t uAffect)
 {
 	CPythonPlayer::Instance().SetAffect(uAffect);
 }
 
-void CPythonPlayerEventHandler::OnResetAffect(UINT uAffect)
+void CPythonPlayerEventHandler::OnResetAffect(uint32_t uAffect)
 {
 	CPythonPlayer::Instance().ResetAffect(uAffect);
 }
@@ -37,7 +37,7 @@ void CPythonPlayerEventHandler::OnSyncing(const SState& c_rkState)
 
 void CPythonPlayerEventHandler::OnWaiting(const SState& c_rkState)
 {
-	DWORD dwCurTime = ELTimer_GetMSec();
+	uint32_t dwCurTime = ELTimer_GetMSec();
 	if (m_dwNextWaitingNotifyTime > dwCurTime)
 		return;
 
@@ -61,7 +61,7 @@ void CPythonPlayerEventHandler::OnWaiting(const SState& c_rkState)
 
 void CPythonPlayerEventHandler::OnMoving(const SState& c_rkState)
 {
-	DWORD dwCurTime = ELTimer_GetMSec();
+	uint32_t dwCurTime = ELTimer_GetMSec();
 	if (m_dwNextMovingNotifyTime > dwCurTime)
 		return;
 
@@ -75,7 +75,7 @@ void CPythonPlayerEventHandler::OnMoving(const SState& c_rkState)
 
 void CPythonPlayerEventHandler::OnMove(const SState& c_rkState)
 {
-	DWORD dwCurTime = ELTimer_GetMSec();
+	uint32_t dwCurTime = ELTimer_GetMSec();
 	m_dwNextWaitingNotifyTime = dwCurTime + 100;
 	m_dwNextMovingNotifyTime = dwCurTime + 300;
 
@@ -99,7 +99,7 @@ void CPythonPlayerEventHandler::OnWarp(const SState& c_rkState)
 	rkNetStream.SendCharacterStatePacket(c_rkState.kPPosSelf, c_rkState.fAdvRotSelf, CInstanceBase::FUNC_WAIT, 0);
 }
 
-void CPythonPlayerEventHandler::OnAttack(const SState& c_rkState, WORD wMotionIndex)
+void CPythonPlayerEventHandler::OnAttack(const SState& c_rkState, uint16_t wMotionIndex)
 {
 	//	Tracef("CPythonPlayerEventHandler::OnAttack [%d]\n", wMotionIndex);
 	assert(wMotionIndex < 255);
@@ -108,15 +108,15 @@ void CPythonPlayerEventHandler::OnAttack(const SState& c_rkState, WORD wMotionIn
 	rkNetStream.SendCharacterStatePacket(c_rkState.kPPosSelf, c_rkState.fAdvRotSelf, CInstanceBase::FUNC_COMBO, wMotionIndex);
 
 #ifdef __ATTACK_SPEED_CHECK__
-	static DWORD s_dwLastTime = timeGetTime();
+	static uint32_t s_dwLastTime = timeGetTime();
 
-	DWORD dwCurTime = timeGetTime();
+	uint32_t dwCurTime = timeGetTime();
 	Tracef("%d\n", dwCurTime - s_dwLastTime);
 	s_dwLastTime = dwCurTime;
 #endif
 }
 
-void CPythonPlayerEventHandler::OnUseSkill(const SState& c_rkState, UINT uMotSkill, UINT uArg)
+void CPythonPlayerEventHandler::OnUseSkill(const SState& c_rkState, uint32_t uMotSkill, uint32_t uArg)
 {
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.SendCharacterStatePacket(c_rkState.kPPosSelf, c_rkState.fAdvRotSelf, CInstanceBase::FUNC_SKILL | uMotSkill, uArg);
@@ -131,9 +131,9 @@ void CPythonPlayerEventHandler::OnChangeShape()
 	CPythonPlayer::Instance().NEW_Stop();
 }
 
-void CPythonPlayerEventHandler::OnHit(UINT uSkill, CActorInstance& rkActorVictim, BOOL isSendPacket)
+void CPythonPlayerEventHandler::OnHit(uint32_t uSkill, CActorInstance& rkActorVictim, int32_t isSendPacket)
 {
-	DWORD dwVIDVictim = rkActorVictim.GetVirtualID();
+	uint32_t dwVIDVictim = rkActorVictim.GetVirtualID();
 
 	// Update Target
 	CPythonPlayer::Instance().SetTarget(dwVIDVictim, FALSE);
@@ -143,7 +143,7 @@ void CPythonPlayerEventHandler::OnHit(UINT uSkill, CActorInstance& rkActorVictim
 	{
 // #define ATTACK_TIME_LOG
 #ifdef ATTACK_TIME_LOG
-		static std::map<DWORD, float> s_prevTimed;
+		static std::map<uint32_t, float> s_prevTimed;
 		float curTime = timeGetTime() / 1000.0f;
 		bool isFirst = false;
 		if (s_prevTimed.end() == s_prevTimed.find(dwVIDVictim))
@@ -235,7 +235,7 @@ void CPythonPlayerEventHandler::CNormalBowAttack_FlyEventHandler_AutoClear::OnSe
 	CPythonNetworkStream& rpns = CPythonNetworkStream::Instance();
 	rpns.SendFlyTargetingPacket(m_pInstTarget->GetVirtualID(), m_pInstTarget->GetGraphicThingInstancePtr()->OnGetFlyTargetPosition());
 }
-void CPythonPlayerEventHandler::CNormalBowAttack_FlyEventHandler_AutoClear::OnShoot(DWORD dwSkillIndex)
+void CPythonPlayerEventHandler::CNormalBowAttack_FlyEventHandler_AutoClear::OnShoot(uint32_t dwSkillIndex)
 {
 	CPythonNetworkStream& rpns = CPythonNetworkStream::Instance();
 	rpns.SendShootPacket(dwSkillIndex);
@@ -253,7 +253,7 @@ void CPythonPlayerEventHandler::CNormalBowAttack_FlyEventHandler_AutoClear::SetT
 	m_pInstTarget = pInstTarget;
 }
 
-void CPythonPlayerEventHandler::CNormalBowAttack_FlyEventHandler_AutoClear::OnExplodingAtAnotherTarget(DWORD dwSkillIndex, DWORD dwVID)
+void CPythonPlayerEventHandler::CNormalBowAttack_FlyEventHandler_AutoClear::OnExplodingAtAnotherTarget(uint32_t dwSkillIndex, uint32_t dwVID)
 {
 	return;
 
@@ -269,7 +269,7 @@ void CPythonPlayerEventHandler::CNormalBowAttack_FlyEventHandler_AutoClear::OnEx
 		pInstance->GetGraphicThingInstanceRef().OnShootDamage();
 	}
 }
-void CPythonPlayerEventHandler::CNormalBowAttack_FlyEventHandler_AutoClear::OnExplodingAtTarget(DWORD dwSkillIndex)
+void CPythonPlayerEventHandler::CNormalBowAttack_FlyEventHandler_AutoClear::OnExplodingAtTarget(uint32_t dwSkillIndex)
 {
 	//	Tracef("Shoot : Hit the desired target : %d, %d\n", dwSkillIndex, m_pInstTarget->GetVirtualID());
 	//	CPythonNetworkStream& rkStream=CPythonNetworkStream::Instance();

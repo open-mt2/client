@@ -7,7 +7,7 @@ void CActorInstance::__Push(int x, int y)
 	if (IsResistFallen())
 		return;
 
-	// DWORD dwVID=GetVirtualID();
+	// uint32_t dwVID=GetVirtualID();
 	// Tracenf("VID %d SyncPixelPosition %d %d", dwVID, x, y);
 
 	const D3DXVECTOR3& c_rv3Src = GetPosition();

@@ -118,7 +118,7 @@ void CSnowEnvironment::__ApplyBlur()
 	//				STATEMANAGER.SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 	//				STATEMANAGER.SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
 	//				STATEMANAGER.SetTextureStageState(0,  D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
-	//				DWORD	alphaColor = 0xFFFFFF | ((DWORD)(0.6f*255.0f) << 24);
+	//				uint32_t	alphaColor = 0xFFFFFF | ((uint32_t)(0.6f*255.0f) << 24);
 	//
 	//				BlurVertex V[4] = { BlurVertex(D3DXVECTOR3(0.0f,0.0f,0.0f),1.0f,		alphaColor, 0,0) ,
 	//									BlurVertex(D3DXVECTOR3(wTextureSize,0.0f,0.0f),1.0f,		alphaColor, 1,0) ,
@@ -179,7 +179,7 @@ void CSnowEnvironment::Render()
 
 	__BeginBlur();
 
-	DWORD dwParticleCount = min(m_dwParticleMaxNum, m_kVct_pkParticleSnow.size());
+	uint32_t dwParticleCount = min(m_dwParticleMaxNum, m_kVct_pkParticleSnow.size());
 
 	CCamera* pCamera = CCameraManager::Instance().GetCurrentCamera();
 	if (!pCamera)
@@ -257,14 +257,14 @@ bool CSnowEnvironment::__CreateGeometry()
 	if (FAILED(ms_lpd3dDevice->CreateVertexBuffer(sizeof(SParticleVertex) * m_dwParticleMaxNum * 4, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, D3DFVF_XYZ | D3DFVF_TEX1, D3DPOOL_SYSTEMMEM, &m_pVB, NULL)))
 		return false;
 
-	if (FAILED(ms_lpd3dDevice->CreateIndexBuffer(sizeof(WORD) * m_dwParticleMaxNum * 6, D3DUSAGE_WRITEONLY, D3DFMT_INDEX16, D3DPOOL_MANAGED, &m_pIB, NULL)))
+	if (FAILED(ms_lpd3dDevice->CreateIndexBuffer(sizeof(uint16_t) * m_dwParticleMaxNum * 6, D3DUSAGE_WRITEONLY, D3DFMT_INDEX16, D3DPOOL_MANAGED, &m_pIB, NULL)))
 		return false;
 
-	WORD* dstIndices;
-	if (FAILED(m_pIB->Lock(0, sizeof(WORD) * m_dwParticleMaxNum * 6, (VOID**)&dstIndices, 0)))
+	uint16_t* dstIndices;
+	if (FAILED(m_pIB->Lock(0, sizeof(uint16_t) * m_dwParticleMaxNum * 6, (void**)&dstIndices, 0)))
 		return false;
 
-	const WORD c_awFillRectIndices[6] = {
+	const uint16_t c_awFillRectIndices[6] = {
 		0,
 		2,
 		1,

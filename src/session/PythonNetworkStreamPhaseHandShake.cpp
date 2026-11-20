@@ -112,7 +112,7 @@ bool CPythonNetworkStream::RecvHandshakePacket()
 
 bool CPythonNetworkStream::RecvHandshakeOKPacket(const protocol::Packet& value)
 {
-	DWORD dwDelta = ELTimer_GetMSec() - m_kServerTimeSync.m_dwChangeClientTime;
+	uint32_t dwDelta = ELTimer_GetMSec() - m_kServerTimeSync.m_dwChangeClientTime;
 	ELTimer_SetServerMSec(m_kServerTimeSync.m_dwChangeServerTime + dwDelta);
 
 	Tracenf("HANDSHAKE OK RECV %u %u", m_kServerTimeSync.m_dwChangeServerTime, dwDelta);

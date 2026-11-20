@@ -6,8 +6,8 @@
 #include <Neoeter/IO/EterPackManager.h>
 
 // CHINA_CRYPT_KEY
-extern DWORD g_adwEncryptKey[4];
-extern DWORD g_adwDecryptKey[4];
+extern uint32_t g_adwEncryptKey[4];
+extern uint32_t g_adwDecryptKey[4];
 // END_OF_CHINA_CRYPT_KEY
 
 void CAccountConnector::SetHandler(PyObject* poHandler)
@@ -135,7 +135,7 @@ bool CAccountConnector::__HandshakeState_Process()
 
 bool CAccountConnector::__AuthState_Process()
 {
-	if (!__AnalyzePacket(0, sizeof(BYTE), &CAccountConnector::__AuthState_RecvEmpty))
+	if (!__AnalyzePacket(0, sizeof(uint8_t), &CAccountConnector::__AuthState_RecvEmpty))
 		return true;
 
 	if (!__AnalyzePacket(HEADER_GC_PHASE, sizeof(TPacketGCPhase), &CAccountConnector::__AuthState_RecvPhase))
@@ -167,8 +167,8 @@ bool CAccountConnector::__AuthState_Process()
 
 bool CAccountConnector::__AuthState_RecvEmpty()
 {
-	BYTE byEmpty;
-	Recv(sizeof(BYTE), &byEmpty);
+	uint8_t byEmpty;
+	Recv(sizeof(uint8_t), &byEmpty);
 	return true;
 }
 
@@ -200,7 +200,7 @@ bool CAccountConnector::__AuthState_RecvPhase()
 
 		m_strPassword = "";
 
-		for (DWORD i = 0; i < 4; ++i)
+		for (uint32_t i = 0; i < 4; ++i)
 			LoginPacket.adwClientKey[i] = g_adwEncryptKey[i];
 
 		if (!Send(sizeof(LoginPacket), &LoginPacket))
@@ -232,8 +232,8 @@ bool CAccountConnector::__AuthState_RecvHandshake()
 
 		ELTimer_SetServerMSec(kPacketHandshake.dwTime + kPacketHandshake.lDelta);
 
-		// DWORD dwBaseServerTime = kPacketHandshake.dwTime+ kPacketHandshake.lDelta;
-		// DWORD dwBaseClientTime = ELTimer_GetMSec();
+		// uint32_t dwBaseServerTime = kPacketHandshake.dwTime+ kPacketHandshake.lDelta;
+		// uint32_t dwBaseClientTime = ELTimer_GetMSec();
 
 		kPacketHandshake.dwTime = kPacketHandshake.dwTime + kPacketHandshake.lDelta + kPacketHandshake.lDelta;
 		kPacketHandshake.lDelta = 0;
@@ -354,9 +354,9 @@ bool CAccountConnector::__AuthState_RecvChinaMatrixCard()
 	return true;
 }
 
-bool CAccountConnector::__AnalyzePacket(UINT uHeader, UINT uPacketSize, bool (CAccountConnector::*pfnDispatchPacket)())
+bool CAccountConnector::__AnalyzePacket(uint32_t uHeader, uint32_t uPacketSize, bool (CAccountConnector::*pfnDispatchPacket)())
 {
-	BYTE bHeader;
+	uint8_t bHeader;
 	if (!Peek(sizeof(bHeader), &bHeader))
 		return true;
 
@@ -369,9 +369,9 @@ bool CAccountConnector::__AnalyzePacket(UINT uHeader, UINT uPacketSize, bool (CA
 	return (this->*pfnDispatchPacket)();
 }
 
-bool CAccountConnector::__AnalyzeVarSizePacket(UINT uHeader, bool (CAccountConnector::*pfnDispatchPacket)(int))
+bool CAccountConnector::__AnalyzeVarSizePacket(uint32_t uHeader, bool (CAccountConnector::*pfnDispatchPacket)(int))
 {
-	BYTE bHeader;
+	uint8_t bHeader;
 	if (!Peek(sizeof(bHeader), &bHeader))
 		return true;
 

@@ -16,27 +16,27 @@ class CPythonSafeBox : public CSingleton<CPythonSafeBox>
 		virtual ~CPythonSafeBox();
 
 		void OpenSafeBox(int iSize);
-		void SetItemData(DWORD dwSlotIndex, const TItemData& rItemData);
-		void DelItemData(DWORD dwSlotIndex);
+		void SetItemData(uint32_t dwSlotIndex, const TItemData& rItemData);
+		void DelItemData(uint32_t dwSlotIndex);
 
-		void SetMoney(DWORD dwMoney);
-		DWORD GetMoney();
+		void SetMoney(uint32_t dwMoney);
+		uint32_t GetMoney();
 
-		BOOL GetSlotItemID(DWORD dwSlotIndex, DWORD* pdwItemID);
+		int32_t GetSlotItemID(uint32_t dwSlotIndex, uint32_t* pdwItemID);
 
 		int GetCurrentSafeBoxSize();
-		BOOL GetItemDataPtr(DWORD dwSlotIndex, TItemData** ppInstance);
+		int32_t GetItemDataPtr(uint32_t dwSlotIndex, TItemData** ppInstance);
 
 		// MALL
 		void OpenMall(int iSize);
-		void SetMallItemData(DWORD dwSlotIndex, const TItemData& rItemData);
-		void DelMallItemData(DWORD dwSlotIndex);
-		BOOL GetMallItemDataPtr(DWORD dwSlotIndex, TItemData** ppInstance);
-		BOOL GetSlotMallItemID(DWORD dwSlotIndex, DWORD* pdwItemID);
-		DWORD GetMallSize();
+		void SetMallItemData(uint32_t dwSlotIndex, const TItemData& rItemData);
+		void DelMallItemData(uint32_t dwSlotIndex);
+		int32_t GetMallItemDataPtr(uint32_t dwSlotIndex, TItemData** ppInstance);
+		int32_t GetSlotMallItemID(uint32_t dwSlotIndex, uint32_t* pdwItemID);
+		uint32_t GetMallSize();
 
 	protected:
 		TItemInstanceVector m_ItemInstanceVector;
 		TItemInstanceVector m_MallItemInstanceVector;
-		DWORD m_dwMoney;
+		uint32_t m_dwMoney;
 };

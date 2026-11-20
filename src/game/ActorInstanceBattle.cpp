@@ -5,12 +5,12 @@
 #include <Client/Game/ActorInstance.h>
 #include <Client/Game/RaceData.h>
 
-void CActorInstance::SetBattleHitEffect(DWORD dwID)
+void CActorInstance::SetBattleHitEffect(uint32_t dwID)
 {
 	m_dwBattleHitEffectID = dwID;
 }
 
-void CActorInstance::SetBattleAttachEffect(DWORD dwID)
+void CActorInstance::SetBattleAttachEffect(uint32_t dwID)
 {
 	m_dwBattleAttachEffectID = dwID;
 }
@@ -40,7 +40,7 @@ bool CActorInstance::CanUseSkill()
 	if (!CanAct())
 		return false;
 
-	DWORD dwCurMotionIndex = __GetCurrentMotionIndex();
+	uint32_t dwCurMotionIndex = __GetCurrentMotionIndex();
 
 	// Locked during attack
 	switch (dwCurMotionIndex)
@@ -114,7 +114,7 @@ bool CActorInstance::CanFishing()
 	return true;
 }
 
-BOOL CActorInstance::IsClickableDistanceDestInstance(CActorInstance& rkInstDst, float fDistance)
+int32_t CActorInstance::IsClickableDistanceDestInstance(CActorInstance& rkInstDst, float fDistance)
 {
 	TPixelPosition kPPosSrc;
 	GetPixelPosition(&kPPosSrc);
@@ -257,8 +257,8 @@ void CActorInstance::__RunNextCombo()
 	++m_dwcurComboIndex;
 	///////////////////////////
 
-	WORD wComboIndex = m_dwcurComboIndex;
-	WORD wComboType = __GetCurrentComboType();
+	uint16_t wComboIndex = m_dwcurComboIndex;
+	uint16_t wComboType = __GetCurrentComboType();
 
 	if (wComboIndex == 0)
 	{
@@ -266,7 +266,7 @@ void CActorInstance::__RunNextCombo()
 		return;
 	}
 
-	DWORD dwComboArrayIndex = wComboIndex - 1;
+	uint32_t dwComboArrayIndex = wComboIndex - 1;
 
 	CRaceData::TComboData* pComboData;
 
@@ -284,7 +284,7 @@ void CActorInstance::__RunNextCombo()
 		return;
 	}
 
-	WORD wcurComboMotionIndex = pComboData->ComboIndexVector[dwComboArrayIndex];
+	uint16_t wcurComboMotionIndex = pComboData->ComboIndexVector[dwComboArrayIndex];
 	ComboAttack(wcurComboMotionIndex, m_fAtkDirRot, 0.1f);
 
 	////////////////////////////////
@@ -315,7 +315,7 @@ void CActorInstance::__ClearCombo()
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-BOOL CActorInstance::isAttacking()
+int32_t CActorInstance::isAttacking()
 {
 	if (isNormalAttacking())
 		return TRUE;
@@ -329,7 +329,7 @@ BOOL CActorInstance::isAttacking()
 	return FALSE;
 }
 
-BOOL CActorInstance::isValidAttacking()
+int32_t CActorInstance::isValidAttacking()
 {
 	if (!m_pkCurRaceMotionData)
 		return FALSE;
@@ -351,7 +351,7 @@ BOOL CActorInstance::isValidAttacking()
 	return TRUE;
 }
 
-BOOL CActorInstance::CanCheckAttacking()
+int32_t CActorInstance::CanCheckAttacking()
 {
 	if (isAttacking())
 		return true;
@@ -367,7 +367,7 @@ bool CActorInstance::__IsInSplashTime()
 	return false;
 }
 
-BOOL CActorInstance::isNormalAttacking()
+int32_t CActorInstance::isNormalAttacking()
 {
 	if (!m_pkCurRaceMotionData)
 		return FALSE;
@@ -382,7 +382,7 @@ BOOL CActorInstance::isNormalAttacking()
 	return TRUE;
 }
 
-BOOL CActorInstance::isComboAttacking()
+int32_t CActorInstance::isComboAttacking()
 {
 	if (!m_pkCurRaceMotionData)
 		return FALSE;
@@ -397,7 +397,7 @@ BOOL CActorInstance::isComboAttacking()
 	return TRUE;
 }
 
-BOOL CActorInstance::IsSplashAttacking()
+int32_t CActorInstance::IsSplashAttacking()
 {
 	if (!m_pkCurRaceMotionData)
 		return FALSE;
@@ -408,7 +408,7 @@ BOOL CActorInstance::IsSplashAttacking()
 	return FALSE;
 }
 
-BOOL CActorInstance::__IsMovingSkill(WORD wSkillNumber)
+int32_t CActorInstance::__IsMovingSkill(uint16_t wSkillNumber)
 {
 	enum
 	{
@@ -418,9 +418,9 @@ BOOL CActorInstance::__IsMovingSkill(WORD wSkillNumber)
 	return HORSE_DASH_SKILL_NUMBER == wSkillNumber;
 }
 
-BOOL CActorInstance::IsActEmotion()
+int32_t CActorInstance::IsActEmotion()
 {
-	DWORD dwCurMotionIndex = __GetCurrentMotionIndex();
+	uint32_t dwCurMotionIndex = __GetCurrentMotionIndex();
 	switch (dwCurMotionIndex)
 	{
 		case CRaceMotionData::NAME_FRENCH_KISS_START + 0:
@@ -438,12 +438,12 @@ BOOL CActorInstance::IsActEmotion()
 	return FALSE;
 }
 
-BOOL CActorInstance::IsUsingMovingSkill()
+int32_t CActorInstance::IsUsingMovingSkill()
 {
 	return __IsMovingSkill(m_kCurMotNode.uSkill);
 }
 
-DWORD CActorInstance::GetComboIndex()
+uint32_t CActorInstance::GetComboIndex()
 {
 	return m_dwcurComboIndex;
 }
@@ -470,9 +470,9 @@ bool CActorInstance::__CanInputNormalAttackCommand()
 	return false;
 }
 
-BOOL CActorInstance::NormalAttack(float fDirRot, float fBlendTime)
+int32_t CActorInstance::NormalAttack(float fDirRot, float fBlendTime)
 {
-	WORD wMotionIndex;
+	uint16_t wMotionIndex;
 	if (!m_pkCurRaceData->GetNormalAttackIndex(m_wcurMotionMode, &wMotionIndex))
 		return FALSE;
 
@@ -487,7 +487,7 @@ BOOL CActorInstance::NormalAttack(float fDirRot, float fBlendTime)
 	return TRUE;
 }
 
-BOOL CActorInstance::ComboAttack(DWORD dwMotionIndex, float fDirRot, float fBlendTime)
+int32_t CActorInstance::ComboAttack(uint32_t dwMotionIndex, float fDirRot, float fBlendTime)
 {
 	BlendRotation(fDirRot, fBlendTime);
 	SetAdvancingRotation(fDirRot);
@@ -501,7 +501,7 @@ BOOL CActorInstance::ComboAttack(DWORD dwMotionIndex, float fDirRot, float fBlen
 	return TRUE;
 }
 
-void CActorInstance::__ProcessMotionEventAttackSuccess(DWORD dwMotionKey, BYTE byEventIndex, CActorInstance& rVictim)
+void CActorInstance::__ProcessMotionEventAttackSuccess(uint32_t dwMotionKey, uint8_t byEventIndex, CActorInstance& rVictim)
 {
 	CRaceMotionData* pMotionData;
 
@@ -519,7 +519,7 @@ void CActorInstance::__ProcessMotionEventAttackSuccess(DWORD dwMotionKey, BYTE b
 	__ProcessDataAttackSuccess(pMotionEventData->AttackData, rVictim, c_rv3VictimPos);
 }
 
-void CActorInstance::__ProcessMotionAttackSuccess(DWORD dwMotionKey, CActorInstance& rVictim)
+void CActorInstance::__ProcessMotionAttackSuccess(uint32_t dwMotionKey, CActorInstance& rVictim)
 {
 	CRaceMotionData* c_pMotionData;
 
@@ -530,7 +530,7 @@ void CActorInstance::__ProcessMotionAttackSuccess(DWORD dwMotionKey, CActorInsta
 	__ProcessDataAttackSuccess(c_pMotionData->GetMotionAttackDataReference(), rVictim, c_rv3VictimPos);
 }
 
-DWORD CActorInstance::__GetOwnerVID()
+uint32_t CActorInstance::__GetOwnerVID()
 {
 	return m_dwOwnerVID;
 }
@@ -600,7 +600,7 @@ bool IS_PARTY_HUNTING_RACE(unsigned int vnum)
 	*/
 }
 
-void CActorInstance::__ProcessDataAttackSuccess(const NRaceData::TAttackData& c_rAttackData, CActorInstance& rVictim, const D3DXVECTOR3& c_rv3Position, UINT uiSkill, BOOL isSendPacket)
+void CActorInstance::__ProcessDataAttackSuccess(const NRaceData::TAttackData& c_rAttackData, CActorInstance& rVictim, const D3DXVECTOR3& c_rv3Position, uint32_t uiSkill, int32_t isSendPacket)
 {
 	if (NRaceData::HIT_TYPE_NONE == c_rAttackData.iHittingType)
 		return;
@@ -716,9 +716,9 @@ void CActorInstance::OnShootDamage()
 	}
 }
 
-void CActorInstance::__Shake(DWORD dwDuration)
+void CActorInstance::__Shake(uint32_t dwDuration)
 {
-	DWORD dwCurTime = ELTimer_GetMSec();
+	uint32_t dwCurTime = ELTimer_GetMSec();
 	m_dwShakeTime = dwCurTime + dwDuration;
 }
 
@@ -728,7 +728,7 @@ void CActorInstance::ShakeProcess()
 	{
 		D3DXVECTOR3 v3Pos(0.0f, 0.0f, 0.0f);
 
-		DWORD dwCurTime = ELTimer_GetMSec();
+		uint32_t dwCurTime = ELTimer_GetMSec();
 
 		if (m_dwShakeTime < dwCurTime)
 		{

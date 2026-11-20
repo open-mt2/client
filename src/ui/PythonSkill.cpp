@@ -6,12 +6,12 @@
 #include <Client/UI/InstanceBase.h>
 #include <Client/Player/PythonPlayer.h>
 
-std::map<std::string, DWORD> CPythonSkill::SSkillData::ms_StatusNameMap;
-std::map<std::string, DWORD> CPythonSkill::SSkillData::ms_NewMinStatusNameMap;
-std::map<std::string, DWORD> CPythonSkill::SSkillData::ms_NewMaxStatusNameMap;
-DWORD CPythonSkill::SSkillData::ms_dwTimeIncreaseSkillNumber = 0;
+std::map<std::string, uint32_t> CPythonSkill::SSkillData::ms_StatusNameMap;
+std::map<std::string, uint32_t> CPythonSkill::SSkillData::ms_NewMinStatusNameMap;
+std::map<std::string, uint32_t> CPythonSkill::SSkillData::ms_NewMaxStatusNameMap;
+uint32_t CPythonSkill::SSkillData::ms_dwTimeIncreaseSkillNumber = 0;
 
-BOOL SKILL_EFFECT_UPGRADE_ENABLE = FALSE;
+int32_t SKILL_EFFECT_UPGRADE_ENABLE = FALSE;
 
 int SplitLine(const char* c_szText, CTokenVector* pstTokenVector, const char* c_szDelimeter)
 {
@@ -21,7 +21,7 @@ int SplitLine(const char* c_szText, CTokenVector* pstTokenVector, const char* c_
 	std::string stToken;
 	std::string stLine = c_szText;
 
-	DWORD basePos = 0;
+	uint32_t basePos = 0;
 
 	do
 	{
@@ -104,7 +104,7 @@ bool CPythonSkill::RegisterSkillTable(const char* c_szFileName)
 	// END_OF_OVERWRITE_SKILLPROTO_POLY
 
 	CTokenVector TokenVector;
-	for (DWORD i = 0; i < textFileLoader.GetLineCount(); ++i)
+	for (uint32_t i = 0; i < textFileLoader.GetLineCount(); ++i)
 	{
 		if (!textFileLoader.SplitLineByTab(i, &TokenVector))
 			continue;
@@ -154,7 +154,7 @@ bool CPythonSkill::RegisterSkillTable(const char* c_szFileName)
 
 		rSkillData.strDuration = TokenVector[TABLE_TOKEN_TYPE_DURATION_POLY];
 
-		const DWORD LevelEmpty = 1;
+		const uint32_t LevelEmpty = 1;
 
 		const std::string& c_strMaxLevel = TokenVector[TABLE_TOKEN_TYPE_MAX_LEVEL];
 		if (!c_strMaxLevel.empty())
@@ -274,7 +274,7 @@ void CPythonSkill::__RegisterNormalIconImage(TSkillData& rData, const char* c_sz
 		rGradeData.pImage = rData.pImage;
 	}
 }
-extern const DWORD c_iSkillIndex_Riding;
+extern const uint32_t c_iSkillIndex_Riding;
 bool CPythonSkill::RegisterSkillDesc(const char* c_szFileName)
 {
 	CEterPackManager::TPackDataPtr data;
@@ -286,7 +286,7 @@ bool CPythonSkill::RegisterSkillDesc(const char* c_szFileName)
 	textFileLoader.Bind(data->size(), data->data());
 
 	CTokenVector TokenVector;
-	for (DWORD i = 0; i < textFileLoader.GetLineCount(); ++i)
+	for (uint32_t i = 0; i < textFileLoader.GetLineCount(); ++i)
 	{
 		if (!textFileLoader.SplitLineByTab(i, &TokenVector))
 			continue;
@@ -297,7 +297,7 @@ bool CPythonSkill::RegisterSkillDesc(const char* c_szFileName)
 			continue;
 		}
 
-		DWORD iSkillIndex = atoi(TokenVector[DESC_TOKEN_TYPE_VNUM].c_str());
+		uint32_t iSkillIndex = atoi(TokenVector[DESC_TOKEN_TYPE_VNUM].c_str());
 		if (iSkillIndex == 0)
 		{
 			TraceError("SkillDesc.line(%d).NO_INDEX_ERROR\n", i + 1);
@@ -321,14 +321,14 @@ bool CPythonSkill::RegisterSkillDesc(const char* c_szFileName)
 			std::string strJob = TokenVector[DESC_TOKEN_TYPE_JOB];
 			stl_lowers(strJob);
 
-			std::map<std::string, DWORD>::iterator it = m_SkillTypeIndexMap.find(strJob.c_str());
+			std::map<std::string, uint32_t>::iterator it = m_SkillTypeIndexMap.find(strJob.c_str());
 			if (m_SkillTypeIndexMap.end() == it)
 			{
 				TraceError("CPythonSkill::RegisterSkillDesc(dwSkillIndex=%d, strType=%s).STRANGE_SKILL_TYPE", iSkillIndex, strJob.c_str());
 				continue;
 			}
 
-			rSkillData.byType = BYTE(it->second);
+			rSkillData.byType = uint8_t(it->second);
 		}
 
 		// Name
@@ -369,7 +369,7 @@ bool CPythonSkill::RegisterSkillDesc(const char* c_szFileName)
 			for (CTokenVector::iterator it = AttributeTokenVector.begin(); it != AttributeTokenVector.end(); ++it)
 			{
 				std::string& rstrToken = *it;
-				std::map<std::string, DWORD>::iterator it2 = m_SkillAttributeIndexMap.find(rstrToken);
+				std::map<std::string, uint32_t>::iterator it2 = m_SkillAttributeIndexMap.find(rstrToken);
 				if (m_SkillAttributeIndexMap.end() == it2)
 				{
 					TraceError("CPythonSkill::RegisterSkillDesc(dwSkillIndex=%d) - Strange Skill Attribute(%s)", iSkillIndex, rstrToken.c_str());
@@ -388,7 +388,7 @@ bool CPythonSkill::RegisterSkillDesc(const char* c_szFileName)
 			for (CTokenVector::iterator it = WeaponTokenVector.begin(); it != WeaponTokenVector.end(); ++it)
 			{
 				std::string& rstrToken = *it;
-				std::map<std::string, DWORD>::iterator it2 = m_SkillNeedWeaponIndexMap.find(rstrToken);
+				std::map<std::string, uint32_t>::iterator it2 = m_SkillNeedWeaponIndexMap.find(rstrToken);
 				if (m_SkillNeedWeaponIndexMap.end() == it2)
 				{
 					TraceError("CPythonSkill::RegisterSkillDesc(dwSkillIndex=%d) - Strange Skill Need Weapon(%s)", iSkillIndex, rstrToken.c_str());
@@ -446,7 +446,7 @@ bool CPythonSkill::RegisterSkillDesc(const char* c_szFileName)
 			else
 			{
 				rSkillData.bNoMotion = FALSE;
-				rSkillData.wMotionIndex = (WORD)atoi(c_rstrMotionIndex.c_str());
+				rSkillData.wMotionIndex = (uint16_t)atoi(c_rstrMotionIndex.c_str());
 			}
 		}
 		else
@@ -515,13 +515,13 @@ bool CPythonSkill::RegisterSkillDesc(const char* c_szFileName)
 			if (c_rstrLevelLimit.empty())
 				rSkillData.byLevelLimit = 0;
 			else
-				rSkillData.byLevelLimit = (WORD)atoi(c_rstrLevelLimit.c_str());
+				rSkillData.byLevelLimit = (uint16_t)atoi(c_rstrLevelLimit.c_str());
 		}
 
 		if (TokenVector.size() > DESC_TOKEN_TYPE_MAX_LEVEL)
 		{
 			const std::string& c_rstrMaxLevel = TokenVector[DESC_TOKEN_TYPE_MAX_LEVEL];
-			const DWORD LevelLimitEmpty = 1;
+			const uint32_t LevelLimitEmpty = 1;
 			if (c_rstrMaxLevel.empty())
 			{
 				if (rSkillData.byLevelLimit > LevelLimitEmpty)
@@ -530,7 +530,7 @@ bool CPythonSkill::RegisterSkillDesc(const char* c_szFileName)
 					rSkillData.byMaxLevel = 20;
 			}
 			else
-				rSkillData.byMaxLevel = (BYTE)atoi(c_rstrMaxLevel.c_str());
+				rSkillData.byMaxLevel = (uint8_t)atoi(c_rstrMaxLevel.c_str());
 		}
 	}
 
@@ -542,7 +542,7 @@ void CPythonSkill::Destroy()
 	m_SkillDataMap.clear();
 }
 
-bool CPythonSkill::RegisterSkill(DWORD dwSkillIndex, const char* c_szFileName)
+bool CPythonSkill::RegisterSkill(uint32_t dwSkillIndex, const char* c_szFileName)
 {
 	CTextFileLoader TextFileLoader;
 	if (!TextFileLoader.Load(c_szFileName))
@@ -560,14 +560,14 @@ bool CPythonSkill::RegisterSkill(DWORD dwSkillIndex, const char* c_szFileName)
 	if (TextFileLoader.GetTokenString("type", &strTypeName))
 	{
 		stl_lowers(strTypeName);
-		std::map<std::string, DWORD>::iterator it = m_SkillTypeIndexMap.find(strTypeName.c_str());
+		std::map<std::string, uint32_t>::iterator it = m_SkillTypeIndexMap.find(strTypeName.c_str());
 		if (m_SkillTypeIndexMap.end() == it)
 		{
 			TraceError("Strange Skill Type - CPythonSkill::RegisterSkill(dwSkillIndex=%d, c_szFileName=%s)", dwSkillIndex, c_szFileName);
 			return false;
 		}
 
-		SkillData.byType = (BYTE)it->second;
+		SkillData.byType = (uint8_t)it->second;
 	}
 	else
 	{
@@ -581,7 +581,7 @@ bool CPythonSkill::RegisterSkill(DWORD dwSkillIndex, const char* c_szFileName)
 		for (CTokenVector::iterator it = pAttributeTokenVector->begin(); it != pAttributeTokenVector->end(); ++it)
 		{
 			std::string& rstrToken = *it;
-			std::map<std::string, DWORD>::iterator it2 = m_SkillAttributeIndexMap.find(rstrToken.c_str());
+			std::map<std::string, uint32_t>::iterator it2 = m_SkillAttributeIndexMap.find(rstrToken.c_str());
 			if (m_SkillAttributeIndexMap.end() == it2)
 			{
 				TraceError("Strange Skill Attribute - CPythonSkill::RegisterSkill(dwSkillIndex=%d, c_szFileName=%s)", dwSkillIndex, c_szFileName);
@@ -597,7 +597,7 @@ bool CPythonSkill::RegisterSkill(DWORD dwSkillIndex, const char* c_szFileName)
 		for (CTokenVector::iterator it = pNeedWeaponVector->begin(); it != pNeedWeaponVector->end(); ++it)
 		{
 			std::string& rstrToken = *it;
-			std::map<std::string, DWORD>::iterator it2 = m_SkillNeedWeaponIndexMap.find(rstrToken.c_str());
+			std::map<std::string, uint32_t>::iterator it2 = m_SkillNeedWeaponIndexMap.find(rstrToken.c_str());
 			if (m_SkillNeedWeaponIndexMap.end() == it2)
 			{
 				TraceError("Strange Skill Need Weapon - CPythonSkill::RegisterSkill(dwSkillIndex=%d, c_szFileName=%s)", dwSkillIndex, c_szFileName);
@@ -644,10 +644,10 @@ bool CPythonSkill::RegisterSkill(DWORD dwSkillIndex, const char* c_szFileName)
 
 		if (isConditionData)
 		{
-			DWORD dwSize = pConditionDataVector->size();
+			uint32_t dwSize = pConditionDataVector->size();
 			SkillData.ConditionDataVector.clear();
 			SkillData.ConditionDataVector.resize(dwSize);
-			for (DWORD i = 0; i < dwSize; ++i)
+			for (uint32_t i = 0; i < dwSize; ++i)
 			{
 				SkillData.ConditionDataVector[i] = pConditionDataVector->at(i);
 			}
@@ -667,10 +667,10 @@ bool CPythonSkill::RegisterSkill(DWORD dwSkillIndex, const char* c_szFileName)
 
 		if (isAffectData)
 		{
-			DWORD dwSize = pAffectDataVector->size() / 3;
+			uint32_t dwSize = pAffectDataVector->size() / 3;
 			SkillData.AffectDataVector.clear();
 			SkillData.AffectDataVector.resize(dwSize);
-			for (DWORD i = 0; i < dwSize; ++i)
+			for (uint32_t i = 0; i < dwSize; ++i)
 			{
 				SkillData.AffectDataVector[i].strAffectDescription = pAffectDataVector->at(i * 3 + 0);
 				SkillData.AffectDataVector[i].strAffectMinFormula = pAffectDataVector->at(i * 3 + 1);
@@ -690,7 +690,7 @@ bool CPythonSkill::RegisterSkill(DWORD dwSkillIndex, const char* c_szFileName)
 			if (SKILL_GRADE_COUNT * 2 != pGradeDataVector->size())
 				TraceError("CPythonSkill::RegisterSkill(dwSkillIndex=%d, c_szFileName=%s) - Strange Grade Data Count", dwSkillIndex, c_szFileName);
 
-			for (DWORD i = 0; i < min(SKILL_GRADE_COUNT, pGradeDataVector->size() / 2); ++i)
+			for (uint32_t i = 0; i < min(SKILL_GRADE_COUNT, pGradeDataVector->size() / 2); ++i)
 			{
 				SkillData.GradeData[i].strName = pGradeDataVector->at(i * 2 + 0);
 				std::string strIconFileName = g_strImagePath + pGradeDataVector->at(i * 2 + 1);
@@ -708,7 +708,7 @@ bool CPythonSkill::RegisterSkill(DWORD dwSkillIndex, const char* c_szFileName)
 	TextFileLoader.GetTokenByte("maxlevel", &SkillData.byMaxLevel);
 	TextFileLoader.GetTokenByte("leveluppoint", &SkillData.byLevelUpPoint);
 
-	WORD wMotionIndex;
+	uint16_t wMotionIndex;
 	if (TextFileLoader.GetTokenWord("motionindex", &wMotionIndex))
 	{
 		SkillData.wMotionIndex = wMotionIndex;
@@ -718,7 +718,7 @@ bool CPythonSkill::RegisterSkill(DWORD dwSkillIndex, const char* c_szFileName)
 		SkillData.wMotionIndex = 0;
 	}
 
-	WORD wMotionIndexForMe;
+	uint16_t wMotionIndexForMe;
 	if (TextFileLoader.GetTokenWord("motionindexforme", &wMotionIndexForMe))
 	{
 		SkillData.wMotionIndexForMe = wMotionIndexForMe;
@@ -743,7 +743,7 @@ bool CPythonSkill::RegisterSkill(DWORD dwSkillIndex, const char* c_szFileName)
 	return true;
 }
 
-BOOL CPythonSkill::GetSkillData(DWORD dwSkillIndex, TSkillData** ppSkillData)
+int32_t CPythonSkill::GetSkillData(uint32_t dwSkillIndex, TSkillData** ppSkillData)
 {
 	TSkillDataMap::iterator it = m_SkillDataMap.find(dwSkillIndex);
 
@@ -781,8 +781,8 @@ const char* CPythonSkill::GetPathName()
 
 void CPythonSkill::TEST()
 {
-	BOOL isFirst;
-	std::map<std::string, DWORD>::iterator itorSub;
+	int32_t isFirst;
+	std::map<std::string, uint32_t>::iterator itorSub;
 
 	FILE* File = fopen("test.txt", "w");
 
@@ -904,51 +904,51 @@ void CPythonSkill::TEST()
 
 CPythonSkill::CPythonSkill()
 {
-	m_SkillTypeIndexMap.insert(std::map<std::string, DWORD>::value_type("none", SKILL_TYPE_NONE));
-	m_SkillTypeIndexMap.insert(std::map<std::string, DWORD>::value_type("active", SKILL_TYPE_ACTIVE));
-	m_SkillTypeIndexMap.insert(std::map<std::string, DWORD>::value_type("support", SKILL_TYPE_SUPPORT));
-	m_SkillTypeIndexMap.insert(std::map<std::string, DWORD>::value_type("guild", SKILL_TYPE_GUILD));
-	m_SkillTypeIndexMap.insert(std::map<std::string, DWORD>::value_type("horse", SKILL_TYPE_HORSE));
-	m_SkillTypeIndexMap.insert(std::map<std::string, DWORD>::value_type("warrior", SKILL_TYPE_ACTIVE));
-	m_SkillTypeIndexMap.insert(std::map<std::string, DWORD>::value_type("assassin", SKILL_TYPE_ACTIVE));
-	m_SkillTypeIndexMap.insert(std::map<std::string, DWORD>::value_type("sura", SKILL_TYPE_ACTIVE));
-	m_SkillTypeIndexMap.insert(std::map<std::string, DWORD>::value_type("shaman", SKILL_TYPE_ACTIVE));
-	m_SkillTypeIndexMap.insert(std::map<std::string, DWORD>::value_type("passive", SKILL_TYPE_ACTIVE));
+	m_SkillTypeIndexMap.insert(std::map<std::string, uint32_t>::value_type("none", SKILL_TYPE_NONE));
+	m_SkillTypeIndexMap.insert(std::map<std::string, uint32_t>::value_type("active", SKILL_TYPE_ACTIVE));
+	m_SkillTypeIndexMap.insert(std::map<std::string, uint32_t>::value_type("support", SKILL_TYPE_SUPPORT));
+	m_SkillTypeIndexMap.insert(std::map<std::string, uint32_t>::value_type("guild", SKILL_TYPE_GUILD));
+	m_SkillTypeIndexMap.insert(std::map<std::string, uint32_t>::value_type("horse", SKILL_TYPE_HORSE));
+	m_SkillTypeIndexMap.insert(std::map<std::string, uint32_t>::value_type("warrior", SKILL_TYPE_ACTIVE));
+	m_SkillTypeIndexMap.insert(std::map<std::string, uint32_t>::value_type("assassin", SKILL_TYPE_ACTIVE));
+	m_SkillTypeIndexMap.insert(std::map<std::string, uint32_t>::value_type("sura", SKILL_TYPE_ACTIVE));
+	m_SkillTypeIndexMap.insert(std::map<std::string, uint32_t>::value_type("shaman", SKILL_TYPE_ACTIVE));
+	m_SkillTypeIndexMap.insert(std::map<std::string, uint32_t>::value_type("passive", SKILL_TYPE_ACTIVE));
 
-	m_SkillAttributeIndexMap.insert(std::map<std::string, DWORD>::value_type("NEED_POISON_BOTTLE", SKILL_ATTRIBUTE_NEED_POISON_BOTTLE));
-	m_SkillAttributeIndexMap.insert(std::map<std::string, DWORD>::value_type("NEED_EMPTY_BOTTLE", SKILL_ATTRIBUTE_NEED_EMPTY_BOTTLE));
-	m_SkillAttributeIndexMap.insert(std::map<std::string, DWORD>::value_type("CAN_USE_IF_NOT_ENOUGH", SKILL_ATTRIBUTE_CAN_USE_IF_NOT_ENOUGH));
-	m_SkillAttributeIndexMap.insert(std::map<std::string, DWORD>::value_type("FAN_RANGE", SKILL_ATTRIBUTE_FAN_RANGE));
-	m_SkillAttributeIndexMap.insert(std::map<std::string, DWORD>::value_type("NEED_CORPSE", SKILL_ATTRIBUTE_NEED_CORPSE));
-	m_SkillAttributeIndexMap.insert(std::map<std::string, DWORD>::value_type("NEED_TARGET", SKILL_ATTRIBUTE_NEED_TARGET));
-	m_SkillAttributeIndexMap.insert(std::map<std::string, DWORD>::value_type("TOGGLE", SKILL_ATTRIBUTE_TOGGLE));
-	m_SkillAttributeIndexMap.insert(std::map<std::string, DWORD>::value_type("WEAPON_LIMITATION", SKILL_ATTRIBUTE_WEAPON_LIMITATION));
-	m_SkillAttributeIndexMap.insert(std::map<std::string, DWORD>::value_type("MELEE_ATTACK", SKILL_ATTRIBUTE_MELEE_ATTACK));
-	m_SkillAttributeIndexMap.insert(std::map<std::string, DWORD>::value_type("CHARGE_ATTACK", SKILL_ATTRIBUTE_CHARGE_ATTACK));
-	m_SkillAttributeIndexMap.insert(std::map<std::string, DWORD>::value_type("USE_HP", SKILL_ATTRIBUTE_USE_HP));
-	m_SkillAttributeIndexMap.insert(std::map<std::string, DWORD>::value_type("CAN_CHANGE_DIRECTION", SKILL_ATTRIBUTE_CAN_CHANGE_DIRECTION));
-	m_SkillAttributeIndexMap.insert(std::map<std::string, DWORD>::value_type("STANDING_SKILL", SKILL_ATTRIBUTE_STANDING_SKILL));
-	m_SkillAttributeIndexMap.insert(std::map<std::string, DWORD>::value_type("ONLY_FOR_ALLIANCE", SKILL_ATTRIBUTE_ONLY_FOR_ALLIANCE));
-	m_SkillAttributeIndexMap.insert(std::map<std::string, DWORD>::value_type("CAN_USE_FOR_ME", SKILL_ATTRIBUTE_CAN_USE_FOR_ME));
-	m_SkillAttributeIndexMap.insert(std::map<std::string, DWORD>::value_type("ATTACK_SKILL", SKILL_ATTRIBUTE_ATTACK_SKILL));
-	m_SkillAttributeIndexMap.insert(std::map<std::string, DWORD>::value_type("MOVING_SKILL", SKILL_ATTRIBUTE_MOVING_SKILL));
-	m_SkillAttributeIndexMap.insert(std::map<std::string, DWORD>::value_type("HORSE_SKILL", SKILL_ATTRIBUTE_HORSE_SKILL));
-	m_SkillAttributeIndexMap.insert(std::map<std::string, DWORD>::value_type("TIME_INCREASE_SKILL", SKILL_ATTRIBUTE_TIME_INCREASE_SKILL));
-	m_SkillAttributeIndexMap.insert(std::map<std::string, DWORD>::value_type("PASSIVE", SKILL_ATTRIBUTE_PASSIVE));
-	m_SkillAttributeIndexMap.insert(std::map<std::string, DWORD>::value_type("CANNOT_LEVEL_UP", SKILL_ATTRIBUTE_CANNOT_LEVEL_UP));
-	m_SkillAttributeIndexMap.insert(std::map<std::string, DWORD>::value_type("ONLY_FOR_GUILD_WAR", SKILL_ATTRIBUTE_ONLY_FOR_GUILD_WAR));
-	m_SkillAttributeIndexMap.insert(std::map<std::string, DWORD>::value_type("CIRCLE_RANGE", SKILL_ATTRIBUTE_CIRCLE_RANGE));
-	m_SkillAttributeIndexMap.insert(std::map<std::string, DWORD>::value_type("SEARCH_TARGET", SKILL_ATTRIBUTE_SEARCH_TARGET));
+	m_SkillAttributeIndexMap.insert(std::map<std::string, uint32_t>::value_type("NEED_POISON_BOTTLE", SKILL_ATTRIBUTE_NEED_POISON_BOTTLE));
+	m_SkillAttributeIndexMap.insert(std::map<std::string, uint32_t>::value_type("NEED_EMPTY_BOTTLE", SKILL_ATTRIBUTE_NEED_EMPTY_BOTTLE));
+	m_SkillAttributeIndexMap.insert(std::map<std::string, uint32_t>::value_type("CAN_USE_IF_NOT_ENOUGH", SKILL_ATTRIBUTE_CAN_USE_IF_NOT_ENOUGH));
+	m_SkillAttributeIndexMap.insert(std::map<std::string, uint32_t>::value_type("FAN_RANGE", SKILL_ATTRIBUTE_FAN_RANGE));
+	m_SkillAttributeIndexMap.insert(std::map<std::string, uint32_t>::value_type("NEED_CORPSE", SKILL_ATTRIBUTE_NEED_CORPSE));
+	m_SkillAttributeIndexMap.insert(std::map<std::string, uint32_t>::value_type("NEED_TARGET", SKILL_ATTRIBUTE_NEED_TARGET));
+	m_SkillAttributeIndexMap.insert(std::map<std::string, uint32_t>::value_type("TOGGLE", SKILL_ATTRIBUTE_TOGGLE));
+	m_SkillAttributeIndexMap.insert(std::map<std::string, uint32_t>::value_type("WEAPON_LIMITATION", SKILL_ATTRIBUTE_WEAPON_LIMITATION));
+	m_SkillAttributeIndexMap.insert(std::map<std::string, uint32_t>::value_type("MELEE_ATTACK", SKILL_ATTRIBUTE_MELEE_ATTACK));
+	m_SkillAttributeIndexMap.insert(std::map<std::string, uint32_t>::value_type("CHARGE_ATTACK", SKILL_ATTRIBUTE_CHARGE_ATTACK));
+	m_SkillAttributeIndexMap.insert(std::map<std::string, uint32_t>::value_type("USE_HP", SKILL_ATTRIBUTE_USE_HP));
+	m_SkillAttributeIndexMap.insert(std::map<std::string, uint32_t>::value_type("CAN_CHANGE_DIRECTION", SKILL_ATTRIBUTE_CAN_CHANGE_DIRECTION));
+	m_SkillAttributeIndexMap.insert(std::map<std::string, uint32_t>::value_type("STANDING_SKILL", SKILL_ATTRIBUTE_STANDING_SKILL));
+	m_SkillAttributeIndexMap.insert(std::map<std::string, uint32_t>::value_type("ONLY_FOR_ALLIANCE", SKILL_ATTRIBUTE_ONLY_FOR_ALLIANCE));
+	m_SkillAttributeIndexMap.insert(std::map<std::string, uint32_t>::value_type("CAN_USE_FOR_ME", SKILL_ATTRIBUTE_CAN_USE_FOR_ME));
+	m_SkillAttributeIndexMap.insert(std::map<std::string, uint32_t>::value_type("ATTACK_SKILL", SKILL_ATTRIBUTE_ATTACK_SKILL));
+	m_SkillAttributeIndexMap.insert(std::map<std::string, uint32_t>::value_type("MOVING_SKILL", SKILL_ATTRIBUTE_MOVING_SKILL));
+	m_SkillAttributeIndexMap.insert(std::map<std::string, uint32_t>::value_type("HORSE_SKILL", SKILL_ATTRIBUTE_HORSE_SKILL));
+	m_SkillAttributeIndexMap.insert(std::map<std::string, uint32_t>::value_type("TIME_INCREASE_SKILL", SKILL_ATTRIBUTE_TIME_INCREASE_SKILL));
+	m_SkillAttributeIndexMap.insert(std::map<std::string, uint32_t>::value_type("PASSIVE", SKILL_ATTRIBUTE_PASSIVE));
+	m_SkillAttributeIndexMap.insert(std::map<std::string, uint32_t>::value_type("CANNOT_LEVEL_UP", SKILL_ATTRIBUTE_CANNOT_LEVEL_UP));
+	m_SkillAttributeIndexMap.insert(std::map<std::string, uint32_t>::value_type("ONLY_FOR_GUILD_WAR", SKILL_ATTRIBUTE_ONLY_FOR_GUILD_WAR));
+	m_SkillAttributeIndexMap.insert(std::map<std::string, uint32_t>::value_type("CIRCLE_RANGE", SKILL_ATTRIBUTE_CIRCLE_RANGE));
+	m_SkillAttributeIndexMap.insert(std::map<std::string, uint32_t>::value_type("SEARCH_TARGET", SKILL_ATTRIBUTE_SEARCH_TARGET));
 
-	m_SkillNeedWeaponIndexMap.insert(std::map<std::string, DWORD>::value_type("SWORD", SKILL_NEED_WEAPON_SWORD));
-	m_SkillNeedWeaponIndexMap.insert(std::map<std::string, DWORD>::value_type("DAGGER", SKILL_NEED_WEAPON_DAGGER));
-	m_SkillNeedWeaponIndexMap.insert(std::map<std::string, DWORD>::value_type("BOW", SKILL_NEED_WEAPON_BOW));
-	m_SkillNeedWeaponIndexMap.insert(std::map<std::string, DWORD>::value_type("TWO_HANDED", SKILL_NEED_WEAPON_TWO_HANDED));
-	m_SkillNeedWeaponIndexMap.insert(std::map<std::string, DWORD>::value_type("DOUBLE_SWORD", SKILL_NEED_WEAPON_DOUBLE_SWORD));
-	m_SkillNeedWeaponIndexMap.insert(std::map<std::string, DWORD>::value_type("BELL", SKILL_NEED_WEAPON_BELL));
-	m_SkillNeedWeaponIndexMap.insert(std::map<std::string, DWORD>::value_type("FAN", SKILL_NEED_WEAPON_FAN));
-	m_SkillNeedWeaponIndexMap.insert(std::map<std::string, DWORD>::value_type("ARROW", SKILL_NEED_WEAPON_ARROW));
-	m_SkillNeedWeaponIndexMap.insert(std::map<std::string, DWORD>::value_type("EMPTY_HAND", SKILL_NEED_WEAPON_EMPTY_HAND));
+	m_SkillNeedWeaponIndexMap.insert(std::map<std::string, uint32_t>::value_type("SWORD", SKILL_NEED_WEAPON_SWORD));
+	m_SkillNeedWeaponIndexMap.insert(std::map<std::string, uint32_t>::value_type("DAGGER", SKILL_NEED_WEAPON_DAGGER));
+	m_SkillNeedWeaponIndexMap.insert(std::map<std::string, uint32_t>::value_type("BOW", SKILL_NEED_WEAPON_BOW));
+	m_SkillNeedWeaponIndexMap.insert(std::map<std::string, uint32_t>::value_type("TWO_HANDED", SKILL_NEED_WEAPON_TWO_HANDED));
+	m_SkillNeedWeaponIndexMap.insert(std::map<std::string, uint32_t>::value_type("DOUBLE_SWORD", SKILL_NEED_WEAPON_DOUBLE_SWORD));
+	m_SkillNeedWeaponIndexMap.insert(std::map<std::string, uint32_t>::value_type("BELL", SKILL_NEED_WEAPON_BELL));
+	m_SkillNeedWeaponIndexMap.insert(std::map<std::string, uint32_t>::value_type("FAN", SKILL_NEED_WEAPON_FAN));
+	m_SkillNeedWeaponIndexMap.insert(std::map<std::string, uint32_t>::value_type("ARROW", SKILL_NEED_WEAPON_ARROW));
+	m_SkillNeedWeaponIndexMap.insert(std::map<std::string, uint32_t>::value_type("EMPTY_HAND", SKILL_NEED_WEAPON_EMPTY_HAND));
 
 	m_SkillWeaponTypeIndexMap.insert(make_pair(std::string("SWORD"), CItemData::WEAPON_SWORD));
 	m_SkillWeaponTypeIndexMap.insert(make_pair(std::string("DAGGER"), CItemData::WEAPON_DAGGER));
@@ -1046,19 +1046,19 @@ CPythonSkill::~CPythonSkill()
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-DWORD CPythonSkill::SSkillData::MELEE_SKILL_TARGET_RANGE = 170;
+uint32_t CPythonSkill::SSkillData::MELEE_SKILL_TARGET_RANGE = 170;
 
 const std::string CPythonSkill::SSkillData::GetName() const
 {
 	return strName;
 }
 
-BYTE CPythonSkill::SSkillData::GetType() const
+uint8_t CPythonSkill::SSkillData::GetType() const
 {
 	return byType;
 }
 
-BOOL CPythonSkill::SSkillData::IsMeleeSkill()
+int32_t CPythonSkill::SSkillData::IsMeleeSkill()
 {
 	if (dwSkillAttribute & SKILL_ATTRIBUTE_MELEE_ATTACK)
 		return TRUE;
@@ -1066,7 +1066,7 @@ BOOL CPythonSkill::SSkillData::IsMeleeSkill()
 	return FALSE;
 }
 
-BOOL CPythonSkill::SSkillData::IsChargeSkill()
+int32_t CPythonSkill::SSkillData::IsChargeSkill()
 {
 	if (dwSkillAttribute & SKILL_ATTRIBUTE_CHARGE_ATTACK)
 		return TRUE;
@@ -1074,7 +1074,7 @@ BOOL CPythonSkill::SSkillData::IsChargeSkill()
 	return FALSE;
 }
 
-BOOL CPythonSkill::SSkillData::IsOnlyForGuildWar()
+int32_t CPythonSkill::SSkillData::IsOnlyForGuildWar()
 {
 	if (dwSkillAttribute & SKILL_ATTRIBUTE_ONLY_FOR_GUILD_WAR)
 		return TRUE;
@@ -1082,7 +1082,7 @@ BOOL CPythonSkill::SSkillData::IsOnlyForGuildWar()
 	return FALSE;
 }
 
-DWORD CPythonSkill::SSkillData::GetTargetRange() const
+uint32_t CPythonSkill::SSkillData::GetTargetRange() const
 {
 	if (dwSkillAttribute & SKILL_ATTRIBUTE_MELEE_ATTACK)
 		return MELEE_SKILL_TARGET_RANGE;
@@ -1093,52 +1093,52 @@ DWORD CPythonSkill::SSkillData::GetTargetRange() const
 	return dwTargetRange;
 }
 
-BOOL CPythonSkill::SSkillData::CanChangeDirection()
+int32_t CPythonSkill::SSkillData::CanChangeDirection()
 {
 	return 0 != (dwSkillAttribute & SKILL_ATTRIBUTE_CAN_CHANGE_DIRECTION);
 }
 
-BOOL CPythonSkill::SSkillData::IsFanRange()
+int32_t CPythonSkill::SSkillData::IsFanRange()
 {
 	return 0 != (dwSkillAttribute & SKILL_ATTRIBUTE_FAN_RANGE);
 }
 
-BOOL CPythonSkill::SSkillData::IsCircleRange()
+int32_t CPythonSkill::SSkillData::IsCircleRange()
 {
 	return 0 != (dwSkillAttribute & SKILL_ATTRIBUTE_CIRCLE_RANGE);
 }
 
-BOOL CPythonSkill::SSkillData::IsAutoSearchTarget()
+int32_t CPythonSkill::SSkillData::IsAutoSearchTarget()
 {
 	return 0 != (dwSkillAttribute & SKILL_ATTRIBUTE_SEARCH_TARGET);
 }
 
-BOOL CPythonSkill::SSkillData::IsNeedCorpse()
+int32_t CPythonSkill::SSkillData::IsNeedCorpse()
 {
 	return 0 != (dwSkillAttribute & SKILL_ATTRIBUTE_NEED_CORPSE);
 }
 
-BOOL CPythonSkill::SSkillData::IsNeedTarget()
+int32_t CPythonSkill::SSkillData::IsNeedTarget()
 {
 	return 0 != (dwSkillAttribute & SKILL_ATTRIBUTE_NEED_TARGET);
 }
 
-BOOL CPythonSkill::SSkillData::IsToggleSkill()
+int32_t CPythonSkill::SSkillData::IsToggleSkill()
 {
 	return 0 != (dwSkillAttribute & SKILL_ATTRIBUTE_TOGGLE);
 }
 
-BOOL CPythonSkill::SSkillData::IsUseHPSkill()
+int32_t CPythonSkill::SSkillData::IsUseHPSkill()
 {
 	return 0 != (dwSkillAttribute & SKILL_ATTRIBUTE_USE_HP);
 }
 
-BOOL CPythonSkill::SSkillData::IsStandingSkill()
+int32_t CPythonSkill::SSkillData::IsStandingSkill()
 {
 	return 0 != (dwSkillAttribute & SKILL_ATTRIBUTE_STANDING_SKILL);
 }
 
-BOOL CPythonSkill::SSkillData::CanUseWeaponType(DWORD dwWeaponType)
+int32_t CPythonSkill::SSkillData::CanUseWeaponType(uint32_t dwWeaponType)
 {
 	if (!(dwSkillAttribute & SKILL_ATTRIBUTE_WEAPON_LIMITATION))
 		return TRUE;
@@ -1146,32 +1146,32 @@ BOOL CPythonSkill::SSkillData::CanUseWeaponType(DWORD dwWeaponType)
 	return 0 != (dwNeedWeapon & (1 << dwWeaponType));
 }
 
-BOOL CPythonSkill::SSkillData::IsOnlyForAlliance()
+int32_t CPythonSkill::SSkillData::IsOnlyForAlliance()
 {
 	return 0 != (dwSkillAttribute & SKILL_ATTRIBUTE_ONLY_FOR_ALLIANCE);
 }
 
-BOOL CPythonSkill::SSkillData::CanUseForMe()
+int32_t CPythonSkill::SSkillData::CanUseForMe()
 {
 	return 0 != (dwSkillAttribute & SKILL_ATTRIBUTE_CAN_USE_FOR_ME);
 }
 
-BOOL CPythonSkill::SSkillData::CanUseIfNotEnough()
+int32_t CPythonSkill::SSkillData::CanUseIfNotEnough()
 {
 	return 0 != (dwSkillAttribute & SKILL_ATTRIBUTE_CAN_USE_IF_NOT_ENOUGH);
 }
 
-BOOL CPythonSkill::SSkillData::IsNeedEmptyBottle()
+int32_t CPythonSkill::SSkillData::IsNeedEmptyBottle()
 {
 	return 0 != (dwSkillAttribute & SKILL_ATTRIBUTE_NEED_EMPTY_BOTTLE);
 }
 
-BOOL CPythonSkill::SSkillData::IsNeedPoisonBottle()
+int32_t CPythonSkill::SSkillData::IsNeedPoisonBottle()
 {
 	return 0 != (dwSkillAttribute & SKILL_ATTRIBUTE_NEED_POISON_BOTTLE);
 }
 
-BOOL CPythonSkill::SSkillData::IsNeedBow()
+int32_t CPythonSkill::SSkillData::IsNeedBow()
 {
 	if (!(dwSkillAttribute & SKILL_ATTRIBUTE_WEAPON_LIMITATION))
 		return FALSE;
@@ -1179,29 +1179,29 @@ BOOL CPythonSkill::SSkillData::IsNeedBow()
 	return 0 != (dwNeedWeapon & SKILL_NEED_WEAPON_BOW);
 }
 
-BOOL CPythonSkill::SSkillData::IsHorseSkill()
+int32_t CPythonSkill::SSkillData::IsHorseSkill()
 {
 	return 0 != (dwSkillAttribute & SKILL_ATTRIBUTE_HORSE_SKILL);
 }
 
-BOOL CPythonSkill::SSkillData::IsMovingSkill()
+int32_t CPythonSkill::SSkillData::IsMovingSkill()
 {
 	return 0 != (dwSkillAttribute & SKILL_ATTRIBUTE_MOVING_SKILL);
 }
 
-BOOL CPythonSkill::SSkillData::IsAttackSkill()
+int32_t CPythonSkill::SSkillData::IsAttackSkill()
 {
 	return 0 != (dwSkillAttribute & SKILL_ATTRIBUTE_ATTACK_SKILL);
 }
 
-BOOL CPythonSkill::SSkillData::IsTimeIncreaseSkill()
+int32_t CPythonSkill::SSkillData::IsTimeIncreaseSkill()
 {
 	return 0 != (dwSkillAttribute & SKILL_ATTRIBUTE_TIME_INCREASE_SKILL);
 }
 
 bool CPythonSkill::SSkillData::GetState(const char* c_szStateName, int* piState, int iMinMaxType)
 {
-	std::map<std::string, DWORD>* pStatusNameMap = NULL;
+	std::map<std::string, uint32_t>* pStatusNameMap = NULL;
 
 	switch (iMinMaxType)
 	{
@@ -1219,7 +1219,7 @@ bool CPythonSkill::SSkillData::GetState(const char* c_szStateName, int* piState,
 			break;
 	}
 
-	std::map<std::string, DWORD>::iterator it = pStatusNameMap->find(c_szStateName);
+	std::map<std::string, uint32_t>::iterator it = pStatusNameMap->find(c_szStateName);
 
 	if (it != pStatusNameMap->end())
 	{
@@ -1233,7 +1233,7 @@ bool CPythonSkill::SSkillData::GetState(const char* c_szStateName, int* piState,
 		/*
 				if (0 != ms_dwTimeIncreaseSkillNumber)
 				{
-					DWORD dwSkillSlotIndex;
+					uint32_t dwSkillSlotIndex;
 					if (!CPythonPlayer::Instance().FindSkillSlotIndexBySkillIndex(ms_dwTimeIncreaseSkillNumber, &dwSkillSlotIndex))
 						return false;
 
@@ -1249,7 +1249,7 @@ float CPythonSkill::SSkillData::ProcessFormula(CPoly* pPoly, float fSkillLevel, 
 {
 	if (pPoly->Analyze())
 	{
-		for (DWORD i = 0; i < pPoly->GetVarCount(); ++i)
+		for (uint32_t i = 0; i < pPoly->GetVarCount(); ++i)
 		{
 			const char* c_szVarName = pPoly->GetVarName(i);
 			float fState;
@@ -1280,7 +1280,7 @@ float CPythonSkill::SSkillData::ProcessFormula(CPoly* pPoly, float fSkillLevel, 
 	return pPoly->Eval();
 }
 
-const char* CPythonSkill::SSkillData::GetAffectDescription(DWORD dwIndex, float fSkillLevel)
+const char* CPythonSkill::SSkillData::GetAffectDescription(uint32_t dwIndex, float fSkillLevel)
 {
 	if (dwIndex >= AffectDataVector.size())
 		return NULL;
@@ -1344,7 +1344,7 @@ const char* CPythonSkill::SSkillData::GetAffectDescription(DWORD dwIndex, float 
 	}
 }
 
-DWORD CPythonSkill::SSkillData::GetSkillCoolTime(float fSkillPoint)
+uint32_t CPythonSkill::SSkillData::GetSkillCoolTime(float fSkillPoint)
 {
 	if (strCoolTimeFormula.empty())
 		return 0;
@@ -1352,10 +1352,10 @@ DWORD CPythonSkill::SSkillData::GetSkillCoolTime(float fSkillPoint)
 	CPoly poly;
 	poly.SetStr(strCoolTimeFormula.c_str());
 
-	return DWORD(ProcessFormula(&poly, fSkillPoint));
+	return uint32_t(ProcessFormula(&poly, fSkillPoint));
 }
 
-DWORD CPythonSkill::SSkillData::GetTargetCount(float fSkillPoint)
+uint32_t CPythonSkill::SSkillData::GetTargetCount(float fSkillPoint)
 {
 	if (strTargetCountFormula.empty())
 		return 0;
@@ -1363,10 +1363,10 @@ DWORD CPythonSkill::SSkillData::GetTargetCount(float fSkillPoint)
 	CPoly poly;
 	poly.SetStr(strTargetCountFormula.c_str());
 
-	return DWORD(ProcessFormula(&poly, fSkillPoint));
+	return uint32_t(ProcessFormula(&poly, fSkillPoint));
 }
 
-DWORD CPythonSkill::SSkillData::GetSkillMotionIndex(int iGrade)
+uint32_t CPythonSkill::SSkillData::GetSkillMotionIndex(int iGrade)
 {
 	if (-1 != iGrade && SKILL_EFFECT_UPGRADE_ENABLE)
 	{
@@ -1386,17 +1386,17 @@ DWORD CPythonSkill::SSkillData::GetSkillMotionIndex(int iGrade)
 	return wMotionIndex;
 }
 
-BYTE CPythonSkill::SSkillData::GetMaxLevel()
+uint8_t CPythonSkill::SSkillData::GetMaxLevel()
 {
 	return byMaxLevel;
 }
 
-BYTE CPythonSkill::SSkillData::GetLevelUpPoint()
+uint8_t CPythonSkill::SSkillData::GetLevelUpPoint()
 {
 	return byLevelUpPoint;
 }
 
-BOOL CPythonSkill::SSkillData::IsNoMotion()
+int32_t CPythonSkill::SSkillData::IsNoMotion()
 {
 	return bNoMotion;
 }
@@ -1409,7 +1409,7 @@ bool CPythonSkill::SSkillData::IsCanUseSkill()
 	return true;
 }
 
-DWORD CPythonSkill::SSkillData::GetMotionLoopCount(float fSkillPoint)
+uint32_t CPythonSkill::SSkillData::GetMotionLoopCount(float fSkillPoint)
 {
 	if (strMotionLoopCountFormula.empty())
 		return 0;
@@ -1417,7 +1417,7 @@ DWORD CPythonSkill::SSkillData::GetMotionLoopCount(float fSkillPoint)
 	CPoly poly;
 	poly.SetStr(strMotionLoopCountFormula.c_str());
 
-	return DWORD(ProcessFormula(&poly, fSkillPoint));
+	return uint32_t(ProcessFormula(&poly, fSkillPoint));
 }
 
 int CPythonSkill::SSkillData::GetNeedSP(float fSkillPoint)
@@ -1431,7 +1431,7 @@ int CPythonSkill::SSkillData::GetNeedSP(float fSkillPoint)
 	return int(ProcessFormula(&poly, fSkillPoint));
 }
 
-DWORD CPythonSkill::SSkillData::GetContinuationSP(float fSkillPoint)
+uint32_t CPythonSkill::SSkillData::GetContinuationSP(float fSkillPoint)
 {
 	if (strContinuationSPFormula.empty())
 		return 0;
@@ -1439,10 +1439,10 @@ DWORD CPythonSkill::SSkillData::GetContinuationSP(float fSkillPoint)
 	CPoly poly;
 	poly.SetStr(strContinuationSPFormula.c_str());
 
-	return DWORD(ProcessFormula(&poly, fSkillPoint));
+	return uint32_t(ProcessFormula(&poly, fSkillPoint));
 }
 
-DWORD CPythonSkill::SSkillData::GetDuration(float fSkillPoint)
+uint32_t CPythonSkill::SSkillData::GetDuration(float fSkillPoint)
 {
 	if (strDuration.empty())
 		return 0;
@@ -1450,7 +1450,7 @@ DWORD CPythonSkill::SSkillData::GetDuration(float fSkillPoint)
 	CPoly poly;
 	poly.SetStr(strDuration.c_str());
 
-	return DWORD(ProcessFormula(&poly, fSkillPoint));
+	return uint32_t(ProcessFormula(&poly, fSkillPoint));
 }
 
 CPythonSkill::SSkillData::SSkillData()
@@ -1765,7 +1765,7 @@ PyObject* skillIsSkillRequirement(PyObject* poSelf, PyObject* poArgs)
 			return Py_BuildValue("i", FALSE);
 		}
 
-		DWORD dwRequireSkillSlotIndex;
+		uint32_t dwRequireSkillSlotIndex;
 		if (!CPythonPlayer::Instance().FindSkillSlotIndexBySkillIndex(pRequireSkillData->dwSkillIndex, &dwRequireSkillSlotIndex))
 			return Py_BuildValue("i", FALSE);
 	}
@@ -1846,7 +1846,7 @@ PyObject* skillCanLevelUpSkill(PyObject* poSelf, PyObject* poArgs)
 		CPythonSkill::SSkillData* pRequireSkillData;
 		if (CPythonSkill::Instance().GetSkillDataByName(c_pSkillData->strRequireSkillName.c_str(), &pRequireSkillData))
 		{
-			DWORD dwRequireSkillSlotIndex;
+			uint32_t dwRequireSkillSlotIndex;
 			if (CPythonPlayer::Instance().FindSkillSlotIndexBySkillIndex(pRequireSkillData->dwSkillIndex, &dwRequireSkillSlotIndex))
 			{
 				int iSkillGrade = CPythonPlayer::Instance().GetSkillGrade(dwRequireSkillSlotIndex);
@@ -1858,7 +1858,7 @@ PyObject* skillCanLevelUpSkill(PyObject* poSelf, PyObject* poArgs)
 		}
 	}
 
-	for (DWORD i = 0; i < c_pSkillData->RequireStatDataVector.size(); ++i)
+	for (uint32_t i = 0; i < c_pSkillData->RequireStatDataVector.size(); ++i)
 	{
 		const CPythonSkill::TRequireStatData& c_rRequireStatData = c_pSkillData->RequireStatDataVector[i];
 		if (CPythonPlayer::Instance().GetStatus(c_rRequireStatData.byPoint) < c_rRequireStatData.byLevel)
@@ -1886,7 +1886,7 @@ PyObject* skillCheckRequirementSueccess(PyObject* poSelf, PyObject* poArgs)
 		CPythonSkill::SSkillData* pRequireSkillData;
 		if (CPythonSkill::Instance().GetSkillDataByName(c_pSkillData->strRequireSkillName.c_str(), &pRequireSkillData))
 		{
-			DWORD dwRequireSkillSlotIndex;
+			uint32_t dwRequireSkillSlotIndex;
 			if (CPythonPlayer::Instance().FindSkillSlotIndexBySkillIndex(pRequireSkillData->dwSkillIndex, &dwRequireSkillSlotIndex))
 			{
 				int iSkillGrade = CPythonPlayer::Instance().GetSkillGrade(dwRequireSkillSlotIndex);

@@ -147,7 +147,7 @@ void CActorInstance::UpdateAdvancingPointInstance()
 		const NRaceData::TCollisionData* c_pCollisionData = rInstance.c_pCollisionData;
 		if (c_pCollisionData)
 		{
-			for (DWORD j = 0; j < c_pCollisionData->SphereDataVector.size(); ++j)
+			for (uint32_t j = 0; j < c_pCollisionData->SphereDataVector.size(); ++j)
 			{
 				const TSphereData& c = c_pCollisionData->SphereDataVector[j].GetAttribute();
 				CDynamicSphereInstance& rSphereInstance = rInstance.SphereInstanceVector[j];
@@ -178,8 +178,8 @@ bool CActorInstance::CheckCollisionDetection(const CDynamicSphereInstanceVector*
 	{
 		const CDynamicSphereInstanceVector* c_pDefendingSphereVector = &(*itor).SphereInstanceVector;
 
-		for (DWORD i = 0; i < c_pAttackingSphereVector->size(); ++i)
-			for (DWORD j = 0; j < c_pDefendingSphereVector->size(); ++j)
+		for (uint32_t i = 0; i < c_pAttackingSphereVector->size(); ++i)
+			for (uint32_t j = 0; j < c_pDefendingSphereVector->size(); ++j)
 			{
 				const CDynamicSphereInstance& c_rAttackingSphere = c_pAttackingSphereVector->at(i);
 				const CDynamicSphereInstance& c_rDefendingSphere = c_pDefendingSphereVector->at(j);
@@ -196,7 +196,7 @@ bool CActorInstance::CheckCollisionDetection(const CDynamicSphereInstanceVector*
 	return false;
 }
 
-bool CActorInstance::CreateCollisionInstancePiece(DWORD dwAttachingModelIndex, const NRaceData::TAttachingData* c_pAttachingData, TCollisionPointInstance* pPointInstance)
+bool CActorInstance::CreateCollisionInstancePiece(uint32_t dwAttachingModelIndex, const NRaceData::TAttachingData* c_pAttachingData, TCollisionPointInstance* pPointInstance)
 {
 	if (!c_pAttachingData)
 	{
@@ -263,7 +263,7 @@ bool CActorInstance::CreateCollisionInstancePiece(DWORD dwAttachingModelIndex, c
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-BOOL CActorInstance::__SplashAttackProcess(CActorInstance& rVictim)
+int32_t CActorInstance::__SplashAttackProcess(CActorInstance& rVictim)
 {
 	D3DXVECTOR3 v3Distance(rVictim.m_x - m_x, rVictim.m_z - m_z, rVictim.m_z - m_z);
 	float fDistance = D3DXVec3LengthSq(&v3Distance);
@@ -329,7 +329,7 @@ BOOL CActorInstance::__SplashAttackProcess(CActorInstance& rVictim)
 	return FALSE;
 }
 
-BOOL CActorInstance::__NormalAttackProcess(CActorInstance& rVictim)
+int32_t CActorInstance::__NormalAttackProcess(CActorInstance& rVictim)
 {
 	// Check Distance
 	// NOTE - 일단 근접 체크만 하고 있음
@@ -474,7 +474,7 @@ BOOL CActorInstance::__NormalAttackProcess(CActorInstance& rVictim)
 	return FALSE;
 }
 
-BOOL CActorInstance::AttackingProcess(CActorInstance& rVictim)
+int32_t CActorInstance::AttackingProcess(CActorInstance& rVictim)
 {
 	if (rVictim.__isInvisible())
 		return FALSE;
@@ -488,7 +488,7 @@ BOOL CActorInstance::AttackingProcess(CActorInstance& rVictim)
 	return FALSE;
 }
 
-BOOL CActorInstance::TestPhysicsBlendingCollision(CActorInstance& rVictim)
+int32_t CActorInstance::TestPhysicsBlendingCollision(CActorInstance& rVictim)
 {
 	if (rVictim.IsDead())
 		return FALSE;
@@ -531,7 +531,7 @@ BOOL CActorInstance::TestPhysicsBlendingCollision(CActorInstance& rVictim)
 			CDynamicSphereInstanceVector& c_rMainSphereVector = (*itorMain).SphereInstanceVector;
 			CDynamicSphereInstanceVector& c_rVictimSphereVector = (*itorVictim).SphereInstanceVector;
 
-			for (DWORD i = 0; i < c_rMainSphereVector.size(); ++i)
+			for (uint32_t i = 0; i < c_rMainSphereVector.size(); ++i)
 			{
 				CDynamicSphereInstance& c_rMainSphere = c_rMainSphereVector[i];
 				// adjust main sphere center
@@ -544,13 +544,13 @@ BOOL CActorInstance::TestPhysicsBlendingCollision(CActorInstance& rVictim)
 				{
 					c_rMainSphere.v3Position = prevPosition + (float)(i / (float)nSubCheckCount) * kPDelta;
 
-					for (DWORD j = 0; j < c_rVictimSphereVector.size(); ++j)
+					for (uint32_t j = 0; j < c_rVictimSphereVector.size(); ++j)
 					{
 						CDynamicSphereInstance& c_rVictimSphere = c_rVictimSphereVector[j];
 
 						if (DetectCollisionDynamicSphereVSDynamicSphere(c_rMainSphere, c_rVictimSphere))
 						{
-							BOOL bResult = GetVector3Distance(c_rMainSphere.v3Position, c_rVictimSphere.v3Position) <= GetVector3Distance(c_rMainSphere.v3LastPosition, c_rVictimSphere.v3Position);
+							int32_t bResult = GetVector3Distance(c_rMainSphere.v3Position, c_rVictimSphere.v3Position) <= GetVector3Distance(c_rMainSphere.v3LastPosition, c_rVictimSphere.v3Position);
 
 							c_rMainSphere.v3LastPosition = prevLastPosition;
 							c_rMainSphere.v3Position = prevPosition;
@@ -570,7 +570,7 @@ BOOL CActorInstance::TestPhysicsBlendingCollision(CActorInstance& rVictim)
 	return FALSE;
 }
 
-BOOL CActorInstance::TestActorCollision(CActorInstance& rVictim)
+int32_t CActorInstance::TestActorCollision(CActorInstance& rVictim)
 {
 	/*
 		if (m_pkHorse)
@@ -618,8 +618,8 @@ BOOL CActorInstance::TestActorCollision(CActorInstance& rVictim)
 			const CDynamicSphereInstanceVector& c_rMainSphereVector = (*itorMain).SphereInstanceVector;
 			const CDynamicSphereInstanceVector& c_rVictimSphereVector = (*itorVictim).SphereInstanceVector;
 
-			for (DWORD i = 0; i < c_rMainSphereVector.size(); ++i)
-				for (DWORD j = 0; j < c_rVictimSphereVector.size(); ++j)
+			for (uint32_t i = 0; i < c_rMainSphereVector.size(); ++i)
+				for (uint32_t j = 0; j < c_rVictimSphereVector.size(); ++j)
 				{
 					const CDynamicSphereInstance& c_rMainSphere = c_rMainSphereVector[i];
 					const CDynamicSphereInstance& c_rVictimSphere = c_rVictimSphereVector[j];
@@ -678,7 +678,7 @@ void CActorInstance::BlockMovement()
 	__InitializeMovement();
 }
 
-BOOL CActorInstance::__TestObjectCollision(const CGraphicObjectInstance* c_pObjectInstance)
+int32_t CActorInstance::__TestObjectCollision(const CGraphicObjectInstance* c_pObjectInstance)
 {
 	if (m_pkHorse)
 	{
@@ -698,7 +698,7 @@ BOOL CActorInstance::__TestObjectCollision(const CGraphicObjectInstance* c_pObje
 	for (; itorMain != m_BodyPointInstanceList.end(); ++itorMain)
 	{
 		const CDynamicSphereInstanceVector& c_rMainSphereVector = (*itorMain).SphereInstanceVector;
-		for (DWORD i = 0; i < c_rMainSphereVector.size(); ++i)
+		for (uint32_t i = 0; i < c_rMainSphereVector.size(); ++i)
 		{
 			const CDynamicSphereInstance& c_rMainSphere = c_rMainSphereVector[i];
 
@@ -725,7 +725,7 @@ bool CActorInstance::TestCollisionWithDynamicSphere(const CDynamicSphereInstance
 	for (; itorMain != m_BodyPointInstanceList.end(); ++itorMain)
 	{
 		const CDynamicSphereInstanceVector& c_rMainSphereVector = (*itorMain).SphereInstanceVector;
-		for (DWORD i = 0; i < c_rMainSphereVector.size(); ++i)
+		for (uint32_t i = 0; i < c_rMainSphereVector.size(); ++i)
 		{
 			const CDynamicSphereInstance& c_rMainSphere = c_rMainSphereVector[i];
 

@@ -224,7 +224,7 @@ bool CDungeonBlock::Load(const char* c_szFileName)
 	{
 		CDungeonModelInstance* pModelInstance = new CDungeonModelInstance;
 		pModelInstance->SetMainModelPointer(m_pThing->GetModelPointer(i), &m_kDeformableVertexBuffer);
-		DWORD dwVertexCount = pModelInstance->GetVertexCount();
+		uint32_t dwVertexCount = pModelInstance->GetVertexCount();
 		m_kDeformableVertexBuffer.Destroy();
 		m_kDeformableVertexBuffer.Create(
 			dwVertexCount,

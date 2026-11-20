@@ -35,7 +35,7 @@ class CTerrainDecal : public CDecal
 									   float fMaxX,
 									   float fMinY,
 									   float fMaxY,
-									   DWORD* pdwAffectedPrimitiveCount,
+									   uint32_t* pdwAffectedPrimitiveCount,
 									   D3DXVECTOR3* pv3AffectedVertex,
 									   D3DXVECTOR3* pv3AffectedNormal);
 

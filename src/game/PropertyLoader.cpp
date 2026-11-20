@@ -21,7 +21,7 @@ bool CPropertyLoader::OnFile(const char* c_szPathName, const char* c_szFileName)
 	return true;
 }
 
-DWORD CPropertyLoader::RegisterFile(const char* c_szPathName, const char* c_szFileName)
+uint32_t CPropertyLoader::RegisterFile(const char* c_szPathName, const char* c_szFileName)
 {
 	std::string strFileName = "";
 	strFileName += c_szPathName;

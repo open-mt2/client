@@ -3,7 +3,7 @@
 #include <Client/UI/PythonBackground.h>
 #include <Neoeter/Render/GrpMath.h>
 
-void CInstanceBase::SetAttackSpeed(UINT uAtkSpd)
+void CInstanceBase::SetAttackSpeed(uint32_t uAtkSpd)
 {
 	if (uAtkSpd > 1100)
 		uAtkSpd = 0;
@@ -12,7 +12,7 @@ void CInstanceBase::SetAttackSpeed(UINT uAtkSpd)
 	m_kHorse.SetAttackSpeed(uAtkSpd);
 }
 
-void CInstanceBase::SetMoveSpeed(UINT uMovSpd)
+void CInstanceBase::SetMoveSpeed(uint32_t uMovSpd)
 {
 	if (uMovSpd > 1100)
 		uMovSpd = 0;
@@ -182,27 +182,27 @@ void CInstanceBase::EndWalkingWithoutBlending()
 	EndWalking(0.0f);
 }
 
-BOOL CInstanceBase::IsWaiting()
+int32_t CInstanceBase::IsWaiting()
 {
 	return m_GraphicThingInstance.IsWaiting();
 }
 
-BOOL CInstanceBase::IsWalking()
+int32_t CInstanceBase::IsWalking()
 {
 	return m_GraphicThingInstance.IsMoving();
 }
 
-BOOL CInstanceBase::IsPushing()
+int32_t CInstanceBase::IsPushing()
 {
 	return m_GraphicThingInstance.IsPushing();
 }
 
-BOOL CInstanceBase::IsAttacked()
+int32_t CInstanceBase::IsAttacked()
 {
 	return m_GraphicThingInstance.IsAttacked();
 }
 
-BOOL CInstanceBase::IsKnockDown()
+int32_t CInstanceBase::IsKnockDown()
 {
 	if (!m_GraphicThingInstance.IsKnockDown())
 		return FALSE;
@@ -210,19 +210,19 @@ BOOL CInstanceBase::IsKnockDown()
 	return TRUE;
 }
 
-BOOL CInstanceBase::IsAttacking()
+int32_t CInstanceBase::IsAttacking()
 {
 	return m_GraphicThingInstance.isAttacking();
 }
 
-BOOL CInstanceBase::IsActingEmotion()
+int32_t CInstanceBase::IsActingEmotion()
 {
 	return m_GraphicThingInstance.IsActEmotion();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-BOOL CInstanceBase::IsGoing()
+int32_t CInstanceBase::IsGoing()
 {
 	return m_isGoing;
 }

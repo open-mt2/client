@@ -81,7 +81,7 @@ void CActorInstance::__OnWarp()
 	rkEventHandler.OnWarp(kState);
 }
 
-void CActorInstance::__OnAttack(WORD wMotionIndex)
+void CActorInstance::__OnAttack(uint16_t wMotionIndex)
 {
 	IEventHandler& rkEventHandler = __GetEventHandlerRef();
 
@@ -91,7 +91,7 @@ void CActorInstance::__OnAttack(WORD wMotionIndex)
 	rkEventHandler.OnAttack(kState, wMotionIndex);
 }
 
-void CActorInstance::__OnUseSkill(UINT uMotSkill, UINT uLoopCount, bool isMovingSkill)
+void CActorInstance::__OnUseSkill(uint32_t uMotSkill, uint32_t uLoopCount, bool isMovingSkill)
 {
 	IEventHandler& rkEventHandler = __GetEventHandlerRef();
 
@@ -99,14 +99,14 @@ void CActorInstance::__OnUseSkill(UINT uMotSkill, UINT uLoopCount, bool isMoving
 	kState.kPPosSelf = NEW_GetCurPixelPositionRef();
 	kState.fAdvRotSelf = GetAdvancingRotation();
 
-	UINT uArg = uLoopCount;
+	uint32_t uArg = uLoopCount;
 	if (isMovingSkill)
 		uArg |= 1 << 4;
 
 	rkEventHandler.OnUseSkill(kState, uMotSkill, uArg);
 }
 
-void CActorInstance::__OnHit(UINT uSkill, CActorInstance& rkActorVictm, BOOL isSendPacket)
+void CActorInstance::__OnHit(uint32_t uSkill, CActorInstance& rkActorVictm, int32_t isSendPacket)
 {
 	IEventHandler& rkEventHandler = __GetEventHandlerRef();
 	rkEventHandler.OnHit(uSkill, rkActorVictm, isSendPacket);
@@ -118,13 +118,13 @@ void CActorInstance::__OnClearAffects()
 	rkEventHandler.OnClearAffects();
 }
 
-void CActorInstance::__OnSetAffect(UINT uAffect)
+void CActorInstance::__OnSetAffect(uint32_t uAffect)
 {
 	IEventHandler& rkEventHandler = __GetEventHandlerRef();
 	rkEventHandler.OnSetAffect(uAffect);
 }
 
-void CActorInstance::__OnResetAffect(UINT uAffect)
+void CActorInstance::__OnResetAffect(uint32_t uAffect)
 {
 	IEventHandler& rkEventHandler = __GetEventHandlerRef();
 	rkEventHandler.OnResetAffect(uAffect);
@@ -162,13 +162,13 @@ CActorInstance::IEventHandler* CActorInstance::IEventHandler::GetEmptyPtr()
 			virtual void OnWarp(const SState& c_rkState) {}
 
 			virtual void OnClearAffects() {}
-			virtual void OnSetAffect(UINT uAffect) {}
-			virtual void OnResetAffect(UINT uAffect) {}
+			virtual void OnSetAffect(uint32_t uAffect) {}
+			virtual void OnResetAffect(uint32_t uAffect) {}
 
-			virtual void OnAttack(const SState& c_rkState, WORD wMotionIndex) {}
-			virtual void OnUseSkill(const SState& c_rkState, UINT uMotSkill, UINT uMotLoopCount) {}
+			virtual void OnAttack(const SState& c_rkState, uint16_t wMotionIndex) {}
+			virtual void OnUseSkill(const SState& c_rkState, uint32_t uMotSkill, uint32_t uMotLoopCount) {}
 
-			virtual void OnHit(UINT uMotAttack, CActorInstance& rkActorVictim, BOOL isSendPacket) {}
+			virtual void OnHit(uint32_t uMotAttack, CActorInstance& rkActorVictim, int32_t isSendPacket) {}
 
 			virtual void OnChangeShape() {}
 

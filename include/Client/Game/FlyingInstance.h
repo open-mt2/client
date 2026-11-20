@@ -22,7 +22,7 @@ class CFlyingInstance
 		struct TAttachEffectInstance
 		{
 				int iAttachIndex;
-				DWORD dwEffectInstanceIndex;
+				uint32_t dwEffectInstanceIndex;
 
 				CFlyTrace* pFlyTrace;
 		};
@@ -54,13 +54,13 @@ class CFlyingInstance
 
 		void SetPierceCount(int iCount) { m_iPierceCount = iCount; }
 		void SetOwner(IActorInstance* pOwner) { m_pOwner = pOwner; }
-		void SetSkillIndex(DWORD dwIndex) { m_dwSkillIndex = dwIndex; }
+		void SetSkillIndex(uint32_t dwIndex) { m_dwSkillIndex = dwIndex; }
 
 		// FIXME : 툴에서 사용하고 있습니다. 임시로 위로.. - [levites]
 		void __Explode(bool bBomb = true);
 		void __Bomb();
 
-		DWORD ID;
+		uint32_t ID;
 
 	protected:
 		void __Initialize();
@@ -79,7 +79,7 @@ class CFlyingInstance
 		bool m_canAttack;
 
 		int m_iPierceCount;
-		DWORD m_dwSkillIndex;
+		uint32_t m_dwSkillIndex;
 
 		D3DXVECTOR3 m_v3Position;
 		D3DXVECTOR3 m_v3Velocity;
@@ -97,7 +97,7 @@ class CFlyingInstance
 
 		IActorInstance* m_pOwner;
 
-		BOOL m_bTargetHitted;
+		int32_t m_bTargetHitted;
 		std::set<IActorInstance*> m_HittedObjectSet;
 
 	public:
