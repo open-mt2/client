@@ -73,3 +73,8 @@ target_link_libraries(client_player
         $<$<PLATFORM_ID:Linux>:pthread>
         $<$<PLATFORM_ID:Linux>:dl>
 )
+
+if(BUILD_TESTS)
+    enable_testing()
+    add_subdirectory(tests)
+endif()

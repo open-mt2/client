@@ -4,6 +4,7 @@
 #include <Client/UI/PythonItem.h>
 
 #include <Client/UI/AbstractPlayer.h>
+#include <Client/Player/PythonPlayerEventHandler.h>
 
 void SNetworkActorData::UpdatePosition()
 {
@@ -125,7 +126,6 @@ SNetworkActorData::SNetworkActorData()
 
 CNetworkActorManager::CNetworkActorManager()
 {
-	m_dwMainVID = 0;
 }
 
 CNetworkActorManager::~CNetworkActorManager()
@@ -136,18 +136,8 @@ void CNetworkActorManager::Destroy()
 {
 	m_kNetActorDict.clear();
 
-	m_dwMainVID = 0;
 	m_lMainPosX = 0;
 	m_lMainPosY = 0;
-}
-
-void CNetworkActorManager::SetMainActorVID(DWORD dwVID)
-{
-	m_dwMainVID = dwVID;
-	m_lMainPosX = 0;
-	m_lMainPosY = 0;
-
-	m_kNetActorDict.clear();
 }
 
 void CNetworkActorManager::Update()
@@ -301,10 +291,7 @@ bool CNetworkActorManager::__IsVisiblePos(LONG lPosX, LONG lPosY)
 
 bool CNetworkActorManager::__IsMainActorVID(DWORD dwVID)
 {
-	if (dwVID == m_dwMainVID)
-		return true;
-
-	return false;
+	return IAbstractPlayer::GetSingleton().GetMainCharacterIndex() == dwVID;
 }
 
 CPythonCharacterManager& CNetworkActorManager::__GetCharacterManager()
@@ -381,8 +368,7 @@ CInstanceBase* CNetworkActorManager::__AppendCharacterManagerActor(SNetworkActor
 
 	if (kCreateData.m_isMain)
 	{
-		IAbstractPlayer& rkPlayer = IAbstractPlayer::GetSingleton();
-		rkPlayer.SetMainCharacterIndex(dwVID);
+		pNewInstance->SetEventHandler(&CPythonPlayerEventHandler::GetSingleton());
 
 		m_lMainPosX = rkNetActorData.m_lCurX;
 		m_lMainPosY = rkNetActorData.m_lCurY;

@@ -119,8 +119,6 @@ class CNetworkActorManager : public CReferenceObject
 
 		void Destroy();
 
-		void SetMainActorVID(DWORD dwVID);
-
 		void RemoveActor(DWORD dwVID);
 		void AppendActor(const SNetworkActorData& c_rkNetActorData);
 		void UpdateActor(const SNetworkUpdateActorData& c_rkNetUpdateActorData);
@@ -154,8 +152,6 @@ class CNetworkActorManager : public CReferenceObject
 		CPythonCharacterManager& __GetCharacterManager();
 
 	protected:
-		DWORD m_dwMainVID;
-
 		LONG m_lMainPosX;
 		LONG m_lMainPosY;
 

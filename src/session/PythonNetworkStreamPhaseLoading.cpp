@@ -132,16 +132,13 @@ bool CPythonNetworkStream::RecvMainCharacter(const protocol::Packet& value)
 {
 	TPacketGCMainCharacter MainChrPacket = value.Get<TPacketGCMainCharacter>();
 
-	m_dwMainActorVID = MainChrPacket.dwVID;
 	m_dwMainActorRace = MainChrPacket.wRaceNum;
 	m_dwMainActorEmpire = 0;
 	m_dwMainActorSkillGroup = MainChrPacket.bySkillGroup;
 
-	m_rokNetActorMgr->SetMainActorVID(m_dwMainActorVID);
-
 	CPythonPlayer& rkPlayer = CPythonPlayer::Instance();
 	rkPlayer.SetName(MainChrPacket.szName);
-	rkPlayer.SetMainCharacterIndex(GetMainActorVID());
+	rkPlayer.SetMainCharacterIndex(MainChrPacket.dwVID);
 
 	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_LOAD], "LoadData", Py_BuildValue("(ii)", MainChrPacket.lX, MainChrPacket.lY));
 
@@ -156,16 +153,13 @@ bool CPythonNetworkStream::RecvMainCharacter2_EMPIRE(const protocol::Packet& val
 {
 	TPacketGCMainCharacter2_EMPIRE mainChrPacket = value.Get<TPacketGCMainCharacter2_EMPIRE>();
 
-	m_dwMainActorVID = mainChrPacket.dwVID;
 	m_dwMainActorRace = mainChrPacket.wRaceNum;
 	m_dwMainActorEmpire = mainChrPacket.byEmpire;
 	m_dwMainActorSkillGroup = mainChrPacket.bySkillGroup;
 
-	m_rokNetActorMgr->SetMainActorVID(m_dwMainActorVID);
-
 	CPythonPlayer& rkPlayer = CPythonPlayer::Instance();
 	rkPlayer.SetName(mainChrPacket.szName);
-	rkPlayer.SetMainCharacterIndex(GetMainActorVID());
+	rkPlayer.SetMainCharacterIndex(mainChrPacket.dwVID);
 
 	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_LOAD], "LoadData", Py_BuildValue("(ii)", mainChrPacket.lX, mainChrPacket.lY));
 
@@ -179,16 +173,13 @@ bool CPythonNetworkStream::RecvMainCharacter3_BGM(const protocol::Packet& value)
 {
 	TPacketGCMainCharacter3_BGM mainChrPacket = value.Get<TPacketGCMainCharacter3_BGM>();
 
-	m_dwMainActorVID = mainChrPacket.dwVID;
 	m_dwMainActorRace = mainChrPacket.wRaceNum;
 	m_dwMainActorEmpire = mainChrPacket.byEmpire;
 	m_dwMainActorSkillGroup = mainChrPacket.bySkillGroup;
 
-	m_rokNetActorMgr->SetMainActorVID(m_dwMainActorVID);
-
 	CPythonPlayer& rkPlayer = CPythonPlayer::Instance();
 	rkPlayer.SetName(mainChrPacket.szUserName);
-	rkPlayer.SetMainCharacterIndex(GetMainActorVID());
+	rkPlayer.SetMainCharacterIndex(mainChrPacket.dwVID);
 
 	__SetFieldMusicFileName(mainChrPacket.szBGMName);
 
@@ -204,16 +195,13 @@ bool CPythonNetworkStream::RecvMainCharacter4_BGM_VOL(const protocol::Packet& va
 {
 	TPacketGCMainCharacter4_BGM_VOL mainChrPacket = value.Get<TPacketGCMainCharacter4_BGM_VOL>();
 
-	m_dwMainActorVID = mainChrPacket.dwVID;
 	m_dwMainActorRace = mainChrPacket.wRaceNum;
 	m_dwMainActorEmpire = mainChrPacket.byEmpire;
 	m_dwMainActorSkillGroup = mainChrPacket.bySkillGroup;
 
-	m_rokNetActorMgr->SetMainActorVID(m_dwMainActorVID);
-
 	CPythonPlayer& rkPlayer = CPythonPlayer::Instance();
 	rkPlayer.SetName(mainChrPacket.szUserName);
-	rkPlayer.SetMainCharacterIndex(GetMainActorVID());
+	rkPlayer.SetMainCharacterIndex(mainChrPacket.dwVID);
 
 	__SetFieldMusicFileInfo(mainChrPacket.szBGMName, mainChrPacket.fBGMVol);
 

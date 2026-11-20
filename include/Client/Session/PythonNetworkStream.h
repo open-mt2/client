@@ -604,7 +604,6 @@ class CPythonNetworkStream : public CNetworkStream, public CSingleton<CPythonNet
 		TPacketGCHandshake m_HandshakeData;
 		DWORD m_dwChangingPhaseTime;
 		DWORD m_dwBindupRetryCount;
-		DWORD m_dwMainActorVID;
 		DWORD m_dwMainActorRace;
 		DWORD m_dwMainActorEmpire;
 		DWORD m_dwMainActorSkillGroup;

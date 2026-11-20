@@ -527,11 +527,6 @@ void CPythonNetworkStream::SetGamePhase()
 	m_phaseProcessFunc.Set(this, &CPythonNetworkStream::GamePhase);
 	m_phaseLeaveFunc.Set(this, &CPythonNetworkStream::__LeaveGamePhase);
 
-	// Main Character 등록O
-
-	IAbstractPlayer& rkPlayer = IAbstractPlayer::GetSingleton();
-	rkPlayer.SetMainCharacterIndex(GetMainActorVID());
-
 	__RefreshStatus();
 }
 

@@ -2,6 +2,7 @@
 #include <Neoeter/Render/NetPacketHeaderMap.h>
 
 #include <Client/Session/PythonNetworkStream.h>
+#include <Client/UI/AbstractPlayer.h>
 #include <Client/UI/Packet.h>
 #include <Client/UI/QuitRequest.h>
 #include <Client/UI/NetworkActorManager.h>
@@ -716,7 +717,7 @@ void CPythonNetworkStream::SetHandler(PyObject* poHandler)
 // ETC
 DWORD CPythonNetworkStream::GetMainActorVID()
 {
-	return m_dwMainActorVID;
+	return IAbstractPlayer::GetSingleton().GetMainCharacterIndex();
 }
 
 DWORD CPythonNetworkStream::GetMainActorRace()
@@ -835,7 +836,6 @@ CPythonNetworkStream::CPythonNetworkStream()
 	m_dwEmpireID = 0;
 	m_dwGuildID = 0;
 
-	m_dwMainActorVID = 0;
 	m_dwMainActorRace = 0;
 	m_dwMainActorEmpire = 0;
 	m_dwMainActorSkillGroup = 0;
