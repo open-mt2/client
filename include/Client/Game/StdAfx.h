@@ -4,7 +4,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #endif
 
-#include <Platform/Platform.h>
+#include <Neoeter/Platform/Platform.h>
 #include <Neoeter/Platform/Base/Utils.h>
 #include <Neoeter/Platform/Base/CRC32.h>
 #include <Neoeter/Platform/Base/Random.h>

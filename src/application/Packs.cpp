@@ -9,7 +9,7 @@
 #include <Neoeter/Platform/Base/MappedFile.h>
 #include <Neoeter/Platform/Base/Stl.h>
 #include <Neoeter/Render/TextFileLoader.h>
-#include <Platform/Platform.h>
+#include <Neoeter/Platform/Platform.h>
 
 namespace Neoeter
 {

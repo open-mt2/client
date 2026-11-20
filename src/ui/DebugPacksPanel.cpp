@@ -9,7 +9,7 @@
 #include <Neoeter/Debug/Debug.h>
 #include <Neoeter/IO/EterPackManager.h>
 
-#include <Platform/RenderBackend.h>
+#include <Neoeter/Platform/RenderBackend.h>
 
 #include <algorithm>
 #include <cctype>

@@ -11,7 +11,7 @@
 #include <Client/UI/PythonBackground.h>
 #include <Neoeter/Platform/Base/Debug.h>
 #include <Neoeter/Render/Util.h>
-#include <Platform/Platform.h>
+#include <Neoeter/Platform/Platform.h>
 
 #include <cstdint>
 #include <cstdlib>

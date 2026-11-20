@@ -3,7 +3,7 @@
 #include <Neoeter/Model/Grn/GrannyCompat.h>
 #include <Neoeter/Platform/Base/Debug.h>
 #include <Neoeter/Platform/Base/Utils.h>
-#include <Platform/Platform.h>
+#include <Neoeter/Platform/Platform.h>
 
 namespace
 {

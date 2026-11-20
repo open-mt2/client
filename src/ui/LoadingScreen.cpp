@@ -1,6 +1,6 @@
 #include <Client/UI/LoadingScreen.h>
 
-#include <Platform/Platform.h>
+#include <Neoeter/Platform/Platform.h>
 #include <Neoeter/Platform/Base/Debug.h>
 #include <Neoeter/Render/MSWindow.h>
 
@@ -20,7 +20,7 @@ static bool g_fadeInPending = false;
 
 #if defined(OPENMT2_RENDERER_GL)
 
-#include <Platform/GLCompat.h>
+#include <Neoeter/Platform/GLCompat.h>
 
 namespace
 {
