@@ -17,7 +17,7 @@
 #include <Client/UI/PythonSystem.h>
 #include <Client/UI/QuitRequest.h>
 
-std::string g_strEffectName = "d:/ymir work/effect/etc/direction/direction_land.mse";
+std::string g_strEffectName = "ymir work/effect/etc/direction/direction_land.mse";
 
 uint32_t CPythonBackground::GetRenderShadowTime()
 {
@@ -943,13 +943,13 @@ void CPythonBackground::SetXMaxTree(int iGrade)
 	iGrade = min(iGrade, 2);
 
 	static std::string s_strTreeName[3] = {
-		"d:/ymir work/tree/christmastree1.spt",
-		"d:/ymir work/tree/christmastree2.spt",
-		"d:/ymir work/tree/christmastree3.spt"};
+		"ymir work/tree/christmastree1.spt",
+		"ymir work/tree/christmastree2.spt",
+		"ymir work/tree/christmastree3.spt"};
 	static std::string s_strEffectName[3] = {
-		"d:/ymir work/effect/etc/christmas_tree/tree_1s.mse",
-		"d:/ymir work/effect/etc/christmas_tree/tree_2s.mse",
-		"d:/ymir work/effect/etc/christmas_tree/tree_3s.mse",
+		"ymir work/effect/etc/christmas_tree/tree_1s.mse",
+		"ymir work/effect/etc/christmas_tree/tree_2s.mse",
+		"ymir work/effect/etc/christmas_tree/tree_3s.mse",
 	};
 	rkMap.XMasTree_Set(c_v3TreePos.x, c_v3TreePos.y, c_v3TreePos.z, s_strTreeName[iGrade].c_str(), s_strEffectName[iGrade].c_str());
 }

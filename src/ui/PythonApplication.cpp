@@ -1563,8 +1563,8 @@ bool CPythonApplication::Create(PyObject* poSelf, const char* c_szName, int widt
 	SystemParametersInfo(SPI_SETSTICKYKEYS, sizeof(sStickKeys), &sStickKeys, 0);
 
 	// SphereMap
-	CGrannyMaterial::CreateSphereMap(0, "d:/ymir work/special/spheremap.jpg");
-	CGrannyMaterial::CreateSphereMap(1, "d:/ymir work/special/spheremap01.jpg");
+	CGrannyMaterial::CreateSphereMap(0, "ymir work/special/spheremap.jpg");
+	CGrannyMaterial::CreateSphereMap(1, "ymir work/special/spheremap01.jpg");
 	Tracef("[PythonApplication] Application subsystems initialized successfully.\n");
 
 	static bool bStartupFadePlayed = false;

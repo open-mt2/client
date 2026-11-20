@@ -69,9 +69,9 @@ struct FGetPickingPoint
 
 CMapOutdoor::CMapOutdoor()
 {
-	CGraphicImage* pAlphaFogImage = (CGraphicImage*)CResourceManager::Instance().GetResourcePointer("D:/ymir work/special/fog.tga");
-	CGraphicImage* pAttrImage = (CGraphicImage*)CResourceManager::Instance().GetResourcePointer("d:/ymir work/special/white.dds");
-	CGraphicImage* pBuildTransparentImage = (CGraphicImage*)CResourceManager::Instance().GetResourcePointer("d:/ymir Work/special/PCBlockerAlpha.dds");
+	CGraphicImage* pAlphaFogImage = (CGraphicImage*)CResourceManager::Instance().GetResourcePointer("ymir work/special/fog.tga");
+	CGraphicImage* pAttrImage = (CGraphicImage*)CResourceManager::Instance().GetResourcePointer("ymir work/special/white.dds");
+	CGraphicImage* pBuildTransparentImage = (CGraphicImage*)CResourceManager::Instance().GetResourcePointer("ymir work/special/PCBlockerAlpha.dds");
 	m_AlphaFogImageInstance.SetImagePointer(pAlphaFogImage);
 	m_attrImageInstance.SetImagePointer(pAttrImage);
 	m_BuildingTransparentImageInstance.SetImagePointer(pBuildTransparentImage);
@@ -411,7 +411,7 @@ void CMapOutdoor::SetEnvironmentLensFlare()
 								  mc_pEnvironmentData->fLensFlareMaxBrightness,
 								  mc_pEnvironmentData->LensFlareBrightnessColor);
 
-	m_LensFlare.Initialize("d:/ymir work/environment");
+	m_LensFlare.Initialize("ymir work/environment");
 
 	if (!mc_pEnvironmentData->strMainFlareTextureFileName.empty())
 		m_LensFlare.SetMainFlare(mc_pEnvironmentData->strMainFlareTextureFileName.c_str(),

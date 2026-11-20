@@ -146,7 +146,7 @@ bool CItemManager::LoadItemList(const char* c_szFileName)
 				if (4 == TokenVector.size())
 				{
 					char szMildModelPath[MAX_PATH];
-					sprintf(szMildModelPath, "d:/ymir work/item/weapon/%.5d.gr2", dwMildBaseVnum);
+					sprintf(szMildModelPath, "ymir work/item/weapon/%.5d.gr2", dwMildBaseVnum);
 					pItemData->SetDefaultItemData(szMildIconPath, szMildModelPath);
 				}
 				else

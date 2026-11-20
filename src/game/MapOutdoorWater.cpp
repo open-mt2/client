@@ -11,7 +11,7 @@ void CMapOutdoor::LoadWaterTexture()
 	char buf[256];
 	for (int i = 0; i < 30; ++i)
 	{
-		sprintf(buf, "d:/ymir Work/special/water/%02d.dds", i + 1);
+		sprintf(buf, "ymir work/special/water/%02d.dds", i + 1);
 		m_WaterInstances[i].SetImagePointer((CGraphicImage*)CResourceManager::Instance().GetResourcePointer(buf));
 	}
 }

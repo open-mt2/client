@@ -184,7 +184,7 @@ void CInstanceBase::ProcessDamage()
 		damage /= 10;
 		char numBuf[MAX_PATH];
 		sprintf(numBuf, "%d.dds", num);
-		textures.push_back("d:/ymir work/effect/affect/damagevalue/" + strDamageType + numBuf);
+		textures.push_back("ymir work/effect/affect/damagevalue/" + strDamageType + numBuf);
 
 		rkEftMgr.SetEffectTextures(ms_adwCRCAffectEffect[rdwCRCEft], textures);
 

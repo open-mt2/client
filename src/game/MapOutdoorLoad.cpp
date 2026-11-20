@@ -51,7 +51,7 @@ bool CMapOutdoor::Load(float x, float y, float z)
 	}
 	else
 	{
-		const std::string& c_rstrEnvironmentRoot = "d:/ymir work/environment/";
+		const std::string& c_rstrEnvironmentRoot = "ymir work/environment/";
 		const std::string& c_rstrMapName = GetName();
 		m_envDataName = c_rstrEnvironmentRoot + m_settings_envDataName;
 

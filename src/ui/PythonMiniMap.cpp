@@ -526,7 +526,7 @@ typedef struct _MINIMAPVERTEX
 
 bool CPythonMiniMap::Create()
 {
-	const std::string strImageRoot = "D:/ymir work/ui/";
+	const std::string strImageRoot = "ymir work/ui/";
 	const std::string strImageFilter = strImageRoot + "minimap_image_filter.dds";
 	const std::string strImageCamera = strImageRoot + "minimap_camera.dds";
 	const std::string strPlayerMark = strImageRoot + "minimap/playermark.sub";
@@ -569,7 +569,7 @@ bool CPythonMiniMap::Create()
 		m_TargetMarkGraphicImageInstances[k].SetRenderingMode(CGraphicExpandedImageInstance::RENDERING_MODE_SCREEN);
 	}
 
-	m_GuildAreaFlagImageInstance.SetImagePointer((CGraphicSubImage*)CResourceManager::Instance().GetResourcePointer("d:/ymir work/ui/minimap/GuildArea01.sub"));
+	m_GuildAreaFlagImageInstance.SetImagePointer((CGraphicSubImage*)CResourceManager::Instance().GetResourcePointer("ymir work/ui/minimap/GuildArea01.sub"));
 
 	// 그려질 폴리곤 세팅
 #pragma pack(push)
@@ -874,13 +874,13 @@ bool CPythonMiniMap::LoadAtlas()
 
 	CMapOutdoor& rkMap = rkBG.GetMapOutdoorRef();
 
-	const char* playerMarkFileName = "d:/ymir work/ui/minimap/playermark.sub";
+	const char* playerMarkFileName = "ymir work/ui/minimap/playermark.sub";
 
 	char atlasFileName[1024 + 1];
 	snprintf(atlasFileName, sizeof(atlasFileName), "%s/atlas.sub", rkMap.GetName().c_str());
 	if (!CEterPackManager::Instance().isExist(atlasFileName))
 	{
-		snprintf(atlasFileName, sizeof(atlasFileName), "d:/ymir work/ui/atlas/%s/atlas.sub", rkMap.GetName().c_str());
+		snprintf(atlasFileName, sizeof(atlasFileName), "ymir work/ui/atlas/%s/atlas.sub", rkMap.GetName().c_str());
 	}
 
 	m_AtlasImageInstance.Destroy();

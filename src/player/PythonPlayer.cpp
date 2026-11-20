@@ -1250,8 +1250,8 @@ void CPythonPlayer::AlarmHaveToGo()
 
 	PixelPosition.y *= -1.0f;
 
-	CEffectManager::Instance().RegisterEffect("d:/ymir work/effect/etc/compass/appear_middle.mse");
-	CEffectManager::Instance().CreateEffect("d:/ymir work/effect/etc/compass/appear_middle.mse", PixelPosition, v3Rotation);
+	CEffectManager::Instance().RegisterEffect("ymir work/effect/etc/compass/appear_middle.mse");
+	CEffectManager::Instance().CreateEffect("ymir work/effect/etc/compass/appear_middle.mse", PixelPosition, v3Rotation);
 }
 
 // Party

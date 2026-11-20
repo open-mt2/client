@@ -342,20 +342,20 @@ void CPythonNetworkStream::ServerCommand(char* c_szCommand)
 		switch (byDistance)
 		{
 			case 0:
-				CEffectManager::Instance().RegisterEffect("d:/ymir work/effect/etc/firecracker/find_out.mse");
-				CEffectManager::Instance().CreateEffect("d:/ymir work/effect/etc/firecracker/find_out.mse", PixelPosition, v3Rotation);
+				CEffectManager::Instance().RegisterEffect("ymir work/effect/etc/firecracker/find_out.mse");
+				CEffectManager::Instance().CreateEffect("ymir work/effect/etc/firecracker/find_out.mse", PixelPosition, v3Rotation);
 				break;
 			case 1:
-				CEffectManager::Instance().RegisterEffect("d:/ymir work/effect/etc/compass/appear_small.mse");
-				CEffectManager::Instance().CreateEffect("d:/ymir work/effect/etc/compass/appear_small.mse", PixelPosition, v3Rotation);
+				CEffectManager::Instance().RegisterEffect("ymir work/effect/etc/compass/appear_small.mse");
+				CEffectManager::Instance().CreateEffect("ymir work/effect/etc/compass/appear_small.mse", PixelPosition, v3Rotation);
 				break;
 			case 2:
-				CEffectManager::Instance().RegisterEffect("d:/ymir work/effect/etc/compass/appear_middle.mse");
-				CEffectManager::Instance().CreateEffect("d:/ymir work/effect/etc/compass/appear_middle.mse", PixelPosition, v3Rotation);
+				CEffectManager::Instance().RegisterEffect("ymir work/effect/etc/compass/appear_middle.mse");
+				CEffectManager::Instance().CreateEffect("ymir work/effect/etc/compass/appear_middle.mse", PixelPosition, v3Rotation);
 				break;
 			case 3:
-				CEffectManager::Instance().RegisterEffect("d:/ymir work/effect/etc/compass/appear_large.mse");
-				CEffectManager::Instance().CreateEffect("d:/ymir work/effect/etc/compass/appear_large.mse", PixelPosition, v3Rotation);
+				CEffectManager::Instance().RegisterEffect("ymir work/effect/etc/compass/appear_large.mse");
+				CEffectManager::Instance().CreateEffect("ymir work/effect/etc/compass/appear_large.mse", PixelPosition, v3Rotation);
 				break;
 			default:
 				TraceError("CPythonNetworkStream::ServerCommand(c_szCommand=%s) - Strange Distance", c_szCommand);

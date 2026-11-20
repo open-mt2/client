@@ -85,7 +85,7 @@ bool CPythonApplication::CreateOfficialCursors()
 		};
 
 	CEterPackManager::TPackDataPtr data;
-	if (!CEterPackManager::Instance().Get("d:/ymir work/ui/cursor.dds", data))
+	if (!CEterPackManager::Instance().Get("ymir work/ui/cursor.dds", data))
 		return false;
 
 	if (!data || data->size() < 128)

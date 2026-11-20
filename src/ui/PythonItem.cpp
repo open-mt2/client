@@ -686,7 +686,7 @@ void CPythonItem::Destroy()
 
 void CPythonItem::Create()
 {
-	CEffectManager::Instance().RegisterEffect2("d:/ymir work/effect/etc/dropitem/dropitem.mse", &m_dwDropItemEffectID);
+	CEffectManager::Instance().RegisterEffect2("ymir work/effect/etc/dropitem/dropitem.mse", &m_dwDropItemEffectID);
 }
 
 CPythonItem::CPythonItem()

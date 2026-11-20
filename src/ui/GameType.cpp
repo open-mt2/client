@@ -1,8 +1,8 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/UI/GameType.h>
 
-std::string g_strResourcePath = "d:/ymir work/";
-std::string g_strImagePath = "d:/ymir work/ui/";
+std::string g_strResourcePath = "ymir work/";
+std::string g_strImagePath = "ymir work/ui/";
 
 std::string g_strGuildSymbolPathName = "mark/10/";
 

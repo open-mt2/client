@@ -161,7 +161,7 @@ void CItemData::SetDefaultItemData(const char* c_szIconFileName, const char* c_s
 	else
 	{
 		m_strModelFileName = "";
-		m_strDropModelFileName = "d:/ymir work/item/etc/item_bag.gr2";
+		m_strDropModelFileName = "ymir work/item/etc/item_bag.gr2";
 	}
 	m_strIconFileName = c_szIconFileName;
 

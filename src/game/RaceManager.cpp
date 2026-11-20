@@ -26,71 +26,71 @@ void __GetRaceResourcePathes(unsigned race, std::vector<std::string>& vec_stPath
 {
 	if (__IsGuildRace(race))
 	{
-		vec_stPathes.push_back("d:/ymir work/guild/");
-		vec_stPathes.push_back("d:/ymir work/npc/");
-		vec_stPathes.push_back("d:/ymir work/npc2/");
-		vec_stPathes.push_back("d:/ymir work/monster/");
-		vec_stPathes.push_back("d:/ymir work/monster2/");
+		vec_stPathes.push_back("ymir work/guild/");
+		vec_stPathes.push_back("ymir work/npc/");
+		vec_stPathes.push_back("ymir work/npc2/");
+		vec_stPathes.push_back("ymir work/monster/");
+		vec_stPathes.push_back("ymir work/monster2/");
 	}
 	else if (__IsNPCRace(race))
 	{
 		if (race >= 30000)
 		{
-			vec_stPathes.push_back("d:/ymir work/npc2/");
-			vec_stPathes.push_back("d:/ymir work/npc/");
-			vec_stPathes.push_back("d:/ymir work/monster/");
-			vec_stPathes.push_back("d:/ymir work/monster2/");
-			vec_stPathes.push_back("d:/ymir work/guild/");
+			vec_stPathes.push_back("ymir work/npc2/");
+			vec_stPathes.push_back("ymir work/npc/");
+			vec_stPathes.push_back("ymir work/monster/");
+			vec_stPathes.push_back("ymir work/monster2/");
+			vec_stPathes.push_back("ymir work/guild/");
 		}
 		else
 		{
-			vec_stPathes.push_back("d:/ymir work/npc/");
-			vec_stPathes.push_back("d:/ymir work/npc2/");
-			vec_stPathes.push_back("d:/ymir work/monster/");
-			vec_stPathes.push_back("d:/ymir work/monster2/");
-			vec_stPathes.push_back("d:/ymir work/guild/");
+			vec_stPathes.push_back("ymir work/npc/");
+			vec_stPathes.push_back("ymir work/npc2/");
+			vec_stPathes.push_back("ymir work/monster/");
+			vec_stPathes.push_back("ymir work/monster2/");
+			vec_stPathes.push_back("ymir work/guild/");
 		}
 	}
 	// 만우절 이벤트용 예외 몬스터
 	else if (8507 == race || 8510 == race)
 	{
-		vec_stPathes.push_back("d:/ymir work/monster2/");
-		vec_stPathes.push_back("d:/ymir work/monster/");
-		vec_stPathes.push_back("d:/ymir work/npc/");
-		vec_stPathes.push_back("d:/ymir work/npc2/");
-		vec_stPathes.push_back("d:/ymir work/guild/");
+		vec_stPathes.push_back("ymir work/monster2/");
+		vec_stPathes.push_back("ymir work/monster/");
+		vec_stPathes.push_back("ymir work/npc/");
+		vec_stPathes.push_back("ymir work/npc2/");
+		vec_stPathes.push_back("ymir work/guild/");
 	}
 	else if (race > 8000)
 	{
-		vec_stPathes.push_back("d:/ymir work/monster/");
-		vec_stPathes.push_back("d:/ymir work/monster2/");
-		vec_stPathes.push_back("d:/ymir work/npc/");
-		vec_stPathes.push_back("d:/ymir work/npc2/");
-		vec_stPathes.push_back("d:/ymir work/guild/");
+		vec_stPathes.push_back("ymir work/monster/");
+		vec_stPathes.push_back("ymir work/monster2/");
+		vec_stPathes.push_back("ymir work/npc/");
+		vec_stPathes.push_back("ymir work/npc2/");
+		vec_stPathes.push_back("ymir work/guild/");
 	}
 	else if (race > 2000)
 	{
-		vec_stPathes.push_back("d:/ymir work/monster2/");
-		vec_stPathes.push_back("d:/ymir work/monster/");
-		vec_stPathes.push_back("d:/ymir work/npc/");
-		vec_stPathes.push_back("d:/ymir work/npc2/");
-		vec_stPathes.push_back("d:/ymir work/guild/");
+		vec_stPathes.push_back("ymir work/monster2/");
+		vec_stPathes.push_back("ymir work/monster/");
+		vec_stPathes.push_back("ymir work/npc/");
+		vec_stPathes.push_back("ymir work/npc2/");
+		vec_stPathes.push_back("ymir work/guild/");
 	}
 	else if (race >= 1400 && race <= 1700)
 	{
-		vec_stPathes.push_back("d:/ymir work/monster2/");
-		vec_stPathes.push_back("d:/ymir work/monster/");
-		vec_stPathes.push_back("d:/ymir work/npc/");
-		vec_stPathes.push_back("d:/ymir work/npc2/");
-		vec_stPathes.push_back("d:/ymir work/guild/");
+		vec_stPathes.push_back("ymir work/monster2/");
+		vec_stPathes.push_back("ymir work/monster/");
+		vec_stPathes.push_back("ymir work/npc/");
+		vec_stPathes.push_back("ymir work/npc2/");
+		vec_stPathes.push_back("ymir work/guild/");
 	}
 	else
 	{
-		vec_stPathes.push_back("d:/ymir work/monster/");
-		vec_stPathes.push_back("d:/ymir work/monster2/");
-		vec_stPathes.push_back("d:/ymir work/npc/");
-		vec_stPathes.push_back("d:/ymir work/npc2/");
-		vec_stPathes.push_back("d:/ymir work/guild/");
+		vec_stPathes.push_back("ymir work/monster/");
+		vec_stPathes.push_back("ymir work/monster2/");
+		vec_stPathes.push_back("ymir work/npc/");
+		vec_stPathes.push_back("ymir work/npc2/");
+		vec_stPathes.push_back("ymir work/guild/");
 	}
 	return;
 }

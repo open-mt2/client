@@ -281,7 +281,7 @@ void CActorInstance::ChangeMaterial(const char* c_szFileName)
 	std::vector<CRaceData::SSkin>::const_iterator i = c_rkVct_kSkin.begin();
 	const CRaceData::SSkin& c_rkSkinItem = *i;
 
-	std::string dstFileName = "d:/ymir work/npc/guild_symbol/guild_symbol.dds";
+	std::string dstFileName = "ymir work/npc/guild_symbol/guild_symbol.dds";
 	dstFileName = c_szFileName;
 
 	CResource* pkRes = CResourceManager::Instance().GetResourcePointer(dstFileName.c_str());
