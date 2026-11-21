@@ -8,7 +8,6 @@
 #include <Neoeter/IO/EterPackManager.h>
 #include <Client/Game/MapOutdoor.h>
 #include <Client/Game/Lighting.h>
-#include <Client/Game/PropertyLoader.h>
 
 #include <Client/UI/PythonBackground.h>
 #include <Client/UI/PythonCharacterManager.h>
@@ -311,7 +310,7 @@ void CPythonBackground::Initialize()
 
 void CPythonBackground::__CreateProperty()
 {
-	m_PropertyManager.Initialize();
+	m_PropertyManager.Scan("property/");
 }
 
 //////////////////////////////////////////////////////////////////////

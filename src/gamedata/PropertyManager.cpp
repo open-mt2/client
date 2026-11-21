@@ -1,8 +1,11 @@
 #include <Client/Game/StdAfx.h>
-#include <Neoeter/IO/EterPackManager.h>
+#include <Client/GameData/FileSource.h>
 
 #include <Client/GameData/PropertyManager.h>
 #include <Client/GameData/Property.h>
+
+#include <string.h>
+#include <vector>
 
 CPropertyManager::CPropertyManager()
 {
@@ -13,35 +16,37 @@ CPropertyManager::~CPropertyManager()
 	Clear();
 }
 
-void CPropertyManager::Initialize()
+void CPropertyManager::Scan(const char* c_szPrefix)
 {
-	auto fileMap = CEterPackManager::Instance().GetFileMap();
+	std::vector<std::string> paths;
+	if (!GameDataListFiles(c_szPrefix, paths))
+		return;
 
-	for (auto& itor : fileMap)
+	static const char* c_szReservedPrefix = "property/reserve";
+	const size_t c_iReservedLength = strlen(c_szReservedPrefix);
+
+	for (size_t i = 0; i < paths.size(); ++i)
 	{
-		if (itor.first.rfind("property/reserve", 0) == 0)
+		const std::string& c_rstPath = paths[i];
+
+		if (0 == c_rstPath.compare(0, c_iReservedLength, c_szReservedPrefix))
 		{
-			LoadReservedCRC(itor.first.c_str());
+			LoadReservedCRC(c_rstPath.c_str());
 			continue;
 		}
 
-		if (itor.first.rfind("property/", 0) == 0)
-		{
-			if (!Register(itor.first.c_str()))
-				continue;
-		}
+		Register(c_rstPath.c_str());
 	}
 }
 
 bool CPropertyManager::LoadReservedCRC(const char* c_pszFileName)
 {
-	CEterPackManager::TPackDataPtr data;
-	CMemoryTextFileLoader textFileLoader;
-
-	if (!CEterPackManager::Instance().Get(c_pszFileName, data))
+	std::vector<uint8_t> bytes;
+	if (!GameDataReadFile(c_pszFileName, bytes))
 		return false;
 
-	textFileLoader.Bind(data->size(), data->data());
+	CMemoryTextFileLoader textFileLoader;
+	textFileLoader.Bind(static_cast<int>(bytes.size()), bytes.data());
 
 	for (uint32_t i = 0; i < textFileLoader.GetLineCount(); ++i)
 	{
@@ -82,13 +87,13 @@ uint32_t CPropertyManager::GetUniqueCRC(const char* c_szSeed)
 
 bool CPropertyManager::Register(const char* c_pszFileName, CProperty** ppProperty)
 {
-	CEterPackManager::TPackDataPtr data;
-	if (!CEterPackManager::Instance().Get(c_pszFileName, data))
+	std::vector<uint8_t> bytes;
+	if (!GameDataReadFile(c_pszFileName, bytes))
 		return false;
 
 	CProperty* pProperty = new CProperty(c_pszFileName);
 
-	if (!pProperty->ReadFromMemory(data->data(), data->size(), c_pszFileName))
+	if (!pProperty->ReadFromMemory(bytes.data(), static_cast<int>(bytes.size()), c_pszFileName))
 	{
 		delete pProperty;
 		return false;

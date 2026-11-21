@@ -41,7 +41,6 @@
 // Property
 // #include <Client/GameData/Property.h>
 // #include <Client/GameData/PropertyManager.h>
-// #include <Client/Game/PropertyLoader.h>
 
 // Map
 // #include <Client/Game/Area.h>

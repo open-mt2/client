@@ -1,5 +1,8 @@
 #pragma once
 
+#include <Neoeter/Platform/Base/Stl.h>
+
+#include <cstdint>
 #include <string>
 
 class CProperty

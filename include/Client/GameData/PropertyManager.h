@@ -1,5 +1,12 @@
 #pragma once
 
+#include <Neoeter/Platform/Base/Singleton.h>
+#include <Neoeter/Platform/Base/Stl.h>
+
+#include <cstdint>
+#include <map>
+#include <set>
+
 class CPropertyManager : public CSingleton<CPropertyManager>
 {
 	public:
@@ -12,7 +19,9 @@ class CPropertyManager : public CSingleton<CPropertyManager>
 		void ReserveCRC(uint32_t dwCRC);
 		uint32_t GetUniqueCRC(const char* c_szSeed);
 
-		void Initialize();
+		// Loads every entry under prefix and registers it, reserving the CRCs of
+		// the property/reserve entries first.
+		void Scan(const char* c_szPrefix);
 		bool Register(const char* c_pszFileName, CProperty** ppProperty = NULL);
 
 		bool Get(uint32_t dwCRC, CProperty** ppProperty);

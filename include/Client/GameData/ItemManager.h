@@ -2,6 +2,13 @@
 
 #include <Client/GameData/ItemData.h>
 
+#include <Neoeter/Platform/Base/Singleton.h>
+
+#include <cstdint>
+#include <map>
+#include <string>
+#include <vector>
+
 class CItemManager : public CSingleton<CItemManager>
 {
 	public:

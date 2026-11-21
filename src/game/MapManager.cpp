@@ -10,7 +10,6 @@
 
 #include <Neoeter/Render/RenderOptions.h>
 
-#include <Client/Game/PropertyLoader.h>
 
 #include <cmath>
 
@@ -182,9 +181,7 @@ CMapBase* CMapManager::AllocMap()
 //////////////////////////////////////////////////////////////////////////
 void CMapManager::LoadProperty()
 {
-	CPropertyLoader PropertyLoader;
-	PropertyLoader.SetPropertyManager(&m_PropertyManager);
-	PropertyLoader.Create("*.*", "Property");
+	m_PropertyManager.Scan("Property");
 }
 
 bool CMapManager::LoadMap(const std::string& c_rstrMapName, float x, float y, float z)

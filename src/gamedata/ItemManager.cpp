@@ -1,8 +1,10 @@
 #include <Client/Game/StdAfx.h>
-#include <Neoeter/IO/EterPackManager.h>
+#include <Client/GameData/FileSource.h>
 #include <Neoeter/Render/ResourceManager.h>
 
 #include <Client/GameData/ItemManager.h>
+
+#include <sstream>
 
 static uint32_t s_adwItemProtoKey[4] =
 	{
@@ -94,12 +96,12 @@ CItemData* CItemManager::MakeItemData(uint32_t dwIndex)
 
 bool CItemManager::LoadItemList(const char* c_szFileName)
 {
-	CEterPackManager::TPackDataPtr data;
-	CMemoryTextFileLoader textFileLoader;
-	if (!CEterPackManager::Instance().Get(c_szFileName, data))
+	std::vector<uint8_t> bytes;
+	if (!GameDataReadFile(c_szFileName, bytes))
 		return false;
 
-	textFileLoader.Bind(data->size(), data->data());
+	CMemoryTextFileLoader textFileLoader;
+	textFileLoader.Bind(static_cast<int>(bytes.size()), bytes.data());
 
 	CTokenVector TokenVector;
 	for (uint32_t i = 0; i < textFileLoader.GetLineCount(); ++i)
@@ -193,15 +195,15 @@ const std::string& __SnapString(const std::string& c_rstSrc, std::string& rstTem
 
 bool CItemManager::LoadItemDesc(const char* c_szFileName)
 {
-	CEterPackManager::TPackDataPtr data;
-	CMemoryTextFileLoader kTextFileLoader;
-	if (!CEterPackManager::Instance().Get(c_szFileName, data))
+	std::vector<uint8_t> bytes;
+	if (!GameDataReadFile(c_szFileName, bytes))
 	{
 		Tracenf("CItemManager::LoadItemDesc(c_szFileName=%s) - Load Error", c_szFileName);
 		return false;
 	}
 
-	kTextFileLoader.Bind(data->size(), data->data());
+	CMemoryTextFileLoader kTextFileLoader;
+	kTextFileLoader.Bind(static_cast<int>(bytes.size()), bytes.data());
 
 	std::string stTemp;
 
@@ -250,9 +252,11 @@ uint32_t GetHashCode(const char* pString)
 
 bool CItemManager::LoadItemTable(const char* c_szFileName)
 {
-	std::stringstream data;
-	if (!CEterPackManager::Instance().Get(c_szFileName, data))
+	std::vector<uint8_t> bytes;
+	if (!GameDataReadFile(c_szFileName, bytes))
 		return false;
+
+	std::istringstream data(std::string(bytes.begin(), bytes.end()));
 
 	uint32_t dwFourCC, dwElements, dwDataSize;
 	uint32_t dwVersion = 0;

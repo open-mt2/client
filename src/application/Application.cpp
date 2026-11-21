@@ -3,6 +3,9 @@
 #include <Client/Application/CLI.h>
 #include <Client/Application/Context.h>
 #include <Client/Application/GameSession.h>
+#include <Client/Application/PackFileSource.h>
+
+#include <Client/GameData/FileSource.h>
 
 #include <Client/UI/StdAfx.h>
 
@@ -95,6 +98,9 @@ namespace Neoeter
 	{
 		static CLZO s_lzo;
 		static CEterPackManager s_eterPackManager;
+		static CPackFileSource s_packFileSource;
+
+		SetGameDataFileSource(&s_packFileSource);
 
 		m_pythonApplication.reset(new CPythonApplication);
 		m_pythonApplication->Initialize(m_context.Instance());
@@ -131,6 +137,7 @@ namespace Neoeter
 
 	void Application::Shutdown()
 	{
+		SetGameDataFileSource(NULL);
 		Neoeter::Platform::ShutdownCom();
 		m_pythonApplication.reset();
 	}

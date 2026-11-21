@@ -18,6 +18,7 @@
 
 #include <Client/UI/resource.h>
 #include <Client/UI/PythonApplication.h>
+#include <Client/GameData/GameData.h>
 #include <Client/UI/PythonCharacterManager.h>
 #include <Client/UI/LoadingScreen.h>
 
@@ -1118,44 +1119,23 @@ void CPythonApplication::Loop()
 bool LoadLocaleData(const char* localePath)
 {
 	CPythonNonPlayer& rkNPCMgr = CPythonNonPlayer::Instance();
-	CItemManager& rkItemMgr = CItemManager::Instance();
 	CPythonSkill& rkSkillMgr = CPythonSkill::Instance();
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 
-	char szItemList[256];
-	char szItemProto[256];
-	char szItemDesc[256];
 	char szMobProto[256];
 	char szSkillDescFileName[256];
 	char szSkillTableFileName[256];
 	char szInsultList[256];
-	snprintf(szItemList, sizeof(szItemList), "%s/item_list.txt", localePath);
-	snprintf(szItemProto, sizeof(szItemProto), "%s/item_proto", localePath);
-	snprintf(szItemDesc, sizeof(szItemDesc), "%s/itemdesc.txt", localePath);
 	snprintf(szMobProto, sizeof(szMobProto), "%s/mob_proto", localePath);
 	snprintf(szSkillDescFileName, sizeof(szSkillDescFileName), "%s/SkillDesc.txt", localePath);
 	snprintf(szSkillTableFileName, sizeof(szSkillTableFileName), "%s/SkillTable.txt", localePath);
 	snprintf(szInsultList, sizeof(szInsultList), "%s/insult.txt", localePath);
 
 	rkNPCMgr.Destroy();
-	rkItemMgr.Destroy();
 	rkSkillMgr.Destroy();
 
-	if (!rkItemMgr.LoadItemList(szItemList))
-	{
-		TraceError("LoadLocaleData - LoadItemList(%s) Error", szItemList);
-	}
-
-	if (!rkItemMgr.LoadItemTable(szItemProto))
-	{
-		TraceError("LoadLocaleData - LoadItemProto(%s) Error", szItemProto);
+	if (!GameData::LoadItemTables(localePath))
 		return false;
-	}
-
-	if (!rkItemMgr.LoadItemDesc(szItemDesc))
-	{
-		Tracenf("LoadLocaleData - LoadItemDesc(%s) Error", szItemDesc);
-	}
 
 	if (!rkNPCMgr.LoadNonPlayerData(szMobProto))
 	{
