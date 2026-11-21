@@ -643,9 +643,9 @@ void CPythonPlayer::NEW_ResetCameraRotation()
 
 	pkCmrCur->EndDrag();
 
-	rkApp.SetCursorNum(CPythonApplication::NORMAL);
-	if (CPythonApplication::CURSOR_MODE_HARDWARE == rkApp.GetCursorMode())
-		rkApp.SetCursorVisible(TRUE);
+	rkApp.Cursor().SetNum(CApplicationCursor::NORMAL);
+	if (CApplicationCursor::MODE_HARDWARE == rkApp.Cursor().GetMode())
+		rkApp.Cursor().SetVisible(TRUE);
 }
 
 bool CPythonPlayer::__CanShot(CInstanceBase& rkInstMain, CInstanceBase& rkInstTarget)

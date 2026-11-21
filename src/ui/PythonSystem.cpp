@@ -627,9 +627,9 @@ void CPythonSystem::ApplyConfig() // 이전 설정과 현재 설정을 비교해
 	if (m_OldConfig.is_software_cursor != m_Config.is_software_cursor)
 	{
 		if (m_Config.is_software_cursor)
-			CPythonApplication::Instance().SetCursorMode(CPythonApplication::CURSOR_MODE_SOFTWARE);
+			CPythonApplication::Instance().Cursor().SetMode(CApplicationCursor::MODE_SOFTWARE);
 		else
-			CPythonApplication::Instance().SetCursorMode(CPythonApplication::CURSOR_MODE_HARDWARE);
+			CPythonApplication::Instance().Cursor().SetMode(CApplicationCursor::MODE_HARDWARE);
 	}
 
 	m_OldConfig = m_Config;

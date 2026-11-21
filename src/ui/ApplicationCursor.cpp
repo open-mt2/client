@@ -1,4 +1,5 @@
 #include <Client/UI/StdAfx.h>
+#include <Client/UI/ApplicationCursor.h>
 #include <Client/UI/PythonApplication.h>
 #include <Client/UI/resource.h>
 #include <Client/UI/SdlCursor.h>
@@ -63,7 +64,17 @@ namespace
 	}
 }
 
-bool CPythonApplication::CreateOfficialCursors()
+CApplicationCursor::CApplicationCursor(CPythonApplication& rkApp) : m_rkApp(rkApp),
+																	m_hCurrentCursor(NULL),
+																	m_bVisible(TRUE),
+																	m_bLiarCursorOn(false),
+																	m_iMode(MODE_HARDWARE),
+																	m_iNum(SHAPE_NORMAL),
+																	m_iContinuousNum(SHAPE_NORMAL)
+{
+}
+
+bool CApplicationCursor::CreateOfficial()
 {
 	static const SCursorCell s_cells[CURSOR_COUNT] =
 		{
@@ -127,14 +138,14 @@ bool CPythonApplication::CreateOfficialCursors()
 		}
 	}
 
-	m_CursorHandleMap.clear();
+	m_kHandleMap.clear();
 
 	for (int i = 0; i < CURSOR_COUNT; ++i)
 	{
 		SDL_Surface* pSurface = SDL_CreateRGBSurface(0, 32, 32, 32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
 		if (!pSurface)
 		{
-			DestroyCursors();
+			Destroy();
 			return false;
 		}
 
@@ -155,7 +166,7 @@ bool CPythonApplication::CreateOfficialCursors()
 		if (!hasAlpha)
 		{
 			SDL_FreeSurface(pSurface);
-			DestroyCursors();
+			Destroy();
 			return false;
 		}
 
@@ -164,22 +175,22 @@ bool CPythonApplication::CreateOfficialCursors()
 
 		if (!pCursor)
 		{
-			DestroyCursors();
+			Destroy();
 			return false;
 		}
 
-		m_CursorHandleMap.insert(TCursorHandleMap::value_type(i, reinterpret_cast<PlatformHandle>(pCursor)));
+		m_kHandleMap.insert(TCursorHandleMap::value_type(i, reinterpret_cast<PlatformHandle>(pCursor)));
 	}
 
 	return true;
 }
 
-bool CPythonApplication::CreateCursors()
+bool CApplicationCursor::Create()
 {
-	m_bCursorVisible = TRUE;
+	m_bVisible = TRUE;
 	m_bLiarCursorOn = false;
 
-	if (CreateOfficialCursors())
+	if (CreateOfficial())
 		return true;
 
 	TraceError("CreateOfficialCursors failed, falling back to SDL system cursors");
@@ -207,7 +218,7 @@ bool CPythonApplication::CreateCursors()
 			SDL_SYSTEM_CURSOR_SIZENWSE, // HVSIZE
 		};
 
-	m_CursorHandleMap.clear();
+	m_kHandleMap.clear();
 
 	for (int i = 0; i < CURSOR_COUNT; ++i)
 	{
@@ -216,88 +227,100 @@ bool CPythonApplication::CreateCursors()
 		if (NULL == hCursor)
 			return false;
 
-		m_CursorHandleMap.insert(TCursorHandleMap::value_type(i, hCursor));
+		m_kHandleMap.insert(TCursorHandleMap::value_type(i, hCursor));
 	}
 
 	return true;
 }
 
-void CPythonApplication::DestroyCursors()
+void CApplicationCursor::Destroy()
 {
 	TCursorHandleMap::iterator itor;
-	for (itor = m_CursorHandleMap.begin(); itor != m_CursorHandleMap.end(); ++itor)
+	for (itor = m_kHandleMap.begin(); itor != m_kHandleMap.end(); ++itor)
 	{
 		Platform_DestroyCursor(itor->second);
 	}
 }
 
-void CPythonApplication::SetCursorVisible(int32_t bFlag, bool bLiarCursorOn)
+void CApplicationCursor::RestoreHandle()
 {
-	m_bCursorVisible = bFlag;
+	if (m_bVisible && MODE_HARDWARE == m_iMode)
+	{
+		Platform_SetCursorHandle(m_hCurrentCursor);
+	}
+}
+
+void CApplicationCursor::SetVisible(int32_t bFlag, bool bLiarCursorOn)
+{
+	m_bVisible = bFlag;
 	m_bLiarCursorOn = bLiarCursorOn;
 
-	if (CURSOR_MODE_HARDWARE == m_iCursorMode)
+	if (MODE_HARDWARE == m_iMode)
 	{
 		// SDL_ShowCursor returns the previous state (0/1) instead of the
 		// Win32 reference counter, so it must be called once, not in the
 		// Win32 do/while loop.
-		Platform_ShowCursorFlag(m_bCursorVisible);
+		Platform_ShowCursorFlag(m_bVisible);
 	}
 }
 
-int32_t CPythonApplication::GetCursorVisible()
+int32_t CApplicationCursor::GetVisible()
 {
-	return m_bCursorVisible;
+	return m_bVisible;
 }
 
-bool CPythonApplication::GetLiarCursorOn()
+bool CApplicationCursor::GetLiarCursorOn()
 {
 	return m_bLiarCursorOn;
 }
 
-int CPythonApplication::GetCursorMode()
+int CApplicationCursor::GetMode()
 {
-	return m_iCursorMode;
+	return m_iMode;
 }
 
-int32_t CPythonApplication::__IsContinuousChangeTypeCursor(int iCursorNum)
+int CApplicationCursor::GetNum()
+{
+	return m_iNum;
+}
+
+bool CApplicationCursor::__IsContinuousChangeType(int iCursorNum)
 {
 	switch (iCursorNum)
 	{
-		case CURSOR_SHAPE_NORMAL:
-		case CURSOR_SHAPE_ATTACK:
-		case CURSOR_SHAPE_TARGET:
-		case CURSOR_SHAPE_MAGIC:
-		case CURSOR_SHAPE_BUY:
-		case CURSOR_SHAPE_SELL:
-			return TRUE;
-			break;
+		case SHAPE_NORMAL:
+		case SHAPE_ATTACK:
+		case SHAPE_TARGET:
+		case SHAPE_MAGIC:
+		case SHAPE_BUY:
+		case SHAPE_SELL:
+			return true;
 	}
 
-	return FALSE;
+	return false;
 }
 
-int32_t CPythonApplication::SetCursorNum(int iCursorNum)
+int32_t CApplicationCursor::SetNum(int iCursorNum)
 {
-	if (CURSOR_SHAPE_NORMAL == iCursorNum)
+	if (SHAPE_NORMAL == iCursorNum)
 	{
-		if (!__IsContinuousChangeTypeCursor(m_iCursorNum))
+		if (!__IsContinuousChangeType(m_iNum))
 		{
-			iCursorNum = m_iContinuousCursorNum;
+			iCursorNum = m_iContinuousNum;
 		}
 	}
 	else
 	{
-		if (__IsContinuousChangeTypeCursor(m_iCursorNum)) // 현재 커서가 지속 커서일때만
+		if (__IsContinuousChangeType(m_iNum)) // 현재 커서가 지속 커서일때만
 		{
-			m_iContinuousCursorNum = m_iCursorNum; // 현재의 커서를 저장한다.
+			m_iContinuousNum = m_iNum; // 현재의 커서를 저장한다.
 		}
 	}
 
-	if (CURSOR_MODE_HARDWARE == m_iCursorMode)
+	if (MODE_HARDWARE == m_iMode)
 	{
-		TCursorHandleMap::iterator itor = m_CursorHandleMap.find(iCursorNum);
-		if (m_CursorHandleMap.end() == itor)
+		TCursorHandleMap::iterator itor = m_kHandleMap.find(iCursorNum);
+		if (m_kHandleMap.end() == itor)
 			return FALSE;
 
 		PlatformHandle hCursor = itor->second;
@@ -306,24 +329,24 @@ int32_t CPythonApplication::SetCursorNum(int iCursorNum)
 		m_hCurrentCursor = hCursor;
 	}
 
-	m_iCursorNum = iCursorNum;
+	m_iNum = iCursorNum;
 
-	PyCallClassMemberFunc(m_poMouseHandler, "ChangeCursor", Py_BuildValue("(i)", m_iCursorNum));
+	PyCallClassMemberFunc(m_rkApp.m_poMouseHandler, "ChangeCursor", Py_BuildValue("(i)", m_iNum));
 
 	return TRUE;
 }
 
-void CPythonApplication::SetCursorMode(int iMode)
+void CApplicationCursor::SetMode(int iMode)
 {
 	switch (iMode)
 	{
-		case CURSOR_MODE_HARDWARE:
-			m_iCursorMode = CURSOR_MODE_HARDWARE;
+		case MODE_HARDWARE:
+			m_iMode = MODE_HARDWARE;
 			Platform_ShowCursorFlag(TRUE);
 			break;
 
-		case CURSOR_MODE_SOFTWARE:
-			m_iCursorMode = CURSOR_MODE_SOFTWARE;
+		case MODE_SOFTWARE:
+			m_iMode = MODE_SOFTWARE;
 			Platform_SetCursorHandle(NULL);
 			Platform_ShowCursorFlag(FALSE);
 			break;

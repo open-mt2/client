@@ -1,21 +1,44 @@
 #include <Client/UI/StdAfx.h>
+#include <Client/UI/ApplicationCamera.h>
 #include <Client/UI/PythonApplication.h>
+#include <Client/UI/PythonBackground.h>
 
+#include <Neoeter/Audio/SoundManager.h>
 #include <Neoeter/Platform/Base/Timer.h>
 #include <Neoeter/Render/Camera.h>
 
-float BlendValueByLinear(float fElapsedTime, float fDuration, float fBeginValue, float fEndValue)
+namespace
 {
-	if (fElapsedTime >= fDuration)
-		return fEndValue;
+	float c_fDefaultCameraRotateSpeed = 1.5f;
+	float c_fDefaultCameraPitchSpeed = 1.5f;
+	float c_fDefaultCameraZoomSpeed = 0.05f;
 
-	return (fEndValue - fBeginValue) * (fElapsedTime / fDuration) + fBeginValue;
+	float BlendValueByLinear(float fElapsedTime, float fDuration, float fBeginValue, float fEndValue)
+	{
+		if (fElapsedTime >= fDuration)
+			return fEndValue;
+
+		return (fEndValue - fBeginValue) * (fElapsedTime / fDuration) + fBeginValue;
+	}
 }
 
-void CPythonApplication::__UpdateCamera()
+CApplicationCamera::CApplicationCamera(CPythonApplication& rkApp) : m_rkApp(rkApp)
 {
-	//////////////////////
-	// Camera Setting
+	m_v3CenterPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_iCameraMode = CAMERA_MODE_NORMAL;
+	m_isSpecialCameraMode = FALSE;
+	m_fBlendCameraStartTime = 0.0f;
+	m_fBlendCameraBlendTime = 0.0f;
+	m_fRotationSpeed = 0.0f;
+	m_fPitchSpeed = 0.0f;
+	m_fZoomSpeed = 0.0f;
+	m_fCameraRotateSpeed = c_fDefaultCameraRotateSpeed;
+	m_fCameraPitchSpeed = c_fDefaultCameraPitchSpeed;
+	m_fCameraZoomSpeed = c_fDefaultCameraZoomSpeed;
+}
+
+void CApplicationCamera::Update()
+{
 	CCamera* pMainCamera = CCameraManager::Instance().GetCurrentCamera();
 	if (!pMainCamera)
 		return;
@@ -39,7 +62,7 @@ void CPythonApplication::__UpdateCamera()
 
 		// Temporary. Have to fix that this work in camera class. - [levites]
 		pMainCamera->Unlock();
-		m_pyGraphic.SetPositionCamera(fxCenter, fyCenter, fzCenter, fDistance, fPitch, fRotation);
+		m_rkApp.m_pyGraphic.SetPositionCamera(fxCenter, fyCenter, fzCenter, fDistance, fPitch, fRotation);
 		pMainCamera->MoveVertical(fUpDir);
 		pMainCamera->MoveFront(fViewDir);
 		pMainCamera->MoveAlongCross(fCrossDir);
@@ -48,17 +71,17 @@ void CPythonApplication::__UpdateCamera()
 	else if (CAMERA_MODE_STAND == m_iCameraMode)
 	{
 		float fDistance, fPitch, fRotation, fHeight;
-		GetCamera(&fDistance, &fPitch, &fRotation, &fHeight);
-		m_pyGraphic.SetPositionCamera(m_kEventCameraSetting.v3CenterPosition.x,
-									  m_kEventCameraSetting.v3CenterPosition.y,
-									  m_kEventCameraSetting.v3CenterPosition.z + pMainCamera->GetTargetHeight(),
-									  fDistance, fPitch, fRotation);
+		Get(&fDistance, &fPitch, &fRotation, &fHeight);
+		m_rkApp.m_pyGraphic.SetPositionCamera(m_kEventCameraSetting.v3CenterPosition.x,
+											  m_kEventCameraSetting.v3CenterPosition.y,
+											  m_kEventCameraSetting.v3CenterPosition.z + pMainCamera->GetTargetHeight(),
+											  fDistance, fPitch, fRotation);
 	}
 	else if (CAMERA_MODE_NORMAL == m_iCameraMode)
 	{
 		float fDistance, fPitch, fRotation, fHeight;
-		GetCamera(&fDistance, &fPitch, &fRotation, &fHeight);
-		m_pyGraphic.SetPositionCamera(m_v3CenterPosition.x, m_v3CenterPosition.y, m_v3CenterPosition.z + pMainCamera->GetTargetHeight(), fDistance, fPitch, fRotation);
+		Get(&fDistance, &fPitch, &fRotation, &fHeight);
+		m_rkApp.m_pyGraphic.SetPositionCamera(m_v3CenterPosition.x, m_v3CenterPosition.y, m_v3CenterPosition.z + pMainCamera->GetTargetHeight(), fDistance, fPitch, fRotation);
 	}
 
 	if (0.0f != m_fRotationSpeed)
@@ -82,48 +105,62 @@ void CPythonApplication::__UpdateCamera()
 	if (0.0f != m_kCmrPos.m_fUpDir)
 		pMainCamera->MoveVertical(m_kCmrPos.m_fUpDir);
 
-	//////////////////////
-
 	if (pMainCamera->IsDraging())
-		SkipRenderBuffering(3000);
+		m_rkApp.SkipRenderBuffering(3000);
 
-	//////////////////////
-	// Sound Setting
 	const D3DXVECTOR3& c_rv3CameraDirection = pMainCamera->GetView();
 	const D3DXVECTOR3& c_rv3CameraUp = pMainCamera->GetUp();
-	m_SoundManager.SetPosition(m_v3CenterPosition.x, m_v3CenterPosition.y, m_v3CenterPosition.z); // Listener - 캐릭터 위치
-	m_SoundManager.SetDirection(c_rv3CameraDirection.x, c_rv3CameraDirection.y, c_rv3CameraDirection.z, c_rv3CameraUp.x, c_rv3CameraUp.y, c_rv3CameraUp.z);
-	m_SoundManager.Update();
-	//////////////////////
+	m_rkApp.m_SoundManager.SetPosition(m_v3CenterPosition.x, m_v3CenterPosition.y, m_v3CenterPosition.z);
+	m_rkApp.m_SoundManager.SetDirection(c_rv3CameraDirection.x, c_rv3CameraDirection.y, c_rv3CameraDirection.z, c_rv3CameraUp.x, c_rv3CameraUp.y, c_rv3CameraUp.z);
+	m_rkApp.m_SoundManager.Update();
 }
 
-void CPythonApplication::SetViewDirCameraSpeed(float fSpeed)
+void CApplicationCamera::OnUpdate()
 {
-	if (IsLockCurrentCamera())
+	if (CPythonBackground::Instance().IsMapReady())
+	{
+		CCamera* pkCameraMgr = CCameraManager::Instance().GetCurrentCamera();
+		if (pkCameraMgr)
+		{
+			if (m_rkApp.m_iCameraBaseWidth > 0 && m_rkApp.m_iCameraBaseHeight > 0 && m_rkApp.m_dwWidth > 0 && m_rkApp.m_dwHeight > 0)
+			{
+				pkCameraMgr->SetMouseDragScale(
+					float(m_rkApp.m_iCameraBaseWidth) / float(m_rkApp.m_dwWidth),
+					float(m_rkApp.m_iCameraBaseHeight) / float(m_rkApp.m_dwHeight));
+			}
+
+			pkCameraMgr->Update();
+		}
+	}
+}
+
+void CApplicationCamera::SetViewDirSpeed(float fSpeed)
+{
+	if (IsLocked())
 		return;
 
 	m_kCmrSpd.m_fViewDir = fSpeed;
 }
 
-void CPythonApplication::SetCrossDirCameraSpeed(float fSpeed)
+void CApplicationCamera::SetCrossDirSpeed(float fSpeed)
 {
-	if (IsLockCurrentCamera())
+	if (IsLocked())
 		return;
 
 	m_kCmrSpd.m_fCrossDir = fSpeed;
 }
 
-void CPythonApplication::SetUpDirCameraSpeed(float fSpeed)
+void CApplicationCamera::SetUpDirSpeed(float fSpeed)
 {
-	if (IsLockCurrentCamera())
+	if (IsLocked())
 		return;
 
 	m_kCmrSpd.m_fUpDir = fSpeed;
 }
 
-void CPythonApplication::SetCamera(float Distance, float Pitch, float Rotation, float fDestinationHeight)
+void CApplicationCamera::Set(float fDistance, float fPitch, float fRotation, float fDestinationHeight)
 {
-	if (IsLockCurrentCamera())
+	if (IsLocked())
 		return;
 
 	CCamera* pCurrentCamera = CCameraManager::Instance().GetCurrentCamera();
@@ -131,52 +168,52 @@ void CPythonApplication::SetCamera(float Distance, float Pitch, float Rotation, 
 		return;
 
 	D3DXVECTOR3 v3Target = pCurrentCamera->GetTarget();
-	m_pyGraphic.SetPositionCamera(v3Target.x, v3Target.y, v3Target.z, Distance, Pitch, Rotation);
+	m_rkApp.m_pyGraphic.SetPositionCamera(v3Target.x, v3Target.y, v3Target.z, fDistance, fPitch, fRotation);
 
 	CCamera* pMainCamera = CCameraManager::Instance().GetCurrentCamera();
 	if (pMainCamera)
 		pMainCamera->SetTargetHeight(fDestinationHeight);
 }
 
-void CPythonApplication::GetCamera(float* Distance, float* Pitch, float* Rotation, float* DestinationHeight)
+void CApplicationCamera::Get(float* pDistance, float* pPitch, float* pRotation, float* pDestinationHeight)
 {
 	CCamera* pCurrentCamera = CCameraManager::Instance().GetCurrentCamera();
-	*Distance = pCurrentCamera->GetDistance();
-	*Pitch = pCurrentCamera->GetPitch();
-	*Rotation = pCurrentCamera->GetRoll();
-	*DestinationHeight = pCurrentCamera->GetTarget().z;
+	*pDistance = pCurrentCamera->GetDistance();
+	*pPitch = pCurrentCamera->GetPitch();
+	*pRotation = pCurrentCamera->GetRoll();
+	*pDestinationHeight = pCurrentCamera->GetTarget().z;
 }
 
-void CPythonApplication::RotateCamera(int iDirection)
+void CApplicationCamera::Rotate(int iDirection)
 {
-	if (IsLockCurrentCamera())
+	if (IsLocked())
 		return;
 
 	float fDegree = m_fCameraRotateSpeed * float(iDirection);
 	m_fRotationSpeed = fDegree;
 }
 
-void CPythonApplication::PitchCamera(int iDirection)
+void CApplicationCamera::Pitch(int iDirection)
 {
-	if (IsLockCurrentCamera())
+	if (IsLocked())
 		return;
 
 	float fDegree = m_fCameraPitchSpeed * float(iDirection);
 	m_fPitchSpeed = fDegree;
 }
 
-void CPythonApplication::ZoomCamera(int iDirection)
+void CApplicationCamera::Zoom(int iDirection)
 {
-	if (IsLockCurrentCamera())
+	if (IsLocked())
 		return;
 
 	float fRatio = 1.0f + m_fCameraZoomSpeed * float(iDirection);
 	m_fZoomSpeed = fRatio;
 }
 
-void CPythonApplication::MovieRotateCamera(int iDirection)
+void CApplicationCamera::MovieRotate(int iDirection)
 {
-	if (IsLockCurrentCamera())
+	if (IsLocked())
 		return;
 
 	float fDegree = m_fCameraRotateSpeed * float(iDirection);
@@ -184,16 +221,16 @@ void CPythonApplication::MovieRotateCamera(int iDirection)
 	{
 		if (GetKeyState(VK_SCROLL) & 1)
 		{
-			SetCrossDirCameraSpeed(-fDegree * 6.0f);
+			SetCrossDirSpeed(-fDegree * 6.0f);
 			return;
 		}
 	}
 	m_fRotationSpeed = fDegree;
 }
 
-void CPythonApplication::MoviePitchCamera(int iDirection)
+void CApplicationCamera::MoviePitch(int iDirection)
 {
-	if (IsLockCurrentCamera())
+	if (IsLocked())
 		return;
 
 	float fDegree = m_fCameraPitchSpeed * float(iDirection);
@@ -201,16 +238,16 @@ void CPythonApplication::MoviePitchCamera(int iDirection)
 	{
 		if (GetKeyState(VK_SCROLL) & 1)
 		{
-			SetViewDirCameraSpeed(-fDegree * 6.0f);
+			SetViewDirSpeed(-fDegree * 6.0f);
 			return;
 		}
 	}
 	m_fPitchSpeed = fDegree;
 }
 
-void CPythonApplication::MovieZoomCamera(int iDirection)
+void CApplicationCamera::MovieZoom(int iDirection)
 {
-	if (IsLockCurrentCamera())
+	if (IsLocked())
 		return;
 
 	float fRatio = 1.0f + m_fCameraZoomSpeed * float(iDirection);
@@ -218,23 +255,23 @@ void CPythonApplication::MovieZoomCamera(int iDirection)
 	{
 		if (GetKeyState(VK_SCROLL) & 1)
 		{
-			SetUpDirCameraSpeed((1.0f - fRatio) * 200.0f);
+			SetUpDirSpeed((1.0f - fRatio) * 200.0f);
 			return;
 		}
 	}
 	m_fZoomSpeed = fRatio;
 }
 
-void CPythonApplication::MovieResetCamera()
+void CApplicationCamera::MovieReset()
 {
-	if (IsLockCurrentCamera())
+	if (IsLocked())
 		return;
 
 	if (m_isSpecialCameraMode)
 	{
-		SetCrossDirCameraSpeed(0.0f);
-		SetViewDirCameraSpeed(0.0f);
-		SetUpDirCameraSpeed(0.0f);
+		SetCrossDirSpeed(0.0f);
+		SetViewDirSpeed(0.0f);
+		SetUpDirSpeed(0.0f);
 
 		m_kCmrPos.m_fViewDir = 0;
 		m_kCmrPos.m_fCrossDir = 0;
@@ -242,17 +279,17 @@ void CPythonApplication::MovieResetCamera()
 	}
 }
 
-float CPythonApplication::GetRotation()
+float CApplicationCamera::GetRotation()
 {
 	return CCameraManager::Instance().GetCurrentCamera()->GetRoll();
 }
 
-float CPythonApplication::GetPitch()
+float CApplicationCamera::GetPitch()
 {
 	return CCameraManager::Instance().GetCurrentCamera()->GetPitch();
 }
 
-bool CPythonApplication::IsLockCurrentCamera()
+bool CApplicationCamera::IsLocked()
 {
 	CCamera* pCamera = CCameraManager::Instance().GetCurrentCamera();
 	if (!pCamera)
@@ -261,26 +298,24 @@ bool CPythonApplication::IsLockCurrentCamera()
 	return pCamera->IsLock();
 }
 
-void CPythonApplication::SetEventCamera(const SCameraSetting& c_rCameraSetting)
+void CApplicationCamera::SetEvent(const IAbstractApplication::SCameraSetting& c_rCameraSetting)
 {
 	if (CCameraManager::DEFAULT_PERSPECTIVE_CAMERA == CCameraManager::Instance().GetCurrentCameraNum())
 	{
-		GetCameraSetting(&m_DefaultCameraSetting);
+		GetSetting(&m_DefaultCameraSetting);
 	}
-
-	/////
 
 	CCameraManager::Instance().SetCurrentCamera(EVENT_CAMERA_NUMBER);
 	CCamera* pCamera = CCameraManager::Instance().GetCurrentCamera();
 	if (!pCamera)
 		return;
 
-	SetCameraSetting(c_rCameraSetting);
+	SetSetting(c_rCameraSetting);
 	m_kEventCameraSetting = c_rCameraSetting;
 	m_iCameraMode = CAMERA_MODE_STAND;
 }
 
-void CPythonApplication::BlendEventCamera(const SCameraSetting& c_rCameraSetting, float fBlendTime)
+void CApplicationCamera::BlendEvent(const IAbstractApplication::SCameraSetting& c_rCameraSetting, float fBlendTime)
 {
 	m_iCameraMode = CAMERA_MODE_BLEND;
 	m_fBlendCameraStartTime = CTimer::Instance().GetCurrentSecond();
@@ -292,13 +327,11 @@ void CPythonApplication::BlendEventCamera(const SCameraSetting& c_rCameraSetting
 		pCamera->Lock();
 }
 
-void CPythonApplication::SetDefaultCamera()
+void CApplicationCamera::SetDefault()
 {
 	m_iCameraMode = CAMERA_MODE_NORMAL;
 	m_fBlendCameraStartTime = 0.0f;
 	m_fBlendCameraBlendTime = 0.0f;
-
-	/////
 
 	CCamera* pCamera = CCameraManager::Instance().GetCurrentCamera();
 	if (pCamera)
@@ -307,22 +340,22 @@ void CPythonApplication::SetDefaultCamera()
 	if (CCameraManager::DEFAULT_PERSPECTIVE_CAMERA != CCameraManager::Instance().GetCurrentCameraNum())
 	{
 		CCameraManager::Instance().SetCurrentCamera(CCameraManager::DEFAULT_PERSPECTIVE_CAMERA);
-		SetCameraSetting(m_DefaultCameraSetting);
+		SetSetting(m_DefaultCameraSetting);
 	}
 }
 
-void CPythonApplication::SetCameraSetting(const SCameraSetting& c_rCameraSetting)
+void CApplicationCamera::SetSetting(const IAbstractApplication::SCameraSetting& c_rCameraSetting)
 {
 	CCamera* pCamera = CCameraManager::Instance().GetCurrentCamera();
 	if (!pCamera)
 		return;
 
-	m_pyGraphic.SetPositionCamera(c_rCameraSetting.v3CenterPosition.x,
-								  c_rCameraSetting.v3CenterPosition.y,
-								  c_rCameraSetting.v3CenterPosition.z,
-								  c_rCameraSetting.fZoom,
-								  c_rCameraSetting.fPitch,
-								  c_rCameraSetting.fRotation);
+	m_rkApp.m_pyGraphic.SetPositionCamera(c_rCameraSetting.v3CenterPosition.x,
+										  c_rCameraSetting.v3CenterPosition.y,
+										  c_rCameraSetting.v3CenterPosition.z,
+										  c_rCameraSetting.fZoom,
+										  c_rCameraSetting.fPitch,
+										  c_rCameraSetting.fRotation);
 
 	if (0.0f != c_rCameraSetting.kCmrPos.m_fViewDir)
 		pCamera->MoveFront(c_rCameraSetting.kCmrPos.m_fViewDir);
@@ -342,7 +375,7 @@ void CPythonApplication::SetCameraSetting(const SCameraSetting& c_rCameraSetting
 	m_fRotationSpeed = 0.0f;
 }
 
-void CPythonApplication::GetCameraSetting(SCameraSetting* pCameraSetting)
+void CApplicationCamera::GetSetting(IAbstractApplication::SCameraSetting* pCameraSetting)
 {
 	pCameraSetting->v3CenterPosition = m_v3CenterPosition;
 	pCameraSetting->kCmrPos = m_kCmrPos;
@@ -351,13 +384,13 @@ void CPythonApplication::GetCameraSetting(SCameraSetting* pCameraSetting)
 		pCameraSetting->v3CenterPosition.z += CCameraManager::Instance().GetCurrentCamera()->GetTargetHeight();
 
 	float fHeight;
-	GetCamera(&pCameraSetting->fZoom, &pCameraSetting->fPitch, &pCameraSetting->fRotation, &fHeight);
+	Get(&pCameraSetting->fZoom, &pCameraSetting->fPitch, &pCameraSetting->fRotation, &fHeight);
 }
 
-void CPythonApplication::SaveCameraSetting(const char* c_szFileName)
+void CApplicationCamera::SaveSetting(const char* c_szFileName)
 {
-	SCameraSetting CameraSetting;
-	GetCameraSetting(&CameraSetting);
+	IAbstractApplication::SCameraSetting CameraSetting;
+	GetSetting(&CameraSetting);
 
 	FILE* File = fopen(c_szFileName, "w");
 	SetFileAttributes(c_szFileName, FILE_ATTRIBUTE_NORMAL);
@@ -379,7 +412,7 @@ void CPythonApplication::SaveCameraSetting(const char* c_szFileName)
 	fclose(File);
 }
 
-bool CPythonApplication::LoadCameraSetting(const char* c_szFileName)
+bool CApplicationCamera::LoadSetting(const char* c_szFileName)
 {
 	CTextFileLoader TextFileLoader;
 	if (!TextFileLoader.Load(c_szFileName))
@@ -396,7 +429,7 @@ bool CPythonApplication::LoadCameraSetting(const char* c_szFileName)
 				if (3 == pCameraSetting->size())
 					if (3 == pCmrPos->size())
 					{
-						SCameraSetting CameraSetting;
+						IAbstractApplication::SCameraSetting CameraSetting;
 						CameraSetting.v3CenterPosition = v3CenterPosition;
 
 						CameraSetting.fZoom = atof(pCameraSetting->at(0).c_str());
@@ -407,9 +440,45 @@ bool CPythonApplication::LoadCameraSetting(const char* c_szFileName)
 						CameraSetting.kCmrPos.m_fViewDir = atof(pCmrPos->at(1).c_str());
 						CameraSetting.kCmrPos.m_fCrossDir = atof(pCmrPos->at(2).c_str());
 
-						SetEventCamera(CameraSetting);
+						SetEvent(CameraSetting);
 						return true;
 					}
 
 	return false;
+}
+
+void CApplicationCamera::SetGlobalCenterPosition(int32_t x, int32_t y)
+{
+	CPythonBackground& rkBG = CPythonBackground::Instance();
+	rkBG.GlobalPositionToLocalPosition(x, y);
+
+	float z = CPythonBackground::Instance().GetHeight(x, y);
+
+	SetCenterPosition(x, y, z);
+}
+
+void CApplicationCamera::SetCenterPosition(float fx, float fy, float fz)
+{
+	m_v3CenterPosition.x = +fx;
+	m_v3CenterPosition.y = -fy;
+	m_v3CenterPosition.z = +fz;
+}
+
+void CApplicationCamera::GetCenterPosition(TPixelPosition* pPixelPosition)
+{
+	pPixelPosition->x = +m_v3CenterPosition.x;
+	pPixelPosition->y = -m_v3CenterPosition.y;
+	pPixelPosition->z = +m_v3CenterPosition.z;
+}
+
+void CApplicationCamera::EnableSpecialMode()
+{
+	m_isSpecialCameraMode = TRUE;
+}
+
+void CApplicationCamera::SetSpeed(int iPercentage)
+{
+	m_fCameraRotateSpeed = c_fDefaultCameraRotateSpeed * float(iPercentage) / 100.0f;
+	m_fCameraPitchSpeed = c_fDefaultCameraPitchSpeed * float(iPercentage) / 100.0f;
+	m_fCameraZoomSpeed = c_fDefaultCameraZoomSpeed * float(iPercentage) / 100.0f;
 }

@@ -4,25 +4,6 @@
 #include <Neoeter/Render/Camera.h>
 #include <Neoeter/Platform/PlatformWindow.h>
 
-void CPythonApplication::OnCameraUpdate()
-{
-	if (m_pyBackground.IsMapReady())
-	{
-		CCamera* pkCameraMgr = CCameraManager::Instance().GetCurrentCamera();
-		if (pkCameraMgr)
-		{
-			if (m_iCameraBaseWidth > 0 && m_iCameraBaseHeight > 0 && m_dwWidth > 0 && m_dwHeight > 0)
-			{
-				pkCameraMgr->SetMouseDragScale(
-					float(m_iCameraBaseWidth) / float(m_dwWidth),
-					float(m_iCameraBaseHeight) / float(m_dwHeight));
-			}
-
-			pkCameraMgr->Update();
-		}
-	}
-}
-
 void CPythonApplication::OnUIUpdate()
 {
 	UI::CWindowManager& rkUIMgr = UI::CWindowManager::Instance();
@@ -84,9 +65,9 @@ void CPythonApplication::OnMouseMiddleButtonDown(int x, int y)
 	if (!m_pyBackground.IsMapReady())
 		return;
 
-	SetCursorNum(CAMERA_ROTATE);
-	if (CURSOR_MODE_HARDWARE == GetCursorMode())
-		SetCursorVisible(FALSE, true);
+	m_kCursor.SetNum(CApplicationCursor::CAMERA_ROTATE);
+	if (CApplicationCursor::MODE_HARDWARE == m_kCursor.GetMode())
+		m_kCursor.SetVisible(FALSE, true);
 }
 
 void CPythonApplication::OnMouseMiddleButtonUp(int x, int y)
@@ -105,9 +86,9 @@ void CPythonApplication::OnMouseMiddleButtonUp(int x, int y)
 	if (!m_pyBackground.IsMapReady())
 		return;
 
-	SetCursorNum(NORMAL);
-	if (CURSOR_MODE_HARDWARE == GetCursorMode())
-		SetCursorVisible(TRUE);
+	m_kCursor.SetNum(CApplicationCursor::NORMAL);
+	if (CApplicationCursor::MODE_HARDWARE == m_kCursor.GetMode())
+		m_kCursor.SetVisible(TRUE);
 }
 
 void CPythonApplication::OnMouseWheel(int nLen)
@@ -135,16 +116,16 @@ void CPythonApplication::OnMouseMove(int x, int y)
 
 			if (m_pyBackground.IsMapReady())
 			{
-				SetCursorNum(NORMAL);
-				if (CURSOR_MODE_HARDWARE == GetCursorMode())
-					SetCursorVisible(TRUE);
+				m_kCursor.SetNum(CApplicationCursor::NORMAL);
+				if (CApplicationCursor::MODE_HARDWARE == m_kCursor.GetMode())
+					m_kCursor.SetVisible(TRUE);
 			}
 		}
 	}
 
 	if (Neoeter::Debug::WantsMouseAt(x, y))
 	{
-		if (CURSOR_MODE_SOFTWARE == GetCursorMode())
+		if (CApplicationCursor::MODE_SOFTWARE == m_kCursor.GetMode())
 			UI::CWindowManager::Instance().RunMouseMove(x, y);
 
 		return;

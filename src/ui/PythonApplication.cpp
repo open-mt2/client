@@ -36,11 +36,8 @@ double g_specularSpd = 0.007f;
 
 CPythonApplication* CPythonApplication::ms_pInstance;
 
-float c_fDefaultCameraRotateSpeed = 1.5f;
-float c_fDefaultCameraPitchSpeed = 1.5f;
-float c_fDefaultCameraZoomSpeed = 0.05f;
-
 CPythonApplication::CPythonApplication() : m_poMouseHandler(NULL),
+										   m_kCamera(*this),
 										   m_isDebugLeftButtonCaptured(false),
 										   m_isDebugRightButtonCaptured(false),
 										   m_isDebugMiddleButtonCaptured(false),
@@ -52,11 +49,9 @@ CPythonApplication::CPythonApplication() : m_poMouseHandler(NULL),
 										   m_dwRenderFPS(0),
 										   m_dwFaceCount(0),
 										   m_dwLButtonDownTime(0),
-										   m_bCursorVisible(TRUE),
-										   m_bLiarCursorOn(false),
-										   m_iCursorMode(CURSOR_MODE_HARDWARE),
 										   m_isWindowed(false),
-										   m_isFrameSkipDisable(false)
+										   m_isFrameSkipDisable(false),
+										   m_kCursor(*this)
 {
 #ifndef _DEBUG
 	SetEterExceptionHandler();
@@ -74,7 +69,6 @@ CPythonApplication::CPythonApplication() : m_poMouseHandler(NULL),
 	ms_pInstance = this;
 	m_isWindowFullScreenEnable = FALSE;
 
-	m_v3CenterPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_dwStartLocalTime = ELTimer_GetMSec();
 	m_tServerTime = 0;
 	m_tLocalStartTime = 0;
@@ -89,10 +83,6 @@ CPythonApplication::CPythonApplication() : m_poMouseHandler(NULL),
 	m_isActivateWnd = true;
 	m_isMinimizedWnd = false;
 
-	m_fRotationSpeed = 0.0f;
-	m_fPitchSpeed = 0.0f;
-	m_fZoomSpeed = 0.0f;
-
 	m_fFaceSpd = 0.0f;
 
 	m_dwFaceAccCount = 0;
@@ -103,21 +93,9 @@ CPythonApplication::CPythonApplication() : m_poMouseHandler(NULL),
 
 	m_FlyingManager.SetMapManagerPtr(&m_pyBackground);
 
-	m_iCursorNum = CURSOR_SHAPE_NORMAL;
-	m_iContinuousCursorNum = CURSOR_SHAPE_NORMAL;
-
-	m_isSpecialCameraMode = FALSE;
-	m_fCameraRotateSpeed = c_fDefaultCameraRotateSpeed;
-	m_fCameraPitchSpeed = c_fDefaultCameraPitchSpeed;
-	m_fCameraZoomSpeed = c_fDefaultCameraZoomSpeed;
-
-	m_iCameraMode = CAMERA_MODE_NORMAL;
-	m_fBlendCameraStartTime = 0.0f;
-	m_fBlendCameraBlendTime = 0.0f;
-
 	m_iForceSightRange = -1;
 
-	CCameraManager::Instance().AddCamera(EVENT_CAMERA_NUMBER);
+	CCameraManager::Instance().AddCamera(CApplicationCamera::EVENT_CAMERA_NUMBER);
 }
 
 CPythonApplication::~CPythonApplication()
@@ -592,7 +570,7 @@ bool CPythonApplication::Process()
 #endif
 	//!@# Alt+Tab 중 SetTransfor 에서 튕김 현상 해결을 위해 - [levites]
 	// if (m_isActivateWnd)
-	__UpdateCamera();
+	m_kCamera.Update();
 #ifdef __PERFORMANCE_CHECK__
 	uint32_t dwUpdateTime6 = ELTimer_GetMSec();
 #endif
@@ -601,7 +579,7 @@ bool CPythonApplication::Process()
 #ifdef __PERFORMANCE_CHECK__
 	uint32_t dwUpdateTime7 = ELTimer_GetMSec();
 #endif
-	OnCameraUpdate();
+	m_kCamera.OnUpdate();
 #ifdef __PERFORMANCE_CHECK__
 	uint32_t dwUpdateTime8 = ELTimer_GetMSec();
 #endif
@@ -979,6 +957,11 @@ void CPythonApplication::UpdateClientRect()
 	RECT rcApp;
 	GetClientRect(&rcApp);
 	OnSizeChange(rcApp.right - rcApp.left, rcApp.bottom - rcApp.top);
+}
+
+CApplicationCursor& CPythonApplication::Cursor()
+{
+	return m_kCursor;
 }
 
 void CPythonApplication::SetMouseHandler(PyObject* poMouseHandler)
@@ -1453,7 +1436,7 @@ bool CPythonApplication::Create(PyObject* poSelf, const char* c_szName, int widt
 	if (!CreateDevice(width, height, Windowed, m_pySystem.GetBPP(), m_pySystem.GetFrequency()))
 		return false;
 
-	if (!CreateCursors())
+	if (!m_kCursor.Create())
 	{
 		TraceError("CMSWindow::Cursors Create Error");
 		SET_EXCEPTION("CREATE_CURSOR");
@@ -1487,9 +1470,9 @@ bool CPythonApplication::Create(PyObject* poSelf, const char* c_szName, int widt
 
 	// Mouse
 	if (m_pySystem.IsSoftwareCursor())
-		SetCursorMode(CURSOR_MODE_SOFTWARE);
+		m_kCursor.SetMode(CApplicationCursor::MODE_SOFTWARE);
 	else
-		SetCursorMode(CURSOR_MODE_HARDWARE);
+		m_kCursor.SetMode(CApplicationCursor::MODE_HARDWARE);
 
 	// Network
 	if (!m_netDevice.Create())
@@ -1547,28 +1530,29 @@ bool CPythonApplication::Create(PyObject* poSelf, const char* c_szName, int widt
 	return true;
 }
 
-void CPythonApplication::SetGlobalCenterPosition(int32_t x, int32_t y)
+CApplicationCamera& CPythonApplication::Camera()
 {
-	CPythonBackground& rkBG = CPythonBackground::Instance();
-	rkBG.GlobalPositionToLocalPosition(x, y);
-
-	float z = CPythonBackground::Instance().GetHeight(x, y);
-
-	CPythonApplication::Instance().SetCenterPosition(x, y, z);
+	return m_kCamera;
 }
 
 void CPythonApplication::SetCenterPosition(float fx, float fy, float fz)
 {
-	m_v3CenterPosition.x = +fx;
-	m_v3CenterPosition.y = -fy;
-	m_v3CenterPosition.z = +fz;
+	m_kCamera.SetCenterPosition(fx, fy, fz);
 }
 
-void CPythonApplication::GetCenterPosition(TPixelPosition* pPixelPosition)
+void CPythonApplication::SetEventCamera(const SCameraSetting& c_rCameraSetting)
 {
-	pPixelPosition->x = +m_v3CenterPosition.x;
-	pPixelPosition->y = -m_v3CenterPosition.y;
-	pPixelPosition->z = +m_v3CenterPosition.z;
+	m_kCamera.SetEvent(c_rCameraSetting);
+}
+
+void CPythonApplication::BlendEventCamera(const SCameraSetting& c_rCameraSetting, float fBlendTime)
+{
+	m_kCamera.BlendEvent(c_rCameraSetting, fBlendTime);
+}
+
+void CPythonApplication::SetDefaultCamera()
+{
+	m_kCamera.SetDefault();
 }
 
 void CPythonApplication::SetServerTime(time_t tTime)
@@ -1625,18 +1609,6 @@ void CPythonApplication::GetConnectData(std::string& rstIP, int& riPort)
 {
 	rstIP = m_strIP;
 	riPort = m_iPort;
-}
-
-void CPythonApplication::EnableSpecialCameraMode()
-{
-	m_isSpecialCameraMode = TRUE;
-}
-
-void CPythonApplication::SetCameraSpeed(int iPercentage)
-{
-	m_fCameraRotateSpeed = c_fDefaultCameraRotateSpeed * float(iPercentage) / 100.0f;
-	m_fCameraPitchSpeed = c_fDefaultCameraPitchSpeed * float(iPercentage) / 100.0f;
-	m_fCameraZoomSpeed = c_fDefaultCameraZoomSpeed * float(iPercentage) / 100.0f;
 }
 
 void CPythonApplication::SetForceSightRange(int iRange)
@@ -1704,7 +1676,7 @@ void CPythonApplication::Destroy()
 
 	CAttributeInstance::DestroySystem();
 	CTextFileLoader::DestroySystem();
-	DestroyCursors();
+	m_kCursor.Destroy();
 
 	CMSApplication::Destroy();
 

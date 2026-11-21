@@ -57,9 +57,9 @@ void CPythonPlayer::NEW_SetMouseCameraState(int eMBS)
 			if (!rkBG.IsMapReady())
 				return;
 
-			rkApp.SetCursorNum(CPythonApplication::CAMERA_ROTATE);
-			if (CPythonApplication::CURSOR_MODE_HARDWARE == rkApp.GetCursorMode())
-				rkApp.SetCursorVisible(FALSE, true);
+			rkApp.Cursor().SetNum(CApplicationCursor::CAMERA_ROTATE);
+			if (CApplicationCursor::MODE_HARDWARE == rkApp.Cursor().GetMode())
+				rkApp.Cursor().SetVisible(FALSE, true);
 		}
 		else if (MBS_CLICK == eMBS)
 		{
@@ -68,9 +68,9 @@ void CPythonPlayer::NEW_SetMouseCameraState(int eMBS)
 			if (!rkBG.IsMapReady())
 				return;
 
-			rkApp.SetCursorNum(CPythonApplication::NORMAL);
-			if (CPythonApplication::CURSOR_MODE_HARDWARE == rkApp.GetCursorMode())
-				rkApp.SetCursorVisible(TRUE);
+			rkApp.Cursor().SetNum(CApplicationCursor::NORMAL);
+			if (CApplicationCursor::MODE_HARDWARE == rkApp.Cursor().GetMode())
+				rkApp.Cursor().SetVisible(TRUE);
 
 			if (!isCameraDrag)
 			{

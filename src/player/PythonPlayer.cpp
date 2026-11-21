@@ -97,7 +97,7 @@ void CPythonPlayer::NEW_GetMainActorPosition(TPixelPosition* pkPPosActor)
 	}
 	else
 	{
-		CPythonApplication::Instance().GetCenterPosition(pkPPosActor);
+		CPythonApplication::Instance().Camera().GetCenterPosition(pkPPosActor);
 	}
 }
 

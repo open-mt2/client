@@ -437,26 +437,26 @@ PyObject* appSetCamera(PyObject* poSelf, PyObject* poArgs)
 	if (!PyTuple_GetFloat(poArgs, 3, &fDestinationHeight))
 		return Py_BuildException();
 
-	CPythonApplication::Instance().SetCamera(Distance, Pitch, Rotation, fDestinationHeight);
+	CPythonApplication::Instance().Camera().Set(Distance, Pitch, Rotation, fDestinationHeight);
 	return Py_BuildNone();
 }
 
 PyObject* appGetCamera(PyObject* poSelf, PyObject* poArgs)
 {
 	float Distance, Pitch, Rotation, DestinationHeight;
-	CPythonApplication::Instance().GetCamera(&Distance, &Pitch, &Rotation, &DestinationHeight);
+	CPythonApplication::Instance().Camera().Get(&Distance, &Pitch, &Rotation, &DestinationHeight);
 
 	return Py_BuildValue("ffff", Distance, Pitch, Rotation, DestinationHeight);
 }
 
 PyObject* appGetCameraPitch(PyObject* poSelf, PyObject* poArgs)
 {
-	return Py_BuildValue("f", CPythonApplication::Instance().GetPitch());
+	return Py_BuildValue("f", CPythonApplication::Instance().Camera().GetPitch());
 }
 
 PyObject* appGetCameraRotation(PyObject* poSelf, PyObject* poArgs)
 {
-	return Py_BuildValue("f", CPythonApplication::Instance().GetRotation());
+	return Py_BuildValue("f", CPythonApplication::Instance().Camera().GetRotation());
 }
 
 PyObject* appGetTime(PyObject* poSelf, PyObject* poArgs)
@@ -489,7 +489,7 @@ PyObject* appRotateCamera(PyObject* poSelf, PyObject* poArgs)
 	int iDirection;
 	if (!PyTuple_GetInteger(poArgs, 0, &iDirection))
 		return Py_BuildException();
-	CPythonApplication::Instance().RotateCamera(iDirection);
+	CPythonApplication::Instance().Camera().Rotate(iDirection);
 	return Py_BuildNone();
 }
 
@@ -498,7 +498,7 @@ PyObject* appPitchCamera(PyObject* poSelf, PyObject* poArgs)
 	int iDirection;
 	if (!PyTuple_GetInteger(poArgs, 0, &iDirection))
 		return Py_BuildException();
-	CPythonApplication::Instance().PitchCamera(iDirection);
+	CPythonApplication::Instance().Camera().Pitch(iDirection);
 	return Py_BuildNone();
 }
 
@@ -507,7 +507,7 @@ PyObject* appZoomCamera(PyObject* poSelf, PyObject* poArgs)
 	int iDirection;
 	if (!PyTuple_GetInteger(poArgs, 0, &iDirection))
 		return Py_BuildException();
-	CPythonApplication::Instance().ZoomCamera(iDirection);
+	CPythonApplication::Instance().Camera().Zoom(iDirection);
 	return Py_BuildNone();
 }
 
@@ -516,7 +516,7 @@ PyObject* appMovieRotateCamera(PyObject* poSelf, PyObject* poArgs)
 	int iDirection;
 	if (!PyTuple_GetInteger(poArgs, 0, &iDirection))
 		return Py_BuildException();
-	CPythonApplication::Instance().MovieRotateCamera(iDirection);
+	CPythonApplication::Instance().Camera().MovieRotate(iDirection);
 	return Py_BuildNone();
 }
 
@@ -525,7 +525,7 @@ PyObject* appMoviePitchCamera(PyObject* poSelf, PyObject* poArgs)
 	int iDirection;
 	if (!PyTuple_GetInteger(poArgs, 0, &iDirection))
 		return Py_BuildException();
-	CPythonApplication::Instance().MoviePitchCamera(iDirection);
+	CPythonApplication::Instance().Camera().MoviePitch(iDirection);
 	return Py_BuildNone();
 }
 
@@ -534,13 +534,13 @@ PyObject* appMovieZoomCamera(PyObject* poSelf, PyObject* poArgs)
 	int iDirection;
 	if (!PyTuple_GetInteger(poArgs, 0, &iDirection))
 		return Py_BuildException();
-	CPythonApplication::Instance().MovieZoomCamera(iDirection);
+	CPythonApplication::Instance().Camera().MovieZoom(iDirection);
 	return Py_BuildNone();
 }
 
 PyObject* appMovieResetCamera(PyObject* poSelf, PyObject* poArgs)
 {
-	CPythonApplication::Instance().MovieResetCamera();
+	CPythonApplication::Instance().Camera().MovieReset();
 	return Py_BuildNone();
 }
 
@@ -596,7 +596,7 @@ PyObject* appSetGlobalCenterPosition(PyObject* poSelf, PyObject* poArgs)
 	if (!PyTuple_GetInteger(poArgs, 1, &y))
 		return Py_BuildException();
 
-	CPythonApplication::Instance().SetGlobalCenterPosition(x, y);
+	CPythonApplication::Instance().Camera().SetGlobalCenterPosition(x, y);
 	return Py_BuildNone();
 }
 
@@ -660,7 +660,7 @@ PyObject* appSetCursor(PyObject* poSelf, PyObject* poArgs)
 	if (!PyTuple_GetInteger(poArgs, 0, &iCursorNum))
 		return Py_BuildException();
 
-	if (!CPythonApplication::Instance().SetCursorNum(iCursorNum))
+	if (!CPythonApplication::Instance().Cursor().SetNum(iCursorNum))
 		return Py_BuildException("Wrong Cursor Name [%d]", iCursorNum);
 
 	return Py_BuildNone();
@@ -668,42 +668,42 @@ PyObject* appSetCursor(PyObject* poSelf, PyObject* poArgs)
 
 PyObject* appGetCursor(PyObject* poSelf, PyObject* poArgs)
 {
-	return Py_BuildValue("i", CPythonApplication::Instance().GetCursorNum());
+	return Py_BuildValue("i", CPythonApplication::Instance().Cursor().GetNum());
 }
 
 PyObject* appShowCursor(PyObject* poSelf, PyObject* poArgs)
 {
-	CPythonApplication::Instance().SetCursorVisible(TRUE);
+	CPythonApplication::Instance().Cursor().SetVisible(TRUE);
 
 	return Py_BuildNone();
 }
 
 PyObject* appHideCursor(PyObject* poSelf, PyObject* poArgs)
 {
-	CPythonApplication::Instance().SetCursorVisible(FALSE);
+	CPythonApplication::Instance().Cursor().SetVisible(FALSE);
 
 	return Py_BuildNone();
 }
 
 PyObject* appIsShowCursor(PyObject* poSelf, PyObject* poArgs)
 {
-	return Py_BuildValue("i", TRUE == CPythonApplication::Instance().GetCursorVisible());
+	return Py_BuildValue("i", TRUE == CPythonApplication::Instance().Cursor().GetVisible());
 }
 
 PyObject* appIsLiarCursorOn(PyObject* poSelf, PyObject* poArgs)
 {
-	return Py_BuildValue("i", TRUE == CPythonApplication::Instance().GetLiarCursorOn());
+	return Py_BuildValue("i", TRUE == CPythonApplication::Instance().Cursor().GetLiarCursorOn());
 }
 
 PyObject* appSetSoftwareCursor(PyObject* poSelf, PyObject* poArgs)
 {
-	CPythonApplication::Instance().SetCursorMode(CPythonApplication::CURSOR_MODE_SOFTWARE);
+	CPythonApplication::Instance().Cursor().SetMode(CApplicationCursor::MODE_SOFTWARE);
 	return Py_BuildNone();
 }
 
 PyObject* appSetHardwareCursor(PyObject* poSelf, PyObject* poArgs)
 {
-	CPythonApplication::Instance().SetCursorMode(CPythonApplication::CURSOR_MODE_HARDWARE);
+	CPythonApplication::Instance().Cursor().SetMode(CApplicationCursor::MODE_HARDWARE);
 	return Py_BuildNone();
 }
 
@@ -813,7 +813,7 @@ PyObject* appSetGuildSymbolPath(PyObject* poSelf, PyObject* poArgs)
 
 PyObject* appEnableSpecialCameraMode(PyObject* poSelf, PyObject* poArgs)
 {
-	CPythonApplication::Instance().EnableSpecialCameraMode();
+	CPythonApplication::Instance().Camera().EnableSpecialMode();
 	return Py_BuildNone();
 }
 
@@ -823,7 +823,7 @@ PyObject* appSetCameraSpeed(PyObject* poSelf, PyObject* poArgs)
 	if (!PyTuple_GetInteger(poArgs, 0, &iPercentage))
 		return Py_BuildException();
 
-	CPythonApplication::Instance().SetCameraSpeed(iPercentage);
+	CPythonApplication::Instance().Camera().SetSpeed(iPercentage);
 
 	CCamera* pCamera = CCameraManager::Instance().GetCurrentCamera();
 	if (pCamera)
@@ -879,7 +879,7 @@ PyObject* appSaveCameraSetting(PyObject* poSelf, PyObject* poArgs)
 	if (!PyTuple_GetString(poArgs, 0, &szFileName))
 		return Py_BuildException();
 
-	CPythonApplication::Instance().SaveCameraSetting(szFileName);
+	CPythonApplication::Instance().Camera().SaveSetting(szFileName);
 	return Py_BuildNone();
 }
 
@@ -889,7 +889,7 @@ PyObject* appLoadCameraSetting(PyObject* poSelf, PyObject* poArgs)
 	if (!PyTuple_GetString(poArgs, 0, &szFileName))
 		return Py_BuildException();
 
-	bool bResult = CPythonApplication::Instance().LoadCameraSetting(szFileName);
+	bool bResult = CPythonApplication::Instance().Camera().LoadSetting(szFileName);
 	return Py_BuildValue("i", bResult);
 }
 
@@ -1391,27 +1391,27 @@ void initapp()
 	PyModule_AddIntConstant(poModule, "DIK_APPS", DIK_APPS);	 /* AppMenu key */
 
 	// Cursor
-	PyModule_AddIntConstant(poModule, "NORMAL", CPythonApplication::CURSOR_SHAPE_NORMAL);
-	PyModule_AddIntConstant(poModule, "ATTACK", CPythonApplication::CURSOR_SHAPE_ATTACK);
-	PyModule_AddIntConstant(poModule, "TARGET", CPythonApplication::CURSOR_SHAPE_TARGET);
-	PyModule_AddIntConstant(poModule, "TALK", CPythonApplication::CURSOR_SHAPE_TALK);
-	PyModule_AddIntConstant(poModule, "CANT_GO", CPythonApplication::CURSOR_SHAPE_CANT_GO);
-	PyModule_AddIntConstant(poModule, "PICK", CPythonApplication::CURSOR_SHAPE_PICK);
+	PyModule_AddIntConstant(poModule, "NORMAL", CApplicationCursor::SHAPE_NORMAL);
+	PyModule_AddIntConstant(poModule, "ATTACK", CApplicationCursor::SHAPE_ATTACK);
+	PyModule_AddIntConstant(poModule, "TARGET", CApplicationCursor::SHAPE_TARGET);
+	PyModule_AddIntConstant(poModule, "TALK", CApplicationCursor::SHAPE_TALK);
+	PyModule_AddIntConstant(poModule, "CANT_GO", CApplicationCursor::SHAPE_CANT_GO);
+	PyModule_AddIntConstant(poModule, "PICK", CApplicationCursor::SHAPE_PICK);
 
-	PyModule_AddIntConstant(poModule, "DOOR", CPythonApplication::CURSOR_SHAPE_DOOR);
-	PyModule_AddIntConstant(poModule, "CHAIR", CPythonApplication::CURSOR_SHAPE_CHAIR);
-	PyModule_AddIntConstant(poModule, "MAGIC", CPythonApplication::CURSOR_SHAPE_MAGIC);
-	PyModule_AddIntConstant(poModule, "BUY", CPythonApplication::CURSOR_SHAPE_BUY);
-	PyModule_AddIntConstant(poModule, "SELL", CPythonApplication::CURSOR_SHAPE_SELL);
+	PyModule_AddIntConstant(poModule, "DOOR", CApplicationCursor::SHAPE_DOOR);
+	PyModule_AddIntConstant(poModule, "CHAIR", CApplicationCursor::SHAPE_CHAIR);
+	PyModule_AddIntConstant(poModule, "MAGIC", CApplicationCursor::SHAPE_MAGIC);
+	PyModule_AddIntConstant(poModule, "BUY", CApplicationCursor::SHAPE_BUY);
+	PyModule_AddIntConstant(poModule, "SELL", CApplicationCursor::SHAPE_SELL);
 
-	PyModule_AddIntConstant(poModule, "CAMERA_ROTATE", CPythonApplication::CURSOR_SHAPE_CAMERA_ROTATE);
-	PyModule_AddIntConstant(poModule, "HSIZE", CPythonApplication::CURSOR_SHAPE_HSIZE);
-	PyModule_AddIntConstant(poModule, "VSIZE", CPythonApplication::CURSOR_SHAPE_VSIZE);
-	PyModule_AddIntConstant(poModule, "HVSIZE", CPythonApplication::CURSOR_SHAPE_HVSIZE);
+	PyModule_AddIntConstant(poModule, "CAMERA_ROTATE", CApplicationCursor::SHAPE_CAMERA_ROTATE);
+	PyModule_AddIntConstant(poModule, "HSIZE", CApplicationCursor::SHAPE_HSIZE);
+	PyModule_AddIntConstant(poModule, "VSIZE", CApplicationCursor::SHAPE_VSIZE);
+	PyModule_AddIntConstant(poModule, "HVSIZE", CApplicationCursor::SHAPE_HVSIZE);
 
-	PyModule_AddIntConstant(poModule, "CAMERA_TO_POSITIVE", CPythonApplication::CAMERA_TO_POSITIVE);
-	PyModule_AddIntConstant(poModule, "CAMERA_TO_NEGATIVE", CPythonApplication::CAMERA_TO_NEGITIVE);
-	PyModule_AddIntConstant(poModule, "CAMERA_STOP", CPythonApplication::CAMERA_STOP);
+	PyModule_AddIntConstant(poModule, "CAMERA_TO_POSITIVE", CApplicationCamera::CAMERA_TO_POSITIVE);
+	PyModule_AddIntConstant(poModule, "CAMERA_TO_NEGATIVE", CApplicationCamera::CAMERA_TO_NEGITIVE);
+	PyModule_AddIntConstant(poModule, "CAMERA_STOP", CApplicationCamera::CAMERA_STOP);
 
 #ifdef ENABLE_COSTUME_SYSTEM
 	PyModule_AddIntConstant(poModule, "ENABLE_COSTUME_SYSTEM", 1);

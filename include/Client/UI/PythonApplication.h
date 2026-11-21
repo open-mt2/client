@@ -40,6 +40,8 @@
 
 #include <Client/UI/ServerStateChecker.h>
 #include <Client/UI/AbstractApplication.h>
+#include <Client/UI/ApplicationCamera.h>
+#include <Client/UI/ApplicationCursor.h>
 #include <Client/UI/MovieMan.h>
 
 struct IGraphBuilder;
@@ -60,73 +62,12 @@ class CPythonApplication : public CMSApplication, public CInputKeyboard, public 
 			DEVICE_STATE_OK,
 		};
 
-		enum ECursorMode
-		{
-			CURSOR_MODE_HARDWARE,
-			CURSOR_MODE_SOFTWARE,
-		};
-
-		enum ECursorShape
-		{
-			CURSOR_SHAPE_NORMAL,
-			CURSOR_SHAPE_ATTACK,
-			CURSOR_SHAPE_TARGET,
-			CURSOR_SHAPE_TALK,
-			CURSOR_SHAPE_CANT_GO,
-			CURSOR_SHAPE_PICK,
-
-			CURSOR_SHAPE_DOOR,
-			CURSOR_SHAPE_CHAIR,
-			CURSOR_SHAPE_MAGIC, // Magic
-			CURSOR_SHAPE_BUY,	// Buy
-			CURSOR_SHAPE_SELL,	// Sell
-
-			CURSOR_SHAPE_CAMERA_ROTATE, // Camera Rotate
-			CURSOR_SHAPE_HSIZE,			// Horizontal Size
-			CURSOR_SHAPE_VSIZE,			// Vertical Size
-			CURSOR_SHAPE_HVSIZE,		// Horizontal & Vertical Size
-
-			CURSOR_SHAPE_COUNT,
-
-			// 안정적인 네이밍 변환을 위한 임시 enumerate
-			NORMAL = CURSOR_SHAPE_NORMAL,
-			ATTACK = CURSOR_SHAPE_ATTACK,
-			TARGET = CURSOR_SHAPE_TARGET,
-			CAMERA_ROTATE = CURSOR_SHAPE_CAMERA_ROTATE,
-			CURSOR_COUNT = CURSOR_SHAPE_COUNT,
-		};
-
 		enum EInfo
 		{
 			INFO_ACTOR,
 			INFO_EFFECT,
 			INFO_ITEM,
 			INFO_TEXTTAIL,
-		};
-
-		enum ECameraControlDirection
-		{
-			CAMERA_TO_POSITIVE = 1,
-			CAMERA_TO_NEGITIVE = -1,
-			CAMERA_STOP = 0,
-		};
-
-		enum
-		{
-			CAMERA_MODE_NORMAL = 0,
-			CAMERA_MODE_STAND = 1,
-			CAMERA_MODE_BLEND = 2,
-
-			EVENT_CAMERA_NUMBER = 101,
-		};
-
-		struct SCameraSpeed
-		{
-				float m_fUpDir;
-				float m_fViewDir;
-				float m_fCrossDir;
-
-				SCameraSpeed() : m_fUpDir(0.0f), m_fViewDir(0.0f), m_fCrossDir(0.0f) {}
 		};
 
 	public:
@@ -165,44 +106,20 @@ class CPythonApplication : public CMSApplication, public CInputKeyboard, public 
 
 		void UpdateClientRect();
 
-		bool CreateCursors();
-		bool CreateOfficialCursors();
-		void DestroyCursors();
-
 		void SafeSetCapture();
 		void SafeReleaseCapture();
 		void ResetMouseCapture();
 
-		int32_t SetCursorNum(int iCursorNum);
-		void SetCursorVisible(int32_t bFlag, bool bLiarCursorOn = false);
-		int32_t GetCursorVisible();
-		bool GetLiarCursorOn();
-		void SetCursorMode(int iMode);
-		int GetCursorMode();
-		int GetCursorNum() { return m_iCursorNum; }
+		CApplicationCursor& Cursor();
 
 		void SetMouseHandler(PyObject* poMouseHandler);
 
 		int GetWidth();
 		int GetHeight();
 
-		void SetGlobalCenterPosition(int32_t x, int32_t y);
+		CApplicationCamera& Camera();
+
 		void SetCenterPosition(float fx, float fy, float fz);
-		void GetCenterPosition(TPixelPosition* pPixelPosition);
-		void SetCamera(float Distance, float Pitch, float Rotation, float fDestinationHeight);
-		void GetCamera(float* Distance, float* Pitch, float* Rotation, float* DestinationHeight);
-		void RotateCamera(int iDirection);
-		void PitchCamera(int iDirection);
-		void ZoomCamera(int iDirection);
-		void MovieRotateCamera(int iDirection);
-		void MoviePitchCamera(int iDirection);
-		void MovieZoomCamera(int iDirection);
-		void MovieResetCamera();
-		void SetViewDirCameraSpeed(float fSpeed);
-		void SetCrossDirCameraSpeed(float fSpeed);
-		void SetUpDirCameraSpeed(float fSpeed);
-		float GetRotation();
-		float GetPitch();
 
 		void SetFPS(int iFPS);
 		void SetServerTime(time_t tTime);
@@ -234,18 +151,9 @@ class CPythonApplication : public CMSApplication, public CInputKeyboard, public 
 		void RunIMEOpenReadingWndEvent();
 		void RunIMECloseReadingWndEvent();
 
-		void EnableSpecialCameraMode();
-		void SetCameraSpeed(int iPercentage);
-
-		bool IsLockCurrentCamera();
 		void SetEventCamera(const SCameraSetting& c_rCameraSetting);
 		void BlendEventCamera(const SCameraSetting& c_rCameraSetting, float fBlendTime);
 		void SetDefaultCamera();
-
-		void SetCameraSetting(const SCameraSetting& c_rCameraSetting);
-		void GetCameraSetting(SCameraSetting* pCameraSetting);
-		void SaveCameraSetting(const char* c_szFileName);
-		bool LoadCameraSetting(const char* c_szFileName);
 
 		void SetForceSightRange(int iRange);
 
@@ -274,8 +182,6 @@ class CPythonApplication : public CMSApplication, public CInputKeyboard, public 
 	protected:
 		intptr_t WindowProcedure(PlatformWindow hWnd, uint32_t uiMsg, uintptr_t wParam, intptr_t lParam);
 
-		void OnCameraUpdate();
-
 		void InitializeDebugRows();
 
 		void OnUIUpdate();
@@ -299,10 +205,6 @@ class CPythonApplication : public CMSApplication, public CInputKeyboard, public 
 		void OnIMEKeyDown(int iIndex);
 
 		int CheckDeviceState();
-
-		int32_t __IsContinuousChangeTypeCursor(int iCursorNum);
-
-		void __UpdateCamera();
 
 		bool SetWindowFullscreen(bool enabled, int width, int height);
 		void SetResolution(int width, int height);
@@ -356,7 +258,6 @@ class CPythonApplication : public CMSApplication, public CInputKeyboard, public 
 		CPythonSystem m_pySystem;
 
 		PyObject* m_poMouseHandler;
-		D3DXVECTOR3 m_v3CenterPosition;
 
 		unsigned int m_iFPS;
 		bool m_isDebugLeftButtonCaptured;
@@ -385,25 +286,8 @@ class CPythonApplication : public CMSApplication, public CInputKeyboard, public 
 
 		/////////////////////////////////////////////////////////////
 		// Camera
-		SCameraSetting m_DefaultCameraSetting;
-		SCameraSetting m_kEventCameraSetting;
-
-		int m_iCameraMode;
-		float m_fBlendCameraStartTime;
-		float m_fBlendCameraBlendTime;
-		SCameraSetting m_kEndBlendCameraSetting;
-
-		float m_fRotationSpeed;
-		float m_fPitchSpeed;
-		float m_fZoomSpeed;
-		float m_fCameraRotateSpeed;
-		float m_fCameraPitchSpeed;
-		float m_fCameraZoomSpeed;
-
-		SCameraPos m_kCmrPos;
-		SCameraSpeed m_kCmrSpd;
-
-		int32_t m_isSpecialCameraMode;
+		friend class CApplicationCamera;
+		CApplicationCamera m_kCamera;
 		// Camera
 		/////////////////////////////////////////////////////////////
 
@@ -421,13 +305,6 @@ class CPythonApplication : public CMSApplication, public CInputKeyboard, public 
 		uint32_t m_dwLButtonDownTime;
 		uint32_t m_dwLButtonUpTime;
 
-		typedef std::map<int, PlatformHandle> TCursorHandleMap;
-		TCursorHandleMap m_CursorHandleMap;
-		PlatformHandle m_hCurrentCursor;
-
-		int32_t m_bCursorVisible;
-		bool m_bLiarCursorOn;
-		int m_iCursorMode;
 		bool m_isWindowed;
 		bool m_isFrameSkipDisable;
 
@@ -446,6 +323,6 @@ class CPythonApplication : public CMSApplication, public CInputKeyboard, public 
 		int m_iForceSightRange;
 
 	protected:
-		int m_iCursorNum;
-		int m_iContinuousCursorNum;
+		friend class CApplicationCursor;
+		CApplicationCursor m_kCursor;
 };

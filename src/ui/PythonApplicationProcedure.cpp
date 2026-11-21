@@ -217,9 +217,9 @@ intptr_t CPythonApplication::WindowProcedure(PlatformWindow hWnd, uint32_t uiMsg
 		case WM_SETCURSOR:
 			if (IsActive())
 			{
-				if (m_bCursorVisible && CURSOR_MODE_HARDWARE == m_iCursorMode)
+				if (CApplicationCursor::MODE_HARDWARE == m_kCursor.GetMode() && m_kCursor.GetVisible())
 				{
-					Platform_SetCursorHandle(m_hCurrentCursor);
+					m_kCursor.RestoreHandle();
 					return 0;
 				}
 				else
