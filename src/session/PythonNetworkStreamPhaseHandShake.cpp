@@ -90,6 +90,7 @@ bool CPythonNetworkStream::RecvHandshakePacket()
 
 	Tracenf("HANDSHAKE RECV %u %d", kHandshakeData.dwTime, kHandshakeData.lDelta);
 
+	ELTimer_SetServerMSec(kHandshakeData.dwTime + kHandshakeData.lDelta);
 	m_kServerTimeSync.m_dwChangeServerTime = kHandshakeData.dwTime + kHandshakeData.lDelta;
 	m_kServerTimeSync.m_dwChangeClientTime = ELTimer_GetMSec();
 
@@ -98,14 +99,14 @@ bool CPythonNetworkStream::RecvHandshakePacket()
 
 	Tracenf("HANDSHAKE SEND %u", kHandshakeData.dwTime);
 
-	kHandshakeData.header = HEADER_CG_TIME_SYNC;
+	kHandshakeData.header = HEADER_CG_HANDSHAKE;
 	if (!Send(sizeof(TPacketGCHandshake), &kHandshakeData))
 	{
 		assert(!"Failed Sending Handshake");
 		return false;
 	}
 
-	SendSequence();
+	CTimer::Instance().SetBaseTime();
 
 	return true;
 }
