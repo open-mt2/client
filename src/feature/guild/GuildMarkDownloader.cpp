@@ -1,6 +1,6 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/Feature/Guild/GuildMarkDownloader.h>
-#include <Client/Feature/Character/PythonCharacterManager.h>
+#include <Client/Python/Character/PythonCharacterManager.h>
 #include <Client/Protocol/Packet.h>
 #include <Client/Utils/Test.h>
 

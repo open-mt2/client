@@ -1,6 +1,6 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/UI/Cursor/ApplicationCursor.h>
-#include <Client/Application/PythonApplication.h>
+#include <Client/Python/Application/PythonApplication.h>
 #include <Client/UI/resource.h>
 #include <Client/UI/Cursor/SdlCursor.h>
 

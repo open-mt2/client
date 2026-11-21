@@ -1,7 +1,7 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/Game/AffectFlagContainer.h>
 #include <Client/Feature/Chat/InsultChecker.h>
-#include <Client/Feature/System/PythonSystem.h>
+#include <Client/Python/System/PythonSystem.h>
 #include <Client/Protocol/Packet.h>
 #include <Client/Game/Affects.h>
 #include <Client/Application/QuitRequest.h>

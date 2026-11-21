@@ -5,11 +5,11 @@
 #include <Client/Application/CLI.h>
 #include <Client/Application/Context.h>
 #include <Client/Application/Packs.h>
-#include <Client/Script/PythonHostAdapter.h>
+#include <Client/Python/Host/PythonHostAdapter.h>
 #include <Client/UI/Widget/LoadingScreen.h>
 #include <Client/Locale/Locale.h>
-#include <Client/Application/PythonApplication.h>
-#include <Client/Feature/Background/PythonBackground.h>
+#include <Client/Python/Application/PythonApplication.h>
+#include <Client/Python/Background/PythonBackground.h>
 #include <Neoeter/IO/EterPackManager.h>
 #include <Neoeter/Platform/Base/Debug.h>
 #include <Neoeter/Render/Util.h>

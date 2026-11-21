@@ -1,10 +1,10 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/Feature/Character/NetworkActorManager.h>
-#include <Client/Feature/Character/PythonCharacterManager.h>
-#include <Client/Feature/Item/PythonItem.h>
+#include <Client/Python/Character/PythonCharacterManager.h>
+#include <Client/Python/Item/PythonItem.h>
 
 #include <Client/UI/AbstractPlayer.h>
-#include <Client/Player/PythonPlayerEventHandler.h>
+#include <Client/Python/Player/PythonPlayerEventHandler.h>
 
 void SNetworkActorData::UpdatePosition()
 {

@@ -14,8 +14,8 @@
 
 #include <Client/UI/Widget/LoadingScreen.h>
 #include <Client/Locale/Locale.h>
-#include <Client/Application/PythonApplication.h>
-#include <Client/Utils/PythonUtils.h>
+#include <Client/Python/Application/PythonApplication.h>
+#include <Client/Python/Utils/PythonUtils.h>
 #include <Neoeter/IO/EterPackManager.h>
 #include <Neoeter/Platform/Base/Debug.h>
 #include <Neoeter/Platform/Base/lzo.h>

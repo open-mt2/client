@@ -23,7 +23,6 @@ target_link_libraries(client_application
     PUBLIC
         client_script
         client_ui
-        client_utils
 )
 
 if(DEFINED OPENMT2_CLIENT_VERSION)

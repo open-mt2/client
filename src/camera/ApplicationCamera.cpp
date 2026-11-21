@@ -1,7 +1,7 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/Camera/ApplicationCamera.h>
-#include <Client/Application/PythonApplication.h>
-#include <Client/Feature/Background/PythonBackground.h>
+#include <Client/Python/Application/PythonApplication.h>
+#include <Client/Python/Background/PythonBackground.h>
 
 #include <Neoeter/Audio/SoundManager.h>
 #include <Neoeter/Platform/Base/Timer.h>
