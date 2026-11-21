@@ -1,6 +1,6 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/Feature/Guild/GuildMarkUploader.h>
-#include <Client/Protocol/Packet.h>
+#include <Client/Game/Packet.h>
 #include <Client/Utils/Test.h>
 #include <Client/Feature/Guild/ImageFile.h>
 

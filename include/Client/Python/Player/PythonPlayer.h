@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Client/UI/AbstractPlayer.h>
-#include <Client/Protocol/Packet.h>
+#include <Client/Game/Packet.h>
 #include <Client/Python/Skill/PythonSkill.h>
 #include <Client/Python/Player/PythonPlayerInput.h>
 #include <Client/Python/Player/PythonPlayerSkill.h>

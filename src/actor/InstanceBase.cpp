@@ -6,7 +6,7 @@
 #include <Client/Python/Character/PythonCharacterManager.h>
 #include <Client/UI/AbstractPlayer.h>
 #include <Client/Application/AbstractApplication.h>
-#include <Client/Protocol/Packet.h>
+#include <Client/Game/Packet.h>
 
 #include <Neoeter/Render/StateManager.h>
 #include <Client/GameData/ItemManager.h>

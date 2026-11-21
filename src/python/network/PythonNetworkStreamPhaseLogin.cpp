@@ -1,7 +1,7 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/Python/Network/PythonNetworkStream.h>
 #include <Client/Session/NetworkStreamPhases.h>
-#include <Client/Protocol/Packet.h>
+#include <Client/Game/Packet.h>
 #include <Client/Utils/Test.h>
 #include <Client/Session/AccountConnector.h>
 

@@ -2,7 +2,7 @@
 #include <Client/Game/AffectFlagContainer.h>
 #include <Client/Feature/Chat/InsultChecker.h>
 #include <Client/Python/System/PythonSystem.h>
-#include <Client/Protocol/Packet.h>
+#include <Client/Game/Packet.h>
 #include <Client/Game/Affects.h>
 #include <Client/Application/QuitRequest.h>
 #include <Neoeter/Audio/SoundManager.h>

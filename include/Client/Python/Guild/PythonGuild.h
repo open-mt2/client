@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Client/Protocol/Packet.h>
+#include <Client/Game/Packet.h>
 
 class CPythonGuild : public CSingleton<CPythonGuild>
 {

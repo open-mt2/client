@@ -1,6 +1,6 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/Session/AccountConnector.h>
-#include <Client/Protocol/Packet.h>
+#include <Client/Game/Packet.h>
 #include <Client/Python/Network/PythonNetworkStream.h>
 #include <Neoeter/Platform/Base/tea.h>
 #include <Neoeter/IO/EterPackManager.h>

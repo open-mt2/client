@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Client/Protocol/Packet.h>
+#include <Client/Game/Packet.h>
 #include <Client/UI/AbstractChat.h>
 #include <Neoeter/Render/GrpTextInstance.h>
 #include <Python.h>

@@ -1,7 +1,7 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/Python/Network/PythonNetworkStream.h>
 #include <Client/Session/NetworkStreamPhases.h>
-#include <Client/Protocol/Packet.h>
+#include <Client/Game/Packet.h>
 #include <Client/Python/Application/PythonApplication.h>
 #include <Client/Feature/Character/NetworkActorManager.h>
 
