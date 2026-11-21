@@ -1,7 +1,7 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/Feature/Chat/PythonChat.h>
 
-#include <Client/UI/AbstractApplication.h>
+#include <Client/Application/AbstractApplication.h>
 #include <Client/Feature/Character/PythonCharacterManager.h>
 #include <Neoeter/Platform/Base/Timer.h>
 

@@ -5,7 +5,7 @@
 #include <Client/Player/PythonPlayer.h>
 #include <Client/Feature/Character/PythonCharacterManager.h>
 #include <Client/UI/AbstractPlayer.h>
-#include <Client/UI/AbstractApplication.h>
+#include <Client/Application/AbstractApplication.h>
 #include <Client/Protocol/Packet.h>
 
 #include <Neoeter/Render/StateManager.h>

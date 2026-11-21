@@ -39,7 +39,7 @@
 #include <Client/Session/AccountConnector.h>
 
 #include <Client/Session/ServerStateChecker.h>
-#include <Client/UI/AbstractApplication.h>
+#include <Client/Application/AbstractApplication.h>
 #include <Client/Camera/ApplicationCamera.h>
 #include <Client/UI/Cursor/ApplicationCursor.h>
 

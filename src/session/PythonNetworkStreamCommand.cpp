@@ -2,7 +2,7 @@
 #include <Client/Session/PythonNetworkStream.h>
 #include <Client/Feature/NonPlayer/PythonNonPlayer.h>
 #include <Client/Application/QuitRequest.h>
-#include <Client/UI/AbstractApplication.h>
+#include <Client/Application/AbstractApplication.h>
 #include <Client/UI/AbstractPlayer.h>
 #include <Client/UI/AbstractCharacterManager.h>
 #include <Client/UI/AbstractChat.h>

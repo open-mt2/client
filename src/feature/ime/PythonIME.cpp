@@ -1,6 +1,6 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/Feature/Ime/PythonIME.h>
-#include <Client/UI/AbstractApplication.h>
+#include <Client/Application/AbstractApplication.h>
 
 CPythonIME::CPythonIME()
 	: CIME()

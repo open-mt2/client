@@ -3,7 +3,7 @@
 #include <Client/Session/PythonNetworkStream.h>
 #include <Client/Feature/NonPlayer/PythonNonPlayer.h>
 
-#include <Client/UI/AbstractApplication.h>
+#include <Client/Application/AbstractApplication.h>
 
 #include <Client/GameData/ItemData.h>
 #include <Client/GameData/ItemManager.h>

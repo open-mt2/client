@@ -3,7 +3,7 @@
 
 #include <Client/GameData/ItemManager.h>
 #include <Client/Actor/InstanceBase.h>
-#include <Client/UI/AbstractApplication.h>
+#include <Client/Application/AbstractApplication.h>
 
 extern int TWOHANDED_WEWAPON_ATT_SPEED_DECREASE_VALUE;
 

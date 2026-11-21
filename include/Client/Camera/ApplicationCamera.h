@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Client/Map/MapType.h>
-#include <Client/UI/AbstractApplication.h>
+#include <Client/Application/AbstractApplication.h>
 
 class CPythonApplication;
 

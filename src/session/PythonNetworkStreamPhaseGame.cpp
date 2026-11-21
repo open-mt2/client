@@ -21,7 +21,7 @@
 #include <Neoeter/IO/EterPackManager.h>
 #include <Client/GameData/ItemManager.h>
 
-#include <Client/UI/AbstractApplication.h>
+#include <Client/Application/AbstractApplication.h>
 #include <Client/UI/AbstractCharacterManager.h>
 #include <Client/Actor/InstanceBase.h>
 
