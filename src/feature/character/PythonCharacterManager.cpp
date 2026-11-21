@@ -3,7 +3,7 @@
 #include <Client/Feature/Background/PythonBackground.h>
 #include <Client/Feature/NonPlayer/PythonNonPlayer.h>
 #include <Client/UI/AbstractPlayer.h>
-#include <Client/UI/Packet.h>
+#include <Client/Protocol/Packet.h>
 
 #include <Neoeter/Render/Camera.h>
 

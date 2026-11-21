@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Client/UI/Packet.h>
+#include <Client/Protocol/Packet.h>
 #include <Client/UI/AbstractChat.h>
 
 class CWhisper

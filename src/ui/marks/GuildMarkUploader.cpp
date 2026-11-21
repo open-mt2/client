@@ -1,6 +1,6 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/UI/Marks/GuildMarkUploader.h>
-#include <Client/UI/Packet.h>
+#include <Client/Protocol/Packet.h>
 #include <Client/UI/Test.h>
 #include <Client/UI/ImageFile.h>
 

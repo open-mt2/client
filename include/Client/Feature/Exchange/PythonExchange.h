@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Client/UI/Packet.h>
+#include <Client/Protocol/Packet.h>
 
 /*
  *	교환 창 관련

@@ -2,7 +2,7 @@
 
 #include <Client/UI/StdAfx.h>
 #include <Neoeter/Render/NetPacketHeaderMap.h>
-#include <Client/UI/Packet.h>
+#include <Client/Protocol/Packet.h>
 
 #include <cstddef>
 #include <cstdio>

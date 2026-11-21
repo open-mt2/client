@@ -1,5 +1,5 @@
 #include <Client/UI/StdAfx.h>
-#include <Client/UI/Packet.h>
+#include <Client/Protocol/Packet.h>
 #include <Client/UI/ServerStateChecker.h>
 
 #include <Neoeter/Render/NetAddress.h>

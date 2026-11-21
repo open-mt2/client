@@ -1,5 +1,5 @@
 #include <Client/UI/StdAfx.h>
-#include <Client/UI/GameType.h>
+#include <Client/UI/Affects.h>
 
 std::string g_strResourcePath = "ymir work/";
 std::string g_strImagePath = "ymir work/ui/";

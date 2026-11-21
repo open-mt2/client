@@ -2,8 +2,8 @@
 #include <Client/UI/Util/AffectFlagContainer.h>
 #include <Client/UI/Util/InsultChecker.h>
 #include <Client/Feature/System/PythonSystem.h>
-#include <Client/UI/Packet.h>
-#include <Client/UI/GameType.h>
+#include <Client/Protocol/Packet.h>
+#include <Client/UI/Affects.h>
 #include <Client/UI/QuitRequest.h>
 #include <Neoeter/Audio/SoundManager.h>
 #include <Neoeter/Platform/PlatformWindow.h>

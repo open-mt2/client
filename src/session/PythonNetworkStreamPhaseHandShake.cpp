@@ -2,7 +2,7 @@
 #include <Client/Session/PythonNetworkStream.h>
 #include <Client/Session/NetworkStreamPhases.h>
 #include <Client/UI/App/PythonApplication.h>
-#include <Client/UI/Packet.h>
+#include <Client/Protocol/Packet.h>
 #include <Neoeter/IO/EterPackManager.h>
 
 // HandShake ---------------------------------------------------------------------------
