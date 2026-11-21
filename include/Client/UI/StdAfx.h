@@ -31,36 +31,6 @@ enum
 #endif
 };
 
-void initapp();
-void initime();
-void initsystem();
-void initchr();
-void initchrmgr();
-void initChat();
-void initTextTail();
-void initime();
-void initItem();
-void initNonPlayer();
-void initnet();
-void initPlayer();
-void initSectionDisplayer();
-void initServerStateChecker();
-void initTrade();
-void initMiniMap();
-void initProfiler();
-void initEvent();
-void initeffect();
-void initsnd();
-void initeventmgr();
-void initBackground();
-void initwndMgr();
-void initshop();
-void initpack();
-void initskill();
-void initfly();
-void initquest();
-void initsafebox();
-void initguild();
-void initMessenger();
+#include <Client/Script/ModuleInit.h>
 
 extern void ApplicationSetErrorString(const char* szErrorString);

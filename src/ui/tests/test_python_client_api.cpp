@@ -1,4 +1,5 @@
 #include <Client/UI/StdAfx.h>
+#include <Client/Script/Bindings.h>
 #include <Neoeter/Python/Host/PythonLauncher.h>
 
 #include <support/PythonApiSnapshot.h>
@@ -14,50 +15,18 @@ bool __IS_TEST_SERVER_MODE__ = false;
 namespace
 {
 
-	// Mirrors the registration order in PythonRuntime::RegisterModules() minus
-	// the pack/script loading that needs game assets.  If a module is added there,
-	// add it here and regenerate the snapshot.
+	// Every module the client registers, in the order the script host receives
+	// them from the module table.  A new module is added to the table, not here.
 	void RegisterClientModules()
 	{
-		initpack();
-		initdbg();
-		initime();
-		initgrp();
-		initgrpImage();
-		initgrpText();
-		initwndMgr();
-
-		initapp();
-		initsystem();
-		initchr();
-		initchrmgr();
-		initPlayer();
-		initItem();
-		initNonPlayer();
-		initTrade();
-		initChat();
-		initTextTail();
-		initnet();
-		initMiniMap();
-		initProfiler();
-		initEvent();
-		initeffect();
-		initfly();
-		initsnd();
-		initeventmgr();
-		initshop();
-		initskill();
-		initquest();
-		initBackground();
-		initMessenger();
-		initsafebox();
-		initguild();
-		initServerStateChecker();
+		const Neoeter::ModuleTable& modules = Neoeter::ClientModules();
+		for (uint32_t i = 0; i < modules.count; ++i)
+			modules.entries[i].register_module();
 	}
 
 	// Every module the client registers, in alphabetical order so the snapshot is
 	// easy to review.  grpThing is registered by EterPythonLib's own test but not
-	// by PythonRuntime, so it is deliberately absent here.
+	// by the client module table, so it is deliberately absent here.
 	const char* kClientModules[] = {
 		"ServerStateChecker",
 		"app",
@@ -99,7 +68,7 @@ namespace
 } // namespace
 
 // TA.6: boot the full client interpreter headless, register every module from
-// PythonRuntime and pin the exposed API surface.
+// the client module table and pin the exposed API surface.
 int main(int argc, char** argv)
 {
 	TEST_ASSERT_MSG(argc == 2, "usage: test_python_client_api <golden>");

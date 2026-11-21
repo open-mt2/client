@@ -21,6 +21,7 @@ endif()
 
 target_link_libraries(client_application
     PUBLIC
+        client_script
         client_ui
         client_utils
 )

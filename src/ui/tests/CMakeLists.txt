@@ -15,6 +15,7 @@ target_link_libraries(test_userinterface
 
 target_link_libraries(test_python_client_api
     PRIVATE
+        client_script
         client_ui
         pthread
         dl
