@@ -3,7 +3,7 @@
 class CMapBase;
 #include <Client/Game/Lighting.h>
 #include <Client/Game/MapOutdoor.h>
-#include <Client/Game/PropertyManager.h>
+#include <Client/GameData/PropertyManager.h>
 
 // VICTIM_COLLISION_TEST
 #include <Client/Game/PhysicsObject.h>

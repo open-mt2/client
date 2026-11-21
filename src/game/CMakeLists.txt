@@ -62,6 +62,7 @@ endif()
 
 target_link_libraries(client_game
     PUBLIC
+        client_gamedata
         neoeter_platform_base
         neoeter_io
         neoeter_render

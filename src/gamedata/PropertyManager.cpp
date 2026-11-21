@@ -1,8 +1,8 @@
 #include <Client/Game/StdAfx.h>
 #include <Neoeter/IO/EterPackManager.h>
 
-#include <Client/Game/PropertyManager.h>
-#include <Client/Game/Property.h>
+#include <Client/GameData/PropertyManager.h>
+#include <Client/GameData/Property.h>
 
 CPropertyManager::CPropertyManager()
 {

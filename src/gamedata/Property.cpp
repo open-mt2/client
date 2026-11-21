@@ -2,8 +2,8 @@
 #include <string.h>
 #include <Neoeter/Platform/Base/TempFile.h>
 
-#include <Client/Game/PropertyManager.h>
-#include <Client/Game/Property.h>
+#include <Client/GameData/PropertyManager.h>
+#include <Client/GameData/Property.h>
 /*
  *	CProperty 파일 포맷
  *

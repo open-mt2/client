@@ -5,8 +5,8 @@
 
 #include <Client/UI/AbstractApplication.h>
 
-#include <Client/Game/ItemData.h>
-#include <Client/Game/ItemManager.h>
+#include <Client/GameData/ItemData.h>
+#include <Client/GameData/ItemManager.h>
 
 #include <Neoeter/IO/EterPackManager.h>
 

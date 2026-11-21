@@ -1,5 +1,5 @@
 #pragma once
-#include <Client/Game/ItemData.h>
+#include <Client/GameData/ItemData.h>
 #include <Client/Protocol/Types.h>
 
 struct SAffects

@@ -18,7 +18,7 @@
 #include <Client/UI/PythonApplication.h>
 
 #include <Neoeter/IO/EterPackManager.h>
-#include <Client/Game/ItemManager.h>
+#include <Client/GameData/ItemManager.h>
 
 #include <Client/UI/AbstractApplication.h>
 #include <Client/UI/AbstractCharacterManager.h>

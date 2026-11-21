@@ -5,7 +5,7 @@
 #include <Client/UI/InstanceBase.h>
 #include <Client/UI/PythonChat.h>
 #include <Client/UI/PythonGuild.h>
-#include <Client/Game/ItemManager.h>
+#include <Client/GameData/ItemManager.h>
 
 void CPythonPlayer::ClearAffects()
 {

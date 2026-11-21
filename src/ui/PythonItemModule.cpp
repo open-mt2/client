@@ -1,7 +1,7 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/UI/PythonItem.h>
 
-#include <Client/Game/ItemManager.h>
+#include <Client/GameData/ItemManager.h>
 #include <Client/UI/InstanceBase.h>
 #include <Client/UI/AbstractApplication.h>
 

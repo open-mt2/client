@@ -1,6 +1,6 @@
 #include <Client/Game/StdAfx.h>
 #include <Neoeter/Platform/Base/Filename.h>
-#include <Client/Game/Property.h>
+#include <Client/GameData/Property.h>
 
 float SEnvironmentData::GetFogNearDistance() const
 {

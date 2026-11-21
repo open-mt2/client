@@ -1,7 +1,7 @@
 #include <Client/Game/StdAfx.h>
 #include <Client/Game/ActorInstance.h>
 #include <Client/Game/RaceManager.h>
-#include <Client/Game/ItemManager.h>
+#include <Client/GameData/ItemManager.h>
 #include <Client/Game/RaceData.h>
 
 #include <Neoeter/Render/ResourceManager.h>

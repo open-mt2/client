@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Client/Game/ItemData.h>
+#include <Client/GameData/ItemData.h>
 #include <Neoeter/Platform/Base/Poly/Poly.h>
 
 class CInstanceBase;

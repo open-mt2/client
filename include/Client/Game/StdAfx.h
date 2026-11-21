@@ -27,8 +27,8 @@
 // #include "Octree.h"
 
 // Item
-// #include <Client/Game/ItemData.h>
-// #include <Client/Game/ItemManager.h>
+// #include <Client/GameData/ItemData.h>
+// #include <Client/GameData/ItemManager.h>
 
 // Actor
 // #include <Client/Game/WeaponTrace.h>
@@ -39,8 +39,8 @@
 // #include <Client/Game/RaceManager.h>
 
 // Property
-// #include <Client/Game/Property.h>
-// #include <Client/Game/PropertyManager.h>
+// #include <Client/GameData/Property.h>
+// #include <Client/GameData/PropertyManager.h>
 // #include <Client/Game/PropertyLoader.h>
 
 // Map

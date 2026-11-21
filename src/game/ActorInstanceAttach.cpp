@@ -2,8 +2,8 @@
 #include <Neoeter/Effect/EffectManager.h>
 
 #include <Client/Game/ActorInstance.h>
-#include <Client/Game/ItemData.h>
-#include <Client/Game/ItemManager.h>
+#include <Client/GameData/ItemData.h>
+#include <Client/GameData/ItemManager.h>
 #include <Client/Game/RaceData.h>
 #include <Client/Game/WeaponTrace.h>
 

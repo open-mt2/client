@@ -7,8 +7,8 @@
 #include <Neoeter/Platform/Base/Timer.h>
 
 #include <Client/Game/Area.h>
-#include <Client/Game/PropertyManager.h>
-#include <Client/Game/Property.h>
+#include <Client/GameData/PropertyManager.h>
+#include <Client/GameData/Property.h>
 
 CDynamicPool<CArea::TObjectInstance> CArea::ms_ObjectInstancePool;
 CDynamicPool<CAttributeInstance> CArea::ms_AttributeInstancePool;

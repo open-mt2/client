@@ -1,7 +1,7 @@
 #include <Client/Game/StdAfx.h>
 #include <Neoeter/Render/ResourceManager.h>
 
-#include <Client/Game/ItemData.h>
+#include <Client/GameData/ItemData.h>
 
 CDynamicPool<CItemData> CItemData::ms_kPool;
 

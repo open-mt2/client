@@ -9,7 +9,7 @@
 #include <Client/UI/Packet.h>
 
 #include <Neoeter/Render/StateManager.h>
-#include <Client/Game/ItemManager.h>
+#include <Client/GameData/ItemManager.h>
 
 int32_t HAIR_COLOR_ENABLE = FALSE;
 int32_t USE_ARMOR_SPECULAR = FALSE;

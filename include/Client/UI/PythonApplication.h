@@ -8,7 +8,7 @@
 #include <Neoeter/Render/GrpLightManager.h>
 #include <Neoeter/Effect/EffectManager.h>
 #include <Client/Game/RaceManager.h>
-#include <Client/Game/ItemManager.h>
+#include <Client/GameData/ItemManager.h>
 #include <Client/Game/FlyingObjectManager.h>
 #include <Client/Game/GameEventManager.h>
 #include <Neoeter/Audio/SoundManager.h>

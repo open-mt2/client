@@ -1,7 +1,7 @@
 #include <Client/Game/StdAfx.h>
 #include <Client/Game/PropertyLoader.h>
-#include <Client/Game/PropertyManager.h>
-#include <Client/Game/Property.h>
+#include <Client/GameData/PropertyManager.h>
+#include <Client/GameData/Property.h>
 
 bool CPropertyLoader::OnFolder(const char* c_szFilter, const char* c_szPathName, const char* c_szFileName)
 {

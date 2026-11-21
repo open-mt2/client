@@ -1,9 +1,9 @@
 #include <Client/Game/StdAfx.h>
 #include <Client/Game/GameUtil.h>
 #include <Client/Game/Lighting.h>
-#include <Client/Game/ItemManager.h>
+#include <Client/GameData/ItemManager.h>
 #include <Client/Game/RaceManager.h>
-#include <Client/Game/PropertyManager.h>
+#include <Client/GameData/PropertyManager.h>
 #include <Client/Game/ActorInstance.h>
 #include <cassert>
 #include <cmath>

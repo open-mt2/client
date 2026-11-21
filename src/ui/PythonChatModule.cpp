@@ -1,7 +1,7 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/UI/PythonChat.h>
 #include <Client/UI/PythonItem.h>
-#include <Client/Game/ItemManager.h>
+#include <Client/GameData/ItemManager.h>
 
 PyObject* chatSetChatColor(PyObject* poSelf, PyObject* poArgs)
 {

@@ -1,6 +1,6 @@
 #include <Client/UI/StdAfx.h>
 #include <Neoeter/Render/GrpMath.h>
-#include <Client/Game/ItemManager.h>
+#include <Client/GameData/ItemManager.h>
 #include <Neoeter/Effect/EffectManager.h>
 #include <Client/UI/PythonBackground.h>
 

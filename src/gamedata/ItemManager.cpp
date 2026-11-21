@@ -2,7 +2,7 @@
 #include <Neoeter/IO/EterPackManager.h>
 #include <Neoeter/Render/ResourceManager.h>
 
-#include <Client/Game/ItemManager.h>
+#include <Client/GameData/ItemManager.h>
 
 static uint32_t s_adwItemProtoKey[4] =
 	{
