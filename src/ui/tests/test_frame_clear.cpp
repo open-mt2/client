@@ -2,7 +2,7 @@
 
 #include <Client/UI/Widget/FrameClear.h>
 
-// Every GL frame must start from a cleared colour buffer (open-mt2/devkit#137).
+// Every GL frame must start from a cleared colour buffer.
 //
 // The Windows build presents through OpenGL like Linux, but the colour clear was
 // compiled only for debug and Linux builds. After a swap the back buffer keeps an

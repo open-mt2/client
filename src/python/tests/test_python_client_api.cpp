@@ -67,7 +67,7 @@ namespace
 
 } // namespace
 
-// TA.6: boot the full client interpreter headless, register every module from
+// Boot the full client interpreter headless, register every module from
 // the client module table and pin the exposed API surface.
 int main(int argc, char** argv)
 {

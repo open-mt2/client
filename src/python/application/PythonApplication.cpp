@@ -76,10 +76,9 @@ CPythonApplication::CPythonApplication() : m_poMouseHandler(NULL),
 	m_iPort = 0;
 	m_iFPS = 60;
 
-	// The window is created shown by the SDL path on every target (T1.2), so
-	// start active and not minimized. The old Windows default waited for a
-	// WM_SIZE event that Wine never synthesizes for the initial window, which
-	// left the render loop permanently minimized (T3.2).
+	// The window is created shown by the SDL path on every target, so start
+	// active and not minimized. Wine never synthesizes the initial WM_SIZE
+	// event, which would leave the render loop permanently minimized.
 	m_isActivateWnd = true;
 	m_isMinimizedWnd = false;
 

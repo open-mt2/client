@@ -3,7 +3,7 @@
 // ============================================================================
 // PythonApiSnapshot.h - capture the embedded interpreter's API surface
 // ============================================================================
-// TA.6: the client embeds Python 2.7 and registers its C++ bindings through
+// The client embeds Python 2.7 and registers its C++ bindings through
 // Py_InitModule().  This helper boots nothing on its own; callers create the
 // CPythonLauncher, register the modules they own, then call Capture().
 //
@@ -19,7 +19,7 @@
 // - The snapshot is text, sorted, and contains no timestamps, so it is stable
 //   across runs and machines.
 
-#include <Python.h> // T1.9: the include dir selects the platform copy
+#include <Python.h> // the include dir selects the platform copy
 
 #include <algorithm>
 #include <cstdio>

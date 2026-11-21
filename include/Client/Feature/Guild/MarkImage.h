@@ -5,8 +5,8 @@
 #include <map>
 #include <vector>
 
-// Guild-mark pixels are 32-bit BGRA on the wire (T0.3 data-width audit).
-// 'unsigned long' is 8 bytes on LP64, which broke the 16x12 mark buffer and
+// Guild-mark pixels are 32-bit BGRA on the wire.
+// 'unsigned long' is 8 bytes on LP64 and overruns the 16x12 mark buffer and
 // the LZO block sizes; uint32_t matches the protocol on every target.
 typedef uint32_t Pixel;
 static_assert(sizeof(Pixel) == 4, "guild mark pixels must be 32-bit");
@@ -109,8 +109,7 @@ class CGuildMarkImage
 
 		SGuildMarkBlock m_aakBlock[BLOCK_ROW_COUNT][BLOCK_COL_COUNT];
 
-		// BGRA pixels, WIDTH * HEIGHT * 4 bytes. Replaces the DevIL image
-		// handle the class used before T2.1.
+		// BGRA pixels, WIDTH * HEIGHT * 4 bytes.
 		std::vector<uint8_t> m_pixels;
 };
 

@@ -196,7 +196,7 @@ bool CApplicationCursor::Create()
 	TraceError("CreateOfficialCursors failed, falling back to SDL system cursors");
 
 	// The Win32 cursor resources are not part of the source tree, so the SDL
-	// window/input path uses SDL system cursors on every target (T3.2).
+	// window/input path uses SDL system cursors on every target.
 	static const SDL_SystemCursor s_systemCursors[CURSOR_COUNT] =
 		{
 			SDL_SYSTEM_CURSOR_ARROW,	 // NORMAL

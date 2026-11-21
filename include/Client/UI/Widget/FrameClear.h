@@ -1,6 +1,6 @@
 #pragma once
 
-// Start of every rendered frame (open-mt2/devkit#137).
+// Start of every rendered frame.
 //
 // The UI draws over whatever the back buffer holds. After a GL swap that is an
 // older frame, so any region the UI leaves undrawn alternates between stale

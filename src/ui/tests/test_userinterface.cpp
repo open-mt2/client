@@ -147,8 +147,7 @@ namespace
 	{
 		// The client hides the cursor with a Windows-style do/while loop:
 		//     do { i = ShowCursor(FALSE); } while (i >= 0);
-		// A platform stub that always returns 0 makes that loop infinite, which
-		// used to hang the logo-close path before the login window could open.
+		// A platform stub that always returns 0 makes that loop infinite.
 		int guard = 0;
 		int count = 0;
 		do {

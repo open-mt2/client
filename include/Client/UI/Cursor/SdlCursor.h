@@ -1,12 +1,10 @@
 #pragma once
 
-// SDL hardware cursors (T3.2).
+// SDL hardware cursors.
 //
-// The original client loaded its cursor bitmaps from Win32 resources
-// (`LoadImage(..., IMAGE_CURSOR, ...)`). No resource script ships with the
-// sources, so on the Windows target that call always fails and the client stops
-// with a "CREATE_CURSOR" message box before the login screen. Since T1.2/T1.3
-// both targets use SDL for the window and input, use SDL system cursors instead.
+// No resource script for the Win32 cursor loader ships with the sources, so
+// that call would always fail on the Windows target. Both targets use SDL for
+// the window and input, so use SDL system cursors instead.
 //
 // The helpers keep the Windows-only SetCursor/ShowCursor/DestroyCursor calls in
 // one place so the call sites stay platform-neutral.
