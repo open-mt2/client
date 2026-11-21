@@ -1,6 +1,6 @@
 #include <Client/UI/StdAfx.h>
-#include <Client/UI/Instance/InstanceBase.h>
-#include <Client/UI/Instance/InstanceBaseMotion.h>
+#include <Client/Actor/InstanceBase.h>
+#include <Client/Actor/InstanceBaseMotion.h>
 #include <Client/UI/AbstractPlayer.h>
 #include <Client/Game/ActorInstance.h>
 

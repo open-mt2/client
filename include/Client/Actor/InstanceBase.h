@@ -4,11 +4,11 @@
 #include <Client/Game/ActorInstance.h>
 
 #include <Client/Game/AffectFlagContainer.h>
-#include <Client/UI/Instance/InstanceBaseBattle.h>
-#include <Client/UI/Instance/InstanceBaseEffect.h>
-#include <Client/UI/Instance/InstanceBaseMovement.h>
-#include <Client/UI/Instance/InstanceBaseMotion.h>
-#include <Client/UI/Instance/InstanceBaseTransform.h>
+#include <Client/Actor/InstanceBaseBattle.h>
+#include <Client/Actor/InstanceBaseEffect.h>
+#include <Client/Actor/InstanceBaseMovement.h>
+#include <Client/Actor/InstanceBaseMotion.h>
+#include <Client/Actor/InstanceBaseTransform.h>
 
 class CInstanceBase
 {

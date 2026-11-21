@@ -1,7 +1,7 @@
 #include <Client/UI/StdAfx.h>
 #include <Neoeter/IO/EterPackManager.h>
 #include <Client/Feature/NonPlayer/PythonNonPlayer.h>
-#include <Client/UI/Instance/InstanceBase.h>
+#include <Client/Actor/InstanceBase.h>
 #include <Client/Feature/Character/PythonCharacterManager.h>
 
 bool CPythonNonPlayer::LoadNonPlayerData(const char* c_szFileName)

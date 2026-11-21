@@ -1,6 +1,6 @@
 #include <Client/UI/StdAfx.h>
-#include <Client/UI/Instance/InstanceBase.h>
-#include <Client/UI/Instance/InstanceBaseTransform.h>
+#include <Client/Actor/InstanceBase.h>
+#include <Client/Actor/InstanceBaseTransform.h>
 #include <Client/Feature/Background/PythonBackground.h>
 
 CInstanceBaseTransform::CInstanceBaseTransform(CInstanceBase& rkOwner) : m_rkOwner(rkOwner)

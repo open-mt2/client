@@ -60,14 +60,19 @@ file(GLOB_RECURSE USERINTERFACE_SOURCES CONFIGURE_DEPENDS
 )
 list(FILTER USERINTERFACE_SOURCES EXCLUDE REGEX "/tests/")
 
-# The client game features (chat, guild, shop, ...) are their own directory
-# package but still build into this target: their headers cross into the UI
-# and the UI into theirs, so a separate library would be a cycle.
+# The client game features (chat, guild, shop, ...) and the actor view
+# (CInstanceBase and its components) are their own directory packages but
+# still build into this target: their headers cross into the UI and the UI
+# into theirs, so a separate library would be a cycle.
 file(GLOB_RECURSE FEATURE_SOURCES CONFIGURE_DEPENDS
     "${CMAKE_CURRENT_SOURCE_DIR}/../feature/*.cpp"
 )
 list(FILTER FEATURE_SOURCES EXCLUDE REGEX "/tests/")
-list(APPEND USERINTERFACE_SOURCES ${FEATURE_SOURCES})
+file(GLOB_RECURSE ACTOR_SOURCES CONFIGURE_DEPENDS
+    "${CMAKE_CURRENT_SOURCE_DIR}/../actor/*.cpp"
+)
+list(FILTER ACTOR_SOURCES EXCLUDE REGEX "/tests/")
+list(APPEND USERINTERFACE_SOURCES ${FEATURE_SOURCES} ${ACTOR_SOURCES})
 
 add_library(client_ui STATIC ${USERINTERFACE_SOURCES})
 target_sources(client_ui PRIVATE

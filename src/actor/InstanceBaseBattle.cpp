@@ -1,5 +1,5 @@
 #include <Client/UI/StdAfx.h>
-#include <Client/UI/Instance/InstanceBase.h>
+#include <Client/Actor/InstanceBase.h>
 #include <Client/Feature/Background/PythonBackground.h>
 #include <Client/Feature/Character/PythonCharacterManager.h>
 #include <Neoeter/Terrain/Terrain.h>

@@ -23,7 +23,7 @@
 
 #include <Client/UI/AbstractApplication.h>
 #include <Client/UI/AbstractCharacterManager.h>
-#include <Client/UI/Instance/InstanceBase.h>
+#include <Client/Actor/InstanceBase.h>
 
 #include <Client/Platform/ProcessCRC.h>
 

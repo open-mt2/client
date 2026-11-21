@@ -1,7 +1,7 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/Feature/NonPlayer/PythonNonPlayer.h>
 
-#include <Client/UI/Instance/InstanceBase.h>
+#include <Client/Actor/InstanceBase.h>
 #include <Client/Feature/Character/PythonCharacterManager.h>
 
 PyObject* nonplayerGetEventType(PyObject* poSelf, PyObject* poArgs)

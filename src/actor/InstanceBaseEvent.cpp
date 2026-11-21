@@ -1,5 +1,5 @@
 #include <Client/UI/StdAfx.h>
-#include <Client/UI/Instance/InstanceBase.h>
+#include <Client/Actor/InstanceBase.h>
 
 CActorInstance::IEventHandler& CInstanceBase::GetEventHandlerRef()
 {

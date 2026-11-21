@@ -2,7 +2,7 @@
 #include <Client/Player/PythonPlayer.h>
 #include <Client/Player/PythonPlayerInput.h>
 
-#include <Client/UI/Instance/InstanceBase.h>
+#include <Client/Actor/InstanceBase.h>
 
 void CPythonPlayerInput::SetAttackKeyState(bool isPress)
 {
