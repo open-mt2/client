@@ -58,6 +58,7 @@ bool CPackFileSource::ReadFile(const std::string& c_rstPath, std::vector<uint8_t
 
 void CPackFileSource::ListFiles(const std::string& c_rstPrefix, std::vector<std::string>& rPaths)
 {
+	std::string stDiskDirectory = c_rstPrefix;
 	std::string stPrefix = c_rstPrefix;
 	StringPath(stPrefix);
 
@@ -73,7 +74,7 @@ void CPackFileSource::ListFiles(const std::string& c_rstPrefix, std::vector<std:
 
 	std::vector<std::string> diskPaths;
 	CDiskScan scan(diskPaths);
-	scan.Scan(stPrefix.c_str());
+	scan.Scan(stDiskDirectory.c_str());
 
 	for (size_t i = 0; i < diskPaths.size(); ++i)
 	{
