@@ -1,6 +1,8 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/UI/ProcessScanner.h>
 
+#include <tlhelp32.h>
+
 static std::vector<CRCPair> gs_kVct_crcPair;
 static CRITICAL_SECTION gs_csData;
 static PlatformHandle gs_evReqExit = NULL;

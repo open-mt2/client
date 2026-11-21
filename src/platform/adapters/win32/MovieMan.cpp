@@ -1,9 +1,15 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/UI/MovieMan.h>
+#include <Client/UI/PythonApplication.h>
 
+#include <amstream.h>
+#include <ddraw.h>
+#include <ddstream.h>
 #include <dshow.h>
 #include <dmodshow.h>
 #include <dmoreg.h>
+#include <mmstream.h>
+
 // mingw-w64 ships ddraw.h but no import library, so resolve the entry point at
 // run time and keep the SDK signature at the call site (T1.9).
 namespace
@@ -24,7 +30,6 @@ namespace
 	}
 }
 #define DirectDrawCreate DirectDrawCreate_Load
-#endif
 
 #define LOGO_PMANG_FILE "ymir.mpg"
 #define LOGO_NW_FILE "logoNW.mpg"
