@@ -1,5 +1,6 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/Session/PythonNetworkStream.h>
+#include <Client/Session/NetworkStreamPhases.h>
 #include <Client/UI/Packet.h>
 #include <Client/UI/PythonApplication.h>
 #include <Client/UI/NetworkActorManager.h>
@@ -128,88 +129,88 @@ void CPythonNetworkStream::SetLoadingPhase()
 	__DirectEnterMode_Initialize();
 }
 
-bool CPythonNetworkStream::RecvMainCharacter(const protocol::Packet& value)
+bool CNetworkStreamLoadingPhase::RecvMainCharacter(const protocol::Packet& value)
 {
 	TPacketGCMainCharacter MainChrPacket = value.Get<TPacketGCMainCharacter>();
 
-	m_dwMainActorRace = MainChrPacket.wRaceNum;
-	m_dwMainActorEmpire = 0;
-	m_dwMainActorSkillGroup = MainChrPacket.bySkillGroup;
+	m_rkStream.m_dwMainActorRace = MainChrPacket.wRaceNum;
+	m_rkStream.m_dwMainActorEmpire = 0;
+	m_rkStream.m_dwMainActorSkillGroup = MainChrPacket.bySkillGroup;
 
 	CPythonPlayer& rkPlayer = CPythonPlayer::Instance();
 	rkPlayer.SetName(MainChrPacket.szName);
 	rkPlayer.SetMainCharacterIndex(MainChrPacket.dwVID);
 
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_LOAD], "LoadData", Py_BuildValue("(ii)", MainChrPacket.lX, MainChrPacket.lY));
+	PyCallClassMemberFunc(m_rkStream.m_apoPhaseWnd[CPythonNetworkStream::PHASE_WINDOW_LOAD], "LoadData", Py_BuildValue("(ii)", MainChrPacket.lX, MainChrPacket.lY));
 
 	// Tracef(" >> RecvMainCharacter\n");
 
-	SendClientVersionPacket();
+	m_rkStream.SendClientVersionPacket();
 	return true;
 }
 
 // SUPPORT_BGM
-bool CPythonNetworkStream::RecvMainCharacter2_EMPIRE(const protocol::Packet& value)
+bool CNetworkStreamLoadingPhase::RecvMainCharacter2_EMPIRE(const protocol::Packet& value)
 {
 	TPacketGCMainCharacter2_EMPIRE mainChrPacket = value.Get<TPacketGCMainCharacter2_EMPIRE>();
 
-	m_dwMainActorRace = mainChrPacket.wRaceNum;
-	m_dwMainActorEmpire = mainChrPacket.byEmpire;
-	m_dwMainActorSkillGroup = mainChrPacket.bySkillGroup;
+	m_rkStream.m_dwMainActorRace = mainChrPacket.wRaceNum;
+	m_rkStream.m_dwMainActorEmpire = mainChrPacket.byEmpire;
+	m_rkStream.m_dwMainActorSkillGroup = mainChrPacket.bySkillGroup;
 
 	CPythonPlayer& rkPlayer = CPythonPlayer::Instance();
 	rkPlayer.SetName(mainChrPacket.szName);
 	rkPlayer.SetMainCharacterIndex(mainChrPacket.dwVID);
 
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_LOAD], "LoadData", Py_BuildValue("(ii)", mainChrPacket.lX, mainChrPacket.lY));
+	PyCallClassMemberFunc(m_rkStream.m_apoPhaseWnd[CPythonNetworkStream::PHASE_WINDOW_LOAD], "LoadData", Py_BuildValue("(ii)", mainChrPacket.lX, mainChrPacket.lY));
 
 	// Tracef(" >> RecvMainCharacterNew : %d\n", m_dwMainActorEmpire);
 
-	SendClientVersionPacket();
+	m_rkStream.SendClientVersionPacket();
 	return true;
 }
 
-bool CPythonNetworkStream::RecvMainCharacter3_BGM(const protocol::Packet& value)
+bool CNetworkStreamLoadingPhase::RecvMainCharacter3_BGM(const protocol::Packet& value)
 {
 	TPacketGCMainCharacter3_BGM mainChrPacket = value.Get<TPacketGCMainCharacter3_BGM>();
 
-	m_dwMainActorRace = mainChrPacket.wRaceNum;
-	m_dwMainActorEmpire = mainChrPacket.byEmpire;
-	m_dwMainActorSkillGroup = mainChrPacket.bySkillGroup;
+	m_rkStream.m_dwMainActorRace = mainChrPacket.wRaceNum;
+	m_rkStream.m_dwMainActorEmpire = mainChrPacket.byEmpire;
+	m_rkStream.m_dwMainActorSkillGroup = mainChrPacket.bySkillGroup;
 
 	CPythonPlayer& rkPlayer = CPythonPlayer::Instance();
 	rkPlayer.SetName(mainChrPacket.szUserName);
 	rkPlayer.SetMainCharacterIndex(mainChrPacket.dwVID);
 
-	__SetFieldMusicFileName(mainChrPacket.szBGMName);
+	m_rkStream.__SetFieldMusicFileName(mainChrPacket.szBGMName);
 
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_LOAD], "LoadData", Py_BuildValue("(ii)", mainChrPacket.lX, mainChrPacket.lY));
+	PyCallClassMemberFunc(m_rkStream.m_apoPhaseWnd[CPythonNetworkStream::PHASE_WINDOW_LOAD], "LoadData", Py_BuildValue("(ii)", mainChrPacket.lX, mainChrPacket.lY));
 
 	// Tracef(" >> RecvMainCharacterNew : %d\n", m_dwMainActorEmpire);
 
-	SendClientVersionPacket();
+	m_rkStream.SendClientVersionPacket();
 	return true;
 }
 
-bool CPythonNetworkStream::RecvMainCharacter4_BGM_VOL(const protocol::Packet& value)
+bool CNetworkStreamLoadingPhase::RecvMainCharacter4_BGM_VOL(const protocol::Packet& value)
 {
 	TPacketGCMainCharacter4_BGM_VOL mainChrPacket = value.Get<TPacketGCMainCharacter4_BGM_VOL>();
 
-	m_dwMainActorRace = mainChrPacket.wRaceNum;
-	m_dwMainActorEmpire = mainChrPacket.byEmpire;
-	m_dwMainActorSkillGroup = mainChrPacket.bySkillGroup;
+	m_rkStream.m_dwMainActorRace = mainChrPacket.wRaceNum;
+	m_rkStream.m_dwMainActorEmpire = mainChrPacket.byEmpire;
+	m_rkStream.m_dwMainActorSkillGroup = mainChrPacket.bySkillGroup;
 
 	CPythonPlayer& rkPlayer = CPythonPlayer::Instance();
 	rkPlayer.SetName(mainChrPacket.szUserName);
 	rkPlayer.SetMainCharacterIndex(mainChrPacket.dwVID);
 
-	__SetFieldMusicFileInfo(mainChrPacket.szBGMName, mainChrPacket.fBGMVol);
+	m_rkStream.__SetFieldMusicFileInfo(mainChrPacket.szBGMName, mainChrPacket.fBGMVol);
 
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_LOAD], "LoadData", Py_BuildValue("(ii)", mainChrPacket.lX, mainChrPacket.lY));
+	PyCallClassMemberFunc(m_rkStream.m_apoPhaseWnd[CPythonNetworkStream::PHASE_WINDOW_LOAD], "LoadData", Py_BuildValue("(ii)", mainChrPacket.lX, mainChrPacket.lY));
 
 	// Tracef(" >> RecvMainCharacterNew : %d\n", m_dwMainActorEmpire);
 
-	SendClientVersionPacket();
+	m_rkStream.SendClientVersionPacket();
 	return true;
 }
 
@@ -238,14 +239,14 @@ float CPythonNetworkStream::GetFieldMusicVolume()
 }
 // END_OF_SUPPORT_BGM
 
-bool CPythonNetworkStream::__RecvPlayerPoints(const protocol::Packet& value)
+bool CNetworkStreamLoadingPhase::__RecvPlayerPoints(const protocol::Packet& value)
 {
 	TPacketGCPoints PointsPacket = value.Get<TPacketGCPoints>();
 
 	for (uint32_t i = 0; i < POINT_MAX_NUM; ++i)
 		CPythonPlayer::Instance().SetStatus(i, PointsPacket.points[i]);
 
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshStatus", Py_BuildValue("()"));
+	PyCallClassMemberFunc(m_rkStream.m_apoPhaseWnd[CPythonNetworkStream::PHASE_WINDOW_GAME], "RefreshStatus", Py_BuildValue("()"));
 	return true;
 }
 
@@ -271,4 +272,35 @@ bool CPythonNetworkStream::SendEnterGame()
 
 	__SendInternalBuffer();
 	return true;
+}
+
+CNetworkStreamLoadingPhase::CNetworkStreamLoadingPhase(CPythonNetworkStream& rkStream) : CNetworkStreamPhase(rkStream)
+{
+}
+
+ENetworkStreamPhaseResult CNetworkStreamLoadingPhase::Handle(uint8_t header, const protocol::Packet& value)
+{
+	using Handler = bool (CNetworkStreamLoadingPhase::*)(const protocol::Packet&);
+
+	struct FEntry
+	{
+			uint8_t header;
+			Handler handler;
+	};
+
+	static const FEntry entries[] = {
+		{HEADER_GC_MAIN_CHARACTER, &CNetworkStreamLoadingPhase::RecvMainCharacter},
+		{HEADER_GC_MAIN_CHARACTER2_EMPIRE, &CNetworkStreamLoadingPhase::RecvMainCharacter2_EMPIRE},
+		{HEADER_GC_MAIN_CHARACTER3_BGM, &CNetworkStreamLoadingPhase::RecvMainCharacter3_BGM},
+		{HEADER_GC_MAIN_CHARACTER4_BGM_VOL, &CNetworkStreamLoadingPhase::RecvMainCharacter4_BGM_VOL},
+		{HEADER_GC_PLAYER_POINTS, &CNetworkStreamLoadingPhase::__RecvPlayerPoints},
+	};
+
+	for (const FEntry& entry : entries)
+	{
+		if (entry.header == header)
+			return (this->*entry.handler)(value) ? ENetworkStreamPhaseResult::Handled : ENetworkStreamPhaseResult::Failed;
+	}
+
+	return ENetworkStreamPhaseResult::NotHandled;
 }

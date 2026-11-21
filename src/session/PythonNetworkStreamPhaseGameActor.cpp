@@ -1,5 +1,6 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/Session/PythonNetworkStream.h>
+#include <Client/Session/NetworkStreamPhases.h>
 #include <Client/UI/NetworkActorManager.h>
 #include <Client/UI/PythonBackground.h>
 
@@ -74,11 +75,11 @@ bool IsInvisibleRace(uint16_t raceNum)
 
 static SNetworkActorData s_kNetActorData;
 
-bool CPythonNetworkStream::RecvCharacterAppendPacket(const protocol::Packet& value)
+bool CNetworkStreamGameActorPhase::RecvCharacterAppendPacket(const protocol::Packet& value)
 {
 	TPacketGCCharacterAdd chrAddPacket = value.Get<TPacketGCCharacterAdd>();
 
-	__GlobalPositionToLocalPosition(chrAddPacket.x, chrAddPacket.y);
+	m_rkStream.__GlobalPositionToLocalPosition(chrAddPacket.x, chrAddPacket.y);
 
 	SNetworkActorData kNetActorData;
 	kNetActorData.m_bType = chrAddPacket.bType;
@@ -127,7 +128,7 @@ bool CPythonNetworkStream::RecvCharacterAppendPacket(const protocol::Packet& val
 		// else
 		//	kNetActorData.m_stName=chrAddPacket.name;
 
-		__RecvCharacterAppendPacket(&kNetActorData);
+		m_rkStream.__RecvCharacterAppendPacket(&kNetActorData);
 	}
 	else
 	{
@@ -137,7 +138,7 @@ bool CPythonNetworkStream::RecvCharacterAppendPacket(const protocol::Packet& val
 	return true;
 }
 
-bool CPythonNetworkStream::RecvCharacterAdditionalInfo(const protocol::Packet& value)
+bool CNetworkStreamGameActorPhase::RecvCharacterAdditionalInfo(const protocol::Packet& value)
 {
 	TPacketGCCharacterAdditionalInfo chrInfoPacket = value.Get<TPacketGCCharacterAdditionalInfo>();
 
@@ -159,7 +160,7 @@ bool CPythonNetworkStream::RecvCharacterAdditionalInfo(const protocol::Packet& v
 		kNetActorData.m_dwHair = chrInfoPacket.awPart[CHR_EQUIPPART_HAIR];
 		kNetActorData.m_dwMountVnum = chrInfoPacket.dwMountVnum;
 
-		__RecvCharacterAppendPacket(&kNetActorData);
+		m_rkStream.__RecvCharacterAppendPacket(&kNetActorData);
 	}
 	else
 	{
@@ -168,14 +169,14 @@ bool CPythonNetworkStream::RecvCharacterAdditionalInfo(const protocol::Packet& v
 	return true;
 }
 
-bool CPythonNetworkStream::RecvCharacterAppendPacketNew(const protocol::Packet& value)
+bool CNetworkStreamGameActorPhase::RecvCharacterAppendPacketNew(const protocol::Packet& value)
 {
 	TraceError("TPacketGCCharacterAdd2 is an unwritten packet.");
 	TPacketGCCharacterAdd2 chrAddPacket = value.Get<TPacketGCCharacterAdd2>();
 	if (IsInvisibleRace(chrAddPacket.wRaceNum))
 		return true;
 
-	__GlobalPositionToLocalPosition(chrAddPacket.x, chrAddPacket.y);
+	m_rkStream.__GlobalPositionToLocalPosition(chrAddPacket.x, chrAddPacket.y);
 
 	SNetworkActorData kNetActorData;
 	kNetActorData.m_dwLevel = 0;
@@ -198,12 +199,12 @@ bool CPythonNetworkStream::RecvCharacterAppendPacketNew(const protocol::Packet& 
 	kNetActorData.m_sAlignment = chrAddPacket.sAlignment;
 	kNetActorData.m_byPKMode = chrAddPacket.bPKMode;
 	kNetActorData.m_stName = chrAddPacket.name;
-	__RecvCharacterAppendPacket(&kNetActorData);
+	m_rkStream.__RecvCharacterAppendPacket(&kNetActorData);
 
 	return true;
 }
 
-bool CPythonNetworkStream::RecvCharacterUpdatePacket(const protocol::Packet& value)
+bool CNetworkStreamGameActorPhase::RecvCharacterUpdatePacket(const protocol::Packet& value)
 {
 	TPacketGCCharacterUpdate chrUpdatePacket = value.Get<TPacketGCCharacterUpdate>();
 
@@ -221,12 +222,12 @@ bool CPythonNetworkStream::RecvCharacterUpdatePacket(const protocol::Packet& val
 	kNetUpdateActorData.m_byPKMode = chrUpdatePacket.bPKMode;
 	kNetUpdateActorData.m_dwStateFlags = chrUpdatePacket.bStateFlag;
 	kNetUpdateActorData.m_dwMountVnum = chrUpdatePacket.dwMountVnum;
-	__RecvCharacterUpdatePacket(&kNetUpdateActorData);
+	m_rkStream.__RecvCharacterUpdatePacket(&kNetUpdateActorData);
 
 	return true;
 }
 
-bool CPythonNetworkStream::RecvCharacterUpdatePacketNew(const protocol::Packet& value)
+bool CNetworkStreamGameActorPhase::RecvCharacterUpdatePacketNew(const protocol::Packet& value)
 {
 	TPacketGCCharacterUpdate2 chrUpdatePacket = value.Get<TPacketGCCharacterUpdate2>();
 
@@ -244,7 +245,7 @@ bool CPythonNetworkStream::RecvCharacterUpdatePacketNew(const protocol::Packet& 
 	kNetUpdateActorData.m_byPKMode = chrUpdatePacket.bPKMode;
 	kNetUpdateActorData.m_dwStateFlags = chrUpdatePacket.bStateFlag;
 	kNetUpdateActorData.m_dwMountVnum = chrUpdatePacket.dwMountVnum;
-	__RecvCharacterUpdatePacket(&kNetUpdateActorData);
+	m_rkStream.__RecvCharacterUpdatePacket(&kNetUpdateActorData);
 
 	return true;
 }
@@ -314,26 +315,26 @@ void CPythonNetworkStream::__RecvCharacterUpdatePacket(SNetworkUpdateActorData* 
 	}
 }
 
-bool CPythonNetworkStream::RecvCharacterDeletePacket(const protocol::Packet& value)
+bool CNetworkStreamGameActorPhase::RecvCharacterDeletePacket(const protocol::Packet& value)
 {
 	TPacketGCCharacterDelete chrDelPacket = value.Get<TPacketGCCharacterDelete>();
 
-	m_rokNetActorMgr->RemoveActor(chrDelPacket.dwVID);
+	m_rkStream.m_rokNetActorMgr->RemoveActor(chrDelPacket.dwVID);
 
 	// 캐릭터가 사라질때 개인 상점도 없애줍니다.
 	// Key Check 를 하기때문에 없어도 상관은 없습니다.
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME],
+	PyCallClassMemberFunc(m_rkStream.m_apoPhaseWnd[CPythonNetworkStream::PHASE_WINDOW_GAME],
 						  "BINARY_PrivateShop_Disappear",
 						  Py_BuildValue("(i)", chrDelPacket.dwVID));
 
 	return true;
 }
 
-bool CPythonNetworkStream::RecvCharacterMovePacket(const protocol::Packet& value)
+bool CNetworkStreamGameActorPhase::RecvCharacterMovePacket(const protocol::Packet& value)
 {
 	TPacketGCMove kMovePacket = value.Get<TPacketGCMove>();
 
-	__GlobalPositionToLocalPosition(kMovePacket.lX, kMovePacket.lY);
+	m_rkStream.__GlobalPositionToLocalPosition(kMovePacket.lX, kMovePacket.lY);
 
 	SNetworkMoveActorData kNetMoveActorData;
 	kNetMoveActorData.m_dwArg = kMovePacket.bArg;
@@ -345,16 +346,16 @@ bool CPythonNetworkStream::RecvCharacterMovePacket(const protocol::Packet& value
 	kNetMoveActorData.m_lPosY = kMovePacket.lY;
 	kNetMoveActorData.m_dwDuration = kMovePacket.dwDuration;
 
-	m_rokNetActorMgr->MoveActor(kNetMoveActorData);
+	m_rkStream.m_rokNetActorMgr->MoveActor(kNetMoveActorData);
 
 	return true;
 }
 
-bool CPythonNetworkStream::RecvOwnerShipPacket(const protocol::Packet& value)
+bool CNetworkStreamGameActorPhase::RecvOwnerShipPacket(const protocol::Packet& value)
 {
 	TPacketGCOwnership kPacketOwnership = value.Get<TPacketGCOwnership>();
 
-	m_rokNetActorMgr->SetActorOwner(kPacketOwnership.dwOwnerVID, kPacketOwnership.dwVictimVID);
+	m_rkStream.m_rokNetActorMgr->SetActorOwner(kPacketOwnership.dwOwnerVID, kPacketOwnership.dwVictimVID);
 
 	return true;
 }
@@ -397,7 +398,7 @@ bool CPythonNetworkStream::RecvSyncPositionPacket()
 }
 
 /*
-bool CPythonNetworkStream::RecvCharacterAppendPacket(const protocol::Packet& value)
+bool CNetworkStreamGameActorPhase::RecvCharacterAppendPacket(const protocol::Packet& value)
 {
 	TPacketGCCharacterAdd chrAddPacket = value.Get<TPacketGCCharacterAdd>();
 
@@ -423,3 +424,37 @@ bool CPythonNetworkStream::RecvCharacterAppendPacket(const protocol::Packet& val
 	return true;
 }
 */
+
+CNetworkStreamGameActorPhase::CNetworkStreamGameActorPhase(CPythonNetworkStream& rkStream) : CNetworkStreamPhase(rkStream)
+{
+}
+
+ENetworkStreamPhaseResult CNetworkStreamGameActorPhase::Handle(uint8_t header, const protocol::Packet& value)
+{
+	using Handler = bool (CNetworkStreamGameActorPhase::*)(const protocol::Packet&);
+
+	struct FEntry
+	{
+			uint8_t header;
+			Handler handler;
+	};
+
+	static const FEntry entries[] = {
+		{HEADER_GC_CHAR_ADDITIONAL_INFO, &CNetworkStreamGameActorPhase::RecvCharacterAdditionalInfo},
+		{HEADER_GC_CHARACTER_ADD, &CNetworkStreamGameActorPhase::RecvCharacterAppendPacket},
+		{HEADER_GC_CHARACTER_ADD2, &CNetworkStreamGameActorPhase::RecvCharacterAppendPacketNew},
+		{HEADER_GC_CHARACTER_DEL, &CNetworkStreamGameActorPhase::RecvCharacterDeletePacket},
+		{HEADER_GC_CHARACTER_MOVE, &CNetworkStreamGameActorPhase::RecvCharacterMovePacket},
+		{HEADER_GC_CHARACTER_UPDATE, &CNetworkStreamGameActorPhase::RecvCharacterUpdatePacket},
+		{HEADER_GC_CHARACTER_UPDATE2, &CNetworkStreamGameActorPhase::RecvCharacterUpdatePacketNew},
+		{HEADER_GC_OWNERSHIP, &CNetworkStreamGameActorPhase::RecvOwnerShipPacket},
+	};
+
+	for (const FEntry& entry : entries)
+	{
+		if (entry.header == header)
+			return (this->*entry.handler)(value) ? ENetworkStreamPhaseResult::Handled : ENetworkStreamPhaseResult::Failed;
+	}
+
+	return ENetworkStreamPhaseResult::NotHandled;
+}

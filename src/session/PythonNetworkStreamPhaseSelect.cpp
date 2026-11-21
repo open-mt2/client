@@ -1,5 +1,6 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/Session/PythonNetworkStream.h>
+#include <Client/Session/NetworkStreamPhases.h>
 #include <Client/UI/Packet.h>
 
 extern uint32_t g_adwEncryptKey[4];
@@ -147,7 +148,7 @@ bool CPythonNetworkStream::SendChangeNamePacket(uint8_t index, const char* name)
 	return SendSequence();
 }
 
-bool CPythonNetworkStream::__RecvPlayerCreateSuccessPacket(const protocol::Packet& value)
+bool CNetworkStreamSelectPhase::__RecvPlayerCreateSuccessPacket(const protocol::Packet& value)
 {
 	const TPacketGCPlayerCreateSuccess kCreateSuccessPacket = value.Get<TPacketGCPlayerCreateSuccess>();
 
@@ -158,54 +159,85 @@ bool CPythonNetworkStream::__RecvPlayerCreateSuccessPacket(const protocol::Packe
 		return true;
 	}
 
-	m_akSimplePlayerInfo[kCreateSuccessPacket.bAccountCharacterSlot] = kCreateSuccessPacket.kSimplePlayerInfomation;
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_CREATE], "OnCreateSuccess", Py_BuildValue("()"));
+	m_rkStream.m_akSimplePlayerInfo[kCreateSuccessPacket.bAccountCharacterSlot] = kCreateSuccessPacket.kSimplePlayerInfomation;
+	PyCallClassMemberFunc(m_rkStream.m_apoPhaseWnd[CPythonNetworkStream::PHASE_WINDOW_CREATE], "OnCreateSuccess", Py_BuildValue("()"));
 	return true;
 }
 
-bool CPythonNetworkStream::__RecvPlayerCreateFailurePacket(const protocol::Packet& value)
+bool CNetworkStreamSelectPhase::__RecvPlayerCreateFailurePacket(const protocol::Packet& value)
 {
 	const TPacketGCCreateFailure packet = value.Get<TPacketGCCreateFailure>();
 
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_CREATE], "OnCreateFailure", Py_BuildValue("(i)", packet.bType));
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_SELECT], "OnCreateFailure", Py_BuildValue("(i)", packet.bType));
+	PyCallClassMemberFunc(m_rkStream.m_apoPhaseWnd[CPythonNetworkStream::PHASE_WINDOW_CREATE], "OnCreateFailure", Py_BuildValue("(i)", packet.bType));
+	PyCallClassMemberFunc(m_rkStream.m_apoPhaseWnd[CPythonNetworkStream::PHASE_WINDOW_SELECT], "OnCreateFailure", Py_BuildValue("(i)", packet.bType));
 	return true;
 }
 
-bool CPythonNetworkStream::__RecvPlayerDestroySuccessPacket(const protocol::Packet& value)
+bool CNetworkStreamSelectPhase::__RecvPlayerDestroySuccessPacket(const protocol::Packet& value)
 {
 	const TPacketGCDestroyCharacterSuccess packet = value.Get<TPacketGCDestroyCharacterSuccess>();
 
-	memset(&m_akSimplePlayerInfo[packet.account_index], 0, sizeof(m_akSimplePlayerInfo[packet.account_index]));
-	m_adwGuildID[packet.account_index] = 0;
-	m_astrGuildName[packet.account_index] = "";
+	memset(&m_rkStream.m_akSimplePlayerInfo[packet.account_index], 0, sizeof(m_rkStream.m_akSimplePlayerInfo[packet.account_index]));
+	m_rkStream.m_adwGuildID[packet.account_index] = 0;
+	m_rkStream.m_astrGuildName[packet.account_index] = "";
 
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_SELECT], "OnDeleteSuccess", Py_BuildValue("(i)", packet.account_index));
+	PyCallClassMemberFunc(m_rkStream.m_apoPhaseWnd[CPythonNetworkStream::PHASE_WINDOW_SELECT], "OnDeleteSuccess", Py_BuildValue("(i)", packet.account_index));
 	return true;
 }
 
-bool CPythonNetworkStream::__RecvPlayerDestroyFailurePacket(const protocol::Packet& value)
+bool CNetworkStreamSelectPhase::__RecvPlayerDestroyFailurePacket(const protocol::Packet& value)
 {
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_SELECT], "OnDeleteFailure", Py_BuildValue("()"));
+	PyCallClassMemberFunc(m_rkStream.m_apoPhaseWnd[CPythonNetworkStream::PHASE_WINDOW_SELECT], "OnDeleteFailure", Py_BuildValue("()"));
 	return true;
 }
 
-bool CPythonNetworkStream::__RecvChangeName(const protocol::Packet& value)
+bool CNetworkStreamSelectPhase::__RecvChangeName(const protocol::Packet& value)
 {
 	const TPacketGCChangeName ChangeNamePacket = value.Get<TPacketGCChangeName>();
 
 	for (int i = 0; i < PLAYER_PER_ACCOUNT4; ++i)
 	{
-		if (ChangeNamePacket.pid == m_akSimplePlayerInfo[i].dwID)
+		if (ChangeNamePacket.pid == m_rkStream.m_akSimplePlayerInfo[i].dwID)
 		{
-			m_akSimplePlayerInfo[i].bChangeName = FALSE;
-			snprintf(m_akSimplePlayerInfo[i].szName, sizeof(m_akSimplePlayerInfo[i].szName), "%s", ChangeNamePacket.name);
+			m_rkStream.m_akSimplePlayerInfo[i].bChangeName = FALSE;
+			snprintf(m_rkStream.m_akSimplePlayerInfo[i].szName, sizeof(m_rkStream.m_akSimplePlayerInfo[i].szName), "%s", ChangeNamePacket.name);
 
-			PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_SELECT], "OnChangeName", Py_BuildValue("(is)", i, ChangeNamePacket.name));
+			PyCallClassMemberFunc(m_rkStream.m_apoPhaseWnd[CPythonNetworkStream::PHASE_WINDOW_SELECT], "OnChangeName", Py_BuildValue("(is)", i, ChangeNamePacket.name));
 			return true;
 		}
 	}
 
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_SELECT], "OnCreateFailure", Py_BuildValue("(i)", 100));
+	PyCallClassMemberFunc(m_rkStream.m_apoPhaseWnd[CPythonNetworkStream::PHASE_WINDOW_SELECT], "OnCreateFailure", Py_BuildValue("(i)", 100));
 	return true;
+}
+
+CNetworkStreamSelectPhase::CNetworkStreamSelectPhase(CPythonNetworkStream& rkStream) : CNetworkStreamPhase(rkStream)
+{
+}
+
+ENetworkStreamPhaseResult CNetworkStreamSelectPhase::Handle(uint8_t header, const protocol::Packet& value)
+{
+	using Handler = bool (CNetworkStreamSelectPhase::*)(const protocol::Packet&);
+
+	struct FEntry
+	{
+			uint8_t header;
+			Handler handler;
+	};
+
+	static const FEntry entries[] = {
+		{HEADER_GC_CHANGE_NAME, &CNetworkStreamSelectPhase::__RecvChangeName},
+		{HEADER_GC_PLAYER_CREATE_FAILURE, &CNetworkStreamSelectPhase::__RecvPlayerCreateFailurePacket},
+		{HEADER_GC_PLAYER_CREATE_SUCCESS, &CNetworkStreamSelectPhase::__RecvPlayerCreateSuccessPacket},
+		{HEADER_GC_PLAYER_DELETE_WRONG_SOCIAL_ID, &CNetworkStreamSelectPhase::__RecvPlayerDestroyFailurePacket},
+		{HEADER_GC_PLAYER_DELETE_SUCCESS, &CNetworkStreamSelectPhase::__RecvPlayerDestroySuccessPacket},
+	};
+
+	for (const FEntry& entry : entries)
+	{
+		if (entry.header == header)
+			return (this->*entry.handler)(value) ? ENetworkStreamPhaseResult::Handled : ENetworkStreamPhaseResult::Failed;
+	}
+
+	return ENetworkStreamPhaseResult::NotHandled;
 }

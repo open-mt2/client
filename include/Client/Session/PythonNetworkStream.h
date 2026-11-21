@@ -8,6 +8,7 @@
 
 #include <Client/Protocol/Wire.h>
 #include <Client/Protocol/Decode.h>
+#include <Client/Session/NetworkStreamPhases.h>
 
 class CInstanceBase;
 class CNetworkActorManager;
@@ -230,16 +231,10 @@ class CPythonNetworkStream : public CNetworkStream, public CSingleton<CPythonNet
 		bool SendGuildWithdrawMoneyPacket(uint32_t dwMoney);
 
 		// Mall
-		bool RecvMallOpenPacket(const protocol::Packet& value);
-		bool RecvMallItemSetPacket(const protocol::Packet& value);
-		bool RecvMallItemDelPacket(const protocol::Packet& value);
 
 		// Lover
-		bool RecvLoverInfoPacket(const protocol::Packet& value);
-		bool RecvLovePointUpdatePacket(const protocol::Packet& value);
 
 		// Dig
-		bool RecvDigMotionPacket(const protocol::Packet& value);
 
 		// Fishing
 		bool SendFishingPacket(int iRotation);
@@ -263,7 +258,6 @@ class CPythonNetworkStream : public CNetworkStream, public CSingleton<CPythonNet
 
 		// Handshake
 		bool RecvHandshakePacket();
-		bool RecvHandshakeOKPacket(const protocol::Packet& value);
 
 		// ETC
 		uint32_t GetMainActorVID();
@@ -390,99 +384,41 @@ class CPythonNetworkStream : public CNetworkStream, public CSingleton<CPythonNet
 		bool DispatchProtocolPacket(const protocol::Packet& value);
 
 		// Login Phase
-		bool __RecvLoginSuccessPacket3(const protocol::Packet& value);
-		bool __RecvLoginSuccessPacket4(const protocol::Packet& value);
-		bool __RecvLoginFailurePacket(const protocol::Packet& value);
-		bool __RecvEmpirePacket(const protocol::Packet& value);
-		bool __RecvChinaMatrixCardPacket(const protocol::Packet& value);
-		bool __RecvRunupMatrixQuizPacket(const protocol::Packet& value);
-		bool __RecvNEWCIBNPasspodRequestPacket(const protocol::Packet& value);
-		bool __RecvNEWCIBNPasspodFailurePacket(const protocol::Packet& value);
-		bool __RecvLoginKeyPacket(const protocol::Packet& value);
 
 		// Select Phase
-		bool __RecvPlayerCreateSuccessPacket(const protocol::Packet& value);
-		bool __RecvPlayerCreateFailurePacket(const protocol::Packet& value);
-		bool __RecvPlayerDestroySuccessPacket(const protocol::Packet& value);
-		bool __RecvPlayerDestroyFailurePacket(const protocol::Packet& value);
 		bool __RecvPreserveItemPacket();
-		bool __RecvPlayerPoints(const protocol::Packet& value);
-		bool __RecvChangeName(const protocol::Packet& value);
 
 		// Loading Phase
-		bool RecvMainCharacter(const protocol::Packet& value);
-		bool RecvMainCharacter2_EMPIRE(const protocol::Packet& value);
-		bool RecvMainCharacter3_BGM(const protocol::Packet& value);
-		bool RecvMainCharacter4_BGM_VOL(const protocol::Packet& value);
 
 		void __SetFieldMusicFileName(const char* musicName);
 		void __SetFieldMusicFileInfo(const char* musicName, float vol);
 		// END_OF_SUPPORT_BGM
 
 		// Main Game Phase
-		bool RecvWarpPacket(const protocol::Packet& value);
-		bool RecvPVPPacket(const protocol::Packet& value);
 		bool RecvDuelStartPacket();
 		bool RecvGlobalTimePacket();
-		bool RecvCharacterAppendPacket(const protocol::Packet& value);
-		bool RecvCharacterAdditionalInfo(const protocol::Packet& value);
-		bool RecvCharacterAppendPacketNew(const protocol::Packet& value);
-		bool RecvCharacterUpdatePacket(const protocol::Packet& value);
-		bool RecvCharacterUpdatePacketNew(const protocol::Packet& value);
-		bool RecvCharacterDeletePacket(const protocol::Packet& value);
 		bool RecvChatPacket();
-		bool RecvOwnerShipPacket(const protocol::Packet& value);
 		bool RecvSyncPositionPacket();
 		bool RecvWhisperPacket();
-		bool RecvPointChange(const protocol::Packet& value); // Alarm to python
-		bool RecvChangeSpeedPacket(const protocol::Packet& value);
 
-		bool RecvStunPacket(const protocol::Packet& value);
-		bool RecvDeadPacket(const protocol::Packet& value);
-		bool RecvCharacterMovePacket(const protocol::Packet& value);
 
-		bool RecvItemSetPacket(const protocol::Packet& value);	  // Alarm to python
-		bool RecvItemSetPacket2(const protocol::Packet& value);	  // Alarm to python
-		bool RecvItemUsePacket(const protocol::Packet& value);	  // Alarm to python
-		bool RecvItemUpdatePacket(const protocol::Packet& value); // Alarm to python
-		bool RecvItemGroundAddPacket(const protocol::Packet& value);
-		bool RecvItemGroundDelPacket(const protocol::Packet& value);
-		bool RecvItemOwnership(const protocol::Packet& value);
 
-		bool RecvQuickSlotAddPacket(const protocol::Packet& value);	 // Alarm to python
-		bool RecvQuickSlotDelPacket(const protocol::Packet& value);	 // Alarm to python
-		bool RecvQuickSlotMovePacket(const protocol::Packet& value); // Alarm to python
 
-		bool RecvCharacterPositionPacket(const protocol::Packet& value);
-		bool RecvMotionPacket(const protocol::Packet& value);
 
 		bool RecvShopPacket();
-		bool RecvShopSignPacket(const protocol::Packet& value);
-		bool RecvExchangePacket(const protocol::Packet& value);
 
 		// Quest
 		bool RecvScriptPacket();
 		bool RecvQuestInfoPacket();
-		bool RecvQuestConfirmPacket(const protocol::Packet& value);
-		bool RecvRequestMakeGuild(const protocol::Packet& value);
 
 		// Skill
-		bool RecvSkillLevel(const protocol::Packet& value);
-		bool RecvSkillLevelNew(const protocol::Packet& value);
 		bool RecvSkillCoolTimeEnd();
 
 		// Target
-		bool RecvTargetPacket(const protocol::Packet& value);
-		bool RecvViewEquipPacket(const protocol::Packet& value);
-		bool RecvDamageInfoPacket(const protocol::Packet& value);
 
 		// Mount
-		bool RecvMountPacket(const protocol::Packet& value);
 
 		// Fly
-		bool RecvCreateFlyPacket(const protocol::Packet& value);
-		bool RecvFlyTargetingPacket(const protocol::Packet& value);
-		bool RecvAddFlyTargetingPacket(const protocol::Packet& value);
 
 		// Messenger
 		bool RecvMessenger();
@@ -491,63 +427,36 @@ class CPythonNetworkStream : public CNetworkStream, public CSingleton<CPythonNet
 		bool RecvGuild();
 
 		// Party
-		bool RecvPartyInvite(const protocol::Packet& value);
-		bool RecvPartyAdd(const protocol::Packet& value);
-		bool RecvPartyUpdate(const protocol::Packet& value);
-		bool RecvPartyRemove(const protocol::Packet& value);
-		bool RecvPartyLink(const protocol::Packet& value);
-		bool RecvPartyUnlink(const protocol::Packet& value);
-		bool RecvPartyParameter(const protocol::Packet& value);
 
 		// SafeBox
-		bool RecvSafeBoxSetPacket(const protocol::Packet& value);
-		bool RecvSafeBoxDelPacket(const protocol::Packet& value);
-		bool RecvSafeBoxWrongPasswordPacket(const protocol::Packet& value);
-		bool RecvSafeBoxSizePacket(const protocol::Packet& value);
-		bool RecvSafeBoxMoneyChangePacket(const protocol::Packet& value);
 
 		// Fishing
-		bool RecvFishing(const protocol::Packet& value);
 
 		// Dungeon
 		bool RecvDungeon();
 
 		// Time
-		bool RecvTimePacket(const protocol::Packet& value);
 
 		// WalkMode
-		bool RecvWalkModePacket(const protocol::Packet& value);
 
 		// ChangeSkillGroup
-		bool RecvChangeSkillGroupPacket(const protocol::Packet& value);
 
 		// Refine
-		bool RecvRefineInformationPacket(const protocol::Packet& value);
-		bool RecvRefineInformationPacketNew(const protocol::Packet& value);
 
 		// Use Potion
-		bool RecvSpecialEffect(const protocol::Packet& value);
 
 		// 서버에서 지정한 이팩트 발동 패킷.
-		bool RecvSpecificEffect(const protocol::Packet& value);
 
 		// 용혼석 관련
-		bool RecvDragonSoulRefine(const protocol::Packet& value);
 
 		// MiniMap Info
 		bool RecvNPCList();
 		bool RecvLandPacket();
 		bool RecvTargetCreatePacket();
-		bool RecvTargetCreatePacketNew(const protocol::Packet& value);
-		bool RecvTargetUpdatePacket(const protocol::Packet& value);
-		bool RecvTargetDeletePacket(const protocol::Packet& value);
 
 		// Affect
-		bool RecvAffectAddPacket(const protocol::Packet& value);
-		bool RecvAffectRemovePacket(const protocol::Packet& value);
 
 		// Channel
-		bool RecvChannelPacket(const protocol::Packet& value);
 
 	protected:
 		// 이모티콘
@@ -599,6 +508,25 @@ class CPythonNetworkStream : public CNetworkStream, public CSingleton<CPythonNet
 		void __FilterInsult(char* szLine, uint32_t uLineLen);
 
 		void __SetGuildID(uint32_t id);
+
+	protected:
+		friend class CNetworkStreamOfflinePhase;
+		friend class CNetworkStreamHandShakePhase;
+		friend class CNetworkStreamLoginPhase;
+		friend class CNetworkStreamSelectPhase;
+		friend class CNetworkStreamLoadingPhase;
+		friend class CNetworkStreamGamePhase;
+		friend class CNetworkStreamGameActorPhase;
+		friend class CNetworkStreamGameItemPhase;
+
+		CNetworkStreamOfflinePhase m_kOfflinePhase;
+		CNetworkStreamHandShakePhase m_kHandShakePhase;
+		CNetworkStreamLoginPhase m_kLoginPhase;
+		CNetworkStreamSelectPhase m_kSelectPhase;
+		CNetworkStreamLoadingPhase m_kLoadingPhase;
+		CNetworkStreamGamePhase m_kGamePhase;
+		CNetworkStreamGameActorPhase m_kGameActorPhase;
+		CNetworkStreamGameItemPhase m_kGameItemPhase;
 
 	protected:
 		TPacketGCHandshake m_HandshakeData;

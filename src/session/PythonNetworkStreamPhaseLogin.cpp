@@ -1,5 +1,6 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/Session/PythonNetworkStream.h>
+#include <Client/Session/NetworkStreamPhases.h>
 #include <Client/UI/Packet.h>
 #include <Client/UI/Test.h>
 #include <Client/UI/AccountConnector.h>
@@ -77,59 +78,59 @@ void CPythonNetworkStream::SetLoginPhase()
 	}
 }
 
-bool CPythonNetworkStream::__RecvEmpirePacket(const protocol::Packet& value)
+bool CNetworkStreamLoginPhase::__RecvEmpirePacket(const protocol::Packet& value)
 {
 	TPacketGCEmpire kPacketEmpire = value.Get<TPacketGCEmpire>();
 
-	m_dwEmpireID = kPacketEmpire.bEmpire;
+	m_rkStream.m_dwEmpireID = kPacketEmpire.bEmpire;
 	return true;
 }
 
-bool CPythonNetworkStream::__RecvLoginSuccessPacket3(const protocol::Packet& value)
+bool CNetworkStreamLoginPhase::__RecvLoginSuccessPacket3(const protocol::Packet& value)
 {
 	TPacketGCLoginSuccess3 kPacketLoginSuccess = value.Get<TPacketGCLoginSuccess3>();
 
 	for (int i = 0; i < PLAYER_PER_ACCOUNT3; ++i)
 	{
-		m_akSimplePlayerInfo[i] = kPacketLoginSuccess.akSimplePlayerInformation[i];
-		m_adwGuildID[i] = kPacketLoginSuccess.guild_id[i];
-		m_astrGuildName[i] = kPacketLoginSuccess.guild_name[i];
+		m_rkStream.m_akSimplePlayerInfo[i] = kPacketLoginSuccess.akSimplePlayerInformation[i];
+		m_rkStream.m_adwGuildID[i] = kPacketLoginSuccess.guild_id[i];
+		m_rkStream.m_astrGuildName[i] = kPacketLoginSuccess.guild_name[i];
 	}
 
-	m_kMarkAuth.m_dwHandle = kPacketLoginSuccess.handle;
-	m_kMarkAuth.m_dwRandomKey = kPacketLoginSuccess.random_key;
+	m_rkStream.m_kMarkAuth.m_dwHandle = kPacketLoginSuccess.handle;
+	m_rkStream.m_kMarkAuth.m_dwRandomKey = kPacketLoginSuccess.random_key;
 
-	if (__DirectEnterMode_IsSet())
+	if (m_rkStream.__DirectEnterMode_IsSet())
 	{
 	}
 	else
 	{
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_SELECT], "Refresh", Py_BuildValue("()"));
+		PyCallClassMemberFunc(m_rkStream.m_apoPhaseWnd[CPythonNetworkStream::PHASE_WINDOW_SELECT], "Refresh", Py_BuildValue("()"));
 	}
 
 	return true;
 }
 
-bool CPythonNetworkStream::__RecvLoginSuccessPacket4(const protocol::Packet& value)
+bool CNetworkStreamLoginPhase::__RecvLoginSuccessPacket4(const protocol::Packet& value)
 {
 	TPacketGCLoginSuccess4 kPacketLoginSuccess = value.Get<TPacketGCLoginSuccess4>();
 
 	for (int i = 0; i < PLAYER_PER_ACCOUNT4; ++i)
 	{
-		m_akSimplePlayerInfo[i] = kPacketLoginSuccess.akSimplePlayerInformation[i];
-		m_adwGuildID[i] = kPacketLoginSuccess.guild_id[i];
-		m_astrGuildName[i] = kPacketLoginSuccess.guild_name[i];
+		m_rkStream.m_akSimplePlayerInfo[i] = kPacketLoginSuccess.akSimplePlayerInformation[i];
+		m_rkStream.m_adwGuildID[i] = kPacketLoginSuccess.guild_id[i];
+		m_rkStream.m_astrGuildName[i] = kPacketLoginSuccess.guild_name[i];
 	}
 
-	m_kMarkAuth.m_dwHandle = kPacketLoginSuccess.handle;
-	m_kMarkAuth.m_dwRandomKey = kPacketLoginSuccess.random_key;
+	m_rkStream.m_kMarkAuth.m_dwHandle = kPacketLoginSuccess.handle;
+	m_rkStream.m_kMarkAuth.m_dwRandomKey = kPacketLoginSuccess.random_key;
 
-	if (__DirectEnterMode_IsSet())
+	if (m_rkStream.__DirectEnterMode_IsSet())
 	{
 	}
 	else
 	{
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_SELECT], "Refresh", Py_BuildValue("()"));
+		PyCallClassMemberFunc(m_rkStream.m_apoPhaseWnd[CPythonNetworkStream::PHASE_WINDOW_SELECT], "Refresh", Py_BuildValue("()"));
 	}
 
 	return true;
@@ -147,11 +148,11 @@ void CPythonNetworkStream::OnConnectFailure()
 	}
 }
 
-bool CPythonNetworkStream::__RecvLoginFailurePacket(const protocol::Packet& value)
+bool CNetworkStreamLoginPhase::__RecvLoginFailurePacket(const protocol::Packet& value)
 {
 	TPacketGCLoginFailure packet_failure = value.Get<TPacketGCLoginFailure>();
 
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_LOGIN], "OnLoginFailure", Py_BuildValue("(s)", packet_failure.szStatus));
+	PyCallClassMemberFunc(m_rkStream.m_apoPhaseWnd[CPythonNetworkStream::PHASE_WINDOW_LOGIN], "OnLoginFailure", Py_BuildValue("(s)", packet_failure.szStatus));
 #ifdef _DEBUG
 	Tracef(" RecvLoginFailurePacket : [%s]\n", packet_failure.szStatus);
 #endif
@@ -225,11 +226,11 @@ bool CPythonNetworkStream::SendLoginPacketNew(const char* c_szName, const char* 
 	return true;
 }
 
-bool CPythonNetworkStream::__RecvRunupMatrixQuizPacket(const protocol::Packet& value)
+bool CNetworkStreamLoginPhase::__RecvRunupMatrixQuizPacket(const protocol::Packet& value)
 {
 	TPacketGCRunupMatrixQuiz kMatrixQuizPacket = value.Get<TPacketGCRunupMatrixQuiz>();
 
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_LOGIN], "BINARY_OnRunupMatrixQuiz", Py_BuildValue("(s)", kMatrixQuizPacket.szQuiz));
+	PyCallClassMemberFunc(m_rkStream.m_apoPhaseWnd[CPythonNetworkStream::PHASE_WINDOW_LOGIN], "BINARY_OnRunupMatrixQuiz", Py_BuildValue("(s)", kMatrixQuizPacket.szQuiz));
 	return true;
 }
 
@@ -247,15 +248,15 @@ bool CPythonNetworkStream::SendRunupMatrixAnswerPacket(const char* c_szMatrixCar
 	return SendSequence();
 }
 
-bool CPythonNetworkStream::__RecvNEWCIBNPasspodRequestPacket(const protocol::Packet& value)
+bool CNetworkStreamLoginPhase::__RecvNEWCIBNPasspodRequestPacket(const protocol::Packet& value)
 {
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_LOGIN], "BINARY_OnNEWCIBNPasspodRequest", Py_BuildValue("()"));
+	PyCallClassMemberFunc(m_rkStream.m_apoPhaseWnd[CPythonNetworkStream::PHASE_WINDOW_LOGIN], "BINARY_OnNEWCIBNPasspodRequest", Py_BuildValue("()"));
 	return true;
 }
 
-bool CPythonNetworkStream::__RecvNEWCIBNPasspodFailurePacket(const protocol::Packet& value)
+bool CNetworkStreamLoginPhase::__RecvNEWCIBNPasspodFailurePacket(const protocol::Packet& value)
 {
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_LOGIN], "BINARY_OnNEWCIBNPasspodFailure", Py_BuildValue("()"));
+	PyCallClassMemberFunc(m_rkStream.m_apoPhaseWnd[CPythonNetworkStream::PHASE_WINDOW_LOGIN], "BINARY_OnNEWCIBNPasspodFailure", Py_BuildValue("()"));
 	return true;
 }
 
@@ -294,7 +295,7 @@ bool CPythonNetworkStream::SendChinaMatrixCardPacket(const char* c_szMatrixCardS
 #define ROW(rows, i) ((rows >> ((4 - i - 1) * 8)) & 0x000000FF)
 #define COL(cols, i) ((cols >> ((4 - i - 1) * 8)) & 0x000000FF)
 
-bool CPythonNetworkStream::__RecvChinaMatrixCardPacket(const protocol::Packet& value)
+bool CNetworkStreamLoginPhase::__RecvChinaMatrixCardPacket(const protocol::Packet& value)
 {
 	TPacketGCChinaMatrixCard kMatrixCardPacket = value.Get<TPacketGCChinaMatrixCard>();
 
@@ -306,16 +307,51 @@ bool CPythonNetworkStream::__RecvChinaMatrixCardPacket(const protocol::Packet& v
 									  COL(kMatrixCardPacket.dwCols, 1),
 									  COL(kMatrixCardPacket.dwCols, 2),
 									  COL(kMatrixCardPacket.dwCols, 3));
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_LOGIN], "OnMatrixCard", pyValue);
+	PyCallClassMemberFunc(m_rkStream.m_apoPhaseWnd[CPythonNetworkStream::PHASE_WINDOW_LOGIN], "OnMatrixCard", pyValue);
 	return true;
 }
 
-bool CPythonNetworkStream::__RecvLoginKeyPacket(const protocol::Packet& value)
+bool CNetworkStreamLoginPhase::__RecvLoginKeyPacket(const protocol::Packet& value)
 {
 	TPacketGCLoginKey kLoginKeyPacket = value.Get<TPacketGCLoginKey>();
 
-	m_dwLoginKey = kLoginKeyPacket.dwLoginKey;
-	m_isWaitLoginKey = FALSE;
+	m_rkStream.m_dwLoginKey = kLoginKeyPacket.dwLoginKey;
+	m_rkStream.m_isWaitLoginKey = FALSE;
 
 	return true;
+}
+
+CNetworkStreamLoginPhase::CNetworkStreamLoginPhase(CPythonNetworkStream& rkStream) : CNetworkStreamPhase(rkStream)
+{
+}
+
+ENetworkStreamPhaseResult CNetworkStreamLoginPhase::Handle(uint8_t header, const protocol::Packet& value)
+{
+	using Handler = bool (CNetworkStreamLoginPhase::*)(const protocol::Packet&);
+
+	struct FEntry
+	{
+			uint8_t header;
+			Handler handler;
+	};
+
+	static const FEntry entries[] = {
+		{HEADER_GC_CHINA_MATRIX_CARD, &CNetworkStreamLoginPhase::__RecvChinaMatrixCardPacket},
+		{HEADER_GC_EMPIRE, &CNetworkStreamLoginPhase::__RecvEmpirePacket},
+		{HEADER_GC_LOGIN_FAILURE, &CNetworkStreamLoginPhase::__RecvLoginFailurePacket},
+		{HEADER_GC_LOGIN_KEY, &CNetworkStreamLoginPhase::__RecvLoginKeyPacket},
+		{HEADER_GC_LOGIN_SUCCESS3, &CNetworkStreamLoginPhase::__RecvLoginSuccessPacket3},
+		{HEADER_GC_LOGIN_SUCCESS4, &CNetworkStreamLoginPhase::__RecvLoginSuccessPacket4},
+		{HEADER_GC_NEWCIBN_PASSPOD_FAILURE, &CNetworkStreamLoginPhase::__RecvNEWCIBNPasspodFailurePacket},
+		{HEADER_GC_NEWCIBN_PASSPOD_REQUEST, &CNetworkStreamLoginPhase::__RecvNEWCIBNPasspodRequestPacket},
+		{HEADER_GC_RUNUP_MATRIX_QUIZ, &CNetworkStreamLoginPhase::__RecvRunupMatrixQuizPacket},
+	};
+
+	for (const FEntry& entry : entries)
+	{
+		if (entry.header == header)
+			return (this->*entry.handler)(value) ? ENetworkStreamPhaseResult::Handled : ENetworkStreamPhaseResult::Failed;
+	}
+
+	return ENetworkStreamPhaseResult::NotHandled;
 }
