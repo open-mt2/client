@@ -1,5 +1,5 @@
 #include <Client/UI/StdAfx.h>
-#include <Client/UI/PythonApplication.h>
+#include <Client/UI/App/PythonApplication.h>
 
 PyObject* sndPlaySound(PyObject* poSelf, PyObject* poArgs)
 {

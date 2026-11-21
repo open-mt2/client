@@ -1,6 +1,6 @@
 #include <support/TestAssert.h>
 
-#include <Client/UI/FrameClear.h>
+#include <Client/UI/Widget/FrameClear.h>
 
 // Every GL frame must start from a cleared colour buffer (open-mt2/devkit#137).
 //

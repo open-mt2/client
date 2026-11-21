@@ -16,16 +16,16 @@
 #include <Client/Feature/Quest/PythonQuest.h>
 #include <Client/Feature/Event/PythonEventManager.h>
 #include <Client/Feature/Messenger/PythonMessenger.h>
-#include <Client/UI/PythonApplication.h>
+#include <Client/UI/App/PythonApplication.h>
 
 #include <Neoeter/IO/EterPackManager.h>
 #include <Client/GameData/ItemManager.h>
 
 #include <Client/UI/AbstractApplication.h>
 #include <Client/UI/AbstractCharacterManager.h>
-#include <Client/UI/InstanceBase.h>
+#include <Client/UI/Instance/InstanceBase.h>
 
-#include <Client/UI/ProcessCRC.h>
+#include <Client/UI/Util/ProcessCRC.h>
 
 int32_t gs_bEmpireLanuageEnable = TRUE;
 

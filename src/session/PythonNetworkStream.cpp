@@ -7,11 +7,11 @@
 #include <Client/UI/QuitRequest.h>
 #include <Client/Feature/Character/NetworkActorManager.h>
 
-#include <Client/UI/GuildMarkDownloader.h>
-#include <Client/UI/GuildMarkUploader.h>
-#include <Client/UI/MarkManager.h>
+#include <Client/UI/Marks/GuildMarkDownloader.h>
+#include <Client/UI/Marks/GuildMarkUploader.h>
+#include <Client/UI/Marks/MarkManager.h>
 
-#include <Client/UI/ProcessCRC.h>
+#include <Client/UI/Util/ProcessCRC.h>
 
 // MARK_BUG_FIX
 static uint32_t gs_nextDownloadMarkTime = 0;

@@ -1,7 +1,7 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/Feature/Character/PythonCharacterManager.h>
 #include <Client/Feature/Background/PythonBackground.h>
-#include <Client/UI/InstanceBase.h>
+#include <Client/UI/Instance/InstanceBase.h>
 #include <Client/Game/RaceManager.h>
 
 //////////////////////////////////////////////////////////////////////////

@@ -1,7 +1,7 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/Player/PythonPlayer.h>
 #include <Client/Player/PythonPlayerInput.h>
-#include <Client/UI/PythonApplication.h>
+#include <Client/UI/App/PythonApplication.h>
 
 #include <Neoeter/Render/Camera.h>
 

@@ -1,0 +1,1688 @@
+#include <Client/UI/StdAfx.h>
+#include <SDL2/SDL.h>
+#include <Client/UI/Cursor/SdlCursor.h>
+#include <Client/UI/QuitRequest.h>
+#include <Client/UI/Widget/FrameClear.h>
+#include <Neoeter/Platform/Base/error.h>
+#include <Neoeter/Platform/Base/Version.h>
+#include <Neoeter/Platform/Port.h>
+#include <Neoeter/Debug/Debug.h>
+#include <Client/UI/Widget/DebugPacksPanel.h>
+#include <Client/UI/Widget/GraphicsOptionsPanel.h>
+#include <Neoeter/Render/Camera.h>
+#include <Neoeter/Render/AttributeInstance.h>
+#include <Client/Map/AreaTerrain.h>
+#include <Client/Map/Lighting.h>
+#include <Client/Map/ScreenDepthOfField.h>
+#include <Neoeter/Model/Grn/Material.h>
+
+#include <Client/UI/resource.h>
+#include <Client/UI/App/PythonApplication.h>
+#include <Client/GameData/GameData.h>
+#include <Client/Feature/Character/PythonCharacterManager.h>
+#include <Client/UI/Widget/LoadingScreen.h>
+
+#include <Client/UI/Util/ProcessScanner.h>
+
+#ifndef OPENMT2_CLIENT_VERSION
+#define OPENMT2_CLIENT_VERSION "unknown"
+#endif
+
+extern void GrannyCreateSharedDeformBuffer();
+extern void GrannyDestroySharedDeformBuffer();
+
+float MIN_FOG = 2400.0f;
+double g_specularSpd = 0.007f;
+
+CPythonApplication* CPythonApplication::ms_pInstance;
+
+CPythonApplication::CPythonApplication() : m_poMouseHandler(NULL),
+										   m_kCamera(*this),
+										   m_isDebugLeftButtonCaptured(false),
+										   m_isDebugRightButtonCaptured(false),
+										   m_isDebugMiddleButtonCaptured(false),
+										   m_fAveRenderTime(0.0f),
+										   m_dwLastIdleTime(0),
+										   m_fGlobalTime(0.0f),
+										   m_fGlobalElapsedTime(0.0f),
+										   m_dwUpdateFPS(0),
+										   m_dwRenderFPS(0),
+										   m_dwFaceCount(0),
+										   m_dwLButtonDownTime(0),
+										   m_isWindowed(false),
+										   m_isFrameSkipDisable(false),
+										   m_kCursor(*this)
+{
+#ifndef _DEBUG
+	SetEterExceptionHandler();
+#endif
+
+	CTimer::Instance().UseCustomTime();
+	m_dwWidth = 800;
+	m_dwHeight = 600;
+	m_iCameraBaseWidth = 0;
+	m_iCameraBaseHeight = 0;
+	m_isUIResolutionReloadPending = false;
+	m_iPendingWidth = 0;
+	m_iPendingHeight = 0;
+
+	ms_pInstance = this;
+	m_isWindowFullScreenEnable = FALSE;
+
+	m_dwStartLocalTime = ELTimer_GetMSec();
+	m_tServerTime = 0;
+	m_tLocalStartTime = 0;
+
+	m_iPort = 0;
+	m_iFPS = 60;
+
+	// The window is created shown by the SDL path on every target (T1.2), so
+	// start active and not minimized. The old Windows default waited for a
+	// WM_SIZE event that Wine never synthesizes for the initial window, which
+	// left the render loop permanently minimized (T3.2).
+	m_isActivateWnd = true;
+	m_isMinimizedWnd = false;
+
+	m_fFaceSpd = 0.0f;
+
+	m_dwFaceAccCount = 0;
+	m_dwFaceAccTime = 0;
+
+	m_dwFaceSpdSum = 0;
+	m_dwFaceSpdCount = 0;
+
+	m_FlyingManager.SetMapManagerPtr(&m_pyBackground);
+
+	m_iForceSightRange = -1;
+
+	CCameraManager::Instance().AddCamera(CApplicationCamera::EVENT_CAMERA_NUMBER);
+}
+
+CPythonApplication::~CPythonApplication()
+{
+}
+
+void CPythonApplication::GetMousePosition(POINT* ppt)
+{
+	CMSApplication::GetMousePosition(ppt);
+}
+
+void CPythonApplication::SetMinFog(float fMinFog)
+{
+	MIN_FOG = fMinFog;
+	m_pyBackground.SetFogDistance(fMinFog);
+}
+
+void CPythonApplication::SetFrameSkip(bool isEnable)
+{
+	if (isEnable)
+		m_isFrameSkipDisable = false;
+	else
+		m_isFrameSkipDisable = true;
+}
+
+void CPythonApplication::NotifyHack(const char* c_szFormat, ...)
+{
+	char szBuf[1024];
+
+	va_list args;
+	va_start(args, c_szFormat);
+	_vsnprintf(szBuf, sizeof(szBuf), c_szFormat, args);
+	va_end(args);
+	m_pyNetworkStream.NotifyHack(szBuf);
+}
+
+void CPythonApplication::GetInfo(uint32_t eInfo, std::string* pstInfo)
+{
+	switch (eInfo)
+	{
+		case INFO_ACTOR:
+			m_kChrMgr.GetInfo(pstInfo);
+			break;
+		case INFO_EFFECT:
+			m_kEftMgr.GetInfo(pstInfo);
+			break;
+		case INFO_ITEM:
+			m_pyItem.GetInfo(pstInfo);
+			break;
+		case INFO_TEXTTAIL:
+			m_pyTextTail.GetInfo(pstInfo);
+			break;
+	}
+}
+
+void CPythonApplication::Abort()
+{
+	TraceError("============================================================================================================");
+	TraceError("Abort!!!!\n\n");
+
+	Client_RequestQuit();
+}
+
+void CPythonApplication::Exit()
+{
+	Client_RequestQuit();
+}
+
+bool PERF_CHECKER_RENDER_GAME = false;
+
+void CPythonApplication::InitializeDebugRows()
+{
+#if defined(NEOETER_DEBUG_UI)
+	DebugPacksPanel_Initialize();
+	GraphicsOptionsPanel_Initialize();
+#endif
+
+	Neoeter::Debug::AddRow("Client", []
+						   { return std::string(OPENMT2_CLIENT_VERSION); });
+
+	Neoeter::Debug::AddRow("Neoeter", []
+						   { return std::string(Neoeter::GetVersionString()); });
+
+	Neoeter::Debug::AddRow("Render FPS", []
+						   { return std::to_string(CPythonApplication::Instance().GetRenderFPS()); });
+
+	Neoeter::Debug::AddRow("Frame", []
+						   {
+		const long tenths = static_cast<long>(CPythonApplication::Instance().GetAveRenderTime() * 10.0f + 0.5f);
+		return std::to_string(tenths / 10) + "." + std::to_string(tenths % 10) + " ms"; });
+
+	Neoeter::Debug::AddRow("Update FPS", []
+						   { return std::to_string(CPythonApplication::Instance().GetUpdateFPS()); });
+
+	Neoeter::Debug::AddRow("Faces", []
+						   { return std::to_string(CPythonApplication::Instance().m_pyGraphic.GetFaceCount()); });
+
+	Neoeter::Debug::AddSlider(
+		"Hour",
+		0.0f,
+		24.0f,
+		[]
+		{ return DayNight_GetHour(); },
+		[](float fHour)
+		{ DayNight_SetHour(fHour); });
+
+	Neoeter::Debug::AddCombo(
+		"Resolution",
+		[]
+		{
+			std::vector<std::string> labels;
+			CPythonSystem& system = CPythonSystem::Instance();
+			for (int index = 0; index < system.GetResolutionCount(); ++index)
+			{
+				uint32_t width = 0;
+				uint32_t height = 0;
+				uint32_t bpp = 0;
+				if (!system.GetResolution(index, &width, &height, &bpp))
+					continue;
+				labels.push_back(std::to_string(width) + " x " + std::to_string(height) + " (" + std::to_string(bpp) + " bpp)");
+			}
+			return labels;
+		},
+		[]
+		{
+			CPythonSystem& system = CPythonSystem::Instance();
+			return system.GetResolutionIndex(CPythonApplication::Instance().GetWidth(), CPythonApplication::Instance().GetHeight(), system.GetBPP());
+		},
+		[](int index)
+		{
+			CPythonSystem& system = CPythonSystem::Instance();
+			uint32_t width = 0;
+			uint32_t height = 0;
+			uint32_t bpp = 0;
+			if (!system.GetResolution(index, &width, &height, &bpp))
+				return;
+
+			CPythonSystem::TConfig config = *system.GetConfig();
+			config.width = width;
+			config.height = height;
+			config.bpp = bpp;
+			system.SetConfig(&config);
+
+			CPythonApplication::Instance().SetResolution(static_cast<int>(width), static_cast<int>(height));
+		});
+}
+
+void CPythonApplication::RenderGame()
+{
+	if (!PERF_CHECKER_RENDER_GAME)
+	{
+		float fAspect = m_kWndMgr.GetAspect();
+		float fFarClip = m_pyBackground.GetFarClip();
+
+		m_pyGraphic.SetPerspective(30.0f, fAspect, 100.0, fFarClip);
+
+		CCullingManager::Instance().Process();
+
+		m_kChrMgr.Deform();
+		m_kEftMgr.Update();
+
+		m_pyBackground.RenderCharacterShadowToTexture();
+
+		m_pyGraphic.SetGameRenderState();
+		m_pyGraphic.PushState();
+		CScreenDepthOfField::Instance().BeginScene(100.0f, fFarClip);
+
+		{
+			long lx, ly;
+			m_kWndMgr.GetMousePosition(lx, ly);
+			m_pyGraphic.SetCursorPosition(lx, ly);
+		}
+
+		m_pyBackground.RenderSky();
+
+		m_pyBackground.RenderBeforeLensFlare();
+
+		m_pyBackground.RenderCloud();
+
+		m_pyBackground.BeginEnvironment();
+		m_pyBackground.Render();
+
+		m_pyBackground.SetCharacterDirLight();
+		m_kChrMgr.Render();
+
+		m_pyBackground.SetBackgroundDirLight();
+		m_pyBackground.RenderWater();
+		m_pyBackground.RenderSnow();
+		m_pyBackground.RenderEffect();
+
+		m_pyBackground.EndEnvironment();
+
+		m_kEftMgr.Render();
+		m_pyItem.Render();
+		m_FlyingManager.Render();
+
+		m_pyBackground.BeginEnvironment();
+		m_pyBackground.RenderPCBlocker();
+		m_pyBackground.EndEnvironment();
+
+		m_pyBackground.RenderAfterLensFlare();
+
+		CScreenDepthOfField::Instance().EndScene();
+
+		return;
+	}
+
+	// if (GetAsyncKeyState(VK_Z))
+	//	STATEMANAGER.SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+
+	uint32_t t1 = ELTimer_GetMSec();
+	m_kChrMgr.Deform();
+	uint32_t t2 = ELTimer_GetMSec();
+	m_kEftMgr.Update();
+	uint32_t t3 = ELTimer_GetMSec();
+	m_pyBackground.RenderCharacterShadowToTexture();
+	uint32_t t4 = ELTimer_GetMSec();
+
+	m_pyGraphic.SetGameRenderState();
+	m_pyGraphic.PushState();
+
+	float fAspect = m_kWndMgr.GetAspect();
+	float fFarClip = m_pyBackground.GetFarClip();
+
+	m_pyGraphic.SetPerspective(30.0f, fAspect, 100.0, fFarClip);
+	CScreenDepthOfField::Instance().BeginScene(100.0f, fFarClip);
+
+	uint32_t t5 = ELTimer_GetMSec();
+
+	CCullingManager::Instance().Process();
+
+	uint32_t t6 = ELTimer_GetMSec();
+
+	{
+		long lx, ly;
+		m_kWndMgr.GetMousePosition(lx, ly);
+		m_pyGraphic.SetCursorPosition(lx, ly);
+	}
+
+	m_pyBackground.RenderSky();
+	uint32_t t7 = ELTimer_GetMSec();
+	m_pyBackground.RenderBeforeLensFlare();
+	uint32_t t8 = ELTimer_GetMSec();
+	m_pyBackground.RenderCloud();
+	uint32_t t9 = ELTimer_GetMSec();
+	m_pyBackground.BeginEnvironment();
+	m_pyBackground.Render();
+
+	m_pyBackground.SetCharacterDirLight();
+	uint32_t t10 = ELTimer_GetMSec();
+	m_kChrMgr.Render();
+	uint32_t t11 = ELTimer_GetMSec();
+
+	m_pyBackground.SetBackgroundDirLight();
+	m_pyBackground.RenderWater();
+	uint32_t t12 = ELTimer_GetMSec();
+	m_pyBackground.RenderEffect();
+	uint32_t t13 = ELTimer_GetMSec();
+	m_pyBackground.EndEnvironment();
+	m_kEftMgr.Render();
+	uint32_t t14 = ELTimer_GetMSec();
+	m_pyItem.Render();
+	uint32_t t15 = ELTimer_GetMSec();
+	m_FlyingManager.Render();
+	uint32_t t16 = ELTimer_GetMSec();
+	m_pyBackground.BeginEnvironment();
+	m_pyBackground.RenderPCBlocker();
+	m_pyBackground.EndEnvironment();
+	uint32_t t17 = ELTimer_GetMSec();
+	m_pyBackground.RenderAfterLensFlare();
+	uint32_t t18 = ELTimer_GetMSec();
+	CScreenDepthOfField::Instance().EndScene();
+	uint32_t tEnd = ELTimer_GetMSec();
+
+	if (GetAsyncKeyState(VK_Z))
+		STATEMANAGER.SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+
+	if (tEnd - t1 < 3)
+		return;
+
+	static FILE* fp = fopen("perf_game_render.txt", "w");
+
+	fprintf(fp, "GR.Total %d (Time %d)\n", tEnd - t1, ELTimer_GetMSec());
+	fprintf(fp, "GR.DFM %d\n", t2 - t1);
+	fprintf(fp, "GR.EFT.UP %d\n", t3 - t2);
+	fprintf(fp, "GR.SHW %d\n", t4 - t3);
+	fprintf(fp, "GR.STT %d\n", t5 - t4);
+	fprintf(fp, "GR.CLL %d\n", t6 - t5);
+	fprintf(fp, "GR.BG.SKY %d\n", t7 - t6);
+	fprintf(fp, "GR.BG.LEN %d\n", t8 - t7);
+	fprintf(fp, "GR.BG.CLD %d\n", t9 - t8);
+	fprintf(fp, "GR.BG.MAIN %d\n", t10 - t9);
+	fprintf(fp, "GR.CHR %d\n", t11 - t10);
+	fprintf(fp, "GR.BG.WTR %d\n", t12 - t11);
+	fprintf(fp, "GR.BG.EFT %d\n", t13 - t12);
+	fprintf(fp, "GR.EFT %d\n", t14 - t13);
+	fprintf(fp, "GR.ITM %d\n", t15 - t14);
+	fprintf(fp, "GR.FLY %d\n", t16 - t15);
+	fprintf(fp, "GR.BG.BLK %d\n", t17 - t16);
+	fprintf(fp, "GR.BG.LEN %d\n", t18 - t17);
+
+	fflush(fp);
+}
+
+void CPythonApplication::UpdateGame()
+{
+	uint32_t t1 = ELTimer_GetMSec();
+	long lMouseX = 0;
+	long lMouseY = 0;
+	m_kWndMgr.GetMousePosition(lMouseX, lMouseY);
+
+	CGraphicTextInstance::Hyperlink_UpdateMousePos(lMouseX, lMouseY);
+
+	uint32_t t2 = ELTimer_GetMSec();
+
+	//!@# Alt+Tab 중 SetTransfor 에서 튕김 현상 해결을 위해 - [levites]
+	// if (m_isActivateWnd)
+	{
+		CScreen s;
+		float fAspect = UI::CWindowManager::Instance().GetAspect();
+		float fFarClip = CPythonBackground::Instance().GetFarClip();
+
+		s.SetPerspective(30.0f, fAspect, 100.0f, fFarClip);
+		s.BuildViewFrustum();
+	}
+
+	uint32_t t3 = ELTimer_GetMSec();
+	TPixelPosition kPPosMainActor;
+	m_pyPlayer.NEW_GetMainActorPosition(&kPPosMainActor);
+
+	uint32_t t4 = ELTimer_GetMSec();
+	m_pyBackground.Update(kPPosMainActor.x, kPPosMainActor.y, kPPosMainActor.z);
+
+	uint32_t t5 = ELTimer_GetMSec();
+	m_GameEventManager.SetCenterPosition(kPPosMainActor.x, kPPosMainActor.y, kPPosMainActor.z);
+	m_GameEventManager.Update();
+
+	uint32_t t6 = ELTimer_GetMSec();
+	m_kChrMgr.Update();
+	uint32_t t7 = ELTimer_GetMSec();
+	m_kEftMgr.UpdateSound();
+	uint32_t t8 = ELTimer_GetMSec();
+	m_FlyingManager.Update();
+	uint32_t t9 = ELTimer_GetMSec();
+
+	POINT ptMouse;
+	ptMouse.x = lMouseX;
+	ptMouse.y = lMouseY;
+	m_pyItem.Update(ptMouse);
+	uint32_t t10 = ELTimer_GetMSec();
+	m_pyPlayer.Update();
+	uint32_t t11 = ELTimer_GetMSec();
+
+	// NOTE : Update 동안 위치 값이 바뀌므로 다시 얻어 옵니다 - [levites]
+	//        이 부분 때문에 메인 케릭터의 Sound가 이전 위치에서 플레이 되는 현상이 있었음.
+	m_pyPlayer.NEW_GetMainActorPosition(&kPPosMainActor);
+	SetCenterPosition(kPPosMainActor.x, kPPosMainActor.y, kPPosMainActor.z);
+	uint32_t t12 = ELTimer_GetMSec();
+
+	if (PERF_CHECKER_RENDER_GAME)
+	{
+		if (t12 - t1 > 5)
+		{
+			static FILE* fp = fopen("perf_game_update.txt", "w");
+
+			fprintf(fp, "GU.Total %d (Time %d)\n", t12 - t1, ELTimer_GetMSec());
+			fprintf(fp, "GU.GMP %d\n", t2 - t1);
+			fprintf(fp, "GU.SCR %d\n", t3 - t2);
+			fprintf(fp, "GU.MPS %d\n", t4 - t3);
+			fprintf(fp, "GU.BG %d\n", t5 - t4);
+			fprintf(fp, "GU.GEM %d\n", t6 - t5);
+			fprintf(fp, "GU.CHR %d\n", t7 - t6);
+			fprintf(fp, "GU.EFT %d\n", t8 - t7);
+			fprintf(fp, "GU.FLY %d\n", t9 - t8);
+			fprintf(fp, "GU.ITM %d\n", t10 - t9);
+			fprintf(fp, "GU.PLR %d\n", t11 - t10);
+			fprintf(fp, "GU.POS %d\n", t12 - t11);
+			fflush(fp);
+		}
+	}
+}
+
+void CPythonApplication::SkipRenderBuffering(uint32_t dwSleepMSec)
+{
+	m_dwBufSleepSkipTime = ELTimer_GetMSec() + dwSleepMSec;
+}
+
+bool CPythonApplication::Process()
+{
+	if (Neoeter::Platform::IsLinux() && Platform_IsQuitRequested())
+		return false;
+
+	ELTimer_SetFrameMSec();
+
+	// 	m_Profiler.Clear();
+	uint32_t dwStart = ELTimer_GetMSec();
+
+	///////////////////////////////////////////////////////////////////////////////////////////////////
+	static uint32_t s_dwUpdateFrameCount = 0;
+	static uint32_t s_dwRenderFrameCount = 0;
+	static uint32_t s_dwFaceCount = 0;
+	static uint32_t s_uiLoad = 0;
+	static uint32_t s_dwCheckTime = ELTimer_GetMSec();
+
+	if (ELTimer_GetMSec() - s_dwCheckTime > 1000)
+	{
+		m_dwUpdateFPS = s_dwUpdateFrameCount;
+		m_dwRenderFPS = s_dwRenderFrameCount;
+		m_dwLoad = s_uiLoad;
+
+		m_dwFaceCount = s_dwFaceCount / max(1, s_dwRenderFrameCount);
+
+		s_dwCheckTime = ELTimer_GetMSec();
+
+		static uint32_t s_dwLastLogTime = 0;
+		if (s_dwCheckTime - s_dwLastLogTime >= 5000)
+		{
+			s_dwLastLogTime = s_dwCheckTime;
+			Tracef("[PythonApplication::Process] Running... (FPS: %u, RenderFPS: %u, Load: %u%%)\n",
+				   m_dwUpdateFPS, m_dwRenderFPS, m_dwLoad);
+		}
+
+		s_uiLoad = s_dwFaceCount = s_dwUpdateFrameCount = s_dwRenderFrameCount = 0;
+	}
+
+	// Update Time
+	static int32_t s_bFrameSkip = false;
+	static uint32_t s_uiNextFrameTime = ELTimer_GetMSec();
+
+#ifdef __PERFORMANCE_CHECK__
+	uint32_t dwUpdateTime1 = ELTimer_GetMSec();
+#endif
+	CTimer& rkTimer = CTimer::Instance();
+	rkTimer.Advance();
+
+	m_fGlobalTime = rkTimer.GetCurrentSecond();
+	m_fGlobalElapsedTime = rkTimer.GetElapsedSecond();
+
+	uint32_t uiFrameTime = rkTimer.GetElapsedMilliecond();
+	s_uiNextFrameTime += uiFrameTime; // 17 - 1초당 60fps기준.
+
+	uint32_t updatestart = ELTimer_GetMSec();
+#ifdef __PERFORMANCE_CHECK__
+	uint32_t dwUpdateTime2 = ELTimer_GetMSec();
+#endif
+	// Network I/O
+	m_pyNetworkStream.Process();
+	// m_pyNetworkDatagram.Process();
+
+	m_kGuildMarkUploader.Process();
+
+	m_kGuildMarkDownloader.Process();
+	m_kAccountConnector.Process();
+
+#ifdef __PERFORMANCE_CHECK__
+	uint32_t dwUpdateTime3 = ELTimer_GetMSec();
+#endif
+	//////////////////////
+	// Input Process
+	// Keyboard
+	UpdateKeyboard();
+#ifdef __PERFORMANCE_CHECK__
+	uint32_t dwUpdateTime4 = ELTimer_GetMSec();
+#endif
+	// Mouse
+	POINT Point;
+	GetMousePosition(&Point);
+	OnMouseMove(Point.x, Point.y);
+	//////////////////////
+#ifdef __PERFORMANCE_CHECK__
+	uint32_t dwUpdateTime5 = ELTimer_GetMSec();
+#endif
+	//!@# Alt+Tab 중 SetTransfor 에서 튕김 현상 해결을 위해 - [levites]
+	// if (m_isActivateWnd)
+	m_kCamera.Update();
+#ifdef __PERFORMANCE_CHECK__
+	uint32_t dwUpdateTime6 = ELTimer_GetMSec();
+#endif
+	// Update Game Playing
+	CResourceManager::Instance().Update();
+#ifdef __PERFORMANCE_CHECK__
+	uint32_t dwUpdateTime7 = ELTimer_GetMSec();
+#endif
+	m_kCamera.OnUpdate();
+#ifdef __PERFORMANCE_CHECK__
+	uint32_t dwUpdateTime8 = ELTimer_GetMSec();
+#endif
+	OnMouseUpdate();
+#ifdef __PERFORMANCE_CHECK__
+	uint32_t dwUpdateTime9 = ELTimer_GetMSec();
+#endif
+	OnUIUpdate();
+
+#ifdef __PERFORMANCE_CHECK__
+	uint32_t dwUpdateTime10 = ELTimer_GetMSec();
+
+	if (dwUpdateTime10 - dwUpdateTime1 > 10)
+	{
+		static FILE* fp = fopen("perf_app_update.txt", "w");
+
+		fprintf(fp, "AU.Total %d (Time %d)\n", dwUpdateTime9 - dwUpdateTime1, ELTimer_GetMSec());
+		fprintf(fp, "AU.TU %d\n", dwUpdateTime2 - dwUpdateTime1);
+		fprintf(fp, "AU.NU %d\n", dwUpdateTime3 - dwUpdateTime2);
+		fprintf(fp, "AU.KU %d\n", dwUpdateTime4 - dwUpdateTime3);
+		fprintf(fp, "AU.MP %d\n", dwUpdateTime5 - dwUpdateTime4);
+		fprintf(fp, "AU.CP %d\n", dwUpdateTime6 - dwUpdateTime5);
+		fprintf(fp, "AU.RU %d\n", dwUpdateTime7 - dwUpdateTime6);
+		fprintf(fp, "AU.CU %d\n", dwUpdateTime8 - dwUpdateTime7);
+		fprintf(fp, "AU.MU %d\n", dwUpdateTime9 - dwUpdateTime8);
+		fprintf(fp, "AU.UU %d\n", dwUpdateTime10 - dwUpdateTime9);
+		fprintf(fp, "----------------------------------\n");
+		fflush(fp);
+	}
+#endif
+
+	// Update하는데 걸린시간.delta값
+	m_dwCurUpdateTime = ELTimer_GetMSec() - updatestart;
+
+	uint32_t dwCurrentTime = ELTimer_GetMSec();
+	int32_t bCurrentLateUpdate = FALSE;
+
+	s_bFrameSkip = false;
+
+	if (dwCurrentTime > s_uiNextFrameTime)
+	{
+		int dt = dwCurrentTime - s_uiNextFrameTime;
+		int nAdjustTime = ((float)dt / (float)uiFrameTime) * uiFrameTime;
+
+		if (dt >= 500)
+		{
+			s_uiNextFrameTime += nAdjustTime;
+			printf("FrameSkip Calibration %d\n", nAdjustTime);
+			CTimer::Instance().Adjust(nAdjustTime);
+		}
+
+		s_bFrameSkip = true;
+		bCurrentLateUpdate = TRUE;
+	}
+
+	// s_bFrameSkip = false;
+
+	// if (dwCurrentTime > s_uiNextFrameTime)
+	//{
+	//	int dt = dwCurrentTime - s_uiNextFrameTime;
+
+	//	//너무 늦었을 경우 따라잡는다.
+	//	//그리고 m_dwCurUpdateTime는 delta인데 delta랑 absolute time이랑 비교하면 어쩌자는겨?
+	//	//if (dt >= 500 || m_dwCurUpdateTime > s_uiNextFrameTime)
+
+	//	//기존코드대로 하면 0.5초 이하 차이난 상태로 update가 지속되면 계속 rendering frame skip발생
+	//	if (dt >= 500 || m_dwCurUpdateTime > s_uiNextFrameTime)
+	//	{
+	//		s_uiNextFrameTime += dt / uiFrameTime * uiFrameTime;
+	//		printf("FrameSkip Calibration %d\n", dt / uiFrameTime * uiFrameTime);
+	//		CTimer::Instance().Adjust((dt / uiFrameTime) * uiFrameTime);
+	//		s_bFrameSkip = true;
+	//	}
+	//}
+
+	if (m_isFrameSkipDisable)
+		s_bFrameSkip = false;
+
+#ifdef __VTUNE__
+	s_bFrameSkip = false;
+#endif
+	/*
+	static bool s_isPrevFrameSkip=false;
+	static uint32_t s_dwFrameSkipCount=0;
+	static uint32_t s_dwFrameSkipEndTime=0;
+
+	static uint32_t ERROR_FRAME_SKIP_COUNT = 60*5;
+	static uint32_t ERROR_FRAME_SKIP_TIME = ERROR_FRAME_SKIP_COUNT*18;
+
+	//static uint32_t MAX_FRAME_SKIP=0;
+
+	if (IsActive())
+	{
+	uint32_t dwFrameSkipCurTime=ELTimer_GetMSec();
+
+	if (s_bFrameSkip)
+	{
+	// 이전 프레임도 스킵이라면..
+	if (s_isPrevFrameSkip)
+	{
+	if (s_dwFrameSkipEndTime==0)
+	{
+	s_dwFrameSkipCount=0; // 프레임 체크는 로딩 대비
+	s_dwFrameSkipEndTime=dwFrameSkipCurTime+ERROR_FRAME_SKIP_TIME; // 시간 체크는 로딩후 프레임 스킵 체크
+
+	//printf("FrameSkipCheck Start\n");
+	}
+	++s_dwFrameSkipCount;
+
+	//if (MAX_FRAME_SKIP<s_dwFrameSkipCount)
+	//	MAX_FRAME_SKIP=s_dwFrameSkipCount;
+
+	//printf("u %d c %d/%d t %d\n",
+	//	dwUpdateTime9-dwUpdateTime1,
+	//	s_dwFrameSkipCount,
+	//	MAX_FRAME_SKIP,
+	//	s_dwFrameSkipEndTime);
+
+	//#ifndef _DEBUG
+	// 일정 시간동안 계속 프레임 스킵만 한다면...
+	if (s_dwFrameSkipCount>ERROR_FRAME_SKIP_COUNT && s_dwFrameSkipEndTime<dwFrameSkipCurTime)
+	{
+	s_isPrevFrameSkip=false;
+	s_dwFrameSkipEndTime=0;
+	s_dwFrameSkipCount=0;
+
+	//m_pyNetworkStream.AbsoluteExitGame();
+
+	TraceError("Terminate a connection with infinite frame skips");
+
+	{
+	FILE* fp=fopen("errorlog.txt", "w");
+	if (fp)
+	{
+	fprintf(fp, "FRAMESKIP\n");
+	fprintf(fp, "Total %d\n",		dwUpdateTime9-dwUpdateTime1);
+	fprintf(fp, "Timer %d\n",		dwUpdateTime2-dwUpdateTime1);
+	fprintf(fp, "Network %d\n",		dwUpdateTime3-dwUpdateTime2);
+	fprintf(fp, "Keyboard %d\n",	dwUpdateTime4-dwUpdateTime3);
+	fprintf(fp, "Controll %d\n",	dwUpdateTime5-dwUpdateTime4);
+	fprintf(fp, "Resource %d\n",	dwUpdateTime6-dwUpdateTime5);
+	fprintf(fp, "Camera %d\n",		dwUpdateTime7-dwUpdateTime6);
+	fprintf(fp, "Mouse %d\n",		dwUpdateTime8-dwUpdateTime7);
+	fprintf(fp, "UI %d\n",			dwUpdateTime9-dwUpdateTime8);
+	fclose(fp);
+
+	WinExec("errorlog.exe", SW_SHOW);
+	}
+	}
+	}
+	}
+
+	s_isPrevFrameSkip=true;
+	}
+	else
+	{
+	s_isPrevFrameSkip=false;
+	s_dwFrameSkipCount=0;
+	s_dwFrameSkipEndTime=0;
+	}
+	}
+	else
+	{
+	s_isPrevFrameSkip=false;
+	s_dwFrameSkipCount=0;
+	s_dwFrameSkipEndTime=0;
+	}
+	*/
+	if (!s_bFrameSkip)
+	{
+		//		static double pos=0.0f;
+		//		CGrannyMaterial::TranslateSpecularMatrix(fabs(sin(pos)*0.005), fabs(cos(pos)*0.005), 0.0f);
+		//		pos+=0.01f;
+
+		CGrannyMaterial::TranslateSpecularMatrix(g_specularSpd, g_specularSpd, 0.0f);
+
+		uint32_t dwRenderStartTime = ELTimer_GetMSec();
+
+		bool canRender = true;
+
+		if (m_isMinimizedWnd)
+		{
+			canRender = false;
+		}
+		else
+		{
+			if (m_pyGraphic.IsLostDevice())
+			{
+				CPythonBackground& rkBG = CPythonBackground::Instance();
+				rkBG.ReleaseCharacterShadowTexture();
+
+				if (m_pyGraphic.RestoreDevice())
+					rkBG.CreateCharacterShadowTexture();
+				else
+					canRender = false;
+			}
+		}
+
+		if (!IsActive())
+		{
+			SkipRenderBuffering(3000);
+		}
+
+		// 리스토어 처리때를 고려해 일정 시간동안은 버퍼링을 하지 않는다
+		if (!canRender)
+		{
+			SkipRenderBuffering(3000);
+		}
+		else
+		{
+			// RestoreLostDevice
+			CCullingManager::Instance().Update();
+			if (m_pyGraphic.Begin())
+			{
+
+				BeginFrameClear(m_pyGraphic);
+
+				/////////////////////
+				// Interface
+				m_pyGraphic.SetInterfaceRenderState();
+
+				OnUIRender();
+
+				Neoeter::Debug::Draw();
+
+				OnMouseRender();
+				/////////////////////
+
+				m_pyGraphic.End();
+
+				LoadingScreen_RenderFadeIn();
+
+				// uint32_t t1 = ELTimer_GetMSec();
+				m_pyGraphic.Show();
+				// uint32_t t2 = ELTimer_GetMSec();
+
+				uint32_t dwRenderEndTime = ELTimer_GetMSec();
+
+				static uint32_t s_dwRenderCheckTime = dwRenderEndTime;
+				static uint32_t s_dwRenderRangeTime = 0;
+				static uint32_t s_dwRenderRangeFrame = 0;
+
+				m_dwCurRenderTime = dwRenderEndTime - dwRenderStartTime;
+				s_dwRenderRangeTime += m_dwCurRenderTime;
+				++s_dwRenderRangeFrame;
+
+				if (dwRenderEndTime - s_dwRenderCheckTime > 1000)
+				{
+					m_fAveRenderTime = float(double(s_dwRenderRangeTime) / double(s_dwRenderRangeFrame));
+
+					s_dwRenderCheckTime = ELTimer_GetMSec();
+					s_dwRenderRangeTime = 0;
+					s_dwRenderRangeFrame = 0;
+				}
+
+				uint32_t dwCurFaceCount = m_pyGraphic.GetFaceCount();
+				m_pyGraphic.ResetFaceCount();
+				s_dwFaceCount += dwCurFaceCount;
+
+				if (dwCurFaceCount > 5000)
+				{
+					// 프레임 완충 처리
+					if (dwRenderEndTime > m_dwBufSleepSkipTime)
+					{
+						static float s_fBufRenderTime = 0.0f;
+
+						float fCurRenderTime = m_dwCurRenderTime;
+
+						if (fCurRenderTime > s_fBufRenderTime)
+						{
+							float fRatio = fMAX(0.5f, (fCurRenderTime - s_fBufRenderTime) / 30.0f);
+							s_fBufRenderTime = (s_fBufRenderTime * (100.0f - fRatio) + (fCurRenderTime + 5) * fRatio) / 100.0f;
+						}
+						else
+						{
+							float fRatio = 0.5f;
+							s_fBufRenderTime = (s_fBufRenderTime * (100.0f - fRatio) + fCurRenderTime * fRatio) / 100.0f;
+						}
+
+						// 한계치를 정한다
+						if (s_fBufRenderTime > 100.0f)
+							s_fBufRenderTime = 100.0f;
+
+						uint32_t dwBufRenderTime = s_fBufRenderTime;
+
+						if (m_isWindowed)
+						{
+							if (dwBufRenderTime > 58)
+								dwBufRenderTime = 64;
+							else if (dwBufRenderTime > 42)
+								dwBufRenderTime = 48;
+							else if (dwBufRenderTime > 26)
+								dwBufRenderTime = 32;
+							else if (dwBufRenderTime > 10)
+								dwBufRenderTime = 16;
+							else
+								dwBufRenderTime = 8;
+						}
+
+						// 일정 프레임 속도에 맞추어주는쪽에 눈에 편하다
+						// 아래에서 한번 하면 됬다.
+						// if (m_dwCurRenderTime<dwBufRenderTime)
+						//	Sleep(dwBufRenderTime-m_dwCurRenderTime);
+
+						m_fAveRenderTime = s_fBufRenderTime;
+					}
+
+					m_dwFaceAccCount += dwCurFaceCount;
+					m_dwFaceAccTime += m_dwCurRenderTime;
+
+					m_fFaceSpd = (m_dwFaceAccCount / m_dwFaceAccTime);
+				}
+
+				// 거리 자동 조절
+				if (-1 == m_iForceSightRange)
+				{
+					float fTargetViewDistance = 25600.0f;
+
+					if (dwCurFaceCount > 5000)
+					{
+						const float fFar = 25600.0f;
+						const float fNear = MIN_FOG;
+						const float fAveRenderTime = (m_fAveRenderTime > 0.0f) ? m_fAveRenderTime : 16.0f;
+						const double dbAvePow = double(1000.0f / max(16.0f, fAveRenderTime));
+						const double dbMaxPow = 60.0;
+						fTargetViewDistance = fMIN(fNear + (fFar - fNear) * float(dbAvePow / dbMaxPow), fFar);
+					}
+
+					static uint32_t s_dwLastViewDistanceUpdate = 0;
+					static float s_fAppliedViewDistance = 0.0f;
+
+					if (s_fAppliedViewDistance <= 0.0f)
+						s_fAppliedViewDistance = m_pyBackground.GetFarClip();
+
+					const uint32_t dwViewDistanceNow = ELTimer_GetMSec();
+					if (dwViewDistanceNow - s_dwLastViewDistanceUpdate >= 1000)
+					{
+						s_dwLastViewDistanceUpdate = dwViewDistanceNow;
+
+						if (fabs(fTargetViewDistance - s_fAppliedViewDistance) >= 512.0f)
+						{
+							s_fAppliedViewDistance = fTargetViewDistance;
+							m_pyBackground.SetViewDistanceSet(0, fTargetViewDistance);
+						}
+					}
+				}
+				// 거리 강제 설정시
+				else
+				{
+					m_pyBackground.SetViewDistanceSet(0, float(m_iForceSightRange));
+				}
+
+				++s_dwRenderFrameCount;
+			}
+		}
+	}
+
+	int rest = s_uiNextFrameTime - ELTimer_GetMSec();
+
+	if (rest > 0 && !bCurrentLateUpdate)
+	{
+		s_uiLoad -= rest; // 쉰 시간은 로드에서 뺀다..
+		Neoeter::Platform::SleepMillis(rest);
+	}
+
+	++s_dwUpdateFrameCount;
+
+	s_uiLoad += ELTimer_GetMSec() - dwStart;
+	// m_Profiler.ProfileByScreen();
+	return true;
+}
+
+void CPythonApplication::UpdateClientRect()
+{
+	RECT rcApp;
+	GetClientRect(&rcApp);
+	OnSizeChange(rcApp.right - rcApp.left, rcApp.bottom - rcApp.top);
+}
+
+CApplicationCursor& CPythonApplication::Cursor()
+{
+	return m_kCursor;
+}
+
+void CPythonApplication::SetMouseHandler(PyObject* poMouseHandler)
+{
+	m_poMouseHandler = poMouseHandler;
+}
+
+int CPythonApplication::CheckDeviceState()
+{
+	CGraphicDevice::EDeviceState e_deviceState = m_grpDevice.GetDeviceState();
+
+	switch (e_deviceState)
+	{
+			// 디바이스가 없으면 프로그램이 종료 되어야 한다.
+		case CGraphicDevice::DEVICESTATE_NULL:
+			return DEVICE_STATE_FALSE;
+
+			// DEVICESTATE_BROKEN일 때는 다음 루프에서 복구 될 수 있도록 리턴 한다.
+			// 그냥 진행할 경우 DrawPrimitive 같은 것을 하면 프로그램이 터진다.
+		case CGraphicDevice::DEVICESTATE_BROKEN:
+			return DEVICE_STATE_SKIP;
+
+		case CGraphicDevice::DEVICESTATE_NEEDS_RESET:
+			if (!m_grpDevice.Reset())
+				return DEVICE_STATE_SKIP;
+
+			break;
+
+		default:
+			break;
+	}
+
+	return DEVICE_STATE_OK;
+}
+
+bool CPythonApplication::CreateDevice(int width, int height, int Windowed, int bit /* = 32*/, int frequency /* = 0*/)
+{
+	int iRet;
+
+	m_grpDevice.InitBackBufferCount(2);
+	m_grpDevice.RegisterWarningString(CGraphicDevice::CREATE_BAD_DRIVER, "Your video card driver is on the list of known problematic drivers. Updating it to the latest version is strongly recommended.");
+	m_grpDevice.RegisterWarningString(CGraphicDevice::CREATE_NO_TNL, "Your video card does not support hardware transformation and lighting. The game will run in software mode, which may be slower.");
+
+	iRet = m_grpDevice.Create(GetWindowHandle(), width, height, Windowed ? true : false, bit, frequency);
+
+	switch (iRet)
+	{
+		case CGraphicDevice::CREATE_OK:
+			return true;
+
+		case CGraphicDevice::CREATE_REFRESHRATE:
+			return true;
+
+		case CGraphicDevice::CREATE_ENUM:
+		case CGraphicDevice::CREATE_DETECT:
+			SET_EXCEPTION(CREATE_NO_APPROPRIATE_DEVICE);
+			TraceError("CreateDevice: Enum & Detect failed");
+			return false;
+
+		case CGraphicDevice::CREATE_NO_DIRECTX:
+			// PyErr_SetString(PyExc_RuntimeError, "DirectX 9 or greater required to run game");
+			SET_EXCEPTION(CREATE_NO_DIRECTX);
+			TraceError("CreateDevice: DirectX 9 or greater required to run game");
+			return false;
+
+		case CGraphicDevice::CREATE_DEVICE:
+			// PyErr_SetString(PyExc_RuntimeError, "GraphicDevice create failed");
+			SET_EXCEPTION(CREATE_DEVICE);
+			TraceError("CreateDevice: GraphicDevice create failed");
+			return false;
+
+		case CGraphicDevice::CREATE_FORMAT:
+			SET_EXCEPTION(CREATE_FORMAT);
+			TraceError("CreateDevice: Change the screen format");
+			return false;
+
+			/*case CGraphicDevice::CREATE_GET_ADAPTER_DISPLAY_MODE:
+			//PyErr_SetString(PyExc_RuntimeError, "GetAdapterDisplayMode failed");
+			SET_EXCEPTION(CREATE_GET_ADAPTER_DISPLAY_MODE);
+			TraceError("CreateDevice: GetAdapterDisplayMode failed");
+			return false;*/
+
+		case CGraphicDevice::CREATE_GET_DEVICE_CAPS:
+			PyErr_SetString(PyExc_RuntimeError, "GetDevCaps failed");
+			TraceError("CreateDevice: GetDevCaps failed");
+			return false;
+
+		case CGraphicDevice::CREATE_GET_DEVICE_CAPS2:
+			PyErr_SetString(PyExc_RuntimeError, "GetDevCaps2 failed");
+			TraceError("CreateDevice: GetDevCaps2 failed");
+			return false;
+
+		default:
+			if (iRet & CGraphicDevice::CREATE_OK)
+			{
+				if (iRet & CGraphicDevice::CREATE_NO_TNL)
+				{
+					CGrannyLODController::SetMinLODMode(true);
+				}
+				return true;
+			}
+
+			// PyErr_SetString(PyExc_RuntimeError, "Unknown Error!");
+			SET_EXCEPTION(UNKNOWN_ERROR);
+			TraceError("CreateDevice: Unknown Error!");
+			return false;
+	}
+}
+
+void CPythonApplication::Loop()
+{
+	Tracef("[PythonApplication] Entering main engine loop...\n");
+	while (1)
+	{
+		if (IsMessage())
+		{
+			if (!MessageProcess())
+			{
+				Tracef("[PythonApplication] MessageProcess() returned false. Exiting loop.\n");
+				break;
+			}
+		}
+		else
+		{
+			if (!Process())
+			{
+				Tracef("[PythonApplication] Process() returned false. Exiting loop.\n");
+				break;
+			}
+
+			m_dwLastIdleTime = ELTimer_GetMSec();
+		}
+	}
+	Tracef("[PythonApplication] Main engine loop terminated.\n");
+}
+
+// SUPPORT_NEW_KOREA_SERVER
+bool LoadLocaleData(const char* localePath)
+{
+	CPythonNonPlayer& rkNPCMgr = CPythonNonPlayer::Instance();
+	CPythonSkill& rkSkillMgr = CPythonSkill::Instance();
+	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
+
+	char szMobProto[256];
+	char szSkillDescFileName[256];
+	char szSkillTableFileName[256];
+	char szInsultList[256];
+	snprintf(szMobProto, sizeof(szMobProto), "%s/mob_proto", localePath);
+	snprintf(szSkillDescFileName, sizeof(szSkillDescFileName), "%s/SkillDesc.txt", localePath);
+	snprintf(szSkillTableFileName, sizeof(szSkillTableFileName), "%s/SkillTable.txt", localePath);
+	snprintf(szInsultList, sizeof(szInsultList), "%s/insult.txt", localePath);
+
+	rkNPCMgr.Destroy();
+	rkSkillMgr.Destroy();
+
+	if (!GameData::LoadItemTables(localePath))
+		return false;
+
+	if (!rkNPCMgr.LoadNonPlayerData(szMobProto))
+	{
+		TraceError("LoadLocaleData - LoadMobProto(%s) Error", szMobProto);
+		return false;
+	}
+
+	if (!rkSkillMgr.RegisterSkillDesc(szSkillDescFileName))
+	{
+		TraceError("LoadLocaleData - RegisterSkillDesc(%s) Error", szMobProto);
+		return false;
+	}
+
+	if (!rkSkillMgr.RegisterSkillTable(szSkillTableFileName))
+	{
+		TraceError("LoadLocaleData - RegisterSkillTable(%s) Error", szMobProto);
+		return false;
+	}
+
+	if (!rkNetStream.LoadInsultList(szInsultList))
+	{
+		Tracenf("CPythonApplication - CPythonNetworkStream::LoadInsultList(%s)", szInsultList);
+	}
+
+	return true;
+}
+// END_OF_SUPPORT_NEW_KOREA_SERVER
+
+unsigned __GetWindowMode(bool windowed)
+{
+	if (windowed)
+		return WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
+
+	return WS_POPUP;
+}
+
+static const std::string& GetWindowTitle()
+{
+	static const std::string s_title = std::string("OpenMT2 (v") + OPENMT2_CLIENT_VERSION + ")";
+	return s_title;
+}
+
+static void ClampWindowSizeToDisplay(int& width, int& height)
+{
+	SDL_DisplayMode mode;
+	if (SDL_GetDesktopDisplayMode(0, &mode) != 0)
+		return;
+
+	if (width > mode.w)
+		width = mode.w;
+	if (height > mode.h)
+		height = mode.h;
+}
+
+bool CPythonApplication::SetWindowFullscreen(bool enabled, int width, int height)
+{
+	SDL_Window* window = CMSWindow::GetSDLWindow();
+	if (!window)
+		return false;
+
+	if (enabled)
+	{
+		SDL_RestoreWindow(window);
+		SDL_ShowWindow(window);
+
+		int display = SDL_GetWindowDisplayIndex(window);
+		if (display < 0)
+			display = 0;
+
+		SDL_SetWindowMinimumSize(window, 0, 0);
+		SDL_SetWindowMaximumSize(window, 0, 0);
+
+		if (width > 0 && height > 0)
+		{
+			SDL_DisplayMode desired = {};
+			desired.w = width;
+			desired.h = height;
+
+			SDL_DisplayMode closest = {};
+			if (SDL_GetClosestDisplayMode(display, &desired, &closest))
+				SDL_SetWindowDisplayMode(window, &closest);
+		}
+
+		if (SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN) != 0)
+		{
+			if (SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP) != 0)
+			{
+				SDL_SetWindowFullscreen(window, 0);
+				return false;
+			}
+		}
+	}
+	else
+	{
+		SDL_SetWindowFullscreen(window, 0);
+
+		if (width > 0 && height > 0)
+		{
+			SDL_SetWindowResizable(window, SDL_FALSE);
+			SDL_SetWindowMinimumSize(window, width, height);
+			SDL_SetWindowMaximumSize(window, width, height);
+			SDL_SetWindowSize(window, width, height);
+			SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+		}
+	}
+
+#if defined(OPENMT2_RENDERER_GL)
+	if (SDL_GLContext context = CMSWindow::GetGLContext())
+		SDL_GL_MakeCurrent(window, context);
+#endif
+
+	int actualWidth = width;
+	int actualHeight = height;
+	SDL_GetWindowSize(window, &actualWidth, &actualHeight);
+	if (actualWidth > 0 && actualHeight > 0)
+		Platform_SetWindowResolution(actualWidth, actualHeight);
+
+	return true;
+}
+
+void CPythonApplication::SetResolution(int width, int height)
+{
+	if (width <= 0 || height <= 0)
+		return;
+
+	m_isUIResolutionReloadPending = true;
+	m_iPendingWidth = width;
+	m_iPendingHeight = height;
+
+	if (m_isWindowed)
+		SetSize(width, height);
+	else if (!SetWindowFullscreen(true, width, height))
+	{
+		m_isWindowed = true;
+		SetSize(width, height);
+	}
+}
+
+void CPythonApplication::MinimizeWindow()
+{
+	if (SDL_Window* window = CMSWindow::GetSDLWindow())
+		SDL_MinimizeWindow(window);
+}
+
+bool CPythonApplication::CreateStartupWindow()
+{
+	if (GetWindowHandle())
+		return true;
+
+	if (SDL_WasInit(SDL_INIT_VIDEO) == 0)
+		SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
+
+	int width = m_pySystem.GetWidth();
+	int height = m_pySystem.GetHeight();
+	if (width <= 0) width = 1024;
+	if (height <= 0) height = 768;
+
+	ClampWindowSizeToDisplay(width, height);
+
+	m_dwWidth = width;
+	m_dwHeight = height;
+	m_isWindowed = Neoeter::Platform::IsLinux() ? true : m_pySystem.IsWindowed();
+	Platform_SetWindowResolution(width, height);
+
+	uint32_t WindowMode = __GetWindowMode(true);
+	return CMSWindow::Create(GetWindowTitle().c_str(), 4, 0, WindowMode,
+							 ::LoadIcon(GetInstance(), MAKEINTRESOURCE(IDI_OPENMT2)),
+							 IDC_CURSOR_NORMAL, width, height);
+}
+
+bool CPythonApplication::Create(PyObject* poSelf, const char* c_szName, int width, int height, int Windowed)
+{
+	m_pySystem.GetConfig()->is_software_cursor = false;
+
+	int cfgWidth = m_pySystem.GetWidth();
+	int cfgHeight = m_pySystem.GetHeight();
+	if (cfgWidth > 0) width = cfgWidth;
+	if (cfgHeight > 0) height = cfgHeight;
+	if (width <= 0) width = 1024;
+	if (height <= 0) height = 768;
+
+	ClampWindowSizeToDisplay(width, height);
+
+	Tracef("[PythonApplication] Create(name='%s', width=%d, height=%d, Windowed=%d)\n", c_szName, width, height, Windowed);
+
+	Windowed = Neoeter::Platform::IsLinux() ? 1 : (CPythonSystem::Instance().IsWindowed() ? 1 : 0);
+
+	bool bHasWindow = GetWindowHandle() != NULL;
+	int existingWidth = 0;
+	int existingHeight = 0;
+	SDL_Window* existingWindow = CMSWindow::GetSDLWindow();
+	if (existingWindow)
+		SDL_GetWindowSize(existingWindow, &existingWidth, &existingHeight);
+
+	bool bAnotherWindow = false;
+
+	if (!Neoeter::Platform::IsLinux() && !bHasWindow && FindWindow(NULL, GetWindowTitle().c_str()))
+		bAnotherWindow = true;
+
+	m_dwWidth = width;
+	m_dwHeight = height;
+
+	Platform_SetWindowResolution(width, height);
+
+	// Window
+	uint32_t WindowMode = __GetWindowMode(Windowed ? true : false);
+
+	if (bHasWindow)
+	{
+		if (!Neoeter::Platform::IsLinux())
+			SetText(GetWindowTitle().c_str());
+		if (existingWidth != width || existingHeight != height)
+			SetSize(width, height);
+	}
+	else if (!CMSWindow::Create(GetWindowTitle().c_str(), 4, 0, WindowMode, ::LoadIcon(GetInstance(), MAKEINTRESOURCE(IDI_OPENMT2)), IDC_CURSOR_NORMAL, width, height))
+	{
+		// PyErr_SetString(PyExc_RuntimeError, "CMSWindow::Create failed");
+		TraceError("CMSWindow::Create failed");
+		SET_EXCEPTION(CREATE_WINDOW);
+		return false;
+	}
+
+	if (m_pySystem.IsUseDefaultIME())
+	{
+		CPythonIME::Instance().UseDefaultIME();
+	}
+
+	if (Neoeter::Platform::IsLinux())
+	{
+		m_isWindowed = true;
+		if (!bHasWindow || existingWidth != width || existingHeight != height)
+			AdjustSize(width, height);
+
+		if (SDL_Window* window = CMSWindow::GetSDLWindow())
+		{
+			Uint32 flags = SDL_GetWindowFlags(window);
+			if (flags & (SDL_WINDOW_FULLSCREEN | SDL_WINDOW_FULLSCREEN_DESKTOP))
+				SDL_SetWindowFullscreen(window, 0);
+			if (flags & SDL_WINDOW_MAXIMIZED)
+				SDL_RestoreWindow(window);
+		}
+	}
+	else if (!m_pySystem.IsWindowed())
+	{
+		m_isWindowed = false;
+		m_isWindowFullScreenEnable = FALSE;
+
+		if (SetWindowFullscreen(true, width, height))
+		{
+			m_isWindowFullScreenEnable = TRUE;
+
+			int actualWidth = width;
+			int actualHeight = height;
+			if (SDL_Window* window = CMSWindow::GetSDLWindow())
+				SDL_GetWindowSize(window, &actualWidth, &actualHeight);
+
+			if (actualWidth > 0 && actualHeight > 0)
+			{
+				width = actualWidth;
+				height = actualHeight;
+				m_dwWidth = width;
+				m_dwHeight = height;
+			}
+		}
+		else
+		{
+			m_isWindowed = true;
+			AdjustSize(width, height);
+		}
+
+		Windowed = true;
+	}
+	else
+	{
+		m_isWindowFullScreenEnable = FALSE;
+		AdjustSize(width, height);
+		m_isWindowed = true;
+
+		if (bAnotherWindow)
+		{
+			RECT rc;
+
+			GetClientRect(&rc);
+
+			int windowWidth = rc.right - rc.left;
+			int windowHeight = (rc.bottom - rc.top);
+
+			CMSApplication::SetPosition(GetScreenWidth() - windowWidth, GetScreenHeight() - 60 - windowHeight);
+		}
+	}
+
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	if (!m_pySystem.IsNoSoundCard())
+	{
+		// Sound
+		if (!m_SoundManager.Create())
+		{
+			// NOTE : 중국측의 요청으로 생략
+		}
+		else
+		{
+			m_SoundManager.SetMusicVolume(m_pySystem.GetMusicVolume());
+			m_SoundManager.SetSoundVolumeGrade(m_pySystem.GetSoundVolume());
+		}
+	}
+
+	extern bool GRAPHICS_CAPS_SOFTWARE_TILING;
+
+	if (!m_pySystem.IsAutoTiling())
+		GRAPHICS_CAPS_SOFTWARE_TILING = m_pySystem.IsSoftwareTiling();
+
+	// Device
+	if (!CreateDevice(width, height, Windowed, m_pySystem.GetBPP(), m_pySystem.GetFrequency()))
+		return false;
+
+	if (!m_kCursor.Create())
+	{
+		TraceError("CMSWindow::Cursors Create Error");
+		SET_EXCEPTION("CREATE_CURSOR");
+		return false;
+	}
+
+	GrannyCreateSharedDeformBuffer();
+
+	if (m_pySystem.IsAutoTiling())
+	{
+		if (m_grpDevice.IsFastTNL())
+		{
+			m_pyBackground.ReserveSoftwareTilingEnable(false);
+		}
+		else
+		{
+			m_pyBackground.ReserveSoftwareTilingEnable(true);
+		}
+	}
+	else
+	{
+		m_pyBackground.ReserveSoftwareTilingEnable(m_pySystem.IsSoftwareTiling());
+	}
+
+	SetVisibleMode(true);
+
+	if (!InitializeKeyboard(GetWindowHandle()))
+		return false;
+
+	m_pySystem.GetDisplaySettings();
+
+	// Mouse
+	if (m_pySystem.IsSoftwareCursor())
+		m_kCursor.SetMode(CApplicationCursor::MODE_SOFTWARE);
+	else
+		m_kCursor.SetMode(CApplicationCursor::MODE_HARDWARE);
+
+	// Network
+	if (!m_netDevice.Create())
+	{
+		// PyErr_SetString(PyExc_RuntimeError, "NetDevice::Create failed");
+		TraceError("NetDevice::Create failed");
+		SET_EXCEPTION("CREATE_NETWORK");
+		return false;
+	}
+
+	if (!m_grpDevice.IsFastTNL())
+		CGrannyLODController::SetMinLODMode(true);
+
+	m_pyItem.Create();
+
+	// Other Modules
+	DefaultFont_Startup();
+
+	CPythonIME::Instance().Create(GetWindowHandle());
+	CPythonIME::Instance().SetText("", 0);
+	CPythonTextTail::Instance().Initialize();
+
+	// Light Manager
+	m_LightManager.Initialize();
+
+	CGraphicImageInstance::CreateSystem(32);
+
+	InitializeDebugRows();
+
+	// 백업
+	STICKYKEYS sStickKeys;
+	memset(&sStickKeys, 0, sizeof(sStickKeys));
+	sStickKeys.cbSize = sizeof(sStickKeys);
+	SystemParametersInfo(SPI_GETSTICKYKEYS, sizeof(sStickKeys), &sStickKeys, 0);
+	m_dwStickyKeysFlag = sStickKeys.dwFlags;
+
+	// 설정
+	sStickKeys.dwFlags &= ~(SKF_AVAILABLE | SKF_HOTKEYACTIVE);
+	SystemParametersInfo(SPI_SETSTICKYKEYS, sizeof(sStickKeys), &sStickKeys, 0);
+
+	// SphereMap
+	CGrannyMaterial::CreateSphereMap(0, "ymir work/special/spheremap.jpg");
+	CGrannyMaterial::CreateSphereMap(1, "ymir work/special/spheremap01.jpg");
+	Tracef("[PythonApplication] Application subsystems initialized successfully.\n");
+
+	static bool bStartupFadePlayed = false;
+	if (!bStartupFadePlayed)
+	{
+		bStartupFadePlayed = true;
+		LoadingScreen_FadeOut(0.35f);
+		LoadingScreen_BeginFadeIn(0.8f);
+		m_SoundManager.BeginStartupMusicFadeIn(1.0f);
+	}
+
+	return true;
+}
+
+CApplicationCamera& CPythonApplication::Camera()
+{
+	return m_kCamera;
+}
+
+void CPythonApplication::SetCenterPosition(float fx, float fy, float fz)
+{
+	m_kCamera.SetCenterPosition(fx, fy, fz);
+}
+
+void CPythonApplication::SetEventCamera(const SCameraSetting& c_rCameraSetting)
+{
+	m_kCamera.SetEvent(c_rCameraSetting);
+}
+
+void CPythonApplication::BlendEventCamera(const SCameraSetting& c_rCameraSetting, float fBlendTime)
+{
+	m_kCamera.BlendEvent(c_rCameraSetting, fBlendTime);
+}
+
+void CPythonApplication::SetDefaultCamera()
+{
+	m_kCamera.SetDefault();
+}
+
+void CPythonApplication::SetServerTime(time_t tTime)
+{
+	m_dwStartLocalTime = ELTimer_GetMSec();
+	m_tServerTime = tTime;
+	m_tLocalStartTime = time(0);
+}
+
+time_t CPythonApplication::GetServerTime()
+{
+	return (ELTimer_GetMSec() - m_dwStartLocalTime) + m_tServerTime;
+}
+
+// 2005.03.28 - MALL 아이템에 들어있는 시간의 단위가 서버에서 time(0) 으로 만들어지는
+//              값이기 때문에 단위를 맞추기 위해 시간 관련 처리를 별도로 추가
+time_t CPythonApplication::GetServerTimeStamp()
+{
+	return (time(0) - m_tLocalStartTime) + m_tServerTime;
+}
+
+float CPythonApplication::GetGlobalTime()
+{
+	return m_fGlobalTime;
+}
+
+float CPythonApplication::GetGlobalElapsedTime()
+{
+	return m_fGlobalElapsedTime;
+}
+
+void CPythonApplication::SetFPS(int iFPS)
+{
+	m_iFPS = iFPS;
+}
+
+int CPythonApplication::GetWidth()
+{
+	return m_dwWidth;
+}
+
+int CPythonApplication::GetHeight()
+{
+	return m_dwHeight;
+}
+
+void CPythonApplication::SetConnectData(const char* c_szIP, int iPort)
+{
+	m_strIP = c_szIP;
+	m_iPort = iPort;
+}
+
+void CPythonApplication::GetConnectData(std::string& rstIP, int& riPort)
+{
+	rstIP = m_strIP;
+	riPort = m_iPort;
+}
+
+void CPythonApplication::SetForceSightRange(int iRange)
+{
+	m_iForceSightRange = iRange;
+}
+
+void CPythonApplication::Clear()
+{
+	m_pySystem.Clear();
+}
+
+void CPythonApplication::Destroy()
+{
+	// SphereMap
+	CGrannyMaterial::DestroySphereMap();
+
+	m_kWndMgr.Destroy();
+
+	CPythonSystem::Instance().SaveConfig();
+
+	DestroyCollisionInstanceSystem();
+
+	m_pySystem.SaveInterfaceStatus();
+
+	m_pyEventManager.Destroy();
+	m_FlyingManager.Destroy();
+
+	m_pyMiniMap.Destroy();
+
+	m_pyTextTail.Destroy();
+	m_pyChat.Destroy();
+	m_kChrMgr.Destroy();
+	m_RaceManager.Destroy();
+
+	m_pyItem.Destroy();
+	m_kItemMgr.Destroy();
+
+	m_pyBackground.Destroy();
+
+	m_kEftMgr.Destroy();
+	m_LightManager.Destroy();
+
+	// DEFAULT_FONT
+	DefaultFont_Cleanup();
+	// END_OF_DEFAULT_FONT
+
+	GrannyDestroySharedDeformBuffer();
+
+	m_pyGraphic.Destroy();
+	// m_pyNetworkDatagram.Destroy();
+
+	m_pyRes.Destroy();
+
+	m_kGuildMarkDownloader.Disconnect();
+
+	CGrannyModelInstance::DestroySystem();
+	CGraphicImageInstance::DestroySystem();
+
+	m_SoundManager.Destroy();
+	m_grpDevice.Destroy();
+
+	// FIXME : 만들어져 있지 않음 - [levites]
+	// CSpeedTreeForestDirectX8::Instance().Clear();
+
+	CAttributeInstance::DestroySystem();
+	CTextFileLoader::DestroySystem();
+	m_kCursor.Destroy();
+
+	CMSApplication::Destroy();
+
+	STICKYKEYS sStickKeys;
+	memset(&sStickKeys, 0, sizeof(sStickKeys));
+	sStickKeys.cbSize = sizeof(sStickKeys);
+	sStickKeys.dwFlags = m_dwStickyKeysFlag;
+	SystemParametersInfo(SPI_SETSTICKYKEYS, sizeof(sStickKeys), &sStickKeys, 0);
+}

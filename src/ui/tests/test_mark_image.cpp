@@ -7,7 +7,7 @@
 
 #include <Neoeter/Platform/Base/lzo.h>
 #include <Neoeter/Platform/Platform.h>
-#include <Client/UI/MarkImage.h>
+#include <Client/UI/Marks/MarkImage.h>
 
 static const char* kPath = "/tmp/openmt2_test_mark_image.tga";
 

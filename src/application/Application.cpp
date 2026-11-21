@@ -12,9 +12,9 @@
 
 #include <Client/UI/StdAfx.h>
 
-#include <Client/UI/LoadingScreen.h>
+#include <Client/UI/Widget/LoadingScreen.h>
 #include <Client/UI/Locale.h>
-#include <Client/UI/PythonApplication.h>
+#include <Client/UI/App/PythonApplication.h>
 #include <Client/Utils/PythonUtils.h>
 #include <Neoeter/IO/EterPackManager.h>
 #include <Neoeter/Platform/Base/Debug.h>

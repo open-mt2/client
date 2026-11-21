@@ -1,6 +1,6 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/Feature/Ime/PythonIME.h>
-#include <Client/UI/PythonApplication.h>
+#include <Client/UI/App/PythonApplication.h>
 
 PyObject* imeEnable(PyObject* poSelf, PyObject* poArgs)
 {

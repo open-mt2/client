@@ -3,7 +3,7 @@
 #include <Client/Player/PythonPlayerSkill.h>
 #include <Client/Feature/TextTail/PythonTextTail.h>
 #include <Client/Session/PythonNetworkStream.h>
-#include <Client/UI/InstanceBase.h>
+#include <Client/UI/Instance/InstanceBase.h>
 #include <Client/Feature/Chat/PythonChat.h>
 #include <Client/Feature/Guild/PythonGuild.h>
 #include <Client/GameData/ItemManager.h>

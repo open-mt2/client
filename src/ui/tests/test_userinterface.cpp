@@ -1,6 +1,6 @@
 #include <Client/UI/StdAfx.h>
-#include <Client/UI/AffectFlagContainer.h>
-#include <Client/UI/InsultChecker.h>
+#include <Client/UI/Util/AffectFlagContainer.h>
+#include <Client/UI/Util/InsultChecker.h>
 #include <Client/Feature/System/PythonSystem.h>
 #include <Client/UI/Packet.h>
 #include <Client/UI/GameType.h>

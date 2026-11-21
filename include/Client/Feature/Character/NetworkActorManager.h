@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Client/UI/InstanceBase.h>
+#include <Client/UI/Instance/InstanceBase.h>
 
 struct SNetworkActorData
 {

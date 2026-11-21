@@ -1,7 +1,7 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/Feature/Guild/PythonGuild.h>
 #include <Client/UI/AbstractPlayer.h>
-#include <Client/UI/MarkManager.h>
+#include <Client/UI/Marks/MarkManager.h>
 #include <Client/Game/Balance.h>
 
 std::map<uint32_t, uint32_t> g_GuildSkillSlotToIndexMap;

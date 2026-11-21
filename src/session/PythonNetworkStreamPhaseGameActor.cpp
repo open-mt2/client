@@ -4,7 +4,7 @@
 #include <Client/Feature/Character/NetworkActorManager.h>
 #include <Client/Feature/Background/PythonBackground.h>
 
-#include <Client/UI/PythonApplication.h>
+#include <Client/UI/App/PythonApplication.h>
 #include <Client/UI/AbstractPlayer.h>
 #include <Client/Game/ActorInstance.h>
 #include <Client/Map/Map.h>

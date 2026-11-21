@@ -1588,8 +1588,8 @@ PyObject* netSetSkillGroupFake(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildNone();
 }
 
-#include <Client/UI/GuildMarkUploader.h>
-#include <Client/UI/GuildMarkDownloader.h>
+#include <Client/UI/Marks/GuildMarkUploader.h>
+#include <Client/UI/Marks/GuildMarkDownloader.h>
 
 PyObject* netSendGuildSymbol(PyObject* poSelf, PyObject* poArgs)
 {

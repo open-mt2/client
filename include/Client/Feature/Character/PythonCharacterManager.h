@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Client/UI/AbstractCharacterManager.h>
-#include <Client/UI/InstanceBase.h>
+#include <Client/UI/Instance/InstanceBase.h>
 #include <Client/Map/PhysicsObject.h>
 
 class CPythonCharacterManager : public CSingleton<CPythonCharacterManager>, public IAbstractCharacterManager, public IObjectManager
