@@ -1,5 +1,6 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/Player/PythonPlayer.h>
+#include <Client/Player/PythonPlayerInput.h>
 #include <Client/Player/PythonPlayerEventHandler.h>
 #include <Client/UI/PythonApplication.h>
 #include <Neoeter/Render/Camera.h>
@@ -14,9 +15,13 @@ const float c_fRotatingStepTime = 0.5f;
 const float c_fComboDistance = 250.0f;
 const float c_fClickDistance = 300.0f;
 
-uint32_t CPythonPlayer::__GetPickableDistance()
+CPythonPlayerInput::CPythonPlayerInput(CPythonPlayer& rkOwner) : m_rkOwner(rkOwner)
 {
-	CInstanceBase* pkInstMain = NEW_GetMainActorPtr();
+}
+
+uint32_t CPythonPlayerInput::__GetPickableDistance()
+{
+	CInstanceBase* pkInstMain = m_rkOwner.NEW_GetMainActorPtr();
 	if (pkInstMain)
 		if (pkInstMain->IsMountingHorse())
 			return 500;
@@ -24,9 +29,9 @@ uint32_t CPythonPlayer::__GetPickableDistance()
 	return 300;
 }
 
-void CPythonPlayer::PickCloseMoney()
+void CPythonPlayerInput::PickCloseMoney()
 {
-	CInstanceBase* pkInstMain = NEW_GetMainActorPtr();
+	CInstanceBase* pkInstMain = m_rkOwner.NEW_GetMainActorPtr();
 	if (!pkInstMain)
 		return;
 
@@ -38,12 +43,12 @@ void CPythonPlayer::PickCloseMoney()
 	if (!rkItem.GetCloseMoney(kPPosMain, &dwItemID, __GetPickableDistance()))
 		return;
 
-	SendClickItemPacket(dwItemID);
+	m_rkOwner.SendClickItemPacket(dwItemID);
 }
 
-void CPythonPlayer::PickCloseItem()
+void CPythonPlayerInput::PickCloseItem()
 {
-	CInstanceBase* pkInstMain = NEW_GetMainActorPtr();
+	CInstanceBase* pkInstMain = m_rkOwner.NEW_GetMainActorPtr();
 	if (!pkInstMain)
 		return;
 
@@ -55,45 +60,45 @@ void CPythonPlayer::PickCloseItem()
 	if (!rkItem.GetCloseItem(kPPosMain, &dwItemID, __GetPickableDistance()))
 		return;
 
-	SendClickItemPacket(dwItemID);
+	m_rkOwner.SendClickItemPacket(dwItemID);
 }
 
-bool CPythonPlayer::__IsTarget()
+bool CPythonPlayerInput::__IsTarget()
 {
 	return 0 != __GetTargetVID();
 }
 
-bool CPythonPlayer::__IsSameTargetVID(uint32_t dwVID)
+bool CPythonPlayerInput::__IsSameTargetVID(uint32_t dwVID)
 {
 	return dwVID == __GetTargetVID();
 }
 
-uint32_t CPythonPlayer::__GetTargetVID()
+uint32_t CPythonPlayerInput::__GetTargetVID()
 {
-	return m_dwTargetVID;
+	return m_rkOwner.m_dwTargetVID;
 }
 
-uint32_t CPythonPlayer::GetTargetVID()
+uint32_t CPythonPlayerInput::GetTargetVID()
 {
 	return __GetTargetVID();
 }
 
-CInstanceBase* CPythonPlayer::__GetTargetActorPtr()
+CInstanceBase* CPythonPlayerInput::__GetTargetActorPtr()
 {
-	return NEW_FindActorPtr(__GetTargetVID());
+	return m_rkOwner.NEW_FindActorPtr(__GetTargetVID());
 }
 
-void CPythonPlayer::__SetTargetVID(uint32_t dwVID)
+void CPythonPlayerInput::__SetTargetVID(uint32_t dwVID)
 {
-	m_dwTargetVID = dwVID;
+	m_rkOwner.m_dwTargetVID = dwVID;
 }
 
-void CPythonPlayer::__ClearTarget()
+void CPythonPlayerInput::__ClearTarget()
 {
 	if (!__IsTarget())
 		return;
 
-	CInstanceBase* pkInstMain = NEW_GetMainActorPtr();
+	CInstanceBase* pkInstMain = m_rkOwner.NEW_GetMainActorPtr();
 	if (!pkInstMain)
 		return;
 
@@ -108,9 +113,9 @@ void CPythonPlayer::__ClearTarget()
 	CPythonNetworkStream::Instance().SendTargetPacket(0);
 }
 
-void CPythonPlayer::SetTarget(uint32_t dwVID, int32_t bForceChange)
+void CPythonPlayerInput::SetTarget(uint32_t dwVID, int32_t bForceChange)
 {
-	CInstanceBase* pkInstMain = NEW_GetMainActorPtr();
+	CInstanceBase* pkInstMain = m_rkOwner.NEW_GetMainActorPtr();
 	if (!pkInstMain)
 		return;
 
@@ -133,22 +138,22 @@ void CPythonPlayer::SetTarget(uint32_t dwVID, int32_t bForceChange)
 			CPythonNetworkStream::Instance().SendTargetPacket(0);
 			return;
 		}
-		m_dwTargetEndTime = dwCurrentTime + 1000;
+		m_rkOwner.m_dwTargetEndTime = dwCurrentTime + 1000;
 		return;
 	}
 
 	if (bForceChange)
 	{
-		m_dwTargetEndTime = dwCurrentTime + 2000;
+		m_rkOwner.m_dwTargetEndTime = dwCurrentTime + 2000;
 	}
 	else
 	{
-		if (m_dwTargetEndTime > dwCurrentTime)
+		if (m_rkOwner.m_dwTargetEndTime > dwCurrentTime)
 		{
 			return;
 		}
 
-		m_dwTargetEndTime = dwCurrentTime + 1000;
+		m_rkOwner.m_dwTargetEndTime = dwCurrentTime + 1000;
 	}
 
 	if (__IsTarget())
@@ -180,7 +185,7 @@ void CPythonPlayer::SetTarget(uint32_t dwVID, int32_t bForceChange)
 	CPythonNetworkStream::Instance().SendTargetPacket(0);
 }
 
-bool CPythonPlayer::__ChangeTargetToPickedInstance()
+bool CPythonPlayerInput::__ChangeTargetToPickedInstance()
 {
 	uint32_t dwVID;
 	if (!CPythonCharacterManager::Instance().OLD_GetPickedInstanceVID(&dwVID))
@@ -190,7 +195,7 @@ bool CPythonPlayer::__ChangeTargetToPickedInstance()
 	return true;
 }
 
-CInstanceBase* CPythonPlayer::__GetSkillTargetInstancePtr(CPythonSkill::TSkillData& rkSkillData)
+CInstanceBase* CPythonPlayerInput::__GetSkillTargetInstancePtr(CPythonSkill::TSkillData& rkSkillData)
 {
 	if (rkSkillData.IsNeedCorpse())
 		return __GetDeadTargetInstancePtr();
@@ -198,7 +203,7 @@ CInstanceBase* CPythonPlayer::__GetSkillTargetInstancePtr(CPythonSkill::TSkillDa
 	return __GetAliveTargetInstancePtr();
 }
 
-CInstanceBase* CPythonPlayer::__GetDeadTargetInstancePtr()
+CInstanceBase* CPythonPlayerInput::__GetDeadTargetInstancePtr()
 {
 	if (!__IsTarget())
 		return NULL;
@@ -214,7 +219,7 @@ CInstanceBase* CPythonPlayer::__GetDeadTargetInstancePtr()
 	return pkInstTarget;
 }
 
-CInstanceBase* CPythonPlayer::__GetAliveTargetInstancePtr()
+CInstanceBase* CPythonPlayerInput::__GetAliveTargetInstancePtr()
 {
 	if (!__IsTarget())
 		return NULL;
@@ -230,7 +235,7 @@ CInstanceBase* CPythonPlayer::__GetAliveTargetInstancePtr()
 	return pkInstTarget;
 }
 
-void CPythonPlayer::OpenCharacterMenu(uint32_t dwVictimActorID)
+void CPythonPlayerInput::OpenCharacterMenu(uint32_t dwVictimActorID)
 {
 	CInstanceBase* pkInstMain = CPythonPlayer::Instance().NEW_GetMainActorPtr();
 	if (!pkInstMain)
@@ -246,17 +251,17 @@ void CPythonPlayer::OpenCharacterMenu(uint32_t dwVictimActorID)
 	//	if (pkInstMain == pkInstTarget)
 	//		return;
 
-	PyCallClassMemberFunc(m_ppyGameWindow, "SetPCTargetBoard", Py_BuildValue("(is)", pkInstTarget->GetVirtualID(), pkInstTarget->GetNameString()));
+	PyCallClassMemberFunc(m_rkOwner.m_ppyGameWindow, "SetPCTargetBoard", Py_BuildValue("(is)", pkInstTarget->GetVirtualID(), pkInstTarget->GetNameString()));
 }
 
-void CPythonPlayer::__OnClickItem(CInstanceBase& rkInstMain, uint32_t dwItemID)
+void CPythonPlayerInput::__OnClickItem(CInstanceBase& rkInstMain, uint32_t dwItemID)
 {
 }
 
-void CPythonPlayer::__OnClickActor(CInstanceBase& rkInstMain, uint32_t dwPickedActorID, bool isAuto)
+void CPythonPlayerInput::__OnClickActor(CInstanceBase& rkInstMain, uint32_t dwPickedActorID, bool isAuto)
 {
 	// 만약 스킬을 써서 접근중이라면..
-	if (MODE_USE_SKILL == m_eReservedMode)
+	if (CPythonPlayer::MODE_USE_SKILL == m_rkOwner.m_eReservedMode)
 	{
 		// 같은 캐릭터를 클릭 했으면 리턴
 		if (__GetTargetVID() == dwPickedActorID)
@@ -264,16 +269,16 @@ void CPythonPlayer::__OnClickActor(CInstanceBase& rkInstMain, uint32_t dwPickedA
 
 		// 2005.03.25.levites
 		// 탄환격을 쓰고 달려가는중 공격할 수 있는 다른 타겟을 클릭하면
-		if (__CheckDashAffect(rkInstMain))
+		if (m_rkOwner.GetSkill().__CheckDashAffect(rkInstMain))
 		{
-			m_dwVIDReserved = dwPickedActorID;
+			m_rkOwner.m_dwVIDReserved = dwPickedActorID;
 			return;
 		}
 	}
 
 	__ClearReservedAction();
 
-	CInstanceBase* pkInstVictim = NEW_FindActorPtr(dwPickedActorID);
+	CInstanceBase* pkInstVictim = m_rkOwner.NEW_FindActorPtr(dwPickedActorID);
 	CInstanceBase& rkInstVictim = *pkInstVictim;
 	if (!pkInstVictim)
 		return;
@@ -292,17 +297,17 @@ void CPythonPlayer::__OnClickActor(CInstanceBase& rkInstMain, uint32_t dwPickedA
 
 	if (rkInstVictim.IsNPC())
 	{
-		__SendClickActorPacket(rkInstVictim);
+		m_rkOwner.__SendClickActorPacket(rkInstVictim);
 	}
 
 	rkInstMain.GetMovement().NEW_Stop();
 	return;
 }
 
-void CPythonPlayer::__OnPressActor(CInstanceBase& rkInstMain, uint32_t dwPickedActorID, bool isAuto)
+void CPythonPlayerInput::__OnPressActor(CInstanceBase& rkInstMain, uint32_t dwPickedActorID, bool isAuto)
 {
 	// 만약 스킬을 써서 접근중이라면..
-	if (MODE_USE_SKILL == m_eReservedMode)
+	if (CPythonPlayer::MODE_USE_SKILL == m_rkOwner.m_eReservedMode)
 	{
 		// 같은 캐릭터를 클릭 했으면 리턴
 		if (__GetTargetVID() == dwPickedActorID)
@@ -310,9 +315,9 @@ void CPythonPlayer::__OnPressActor(CInstanceBase& rkInstMain, uint32_t dwPickedA
 
 		// 2005.03.25.levites
 		// 탄환격을 쓰고 달려가는중 공격할 수 있는 다른 타겟을 클릭하면
-		if (__CheckDashAffect(rkInstMain))
+		if (m_rkOwner.GetSkill().__CheckDashAffect(rkInstMain))
 		{
-			m_dwVIDReserved = dwPickedActorID;
+			m_rkOwner.m_dwVIDReserved = dwPickedActorID;
 			return;
 		}
 	}
@@ -323,7 +328,7 @@ void CPythonPlayer::__OnPressActor(CInstanceBase& rkInstMain, uint32_t dwPickedA
 	if (!__CanAttack())
 		return;
 
-	CInstanceBase* pkInstVictim = NEW_FindActorPtr(dwPickedActorID);
+	CInstanceBase* pkInstVictim = m_rkOwner.NEW_FindActorPtr(dwPickedActorID);
 	if (!pkInstVictim)
 		return;
 
@@ -358,13 +363,13 @@ void CPythonPlayer::__OnPressActor(CInstanceBase& rkInstMain, uint32_t dwPickedA
 	rkInstMain.GetBattle().NEW_AttackToDestInstanceDirection(rkInstVictim, rkPlayerEventHandler.GetNormalBowAttackFlyEventHandler(&rkInstMain, &rkInstVictim));
 }
 
-void CPythonPlayer::__OnPressItem(CInstanceBase& rkInstMain, uint32_t dwPickedItemID)
+void CPythonPlayerInput::__OnPressItem(CInstanceBase& rkInstMain, uint32_t dwPickedItemID)
 {
 	static uint32_t s_dwLastPickItemID = 0;
 
 	if (s_dwLastPickItemID == dwPickedItemID)
 	{
-		Logn(1, "CPythonPlayer::__OnPressItem - ALREADY PICKED ITEM");
+		Logn(1, "CPythonPlayerInput::__OnPressItem - ALREADY PICKED ITEM");
 		return;
 	}
 
@@ -384,10 +389,10 @@ void CPythonPlayer::__OnPressItem(CInstanceBase& rkInstMain, uint32_t dwPickedIt
 	}
 
 	rkInstMain.GetMovement().NEW_Stop();
-	SendClickItemPacket(dwPickedItemID);
+	m_rkOwner.SendClickItemPacket(dwPickedItemID);
 }
 
-void CPythonPlayer::__OnClickGround(CInstanceBase& rkInstMain, const TPixelPosition& c_rkPPosPickedGround)
+void CPythonPlayerInput::__OnClickGround(CInstanceBase& rkInstMain, const TPixelPosition& c_rkPPosPickedGround)
 {
 	if (!__IsMovableGroundDistance(rkInstMain, c_rkPPosPickedGround))
 		return;
@@ -396,23 +401,23 @@ void CPythonPlayer::__OnClickGround(CInstanceBase& rkInstMain, const TPixelPosit
 		__ShowPickedEffect(c_rkPPosPickedGround);
 }
 
-void CPythonPlayer::SetMovableGroundDistance(float fDistance)
+void CPythonPlayerInput::SetMovableGroundDistance(float fDistance)
 {
-	MOVABLE_GROUND_DISTANCE = fDistance;
+	m_rkOwner.MOVABLE_GROUND_DISTANCE = fDistance;
 }
 
-bool CPythonPlayer::__IsMovableGroundDistance(CInstanceBase& rkInstMain, const TPixelPosition& c_rkPPosPickedGround)
+bool CPythonPlayerInput::__IsMovableGroundDistance(CInstanceBase& rkInstMain, const TPixelPosition& c_rkPPosPickedGround)
 {
 	float fDistance = rkInstMain.GetBattle().NEW_GetDistanceFromDestPixelPosition(c_rkPPosPickedGround);
 
-	if (fDistance < MOVABLE_GROUND_DISTANCE)
+	if (fDistance < m_rkOwner.MOVABLE_GROUND_DISTANCE)
 		return false;
 
 	// Tracef("IsMovableGroundDistance(%f)\n", fDistance);
 	return true;
 }
 
-void CPythonPlayer::__OnPressGround(CInstanceBase& rkInstMain, const TPixelPosition& c_rkPPosPickedGround)
+void CPythonPlayerInput::__OnPressGround(CInstanceBase& rkInstMain, const TPixelPosition& c_rkPPosPickedGround)
 {
 	__ClearReservedAction();
 	__ClearAutoAttackTargetActorID();
@@ -430,22 +435,22 @@ void CPythonPlayer::__OnPressGround(CInstanceBase& rkInstMain, const TPixelPosit
 	}
 }
 
-void CPythonPlayer::__OnPressScreen(CInstanceBase& rkInstMain)
+void CPythonPlayerInput::__OnPressScreen(CInstanceBase& rkInstMain)
 {
 	__ClearReservedAction();
 
 	NEW_MoveToMouseScreenDirection();
 }
 
-bool CPythonPlayer::NEW_MoveToDirection(float fDirRot)
+bool CPythonPlayerInput::NEW_MoveToDirection(float fDirRot)
 {
 	// PrivateShop
-	if (IsOpenPrivateShop())
+	if (m_rkOwner.IsOpenPrivateShop())
 		return true;
 
 	__ClearReservedAction();
 
-	CInstanceBase* pkInstMain = NEW_GetMainActorPtr();
+	CInstanceBase* pkInstMain = m_rkOwner.NEW_GetMainActorPtr();
 	if (!pkInstMain)
 		return false;
 
@@ -459,7 +464,7 @@ bool CPythonPlayer::NEW_MoveToDirection(float fDirRot)
 		float fCmrCurRot = CameraRotationToCharacterRotation(pkCmrCur->GetRoll());
 
 		// 현재
-		if (m_isCmrRot)
+		if (m_rkOwner.m_isCmrRot)
 		{
 			float fSigDirRot = fDirRot;
 			if (fSigDirRot > 180.0f)
@@ -473,7 +478,7 @@ bool CPythonPlayer::NEW_MoveToDirection(float fDirRot)
 
 			float fElapsedTime = CPythonApplication::Instance().GetGlobalElapsedTime();
 
-			float fRotDeg = -m_fCmrRotSpd * fElapsedTime * fRotRat / 90.0f;
+			float fRotDeg = -m_rkOwner.m_fCmrRotSpd * fElapsedTime * fRotRat / 90.0f;
 			pkCmrCur->Roll(fRotDeg);
 		}
 
@@ -485,22 +490,22 @@ bool CPythonPlayer::NEW_MoveToDirection(float fDirRot)
 	return true;
 }
 
-void CPythonPlayer::NEW_Stop()
+void CPythonPlayerInput::NEW_Stop()
 {
-	CInstanceBase* pkInstMain = NEW_GetMainActorPtr();
+	CInstanceBase* pkInstMain = m_rkOwner.NEW_GetMainActorPtr();
 	if (!pkInstMain)
 		return;
 
 	pkInstMain->GetMovement().NEW_Stop();
-	m_isLeft = FALSE;
-	m_isRight = FALSE;
-	m_isUp = FALSE;
-	m_isDown = FALSE;
+	m_rkOwner.m_isLeft = FALSE;
+	m_rkOwner.m_isRight = FALSE;
+	m_rkOwner.m_isUp = FALSE;
+	m_rkOwner.m_isDown = FALSE;
 }
 
-bool CPythonPlayer::NEW_CancelFishing()
+bool CPythonPlayerInput::NEW_CancelFishing()
 {
-	CInstanceBase* pkInstMain = NEW_GetMainActorPtr();
+	CInstanceBase* pkInstMain = m_rkOwner.NEW_GetMainActorPtr();
 	if (!pkInstMain)
 		return false;
 
@@ -518,9 +523,9 @@ bool CPythonPlayer::NEW_CancelFishing()
 	return false;
 }
 
-void CPythonPlayer::NEW_Fishing()
+void CPythonPlayerInput::NEW_Fishing()
 {
-	CInstanceBase* pkInstMain = NEW_GetMainActorPtr();
+	CInstanceBase* pkInstMain = m_rkOwner.NEW_GetMainActorPtr();
 	if (!pkInstMain)
 		return;
 
@@ -537,22 +542,22 @@ void CPythonPlayer::NEW_Fishing()
 				CPythonNetworkStream::Instance().SendFishingPacket(irot);
 			else
 			{
-				PyCallClassMemberFunc(m_ppyGameWindow, "OnFishingWrongPlace", Py_BuildValue("()"));
+				PyCallClassMemberFunc(m_rkOwner.m_ppyGameWindow, "OnFishingWrongPlace", Py_BuildValue("()"));
 			}
 		}
 	}
 }
 
-void CPythonPlayer::NEW_Attack()
+void CPythonPlayerInput::NEW_Attack()
 {
 	// PrivateShop
-	if (IsOpenPrivateShop())
+	if (m_rkOwner.IsOpenPrivateShop())
 		return;
 
 	if (!__CanAttack())
 		return;
 
-	CInstanceBase* pkInstMain = NEW_GetMainActorPtr();
+	CInstanceBase* pkInstMain = m_rkOwner.NEW_GetMainActorPtr();
 	if (!pkInstMain)
 		return;
 
@@ -586,14 +591,14 @@ void CPythonPlayer::NEW_Attack()
 		}
 		else
 		{
-			PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "NEED_TARGET"));
+			PyCallClassMemberFunc(m_rkOwner.m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", m_rkOwner.GetMainCharacterIndex(), "NEED_TARGET"));
 			return;
 		}
 	}
-	else if (m_isDirKey)
+	else if (m_rkOwner.m_isDirKey)
 	{
 		float fDirRot = 0.0f;
-		NEW_GetMultiKeyDirRotation(m_isLeft, m_isRight, m_isUp, m_isDown, &fDirRot);
+		NEW_GetMultiKeyDirRotation(m_rkOwner.m_isLeft, m_rkOwner.m_isRight, m_rkOwner.m_isUp, m_rkOwner.m_isDown, &fDirRot);
 
 		CCamera* pkCmrCur = CCameraManager::Instance().GetCurrentCamera();
 		if (pkCmrCur)
@@ -618,25 +623,25 @@ void CPythonPlayer::NEW_Attack()
 	}
 }
 
-bool CPythonPlayer::NEW_IsEmptyReservedDelayTime(float fElapsedTime)
+bool CPythonPlayerInput::NEW_IsEmptyReservedDelayTime(float fElapsedTime)
 {
-	m_fReservedDelayTime -= fElapsedTime;
+	m_rkOwner.m_fReservedDelayTime -= fElapsedTime;
 
-	if (m_fReservedDelayTime <= 0.0f)
+	if (m_rkOwner.m_fReservedDelayTime <= 0.0f)
 	{
-		m_fReservedDelayTime = 0.0f;
+		m_rkOwner.m_fReservedDelayTime = 0.0f;
 		return true;
 	}
 
 	return false;
 }
 
-void CPythonPlayer::NEW_SetAutoCameraRotationSpeed(float fRotSpd)
+void CPythonPlayerInput::NEW_SetAutoCameraRotationSpeed(float fRotSpd)
 {
-	m_fCmrRotSpd = fRotSpd;
+	m_rkOwner.m_fCmrRotSpd = fRotSpd;
 }
 
-void CPythonPlayer::NEW_ResetCameraRotation()
+void CPythonPlayerInput::NEW_ResetCameraRotation()
 {
 	CCamera* pkCmrCur = CCameraManager::Instance().GetCurrentCamera();
 	CPythonApplication& rkApp = CPythonApplication::Instance();
@@ -648,46 +653,46 @@ void CPythonPlayer::NEW_ResetCameraRotation()
 		rkApp.Cursor().SetVisible(TRUE);
 }
 
-bool CPythonPlayer::__CanShot(CInstanceBase& rkInstMain, CInstanceBase& rkInstTarget)
+bool CPythonPlayerInput::__CanShot(CInstanceBase& rkInstMain, CInstanceBase& rkInstTarget)
 {
-	if (!__HasEnoughArrow())
+	if (!m_rkOwner.GetSkill().__HasEnoughArrow())
 	{
-		PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotShot", Py_BuildValue("(is)", GetMainCharacterIndex(), "EMPTY_ARROW"));
+		PyCallClassMemberFunc(m_rkOwner.m_ppyGameWindow, "OnCannotShot", Py_BuildValue("(is)", m_rkOwner.GetMainCharacterIndex(), "EMPTY_ARROW"));
 		return false;
 	}
 
 	if (rkInstMain.IsInSafe())
 	{
-		PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotShot", Py_BuildValue("(is)", GetMainCharacterIndex(), "IN_SAFE"));
+		PyCallClassMemberFunc(m_rkOwner.m_ppyGameWindow, "OnCannotShot", Py_BuildValue("(is)", m_rkOwner.GetMainCharacterIndex(), "IN_SAFE"));
 		return false;
 	}
 
 	if (rkInstTarget.IsInSafe())
 	{
-		PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotShot", Py_BuildValue("(is)", GetMainCharacterIndex(), "DEST_IN_SAFE"));
+		PyCallClassMemberFunc(m_rkOwner.m_ppyGameWindow, "OnCannotShot", Py_BuildValue("(is)", m_rkOwner.GetMainCharacterIndex(), "DEST_IN_SAFE"));
 		return false;
 	}
 
 	return true;
 }
 
-bool CPythonPlayer::__CanChangeTarget()
+bool CPythonPlayerInput::__CanChangeTarget()
 {
-	CInstanceBase* pkInstMain = NEW_GetMainActorPtr();
+	CInstanceBase* pkInstMain = m_rkOwner.NEW_GetMainActorPtr();
 	if (!pkInstMain)
 		return false;
 
 	return pkInstMain->CanChangeTarget();
 }
 
-bool CPythonPlayer::__CanMove()
+bool CPythonPlayerInput::__CanMove()
 {
-	if (__IsProcessingEmotion())
+	if (m_rkOwner.__IsProcessingEmotion())
 	{
 		return false;
 	}
 
-	CInstanceBase* pkInstMain = NEW_GetMainActorPtr();
+	CInstanceBase* pkInstMain = m_rkOwner.NEW_GetMainActorPtr();
 	if (!pkInstMain)
 		return false;
 
@@ -700,14 +705,14 @@ bool CPythonPlayer::__CanMove()
 	return true;
 }
 /*
-bool CPythonPlayer::__OLD_CanMove()
+bool CPythonPlayerInput::__OLD_CanMove()
 {
-	if (__IsProcessingEmotion())
+	if (m_rkOwner.__IsProcessingEmotion())
 	{
 		return false;
 	}
 
-	CInstanceBase* pkInstMain=NEW_GetMainActorPtr();
+	CInstanceBase* pkInstMain=m_rkOwner.NEW_GetMainActorPtr();
 	if (!pkInstMain)
 		return false;
 
@@ -727,20 +732,20 @@ bool CPythonPlayer::__OLD_CanMove()
 }
 */
 
-bool CPythonPlayer::__CanAttack()
+bool CPythonPlayerInput::__CanAttack()
 {
-	if (__IsProcessingEmotion())
+	if (m_rkOwner.__IsProcessingEmotion())
 	{
 		return false;
 	}
 
-	if (IsOpenPrivateShop())
+	if (m_rkOwner.IsOpenPrivateShop())
 		return false;
 
-	if (IsObserverMode())
+	if (m_rkOwner.IsObserverMode())
 		return false;
 
-	CInstanceBase* pkInstMain = NEW_GetMainActorPtr();
+	CInstanceBase* pkInstMain = m_rkOwner.NEW_GetMainActorPtr();
 	if (!pkInstMain)
 		return false;
 
@@ -749,7 +754,7 @@ bool CPythonPlayer::__CanAttack()
 	// 나중에 시간 나면 can attack 체크를 서버에서 해주자...
 	// ㅡ_ㅡ unique 슬롯에 차는 탈것은 이 조건이랑 관계없이 공격할 수 있어야 한다 ㅡ_ㅡ
 	// ㅡ_ㅡ 뉴마운트만 이 체크를 하게 함... ㅡ_ㅡ_ㅡ_ㅡ_ㅡ
-	if (pkInstMain->IsMountingHorse() && pkInstMain->IsNewMount() && (GetSkillGrade(109) < 1 && GetSkillLevel(109) < 11))
+	if (pkInstMain->IsMountingHorse() && pkInstMain->IsNewMount() && (m_rkOwner.GetSkillGrade(109) < 1 && m_rkOwner.GetSkillLevel(109) < 11))
 	{
 		return false;
 	}
@@ -757,7 +762,7 @@ bool CPythonPlayer::__CanAttack()
 	return pkInstMain->CanAttack();
 }
 
-void CPythonPlayer::NEW_GetMultiKeyDirRotation(bool isLeft, bool isRight, bool isUp, bool isDown, float* pfDirRot)
+void CPythonPlayerInput::NEW_GetMultiKeyDirRotation(bool isLeft, bool isRight, bool isUp, bool isDown, float* pfDirRot)
 {
 	float fScrX = 0.0f;
 	float fScrY = 0.0f;
@@ -779,7 +784,7 @@ void CPythonPlayer::NEW_GetMultiKeyDirRotation(bool isLeft, bool isRight, bool i
 	NEW_GetMouseDirRotation(fScrX, fScrY, pfDirRot);
 }
 
-void CPythonPlayer::NEW_GetMouseDirRotation(float fScrX, float fScrY, float* pfDirRot)
+void CPythonPlayerInput::NEW_GetMouseDirRotation(float fScrX, float fScrY, float* pfDirRot)
 {
 	long lWidth = UI::CWindowManager::Instance().GetScreenWidth();
 	long lHeight = UI::CWindowManager::Instance().GetScreenHeight();
@@ -794,7 +799,7 @@ void CPythonPlayer::NEW_GetMouseDirRotation(float fScrX, float fScrY, float* pfD
 	*pfDirRot = finputRotation;
 }
 
-float CPythonPlayer::GetDegreeFromPosition(int ix, int iy, int iHalfWidth, int iHalfHeight)
+float CPythonPlayerInput::GetDegreeFromPosition(int ix, int iy, int iHalfWidth, int iHalfHeight)
 {
 	D3DXVECTOR3 vtDir(float(ix - iHalfWidth), float(iy - iHalfHeight), 0.0f);
 	D3DXVec3Normalize(&vtDir, &vtDir);
@@ -808,67 +813,67 @@ float CPythonPlayer::GetDegreeFromPosition(int ix, int iy, int iHalfWidth, int i
 	return 360.0f - ret;
 }
 
-void CPythonPlayer::__ClearReservedAction()
+void CPythonPlayerInput::__ClearReservedAction()
 {
-	m_eReservedMode = MODE_NONE;
+	m_rkOwner.m_eReservedMode = CPythonPlayer::MODE_NONE;
 }
 
-void CPythonPlayer::__ReserveClickItem(uint32_t dwItemID)
+void CPythonPlayerInput::__ReserveClickItem(uint32_t dwItemID)
 {
-	m_eReservedMode = MODE_CLICK_ITEM;
-	m_dwIIDReserved = dwItemID;
+	m_rkOwner.m_eReservedMode = CPythonPlayer::MODE_CLICK_ITEM;
+	m_rkOwner.m_dwIIDReserved = dwItemID;
 }
 
-void CPythonPlayer::__ReserveClickActor(uint32_t dwActorID)
+void CPythonPlayerInput::__ReserveClickActor(uint32_t dwActorID)
 {
-	m_eReservedMode = MODE_CLICK_ACTOR;
-	m_dwVIDReserved = dwActorID;
+	m_rkOwner.m_eReservedMode = CPythonPlayer::MODE_CLICK_ACTOR;
+	m_rkOwner.m_dwVIDReserved = dwActorID;
 }
 
-void CPythonPlayer::__ReserveClickGround(const TPixelPosition& c_rkPPosPickedGround)
+void CPythonPlayerInput::__ReserveClickGround(const TPixelPosition& c_rkPPosPickedGround)
 {
-	m_eReservedMode = MODE_CLICK_POSITION;
-	m_kPPosReserved = c_rkPPosPickedGround;
-	m_fReservedDelayTime = 0.1f;
+	m_rkOwner.m_eReservedMode = CPythonPlayer::MODE_CLICK_POSITION;
+	m_rkOwner.m_kPPosReserved = c_rkPPosPickedGround;
+	m_rkOwner.m_fReservedDelayTime = 0.1f;
 }
 
-bool CPythonPlayer::__IsReservedUseSkill(uint32_t dwSkillSlotIndex)
+bool CPythonPlayerInput::__IsReservedUseSkill(uint32_t dwSkillSlotIndex)
 {
-	if (MODE_USE_SKILL != m_eReservedMode)
+	if (CPythonPlayer::MODE_USE_SKILL != m_rkOwner.m_eReservedMode)
 		return false;
 
-	if (m_dwSkillSlotIndexReserved != dwSkillSlotIndex)
+	if (m_rkOwner.m_dwSkillSlotIndexReserved != dwSkillSlotIndex)
 		return false;
 
 	return true;
 }
 
-void CPythonPlayer::__ReserveUseSkill(uint32_t dwActorID, uint32_t dwSkillSlotIndex, uint32_t dwRange)
+void CPythonPlayerInput::__ReserveUseSkill(uint32_t dwActorID, uint32_t dwSkillSlotIndex, uint32_t dwRange)
 {
-	m_eReservedMode = MODE_USE_SKILL;
-	m_dwVIDReserved = dwActorID;
-	m_dwSkillSlotIndexReserved = dwSkillSlotIndex;
-	m_dwSkillRangeReserved = dwRange;
+	m_rkOwner.m_eReservedMode = CPythonPlayer::MODE_USE_SKILL;
+	m_rkOwner.m_dwVIDReserved = dwActorID;
+	m_rkOwner.m_dwSkillSlotIndexReserved = dwSkillSlotIndex;
+	m_rkOwner.m_dwSkillRangeReserved = dwRange;
 
 	// NOTE : 아슬아슬하게 거리가 꼬이는 문제가 있어서 약간 느슨하게..
-	if (m_dwSkillRangeReserved > 100)
-		m_dwSkillRangeReserved -= 10;
+	if (m_rkOwner.m_dwSkillRangeReserved > 100)
+		m_rkOwner.m_dwSkillRangeReserved -= 10;
 }
 
-void CPythonPlayer::__ClearAutoAttackTargetActorID()
+void CPythonPlayerInput::__ClearAutoAttackTargetActorID()
 {
 	__SetAutoAttackTargetActorID(0);
 }
 
-void CPythonPlayer::__SetAutoAttackTargetActorID(uint32_t dwVID)
+void CPythonPlayerInput::__SetAutoAttackTargetActorID(uint32_t dwVID)
 {
-	m_dwAutoAttackTargetVID = dwVID;
+	m_rkOwner.m_dwAutoAttackTargetVID = dwVID;
 }
 
-void CPythonPlayer::__ReserveProcess_ClickActor()
+void CPythonPlayerInput::__ReserveProcess_ClickActor()
 {
-	CInstanceBase* pkInstMain = NEW_GetMainActorPtr();
-	CInstanceBase* pkInstReserved = NEW_FindActorPtr(m_dwVIDReserved);
+	CInstanceBase* pkInstMain = m_rkOwner.NEW_GetMainActorPtr();
+	CInstanceBase* pkInstReserved = m_rkOwner.NEW_FindActorPtr(m_rkOwner.m_dwVIDReserved);
 	if (!pkInstMain || !pkInstReserved)
 	{
 		__ClearReservedAction();
@@ -884,7 +889,7 @@ void CPythonPlayer::__ReserveProcess_ClickActor()
 	if (!pkInstMain->IsAttackableInstance(*pkInstReserved))
 	{
 		pkInstMain->GetMovement().NEW_Stop();
-		__SendClickActorPacket(*pkInstReserved);
+		m_rkOwner.__SendClickActorPacket(*pkInstReserved);
 		__ClearReservedAction();
 		return;
 	}
@@ -897,7 +902,7 @@ void CPythonPlayer::__ReserveProcess_ClickActor()
 
 	if (pkInstMain->IsInSafe())
 	{
-		PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotAttack", Py_BuildValue("(is)", GetMainCharacterIndex(), "IN_SAFE"));
+		PyCallClassMemberFunc(m_rkOwner.m_ppyGameWindow, "OnCannotAttack", Py_BuildValue("(is)", m_rkOwner.GetMainCharacterIndex(), "IN_SAFE"));
 		pkInstMain->GetMovement().NEW_Stop();
 		__ClearReservedAction();
 		return;
@@ -905,14 +910,14 @@ void CPythonPlayer::__ReserveProcess_ClickActor()
 
 	if (pkInstReserved->IsInSafe())
 	{
-		PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotAttack", Py_BuildValue("(is)", GetMainCharacterIndex(), "DEST_IN_SAFE"));
+		PyCallClassMemberFunc(m_rkOwner.m_ppyGameWindow, "OnCannotAttack", Py_BuildValue("(is)", m_rkOwner.GetMainCharacterIndex(), "DEST_IN_SAFE"));
 		pkInstMain->GetMovement().NEW_Stop();
 		__ClearReservedAction();
 		return;
 	}
 
 	// 탄환격 쓰고 달려가는 도중에는 공격하지 않는다.
-	if (__CheckDashAffect(*pkInstMain))
+	if (m_rkOwner.GetSkill().__CheckDashAffect(*pkInstMain))
 	{
 		return;
 	}
@@ -921,9 +926,9 @@ void CPythonPlayer::__ReserveProcess_ClickActor()
 
 	if (pkInstMain->IsBowMode())
 	{
-		if (!__HasEnoughArrow())
+		if (!m_rkOwner.GetSkill().__HasEnoughArrow())
 		{
-			PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotShot", Py_BuildValue("(is)", GetMainCharacterIndex(), "EMPTY_ARROW"));
+			PyCallClassMemberFunc(m_rkOwner.m_ppyGameWindow, "OnCannotShot", Py_BuildValue("(is)", m_rkOwner.GetMainCharacterIndex(), "EMPTY_ARROW"));
 			pkInstMain->GetMovement().NEW_Stop();
 			__ClearReservedAction();
 			return;
@@ -939,7 +944,7 @@ void CPythonPlayer::__ReserveProcess_ClickActor()
 	__ClearReservedAction();
 }
 /*
-CInstanceBase* pkInstReserved=NEW_FindActorPtr(m_dwVIDReserved);
+CInstanceBase* pkInstReserved=m_rkOwner.NEW_FindActorPtr(m_rkOwner.m_dwVIDReserved);
 if (pkInstReserved)
 {
 	if (pkInstMain->GetBattle().NEW_IsClickableDistanceDestInstance(*pkInstReserved))
@@ -950,21 +955,21 @@ if (pkInstReserved)
 			{
 				if (pkInstMain->IsInSafe())
 				{
-					PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotAttack", Py_BuildValue("(is)", GetMainCharacterIndex(), "IN_SAFE"));
+					PyCallClassMemberFunc(m_rkOwner.m_ppyGameWindow, "OnCannotAttack", Py_BuildValue("(is)", m_rkOwner.GetMainCharacterIndex(), "IN_SAFE"));
 					pkInstMain->GetMovement().NEW_Stop();
 				}
 				else if (pkInstReserved->IsInSafe())
 				{
-					PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotAttack", Py_BuildValue("(is)", GetMainCharacterIndex(), "DEST_IN_SAFE"));
+					PyCallClassMemberFunc(m_rkOwner.m_ppyGameWindow, "OnCannotAttack", Py_BuildValue("(is)", m_rkOwner.GetMainCharacterIndex(), "DEST_IN_SAFE"));
 					pkInstMain->GetMovement().NEW_Stop();
 				}
 				else
 				{
 					if (pkInstMain->IsBowMode())
 					{
-						if (!__HasEnoughArrow())
+						if (!m_rkOwner.GetSkill().__HasEnoughArrow())
 						{
-							PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotShot", Py_BuildValue("(is)", GetMainCharacterIndex(), "EMPTY_ARROW"));
+							PyCallClassMemberFunc(m_rkOwner.m_ppyGameWindow, "OnCannotShot", Py_BuildValue("(is)", m_rkOwner.GetMainCharacterIndex(), "EMPTY_ARROW"));
 							pkInstMain->GetMovement().NEW_Stop();
 							__ClearReservedAction();
 							break;
@@ -982,7 +987,7 @@ if (pkInstReserved)
 		}
 		else
 		{
-			__SendClickActorPacket(*pkInstReserved);
+			m_rkOwner.__SendClickActorPacket(*pkInstReserved);
 
 			pkInstMain->GetMovement().NEW_Stop();
 		}

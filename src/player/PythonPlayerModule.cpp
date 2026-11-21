@@ -109,7 +109,7 @@ class CBeltInventoryHelper
 
 PyObject* playerPickCloseItem(PyObject* poSelf, PyObject* poArgs)
 {
-	CPythonPlayer::Instance().PickCloseItem();
+	CPythonPlayer::Instance().GetInput().PickCloseItem();
 	return Py_BuildNone();
 }
 
@@ -131,7 +131,7 @@ PyObject* playerSetQuickCameraMode(PyObject* poSelf, PyObject* poArgs)
 		return Py_BadArgument();
 
 	CPythonPlayer& rkPlayer = CPythonPlayer::Instance();
-	rkPlayer.SetQuickCameraMode(nIsEnable ? true : false);
+	rkPlayer.GetInput().SetQuickCameraMode(nIsEnable ? true : false);
 
 	return Py_BuildNone();
 }
@@ -330,7 +330,7 @@ PyObject* playerHidePlayer(PyObject* poSelf, PyObject* poArgs)
 
 PyObject* playerComboAttack(PyObject* poSelf, PyObject* poArgs)
 {
-	CPythonPlayer::Instance().NEW_Attack();
+	CPythonPlayer::Instance().GetInput().NEW_Attack();
 	return Py_BuildNone();
 }
 
@@ -375,7 +375,7 @@ PyObject* playerSetAttackKeyState(PyObject* poSelf, PyObject* poArgs)
 		return Py_BuildException("playerSetAttackKeyState(isPressed) - There is no first argument");
 
 	CPythonPlayer& rkPlayer = CPythonPlayer::Instance();
-	rkPlayer.SetAttackKeyState(isPressed ? true : false);
+	rkPlayer.GetInput().SetAttackKeyState(isPressed ? true : false);
 	return Py_BuildNone();
 }
 
@@ -390,13 +390,13 @@ PyObject* playerSetSingleDIKKeyState(PyObject* poSelf, PyObject* poArgs)
 		return Py_BuildException("playerSetSingleDIKKeyState(eDIK, isPressed) - There is no second argument");
 
 	CPythonPlayer& rkPlayer = CPythonPlayer::Instance();
-	rkPlayer.NEW_SetSingleDIKKeyState(eDIK, isPressed ? true : false);
+	rkPlayer.GetInput().NEW_SetSingleDIKKeyState(eDIK, isPressed ? true : false);
 	return Py_BuildNone();
 }
 
 PyObject* playerEndKeyWalkingImmediately(PyObject* poSelf, PyObject* poArgs)
 {
-	CPythonPlayer::Instance().NEW_Stop();
+	CPythonPlayer::Instance().GetInput().NEW_Stop();
 	return Py_BuildNone();
 }
 
@@ -412,7 +412,7 @@ PyObject* playerEndMouseWalking(PyObject* poSelf, PyObject* poArgs)
 
 PyObject* playerResetCameraRotation(PyObject* poSelf, PyObject* poArgs)
 {
-	CPythonPlayer::Instance().NEW_ResetCameraRotation();
+	CPythonPlayer::Instance().GetInput().NEW_ResetCameraRotation();
 	return Py_BuildNone();
 }
 
@@ -423,7 +423,7 @@ PyObject* playerSetAutoCameraRotationSpeed(PyObject* poSelf, PyObject* poArgs)
 		return Py_BuildException();
 
 	CPythonPlayer& rkPlayer = CPythonPlayer::Instance();
-	rkPlayer.NEW_SetAutoCameraRotationSpeed(fCmrRotSpd);
+	rkPlayer.GetInput().NEW_SetAutoCameraRotationSpeed(fCmrRotSpd);
 	return Py_BuildNone();
 }
 
@@ -438,7 +438,7 @@ PyObject* playerSetMouseState(PyObject* poSelf, PyObject* poArgs)
 		return Py_BuildException();
 
 	CPythonPlayer& rkPlayer = CPythonPlayer::Instance();
-	rkPlayer.NEW_SetMouseState(eMBT, eMBS);
+	rkPlayer.GetInput().NEW_SetMouseState(eMBT, eMBS);
 
 	return Py_BuildNone();
 }
@@ -454,7 +454,7 @@ PyObject* playerSetMouseFunc(PyObject* poSelf, PyObject* poArgs)
 		return Py_BuildException();
 
 	CPythonPlayer& rkPlayer = CPythonPlayer::Instance();
-	rkPlayer.NEW_SetMouseFunc(eMBT, eMBS);
+	rkPlayer.GetInput().NEW_SetMouseFunc(eMBT, eMBS);
 
 	return Py_BuildNone();
 }
@@ -466,7 +466,7 @@ PyObject* playerGetMouseFunc(PyObject* poSelf, PyObject* poArgs)
 		return Py_BuildException();
 
 	CPythonPlayer& rkPlayer = CPythonPlayer::Instance();
-	return Py_BuildValue("i", rkPlayer.NEW_GetMouseFunc(eMBT));
+	return Py_BuildValue("i", rkPlayer.GetInput().NEW_GetMouseFunc(eMBT));
 }
 
 PyObject* playerSetMouseMiddleButtonState(PyObject* poSelf, PyObject* poArgs)
@@ -476,7 +476,7 @@ PyObject* playerSetMouseMiddleButtonState(PyObject* poSelf, PyObject* poArgs)
 		return Py_BuildException();
 
 	CPythonPlayer& rkPlayer = CPythonPlayer::Instance();
-	rkPlayer.NEW_SetMouseMiddleButtonState(eMBS);
+	rkPlayer.GetInput().NEW_SetMouseMiddleButtonState(eMBS);
 
 	return Py_BuildNone();
 }
@@ -550,7 +550,7 @@ PyObject* playerUseGuildSkill(PyObject* poSelf, PyObject* poArgs)
 	if (!PyTuple_GetInteger(poArgs, 0, &iSkillSlotIndex))
 		return Py_BuildException();
 
-	CPythonPlayer::Instance().UseGuildSkill(iSkillSlotIndex);
+	CPythonPlayer::Instance().GetSkill().UseGuildSkill(iSkillSlotIndex);
 	return Py_BuildNone();
 }
 
@@ -723,7 +723,7 @@ PyObject* playerClickSkillSlot(PyObject* poSelf, PyObject* poArgs)
 	if (!PyTuple_GetInteger(poArgs, 0, &iSkillSlot))
 		return Py_BadArgument();
 
-	CPythonPlayer::Instance().ClickSkillSlot(iSkillSlot);
+	CPythonPlayer::Instance().GetSkill().ClickSkillSlot(iSkillSlot);
 
 	return Py_BuildNone();
 }
@@ -734,7 +734,7 @@ PyObject* playerChangeCurrentSkillNumberOnly(PyObject* poSelf, PyObject* poArgs)
 	if (!PyTuple_GetInteger(poArgs, 0, &iSlotIndex))
 		return Py_BadArgument();
 
-	CPythonPlayer::Instance().ChangeCurrentSkillNumberOnly(iSlotIndex);
+	CPythonPlayer::Instance().GetSkill().ChangeCurrentSkillNumberOnly(iSlotIndex);
 
 	return Py_BuildNone();
 }
@@ -1733,7 +1733,7 @@ PyObject* playerClear(PyObject* poSelf, PyObject* poArgs)
 
 PyObject* playerClearTarget(PyObject* poSelf, PyObject* poArgs)
 {
-	CPythonPlayer::Instance().SetTarget(0);
+	CPythonPlayer::Instance().GetInput().SetTarget(0);
 	return Py_BuildNone();
 }
 
@@ -1743,7 +1743,7 @@ PyObject* playerSetTarget(PyObject* poSelf, PyObject* poArgs)
 	if (!PyTuple_GetInteger(poArgs, 0, &iVID))
 		return Py_BuildException();
 
-	CPythonPlayer::Instance().SetTarget(iVID);
+	CPythonPlayer::Instance().GetInput().SetTarget(iVID);
 	return Py_BuildNone();
 }
 
@@ -1753,7 +1753,7 @@ PyObject* playerOpenCharacterMenu(PyObject* poSelf, PyObject* poArgs)
 	if (!PyTuple_GetInteger(poArgs, 0, &iVID))
 		return Py_BuildException();
 
-	CPythonPlayer::Instance().OpenCharacterMenu(iVID);
+	CPythonPlayer::Instance().GetInput().OpenCharacterMenu(iVID);
 	return Py_BuildNone();
 }
 
@@ -1883,7 +1883,7 @@ PyObject* playerToggleLevelLimit(PyObject* poSelf, PyObject* poArgs)
 
 PyObject* playerGetTargetVID(PyObject* poSelf, PyObject* poArgs)
 {
-	return Py_BuildValue("i", CPythonPlayer::Instance().GetTargetVID());
+	return Py_BuildValue("i", CPythonPlayer::Instance().GetInput().GetTargetVID());
 }
 
 PyObject* playerRegisterEmotionIcon(PyObject* poSelf, PyObject* poArgs)

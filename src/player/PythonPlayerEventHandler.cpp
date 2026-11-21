@@ -16,17 +16,17 @@ CPythonPlayerEventHandler::~CPythonPlayerEventHandler()
 
 void CPythonPlayerEventHandler::OnClearAffects()
 {
-	CPythonPlayer::Instance().ClearAffects();
+	CPythonPlayer::Instance().GetSkill().ClearAffects();
 }
 
 void CPythonPlayerEventHandler::OnSetAffect(uint32_t uAffect)
 {
-	CPythonPlayer::Instance().SetAffect(uAffect);
+	CPythonPlayer::Instance().GetSkill().SetAffect(uAffect);
 }
 
 void CPythonPlayerEventHandler::OnResetAffect(uint32_t uAffect)
 {
-	CPythonPlayer::Instance().ResetAffect(uAffect);
+	CPythonPlayer::Instance().GetSkill().ResetAffect(uAffect);
 }
 
 void CPythonPlayerEventHandler::OnSyncing(const SState& c_rkState)
@@ -128,7 +128,7 @@ void CPythonPlayerEventHandler::OnUpdate()
 
 void CPythonPlayerEventHandler::OnChangeShape()
 {
-	CPythonPlayer::Instance().NEW_Stop();
+	CPythonPlayer::Instance().GetInput().NEW_Stop();
 }
 
 void CPythonPlayerEventHandler::OnHit(uint32_t uSkill, CActorInstance& rkActorVictim, int32_t isSendPacket)

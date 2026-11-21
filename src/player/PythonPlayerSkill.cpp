@@ -1,5 +1,6 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/Player/PythonPlayer.h>
+#include <Client/Player/PythonPlayerSkill.h>
 #include <Client/UI/PythonTextTail.h>
 #include <Client/Session/PythonNetworkStream.h>
 #include <Client/UI/InstanceBase.h>
@@ -7,19 +8,23 @@
 #include <Client/UI/PythonGuild.h>
 #include <Client/GameData/ItemManager.h>
 
-void CPythonPlayer::ClearAffects()
+CPythonPlayerSkill::CPythonPlayerSkill(CPythonPlayer& rkOwner) : m_rkOwner(rkOwner)
 {
-	PyCallClassMemberFunc(m_ppyGameWindow, "ClearAffects", Py_BuildValue("()"));
 }
 
-void CPythonPlayer::SetAffect(uint32_t uAffect)
+void CPythonPlayerSkill::ClearAffects()
 {
-	PyCallClassMemberFunc(m_ppyGameWindow, "SetAffect", Py_BuildValue("(i)", uAffect));
+	PyCallClassMemberFunc(m_rkOwner.m_ppyGameWindow, "ClearAffects", Py_BuildValue("()"));
+}
+
+void CPythonPlayerSkill::SetAffect(uint32_t uAffect)
+{
+	PyCallClassMemberFunc(m_rkOwner.m_ppyGameWindow, "SetAffect", Py_BuildValue("(i)", uAffect));
 
 	/////
 
 	uint32_t dwSkillIndex;
-	if (!AffectIndexToSkillIndex(uAffect, &dwSkillIndex))
+	if (!m_rkOwner.AffectIndexToSkillIndex(uAffect, &dwSkillIndex))
 		return;
 
 	CPythonSkill::TSkillData* pSkillData;
@@ -30,19 +35,19 @@ void CPythonPlayer::SetAffect(uint32_t uAffect)
 		return;
 
 	uint32_t dwSkillSlotIndex;
-	if (!GetSkillSlotIndex(dwSkillIndex, &dwSkillSlotIndex))
+	if (!m_rkOwner.GetSkillSlotIndex(dwSkillIndex, &dwSkillSlotIndex))
 		return;
 
-	__ActivateSkillSlot(dwSkillSlotIndex);
+	m_rkOwner.__ActivateSkillSlot(dwSkillSlotIndex);
 }
 
-void CPythonPlayer::ResetAffect(uint32_t uAffect)
+void CPythonPlayerSkill::ResetAffect(uint32_t uAffect)
 {
 	// 2004.07.17.myevan.스킬 아닌 이펙트가 안 사라지는 문제
-	PyCallClassMemberFunc(m_ppyGameWindow, "ResetAffect", Py_BuildValue("(i)", uAffect));
+	PyCallClassMemberFunc(m_rkOwner.m_ppyGameWindow, "ResetAffect", Py_BuildValue("(i)", uAffect));
 
 	uint32_t dwSkillIndex;
-	if (!AffectIndexToSkillIndex(uAffect, &dwSkillIndex))
+	if (!m_rkOwner.AffectIndexToSkillIndex(uAffect, &dwSkillIndex))
 		return;
 
 	CPythonSkill::TSkillData* pSkillData;
@@ -53,17 +58,17 @@ void CPythonPlayer::ResetAffect(uint32_t uAffect)
 		return;
 
 	uint32_t dwSkillSlotIndex;
-	if (!GetSkillSlotIndex(dwSkillIndex, &dwSkillSlotIndex))
+	if (!m_rkOwner.GetSkillSlotIndex(dwSkillIndex, &dwSkillSlotIndex))
 		return;
 
-	__DeactivateSkillSlot(dwSkillSlotIndex);
+	m_rkOwner.__DeactivateSkillSlot(dwSkillSlotIndex);
 }
 
-bool CPythonPlayer::FindSkillSlotIndexBySkillIndex(uint32_t dwSkillIndex, uint32_t* pdwSkillSlotIndex)
+bool CPythonPlayerSkill::FindSkillSlotIndexBySkillIndex(uint32_t dwSkillIndex, uint32_t* pdwSkillSlotIndex)
 {
 	for (int i = 0; i < SKILL_MAX_NUM; ++i)
 	{
-		TSkillInstance& rkSkillInst = m_playerStatus.aSkill[i];
+		TSkillInstance& rkSkillInst = m_rkOwner.m_playerStatus.aSkill[i];
 		if (dwSkillIndex == rkSkillInst.dwIndex)
 		{
 			*pdwSkillSlotIndex = i;
@@ -74,12 +79,12 @@ bool CPythonPlayer::FindSkillSlotIndexBySkillIndex(uint32_t dwSkillIndex, uint32
 	return false;
 }
 
-void CPythonPlayer::ChangeCurrentSkillNumberOnly(uint32_t dwSlotIndex)
+void CPythonPlayerSkill::ChangeCurrentSkillNumberOnly(uint32_t dwSlotIndex)
 {
 	if (dwSlotIndex >= SKILL_MAX_NUM)
 		return;
 
-	TSkillInstance& rkSkillInst = m_playerStatus.aSkill[dwSlotIndex];
+	TSkillInstance& rkSkillInst = m_rkOwner.m_playerStatus.aSkill[dwSlotIndex];
 
 	CPythonSkill::TSkillData* pSkillData;
 	if (!CPythonSkill::Instance().GetSkillData(rkSkillInst.dwIndex, &pSkillData))
@@ -88,11 +93,11 @@ void CPythonPlayer::ChangeCurrentSkillNumberOnly(uint32_t dwSlotIndex)
 	if (!pSkillData->IsCanUseSkill())
 		return;
 
-	if (!__IsRightButtonSkillMode())
+	if (!m_rkOwner.GetInput().__IsRightButtonSkillMode())
 	{
-		if (!__IsTarget())
+		if (!m_rkOwner.GetInput().__IsTarget())
 		{
-			PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "NEED_TARGET"));
+			PyCallClassMemberFunc(m_rkOwner.m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", m_rkOwner.GetMainCharacterIndex(), "NEED_TARGET"));
 			return;
 		}
 
@@ -100,17 +105,17 @@ void CPythonPlayer::ChangeCurrentSkillNumberOnly(uint32_t dwSlotIndex)
 	}
 	else
 	{
-		m_dwcurSkillSlotIndex = dwSlotIndex;
-		PyCallClassMemberFunc(m_ppyGameWindow, "ChangeCurrentSkill", Py_BuildValue("(i)", dwSlotIndex));
+		m_rkOwner.m_dwcurSkillSlotIndex = dwSlotIndex;
+		PyCallClassMemberFunc(m_rkOwner.m_ppyGameWindow, "ChangeCurrentSkill", Py_BuildValue("(i)", dwSlotIndex));
 	}
 }
 
-void CPythonPlayer::ClickSkillSlot(uint32_t dwSlotIndex)
+void CPythonPlayerSkill::ClickSkillSlot(uint32_t dwSlotIndex)
 {
 	if (dwSlotIndex >= SKILL_MAX_NUM)
 		return;
 
-	TSkillInstance& rkSkillInst = m_playerStatus.aSkill[dwSlotIndex];
+	TSkillInstance& rkSkillInst = m_rkOwner.m_playerStatus.aSkill[dwSlotIndex];
 
 	CPythonSkill::TSkillData* pSkillData;
 	if (!CPythonSkill::Instance().GetSkillData(rkSkillInst.dwIndex, &pSkillData))
@@ -129,9 +134,9 @@ void CPythonPlayer::ClickSkillSlot(uint32_t dwSlotIndex)
 	{
 		if (pSkillData->IsToggleSkill())
 		{
-			if (IsSkillActive(dwSlotIndex))
+			if (m_rkOwner.IsSkillActive(dwSlotIndex))
 			{
-				CInstanceBase* pkInstMain = NEW_GetMainActorPtr();
+				CInstanceBase* pkInstMain = m_rkOwner.NEW_GetMainActorPtr();
 				if (!pkInstMain)
 					return;
 				if (pkInstMain->GetBattle().IsUsingSkill())
@@ -146,33 +151,33 @@ void CPythonPlayer::ClickSkillSlot(uint32_t dwSlotIndex)
 		return;
 	}
 
-	if (m_dwcurSkillSlotIndex == dwSlotIndex)
+	if (m_rkOwner.m_dwcurSkillSlotIndex == dwSlotIndex)
 	{
-		__UseSkill(m_dwcurSkillSlotIndex);
+		__UseSkill(m_rkOwner.m_dwcurSkillSlotIndex);
 		return;
 	}
 
-	if (!__IsRightButtonSkillMode())
+	if (!m_rkOwner.GetInput().__IsRightButtonSkillMode())
 	{
 		__UseSkill(dwSlotIndex);
 	}
 	else
 	{
-		m_dwcurSkillSlotIndex = dwSlotIndex;
-		PyCallClassMemberFunc(m_ppyGameWindow, "ChangeCurrentSkill", Py_BuildValue("(i)", dwSlotIndex));
+		m_rkOwner.m_dwcurSkillSlotIndex = dwSlotIndex;
+		PyCallClassMemberFunc(m_rkOwner.m_ppyGameWindow, "ChangeCurrentSkill", Py_BuildValue("(i)", dwSlotIndex));
 	}
 }
 
-bool CPythonPlayer::__CheckSkillUsable(uint32_t dwSlotIndex)
+bool CPythonPlayerSkill::__CheckSkillUsable(uint32_t dwSlotIndex)
 {
-	CInstanceBase* pkInstMain = NEW_GetMainActorPtr();
+	CInstanceBase* pkInstMain = m_rkOwner.NEW_GetMainActorPtr();
 	if (!pkInstMain)
 		return false;
 
 	if (dwSlotIndex >= SKILL_MAX_NUM)
 		return false;
 
-	TSkillInstance& rkSkillInst = m_playerStatus.aSkill[dwSlotIndex];
+	TSkillInstance& rkSkillInst = m_rkOwner.m_playerStatus.aSkill[dwSlotIndex];
 
 	CPythonSkill::TSkillData* pSkillData;
 	if (!CPythonSkill::Instance().GetSkillData(rkSkillInst.dwIndex, &pSkillData))
@@ -182,7 +187,7 @@ bool CPythonPlayer::__CheckSkillUsable(uint32_t dwSlotIndex)
 	{
 		if (!pSkillData->IsHorseSkill())
 		{
-			PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "NOT_HORSE_SKILL"));
+			PyCallClassMemberFunc(m_rkOwner.m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", m_rkOwner.GetMainCharacterIndex(), "NOT_HORSE_SKILL"));
 			return false;
 		}
 	}
@@ -191,7 +196,7 @@ bool CPythonPlayer::__CheckSkillUsable(uint32_t dwSlotIndex)
 	{
 		if (!pkInstMain->IsMountingHorse())
 		{
-			PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "HAVE_TO_RIDE"));
+			PyCallClassMemberFunc(m_rkOwner.m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", m_rkOwner.GetMainCharacterIndex(), "HAVE_TO_RIDE"));
 			return false;
 		}
 	}
@@ -202,7 +207,7 @@ bool CPythonPlayer::__CheckSkillUsable(uint32_t dwSlotIndex)
 	{
 		if (pkInstMain->IsInSafe())
 		{
-			PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "IN_SAFE"));
+			PyCallClassMemberFunc(m_rkOwner.m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", m_rkOwner.GetMainCharacterIndex(), "IN_SAFE"));
 
 			return false;
 		}
@@ -219,7 +224,7 @@ bool CPythonPlayer::__CheckSkillUsable(uint32_t dwSlotIndex)
 	{
 		if (!__HasItem(27995))
 		{
-			PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "NEED_EMPTY_BOTTLE"));
+			PyCallClassMemberFunc(m_rkOwner.m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", m_rkOwner.GetMainCharacterIndex(), "NEED_EMPTY_BOTTLE"));
 			return false;
 		}
 	}
@@ -229,7 +234,7 @@ bool CPythonPlayer::__CheckSkillUsable(uint32_t dwSlotIndex)
 	{
 		if (!__HasItem(27996))
 		{
-			PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "NEED_POISON_BOTTLE"));
+			PyCallClassMemberFunc(m_rkOwner.m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", m_rkOwner.GetMainCharacterIndex(), "NEED_POISON_BOTTLE"));
 			return false;
 		}
 	}
@@ -237,16 +242,16 @@ bool CPythonPlayer::__CheckSkillUsable(uint32_t dwSlotIndex)
 	// NOTE : 낚시 중일때는 스킬을 사용하지 못합니다.
 	if (pkInstMain->IsFishingMode())
 	{
-		PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "REMOVE_FISHING_ROD"));
+		PyCallClassMemberFunc(m_rkOwner.m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", m_rkOwner.GetMainCharacterIndex(), "REMOVE_FISHING_ROD"));
 		return false;
 	}
 
 	// NOTE : 레벨 체크
-	if (m_sysIsLevelLimit)
+	if (m_rkOwner.m_sysIsLevelLimit)
 	{
 		if (rkSkillInst.iLevel <= 0)
 		{
-			PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "NOT_YET_LEARN"));
+			PyCallClassMemberFunc(m_rkOwner.m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", m_rkOwner.GetMainCharacterIndex(), "NOT_YET_LEARN"));
 			return false;
 		}
 	}
@@ -254,7 +259,7 @@ bool CPythonPlayer::__CheckSkillUsable(uint32_t dwSlotIndex)
 	// NOTE : 들고 있는 무기 체크
 	if (!pSkillData->CanUseWeaponType(pkInstMain->GetWeaponType()))
 	{
-		PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "NOT_MATCHABLE_WEAPON"));
+		PyCallClassMemberFunc(m_rkOwner.m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", m_rkOwner.GetMainCharacterIndex(), "NOT_MATCHABLE_WEAPON"));
 		return false;
 	}
 
@@ -277,7 +282,7 @@ bool CPythonPlayer::__CheckSkillUsable(uint32_t dwSlotIndex)
 		{
 			if (__CheckRestSkillCoolTime(dwSlotIndex))
 			{
-				PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "WAIT_COOLTIME"));
+				PyCallClassMemberFunc(m_rkOwner.m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", m_rkOwner.GetMainCharacterIndex(), "WAIT_COOLTIME"));
 				return false;
 			}
 		}
@@ -286,19 +291,19 @@ bool CPythonPlayer::__CheckSkillUsable(uint32_t dwSlotIndex)
 	{
 		if (__CheckRestSkillCoolTime(dwSlotIndex))
 		{
-			PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "WAIT_COOLTIME"));
+			PyCallClassMemberFunc(m_rkOwner.m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", m_rkOwner.GetMainCharacterIndex(), "WAIT_COOLTIME"));
 			return false;
 		}
 
 		if (__CheckShortLife(rkSkillInst, *pSkillData))
 		{
-			PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "NOT_ENOUGH_HP"));
+			PyCallClassMemberFunc(m_rkOwner.m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", m_rkOwner.GetMainCharacterIndex(), "NOT_ENOUGH_HP"));
 			return false;
 		}
 
 		if (__CheckShortMana(rkSkillInst, *pSkillData))
 		{
-			PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "NOT_ENOUGH_SP"));
+			PyCallClassMemberFunc(m_rkOwner.m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", m_rkOwner.GetMainCharacterIndex(), "NOT_ENOUGH_SP"));
 			return false;
 		}
 	}
@@ -306,7 +311,7 @@ bool CPythonPlayer::__CheckSkillUsable(uint32_t dwSlotIndex)
 	return true;
 }
 
-bool CPythonPlayer::__CheckShortArrow(TSkillInstance& rkSkillInst, CPythonSkill::TSkillData& rkSkillData)
+bool CPythonPlayerSkill::__CheckShortArrow(TSkillInstance& rkSkillInst, CPythonSkill::TSkillData& rkSkillData)
 {
 	if (!rkSkillData.IsNeedBow())
 		return false;
@@ -317,14 +322,14 @@ bool CPythonPlayer::__CheckShortArrow(TSkillInstance& rkSkillInst, CPythonSkill:
 	return true;
 }
 
-bool CPythonPlayer::__CheckShortMana(TSkillInstance& rkSkillInst, CPythonSkill::TSkillData& rkSkillData)
+bool CPythonPlayerSkill::__CheckShortMana(TSkillInstance& rkSkillInst, CPythonSkill::TSkillData& rkSkillData)
 {
 	extern const uint32_t c_iSkillIndex_Summon;
 	if (c_iSkillIndex_Summon == rkSkillInst.dwIndex)
 		return false;
 
 	int iNeedSP = rkSkillData.GetNeedSP(rkSkillInst.fcurEfficientPercentage);
-	int icurSP = GetStatus(POINT_SP);
+	int icurSP = m_rkOwner.GetStatus(POINT_SP);
 
 	// NOTE : ToggleSkill 이 아닌데 소모 SP 가 0 이다.
 	if (!rkSkillData.IsToggleSkill())
@@ -351,49 +356,49 @@ bool CPythonPlayer::__CheckShortMana(TSkillInstance& rkSkillInst, CPythonSkill::
 	return false;
 }
 
-bool CPythonPlayer::__CheckShortLife(TSkillInstance& rkSkillInst, CPythonSkill::TSkillData& rkSkillData)
+bool CPythonPlayerSkill::__CheckShortLife(TSkillInstance& rkSkillInst, CPythonSkill::TSkillData& rkSkillData)
 {
 	if (!rkSkillData.IsUseHPSkill())
 		return false;
 
 	uint32_t dwNeedHP = rkSkillData.GetNeedSP(rkSkillInst.fcurEfficientPercentage);
-	if (dwNeedHP <= GetStatus(POINT_HP))
+	if (dwNeedHP <= m_rkOwner.GetStatus(POINT_HP))
 		return false;
 
 	return true;
 }
 
-bool CPythonPlayer::__CheckRestSkillCoolTime(uint32_t dwSlotIndex)
+bool CPythonPlayerSkill::__CheckRestSkillCoolTime(uint32_t dwSlotIndex)
 {
-	if (!m_sysIsCoolTime)
+	if (!m_rkOwner.m_sysIsCoolTime)
 		return false;
 
 	if (dwSlotIndex >= SKILL_MAX_NUM)
 		return false;
 
-	float fElapsedTime = CTimer::Instance().GetCurrentSecond() - m_playerStatus.aSkill[dwSlotIndex].fLastUsedTime;
-	if (fElapsedTime >= m_playerStatus.aSkill[dwSlotIndex].fCoolTime)
+	float fElapsedTime = CTimer::Instance().GetCurrentSecond() - m_rkOwner.m_playerStatus.aSkill[dwSlotIndex].fLastUsedTime;
+	if (fElapsedTime >= m_rkOwner.m_playerStatus.aSkill[dwSlotIndex].fCoolTime)
 		return false;
 
 	return true;
 }
 
-bool CPythonPlayer::__CheckDashAffect(CInstanceBase& rkInstMain)
+bool CPythonPlayerSkill::__CheckDashAffect(CInstanceBase& rkInstMain)
 {
 	return rkInstMain.GetBattle().IsAffect(CInstanceBase::AFFECT_DASH);
 }
 
-void CPythonPlayer::__UseCurrentSkill()
+void CPythonPlayerSkill::__UseCurrentSkill()
 {
-	__UseSkill(m_dwcurSkillSlotIndex);
+	__UseSkill(m_rkOwner.m_dwcurSkillSlotIndex);
 }
 
-uint32_t CPythonPlayer::__GetSkillTargetRange(CPythonSkill::TSkillData& rkSkillData)
+uint32_t CPythonPlayerSkill::__GetSkillTargetRange(CPythonSkill::TSkillData& rkSkillData)
 {
-	return rkSkillData.GetTargetRange() + GetStatus(POINT_BOW_DISTANCE) * 100;
+	return rkSkillData.GetTargetRange() + m_rkOwner.GetStatus(POINT_BOW_DISTANCE) * 100;
 }
 
-bool CPythonPlayer::__ProcessEnemySkillTargetRange(CInstanceBase& rkInstMain, CInstanceBase& rkInstTarget, CPythonSkill::TSkillData& rkSkillData, uint32_t dwSkillSlotIndex)
+bool CPythonPlayerSkill::__ProcessEnemySkillTargetRange(CInstanceBase& rkInstMain, CInstanceBase& rkInstTarget, CPythonSkill::TSkillData& rkSkillData, uint32_t dwSkillSlotIndex)
 {
 	uint32_t dwSkillTargetRange = __GetSkillTargetRange(rkSkillData);
 	float fSkillTargetRange = float(dwSkillTargetRange);
@@ -413,11 +418,11 @@ bool CPythonPlayer::__ProcessEnemySkillTargetRange(CInstanceBase& rkInstMain, CI
 	{
 		if (rkSkillData.IsChargeSkill())
 		{
-			if (!__IsReservedUseSkill(dwSkillSlotIndex))
+			if (!m_rkOwner.GetInput().__IsReservedUseSkill(dwSkillSlotIndex))
 				__SendUseSkill(dwSkillSlotIndex, 0);
 		}
 
-		__ReserveUseSkill(rkInstTarget.GetVirtualID(), dwSkillSlotIndex, dwSkillTargetRange);
+		m_rkOwner.GetInput().__ReserveUseSkill(rkInstTarget.GetVirtualID(), dwSkillSlotIndex, dwSkillTargetRange);
 
 		return false;
 	}
@@ -429,26 +434,26 @@ bool CPythonPlayer::__ProcessEnemySkillTargetRange(CInstanceBase& rkInstMain, CI
 	IBackground& rkBG = IBackground::Instance();
 	if (rkBG.IsBlock(kPPosTarget.x, kPPosTarget.y))
 	{
-		PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "CANNOT_APPROACH"));
+		PyCallClassMemberFunc(m_rkOwner.m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", m_rkOwner.GetMainCharacterIndex(), "CANNOT_APPROACH"));
 		return false;
 	}
 
 	return true;
 }
 
-bool CPythonPlayer::__CanUseSkill()
+bool CPythonPlayerSkill::__CanUseSkill()
 {
-	CInstanceBase* pkInstMain = NEW_GetMainActorPtr();
+	CInstanceBase* pkInstMain = m_rkOwner.NEW_GetMainActorPtr();
 	if (!pkInstMain)
 		return false;
 
-	if (IsObserverMode())
+	if (m_rkOwner.IsObserverMode())
 		return false;
 
 	// Fix me
 	// 뉴마운트. 승마스킬레벨 20 미만인 경우, 고급 마운트를 타고 승마 관련 스킬 못 쓰도록 못하도록 하드 코딩...
 	// 나중에 시간 나면 can use skill 체크를 서버에서 해주자...
-	if (pkInstMain->IsMountingHorse() && (GetSkillGrade(109) < 1 && GetSkillLevel(109) < 20))
+	if (pkInstMain->IsMountingHorse() && (m_rkOwner.GetSkillGrade(109) < 1 && m_rkOwner.GetSkillLevel(109) < 20))
 	{
 		return false;
 	}
@@ -456,10 +461,10 @@ bool CPythonPlayer::__CanUseSkill()
 	return pkInstMain->CanUseSkill();
 }
 
-bool CPythonPlayer::__UseSkill(uint32_t dwSlotIndex)
+bool CPythonPlayerSkill::__UseSkill(uint32_t dwSlotIndex)
 {
 	// PrivateShop
-	if (IsOpenPrivateShop())
+	if (m_rkOwner.IsOpenPrivateShop())
 	{
 		return true;
 	}
@@ -471,11 +476,11 @@ bool CPythonPlayer::__UseSkill(uint32_t dwSlotIndex)
 
 	if (dwSlotIndex >= SKILL_MAX_NUM)
 	{
-		Tracenf("CPythonPlayer::__UseSkill(dwSlotIndex=%d) It's not available skill slot number", dwSlotIndex);
+		Tracenf("CPythonPlayerSkill::__UseSkill(dwSlotIndex=%d) It's not available skill slot number", dwSlotIndex);
 		return false;
 	}
 
-	TSkillInstance& rkSkillInst = m_playerStatus.aSkill[dwSlotIndex];
+	TSkillInstance& rkSkillInst = m_rkOwner.m_playerStatus.aSkill[dwSlotIndex];
 
 	if (__CheckSpecialSkill(rkSkillInst.dwIndex))
 	{
@@ -485,13 +490,13 @@ bool CPythonPlayer::__UseSkill(uint32_t dwSlotIndex)
 	CPythonSkill::TSkillData* pSkillData;
 	if (!CPythonSkill::Instance().GetSkillData(rkSkillInst.dwIndex, &pSkillData))
 	{
-		Tracenf("CPythonPlayer::__UseSkill(dwSlotIndex=%d) There is no skill data", dwSlotIndex);
+		Tracenf("CPythonPlayerSkill::__UseSkill(dwSlotIndex=%d) There is no skill data", dwSlotIndex);
 		return false;
 	}
 
 	if (pSkillData->IsToggleSkill())
 	{
-		if (IsSkillActive(dwSlotIndex))
+		if (m_rkOwner.IsSkillActive(dwSlotIndex))
 		{
 			CPythonNetworkStream::Instance().SendUseSkillPacket(rkSkillInst.dwIndex, dwSlotIndex);
 			return false;
@@ -503,10 +508,10 @@ bool CPythonPlayer::__UseSkill(uint32_t dwSlotIndex)
 		return false;
 	}
 
-	CInstanceBase* pkInstMain = NEW_GetMainActorPtr();
+	CInstanceBase* pkInstMain = m_rkOwner.NEW_GetMainActorPtr();
 	if (!pkInstMain)
 	{
-		Tracenf("CPythonPlayer::__UseSkill(dwSlotIndex=%d) There is no main player", dwSlotIndex);
+		Tracenf("CPythonPlayerSkill::__UseSkill(dwSlotIndex=%d) There is no main player", dwSlotIndex);
 		return false;
 	}
 
@@ -523,21 +528,21 @@ bool CPythonPlayer::__UseSkill(uint32_t dwSlotIndex)
 		pSkillData->IsAutoSearchTarget())
 	{
 		if (pSkillData->IsNeedCorpse())
-			pkInstTarget = __GetDeadTargetInstancePtr();
+			pkInstTarget = m_rkOwner.GetInput().__GetDeadTargetInstancePtr();
 		else
-			pkInstTarget = __GetAliveTargetInstancePtr();
+			pkInstTarget = m_rkOwner.GetInput().__GetAliveTargetInstancePtr();
 
 		// 현재 타겟이 없으면..
 		if (!pkInstTarget)
 		{
 			// 업데이트하고..
-			__ChangeTargetToPickedInstance();
+			m_rkOwner.GetInput().__ChangeTargetToPickedInstance();
 
 			// 다시 얻어낸다.
 			if (pSkillData->IsNeedCorpse())
-				pkInstTarget = __GetDeadTargetInstancePtr();
+				pkInstTarget = m_rkOwner.GetInput().__GetDeadTargetInstancePtr();
 			else
-				pkInstTarget = __GetAliveTargetInstancePtr();
+				pkInstTarget = m_rkOwner.GetInput().__GetAliveTargetInstancePtr();
 		}
 
 		if (pkInstTarget)
@@ -548,7 +553,7 @@ bool CPythonPlayer::__UseSkill(uint32_t dwSlotIndex)
 				{
 					if (!pSkillData->CanUseForMe())
 					{
-						PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "CANNOT_USE_SELF"));
+						PyCallClassMemberFunc(m_rkOwner.m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", m_rkOwner.GetMainCharacterIndex(), "CANNOT_USE_SELF"));
 						return false;
 					}
 				}
@@ -561,7 +566,7 @@ bool CPythonPlayer::__UseSkill(uint32_t dwSlotIndex)
 						float fDistance = pkInstMain->GetDistance(pkInstTarget);
 						if (fDistance >= float(dwSkillRange))
 						{
-							__ReserveUseSkill(pkInstTarget->GetVirtualID(), dwSlotIndex, dwSkillRange);
+							m_rkOwner.GetInput().__ReserveUseSkill(pkInstTarget->GetVirtualID(), dwSlotIndex, dwSkillRange);
 							return false;
 						}
 					}
@@ -575,7 +580,7 @@ bool CPythonPlayer::__UseSkill(uint32_t dwSlotIndex)
 					}
 					else
 					{
-						PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "ONLY_FOR_ALLIANCE"));
+						PyCallClassMemberFunc(m_rkOwner.m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", m_rkOwner.GetMainCharacterIndex(), "ONLY_FOR_ALLIANCE"));
 						return false;
 					}
 				}
@@ -584,7 +589,7 @@ bool CPythonPlayer::__UseSkill(uint32_t dwSlotIndex)
 			{
 				if (pkInstTarget->IsInSafe())
 				{
-					PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "CANNOT_ATTACK_ENEMY_IN_SAFE_AREA"));
+					PyCallClassMemberFunc(m_rkOwner.m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", m_rkOwner.GetMainCharacterIndex(), "CANNOT_ATTACK_ENEMY_IN_SAFE_AREA"));
 					return false;
 				}
 
@@ -595,7 +600,7 @@ bool CPythonPlayer::__UseSkill(uint32_t dwSlotIndex)
 				}
 				else
 				{
-					PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "CANNOT_ATTACK"));
+					PyCallClassMemberFunc(m_rkOwner.m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", m_rkOwner.GetMainCharacterIndex(), "CANNOT_ATTACK"));
 					return false;
 				}
 			}
@@ -620,13 +625,13 @@ bool CPythonPlayer::__UseSkill(uint32_t dwSlotIndex)
 			{
 				if (pkInstMain->GetBattle().NEW_GetFrontInstance(&pkInstTarget, 2000.0f))
 				{
-					SetTarget(pkInstTarget->GetVirtualID());
+					m_rkOwner.GetInput().SetTarget(pkInstTarget->GetVirtualID());
 					if (!__ProcessEnemySkillTargetRange(*pkInstMain, *pkInstTarget, *pSkillData, dwSlotIndex))
 						return false;
 				}
 				else
 				{
-					PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "NEED_TARGET"));
+					PyCallClassMemberFunc(m_rkOwner.m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", m_rkOwner.GetMainCharacterIndex(), "NEED_TARGET"));
 					return false;
 				}
 			}
@@ -639,12 +644,12 @@ bool CPythonPlayer::__UseSkill(uint32_t dwSlotIndex)
 			}
 			else if (pSkillData->IsNeedCorpse())
 			{
-				PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "ONLY_FOR_CORPSE"));
+				PyCallClassMemberFunc(m_rkOwner.m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", m_rkOwner.GetMainCharacterIndex(), "ONLY_FOR_CORPSE"));
 				return false;
 			}
 			else
 			{
-				PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "NEED_TARGET"));
+				PyCallClassMemberFunc(m_rkOwner.m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", m_rkOwner.GetMainCharacterIndex(), "NEED_TARGET"));
 				return false;
 			}
 		}
@@ -659,19 +664,19 @@ bool CPythonPlayer::__UseSkill(uint32_t dwSlotIndex)
 		{
 			pkInstMain->GetTransform().NEW_LookAtDestInstance(*pkInstTarget);
 		}
-		else if (__GetPickedActorID(&dwPickedActorID))
+		else if (m_rkOwner.__GetPickedActorID(&dwPickedActorID))
 		{
-			CInstanceBase* pkInstVictim = NEW_FindActorPtr(dwPickedActorID);
+			CInstanceBase* pkInstVictim = m_rkOwner.NEW_FindActorPtr(dwPickedActorID);
 			if (pkInstVictim)
 				pkInstMain->GetTransform().NEW_LookAtDestInstance(*pkInstVictim);
 		}
-		else if (__GetPickedGroundPos(&kPPosPickedGround))
+		else if (m_rkOwner.__GetPickedGroundPos(&kPPosPickedGround))
 		{
 			pkInstMain->GetTransform().NEW_LookAtDestPixelPosition(kPPosPickedGround);
 		}
 		else
 		{
-			Tracenf("CPythonPlayer::__UseSkill(%d) - Need to set the orientation relative to the screen", dwSlotIndex);
+			Tracenf("CPythonPlayerSkill::__UseSkill(%d) - Need to set the orientation relative to the screen", dwSlotIndex);
 		}
 	}
 
@@ -748,7 +753,7 @@ bool CPythonPlayer::__UseSkill(uint32_t dwSlotIndex)
 
 	/////
 	// NOTE : 멀리서 적을 클릭해놓고 스킬을 쓰면 스킬을 쓴뒤 바로 적을 공격하는 문제를 수정하기 위한 코드 - [levites]
-	__ClearReservedAction();
+	m_rkOwner.GetInput().__ClearReservedAction();
 	/////
 
 	if (!pSkillData->IsNoMotion())
@@ -757,7 +762,7 @@ bool CPythonPlayer::__UseSkill(uint32_t dwSlotIndex)
 		uint32_t dwLoopCount = pSkillData->GetMotionLoopCount(rkSkillInst.fcurEfficientPercentage);
 		if (!pkInstMain->GetBattle().NEW_UseSkill(rkSkillInst.dwIndex, dwMotionIndex, dwLoopCount, pSkillData->IsMovingSkill() ? true : false))
 		{
-			Tracenf("CPythonPlayer::__UseSkill(%d) - pkInstMain->NEW_UseSkill - ERROR", dwSlotIndex);
+			Tracenf("CPythonPlayerSkill::__UseSkill(%d) - pkInstMain->NEW_UseSkill - ERROR", dwSlotIndex);
 			return false;
 		}
 	}
@@ -768,9 +773,9 @@ bool CPythonPlayer::__UseSkill(uint32_t dwSlotIndex)
 	return true;
 }
 
-void CPythonPlayer::__SendUseSkill(uint32_t dwSkillSlotIndex, uint32_t dwTargetVID)
+void CPythonPlayerSkill::__SendUseSkill(uint32_t dwSkillSlotIndex, uint32_t dwTargetVID)
 {
-	TSkillInstance& rkSkillInst = m_playerStatus.aSkill[dwSkillSlotIndex];
+	TSkillInstance& rkSkillInst = m_rkOwner.m_playerStatus.aSkill[dwSkillSlotIndex];
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.SendUseSkillPacket(rkSkillInst.dwIndex, dwTargetVID);
@@ -778,28 +783,28 @@ void CPythonPlayer::__SendUseSkill(uint32_t dwSkillSlotIndex, uint32_t dwTargetV
 	__RunCoolTime(dwSkillSlotIndex);
 }
 
-uint8_t CPythonPlayer::__GetSkillType(uint32_t dwSkillSlotIndex)
+uint8_t CPythonPlayerSkill::__GetSkillType(uint32_t dwSkillSlotIndex)
 {
-	TSkillInstance& rkSkillInst = m_playerStatus.aSkill[dwSkillSlotIndex];
+	TSkillInstance& rkSkillInst = m_rkOwner.m_playerStatus.aSkill[dwSkillSlotIndex];
 
 	CPythonSkill::TSkillData* pkSkillData;
 	CPythonSkill& rkPythonSkill = CPythonSkill::Instance();
 	if (!rkPythonSkill.GetSkillData(rkSkillInst.dwIndex, &pkSkillData))
 	{
-		// TraceError("CPythonPlayer::__GetSkillType(dwSkillSlotIndex=%d) - NOT CHECK", dwSkillSlotIndex);
+		// TraceError("CPythonPlayerSkill::__GetSkillType(dwSkillSlotIndex=%d) - NOT CHECK", dwSkillSlotIndex);
 		return 0;
 	}
 	return pkSkillData->GetType();
 }
 
-void CPythonPlayer::__RunCoolTime(uint32_t dwSkillSlotIndex)
+void CPythonPlayerSkill::__RunCoolTime(uint32_t dwSkillSlotIndex)
 {
-	TSkillInstance& rkSkillInst = m_playerStatus.aSkill[dwSkillSlotIndex];
+	TSkillInstance& rkSkillInst = m_rkOwner.m_playerStatus.aSkill[dwSkillSlotIndex];
 
 	CPythonSkill::TSkillData* pkSkillData;
 	if (!CPythonSkill::Instance().GetSkillData(rkSkillInst.dwIndex, &pkSkillData))
 	{
-		TraceError("CPythonPlayer::__SendUseSkill(dwSkillSlotIndex=%d) - NOT CHECK", dwSkillSlotIndex);
+		TraceError("CPythonPlayerSkill::__SendUseSkill(dwSkillSlotIndex=%d) - NOT CHECK", dwSkillSlotIndex);
 		return;
 	}
 
@@ -808,7 +813,7 @@ void CPythonPlayer::__RunCoolTime(uint32_t dwSkillSlotIndex)
 	rkSkillInst.fCoolTime = rkSkillData.GetSkillCoolTime(rkSkillInst.fcurEfficientPercentage);
 	rkSkillInst.fLastUsedTime = CTimer::Instance().GetCurrentSecond();
 
-	int iSpd = 100 - GetStatus(POINT_CASTING_SPEED);
+	int iSpd = 100 - m_rkOwner.GetStatus(POINT_CASTING_SPEED);
 	if (iSpd > 0)
 		iSpd = 100 + iSpd;
 	else if (iSpd < 0)
@@ -818,33 +823,33 @@ void CPythonPlayer::__RunCoolTime(uint32_t dwSkillSlotIndex)
 
 	rkSkillInst.fCoolTime = rkSkillInst.fCoolTime * iSpd / 100;
 
-	PyCallClassMemberFunc(m_ppyGameWindow, "RunUseSkillEvent", Py_BuildValue("(if)", dwSkillSlotIndex, rkSkillInst.fCoolTime));
+	PyCallClassMemberFunc(m_rkOwner.m_ppyGameWindow, "RunUseSkillEvent", Py_BuildValue("(if)", dwSkillSlotIndex, rkSkillInst.fCoolTime));
 }
 
-bool CPythonPlayer::__HasEnoughArrow()
+bool CPythonPlayerSkill::__HasEnoughArrow()
 {
 	CItemData* pItemData;
-	if (CItemManager::Instance().GetItemDataPointer(GetItemIndex(TItemPos(INVENTORY, c_Equipment_Arrow)), &pItemData))
+	if (CItemManager::Instance().GetItemDataPointer(m_rkOwner.GetItemIndex(TItemPos(INVENTORY, c_Equipment_Arrow)), &pItemData))
 		if (CItemData::ITEM_TYPE_WEAPON == pItemData->GetType())
 			if (CItemData::WEAPON_ARROW == pItemData->GetSubType())
 			{
 				return true;
 			}
 
-	PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotShotError", Py_BuildValue("(is)", GetMainCharacterIndex(), "EMPTY_ARROW"));
+	PyCallClassMemberFunc(m_rkOwner.m_ppyGameWindow, "OnCannotShotError", Py_BuildValue("(is)", m_rkOwner.GetMainCharacterIndex(), "EMPTY_ARROW"));
 	return false;
 }
 
-bool CPythonPlayer::__HasItem(uint32_t dwItemID)
+bool CPythonPlayerSkill::__HasItem(uint32_t dwItemID)
 {
 	for (int i = 0; i < c_Inventory_Count; ++i)
 	{
-		if (dwItemID == GetItemIndex(TItemPos(INVENTORY, i)))
+		if (dwItemID == m_rkOwner.GetItemIndex(TItemPos(INVENTORY, i)))
 			return true;
 	}
 	for (int i = 0; i < c_DragonSoul_Inventory_Count; ++i)
 	{
-		if (dwItemID == GetItemIndex(TItemPos(DRAGON_SOUL_INVENTORY, i)))
+		if (dwItemID == m_rkOwner.GetItemIndex(TItemPos(DRAGON_SOUL_INVENTORY, i)))
 			return true;
 	}
 
@@ -861,9 +866,9 @@ extern const uint32_t c_iSkillIndex_Language2;
 extern const uint32_t c_iSkillIndex_Language3;
 extern const uint32_t c_iSkillIndex_Polymorph;
 
-void CPythonPlayer::UseGuildSkill(uint32_t dwSkillSlotIndex)
+void CPythonPlayerSkill::UseGuildSkill(uint32_t dwSkillSlotIndex)
 {
-	CInstanceBase* pkInstMain = NEW_GetMainActorPtr();
+	CInstanceBase* pkInstMain = m_rkOwner.NEW_GetMainActorPtr();
 	if (!pkInstMain)
 		return;
 	if (!pkInstMain->CanUseSkill())
@@ -873,11 +878,11 @@ void CPythonPlayer::UseGuildSkill(uint32_t dwSkillSlotIndex)
 
 	if (dwSkillSlotIndex >= SKILL_MAX_NUM)
 	{
-		Tracenf("CPythonPlayer::UseGuildSkill(dwSkillSlotIndex=%d) It's not available skill slot number", dwSkillSlotIndex);
+		Tracenf("CPythonPlayerSkill::UseGuildSkill(dwSkillSlotIndex=%d) It's not available skill slot number", dwSkillSlotIndex);
 		return;
 	}
 
-	TSkillInstance& rkSkillInst = m_playerStatus.aSkill[dwSkillSlotIndex];
+	TSkillInstance& rkSkillInst = m_rkOwner.m_playerStatus.aSkill[dwSkillSlotIndex];
 
 	uint32_t dwSkillIndex = rkSkillInst.dwIndex;
 
@@ -887,7 +892,7 @@ void CPythonPlayer::UseGuildSkill(uint32_t dwSkillSlotIndex)
 
 	if (__CheckRestSkillCoolTime(dwSkillSlotIndex))
 	{
-		PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "WAIT_COOLTIME"));
+		PyCallClassMemberFunc(m_rkOwner.m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", m_rkOwner.GetMainCharacterIndex(), "WAIT_COOLTIME"));
 		return;
 	}
 
@@ -895,7 +900,7 @@ void CPythonPlayer::UseGuildSkill(uint32_t dwSkillSlotIndex)
 	{
 		if (!CPythonGuild::Instance().IsDoingGuildWar())
 		{
-			PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "ONLY_FOR_GUILD_WAR"));
+			PyCallClassMemberFunc(m_rkOwner.m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", m_rkOwner.GetMainCharacterIndex(), "ONLY_FOR_GUILD_WAR"));
 			return;
 		}
 	}
@@ -903,7 +908,7 @@ void CPythonPlayer::UseGuildSkill(uint32_t dwSkillSlotIndex)
 	uint32_t dwMotionIndex = pSkillData->GetSkillMotionIndex();
 	if (!pkInstMain->GetBattle().NEW_UseSkill(dwSkillIndex, dwMotionIndex, 1, false))
 	{
-		Tracenf("CPythonPlayer::UseGuildSkill(%d) - pkInstMain->NEW_UseSkill - ERROR", dwSkillIndex);
+		Tracenf("CPythonPlayerSkill::UseGuildSkill(%d) - pkInstMain->NEW_UseSkill - ERROR", dwSkillIndex);
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////////
@@ -912,43 +917,43 @@ void CPythonPlayer::UseGuildSkill(uint32_t dwSkillSlotIndex)
 	__RunCoolTime(dwSkillSlotIndex);
 }
 
-void CPythonPlayer::SetComboSkillFlag(int32_t bFlag)
+void CPythonPlayerSkill::SetComboSkillFlag(int32_t bFlag)
 {
 	uint32_t dwSlotIndex;
-	if (!GetSkillSlotIndex(c_iSkillIndex_Combo, &dwSlotIndex))
+	if (!m_rkOwner.GetSkillSlotIndex(c_iSkillIndex_Combo, &dwSlotIndex))
 	{
-		Tracef("CPythonPlayer::SetComboSkillFlag(killIndex=%d) - Can't Find Slot Index\n", c_iSkillIndex_Combo);
+		Tracef("CPythonPlayerSkill::SetComboSkillFlag(killIndex=%d) - Can't Find Slot Index\n", c_iSkillIndex_Combo);
 		return;
 	}
 
-	int iLevel = GetSkillLevel(dwSlotIndex);
+	int iLevel = m_rkOwner.GetSkillLevel(dwSlotIndex);
 	if (iLevel <= 0)
 	{
-		Tracef("CPythonPlayer::SetComboSkillFlag(skillIndex=%d, skillLevel=%d) - Invalid Combo Skill Level\n", c_iSkillIndex_Combo, iLevel);
+		Tracef("CPythonPlayerSkill::SetComboSkillFlag(skillIndex=%d, skillLevel=%d) - Invalid Combo Skill Level\n", c_iSkillIndex_Combo, iLevel);
 		return;
 	}
 
 	iLevel = MIN(iLevel, 2);
 
-	CInstanceBase* pkInstMain = NEW_GetMainActorPtr();
+	CInstanceBase* pkInstMain = m_rkOwner.NEW_GetMainActorPtr();
 	if (!pkInstMain)
 		return;
 
 	if (bFlag)
 	{
 		pkInstMain->SetComboType(iLevel);
-		__ActivateSkillSlot(dwSlotIndex);
+		m_rkOwner.__ActivateSkillSlot(dwSlotIndex);
 	}
 	else
 	{
 		pkInstMain->SetComboType(0);
-		__DeactivateSkillSlot(dwSlotIndex);
+		m_rkOwner.__DeactivateSkillSlot(dwSlotIndex);
 	}
 }
 
-bool CPythonPlayer::__CheckSpecialSkill(uint32_t dwSkillIndex)
+bool CPythonPlayerSkill::__CheckSpecialSkill(uint32_t dwSkillIndex)
 {
-	CInstanceBase* pkInstMain = NEW_GetMainActorPtr();
+	CInstanceBase* pkInstMain = m_rkOwner.NEW_GetMainActorPtr();
 	if (!pkInstMain)
 		return false;
 
@@ -957,11 +962,11 @@ bool CPythonPlayer::__CheckSpecialSkill(uint32_t dwSkillIndex)
 	{
 		if (pkInstMain->IsFishingMode())
 		{
-			NEW_Fishing();
+			m_rkOwner.GetInput().NEW_Fishing();
 		}
 		else
 		{
-			PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "EQUIP_FISHING_ROD"));
+			PyCallClassMemberFunc(m_rkOwner.m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", m_rkOwner.GetMainCharacterIndex(), "EQUIP_FISHING_ROD"));
 		}
 		return true;
 	}
@@ -970,17 +975,17 @@ bool CPythonPlayer::__CheckSpecialSkill(uint32_t dwSkillIndex)
 	else if (c_iSkillIndex_Combo == dwSkillIndex)
 	{
 		uint32_t dwSlotIndex;
-		if (!GetSkillSlotIndex(dwSkillIndex, &dwSlotIndex))
+		if (!m_rkOwner.GetSkillSlotIndex(dwSkillIndex, &dwSlotIndex))
 			return false;
 
-		int iLevel = GetSkillLevel(dwSlotIndex);
+		int iLevel = m_rkOwner.GetSkillLevel(dwSlotIndex);
 		if (iLevel > 0)
 		{
 			CPythonNetworkStream::Instance().SendUseSkillPacket(dwSkillIndex);
 		}
 		else
 		{
-			PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "NOT_YET_LEARN"));
+			PyCallClassMemberFunc(m_rkOwner.m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", m_rkOwner.GetMainCharacterIndex(), "NOT_YET_LEARN"));
 		}
 
 		return true;

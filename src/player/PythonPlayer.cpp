@@ -138,7 +138,7 @@ CInstanceBase* CPythonPlayer::NEW_GetMainActorPtr()
 
 void CPythonPlayer::Update()
 {
-	NEW_RefreshMouseWalkingDirection();
+	m_kInput.NEW_RefreshMouseWalkingDirection();
 
 	CPythonPlayerEventHandler& rkPlayerEventHandler = CPythonPlayerEventHandler::GetSingleton();
 	rkPlayerEventHandler.FlushVictimList();
@@ -185,7 +185,7 @@ bool CPythonPlayer::__IsUsingChargeSkill()
 	if (!pkInstMain)
 		return false;
 
-	if (__CheckDashAffect(*pkInstMain))
+	if (m_kSkill.__CheckDashAffect(*pkInstMain))
 		return true;
 
 	if (MODE_USE_SKILL != m_eReservedMode)
@@ -219,17 +219,17 @@ void CPythonPlayer::__Update_AutoAttack()
 	CInstanceBase* pkInstVictim = NEW_FindActorPtr(m_dwAutoAttackTargetVID);
 	if (!pkInstVictim)
 	{
-		__ClearAutoAttackTargetActorID();
+		m_kInput.__ClearAutoAttackTargetActorID();
 	}
 	else
 	{
 		if (pkInstVictim->IsDead())
 		{
-			__ClearAutoAttackTargetActorID();
+			m_kInput.__ClearAutoAttackTargetActorID();
 		}
 		else if (pkInstMain->IsMountingHorse() && !pkInstMain->GetBattle().CanAttackHorseLevel())
 		{
-			__ClearAutoAttackTargetActorID();
+			m_kInput.__ClearAutoAttackTargetActorID();
 		}
 		else if (pkInstMain->IsAttackableInstance(*pkInstVictim))
 		{
@@ -239,7 +239,7 @@ void CPythonPlayer::__Update_AutoAttack()
 			}
 			else
 			{
-				__ReserveClickActor(m_dwAutoAttackTargetVID);
+				m_kInput.__ReserveClickActor(m_dwAutoAttackTargetVID);
 			}
 		}
 	}
@@ -473,15 +473,15 @@ void CPythonPlayer::NotifyDeletingCharacterInstance(uint32_t dwVID)
 
 void CPythonPlayer::NotifyCharacterDead(uint32_t dwVID)
 {
-	if (__IsSameTargetVID(dwVID))
+	if (m_kInput.__IsSameTargetVID(dwVID))
 	{
-		SetTarget(0);
+		m_kInput.SetTarget(0);
 	}
 }
 
 void CPythonPlayer::NotifyCharacterUpdate(uint32_t dwVID)
 {
-	if (__IsSameTargetVID(dwVID))
+	if (m_kInput.__IsSameTargetVID(dwVID))
 	{
 		CInstanceBase* pMainInstance = NEW_GetMainActorPtr();
 		CInstanceBase* pTargetInstance = CPythonCharacterManager::Instance().GetInstancePtr(dwVID);
@@ -489,7 +489,7 @@ void CPythonPlayer::NotifyCharacterUpdate(uint32_t dwVID)
 		{
 			if (!pMainInstance->IsTargetableInstance(*pTargetInstance))
 			{
-				SetTarget(0);
+				m_kInput.SetTarget(0);
 				PyCallClassMemberFunc(m_ppyGameWindow, "CloseTargetBoard", Py_BuildValue("()"));
 			}
 			else
@@ -502,7 +502,7 @@ void CPythonPlayer::NotifyCharacterUpdate(uint32_t dwVID)
 
 void CPythonPlayer::NotifyDeadMainCharacter()
 {
-	__ClearAutoAttackTargetActorID();
+	m_kInput.__ClearAutoAttackTargetActorID();
 }
 
 void CPythonPlayer::NotifyChangePKMode()
@@ -806,7 +806,7 @@ void CPythonPlayer::RequestUseLocalQuickSlot(uint32_t dwLocalSlotIndex)
 		}
 		case SLOT_TYPE_SKILL:
 		{
-			ClickSkillSlot(dwRegisteredItemPos);
+			m_kSkill.ClickSkillSlot(dwRegisteredItemPos);
 			break;
 		}
 		case SLOT_TYPE_EMOTION:
@@ -1087,7 +1087,7 @@ void CPythonPlayer::__DeactivateSkillSlot(uint32_t dwSlotIndex)
 
 int32_t CPythonPlayer::IsSkillCoolTime(uint32_t dwSlotIndex)
 {
-	if (!__CheckRestSkillCoolTime(dwSlotIndex))
+	if (!m_kSkill.__CheckRestSkillCoolTime(dwSlotIndex))
 		return FALSE;
 
 	return TRUE;
@@ -1193,7 +1193,7 @@ void CPythonPlayer::__SendClickActorPacket(CInstanceBase& rkInstVictim)
 
 void CPythonPlayer::ActEmotion(uint32_t dwEmotionID)
 {
-	CInstanceBase* pkInstTarget = __GetAliveTargetInstancePtr();
+	CInstanceBase* pkInstTarget = m_kInput.__GetAliveTargetInstancePtr();
 	if (!pkInstTarget)
 	{
 		PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotShotError", Py_BuildValue("(is)", GetMainCharacterIndex(), "NEED_TARGET"));
@@ -1205,8 +1205,8 @@ void CPythonPlayer::ActEmotion(uint32_t dwEmotionID)
 
 void CPythonPlayer::StartEmotionProcess()
 {
-	__ClearReservedAction();
-	__ClearAutoAttackTargetActorID();
+	m_kInput.__ClearReservedAction();
+	m_kInput.__ClearAutoAttackTargetActorID();
 
 	m_bisProcessingEmotion = TRUE;
 }
@@ -1526,7 +1526,7 @@ void CPythonPlayer::NEW_ClearSkillData(bool bAll)
 
 	for (it = m_skillSlotDict.begin(); it != m_skillSlotDict.end();)
 	{
-		if (bAll || __GetSkillType(it->first) == CPythonSkill::SKILL_TYPE_ACTIVE)
+		if (bAll || m_kSkill.__GetSkillType(it->first) == CPythonSkill::SKILL_TYPE_ACTIVE)
 			it = m_skillSlotDict.erase(it);
 		else
 			++it;
@@ -1562,7 +1562,7 @@ void CPythonPlayer::ClearSkillDict()
 	m_fConsumeStaminaPerSec = 0.0f;
 	m_fCurrentStamina = 0.0f;
 
-	__ClearAutoAttackTargetActorID();
+	m_kInput.__ClearAutoAttackTargetActorID();
 }
 
 void CPythonPlayer::Clear()
@@ -1633,12 +1633,33 @@ void CPythonPlayer::Clear()
 
 	m_inGuildAreaID = 0xffffffff;
 
-	__ClearAutoAttackTargetActorID();
+	m_kInput.__ClearAutoAttackTargetActorID();
 }
 
-CPythonPlayer::CPythonPlayer(void)
+CPythonPlayerSkill& CPythonPlayer::GetSkill()
 {
-	SetMovableGroundDistance(40.0f);
+	return m_kSkill;
+}
+
+void CPythonPlayer::SetTarget(uint32_t dwVID, int32_t bForceChange)
+{
+	m_kInput.SetTarget(dwVID, bForceChange);
+}
+
+void CPythonPlayer::SetComboSkillFlag(int32_t bFlag)
+{
+	m_kSkill.SetComboSkillFlag(bFlag);
+}
+
+CPythonPlayerInput& CPythonPlayer::GetInput()
+{
+	return m_kInput;
+}
+
+CPythonPlayer::CPythonPlayer(void) : m_kInput(*this),
+									m_kSkill(*this)
+{
+	m_kInput.SetMovableGroundDistance(40.0f);
 
 	// AffectIndex To SkillIndex
 	m_kMap_dwAffectIndexToSkillIndex.insert(std::make_pair(int(CInstanceBase::AFFECT_JEONGWI), 3));

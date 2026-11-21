@@ -1,13 +1,14 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/Player/PythonPlayer.h>
+#include <Client/Player/PythonPlayerInput.h>
 
 #include <Client/UI/InstanceBase.h>
 
-void CPythonPlayer::SetAttackKeyState(bool isPress)
+void CPythonPlayerInput::SetAttackKeyState(bool isPress)
 {
 	if (isPress)
 	{
-		CInstanceBase* pkInstMain = NEW_GetMainActorPtr();
+		CInstanceBase* pkInstMain = m_rkOwner.NEW_GetMainActorPtr();
 		if (pkInstMain)
 			if (pkInstMain->IsFishingMode())
 			{
@@ -16,10 +17,10 @@ void CPythonPlayer::SetAttackKeyState(bool isPress)
 			}
 	}
 
-	m_isAtkKey = isPress;
+	m_rkOwner.m_isAtkKey = isPress;
 }
 
-void CPythonPlayer::NEW_SetSingleDIKKeyState(int eDIKKey, bool isPress)
+void CPythonPlayerInput::NEW_SetSingleDIKKeyState(int eDIKKey, bool isPress)
 {
 	if (NEW_CancelFishing())
 		return;
@@ -27,44 +28,44 @@ void CPythonPlayer::NEW_SetSingleDIKKeyState(int eDIKKey, bool isPress)
 	switch (eDIKKey)
 	{
 		case DIK_UP:
-			NEW_SetSingleDirKeyState(DIR_UP, isPress);
+			NEW_SetSingleDirKeyState(CPythonPlayer::DIR_UP, isPress);
 			break;
 		case DIK_DOWN:
-			NEW_SetSingleDirKeyState(DIR_DOWN, isPress);
+			NEW_SetSingleDirKeyState(CPythonPlayer::DIR_DOWN, isPress);
 			break;
 		case DIK_LEFT:
-			NEW_SetSingleDirKeyState(DIR_LEFT, isPress);
+			NEW_SetSingleDirKeyState(CPythonPlayer::DIR_LEFT, isPress);
 			break;
 		case DIK_RIGHT:
-			NEW_SetSingleDirKeyState(DIR_RIGHT, isPress);
+			NEW_SetSingleDirKeyState(CPythonPlayer::DIR_RIGHT, isPress);
 			break;
 	}
 }
 
-void CPythonPlayer::NEW_SetSingleDirKeyState(int eDirKey, bool isPress)
+void CPythonPlayerInput::NEW_SetSingleDirKeyState(int eDirKey, bool isPress)
 {
 	switch (eDirKey)
 	{
-		case DIR_UP:
-			m_isUp = isPress;
+		case CPythonPlayer::DIR_UP:
+			m_rkOwner.m_isUp = isPress;
 			break;
-		case DIR_DOWN:
-			m_isDown = isPress;
+		case CPythonPlayer::DIR_DOWN:
+			m_rkOwner.m_isDown = isPress;
 			break;
-		case DIR_LEFT:
-			m_isLeft = isPress;
+		case CPythonPlayer::DIR_LEFT:
+			m_rkOwner.m_isLeft = isPress;
 			break;
-		case DIR_RIGHT:
-			m_isRight = isPress;
+		case CPythonPlayer::DIR_RIGHT:
+			m_rkOwner.m_isRight = isPress;
 			break;
 	}
 
-	m_isDirKey = (m_isUp || m_isDown || m_isLeft || m_isRight);
+	m_rkOwner.m_isDirKey = (m_rkOwner.m_isUp || m_rkOwner.m_isDown || m_rkOwner.m_isLeft || m_rkOwner.m_isRight);
 
-	NEW_SetMultiDirKeyState(m_isLeft, m_isRight, m_isUp, m_isDown);
+	NEW_SetMultiDirKeyState(m_rkOwner.m_isLeft, m_rkOwner.m_isRight, m_rkOwner.m_isUp, m_rkOwner.m_isDown);
 }
 
-void CPythonPlayer::NEW_SetMultiDirKeyState(bool isLeft, bool isRight, bool isUp, bool isDown)
+void CPythonPlayerInput::NEW_SetMultiDirKeyState(bool isLeft, bool isRight, bool isUp, bool isDown)
 {
 	if (!__CanMove())
 		return;
@@ -78,7 +79,7 @@ void CPythonPlayer::NEW_SetMultiDirKeyState(bool isLeft, bool isRight, bool isUp
 
 		if (!NEW_MoveToDirection(fDirRot))
 		{
-			Tracen("CPythonPlayer::NEW_SetMultiKeyState - NEW_Move -> ERROR");
+			Tracen("CPythonPlayerInput::NEW_SetMultiKeyState - NEW_Move -> ERROR");
 			return;
 		}
 	}
@@ -88,16 +89,16 @@ void CPythonPlayer::NEW_SetMultiDirKeyState(bool isLeft, bool isRight, bool isUp
 	}
 }
 
-float CPythonPlayer::GetDegreeFromDirection(int iUD, int iLR)
+float CPythonPlayerInput::GetDegreeFromDirection(int iUD, int iLR)
 {
 	switch (iUD)
 	{
-		case KEYBOARD_UD_UP:
-			if (KEYBOARD_LR_LEFT == iLR)
+		case CPythonPlayer::KEYBOARD_UD_UP:
+			if (CPythonPlayer::KEYBOARD_LR_LEFT == iLR)
 			{
 				return +45.0f;
 			}
-			else if (KEYBOARD_LR_RIGHT == iLR)
+			else if (CPythonPlayer::KEYBOARD_LR_RIGHT == iLR)
 			{
 				return -45.0f;
 			}
@@ -105,12 +106,12 @@ float CPythonPlayer::GetDegreeFromDirection(int iUD, int iLR)
 			return 0.0f;
 			break;
 
-		case KEYBOARD_UD_DOWN:
-			if (KEYBOARD_LR_LEFT == iLR)
+		case CPythonPlayer::KEYBOARD_UD_DOWN:
+			if (CPythonPlayer::KEYBOARD_LR_LEFT == iLR)
 			{
 				return +135.0f;
 			}
-			else if (KEYBOARD_LR_RIGHT == iLR)
+			else if (CPythonPlayer::KEYBOARD_LR_RIGHT == iLR)
 			{
 				return -135.0f;
 			}
@@ -118,12 +119,12 @@ float CPythonPlayer::GetDegreeFromDirection(int iUD, int iLR)
 			return +180.0f;
 			break;
 
-		case KEYBOARD_UD_NONE:
-			if (KEYBOARD_LR_LEFT == iLR)
+		case CPythonPlayer::KEYBOARD_UD_NONE:
+			if (CPythonPlayer::KEYBOARD_LR_LEFT == iLR)
 			{
 				return +90.0f;
 			}
-			else if (KEYBOARD_LR_RIGHT == iLR)
+			else if (CPythonPlayer::KEYBOARD_LR_RIGHT == iLR)
 			{
 				return -90.0f;
 			}

@@ -1234,7 +1234,7 @@ bool CPythonSkill::SSkillData::GetState(const char* c_szStateName, int* piState,
 				if (0 != ms_dwTimeIncreaseSkillNumber)
 				{
 					uint32_t dwSkillSlotIndex;
-					if (!CPythonPlayer::Instance().FindSkillSlotIndexBySkillIndex(ms_dwTimeIncreaseSkillNumber, &dwSkillSlotIndex))
+					if (!CPythonPlayer::Instance().GetSkill().FindSkillSlotIndexBySkillIndex(ms_dwTimeIncreaseSkillNumber, &dwSkillSlotIndex))
 						return false;
 
 					*piState = CPythonPlayer::Instance().GetSkillLevel(dwSkillSlotIndex);
@@ -1766,7 +1766,7 @@ PyObject* skillIsSkillRequirement(PyObject* poSelf, PyObject* poArgs)
 		}
 
 		uint32_t dwRequireSkillSlotIndex;
-		if (!CPythonPlayer::Instance().FindSkillSlotIndexBySkillIndex(pRequireSkillData->dwSkillIndex, &dwRequireSkillSlotIndex))
+		if (!CPythonPlayer::Instance().GetSkill().FindSkillSlotIndexBySkillIndex(pRequireSkillData->dwSkillIndex, &dwRequireSkillSlotIndex))
 			return Py_BuildValue("i", FALSE);
 	}
 
@@ -1847,7 +1847,7 @@ PyObject* skillCanLevelUpSkill(PyObject* poSelf, PyObject* poArgs)
 		if (CPythonSkill::Instance().GetSkillDataByName(c_pSkillData->strRequireSkillName.c_str(), &pRequireSkillData))
 		{
 			uint32_t dwRequireSkillSlotIndex;
-			if (CPythonPlayer::Instance().FindSkillSlotIndexBySkillIndex(pRequireSkillData->dwSkillIndex, &dwRequireSkillSlotIndex))
+			if (CPythonPlayer::Instance().GetSkill().FindSkillSlotIndexBySkillIndex(pRequireSkillData->dwSkillIndex, &dwRequireSkillSlotIndex))
 			{
 				int iSkillGrade = CPythonPlayer::Instance().GetSkillGrade(dwRequireSkillSlotIndex);
 				int iSkillLevel = CPythonPlayer::Instance().GetSkillLevel(dwRequireSkillSlotIndex);
@@ -1887,7 +1887,7 @@ PyObject* skillCheckRequirementSueccess(PyObject* poSelf, PyObject* poArgs)
 		if (CPythonSkill::Instance().GetSkillDataByName(c_pSkillData->strRequireSkillName.c_str(), &pRequireSkillData))
 		{
 			uint32_t dwRequireSkillSlotIndex;
-			if (CPythonPlayer::Instance().FindSkillSlotIndexBySkillIndex(pRequireSkillData->dwSkillIndex, &dwRequireSkillSlotIndex))
+			if (CPythonPlayer::Instance().GetSkill().FindSkillSlotIndexBySkillIndex(pRequireSkillData->dwSkillIndex, &dwRequireSkillSlotIndex))
 			{
 				int iSkillGrade = CPythonPlayer::Instance().GetSkillGrade(dwRequireSkillSlotIndex);
 				int iSkillLevel = CPythonPlayer::Instance().GetSkillLevel(dwRequireSkillSlotIndex);

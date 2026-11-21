@@ -3,6 +3,8 @@
 #include <Client/UI/AbstractPlayer.h>
 #include <Client/UI/Packet.h>
 #include <Client/UI/PythonSkill.h>
+#include <Client/Player/PythonPlayerInput.h>
+#include <Client/Player/PythonPlayerSkill.h>
 
 class CInstanceBase;
 
@@ -77,21 +79,6 @@ class CPythonPlayer : public CSingleton<CPythonPlayer>, public IAbstractPlayer
 			METIN_SOCKET_TYPE_SILVER,
 			METIN_SOCKET_TYPE_GOLD,
 		};
-
-		typedef struct SSkillInstance
-		{
-				uint32_t dwIndex;
-				int iType;
-				int iGrade;
-				int iLevel;
-				float fcurEfficientPercentage;
-				float fnextEfficientPercentage;
-				int32_t isCoolTime;
-
-				float fCoolTime;	 // NOTE : 쿨타임 중인 스킬 슬롯을
-				float fLastUsedTime; //        퀵창에 등록할 때 사용하는 변수
-				int32_t bActive;
-		} TSkillInstance;
 
 		enum EKeyBoard_UD
 		{
@@ -183,49 +170,32 @@ class CPythonPlayer : public CSingleton<CPythonPlayer>, public IAbstractPlayer
 		CPythonPlayer(void);
 		virtual ~CPythonPlayer(void);
 
-		void PickCloseMoney();
-		void PickCloseItem();
+		CPythonPlayerInput& GetInput();
+		CPythonPlayerSkill& GetSkill();
+
+		virtual void SetTarget(uint32_t dwVID, int32_t bForceChange = TRUE);
+		virtual void SetComboSkillFlag(int32_t bFlag);
 
 		void SetGameWindow(PyObject* ppyObject);
 
 		void SetObserverMode(bool isEnable);
 		bool IsObserverMode();
 
-		void SetQuickCameraMode(bool isEnable);
 
-		void SetAttackKeyState(bool isPress);
 
 		void NEW_GetMainActorPosition(TPixelPosition* pkPPosActor);
 
 		bool RegisterEffect(uint32_t dwEID, const char* c_szEftFileName, bool isCache);
 
-		bool NEW_SetMouseState(int eMBType, int eMBState);
-		bool NEW_SetMouseFunc(int eMBType, int eMBFunc);
-		int NEW_GetMouseFunc(int eMBT);
-		void NEW_SetMouseMiddleButtonState(int eMBState);
 
-		void NEW_SetAutoCameraRotationSpeed(float fRotSpd);
-		void NEW_ResetCameraRotation();
 
-		void NEW_SetSingleDirKeyState(int eDirKey, bool isPress);
-		void NEW_SetSingleDIKKeyState(int eDIKKey, bool isPress);
-		void NEW_SetMultiDirKeyState(bool isLeft, bool isRight, bool isUp, bool isDown);
 
-		void NEW_Attack();
-		void NEW_Fishing();
-		bool NEW_CancelFishing();
 
 		void NEW_LookAtFocusActor();
 		bool NEW_IsAttackableDistanceFocusActor();
 
 		bool NEW_MoveToDestPixelPositionDirection(const TPixelPosition& c_rkPPosDst);
 		bool NEW_MoveToMousePickedDirection();
-		bool NEW_MoveToMouseScreenDirection();
-		bool NEW_MoveToDirection(float fDirRot);
-		void NEW_Stop();
-
-		// Reserved
-		bool NEW_IsEmptyReservedDelayTime(float fElapsedtime); // 네이밍 교정 논의 필요 - [levites]
 
 		// Dungeon
 		void SetDungeonDestinationPosition(int ix, int iy);
@@ -322,9 +292,6 @@ class CPythonPlayer : public CSingleton<CPythonPlayer>, public IAbstractPlayer
 		void SetSkillLevel(uint32_t dwSlotIndex, uint32_t dwSkillLevel);
 		void SetSkillLevel_(uint32_t dwSkillIndex, uint32_t dwSkillGrade, uint32_t dwSkillLevel);
 		int32_t IsToggleSkill(uint32_t dwSlotIndex);
-		void ClickSkillSlot(uint32_t dwSlotIndex);
-		void ChangeCurrentSkillNumberOnly(uint32_t dwSlotIndex);
-		bool FindSkillSlotIndexBySkillIndex(uint32_t dwSkillIndex, uint32_t* pdwSkillSlotIndex);
 
 		void SetSkillCoolTime(uint32_t dwSkillIndex);
 		void EndSkillCoolTime(uint32_t dwSkillIndex);
@@ -333,18 +300,11 @@ class CPythonPlayer : public CSingleton<CPythonPlayer>, public IAbstractPlayer
 		float GetSkillElapsedCoolTime(uint32_t dwSlotIndex);
 		int32_t IsSkillActive(uint32_t dwSlotIndex);
 		int32_t IsSkillCoolTime(uint32_t dwSlotIndex);
-		void UseGuildSkill(uint32_t dwSkillSlotIndex);
 		bool AffectIndexToSkillSlotIndex(uint32_t uAffect, uint32_t* pdwSkillSlotIndex);
 		bool AffectIndexToSkillIndex(uint32_t dwAffectIndex, uint32_t* pdwSkillIndex);
 
-		void SetAffect(uint32_t uAffect);
-		void ResetAffect(uint32_t uAffect);
-		void ClearAffects();
 
 		// Target
-		void SetTarget(uint32_t dwVID, int32_t bForceChange = TRUE);
-		void OpenCharacterMenu(uint32_t dwVictimActorID);
-		uint32_t GetTargetVID();
 
 		// Party
 		void ExitParty();
@@ -383,10 +343,8 @@ class CPythonPlayer : public CSingleton<CPythonPlayer>, public IAbstractPlayer
 		uint32_t GetPKMode();
 
 		// Combo
-		void SetComboSkillFlag(int32_t bFlag);
 
 		// System
-		void SetMovableGroundDistance(float fDistance);
 
 		// Emotion
 		void ActEmotion(uint32_t dwEmotionID);
@@ -418,19 +376,9 @@ class CPythonPlayer : public CSingleton<CPythonPlayer>, public IAbstractPlayer
 		void __DeactivateSkillSlot(uint32_t dwSlotIndex);
 		void __ActivateSkillSlot(uint32_t dwSlotIndex);
 
-		void __OnPressSmart(CInstanceBase& rkInstMain, bool isAuto);
-		void __OnClickSmart(CInstanceBase& rkInstMain, bool isAuto);
 
-		void __OnPressItem(CInstanceBase& rkInstMain, uint32_t dwPickedItemID);
-		void __OnPressActor(CInstanceBase& rkInstMain, uint32_t dwPickedActorID, bool isAuto);
-		void __OnPressGround(CInstanceBase& rkInstMain, const TPixelPosition& c_rkPPosPickedGround);
-		void __OnPressScreen(CInstanceBase& rkInstMain);
 
-		void __OnClickActor(CInstanceBase& rkInstMain, uint32_t dwPickedActorID, bool isAuto);
-		void __OnClickItem(CInstanceBase& rkInstMain, uint32_t dwPickedItemID);
-		void __OnClickGround(CInstanceBase& rkInstMain, const TPixelPosition& c_rkPPosPickedGround);
 
-		bool __IsMovableGroundDistance(CInstanceBase& rkInstMain, const TPixelPosition& c_rkPPosPickedGround);
 
 		bool __GetPickedActorPtr(CInstanceBase** pkInstPicked);
 
@@ -438,93 +386,42 @@ class CPythonPlayer : public CSingleton<CPythonPlayer>, public IAbstractPlayer
 		bool __GetPickedItemID(uint32_t* pdwItemID);
 		bool __GetPickedGroundPos(TPixelPosition* pkPPosPicked);
 
-		void __ClearReservedAction();
-		void __ReserveClickItem(uint32_t dwItemID);
-		void __ReserveClickActor(uint32_t dwActorID);
-		void __ReserveClickGround(const TPixelPosition& c_rkPPosPickedGround);
-		void __ReserveUseSkill(uint32_t dwActorID, uint32_t dwSkillSlotIndex, uint32_t dwRange);
 
-		void __ReserveProcess_ClickActor();
 
-		void __ShowPickedEffect(const TPixelPosition& c_rkPPosPickedGround);
 		void __SendClickActorPacket(CInstanceBase& rkInstVictim);
 
-		void __ClearAutoAttackTargetActorID();
-		void __SetAutoAttackTargetActorID(uint32_t dwActorID);
 
 		void NEW_ShowEffect(int dwEID, TPixelPosition kPPosDst);
 
-		void NEW_SetMouseSmartState(int eMBS, bool isAuto);
-		void NEW_SetMouseMoveState(int eMBS);
-		void NEW_SetMouseCameraState(int eMBS);
-		void NEW_GetMouseDirRotation(float fScrX, float fScrY, float* pfDirRot);
-		void NEW_GetMultiKeyDirRotation(bool isLeft, bool isRight, bool isUp, bool isDown, float* pfDirRot);
 
-		float GetDegreeFromDirection(int iUD, int iLR);
-		float GetDegreeFromPosition(int ix, int iy, int iHalfWidth, int iHalfHeight);
 
 		bool CheckCategory(int iCategory);
 		bool CheckAbilitySlot(int iSlotIndex);
 
 		void RefreshKeyWalkingDirection();
-		void NEW_RefreshMouseWalkingDirection();
 
 		// Instances
 		void RefreshInstances();
 
-		bool __CanShot(CInstanceBase& rkInstMain, CInstanceBase& rkInstTarget);
-		bool __CanUseSkill();
 
-		bool __CanMove();
 
-		bool __CanAttack();
-		bool __CanChangeTarget();
 
-		bool __CheckSkillUsable(uint32_t dwSlotIndex);
-		void __UseCurrentSkill();
 		void __UseChargeSkill(uint32_t dwSkillSlotIndex);
-		bool __UseSkill(uint32_t dwSlotIndex);
-		bool __CheckSpecialSkill(uint32_t dwSkillIndex);
 
-		bool __CheckRestSkillCoolTime(uint32_t dwSkillSlotIndex);
-		bool __CheckShortLife(TSkillInstance& rkSkillInst, CPythonSkill::TSkillData& rkSkillData);
-		bool __CheckShortMana(TSkillInstance& rkSkillInst, CPythonSkill::TSkillData& rkSkillData);
-		bool __CheckShortArrow(TSkillInstance& rkSkillInst, CPythonSkill::TSkillData& rkSkillData);
-		bool __CheckDashAffect(CInstanceBase& rkInstMain);
 
-		void __SendUseSkill(uint32_t dwSkillSlotIndex, uint32_t dwTargetVID);
-		void __RunCoolTime(uint32_t dwSkillSlotIndex);
 
-		uint8_t __GetSkillType(uint32_t dwSkillSlotIndex);
 
-		bool __IsReservedUseSkill(uint32_t dwSkillSlotIndex);
 		bool __IsMeleeSkill(CPythonSkill::TSkillData& rkSkillData);
 		bool __IsChargeSkill(CPythonSkill::TSkillData& rkSkillData);
-		uint32_t __GetSkillTargetRange(CPythonSkill::TSkillData& rkSkillData);
 		bool __SearchNearTarget();
 		bool __IsUsingChargeSkill();
 
-		bool __ProcessEnemySkillTargetRange(CInstanceBase& rkInstMain, CInstanceBase& rkInstTarget, CPythonSkill::TSkillData& rkSkillData, uint32_t dwSkillSlotIndex);
 
 		// Item
-		bool __HasEnoughArrow();
-		bool __HasItem(uint32_t dwItemID);
-		uint32_t __GetPickableDistance();
 
 		// Target
-		CInstanceBase* __GetTargetActorPtr();
-		void __ClearTarget();
-		uint32_t __GetTargetVID();
-		void __SetTargetVID(uint32_t dwVID);
-		bool __IsSameTargetVID(uint32_t dwVID);
-		bool __IsTarget();
-		bool __ChangeTargetToPickedInstance();
 
-		CInstanceBase* __GetSkillTargetInstancePtr(CPythonSkill::TSkillData& rkSkillData);
-		CInstanceBase* __GetAliveTargetInstancePtr();
-		CInstanceBase* __GetDeadTargetInstancePtr();
 
-		int32_t __IsRightButtonSkillMode();
 
 		// Update
 		void __Update_AutoAttack();
@@ -635,6 +532,12 @@ class CPythonPlayer : public CSingleton<CPythonPlayer>, public IAbstractPlayer
 		SAutoPotionInfo m_kAutoPotionInfo[AUTO_POTION_TYPE_NUM];
 
 	protected:
+		friend class CPythonPlayerInput;
+		friend class CPythonPlayerSkill;
+
+		CPythonPlayerInput m_kInput;
+		CPythonPlayerSkill m_kSkill;
+
 		float MOVABLE_GROUND_DISTANCE;
 
 	private:

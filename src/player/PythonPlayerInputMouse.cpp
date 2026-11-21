@@ -1,26 +1,27 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/Player/PythonPlayer.h>
+#include <Client/Player/PythonPlayerInput.h>
 #include <Client/UI/PythonApplication.h>
 
 #include <Neoeter/Render/Camera.h>
 
-void CPythonPlayer::NEW_SetMouseMoveState(int eMBS)
+void CPythonPlayerInput::NEW_SetMouseMoveState(int eMBS)
 {
-	if (MBS_PRESS == eMBS)
+	if (CPythonPlayer::MBS_PRESS == eMBS)
 	{
 		NEW_MoveToMouseScreenDirection();
 
-		m_isDirMov = true;
+		m_rkOwner.m_isDirMov = true;
 	}
-	else if (MBS_CLICK == eMBS)
+	else if (CPythonPlayer::MBS_CLICK == eMBS)
 	{
 		NEW_Stop();
 
-		m_isDirMov = false;
+		m_rkOwner.m_isDirMov = false;
 	}
 }
 
-bool CPythonPlayer::NEW_MoveToMouseScreenDirection()
+bool CPythonPlayerInput::NEW_MoveToMouseScreenDirection()
 {
 	UI::CWindowManager& rkWndMgr = UI::CWindowManager::Instance();
 
@@ -39,7 +40,7 @@ bool CPythonPlayer::NEW_MoveToMouseScreenDirection()
 	return NEW_MoveToDirection(fDirRot);
 }
 
-void CPythonPlayer::NEW_SetMouseCameraState(int eMBS)
+void CPythonPlayerInput::NEW_SetMouseCameraState(int eMBS)
 {
 	CPythonApplication& rkApp = CPythonApplication::Instance();
 	CPythonBackground& rkBG = CPythonBackground::Instance();
@@ -47,7 +48,7 @@ void CPythonPlayer::NEW_SetMouseCameraState(int eMBS)
 
 	if (pkCmrCur)
 	{
-		if (MBS_PRESS == eMBS)
+		if (CPythonPlayer::MBS_PRESS == eMBS)
 		{
 			POINT ptMouse;
 			rkApp.GetMousePosition(&ptMouse);
@@ -61,7 +62,7 @@ void CPythonPlayer::NEW_SetMouseCameraState(int eMBS)
 			if (CApplicationCursor::MODE_HARDWARE == rkApp.Cursor().GetMode())
 				rkApp.Cursor().SetVisible(FALSE, true);
 		}
-		else if (MBS_CLICK == eMBS)
+		else if (CPythonPlayer::MBS_CLICK == eMBS)
 		{
 			bool isCameraDrag = pkCmrCur->EndDrag();
 
@@ -77,7 +78,7 @@ void CPythonPlayer::NEW_SetMouseCameraState(int eMBS)
 				__ChangeTargetToPickedInstance();
 
 				CInstanceBase* pkInstPicked;
-				if (__GetPickedActorPtr(&pkInstPicked))
+				if (m_rkOwner.__GetPickedActorPtr(&pkInstPicked))
 				{
 					OpenCharacterMenu(pkInstPicked->GetVirtualID());
 				}
@@ -86,21 +87,21 @@ void CPythonPlayer::NEW_SetMouseCameraState(int eMBS)
 	}
 }
 
-void CPythonPlayer::NEW_SetMouseSmartState(int eMBS, bool isAuto)
+void CPythonPlayerInput::NEW_SetMouseSmartState(int eMBS, bool isAuto)
 {
-	CInstanceBase* pkInstMain = NEW_GetMainActorPtr();
+	CInstanceBase* pkInstMain = m_rkOwner.NEW_GetMainActorPtr();
 	if (!pkInstMain) return;
 
 	// PrivateShop
-	if (IsOpenPrivateShop())
+	if (m_rkOwner.IsOpenPrivateShop())
 	{
 		// ShopPacket 이 오기전 잠깐 동안
-		m_isSmtMov = false;
+		m_rkOwner.m_isSmtMov = false;
 		return;
 	}
 
 	// Emotion
-	if (__IsProcessingEmotion())
+	if (m_rkOwner.__IsProcessingEmotion())
 	{
 		return;
 	}
@@ -111,35 +112,35 @@ void CPythonPlayer::NEW_SetMouseSmartState(int eMBS, bool isAuto)
 		return;
 	}
 
-	if (MBS_PRESS == eMBS)
+	if (CPythonPlayer::MBS_PRESS == eMBS)
 	{
-		m_isSmtMov = true;
+		m_rkOwner.m_isSmtMov = true;
 
 		__OnPressSmart(*pkInstMain, isAuto);
 	}
-	else if (MBS_CLICK == eMBS)
+	else if (CPythonPlayer::MBS_CLICK == eMBS)
 	{
-		m_isSmtMov = false;
+		m_rkOwner.m_isSmtMov = false;
 
 		__OnClickSmart(*pkInstMain, isAuto);
 	}
 }
 
-void CPythonPlayer::__OnPressSmart(CInstanceBase& rkInstMain, bool isAuto)
+void CPythonPlayerInput::__OnPressSmart(CInstanceBase& rkInstMain, bool isAuto)
 {
 	uint32_t dwPickedItemID;
 	uint32_t dwPickedActorID;
 	TPixelPosition kPPosPickedGround;
 
-	bool isPickedItemID = __GetPickedItemID(&dwPickedItemID);
-	bool isPickedActorID = __GetPickedActorID(&dwPickedActorID);
-	bool isPickedGroundPos = __GetPickedGroundPos(&kPPosPickedGround);
+	bool isPickedItemID = m_rkOwner.__GetPickedItemID(&dwPickedItemID);
+	bool isPickedActorID = m_rkOwner.__GetPickedActorID(&dwPickedActorID);
+	bool isPickedGroundPos = m_rkOwner.__GetPickedGroundPos(&kPPosPickedGround);
 
 	if (isPickedItemID)
 	{
 		__OnPressItem(rkInstMain, dwPickedItemID);
 	}
-	else if (isPickedActorID && dwPickedActorID != GetMainCharacterIndex())
+	else if (isPickedActorID && dwPickedActorID != m_rkOwner.GetMainCharacterIndex())
 	{
 		__OnPressActor(rkInstMain, dwPickedActorID, isAuto);
 	}
@@ -153,20 +154,20 @@ void CPythonPlayer::__OnPressSmart(CInstanceBase& rkInstMain, bool isAuto)
 	}
 }
 
-void CPythonPlayer::__OnClickSmart(CInstanceBase& rkInstMain, bool isAuto)
+void CPythonPlayerInput::__OnClickSmart(CInstanceBase& rkInstMain, bool isAuto)
 {
 	uint32_t dwPickedItemID;
 	uint32_t dwPickedActorID;
 	TPixelPosition kPPosPickedGround;
-	if (__GetPickedItemID(&dwPickedItemID))
+	if (m_rkOwner.__GetPickedItemID(&dwPickedItemID))
 	{
 		__OnClickItem(rkInstMain, dwPickedItemID);
 	}
-	else if (__GetPickedActorID(&dwPickedActorID))
+	else if (m_rkOwner.__GetPickedActorID(&dwPickedActorID))
 	{
 		__OnClickActor(rkInstMain, dwPickedActorID, isAuto);
 	}
-	else if (__GetPickedGroundPos(&kPPosPickedGround))
+	else if (m_rkOwner.__GetPickedGroundPos(&kPPosPickedGround))
 	{
 		__OnClickGround(rkInstMain, kPPosPickedGround);
 	}
@@ -176,60 +177,60 @@ void CPythonPlayer::__OnClickSmart(CInstanceBase& rkInstMain, bool isAuto)
 	}
 }
 
-void CPythonPlayer::__ShowPickedEffect(const TPixelPosition& c_rkPPosPickedGround)
+void CPythonPlayerInput::__ShowPickedEffect(const TPixelPosition& c_rkPPosPickedGround)
 {
 #ifdef __MOVIE_MODE__
-	CInstanceBase* pkInstMain = NEW_GetMainActorPtr();
+	CInstanceBase* pkInstMain = m_rkOwner.NEW_GetMainActorPtr();
 	if (!pkInstMain) return;
 
 	if (pkInstMain->IsMovieMode())
 		return;
 #endif
-	NEW_ShowEffect(EFFECT_PICK, c_rkPPosPickedGround);
+	m_rkOwner.NEW_ShowEffect(CPythonPlayer::EFFECT_PICK, c_rkPPosPickedGround);
 }
 
-bool CPythonPlayer::NEW_SetMouseFunc(int eMBT, int eMBF)
+bool CPythonPlayerInput::NEW_SetMouseFunc(int eMBT, int eMBF)
 {
-	if (eMBT >= MBT_NUM)
+	if (eMBT >= CPythonPlayer::MBT_NUM)
 		return false;
 
-	m_aeMBFButton[eMBT] = eMBF;
+	m_rkOwner.m_aeMBFButton[eMBT] = eMBF;
 
 	return true;
 }
 
-int CPythonPlayer::NEW_GetMouseFunc(int eMBT)
+int CPythonPlayerInput::NEW_GetMouseFunc(int eMBT)
 {
-	if (eMBT >= MBT_NUM)
+	if (eMBT >= CPythonPlayer::MBT_NUM)
 		return false;
 
-	return m_aeMBFButton[eMBT];
+	return m_rkOwner.m_aeMBFButton[eMBT];
 }
 
-void CPythonPlayer::SetQuickCameraMode(bool isEnable)
+void CPythonPlayerInput::SetQuickCameraMode(bool isEnable)
 {
 	if (isEnable)
 	{
 	}
 	else
 	{
-		NEW_SetMouseCameraState(MBS_CLICK);
+		NEW_SetMouseCameraState(CPythonPlayer::MBS_CLICK);
 	}
 }
 
-bool CPythonPlayer::NEW_SetMouseState(int eMBT, int eMBS)
+bool CPythonPlayerInput::NEW_SetMouseState(int eMBT, int eMBS)
 {
-	if (eMBT >= MBT_NUM)
+	if (eMBT >= CPythonPlayer::MBT_NUM)
 		return false;
 
-	int eMBF = m_aeMBFButton[eMBT];
+	int eMBF = m_rkOwner.m_aeMBFButton[eMBT];
 	switch (eMBF)
 	{
-		case MBF_MOVE:
+		case CPythonPlayer::MBF_MOVE:
 			if (__CanMove())
 				NEW_SetMouseMoveState(eMBS);
 			break;
-		case MBF_SMART:
+		case CPythonPlayer::MBF_SMART:
 			if (CPythonApplication::Instance().IsPressed(DIK_LCONTROL) || CPythonApplication::Instance().IsPressed(DIK_RCONTROL))
 			{
 				NEW_Attack();
@@ -239,26 +240,26 @@ bool CPythonPlayer::NEW_SetMouseState(int eMBT, int eMBS)
 				NEW_SetMouseSmartState(eMBS, false);
 			}
 			break;
-		case MBF_CAMERA:
+		case CPythonPlayer::MBF_CAMERA:
 			NEW_SetMouseCameraState(eMBS);
 			break;
-		case MBF_AUTO:
+		case CPythonPlayer::MBF_AUTO:
 			NEW_SetMouseSmartState(eMBS, true);
 			break;
-		case MBF_ATTACK:
+		case CPythonPlayer::MBF_ATTACK:
 			NEW_Attack();
 			break;
-		case MBF_SKILL:
+		case CPythonPlayer::MBF_SKILL:
 			if (CPythonApplication::Instance().IsPressed(DIK_LCONTROL))
 			{
 				NEW_SetMouseCameraState(eMBS);
 			}
 			else
 			{
-				if (MBS_PRESS == eMBS)
+				if (CPythonPlayer::MBS_PRESS == eMBS)
 				{
 					__ChangeTargetToPickedInstance();
-					__UseCurrentSkill();
+					m_rkOwner.GetSkill().__UseCurrentSkill();
 				}
 			}
 			break;
@@ -267,24 +268,24 @@ bool CPythonPlayer::NEW_SetMouseState(int eMBT, int eMBS)
 	return true;
 }
 
-void CPythonPlayer::NEW_SetMouseMiddleButtonState(int eMBState)
+void CPythonPlayerInput::NEW_SetMouseMiddleButtonState(int eMBState)
 {
 	NEW_SetMouseCameraState(eMBState);
 }
 
-void CPythonPlayer::NEW_RefreshMouseWalkingDirection()
+void CPythonPlayerInput::NEW_RefreshMouseWalkingDirection()
 {
-	CInstanceBase* pkInstMain = NEW_GetMainActorPtr();
+	CInstanceBase* pkInstMain = m_rkOwner.NEW_GetMainActorPtr();
 	if (!pkInstMain) return;
 
-	switch (m_eReservedMode)
+	switch (m_rkOwner.m_eReservedMode)
 	{
-		case MODE_CLICK_ITEM:
+		case CPythonPlayer::MODE_CLICK_ITEM:
 		{
 			CPythonItem& rkIT = CPythonItem::Instance();
 
 			TPixelPosition kPPosPickedItem;
-			if (rkIT.GetGroundItemPosition(m_dwIIDReserved, &kPPosPickedItem))
+			if (rkIT.GetGroundItemPosition(m_rkOwner.m_dwIIDReserved, &kPPosPickedItem))
 			{
 				if (pkInstMain->GetBattle().NEW_GetDistanceFromDestPixelPosition(kPPosPickedItem) < 20.0f)
 				{
@@ -295,7 +296,7 @@ void CPythonPlayer::NEW_RefreshMouseWalkingDirection()
 
 					float fCurRot = pkInstMain->GetTransform().GetRotation();
 					rkNetStream.SendCharacterStatePacket(kPPosCur, fCurRot, CInstanceBase::FUNC_WAIT, 0);
-					SendClickItemPacket(m_dwIIDReserved);
+					m_rkOwner.SendClickItemPacket(m_rkOwner.m_dwIIDReserved);
 
 					pkInstMain->GetMovement().NEW_Stop();
 
@@ -314,26 +315,26 @@ void CPythonPlayer::NEW_RefreshMouseWalkingDirection()
 			break;
 		}
 
-		case MODE_CLICK_ACTOR:
+		case CPythonPlayer::MODE_CLICK_ACTOR:
 		{
 			__ReserveProcess_ClickActor();
 			break;
 		}
 
-		case MODE_CLICK_POSITION:
+		case CPythonPlayer::MODE_CLICK_POSITION:
 		{
 			if (!pkInstMain->GetMotion().isLock())
 				if (NEW_IsEmptyReservedDelayTime(CPythonApplication::Instance().GetGlobalElapsedTime()))
 				{
-					pkInstMain->GetMovement().NEW_MoveToDestPixelPositionDirection(m_kPPosReserved);
+					pkInstMain->GetMovement().NEW_MoveToDestPixelPositionDirection(m_rkOwner.m_kPPosReserved);
 					__ClearReservedAction();
 				}
 			break;
 		}
 
-		case MODE_USE_SKILL:
+		case CPythonPlayer::MODE_USE_SKILL:
 		{
-			CInstanceBase* pkInstReserved = NEW_FindActorPtr(m_dwVIDReserved);
+			CInstanceBase* pkInstReserved = m_rkOwner.NEW_FindActorPtr(m_rkOwner.m_dwVIDReserved);
 			if (pkInstReserved)
 			{
 				float fDistance = pkInstMain->GetDistance(pkInstReserved);
@@ -345,11 +346,11 @@ void CPythonPlayer::NEW_RefreshMouseWalkingDirection()
 					fDistance -= 200.0f; // TEMP: 일단 하드 코딩 처리. 정석적으로는 바운드 스피어를 고려해야함
 				}
 
-				if (fDistance < float(m_dwSkillRangeReserved))
+				if (fDistance < float(m_rkOwner.m_dwSkillRangeReserved))
 				{
 					// 접근 도중 Target 이 바뀌어 있을 수도 있다 - [levites]
-					SetTarget(m_dwVIDReserved);
-					if (__UseSkill(m_dwSkillSlotIndexReserved))
+					SetTarget(m_rkOwner.m_dwVIDReserved);
+					if (m_rkOwner.GetSkill().__UseSkill(m_rkOwner.m_dwSkillSlotIndexReserved))
 						__ClearReservedAction();
 				}
 				else
@@ -368,22 +369,22 @@ void CPythonPlayer::NEW_RefreshMouseWalkingDirection()
 			break;
 	}
 
-	if (m_isSmtMov)
+	if (m_rkOwner.m_isSmtMov)
 		__OnPressSmart(*pkInstMain, false);
 
-	if (m_isDirMov)
+	if (m_rkOwner.m_isDirMov)
 		NEW_MoveToMouseScreenDirection();
 
-	if (m_isDirKey)
-		NEW_SetMultiDirKeyState(m_isLeft, m_isRight, m_isUp, m_isDown);
+	if (m_rkOwner.m_isDirKey)
+		NEW_SetMultiDirKeyState(m_rkOwner.m_isLeft, m_rkOwner.m_isRight, m_rkOwner.m_isUp, m_rkOwner.m_isDown);
 
-	if (m_isAtkKey)
+	if (m_rkOwner.m_isAtkKey)
 		NEW_Attack();
 
-	m_iComboOld = pkInstMain->GetBattle().GetComboIndex();
+	m_rkOwner.m_iComboOld = pkInstMain->GetBattle().GetComboIndex();
 }
 
-int32_t CPythonPlayer::__IsRightButtonSkillMode()
+int32_t CPythonPlayerInput::__IsRightButtonSkillMode()
 {
-	return MBF_SKILL == m_aeMBFButton[MBT_RIGHT];
+	return CPythonPlayer::MBF_SKILL == m_rkOwner.m_aeMBFButton[CPythonPlayer::MBT_RIGHT];
 }
