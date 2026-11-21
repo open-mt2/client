@@ -2,35 +2,40 @@
 #include <Neoeter/Render/GrpMath.h>
 
 #include <Client/Game/ActorInstance.h>
+#include <Client/Game/CActorInstanceCollisionDetection.h>
 
-void CActorInstance::__InitializeCollisionData()
+CActorInstanceCollisionDetection::CActorInstanceCollisionDetection(CActorInstance& rkOwner) : m_rkOwner(rkOwner)
 {
-	m_canSkipCollision = false;
 }
 
-void CActorInstance::EnableSkipCollision()
+void CActorInstanceCollisionDetection::__InitializeCollisionData()
 {
-	m_canSkipCollision = true;
+	m_rkOwner.m_canSkipCollision = false;
 }
 
-void CActorInstance::DisableSkipCollision()
+void CActorInstanceCollisionDetection::EnableSkipCollision()
 {
-	m_canSkipCollision = false;
+	m_rkOwner.m_canSkipCollision = true;
 }
 
-bool CActorInstance::CanSkipCollision()
+void CActorInstanceCollisionDetection::DisableSkipCollision()
 {
-	return m_canSkipCollision;
+	m_rkOwner.m_canSkipCollision = false;
 }
 
-void CActorInstance::UpdatePointInstance()
+bool CActorInstanceCollisionDetection::CanSkipCollision()
 {
-	TCollisionPointInstanceListIterator itor;
-	for (itor = m_DefendingPointInstanceList.begin(); itor != m_DefendingPointInstanceList.end(); ++itor)
-		UpdatePointInstance(&(*itor));
+	return m_rkOwner.m_canSkipCollision;
 }
 
-void CActorInstance::UpdatePointInstance(TCollisionPointInstance* pPointInstance)
+void CActorInstanceCollisionDetection::UpdatePointInstance()
+{
+	CActorInstance::TCollisionPointInstanceListIterator itor;
+	for (itor = m_rkOwner.m_DefendingPointInstanceList.begin(); itor != m_rkOwner.m_DefendingPointInstanceList.end(); ++itor)
+		m_rkOwner.UpdatePointInstance(&(*itor));
+}
+
+void CActorInstance::UpdatePointInstance(CActorInstance::TCollisionPointInstance* pPointInstance)
 {
 	if (!pPointInstance)
 	{
@@ -93,38 +98,38 @@ void CActorInstance::UpdatePointInstance(TCollisionPointInstance* pPointInstance
 	}
 }
 
-void CActorInstance::UpdateAdvancingPointInstance()
+void CActorInstanceCollisionDetection::UpdateAdvancingPointInstance()
 {
 	// 말을 탔을 경우 사람은 이동값을 가지고 있지 않기 때문에 말로 부터 얻어와야 한다 - [levites]
-	D3DXVECTOR3 v3Movement = m_v3Movement;
-	if (m_pkHorse)
-		v3Movement = m_pkHorse->m_v3Movement;
+	D3DXVECTOR3 v3Movement = m_rkOwner.m_v3Movement;
+	if (m_rkOwner.m_pkHorse)
+		v3Movement = m_rkOwner.m_pkHorse->m_v3Movement;
 
 	// 말은 업데이트 하지 않아도 된다 - [levites]
-	if (m_pkHorse)
-		m_pkHorse->UpdateAdvancingPointInstance();
+	if (m_rkOwner.m_pkHorse)
+		m_rkOwner.m_pkHorse->GetCollisionDetection().UpdateAdvancingPointInstance();
 
 	D3DXMATRIX matPoint;
 	D3DXMATRIX matCenter;
 
-	TCollisionPointInstanceListIterator itor = m_BodyPointInstanceList.begin();
-	for (; itor != m_BodyPointInstanceList.end(); ++itor)
+	CActorInstance::TCollisionPointInstanceListIterator itor = m_rkOwner.m_BodyPointInstanceList.begin();
+	for (; itor != m_rkOwner.m_BodyPointInstanceList.end(); ++itor)
 	{
-		TCollisionPointInstance& rInstance = *itor;
+		CActorInstance::TCollisionPointInstance& rInstance = *itor;
 
 		if (rInstance.isAttached)
 		{
-			if (rInstance.dwModelIndex >= m_LODControllerVector.size())
+			if (rInstance.dwModelIndex >= m_rkOwner.m_LODControllerVector.size())
 			{
-				Tracenf("CActorInstance::UpdateAdvancingPointInstance - rInstance.dwModelIndex=%d >= m_LODControllerVector.size()=%d",
-						rInstance.dwModelIndex, m_LODControllerVector.size());
+				Tracenf("CActorInstance::UpdateAdvancingPointInstance - rInstance.dwModelIndex=%d >= m_rkOwner.m_LODControllerVector.size()=%d",
+						rInstance.dwModelIndex, m_rkOwner.m_LODControllerVector.size());
 				continue;
 			}
 
-			CGrannyLODController* pGrnLODController = m_LODControllerVector[rInstance.dwModelIndex];
+			CGrannyLODController* pGrnLODController = m_rkOwner.m_LODControllerVector[rInstance.dwModelIndex];
 			if (!pGrnLODController)
 			{
-				Tracenf("CActorInstance::UpdateAdvancingPointInstance - m_LODControllerVector[rInstance.dwModelIndex=%d] is NULL", rInstance.dwModelIndex);
+				Tracenf("CActorInstance::UpdateAdvancingPointInstance - m_rkOwner.m_LODControllerVector[rInstance.dwModelIndex=%d] is NULL", rInstance.dwModelIndex);
 				continue;
 			}
 
@@ -136,11 +141,11 @@ void CActorInstance::UpdateAdvancingPointInstance()
 			}
 
 			matCenter = *(D3DXMATRIX*)pModelInstance->GetBoneMatrixPointer(rInstance.dwBoneIndex);
-			matCenter *= m_worldMatrix;
+			matCenter *= m_rkOwner.m_worldMatrix;
 		}
 		else
 		{
-			matCenter = m_worldMatrix;
+			matCenter = m_rkOwner.m_worldMatrix;
 		}
 
 		// Update Collision Sphere
@@ -165,7 +170,7 @@ void CActorInstance::UpdateAdvancingPointInstance()
 	}
 }
 
-bool CActorInstance::CheckCollisionDetection(const CDynamicSphereInstanceVector* c_pAttackingSphereVector, D3DXVECTOR3* pv3Position)
+bool CActorInstanceCollisionDetection::CheckCollisionDetection(const CDynamicSphereInstanceVector* c_pAttackingSphereVector, D3DXVECTOR3* pv3Position)
 {
 	if (!c_pAttackingSphereVector)
 	{
@@ -173,8 +178,8 @@ bool CActorInstance::CheckCollisionDetection(const CDynamicSphereInstanceVector*
 		return false;
 	}
 
-	TCollisionPointInstanceListIterator itor;
-	for (itor = m_DefendingPointInstanceList.begin(); itor != m_DefendingPointInstanceList.end(); ++itor)
+	CActorInstance::TCollisionPointInstanceListIterator itor;
+	for (itor = m_rkOwner.m_DefendingPointInstanceList.begin(); itor != m_rkOwner.m_DefendingPointInstanceList.end(); ++itor)
 	{
 		const CDynamicSphereInstanceVector* c_pDefendingSphereVector = &(*itor).SphereInstanceVector;
 
@@ -196,7 +201,7 @@ bool CActorInstance::CheckCollisionDetection(const CDynamicSphereInstanceVector*
 	return false;
 }
 
-bool CActorInstance::CreateCollisionInstancePiece(uint32_t dwAttachingModelIndex, const NRaceData::TAttachingData* c_pAttachingData, TCollisionPointInstance* pPointInstance)
+bool CActorInstance::CreateCollisionInstancePiece(uint32_t dwAttachingModelIndex, const NRaceData::TAttachingData* c_pAttachingData, CActorInstance::TCollisionPointInstance* pPointInstance)
 {
 	if (!c_pAttachingData)
 	{
@@ -263,20 +268,20 @@ bool CActorInstance::CreateCollisionInstancePiece(uint32_t dwAttachingModelIndex
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-int32_t CActorInstance::__SplashAttackProcess(CActorInstance& rVictim)
+int32_t CActorInstanceCollisionDetection::__SplashAttackProcess(CActorInstance& rVictim)
 {
-	D3DXVECTOR3 v3Distance(rVictim.m_x - m_x, rVictim.m_z - m_z, rVictim.m_z - m_z);
+	D3DXVECTOR3 v3Distance(rVictim.m_x - m_rkOwner.m_x, rVictim.m_z - m_rkOwner.m_z, rVictim.m_z - m_rkOwner.m_z);
 	float fDistance = D3DXVec3LengthSq(&v3Distance);
 	if (fDistance >= 1000.0f * 1000.0f)
 		return FALSE;
 
 	// Check Distance
-	if (!__IsInSplashTime())
+	if (!m_rkOwner.GetBattle().__IsInSplashTime())
 		return FALSE;
 
-	const CRaceMotionData::TMotionAttackingEventData* c_pAttackingEvent = m_kSplashArea.c_pAttackingEvent;
+	const CRaceMotionData::TMotionAttackingEventData* c_pAttackingEvent = m_rkOwner.m_kSplashArea.c_pAttackingEvent;
 	const NRaceData::TAttackData& c_rAttackData = c_pAttackingEvent->AttackData;
-	THittedInstanceMap& rHittedInstanceMap = m_kSplashArea.HittedInstanceMap;
+	CActorInstance::THittedInstanceMap& rHittedInstanceMap = m_rkOwner.m_kSplashArea.HittedInstanceMap;
 
 	// NOTE : 이미 때렸다면 때릴 수 없음
 	if (rHittedInstanceMap.end() != rHittedInstanceMap.find(&rVictim))
@@ -288,15 +293,15 @@ int32_t CActorInstance::__SplashAttackProcess(CActorInstance& rVictim)
 	if (NRaceData::ATTACK_TYPE_SNIPE == c_rAttackData.iAttackType)
 	{
 		// Target 이 PC 라면..
-		if (__IsFlyTargetPC())
+		if (m_rkOwner.__IsFlyTargetPC())
 			// 다른 객체는 때릴 수 없다
-			if (!__IsSameFlyTarget(&rVictim))
+			if (!m_rkOwner.__IsSameFlyTarget(&rVictim))
 				return FALSE;
 
 		/*
-				if (IsFlyTargetObject())
+				if (m_rkOwner.IsFlyTargetObject())
 				{
-					CActorInstance * pActorInstance = (CActorInstance *)m_kFlyTarget.GetFlyTarget();
+					CActorInstance * pActorInstance = (CActorInstance *)m_rkOwner.m_kFlyTarget.GetFlyTarget();
 
 					// NOTE : Target 이 PC 일때는 한명만 때릴 수 있다.
 					if (pActorInstance->IsPC())
@@ -307,9 +312,9 @@ int32_t CActorInstance::__SplashAttackProcess(CActorInstance& rVictim)
 	}
 
 	D3DXVECTOR3 v3HitPosition;
-	if (rVictim.CheckCollisionDetection(&m_kSplashArea.SphereInstanceVector, &v3HitPosition))
+	if (rVictim.GetCollisionDetection().CheckCollisionDetection(&m_rkOwner.m_kSplashArea.SphereInstanceVector, &v3HitPosition))
 	{
-		rHittedInstanceMap.insert(std::make_pair(&rVictim, GetLocalTime() + c_rAttackData.fInvisibleTime));
+		rHittedInstanceMap.insert(std::make_pair(&rVictim, m_rkOwner.GetLocalTime() + c_rAttackData.fInvisibleTime));
 
 		int iCurrentHitCount = rHittedInstanceMap.size();
 		int iMaxHitCount = (0 == c_rAttackData.iHitLimitCount ? 16 : c_rAttackData.iHitLimitCount);
@@ -321,19 +326,19 @@ int32_t CActorInstance::__SplashAttackProcess(CActorInstance& rVictim)
 			return FALSE;
 		}
 
-		NEW_SetAtkPixelPosition(NEW_GetCurPixelPositionRef());
-		__ProcessDataAttackSuccess(c_rAttackData, rVictim, v3HitPosition, m_kSplashArea.uSkill, m_kSplashArea.isEnableHitProcess);
+		m_rkOwner.NEW_SetAtkPixelPosition(m_rkOwner.NEW_GetCurPixelPositionRef());
+		m_rkOwner.GetBattle().__ProcessDataAttackSuccess(c_rAttackData, rVictim, v3HitPosition, m_rkOwner.m_kSplashArea.uSkill, m_rkOwner.m_kSplashArea.isEnableHitProcess);
 		return TRUE;
 	}
 
 	return FALSE;
 }
 
-int32_t CActorInstance::__NormalAttackProcess(CActorInstance& rVictim)
+int32_t CActorInstanceCollisionDetection::__NormalAttackProcess(CActorInstance& rVictim)
 {
 	// Check Distance
 	// NOTE - 일단 근접 체크만 하고 있음
-	D3DXVECTOR3 v3Distance(rVictim.m_x - m_x, rVictim.m_z - m_z, rVictim.m_z - m_z);
+	D3DXVECTOR3 v3Distance(rVictim.m_x - m_rkOwner.m_x, rVictim.m_z - m_rkOwner.m_z, rVictim.m_z - m_rkOwner.m_z);
 	float fDistance = D3DXVec3LengthSq(&v3Distance);
 
 	extern bool IS_HUGE_RACE(unsigned int vnum);
@@ -348,13 +353,13 @@ int32_t CActorInstance::__NormalAttackProcess(CActorInstance& rVictim)
 			return FALSE;
 	}
 
-	if (!isValidAttacking())
+	if (!m_rkOwner.GetBattle().isValidAttacking())
 		return FALSE;
 
 	const float c_fAttackRadius = 20.0f;
-	const NRaceData::TMotionAttackData* pad = m_pkCurRaceMotionData->GetMotionAttackDataPointer();
+	const NRaceData::TMotionAttackData* pad = m_rkOwner.m_pkCurRaceMotionData->GetMotionAttackDataPointer();
 
-	const float motiontime = GetAttackingElapsedTime();
+	const float motiontime = m_rkOwner.GetBattle().GetAttackingElapsedTime();
 
 	NRaceData::THitDataContainer::const_iterator itorHitData = pad->HitDataContainer.begin();
 	for (; itorHitData != pad->HitDataContainer.end(); ++itorHitData)
@@ -362,15 +367,15 @@ int32_t CActorInstance::__NormalAttackProcess(CActorInstance& rVictim)
 		const NRaceData::THitData& c_rHitData = *itorHitData;
 
 		// NOTE : 이미 맞았는지 체크
-		THitDataMap::iterator itHitData = m_HitDataMap.find(&c_rHitData);
-		if (itHitData != m_HitDataMap.end())
+		CActorInstance::THitDataMap::iterator itHitData = m_rkOwner.m_HitDataMap.find(&c_rHitData);
+		if (itHitData != m_rkOwner.m_HitDataMap.end())
 		{
-			THittedInstanceMap& rHittedInstanceMap = itHitData->second;
+			CActorInstance::THittedInstanceMap& rHittedInstanceMap = itHitData->second;
 
-			THittedInstanceMap::iterator itInstance;
+			CActorInstance::THittedInstanceMap::iterator itInstance;
 			if ((itInstance = rHittedInstanceMap.find(&rVictim)) != rHittedInstanceMap.end())
 			{
-				if (pad->iMotionType == NRaceData::MOTION_TYPE_COMBO || itInstance->second > GetLocalTime())
+				if (pad->iMotionType == NRaceData::MOTION_TYPE_COMBO || itInstance->second > m_rkOwner.GetLocalTime())
 					continue;
 			}
 		}
@@ -378,8 +383,8 @@ int32_t CActorInstance::__NormalAttackProcess(CActorInstance& rVictim)
 		NRaceData::THitTimePositionMap::const_iterator range_start, range_end;
 		range_start = c_rHitData.mapHitPosition.lower_bound(motiontime - CTimer::Instance().GetElapsedSecond());
 		range_end = c_rHitData.mapHitPosition.upper_bound(motiontime);
-		float c = cosf(D3DXToRadian(GetRotation()));
-		float s = sinf(D3DXToRadian(GetRotation()));
+		float c = cosf(D3DXToRadian(m_rkOwner.GetRotation()));
+		float s = sinf(D3DXToRadian(m_rkOwner.GetRotation()));
 
 		for (; range_start != range_end; ++range_start)
 		{
@@ -390,23 +395,23 @@ int32_t CActorInstance::__NormalAttackProcess(CActorInstance& rVictim)
 			dsi.fRadius = c_fAttackRadius;
 			{
 				D3DXVECTOR3 v3SrcDir = dsiSrc.v3Position - dsiSrc.v3LastPosition;
-				v3SrcDir *= __GetReachScale();
+				v3SrcDir *= m_rkOwner.__GetReachScale();
 
 				const D3DXVECTOR3& v3Src = dsiSrc.v3LastPosition + v3SrcDir;
 				D3DXVECTOR3& v3Dst = dsi.v3Position;
 				v3Dst.x = v3Src.x * c - v3Src.y * s;
 				v3Dst.y = v3Src.x * s + v3Src.y * c;
-				v3Dst += GetPosition();
+				v3Dst += m_rkOwner.GetPosition();
 			}
 			{
 				const D3DXVECTOR3& v3Src = dsiSrc.v3LastPosition;
 				D3DXVECTOR3& v3Dst = dsi.v3LastPosition;
 				v3Dst.x = v3Src.x * c - v3Src.y * s;
 				v3Dst.y = v3Src.x * s + v3Src.y * c;
-				v3Dst += GetPosition();
+				v3Dst += m_rkOwner.GetPosition();
 			}
 
-			TCollisionPointInstanceList::iterator cpit;
+			CActorInstance::TCollisionPointInstanceList::iterator cpit;
 			for (cpit = rVictim.m_DefendingPointInstanceList.begin(); cpit != rVictim.m_DefendingPointInstanceList.end(); ++cpit)
 			{
 				int index = 0;
@@ -417,20 +422,20 @@ int32_t CActorInstance::__NormalAttackProcess(CActorInstance& rVictim)
 					const CDynamicSphereInstance& sub = *dsit;
 					if (DetectCollisionDynamicZCylinderVSDynamicZCylinder(dsi, sub))
 					{
-						THitDataMap::iterator itHitData = m_HitDataMap.find(&c_rHitData);
-						if (itHitData == m_HitDataMap.end())
+						CActorInstance::THitDataMap::iterator itHitData = m_rkOwner.m_HitDataMap.find(&c_rHitData);
+						if (itHitData == m_rkOwner.m_HitDataMap.end())
 						{
-							THittedInstanceMap HittedInstanceMap;
-							HittedInstanceMap.insert(std::make_pair(&rVictim, GetLocalTime() + pad->fInvisibleTime));
-							// HittedInstanceMap.insert(make_pair(&rVictim, GetLocalTime()+HIT_COOL_TIME));
-							m_HitDataMap.insert(make_pair(&c_rHitData, HittedInstanceMap));
+							CActorInstance::THittedInstanceMap HittedInstanceMap;
+							HittedInstanceMap.insert(std::make_pair(&rVictim, m_rkOwner.GetLocalTime() + pad->fInvisibleTime));
+							// HittedInstanceMap.insert(make_pair(&rVictim, m_rkOwner.GetLocalTime()+HIT_COOL_TIME));
+							m_rkOwner.m_HitDataMap.insert(make_pair(&c_rHitData, HittedInstanceMap));
 
 							// Tracef(" ----------- First Hit\n");
 						}
 						else
 						{
-							itHitData->second.insert(std::make_pair(&rVictim, GetLocalTime() + pad->fInvisibleTime));
-							// itHitData->second.insert(make_pair(&rVictim, GetLocalTime()+HIT_COOL_TIME));
+							itHitData->second.insert(std::make_pair(&rVictim, m_rkOwner.GetLocalTime() + pad->fInvisibleTime));
+							// itHitData->second.insert(make_pair(&rVictim, m_rkOwner.GetLocalTime()+HIT_COOL_TIME));
 
 							// Tracef(" ----------- Next Hit : %d\n", itHitData->second.size());
 
@@ -454,16 +459,16 @@ int32_t CActorInstance::__NormalAttackProcess(CActorInstance& rVictim)
 							}
 						}
 
-						D3DXVECTOR3 v3HitPosition = (GetPosition() + rVictim.GetPosition()) * 0.5f;
+						D3DXVECTOR3 v3HitPosition = (m_rkOwner.GetPosition() + rVictim.GetPosition()) * 0.5f;
 
 						// #0000780: [M2KR] 수룡 타격구 문제
 						extern bool IS_HUGE_RACE(unsigned int vnum);
 						if (IS_HUGE_RACE(rVictim.GetRace()))
 						{
-							v3HitPosition = (GetPosition() + sub.v3Position) * 0.5f;
+							v3HitPosition = (m_rkOwner.GetPosition() + sub.v3Position) * 0.5f;
 						}
 
-						__ProcessDataAttackSuccess(*pad, rVictim, v3HitPosition, m_kCurMotNode.uSkill);
+						m_rkOwner.GetBattle().__ProcessDataAttackSuccess(*pad, rVictim, v3HitPosition, m_rkOwner.m_kCurMotNode.uSkill);
 						return TRUE;
 					}
 				}
@@ -474,9 +479,9 @@ int32_t CActorInstance::__NormalAttackProcess(CActorInstance& rVictim)
 	return FALSE;
 }
 
-int32_t CActorInstance::AttackingProcess(CActorInstance& rVictim)
+int32_t CActorInstanceCollisionDetection::AttackingProcess(CActorInstance& rVictim)
 {
-	if (rVictim.__isInvisible())
+	if (rVictim.GetBattle().__isInvisible())
 		return FALSE;
 
 	if (__SplashAttackProcess(rVictim))
@@ -488,13 +493,13 @@ int32_t CActorInstance::AttackingProcess(CActorInstance& rVictim)
 	return FALSE;
 }
 
-int32_t CActorInstance::TestPhysicsBlendingCollision(CActorInstance& rVictim)
+int32_t CActorInstanceCollisionDetection::TestPhysicsBlendingCollision(CActorInstance& rVictim)
 {
 	if (rVictim.IsDead())
 		return FALSE;
 
 	TPixelPosition kPPosLast;
-	GetBlendingPosition(&kPPosLast);
+	m_rkOwner.GetBattle().GetBlendingPosition(&kPPosLast);
 
 	D3DXVECTOR3 v3Distance = D3DXVECTOR3(rVictim.m_x - kPPosLast.x, rVictim.m_y - kPPosLast.y, rVictim.m_z - kPPosLast.z);
 	float fDistance = D3DXVec3LengthSq(&v3Distance);
@@ -503,27 +508,27 @@ int32_t CActorInstance::TestPhysicsBlendingCollision(CActorInstance& rVictim)
 
 	// NOTE : 공격 중일때는 Defending Sphere로 Collision Check를 합니다.
 	// NOTE : Wait로 블렌딩 되는 도중에 뚫고 들어가는 문제가 있어서.. - [levites]
-	TCollisionPointInstanceList* pMainList;
-	TCollisionPointInstanceList* pVictimList;
-	if (isAttacking() || IsWaiting())
+	CActorInstance::TCollisionPointInstanceList* pMainList;
+	CActorInstance::TCollisionPointInstanceList* pVictimList;
+	if (m_rkOwner.GetBattle().isAttacking() || m_rkOwner.IsWaiting())
 	{
-		pMainList = &m_DefendingPointInstanceList;
+		pMainList = &m_rkOwner.m_DefendingPointInstanceList;
 		pVictimList = &rVictim.m_DefendingPointInstanceList;
 	}
 	else
 	{
-		pMainList = &m_BodyPointInstanceList;
+		pMainList = &m_rkOwner.m_BodyPointInstanceList;
 		pVictimList = &rVictim.m_BodyPointInstanceList;
 	}
 
 	TPixelPosition kPDelta;
-	m_PhysicsObject.GetLastPosition(&kPDelta);
+	m_rkOwner.m_PhysicsObject.GetLastPosition(&kPDelta);
 
 	D3DXVECTOR3 prevLastPosition, prevPosition;
 	const int nSubCheckCount = 50;
 
-	TCollisionPointInstanceListIterator itorMain = pMainList->begin();
-	TCollisionPointInstanceListIterator itorVictim = pVictimList->begin();
+	CActorInstance::TCollisionPointInstanceListIterator itorMain = pMainList->begin();
+	CActorInstance::TCollisionPointInstanceListIterator itorVictim = pVictimList->begin();
 	for (; itorMain != pMainList->end(); ++itorMain)
 	{
 		for (; itorVictim != pVictimList->end(); ++itorVictim)
@@ -570,12 +575,12 @@ int32_t CActorInstance::TestPhysicsBlendingCollision(CActorInstance& rVictim)
 	return FALSE;
 }
 
-int32_t CActorInstance::TestActorCollision(CActorInstance& rVictim)
+int32_t CActorInstanceCollisionDetection::TestActorCollision(CActorInstance& rVictim)
 {
 	/*
-		if (m_pkHorse)
+		if (m_rkOwner.m_pkHorse)
 		{
-			if (m_pkHorse->TestActorCollision(rVictim))
+			if (m_rkOwner.m_pkHorse->TestActorCollision(rVictim))
 				return TRUE;
 
 			return FALSE;
@@ -590,28 +595,28 @@ int32_t CActorInstance::TestActorCollision(CActorInstance& rVictim)
 	//        프레임 스킵시나 대상 오브젝트의 크기가 클경우 문제가 생길 여지가 있음
 	//        캐릭터가 자신의 Body Sphere Radius 보다 더 크게 이동했는지를 체크하고,
 	//        만약 그렇지 않다면 거리로 체크해서 걸러준다.
-	D3DXVECTOR3 v3Distance = D3DXVECTOR3(rVictim.m_x - m_x, rVictim.m_y - m_y, rVictim.m_z - m_z);
+	D3DXVECTOR3 v3Distance = D3DXVECTOR3(rVictim.m_x - m_rkOwner.m_x, rVictim.m_y - m_rkOwner.m_y, rVictim.m_z - m_rkOwner.m_z);
 	float fDistance = D3DXVec3LengthSq(&v3Distance);
 	if (fDistance > 800.0f * 800.0f)
 		return FALSE;
 
 	// NOTE : 공격 중일때는 Defending Sphere로 Collision Check를 합니다.
 	// NOTE : Wait로 블렌딩 되는 도중에 뚫고 들어가는 문제가 있어서.. - [levites]
-	TCollisionPointInstanceList* pMainList;
-	TCollisionPointInstanceList* pVictimList;
-	if (isAttacking() || IsWaiting())
+	CActorInstance::TCollisionPointInstanceList* pMainList;
+	CActorInstance::TCollisionPointInstanceList* pVictimList;
+	if (m_rkOwner.GetBattle().isAttacking() || m_rkOwner.IsWaiting())
 	{
-		pMainList = &m_DefendingPointInstanceList;
+		pMainList = &m_rkOwner.m_DefendingPointInstanceList;
 		pVictimList = &rVictim.m_DefendingPointInstanceList;
 	}
 	else
 	{
-		pMainList = &m_BodyPointInstanceList;
+		pMainList = &m_rkOwner.m_BodyPointInstanceList;
 		pVictimList = &rVictim.m_BodyPointInstanceList;
 	}
 
-	TCollisionPointInstanceListIterator itorMain = pMainList->begin();
-	TCollisionPointInstanceListIterator itorVictim = pVictimList->begin();
+	CActorInstance::TCollisionPointInstanceListIterator itorMain = pMainList->begin();
+	CActorInstance::TCollisionPointInstanceListIterator itorVictim = pVictimList->begin();
 	for (; itorMain != pMainList->end(); ++itorMain)
 		for (; itorVictim != pVictimList->end(); ++itorVictim)
 		{
@@ -639,26 +644,26 @@ int32_t CActorInstance::TestActorCollision(CActorInstance& rVictim)
 	return FALSE;
 }
 
-bool CActorInstance::AvoidObject(const CGraphicObjectInstance& c_rkBGObj)
+bool CActorInstanceCollisionDetection::AvoidObject(const CGraphicObjectInstance& c_rkBGObj)
 {
 #ifdef __MOVIE_MODE__
 	if (IsMovieMode())
 		return false;
 #endif
 
-	if (this == &c_rkBGObj)
+	if (&m_rkOwner == &c_rkBGObj)
 		return false;
 
 	if (!__TestObjectCollision(&c_rkBGObj))
 		return false;
 
-	__AdjustCollisionMovement(&c_rkBGObj);
+	m_rkOwner.__AdjustCollisionMovement(&c_rkBGObj);
 	return true;
 }
 
-bool CActorInstance::IsBlockObject(const CGraphicObjectInstance& c_rkBGObj)
+bool CActorInstanceCollisionDetection::IsBlockObject(const CGraphicObjectInstance& c_rkBGObj)
 {
-	if (this == &c_rkBGObj)
+	if (&m_rkOwner == &c_rkBGObj)
 		return false;
 
 	if (!__TestObjectCollision(&c_rkBGObj))
@@ -667,35 +672,35 @@ bool CActorInstance::IsBlockObject(const CGraphicObjectInstance& c_rkBGObj)
 	return true;
 }
 
-void CActorInstance::BlockMovement()
+void CActorInstanceCollisionDetection::BlockMovement()
 {
-	if (m_pkHorse)
+	if (m_rkOwner.m_pkHorse)
 	{
-		m_pkHorse->__InitializeMovement();
+		m_rkOwner.m_pkHorse->__InitializeMovement();
 		return;
 	}
 
-	__InitializeMovement();
+	m_rkOwner.__InitializeMovement();
 }
 
-int32_t CActorInstance::__TestObjectCollision(const CGraphicObjectInstance* c_pObjectInstance)
+int32_t CActorInstanceCollisionDetection::__TestObjectCollision(const CGraphicObjectInstance* c_pObjectInstance)
 {
-	if (m_pkHorse)
+	if (m_rkOwner.m_pkHorse)
 	{
-		if (m_pkHorse->__TestObjectCollision(c_pObjectInstance))
+		if (m_rkOwner.m_pkHorse->GetCollisionDetection().__TestObjectCollision(c_pObjectInstance))
 			return TRUE;
 
 		return FALSE;
 	}
 
-	if (m_canSkipCollision)
+	if (m_rkOwner.m_canSkipCollision)
 		return FALSE;
 
-	if (m_v3Movement.x == 0.0f && m_v3Movement.y == 0.0f && m_v3Movement.z == 0.0f)
+	if (m_rkOwner.m_v3Movement.x == 0.0f && m_rkOwner.m_v3Movement.y == 0.0f && m_rkOwner.m_v3Movement.z == 0.0f)
 		return FALSE;
 
-	TCollisionPointInstanceListIterator itorMain = m_BodyPointInstanceList.begin();
-	for (; itorMain != m_BodyPointInstanceList.end(); ++itorMain)
+	CActorInstance::TCollisionPointInstanceListIterator itorMain = m_rkOwner.m_BodyPointInstanceList.begin();
+	for (; itorMain != m_rkOwner.m_BodyPointInstanceList.end(); ++itorMain)
 	{
 		const CDynamicSphereInstanceVector& c_rMainSphereVector = (*itorMain).SphereInstanceVector;
 		for (uint32_t i = 0; i < c_rMainSphereVector.size(); ++i)
@@ -721,7 +726,7 @@ int32_t CActorInstance::__TestObjectCollision(const CGraphicObjectInstance* c_pO
 
 bool CActorInstance::TestCollisionWithDynamicSphere(const CDynamicSphereInstance& dsi)
 {
-	TCollisionPointInstanceListIterator itorMain = m_BodyPointInstanceList.begin();
+	CActorInstance::TCollisionPointInstanceListIterator itorMain = m_BodyPointInstanceList.begin();
 	for (; itorMain != m_BodyPointInstanceList.end(); ++itorMain)
 	{
 		const CDynamicSphereInstanceVector& c_rMainSphereVector = (*itorMain).SphereInstanceVector;

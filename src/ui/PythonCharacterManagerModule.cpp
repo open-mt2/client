@@ -597,7 +597,7 @@ PyObject* chrmgrSetHorseDustGap(PyObject* poSelf, PyObject* poArgs)
 PyObject* chrmgrToggleDirectionLine(PyObject* poSelf, PyObject* poArgs)
 {
 	static bool s_isVisible = true;
-	CActorInstance::ShowDirectionLine(s_isVisible);
+	CActorInstanceRender::ShowDirectionLine(s_isVisible);
 
 	s_isVisible = !s_isVisible;
 	return Py_BuildNone();

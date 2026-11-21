@@ -217,7 +217,7 @@ bool CInstanceBaseBattle::NEW_GetInstanceVectorInFanRange(float fSkillDistance, 
 				continue;
 
 			// 2004.07.21.levites - 비파부 다중 타겟 지원
-			if (m_rkOwner.m_GraphicThingInstance.IsClickableDistanceDestInstance(pkInstEach->m_GraphicThingInstance, fSkillDistance))
+			if (m_rkOwner.m_GraphicThingInstance.GetBattle().IsClickableDistanceDestInstance(pkInstEach->m_GraphicThingInstance, fSkillDistance))
 			{
 				float fEachInstDistance = min(NEW_GetDistanceFromDestInstance(*pkInstEach), HALF_FAN_ROT_MIN_DISTANCE);
 				float fEachInstDirRot = NEW_GetRotationFromDestInstance(*pkInstEach);
@@ -264,7 +264,7 @@ bool CInstanceBaseBattle::NEW_GetInstanceVectorInCircleRange(float fSkillDistanc
 			if (!m_rkOwner.IsAttackableInstance(*pkInstEach))
 				continue;
 
-			if (m_rkOwner.m_GraphicThingInstance.IsClickableDistanceDestInstance(pkInstEach->m_GraphicThingInstance, fSkillDistance))
+			if (m_rkOwner.m_GraphicThingInstance.GetBattle().IsClickableDistanceDestInstance(pkInstEach->m_GraphicThingInstance, fSkillDistance))
 			{
 				float fEachInstDistance = NEW_GetDistanceFromDestInstance(*pkInstEach);
 				kMap_pkInstNear.insert(std::make_pair(fEachInstDistance, pkInstEach));
@@ -307,7 +307,7 @@ int32_t CInstanceBaseBattle::NEW_IsClickableDistanceDestInstance(CInstanceBase& 
 	if (rkInstDst.IsResource())
 		fDistance = 100.0f;
 
-	return m_rkOwner.m_GraphicThingInstance.IsClickableDistanceDestInstance(rkInstDst.m_GraphicThingInstance, fDistance);
+	return m_rkOwner.m_GraphicThingInstance.GetBattle().IsClickableDistanceDestInstance(rkInstDst.m_GraphicThingInstance, fDistance);
 }
 
 bool CInstanceBaseBattle::NEW_UseSkill(uint32_t uSkill, uint32_t uMot, uint32_t uMotLoopCount, bool isMovingSkill)
@@ -339,12 +339,12 @@ bool CInstanceBaseBattle::NEW_UseSkill(uint32_t uSkill, uint32_t uMot, uint32_t 
 	float fCurRot = m_rkOwner.m_GraphicThingInstance.GetTargetRotation();
 	m_rkOwner.GetMovement().SetAdvancingRotation(fCurRot);
 
-	m_rkOwner.m_GraphicThingInstance.InterceptOnceMotion(CRaceMotionData::NAME_SKILL + uMot, 0.1f, uSkill, 1.0f);
+	m_rkOwner.m_GraphicThingInstance.GetMotion().InterceptOnceMotion(CRaceMotionData::NAME_SKILL + uMot, 0.1f, uSkill, 1.0f);
 
 	m_rkOwner.m_GraphicThingInstance.__OnUseSkill(uMot, uMotLoopCount, isMovingSkill);
 
 	if (uMotLoopCount > 0)
-		m_rkOwner.m_GraphicThingInstance.SetMotionLoopCount(uMotLoopCount);
+		m_rkOwner.m_GraphicThingInstance.GetMotion().SetMotionLoopCount(uMotLoopCount);
 
 	return true;
 }
@@ -414,7 +414,7 @@ bool CInstanceBaseBattle::NEW_AttackToDestInstanceDirection(CInstanceBase& rkIns
 
 void CInstanceBaseBattle::AttackProcess()
 {
-	if (!m_rkOwner.m_GraphicThingInstance.CanCheckAttacking())
+	if (!m_rkOwner.m_GraphicThingInstance.GetBattle().CanCheckAttacking())
 		return;
 
 	CInstanceBase* pkInstLast = NULL;
@@ -446,25 +446,25 @@ void CInstanceBaseBattle::AttackProcess()
 
 void CInstanceBaseBattle::InputNormalAttack(float fAtkDirRot)
 {
-	m_rkOwner.m_GraphicThingInstance.InputNormalAttackCommand(fAtkDirRot);
+	m_rkOwner.m_GraphicThingInstance.GetBattle().InputNormalAttackCommand(fAtkDirRot);
 }
 
 void CInstanceBaseBattle::InputComboAttack(float fAtkDirRot)
 {
-	m_rkOwner.m_GraphicThingInstance.InputComboAttackCommand(fAtkDirRot);
+	m_rkOwner.m_GraphicThingInstance.GetBattle().InputComboAttackCommand(fAtkDirRot);
 	m_rkOwner.GetEffect().__ComboProcess();
 }
 
 void CInstanceBaseBattle::RunNormalAttack(float fAtkDirRot)
 {
 	m_rkOwner.GetMovement().EndGoing();
-	m_rkOwner.m_GraphicThingInstance.NormalAttack(fAtkDirRot);
+	m_rkOwner.m_GraphicThingInstance.GetBattle().NormalAttack(fAtkDirRot);
 }
 
 void CInstanceBaseBattle::RunComboAttack(float fAtkDirRot, uint32_t wMotionIndex)
 {
 	m_rkOwner.GetMovement().EndGoing();
-	m_rkOwner.m_GraphicThingInstance.ComboAttack(wMotionIndex, fAtkDirRot);
+	m_rkOwner.m_GraphicThingInstance.GetBattle().ComboAttack(wMotionIndex, fAtkDirRot);
 }
 
 // 리턴값 TRUE가 무엇인가가 있다
@@ -487,7 +487,7 @@ int32_t CInstanceBaseBattle::CheckAdvancing()
 				if (!pkInstEach->IsDoor())
 					continue;
 
-				if (m_rkOwner.m_GraphicThingInstance.TestActorCollision(pkInstEach->GetGraphicThingInstanceRef()))
+				if (m_rkOwner.m_GraphicThingInstance.GetCollisionDetection().TestActorCollision(pkInstEach->GetGraphicThingInstanceRef()))
 				{
 					m_rkOwner.BlockMovement();
 					return true;
@@ -497,13 +497,13 @@ int32_t CInstanceBaseBattle::CheckAdvancing()
 		return FALSE;
 	}
 
-	if (m_rkOwner.m_GraphicThingInstance.CanSkipCollision())
+	if (m_rkOwner.m_GraphicThingInstance.GetCollisionDetection().CanSkipCollision())
 	{
 		// Tracenf("%x VID %d Skip collisions", ELTimer_GetMSec(), GetVirtualID());
 		return FALSE;
 	}
 
-	int32_t bUsingSkill = m_rkOwner.m_GraphicThingInstance.IsUsingSkill();
+	int32_t bUsingSkill = m_rkOwner.m_GraphicThingInstance.GetMotion().IsUsingSkill();
 
 	m_rkOwner.m_dwAdvActorVID = 0;
 	uint32_t uCollisionCount = 0;
@@ -523,19 +523,19 @@ int32_t CInstanceBaseBattle::CheckAdvancing()
 			continue;
 
 		// 앞으로 전진할수 있는가?
-		if (rkActorSelf.TestActorCollision(rkActorEach))
+		if (rkActorSelf.GetCollisionDetection().TestActorCollision(rkActorEach))
 		{
 			uCollisionCount++;
 			if (uCollisionCount == 2)
 			{
-				rkActorSelf.BlockMovement();
+				rkActorSelf.GetCollisionDetection().BlockMovement();
 				return TRUE;
 			}
 			rkActorSelf.AdjustDynamicCollisionMovement(&rkActorEach);
 
-			if (rkActorSelf.TestActorCollision(rkActorEach))
+			if (rkActorSelf.GetCollisionDetection().TestActorCollision(rkActorEach))
 			{
-				rkActorSelf.BlockMovement();
+				rkActorSelf.GetCollisionDetection().BlockMovement();
 				return TRUE;
 			}
 			else
@@ -590,7 +590,7 @@ int32_t CInstanceBaseBattle::CheckAttacking(CInstanceBase& rkInstVictim)
 	return FALSE;
 #endif
 
-	if (!m_rkOwner.m_GraphicThingInstance.AttackingProcess(rkInstVictim.m_GraphicThingInstance))
+	if (!m_rkOwner.m_GraphicThingInstance.GetCollisionDetection().AttackingProcess(rkInstVictim.m_GraphicThingInstance))
 		return FALSE;
 
 	return TRUE;
@@ -598,27 +598,27 @@ int32_t CInstanceBaseBattle::CheckAttacking(CInstanceBase& rkInstVictim)
 
 int32_t CInstanceBaseBattle::isNormalAttacking()
 {
-	return m_rkOwner.m_GraphicThingInstance.isNormalAttacking();
+	return m_rkOwner.m_GraphicThingInstance.GetBattle().isNormalAttacking();
 }
 
 int32_t CInstanceBaseBattle::isComboAttacking()
 {
-	return m_rkOwner.m_GraphicThingInstance.isComboAttacking();
+	return m_rkOwner.m_GraphicThingInstance.GetBattle().isComboAttacking();
 }
 
 int32_t CInstanceBaseBattle::IsUsingSkill()
 {
-	return m_rkOwner.m_GraphicThingInstance.IsUsingSkill();
+	return m_rkOwner.m_GraphicThingInstance.GetMotion().IsUsingSkill();
 }
 
 int32_t CInstanceBaseBattle::IsUsingMovingSkill()
 {
-	return m_rkOwner.m_GraphicThingInstance.IsUsingMovingSkill();
+	return m_rkOwner.m_GraphicThingInstance.GetBattle().IsUsingMovingSkill();
 }
 
 int32_t CInstanceBaseBattle::CanCancelSkill()
 {
-	return m_rkOwner.m_GraphicThingInstance.CanCancelSkill();
+	return m_rkOwner.m_GraphicThingInstance.GetMotion().CanCancelSkill();
 }
 
 int32_t CInstanceBaseBattle::CanAttackHorseLevel()
@@ -641,12 +641,12 @@ MOTION_KEY CInstanceBaseBattle::GetNormalAttackIndex()
 
 uint32_t CInstanceBaseBattle::GetComboIndex()
 {
-	return m_rkOwner.m_GraphicThingInstance.GetComboIndex();
+	return m_rkOwner.m_GraphicThingInstance.GetBattle().GetComboIndex();
 }
 
 float CInstanceBaseBattle::GetAttackingElapsedTime()
 {
-	return m_rkOwner.m_GraphicThingInstance.GetAttackingElapsedTime();
+	return m_rkOwner.m_GraphicThingInstance.GetBattle().GetAttackingElapsedTime();
 }
 
 void CInstanceBaseBattle::ProcessHitting(uint32_t dwMotionKey, CInstanceBase* pVictimInstance)
@@ -663,12 +663,12 @@ void CInstanceBaseBattle::ProcessHitting(uint32_t dwMotionKey, uint8_t byEventIn
 
 void CInstanceBaseBattle::GetBlendingPosition(TPixelPosition* pPixelPosition)
 {
-	m_rkOwner.m_GraphicThingInstance.GetBlendingPosition(pPixelPosition);
+	m_rkOwner.m_GraphicThingInstance.GetBattle().GetBlendingPosition(pPixelPosition);
 }
 
 void CInstanceBaseBattle::SetBlendingPosition(const TPixelPosition& c_rPixelPosition)
 {
-	m_rkOwner.m_GraphicThingInstance.SetBlendingPosition(c_rPixelPosition);
+	m_rkOwner.m_GraphicThingInstance.GetBattle().SetBlendingPosition(c_rPixelPosition);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////

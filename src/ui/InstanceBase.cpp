@@ -83,14 +83,14 @@ void CInstanceBase::SHORSE::Create(const TPixelPosition& c_rkPPos, uint32_t eRac
 	}
 
 	rkActor.SetShape(0);
-	rkActor.SetBattleHitEffect(eHitEffect);
+	rkActor.GetBattle().SetBattleHitEffect(eHitEffect);
 	rkActor.SetAlphaValue(0.0f);
 	rkActor.BlendAlphaValue(1.0f, 0.5f);
 	rkActor.SetMoveSpeed(1.0f);
 	rkActor.SetAttackSpeed(1.0f);
-	rkActor.SetMotionMode(CRaceMotionData::MODE_GENERAL);
+	rkActor.GetMotion().SetMotionMode(CRaceMotionData::MODE_GENERAL);
 	rkActor.Stop();
-	rkActor.RefreshActorInstance();
+	rkActor.GetAttach().RefreshActorInstance();
 
 	rkActor.SetCurPixelPosition(c_rkPPos);
 
@@ -258,17 +258,17 @@ void CInstanceBase::__DetachHorseSaddle()
 
 void CInstanceBase::BlockMovement()
 {
-	m_GraphicThingInstance.BlockMovement();
+	m_GraphicThingInstance.GetCollisionDetection().BlockMovement();
 }
 
 bool CInstanceBase::IsBlockObject(const CGraphicObjectInstance& c_rkBGObj)
 {
-	return m_GraphicThingInstance.IsBlockObject(c_rkBGObj);
+	return m_GraphicThingInstance.GetCollisionDetection().IsBlockObject(c_rkBGObj);
 }
 
 bool CInstanceBase::AvoidObject(const CGraphicObjectInstance& c_rkBGObj)
 {
-	return m_GraphicThingInstance.AvoidObject(c_rkBGObj);
+	return m_GraphicThingInstance.GetCollisionDetection().AvoidObject(c_rkBGObj);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -409,12 +409,12 @@ void CInstanceBase::__EnableSkipCollision()
 		TraceError("CInstanceBase::__EnableSkipCollision - You shouldn't be a conflict check skip yourself!!");
 		return;
 	}
-	m_GraphicThingInstance.EnableSkipCollision();
+	m_GraphicThingInstance.GetCollisionDetection().EnableSkipCollision();
 }
 
 void CInstanceBase::__DisableSkipCollision()
 {
-	m_GraphicThingInstance.DisableSkipCollision();
+	m_GraphicThingInstance.GetCollisionDetection().DisableSkipCollision();
 }
 
 uint32_t CInstanceBase::__GetShadowMapColor(float x, float y)
@@ -810,7 +810,7 @@ bool CInstanceBase::Create(const SCreateData& c_rkCreateData)
 
 	SetStateFlags(c_rkCreateData.m_dwStateFlags);
 
-	m_GraphicThingInstance.SetBattleHitEffect(ms_adwCRCAffectEffect[EFFECT_HIT]);
+	m_GraphicThingInstance.GetBattle().SetBattleHitEffect(ms_adwCRCAffectEffect[EFFECT_HIT]);
 
 	if (!IsPC())
 	{
@@ -946,7 +946,7 @@ void CInstanceBase::MountHorse(uint32_t eRace)
 
 	m_GraphicThingInstance.MountHorse(m_kHorse.GetActorPtr());
 	m_GraphicThingInstance.Stop();
-	m_GraphicThingInstance.RefreshActorInstance();
+	m_GraphicThingInstance.GetAttach().RefreshActorInstance();
 }
 
 void CInstanceBase::DismountHorse()
@@ -1050,12 +1050,12 @@ uint32_t CInstanceBase::GetShape()
 
 bool CInstanceBase::CanAct()
 {
-	return m_GraphicThingInstance.CanAct();
+	return m_GraphicThingInstance.GetBattle().CanAct();
 }
 
 bool CInstanceBase::CanMove()
 {
-	return m_GraphicThingInstance.CanMove();
+	return m_GraphicThingInstance.GetBattle().CanMove();
 }
 
 bool CInstanceBase::CanUseSkill()
@@ -1072,7 +1072,7 @@ bool CInstanceBase::CanUseSkill()
 	if (!m_kHorse.CanUseSkill())
 		return false;
 
-	if (!m_GraphicThingInstance.CanUseSkill())
+	if (!m_GraphicThingInstance.GetBattle().CanUseSkill())
 		return false;
 
 	return true;
@@ -1089,12 +1089,12 @@ bool CInstanceBase::CanAttack()
 	if (IsHoldingPickAxe())
 		return false;
 
-	return m_GraphicThingInstance.CanAttack();
+	return m_GraphicThingInstance.GetBattle().CanAttack();
 }
 
 bool CInstanceBase::CanFishing()
 {
-	return m_GraphicThingInstance.CanFishing();
+	return m_GraphicThingInstance.GetBattle().CanFishing();
 }
 
 int32_t CInstanceBase::IsBowMode()
@@ -1109,7 +1109,7 @@ int32_t CInstanceBase::IsHandMode()
 
 int32_t CInstanceBase::IsFishingMode()
 {
-	if (CRaceMotionData::MODE_FISHING == m_GraphicThingInstance.GetMotionMode())
+	if (CRaceMotionData::MODE_FISHING == m_GraphicThingInstance.GetMotion().GetMotionMode())
 		return true;
 
 	return false;
@@ -1117,7 +1117,7 @@ int32_t CInstanceBase::IsFishingMode()
 
 int32_t CInstanceBase::IsFishing()
 {
-	return m_GraphicThingInstance.IsFishing();
+	return m_GraphicThingInstance.GetMotion().IsFishing();
 }
 
 int32_t CInstanceBase::IsDead()
@@ -1233,8 +1233,8 @@ int32_t CInstanceBase::__CanProcessNetworkStatePacket()
 		return FALSE;
 	if (m_GraphicThingInstance.IsKnockDown())
 		return FALSE;
-	if (m_GraphicThingInstance.IsUsingSkill())
-		if (!m_GraphicThingInstance.CanCancelSkill())
+	if (m_GraphicThingInstance.GetMotion().IsUsingSkill())
+		if (!m_GraphicThingInstance.GetMotion().CanCancelSkill())
 			return FALSE;
 
 	return TRUE;
@@ -1242,7 +1242,7 @@ int32_t CInstanceBase::__CanProcessNetworkStatePacket()
 
 int32_t CInstanceBase::__IsEnableTCPProcess(uint32_t eCurFunc)
 {
-	if (m_GraphicThingInstance.IsActEmotion())
+	if (m_GraphicThingInstance.GetBattle().IsActEmotion())
 	{
 		return FALSE;
 	}
@@ -1471,7 +1471,7 @@ void CInstanceBase::StateProcess()
 					GetTransform().SCRIPT_SetPixelPosition(kPPosDst.x, kPPosDst.y);
 					GetTransform().BlendRotation(fRotDst);
 
-					m_GraphicThingInstance.InterceptOnceMotion(CRaceMotionData::NAME_SPECIAL_1 + uArg);
+					m_GraphicThingInstance.GetMotion().InterceptOnceMotion(CRaceMotionData::NAME_SPECIAL_1 + uArg);
 				}
 				break;
 			}
@@ -1706,7 +1706,7 @@ void CInstanceBase::MovementProcess()
 							GetMovement().SetAdvancingRotation(m_fDstRot);
 							GetTransform().SetRotation(m_fDstRot);
 
-							m_GraphicThingInstance.InterceptOnceMotion(CRaceMotionData::NAME_SPECIAL_1 + m_kMovAfterFunc.uArg);
+							m_GraphicThingInstance.GetMotion().InterceptOnceMotion(CRaceMotionData::NAME_SPECIAL_1 + m_kMovAfterFunc.uArg);
 							break;
 						}
 
@@ -1744,7 +1744,7 @@ void CInstanceBase::MovementProcess()
 		}
 	}
 
-	if (GetMovement().IsWalking() || m_GraphicThingInstance.IsUsingMovingSkill())
+	if (GetMovement().IsWalking() || m_GraphicThingInstance.GetBattle().IsUsingMovingSkill())
 	{
 		float fRotation = m_GraphicThingInstance.GetRotation();
 		float fAdvancingRotation = m_GraphicThingInstance.GetAdvancingRotation();
@@ -1816,12 +1816,12 @@ void CInstanceBase::__ProcessFunctionEmotion(uint32_t dwMotionNumber, uint32_t d
 		int dst_job = RaceToJob(pTargetInstance->GetRace());
 
 		GetTransform().NEW_LookAtDestInstance(*pTargetInstance);
-		m_GraphicThingInstance.InterceptOnceMotion(wMotionNumber1 + dst_job);
+		m_GraphicThingInstance.GetMotion().InterceptOnceMotion(wMotionNumber1 + dst_job);
 		m_GraphicThingInstance.SetRotation(m_GraphicThingInstance.GetTargetRotation());
 		m_GraphicThingInstance.SetAdvancingRotation(m_GraphicThingInstance.GetTargetRotation());
 
 		pTargetInstance->GetTransform().NEW_LookAtDestInstance(*this);
-		pTargetInstance->m_GraphicThingInstance.InterceptOnceMotion(wMotionNumber2 + src_job);
+		pTargetInstance->m_GraphicThingInstance.GetMotion().InterceptOnceMotion(wMotionNumber2 + src_job);
 		pTargetInstance->m_GraphicThingInstance.SetRotation(pTargetInstance->m_GraphicThingInstance.GetTargetRotation());
 		pTargetInstance->m_GraphicThingInstance.SetAdvancingRotation(pTargetInstance->m_GraphicThingInstance.GetTargetRotation());
 
@@ -1851,7 +1851,7 @@ void CInstanceBase::Update()
 	StateProcess();
 	m_GraphicThingInstance.PhysicsProcess();
 	m_GraphicThingInstance.RotationProcess();
-	m_GraphicThingInstance.ComboProcess();
+	m_GraphicThingInstance.GetBattle().ComboProcess();
 	m_GraphicThingInstance.AccumulationMovement();
 
 	if (m_GraphicThingInstance.IsMovement())
@@ -1870,19 +1870,19 @@ void CInstanceBase::Update()
 		// SetMaterialColor
 		{
 			uint32_t dwMtrlColor = __GetShadowMapColor(kPPosCur.x, kPPosCur.y);
-			m_GraphicThingInstance.SetMaterialColor(dwMtrlColor);
+			m_GraphicThingInstance.GetRender().SetMaterialColor(dwMtrlColor);
 		}
 	}
 
-	m_GraphicThingInstance.UpdateAdvancingPointInstance();
+	m_GraphicThingInstance.GetCollisionDetection().UpdateAdvancingPointInstance();
 
 	GetBattle().AttackProcess();
 	MovementProcess();
 
-	m_GraphicThingInstance.MotionProcess(IsPC());
+	m_GraphicThingInstance.GetMotion().MotionProcess(IsPC());
 	if (IsMountingHorse())
 	{
-		m_kHorse.m_pkActor->HORSE_MotionProcess(FALSE);
+		m_kHorse.m_pkActor->GetMotion().HORSE_MotionProcess(FALSE);
 	}
 
 	GetEffect().__ComboProcess();
@@ -1898,7 +1898,7 @@ void CInstanceBase::Transform()
 	}
 	else
 	{
-		if (GetMovement().IsWalking() || m_GraphicThingInstance.IsUsingMovingSkill())
+		if (GetMovement().IsWalking() || m_GraphicThingInstance.GetBattle().IsUsingMovingSkill())
 		{
 			const D3DXVECTOR3& c_rv3Movment = m_GraphicThingInstance.GetMovementVectorRef();
 
@@ -1945,7 +1945,7 @@ void CInstanceBase::Render()
 	m_kHorse.Render();
 	m_GraphicThingInstance.Render();
 
-	if (CActorInstance::IsDirLine())
+	if (CActorInstanceRender::IsDirLine())
 	{
 		if (NEW_GetDstPixelPositionRef().x != 0.0f)
 		{
@@ -2004,7 +2004,7 @@ void CInstanceBase::RenderToShadowMap()
 
 void CInstanceBase::RenderCollision()
 {
-	m_GraphicThingInstance.RenderCollisionData();
+	m_GraphicThingInstance.GetRender().RenderCollisionData();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2479,7 +2479,7 @@ CActorInstance* CInstanceBase::GetGraphicThingInstancePtr()
 
 void CInstanceBase::RefreshActorInstance()
 {
-	m_GraphicThingInstance.RefreshActorInstance();
+	m_GraphicThingInstance.GetAttach().RefreshActorInstance();
 }
 
 void CInstanceBase::Refresh(uint32_t dwMotIndex, bool isLoop)
@@ -2489,27 +2489,27 @@ void CInstanceBase::Refresh(uint32_t dwMotIndex, bool isLoop)
 
 void CInstanceBase::RestoreRenderMode()
 {
-	m_GraphicThingInstance.RestoreRenderMode();
+	m_GraphicThingInstance.GetRender().RestoreRenderMode();
 }
 
 void CInstanceBase::SetAddRenderMode()
 {
-	m_GraphicThingInstance.SetAddRenderMode();
+	m_GraphicThingInstance.GetRender().SetAddRenderMode();
 }
 
 void CInstanceBase::SetModulateRenderMode()
 {
-	m_GraphicThingInstance.SetModulateRenderMode();
+	m_GraphicThingInstance.GetRender().SetModulateRenderMode();
 }
 
 void CInstanceBase::SetRenderMode(int iRenderMode)
 {
-	m_GraphicThingInstance.SetRenderMode(iRenderMode);
+	m_GraphicThingInstance.GetRender().SetRenderMode(iRenderMode);
 }
 
 void CInstanceBase::SetAddColor(const D3DXCOLOR& c_rColor)
 {
-	m_GraphicThingInstance.SetAddColor(c_rColor);
+	m_GraphicThingInstance.GetRender().SetAddColor(c_rColor);
 }
 
 void CInstanceBase::__SetBlendRenderingMode()
@@ -2723,7 +2723,7 @@ bool CInstanceBase::SetWeapon(uint32_t eWeapon)
 	if (__IsChangableWeapon(eWeapon) == false)
 		eWeapon = 0;
 
-	m_GraphicThingInstance.AttachWeapon(eWeapon);
+	m_GraphicThingInstance.GetAttach().AttachWeapon(eWeapon);
 	m_awPart[CRaceData::PART_WEAPON] = eWeapon;
 
 	// Weapon Effect
@@ -2930,9 +2930,9 @@ void CInstanceBase::RefreshState(uint32_t dwMotIndex, bool isLoop)
 	}
 
 	if (isLoop)
-		m_GraphicThingInstance.InterceptLoopMotion(dwMotIndex);
+		m_GraphicThingInstance.GetMotion().InterceptLoopMotion(dwMotIndex);
 	else
-		m_GraphicThingInstance.InterceptOnceMotion(dwMotIndex);
+		m_GraphicThingInstance.GetMotion().InterceptOnceMotion(dwMotIndex);
 
 	RefreshActorInstance();
 }

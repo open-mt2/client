@@ -75,7 +75,7 @@ bool CActorInstance::SetRace(uint32_t eRace)
 	memset(m_adwPartItemID, 0, sizeof(m_adwPartItemID));
 
 	// Setup Graphic ResourceData
-	__ClearAttachingEffect();
+	GetAttach().__ClearAttachingEffect();
 
 	CGraphicThingInstance::Clear();
 
@@ -253,11 +253,11 @@ void CActorInstance::SetShape(uint32_t eShape, float fSpecular)
 			case NRaceData::ATTACHING_DATA_TYPE_EFFECT:
 				if (c_pAttachingData->isAttaching)
 				{
-					AttachEffectByName(0, c_pAttachingData->strAttachingBoneName.c_str(), c_pAttachingData->pEffectData->strFileName.c_str());
+					GetAttach().AttachEffectByName(0, c_pAttachingData->strAttachingBoneName.c_str(), c_pAttachingData->pEffectData->strFileName.c_str());
 				}
 				else
 				{
-					AttachEffectByName(0, 0, c_pAttachingData->pEffectData->strFileName.c_str());
+					GetAttach().AttachEffectByName(0, 0, c_pAttachingData->pEffectData->strFileName.c_str());
 				}
 				break;
 		}

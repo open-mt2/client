@@ -16,27 +16,27 @@ CInstanceBaseMotion::CInstanceBaseMotion(CInstanceBase& rkOwner) : m_rkOwner(rkO
 
 void CInstanceBaseMotion::SetMotionMode(int iMotionMode)
 {
-	m_rkOwner.m_GraphicThingInstance.SetMotionMode(iMotionMode);
+	m_rkOwner.m_GraphicThingInstance.GetMotion().SetMotionMode(iMotionMode);
 }
 
 int CInstanceBaseMotion::GetMotionMode(uint32_t dwMotionIndex)
 {
-	return m_rkOwner.m_GraphicThingInstance.GetMotionMode();
+	return m_rkOwner.m_GraphicThingInstance.GetMotion().GetMotionMode();
 }
 
 void CInstanceBaseMotion::SetLoopMotion(uint16_t wMotion, float fBlendTime, float fSpeedRatio)
 {
-	m_rkOwner.m_GraphicThingInstance.SetLoopMotion(wMotion, fBlendTime, fSpeedRatio);
+	m_rkOwner.m_GraphicThingInstance.GetMotion().SetLoopMotion(wMotion, fBlendTime, fSpeedRatio);
 }
 
 void CInstanceBaseMotion::PushOnceMotion(uint16_t wMotion, float fBlendTime, float fSpeedRatio)
 {
-	m_rkOwner.m_GraphicThingInstance.PushOnceMotion(wMotion, fBlendTime, fSpeedRatio);
+	m_rkOwner.m_GraphicThingInstance.GetMotion().PushOnceMotion(wMotion, fBlendTime, fSpeedRatio);
 }
 
 void CInstanceBaseMotion::PushLoopMotion(uint16_t wMotion, float fBlendTime, float fSpeedRatio)
 {
-	m_rkOwner.m_GraphicThingInstance.PushLoopMotion(wMotion, fBlendTime, fSpeedRatio);
+	m_rkOwner.m_GraphicThingInstance.GetMotion().PushLoopMotion(wMotion, fBlendTime, fSpeedRatio);
 }
 
 void CInstanceBaseMotion::ResetLocalTime()
@@ -51,7 +51,7 @@ void CInstanceBaseMotion::SetEndStopMotion()
 
 int32_t CInstanceBaseMotion::isLock()
 {
-	return m_rkOwner.m_GraphicThingInstance.isLock();
+	return m_rkOwner.m_GraphicThingInstance.GetMotion().isLock();
 }
 
 void CInstanceBaseMotion::StartFishing(float frot)
@@ -76,7 +76,7 @@ void CInstanceBaseMotion::StartFishing(float frot)
 
 void CInstanceBaseMotion::StopFishing()
 {
-	m_rkOwner.m_GraphicThingInstance.InterceptOnceMotion(CRaceMotionData::NAME_FISHING_STOP);
+	m_rkOwner.m_GraphicThingInstance.GetMotion().InterceptOnceMotion(CRaceMotionData::NAME_FISHING_STOP);
 	PushLoopMotion(CRaceMotionData::NAME_WAIT);
 }
 
@@ -88,13 +88,13 @@ void CInstanceBaseMotion::ReactFishing()
 
 void CInstanceBaseMotion::CatchSuccess()
 {
-	m_rkOwner.m_GraphicThingInstance.InterceptOnceMotion(CRaceMotionData::NAME_FISHING_CATCH);
+	m_rkOwner.m_GraphicThingInstance.GetMotion().InterceptOnceMotion(CRaceMotionData::NAME_FISHING_CATCH);
 	PushLoopMotion(CRaceMotionData::NAME_WAIT);
 }
 
 void CInstanceBaseMotion::CatchFail()
 {
-	m_rkOwner.m_GraphicThingInstance.InterceptOnceMotion(CRaceMotionData::NAME_FISHING_FAIL);
+	m_rkOwner.m_GraphicThingInstance.GetMotion().InterceptOnceMotion(CRaceMotionData::NAME_FISHING_FAIL);
 	PushLoopMotion(CRaceMotionData::NAME_WAIT);
 }
 
@@ -139,11 +139,11 @@ void CInstanceBaseMotion::ActDualEmotion(CInstanceBase& rkDstInst, uint16_t wMot
 {
 	if (!m_rkOwner.GetMovement().IsWaiting())
 	{
-		m_rkOwner.m_GraphicThingInstance.SetLoopMotion(CRaceMotionData::NAME_WAIT, 0.05f);
+		m_rkOwner.m_GraphicThingInstance.GetMotion().SetLoopMotion(CRaceMotionData::NAME_WAIT, 0.05f);
 	}
 	if (!rkDstInst.GetMovement().IsWaiting())
 	{
-		rkDstInst.m_GraphicThingInstance.SetLoopMotion(CRaceMotionData::NAME_WAIT, 0.05f);
+		rkDstInst.m_GraphicThingInstance.GetMotion().SetLoopMotion(CRaceMotionData::NAME_WAIT, 0.05f);
 	}
 
 	const float c_fEmotionDistance = 100.0f;

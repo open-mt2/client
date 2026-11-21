@@ -358,7 +358,7 @@ void CInstanceBaseEffect::__StoneSmoke_Destroy()
 
 void CInstanceBaseEffect::__StoneSmoke_Create(uint32_t eSmoke)
 {
-	m_rkOwner.m_kStoneSmoke.m_dwEftID = m_rkOwner.m_GraphicThingInstance.AttachSmokeEffect(eSmoke);
+	m_rkOwner.m_kStoneSmoke.m_dwEftID = m_rkOwner.m_GraphicThingInstance.GetAttach().AttachSmokeEffect(eSmoke);
 }
 
 void CInstanceBaseEffect::SetAlpha(float fAlpha)
@@ -808,13 +808,13 @@ void CInstanceBaseEffect::__Assassin_SetEunhyeongAffect(bool isVisible)
 		{
 			// 2004.10.16.myevan.은형법 완전 투명
 			m_rkOwner.m_GraphicThingInstance.BlendAlphaValue(0.0f, 1.0f);
-			m_rkOwner.m_GraphicThingInstance.HideAllAttachingEffect();
+			m_rkOwner.m_GraphicThingInstance.GetAttach().HideAllAttachingEffect();
 		}
 	}
 	else
 	{
 		m_rkOwner.m_GraphicThingInstance.BlendAlphaValue(1.0f, 1.0f);
-		m_rkOwner.m_GraphicThingInstance.ShowAllAttachingEffect();
+		m_rkOwner.m_GraphicThingInstance.GetAttach().ShowAllAttachingEffect();
 	}
 }
 
@@ -1002,7 +1002,7 @@ void CInstanceBaseEffect::SetEmoticon(uint32_t eEmoticon)
 		v3Pos.z += float(m_rkOwner.m_GraphicThingInstance.GetHeight());
 
 		// rkEftMgr.CreateEffect(CInstanceBase::ms_adwCRCAffectEffect[CInstanceBase::EFFECT_EMOTICON+eEmoticon],v3Pos,D3DXVECTOR3(0,0,0));
-		m_rkOwner.m_GraphicThingInstance.AttachEffectByID(0, NULL, CInstanceBase::ms_adwCRCAffectEffect[CInstanceBase::EFFECT_EMOTICON + eEmoticon], &v3Pos);
+		m_rkOwner.m_GraphicThingInstance.GetAttach().AttachEffectByID(0, NULL, CInstanceBase::ms_adwCRCAffectEffect[CInstanceBase::EFFECT_EMOTICON + eEmoticon], &v3Pos);
 		m_rkOwner.m_dwEmoticonTime = ELTimer_GetMSec();
 	}
 }
@@ -1019,7 +1019,7 @@ void CInstanceBaseEffect::SetHorseDustGap(float fDustGap)
 
 void CInstanceBaseEffect::__DetachEffect(uint32_t dwEID)
 {
-	m_rkOwner.m_GraphicThingInstance.DettachEffect(dwEID);
+	m_rkOwner.m_GraphicThingInstance.GetAttach().DettachEffect(dwEID);
 }
 
 uint32_t CInstanceBaseEffect::__AttachEffect(uint32_t eEftType)
@@ -1033,7 +1033,7 @@ uint32_t CInstanceBaseEffect::__AttachEffect(uint32_t eEftType)
 
 	if (CInstanceBase::ms_astAffectEffectAttachBone[eEftType].empty())
 	{
-		return m_rkOwner.m_GraphicThingInstance.AttachEffectByID(0, NULL, CInstanceBase::ms_adwCRCAffectEffect[eEftType]);
+		return m_rkOwner.m_GraphicThingInstance.GetAttach().AttachEffectByID(0, NULL, CInstanceBase::ms_adwCRCAffectEffect[eEftType]);
 	}
 	else
 	{
@@ -1043,21 +1043,21 @@ uint32_t CInstanceBaseEffect::__AttachEffect(uint32_t eEftType)
 		// 이런 식의 예외 처리를 해놓은 것은 캐릭터 마다 Equip 의 Bone Name 이 다르기 때문.
 		if (0 == rstrBoneName.compare("PART_WEAPON"))
 		{
-			if (m_rkOwner.m_GraphicThingInstance.GetAttachingBoneName(CRaceData::PART_WEAPON, &c_szBoneName))
+			if (m_rkOwner.m_GraphicThingInstance.GetAttach().GetAttachingBoneName(CRaceData::PART_WEAPON, &c_szBoneName))
 			{
-				return m_rkOwner.m_GraphicThingInstance.AttachEffectByID(0, c_szBoneName, CInstanceBase::ms_adwCRCAffectEffect[eEftType]);
+				return m_rkOwner.m_GraphicThingInstance.GetAttach().AttachEffectByID(0, c_szBoneName, CInstanceBase::ms_adwCRCAffectEffect[eEftType]);
 			}
 		}
 		else if (0 == rstrBoneName.compare("PART_WEAPON_LEFT"))
 		{
-			if (m_rkOwner.m_GraphicThingInstance.GetAttachingBoneName(CRaceData::PART_WEAPON_LEFT, &c_szBoneName))
+			if (m_rkOwner.m_GraphicThingInstance.GetAttach().GetAttachingBoneName(CRaceData::PART_WEAPON_LEFT, &c_szBoneName))
 			{
-				return m_rkOwner.m_GraphicThingInstance.AttachEffectByID(0, c_szBoneName, CInstanceBase::ms_adwCRCAffectEffect[eEftType]);
+				return m_rkOwner.m_GraphicThingInstance.GetAttach().AttachEffectByID(0, c_szBoneName, CInstanceBase::ms_adwCRCAffectEffect[eEftType]);
 			}
 		}
 		else
 		{
-			return m_rkOwner.m_GraphicThingInstance.AttachEffectByID(0, rstrBoneName.c_str(), CInstanceBase::ms_adwCRCAffectEffect[eEftType]);
+			return m_rkOwner.m_GraphicThingInstance.GetAttach().AttachEffectByID(0, rstrBoneName.c_str(), CInstanceBase::ms_adwCRCAffectEffect[eEftType]);
 		}
 	}
 

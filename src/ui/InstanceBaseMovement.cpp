@@ -217,12 +217,12 @@ int32_t CInstanceBaseMovement::IsKnockDown()
 
 int32_t CInstanceBaseMovement::IsAttacking()
 {
-	return m_rkOwner.m_GraphicThingInstance.isAttacking();
+	return m_rkOwner.m_GraphicThingInstance.GetBattle().isAttacking();
 }
 
 int32_t CInstanceBaseMovement::IsActingEmotion()
 {
-	return m_rkOwner.m_GraphicThingInstance.IsActEmotion();
+	return m_rkOwner.m_GraphicThingInstance.GetBattle().IsActEmotion();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -256,7 +256,7 @@ bool CInstanceBaseMovement::NEW_Goto(const TPixelPosition& c_rkPPosDst, float fD
 		return false;
 	}
 
-	if (m_rkOwner.m_GraphicThingInstance.IsUsingMovingSkill())
+	if (m_rkOwner.m_GraphicThingInstance.GetBattle().IsUsingMovingSkill())
 	{
 		SetAdvancingRotation(fDstRot);
 		return true;
@@ -296,7 +296,7 @@ void CInstanceBaseMovement::NEW_MoveToDirection(float fDirRot)
 	if (m_rkOwner.__IsSyncing())
 		return;
 
-	if (m_rkOwner.m_GraphicThingInstance.IsUsingMovingSkill())
+	if (m_rkOwner.m_GraphicThingInstance.GetBattle().IsUsingMovingSkill())
 	{
 		SetAdvancingRotation(fDirRot);
 		return;

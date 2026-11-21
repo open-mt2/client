@@ -1103,9 +1103,9 @@ PyObject* chrFaintTest(PyObject* poSelf, PyObject* poArgs)
 		}
 		else
 		{
-			pCharacterInstance->GetGraphicThingInstanceRef().InterceptOnceMotion(CRaceMotionData::NAME_DAMAGE_FLYING);
-			pCharacterInstance->GetGraphicThingInstanceRef().PushOnceMotion(CRaceMotionData::NAME_STAND_UP);
-			pCharacterInstance->GetGraphicThingInstanceRef().PushLoopMotion(CRaceMotionData::NAME_WAIT);
+			pCharacterInstance->GetGraphicThingInstanceRef().GetMotion().InterceptOnceMotion(CRaceMotionData::NAME_DAMAGE_FLYING);
+			pCharacterInstance->GetGraphicThingInstanceRef().GetMotion().PushOnceMotion(CRaceMotionData::NAME_STAND_UP);
+			pCharacterInstance->GetGraphicThingInstanceRef().GetMotion().PushLoopMotion(CRaceMotionData::NAME_WAIT);
 			pCharacterInstance->GetGraphicThingInstanceRef().SetFaint(true);
 		}
 	}
@@ -1154,7 +1154,7 @@ PyObject* chrWeaponTraceSetTexture(PyObject* poSelf, PyObject* poArgs)
 	CInstanceBase* pInstance = CPythonCharacterManager::Instance().GetMainInstancePtr();
 	if (pInstance)
 	{
-		pInstance->GetGraphicThingInstanceRef().SetWeaponTraceTexture(szPathName);
+		pInstance->GetGraphicThingInstanceRef().GetAttach().SetWeaponTraceTexture(szPathName);
 	}
 	return Py_BuildNone();
 }
@@ -1164,7 +1164,7 @@ PyObject* chrWeaponTraceUseTexture(PyObject* poSelf, PyObject* poArgs)
 	CInstanceBase* pInstance = CPythonCharacterManager::Instance().GetMainInstancePtr();
 	if (pInstance)
 	{
-		pInstance->GetGraphicThingInstanceRef().UseTextureWeaponTrace();
+		pInstance->GetGraphicThingInstanceRef().GetAttach().UseTextureWeaponTrace();
 	}
 	return Py_BuildNone();
 }
@@ -1174,7 +1174,7 @@ PyObject* chrWeaponTraceUseAlpha(PyObject* poSelf, PyObject* poArgs)
 	CInstanceBase* pInstance = CPythonCharacterManager::Instance().GetMainInstancePtr();
 	if (pInstance)
 	{
-		pInstance->GetGraphicThingInstanceRef().UseAlphaWeaponTrace();
+		pInstance->GetGraphicThingInstanceRef().GetAttach().UseAlphaWeaponTrace();
 	}
 	return Py_BuildNone();
 }

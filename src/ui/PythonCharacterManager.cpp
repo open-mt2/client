@@ -37,13 +37,13 @@ void CPythonCharacterManager::AdjustCollisionWithOtherObjects(CActorInstance* pI
 		if (rkActorEach->IsPC() || rkActorEach->IsNPC() || rkActorEach->IsEnemy())
 			continue;
 
-		if (pInst->TestPhysicsBlendingCollision(*rkActorEach))
+		if (pInst->GetCollisionDetection().TestPhysicsBlendingCollision(*rkActorEach))
 		{
 			// NOTE : 일단 기존위치로 원복
 			// TODO : 향후 조금더 잘 처리한다면 physic movement거리를 steping해서 iteration처리해야 함.
 			TPixelPosition curPos;
 			pInst->GetPixelPosition(&curPos);
-			pInst->SetBlendingPosition(curPos);
+			pInst->GetBattle().SetBlendingPosition(curPos);
 			// Tracef("!!!!!! Collision Adjusted\n");
 			break;
 		}

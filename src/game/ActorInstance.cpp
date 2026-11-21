@@ -35,9 +35,9 @@ void CActorInstance::INSTANCEBASE_Transform()
 	// uint32_t t4=ELTimer_GetMSec();
 	Transform();
 	// uint32_t t5=ELTimer_GetMSec();
-	UpdatePointInstance();
+	GetCollisionDetection().UpdatePointInstance();
 	// uint32_t t6=ELTimer_GetMSec();
-	ShakeProcess();
+	GetBattle().ShakeProcess();
 	// uint32_t t7=ELTimer_GetMSec();
 	UpdateBoundingSphere();
 	// uint32_t t8=ELTimer_GetMSec();
@@ -83,7 +83,7 @@ void CActorInstance::OnUpdate()
 	uint32_t t2 = ELTimer_GetMSec();
 #endif
 
-	UpdateAttachingInstances();
+	GetAttach().UpdateAttachingInstances();
 
 #ifdef __PERFORMANCE_CHECKER__
 	uint32_t t3 = ELTimer_GetMSec();
@@ -188,7 +188,7 @@ void CActorInstance::SetMoveSpeed(float fMovSpd)
 
 	m_fMovSpd = fMovSpd;
 
-	if (__IsMoveMotion())
+	if (GetMotion().__IsMoveMotion())
 	{
 		Stop();
 		Move();
@@ -205,18 +205,18 @@ void CActorInstance::Move()
 {
 	if (m_isWalking)
 	{
-		SetLoopMotion(CRaceMotionData::NAME_WALK, 0.15f, m_fMovSpd);
+		GetMotion().SetLoopMotion(CRaceMotionData::NAME_WALK, 0.15f, m_fMovSpd);
 	}
 	else
 	{
-		SetLoopMotion(CRaceMotionData::NAME_RUN, 0.15f, m_fMovSpd);
+		GetMotion().SetLoopMotion(CRaceMotionData::NAME_RUN, 0.15f, m_fMovSpd);
 	}
 }
 
 void CActorInstance::Stop(float fBlendingTime)
 {
-	__ClearMotion();
-	SetLoopMotion(CRaceMotionData::NAME_WAIT, fBlendingTime);
+	GetMotion().__ClearMotion();
+	GetMotion().SetLoopMotion(CRaceMotionData::NAME_WAIT, fBlendingTime);
 }
 
 void CActorInstance::SetOwner(uint32_t dwOwnerVID)
@@ -237,10 +237,10 @@ uint32_t CActorInstance::GetActorType() const
 
 bool CActorInstance::IsHandMode()
 {
-	if (CRaceMotionData::MODE_GENERAL == GetMotionMode())
+	if (CRaceMotionData::MODE_GENERAL == GetMotion().GetMotionMode())
 		return true;
 
-	if (CRaceMotionData::MODE_HORSE == GetMotionMode())
+	if (CRaceMotionData::MODE_HORSE == GetMotion().GetMotionMode())
 		return true;
 
 	return false;
@@ -248,7 +248,7 @@ bool CActorInstance::IsHandMode()
 
 bool CActorInstance::IsTwoHandMode()
 {
-	if (CRaceMotionData::MODE_TWOHAND_SWORD == GetMotionMode())
+	if (CRaceMotionData::MODE_TWOHAND_SWORD == GetMotion().GetMotionMode())
 		return true;
 
 	return false;
@@ -256,10 +256,10 @@ bool CActorInstance::IsTwoHandMode()
 
 bool CActorInstance::IsBowMode()
 {
-	if (CRaceMotionData::MODE_BOW == GetMotionMode())
+	if (CRaceMotionData::MODE_BOW == GetMotion().GetMotionMode())
 		return true;
 
-	if (CRaceMotionData::MODE_HORSE_BOW == GetMotionMode())
+	if (CRaceMotionData::MODE_HORSE_BOW == GetMotion().GetMotionMode())
 		return true;
 
 	return false;
@@ -365,20 +365,20 @@ void CActorInstance::Die()
 	if (m_isRealDead)
 		return;
 
-	if (__IsMoveMotion())
+	if (GetMotion().__IsMoveMotion())
 		Stop();
 
 	SetAdvancingRotation(GetRotation());
 
 	if (IsStone())
 	{
-		InterceptOnceMotion(CRaceMotionData::NAME_DEAD);
+		GetMotion().InterceptOnceMotion(CRaceMotionData::NAME_DEAD);
 	}
 	else
 	{
-		if (!__IsDieMotion())
+		if (!GetMotion().__IsDieMotion())
 		{
-			InterceptOnceMotion(CRaceMotionData::NAME_DEAD);
+			GetMotion().InterceptOnceMotion(CRaceMotionData::NAME_DEAD);
 		}
 	}
 
@@ -407,12 +407,12 @@ int32_t CActorInstance::IsResistFallen()
 
 int32_t CActorInstance::IsMoving()
 {
-	return __IsMoveMotion();
+	return GetMotion().__IsMoveMotion();
 }
 
 int32_t CActorInstance::IsWaiting()
 {
-	return __IsWaitMotion();
+	return GetMotion().__IsWaitMotion();
 }
 
 int32_t CActorInstance::IsDead()
@@ -422,12 +422,12 @@ int32_t CActorInstance::IsDead()
 
 int32_t CActorInstance::IsKnockDown()
 {
-	return __IsKnockDownMotion();
+	return GetMotion().__IsKnockDownMotion();
 }
 
 int32_t CActorInstance::IsDamage()
 {
-	return __IsDamageMotion();
+	return GetMotion().__IsDamageMotion();
 }
 
 int32_t CActorInstance::IsAttacked()
@@ -435,13 +435,13 @@ int32_t CActorInstance::IsAttacked()
 	if (IsPushing())
 		return TRUE;
 
-	if (__IsDamageMotion())
+	if (GetMotion().__IsDamageMotion())
 		return TRUE;
 
-	if (__IsKnockDownMotion())
+	if (GetMotion().__IsKnockDownMotion())
 		return TRUE;
 
-	if (__IsDieMotion())
+	if (GetMotion().__IsDieMotion())
 		return TRUE;
 
 	return FALSE;
@@ -459,7 +459,7 @@ void CActorInstance::__AccumulationMovement(float fRot)
 {
 	// NOTE - 일단은 WAIT로 미끄러짐 방지
 	//        추후에는 RaceMotionData가 이동되는 모션인지에 대한 Flag를 갖고 있게끔 한다. - [levites]
-	uint16_t motion = __GetCurrentMotionIndex();
+	uint16_t motion = GetMotion().__GetCurrentMotionIndex();
 	if (CRaceMotionData::NAME_WAIT == motion ||
 		CRaceMotionData::NAME_INTRO_WAIT == motion ||
 		CRaceMotionData::NAME_INTRO_SELECTED == motion ||
@@ -568,7 +568,7 @@ void CActorInstance::Revive()
 	m_isMain = FALSE;
 	m_isResistFallen = FALSE;
 
-	__InitializeCollisionData();
+	GetCollisionDetection().__InitializeCollisionData();
 }
 
 int32_t CActorInstance::IsStun()
@@ -585,22 +585,22 @@ void CActorInstance::SetWalkMode()
 {
 	m_isWalking = TRUE;
 	if (CRaceMotionData::NAME_RUN == GET_MOTION_INDEX(m_kCurMotNode.dwMotionKey))
-		SetLoopMotion(CRaceMotionData::NAME_WALK, 0.15f, m_fMovSpd);
+		GetMotion().SetLoopMotion(CRaceMotionData::NAME_WALK, 0.15f, m_fMovSpd);
 }
 
 void CActorInstance::SetRunMode()
 {
 	m_isWalking = FALSE;
 	if (CRaceMotionData::NAME_WALK == GET_MOTION_INDEX(m_kCurMotNode.dwMotionKey))
-		SetLoopMotion(CRaceMotionData::NAME_RUN, 0.15f, m_fMovSpd);
+		GetMotion().SetLoopMotion(CRaceMotionData::NAME_RUN, 0.15f, m_fMovSpd);
 }
 
 MOTION_KEY CActorInstance::GetNormalAttackIndex()
 {
 	uint16_t wMotionIndex;
-	m_pkCurRaceData->GetNormalAttackIndex(GetMotionMode(), &wMotionIndex);
+	m_pkCurRaceData->GetNormalAttackIndex(GetMotion().GetMotionMode(), &wMotionIndex);
 
-	return MAKE_MOTION_KEY(GetMotionMode(), wMotionIndex);
+	return MAKE_MOTION_KEY(GetMotion().GetMotionMode(), wMotionIndex);
 }
 
 //////////////////////////////////////////////////////////////////
@@ -633,13 +633,13 @@ void CActorInstance::AdjustDynamicCollisionMovement(const CActorInstance* c_pAct
 	// Sphere간 Collision이 생겼을 경우 이전위치로 RollBack하는 방식으로 바꿨다.
 	// 단 BGObject에 대해서만.
 
-	if (isAttacking())
+	if (GetBattle().isAttacking())
 		return;
 
 	uint32_t uActorType = c_pActorInstance->GetActorType();
 	if ((uActorType == TYPE_BUILDING) || (uActorType == TYPE_OBJECT) || (uActorType == TYPE_DOOR) || (uActorType == TYPE_STONE))
 	{
-		BlockMovement();
+		GetCollisionDetection().BlockMovement();
 
 		// Movement초기화
 		/*	m_v3Movement = D3DXVECTOR3(0.f,0.f,0.f);
@@ -852,7 +852,7 @@ void CActorInstance::__SetTreePosition(float fx, float fy, float fz)
 
 void CActorInstance::ClearAttachingEffect()
 {
-	__ClearAttachingEffect();
+	GetAttach().__ClearAttachingEffect();
 }
 
 void CActorInstance::Destroy()
@@ -869,7 +869,7 @@ void CActorInstance::Destroy()
 		m_pAttributeInstance = NULL;
 	}
 
-	__ClearAttachingEffect();
+	GetAttach().__ClearAttachingEffect();
 
 	CGraphicThingInstance::Clear();
 
@@ -942,7 +942,7 @@ void CActorInstance::__InitializeMotionData()
 
 	memset(&m_kCurMotNode, 0, sizeof(m_kCurMotNode));
 
-	__ClearCombo();
+	GetBattle().__ClearCombo();
 }
 
 void CActorInstance::__Initialize()
@@ -980,20 +980,54 @@ void CActorInstance::__Initialize()
 	__InitializeRotationData();
 	__InitializeMotionData();
 	__InitializeStateData();
-	__InitializeCollisionData();
+	GetCollisionDetection().__InitializeCollisionData();
 
 	__BlendAlpha_Initialize();
 
 	ClearFlyTargeter();
 }
 
-CActorInstance::CActorInstance()
+CActorInstance::CActorInstance() : m_kMotion(*this),
+								   m_kBattle(*this),
+								   m_kAttach(*this),
+								   m_kRender(*this),
+								   m_kCollisionDetection(*this)
 {
 	__Initialize();
 	m_PhysicsObject.SetActorInstance(this);
 }
 
+CActorInstanceBattle& CActorInstance::GetBattle()
+{
+	return m_kBattle;
+}
+
+CActorInstanceAttach& CActorInstance::GetAttach()
+{
+	return m_kAttach;
+}
+
+CActorInstanceRender& CActorInstance::GetRender()
+{
+	return m_kRender;
+}
+
+CActorInstanceCollisionDetection& CActorInstance::GetCollisionDetection()
+{
+	return m_kCollisionDetection;
+}
+
+CActorInstanceMotion& CActorInstance::GetMotion()
+{
+	return m_kMotion;
+}
+
 CActorInstance::~CActorInstance()
 {
 	Destroy();
+}
+
+void CActorInstance::OnRender()
+{
+	m_kRender.OnRender();
 }

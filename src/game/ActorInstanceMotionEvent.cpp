@@ -84,7 +84,7 @@ void CActorInstance::MotionEventProcess(uint32_t dwcurFrame, int iIndex, const C
 void CActorInstance::__ShowEvent()
 {
 	m_isHiding = FALSE;
-	RestoreRenderMode();
+	GetRender().RestoreRenderMode();
 	SetAlphaValue(1.0f);
 }
 
@@ -127,7 +127,7 @@ void CActorInstance::ProcessMotionEventEffectEvent(const CRaceMotionData::TMotio
 	{
 		if (c_pEffectData->isFollowing)
 		{
-			AttachEffectByID(0,
+			GetAttach().AttachEffectByID(0,
 							 c_pEffectData->strAttachingBoneName.c_str(),
 							 c_pEffectData->dwEffectIndex,
 							 &c_pEffectData->v3EffectPosition);
@@ -161,7 +161,7 @@ void CActorInstance::ProcessMotionEventEffectEvent(const CRaceMotionData::TMotio
 	}
 	else
 	{
-		AttachEffectByID(0, NULL, c_pEffectData->dwEffectIndex, &c_pEffectData->v3EffectPosition);
+		GetAttach().AttachEffectByID(0, NULL, c_pEffectData->dwEffectIndex, &c_pEffectData->v3EffectPosition);
 	}
 }
 
@@ -194,7 +194,7 @@ void CActorInstance::ProcessMotionEventEffectToTargetEvent(const CRaceMotionData
 			D3DXVECTOR3 v3Position(c_pEffectToTargetData->v3EffectPosition.x,
 								   c_pEffectToTargetData->v3EffectPosition.y,
 								   c_pEffectToTargetData->v3EffectPosition.z);
-			pTargetInstance->AttachEffectByID(0, NULL, c_pEffectToTargetData->dwEffectIndex, &v3Position);
+			pTargetInstance->GetAttach().AttachEffectByID(0, NULL, c_pEffectToTargetData->dwEffectIndex, &v3Position);
 		}
 		else
 		{

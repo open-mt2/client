@@ -3,7 +3,7 @@
 
 const TPixelPosition& CActorInstance::NEW_GetLastPixelPositionRef()
 {
-	GetBlendingPosition(&m_kPPosLast);
+	GetBattle().GetBlendingPosition(&m_kPPosLast);
 	m_kPPosLast.y = -m_kPPosLast.y;
 
 	return m_kPPosLast;

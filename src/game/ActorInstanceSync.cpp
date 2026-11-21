@@ -30,21 +30,21 @@ void CActorInstance::__Push(int x, int y)
 	{
 		if (pWorld->isPhysicalCollision(c_rv3Src + v3Movement))
 		{
-			ResetBlendingPosition();
+			GetBattle().ResetBlendingPosition();
 			return;
 		}
 		v3Movement += inc;
 	}
 
-	SetBlendingPosition(c_v3Dst);
+	GetBattle().SetBlendingPosition(c_v3Dst);
 
-	if (!IsUsingSkill())
+	if (!GetMotion().IsUsingSkill())
 	{
 		int len = sqrt(c_v3Delta.x * c_v3Delta.x + c_v3Delta.y * c_v3Delta.y);
 		if (len > 150.0f)
 		{
-			InterceptOnceMotion(CRaceMotionData::NAME_DAMAGE_FLYING);
-			PushOnceMotion(CRaceMotionData::NAME_STAND_UP);
+			GetMotion().InterceptOnceMotion(CRaceMotionData::NAME_DAMAGE_FLYING);
+			GetMotion().PushOnceMotion(CRaceMotionData::NAME_STAND_UP);
 		}
 	}
 }

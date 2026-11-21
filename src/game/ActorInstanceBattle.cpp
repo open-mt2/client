@@ -3,44 +3,49 @@
 #include <Neoeter/Audio/SoundManager.h>
 
 #include <Client/Game/ActorInstance.h>
+#include <Client/Game/CActorInstanceBattle.h>
 #include <Client/Game/RaceData.h>
 
-void CActorInstance::SetBattleHitEffect(uint32_t dwID)
+CActorInstanceBattle::CActorInstanceBattle(CActorInstance& rkOwner) : m_rkOwner(rkOwner)
 {
-	m_dwBattleHitEffectID = dwID;
 }
 
-void CActorInstance::SetBattleAttachEffect(uint32_t dwID)
+void CActorInstanceBattle::SetBattleHitEffect(uint32_t dwID)
 {
-	m_dwBattleAttachEffectID = dwID;
+	m_rkOwner.m_dwBattleHitEffectID = dwID;
 }
 
-bool CActorInstance::CanAct()
+void CActorInstanceBattle::SetBattleAttachEffect(uint32_t dwID)
 {
-	if (IsDead())
+	m_rkOwner.m_dwBattleAttachEffectID = dwID;
+}
+
+bool CActorInstanceBattle::CanAct()
+{
+	if (m_rkOwner.IsDead())
 		return false;
 
-	if (IsStun())
+	if (m_rkOwner.IsStun())
 		return false;
 
-	if (IsParalysis())
+	if (m_rkOwner.IsParalysis())
 		return false;
 
-	if (IsFaint())
+	if (m_rkOwner.IsFaint())
 		return false;
 
-	if (IsSleep())
+	if (m_rkOwner.IsSleep())
 		return false;
 
 	return true;
 }
 
-bool CActorInstance::CanUseSkill()
+bool CActorInstanceBattle::CanUseSkill()
 {
 	if (!CanAct())
 		return false;
 
-	uint32_t dwCurMotionIndex = __GetCurrentMotionIndex();
+	uint32_t dwCurMotionIndex = m_rkOwner.GetMotion().__GetCurrentMotionIndex();
 
 	// Locked during attack
 	switch (dwCurMotionIndex)
@@ -56,9 +61,9 @@ bool CActorInstance::CanUseSkill()
 	}
 
 	// Locked during using skill
-	if (IsUsingSkill())
+	if (m_rkOwner.GetMotion().IsUsingSkill())
 	{
-		if (m_pkCurRaceMotionData->IsCancelEnableSkill())
+		if (m_rkOwner.m_pkCurRaceMotionData->IsCancelEnableSkill())
 			return TRUE;
 
 		return FALSE;
@@ -67,40 +72,40 @@ bool CActorInstance::CanUseSkill()
 	return true;
 }
 
-bool CActorInstance::CanMove()
+bool CActorInstanceBattle::CanMove()
 {
 	if (!CanAct())
 		return false;
 
-	if (isLock())
+	if (m_rkOwner.GetMotion().isLock())
 		return false;
 
 	return true;
 }
 
-bool CActorInstance::CanAttack()
+bool CActorInstanceBattle::CanAttack()
 {
 	if (!CanAct())
 		return false;
 
-	if (IsUsingSkill())
+	if (m_rkOwner.GetMotion().IsUsingSkill())
 	{
-		if (!CanCancelSkill())
+		if (!m_rkOwner.GetMotion().CanCancelSkill())
 			return false;
 	}
 
 	return true;
 }
 
-bool CActorInstance::CanFishing()
+bool CActorInstanceBattle::CanFishing()
 {
 	if (!CanAct())
 		return false;
 
-	if (IsUsingSkill())
+	if (m_rkOwner.GetMotion().IsUsingSkill())
 		return false;
 
-	switch (__GetCurrentMotionIndex())
+	switch (m_rkOwner.GetMotion().__GetCurrentMotionIndex())
 	{
 		case CRaceMotionData::NAME_WAIT:
 		case CRaceMotionData::NAME_WALK:
@@ -114,15 +119,15 @@ bool CActorInstance::CanFishing()
 	return true;
 }
 
-int32_t CActorInstance::IsClickableDistanceDestInstance(CActorInstance& rkInstDst, float fDistance)
+int32_t CActorInstanceBattle::IsClickableDistanceDestInstance(CActorInstance& rkInstDst, float fDistance)
 {
 	TPixelPosition kPPosSrc;
-	GetPixelPosition(&kPPosSrc);
+	m_rkOwner.GetPixelPosition(&kPPosSrc);
 
 	D3DXVECTOR3 kD3DVct3Src(kPPosSrc);
 
-	TCollisionPointInstanceList& rkLstkDefPtInst = rkInstDst.m_DefendingPointInstanceList;
-	TCollisionPointInstanceList::iterator i;
+	CActorInstance::TCollisionPointInstanceList& rkLstkDefPtInst = rkInstDst.m_DefendingPointInstanceList;
+	CActorInstance::TCollisionPointInstanceList::iterator i;
 
 	for (i = rkLstkDefPtInst.begin(); i != rkLstkDefPtInst.end(); ++i)
 	{
@@ -144,62 +149,62 @@ int32_t CActorInstance::IsClickableDistanceDestInstance(CActorInstance& rkInstDs
 	return FALSE;
 }
 
-void CActorInstance::InputNormalAttackCommand(float fDirRot)
+void CActorInstanceBattle::InputNormalAttackCommand(float fDirRot)
 {
 	if (!__CanInputNormalAttackCommand())
 		return;
 
-	m_fAtkDirRot = fDirRot;
-	NormalAttack(m_fAtkDirRot);
+	m_rkOwner.m_fAtkDirRot = fDirRot;
+	NormalAttack(m_rkOwner.m_fAtkDirRot);
 }
 
-bool CActorInstance::InputComboAttackCommand(float fDirRot)
+bool CActorInstanceBattle::InputComboAttackCommand(float fDirRot)
 {
-	m_fAtkDirRot = fDirRot;
+	m_rkOwner.m_fAtkDirRot = fDirRot;
 
-	if (m_isPreInput)
+	if (m_rkOwner.m_isPreInput)
 		return false;
 
 	/////////////////////////////////////////////////////////////////////////////////
 
 	// Process Input
-	if (0 == m_dwcurComboIndex)
+	if (0 == m_rkOwner.m_dwcurComboIndex)
 	{
 		__RunNextCombo();
 		return true;
 	}
-	else if (m_pkCurRaceMotionData->IsComboInputTimeData())
+	else if (m_rkOwner.m_pkCurRaceMotionData->IsComboInputTimeData())
 	{
 		// 동작 경과 시간
 		float fElapsedTime = GetAttackingElapsedTime();
 
 		// 이미 입력 한계 시간이 지났다면..
-		if (fElapsedTime > m_pkCurRaceMotionData->GetComboInputEndTime())
+		if (fElapsedTime > m_rkOwner.m_pkCurRaceMotionData->GetComboInputEndTime())
 		{
 			// Tracen("Input Timeout");
-			if (IsBowMode())
-				m_isNextPreInput = TRUE;
+			if (m_rkOwner.IsBowMode())
+				m_rkOwner.m_isNextPreInput = TRUE;
 			return false;
 		}
 
-		if (fElapsedTime > m_pkCurRaceMotionData->GetNextComboTime()) // 콤보 발동 시간 이 후라면
+		if (fElapsedTime > m_rkOwner.m_pkCurRaceMotionData->GetNextComboTime()) // 콤보 발동 시간 이 후라면
 		{
 			// Tracen("Next combo action");
 			//  args : BlendingTime
 			__RunNextCombo();
 			return true;
 		}
-		else if (fElapsedTime > m_pkCurRaceMotionData->GetComboInputStartTime()) // 선 입력 시간 범위 라면..
+		else if (fElapsedTime > m_rkOwner.m_pkCurRaceMotionData->GetComboInputStartTime()) // 선 입력 시간 범위 라면..
 		{
 			// Tracen("Setting up line input");
-			m_isPreInput = TRUE;
+			m_rkOwner.m_isPreInput = TRUE;
 			return false;
 		}
 	}
 	else
 	{
 		float fElapsedTime = GetAttackingElapsedTime();
-		if (fElapsedTime > m_pkCurRaceMotionData->GetMotionDuration() * 0.9f) // 콤보 발동 시간 이 후라면
+		if (fElapsedTime > m_rkOwner.m_pkCurRaceMotionData->GetMotionDuration() * 0.9f) // 콤보 발동 시간 이 후라면
 		{
 			// Tracen("Next combo action");
 			//  args : BlendingTime
@@ -212,14 +217,14 @@ bool CActorInstance::InputComboAttackCommand(float fDirRot)
 	return false;
 }
 
-void CActorInstance::ComboProcess()
+void CActorInstanceBattle::ComboProcess()
 {
 	// If combo is on action
-	if (0 != m_dwcurComboIndex)
+	if (0 != m_rkOwner.m_dwcurComboIndex)
 	{
-		if (!m_pkCurRaceMotionData)
+		if (!m_rkOwner.m_pkCurRaceMotionData)
 		{
-			Tracef("Attacking motion data is NULL! : %d\n", m_dwcurComboIndex);
+			Tracef("Attacking motion data is NULL! : %d\n", m_rkOwner.m_dwcurComboIndex);
 			__ClearCombo();
 			return;
 		}
@@ -227,13 +232,13 @@ void CActorInstance::ComboProcess()
 		float fElapsedTime = GetAttackingElapsedTime();
 
 		// Process PreInput
-		if (m_isPreInput)
+		if (m_rkOwner.m_isPreInput)
 		{
-			// Tracenf("Prefix %f NextComboTime %f", fElapsedTime, m_pkCurRaceMotionData->GetNextComboTime());
-			if (fElapsedTime > m_pkCurRaceMotionData->GetNextComboTime())
+			// Tracenf("Prefix %f NextComboTime %f", fElapsedTime, m_rkOwner.m_pkCurRaceMotionData->GetNextComboTime());
+			if (fElapsedTime > m_rkOwner.m_pkCurRaceMotionData->GetNextComboTime())
 			{
 				__RunNextCombo();
-				m_isPreInput = FALSE;
+				m_rkOwner.m_isPreInput = FALSE;
 
 				return;
 			}
@@ -241,28 +246,28 @@ void CActorInstance::ComboProcess()
 	}
 	else
 	{
-		m_isPreInput = FALSE;
+		m_rkOwner.m_isPreInput = FALSE;
 
-		if (!IsUsingSkill())	  // m_isNextPreInput는 활모드 일때만 사용하는 변수
-			if (m_isNextPreInput) // 활일때만 스킬이 캔슬 되는건 이곳 때문임
+		if (!m_rkOwner.GetMotion().IsUsingSkill())	  // m_rkOwner.m_isNextPreInput는 활모드 일때만 사용하는 변수
+			if (m_rkOwner.m_isNextPreInput) // 활일때만 스킬이 캔슬 되는건 이곳 때문임
 			{
 				__RunNextCombo();
-				m_isNextPreInput = FALSE;
+				m_rkOwner.m_isNextPreInput = FALSE;
 			}
 	}
 }
 
-void CActorInstance::__RunNextCombo()
+void CActorInstanceBattle::__RunNextCombo()
 {
-	++m_dwcurComboIndex;
+	++m_rkOwner.m_dwcurComboIndex;
 	///////////////////////////
 
-	uint16_t wComboIndex = m_dwcurComboIndex;
-	uint16_t wComboType = __GetCurrentComboType();
+	uint16_t wComboIndex = m_rkOwner.m_dwcurComboIndex;
+	uint16_t wComboType = m_rkOwner.__GetCurrentComboType();
 
 	if (wComboIndex == 0)
 	{
-		TraceError("CActorInstance::__RunNextCombo(wComboType=%d, wComboIndex=%d)", wComboType, wComboIndex);
+		TraceError("CActorInstanceBattle::__RunNextCombo(wComboType=%d, wComboIndex=%d)", wComboType, wComboIndex);
 		return;
 	}
 
@@ -270,52 +275,52 @@ void CActorInstance::__RunNextCombo()
 
 	CRaceData::TComboData* pComboData;
 
-	if (!m_pkCurRaceData->GetComboDataPointer(m_wcurMotionMode, wComboType, &pComboData))
+	if (!m_rkOwner.m_pkCurRaceData->GetComboDataPointer(m_rkOwner.m_wcurMotionMode, wComboType, &pComboData))
 	{
-		TraceError("CActorInstance::__RunNextCombo(wComboType=%d, wComboIndex=%d) - m_pkCurRaceData->GetComboDataPointer(m_wcurMotionMode=%d, &pComboData) == NULL",
-				   wComboType, wComboIndex, m_wcurMotionMode);
+		TraceError("CActorInstanceBattle::__RunNextCombo(wComboType=%d, wComboIndex=%d) - m_rkOwner.m_pkCurRaceData->GetComboDataPointer(m_rkOwner.m_wcurMotionMode=%d, &pComboData) == NULL",
+				   wComboType, wComboIndex, m_rkOwner.m_wcurMotionMode);
 		return;
 	}
 
 	if (dwComboArrayIndex >= pComboData->ComboIndexVector.size())
 	{
-		TraceError("CActorInstance::__RunNextCombo(wComboType=%d, wComboIndex=%d) - (dwComboArrayIndex=%d) >= (pComboData->ComboIndexVector.size()=%d)",
+		TraceError("CActorInstanceBattle::__RunNextCombo(wComboType=%d, wComboIndex=%d) - (dwComboArrayIndex=%d) >= (pComboData->ComboIndexVector.size()=%d)",
 				   wComboType, wComboIndex, dwComboArrayIndex, pComboData->ComboIndexVector.size());
 		return;
 	}
 
 	uint16_t wcurComboMotionIndex = pComboData->ComboIndexVector[dwComboArrayIndex];
-	ComboAttack(wcurComboMotionIndex, m_fAtkDirRot, 0.1f);
+	ComboAttack(wcurComboMotionIndex, m_rkOwner.m_fAtkDirRot, 0.1f);
 
 	////////////////////////////////
 	// 콤보가 끝났다면
-	if (m_dwcurComboIndex == pComboData->ComboIndexVector.size())
+	if (m_rkOwner.m_dwcurComboIndex == pComboData->ComboIndexVector.size())
 	{
 		__OnEndCombo();
 	}
 }
 
-void CActorInstance::__OnEndCombo()
+void CActorInstanceBattle::__OnEndCombo()
 {
-	if (__IsMountingHorse())
+	if (m_rkOwner.__IsMountingHorse())
 	{
-		m_dwcurComboIndex = 1;
+		m_rkOwner.m_dwcurComboIndex = 1;
 	}
 
 	// 여기서 콤보를 초기화 해선 안된다.
 	// 콤보가 초기화 되는 곳은 마지막 콤보가 끝나고 Motion 이 자동으로 Wait 으로 돌아가는 시점이다.
 }
 
-void CActorInstance::__ClearCombo()
+void CActorInstanceBattle::__ClearCombo()
 {
-	m_dwcurComboIndex = 0;
-	m_isPreInput = FALSE;
-	m_pkCurRaceMotionData = NULL;
+	m_rkOwner.m_dwcurComboIndex = 0;
+	m_rkOwner.m_isPreInput = FALSE;
+	m_rkOwner.m_pkCurRaceMotionData = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-int32_t CActorInstance::isAttacking()
+int32_t CActorInstanceBattle::isAttacking()
 {
 	if (isNormalAttacking())
 		return TRUE;
@@ -329,15 +334,15 @@ int32_t CActorInstance::isAttacking()
 	return FALSE;
 }
 
-int32_t CActorInstance::isValidAttacking()
+int32_t CActorInstanceBattle::isValidAttacking()
 {
-	if (!m_pkCurRaceMotionData)
+	if (!m_rkOwner.m_pkCurRaceMotionData)
 		return FALSE;
 
-	if (!m_pkCurRaceMotionData->isAttackingMotion())
+	if (!m_rkOwner.m_pkCurRaceMotionData->isAttackingMotion())
 		return FALSE;
 
-	const NRaceData::TMotionAttackData* c_pData = m_pkCurRaceMotionData->GetMotionAttackDataPointer();
+	const NRaceData::TMotionAttackData* c_pData = m_rkOwner.m_pkCurRaceMotionData->GetMotionAttackDataPointer();
 	float fElapsedTime = GetAttackingElapsedTime();
 	NRaceData::THitDataContainer::const_iterator itor = c_pData->HitDataContainer.begin();
 	for (; itor != c_pData->HitDataContainer.end(); ++itor)
@@ -351,7 +356,7 @@ int32_t CActorInstance::isValidAttacking()
 	return TRUE;
 }
 
-int32_t CActorInstance::CanCheckAttacking()
+int32_t CActorInstanceBattle::CanCheckAttacking()
 {
 	if (isAttacking())
 		return true;
@@ -359,56 +364,56 @@ int32_t CActorInstance::CanCheckAttacking()
 	return false;
 }
 
-bool CActorInstance::__IsInSplashTime()
+bool CActorInstanceBattle::__IsInSplashTime()
 {
-	if (m_kSplashArea.fDisappearingTime > GetLocalTime())
+	if (m_rkOwner.m_kSplashArea.fDisappearingTime > m_rkOwner.GetLocalTime())
 		return true;
 
 	return false;
 }
 
-int32_t CActorInstance::isNormalAttacking()
+int32_t CActorInstanceBattle::isNormalAttacking()
 {
-	if (!m_pkCurRaceMotionData)
+	if (!m_rkOwner.m_pkCurRaceMotionData)
 		return FALSE;
 
-	if (!m_pkCurRaceMotionData->isAttackingMotion())
+	if (!m_rkOwner.m_pkCurRaceMotionData->isAttackingMotion())
 		return FALSE;
 
-	const NRaceData::TMotionAttackData* c_pData = m_pkCurRaceMotionData->GetMotionAttackDataPointer();
+	const NRaceData::TMotionAttackData* c_pData = m_rkOwner.m_pkCurRaceMotionData->GetMotionAttackDataPointer();
 	if (NRaceData::MOTION_TYPE_NORMAL != c_pData->iMotionType)
 		return FALSE;
 
 	return TRUE;
 }
 
-int32_t CActorInstance::isComboAttacking()
+int32_t CActorInstanceBattle::isComboAttacking()
 {
-	if (!m_pkCurRaceMotionData)
+	if (!m_rkOwner.m_pkCurRaceMotionData)
 		return FALSE;
 
-	if (!m_pkCurRaceMotionData->isAttackingMotion())
+	if (!m_rkOwner.m_pkCurRaceMotionData->isAttackingMotion())
 		return FALSE;
 
-	const NRaceData::TMotionAttackData* c_pData = m_pkCurRaceMotionData->GetMotionAttackDataPointer();
+	const NRaceData::TMotionAttackData* c_pData = m_rkOwner.m_pkCurRaceMotionData->GetMotionAttackDataPointer();
 	if (NRaceData::MOTION_TYPE_COMBO != c_pData->iMotionType)
 		return FALSE;
 
 	return TRUE;
 }
 
-int32_t CActorInstance::IsSplashAttacking()
+int32_t CActorInstanceBattle::IsSplashAttacking()
 {
-	if (!m_pkCurRaceMotionData)
+	if (!m_rkOwner.m_pkCurRaceMotionData)
 		return FALSE;
 
-	if (m_pkCurRaceMotionData->HasSplashMotionEvent())
+	if (m_rkOwner.m_pkCurRaceMotionData->HasSplashMotionEvent())
 		return TRUE;
 
 	return FALSE;
 }
 
-int32_t CActorInstance::__IsMovingSkill(uint16_t wSkillNumber)
+int32_t CActorInstanceBattle::__IsMovingSkill(uint16_t wSkillNumber)
 {
 	enum
 	{
@@ -418,9 +423,9 @@ int32_t CActorInstance::__IsMovingSkill(uint16_t wSkillNumber)
 	return HORSE_DASH_SKILL_NUMBER == wSkillNumber;
 }
 
-int32_t CActorInstance::IsActEmotion()
+int32_t CActorInstanceBattle::IsActEmotion()
 {
-	uint32_t dwCurMotionIndex = __GetCurrentMotionIndex();
+	uint32_t dwCurMotionIndex = m_rkOwner.GetMotion().__GetCurrentMotionIndex();
 	switch (dwCurMotionIndex)
 	{
 		case CRaceMotionData::NAME_FRENCH_KISS_START + 0:
@@ -438,74 +443,74 @@ int32_t CActorInstance::IsActEmotion()
 	return FALSE;
 }
 
-int32_t CActorInstance::IsUsingMovingSkill()
+int32_t CActorInstanceBattle::IsUsingMovingSkill()
 {
-	return __IsMovingSkill(m_kCurMotNode.uSkill);
+	return __IsMovingSkill(m_rkOwner.m_kCurMotNode.uSkill);
 }
 
-uint32_t CActorInstance::GetComboIndex()
+uint32_t CActorInstanceBattle::GetComboIndex()
 {
-	return m_dwcurComboIndex;
+	return m_rkOwner.m_dwcurComboIndex;
 }
 
-float CActorInstance::GetAttackingElapsedTime()
+float CActorInstanceBattle::GetAttackingElapsedTime()
 {
-	return (GetLocalTime() - m_kCurMotNode.fStartTime) * m_kCurMotNode.fSpeedRatio;
-	//	return (GetLocalTime() - m_kCurMotNode.fStartTime) * __GetAttackSpeed();
+	return (m_rkOwner.GetLocalTime() - m_rkOwner.m_kCurMotNode.fStartTime) * m_rkOwner.m_kCurMotNode.fSpeedRatio;
+	//	return (m_rkOwner.GetLocalTime() - m_rkOwner.m_kCurMotNode.fStartTime) * m_rkOwner.__GetAttackSpeed();
 }
 
-bool CActorInstance::__CanInputNormalAttackCommand()
+bool CActorInstanceBattle::__CanInputNormalAttackCommand()
 {
-	if (IsWaiting())
+	if (m_rkOwner.IsWaiting())
 		return true;
 
 	if (isNormalAttacking())
 	{
 		float fElapsedTime = GetAttackingElapsedTime();
 
-		if (fElapsedTime > m_pkCurRaceMotionData->GetMotionDuration() * 0.9f)
+		if (fElapsedTime > m_rkOwner.m_pkCurRaceMotionData->GetMotionDuration() * 0.9f)
 			return true;
 	}
 
 	return false;
 }
 
-int32_t CActorInstance::NormalAttack(float fDirRot, float fBlendTime)
+int32_t CActorInstanceBattle::NormalAttack(float fDirRot, float fBlendTime)
 {
 	uint16_t wMotionIndex;
-	if (!m_pkCurRaceData->GetNormalAttackIndex(m_wcurMotionMode, &wMotionIndex))
+	if (!m_rkOwner.m_pkCurRaceData->GetNormalAttackIndex(m_rkOwner.m_wcurMotionMode, &wMotionIndex))
 		return FALSE;
 
-	BlendRotation(fDirRot, fBlendTime);
-	SetAdvancingRotation(fDirRot);
-	InterceptOnceMotion(wMotionIndex, 0.1f, 0, __GetAttackSpeed());
+	m_rkOwner.BlendRotation(fDirRot, fBlendTime);
+	m_rkOwner.SetAdvancingRotation(fDirRot);
+	m_rkOwner.GetMotion().InterceptOnceMotion(wMotionIndex, 0.1f, 0, m_rkOwner.__GetAttackSpeed());
 
-	__OnAttack(wMotionIndex);
+	m_rkOwner.__OnAttack(wMotionIndex);
 
-	NEW_SetAtkPixelPosition(NEW_GetCurPixelPositionRef());
+	m_rkOwner.NEW_SetAtkPixelPosition(m_rkOwner.NEW_GetCurPixelPositionRef());
 
 	return TRUE;
 }
 
-int32_t CActorInstance::ComboAttack(uint32_t dwMotionIndex, float fDirRot, float fBlendTime)
+int32_t CActorInstanceBattle::ComboAttack(uint32_t dwMotionIndex, float fDirRot, float fBlendTime)
 {
-	BlendRotation(fDirRot, fBlendTime);
-	SetAdvancingRotation(fDirRot);
+	m_rkOwner.BlendRotation(fDirRot, fBlendTime);
+	m_rkOwner.SetAdvancingRotation(fDirRot);
 
-	InterceptOnceMotion(dwMotionIndex, fBlendTime, 0, __GetAttackSpeed());
+	m_rkOwner.GetMotion().InterceptOnceMotion(dwMotionIndex, fBlendTime, 0, m_rkOwner.__GetAttackSpeed());
 
-	__OnAttack(dwMotionIndex);
+	m_rkOwner.__OnAttack(dwMotionIndex);
 
-	NEW_SetAtkPixelPosition(NEW_GetCurPixelPositionRef());
+	m_rkOwner.NEW_SetAtkPixelPosition(m_rkOwner.NEW_GetCurPixelPositionRef());
 
 	return TRUE;
 }
 
-void CActorInstance::__ProcessMotionEventAttackSuccess(uint32_t dwMotionKey, uint8_t byEventIndex, CActorInstance& rVictim)
+void CActorInstanceBattle::__ProcessMotionEventAttackSuccess(uint32_t dwMotionKey, uint8_t byEventIndex, CActorInstance& rVictim)
 {
 	CRaceMotionData* pMotionData;
 
-	if (!m_pkCurRaceData->GetMotionDataPointer(dwMotionKey, &pMotionData))
+	if (!m_rkOwner.m_pkCurRaceData->GetMotionDataPointer(dwMotionKey, &pMotionData))
 		return;
 
 	if (byEventIndex >= pMotionData->GetMotionEventDataCount())
@@ -519,25 +524,25 @@ void CActorInstance::__ProcessMotionEventAttackSuccess(uint32_t dwMotionKey, uin
 	__ProcessDataAttackSuccess(pMotionEventData->AttackData, rVictim, c_rv3VictimPos);
 }
 
-void CActorInstance::__ProcessMotionAttackSuccess(uint32_t dwMotionKey, CActorInstance& rVictim)
+void CActorInstanceBattle::__ProcessMotionAttackSuccess(uint32_t dwMotionKey, CActorInstance& rVictim)
 {
 	CRaceMotionData* c_pMotionData;
 
-	if (!m_pkCurRaceData->GetMotionDataPointer(dwMotionKey, &c_pMotionData))
+	if (!m_rkOwner.m_pkCurRaceData->GetMotionDataPointer(dwMotionKey, &c_pMotionData))
 		return;
 
 	const D3DXVECTOR3& c_rv3VictimPos = rVictim.GetPositionVectorRef();
 	__ProcessDataAttackSuccess(c_pMotionData->GetMotionAttackDataReference(), rVictim, c_rv3VictimPos);
 }
 
-uint32_t CActorInstance::__GetOwnerVID()
+uint32_t CActorInstanceBattle::__GetOwnerVID()
 {
-	return m_dwOwnerVID;
+	return m_rkOwner.m_dwOwnerVID;
 }
 
-float CActorInstance::__GetOwnerTime()
+float CActorInstanceBattle::__GetOwnerTime()
 {
-	return GetLocalTime() - m_fOwnerBaseTime;
+	return m_rkOwner.GetLocalTime() - m_rkOwner.m_fOwnerBaseTime;
 }
 
 bool IS_HUGE_RACE(unsigned int vnum)
@@ -550,7 +555,7 @@ bool IS_HUGE_RACE(unsigned int vnum)
 	return false;
 }
 
-bool CActorInstance::__CanPushDestActor(CActorInstance& rkActorDst)
+bool CActorInstanceBattle::__CanPushDestActor(CActorInstance& rkActorDst)
 {
 	if (rkActorDst.IsBuilding())
 		return false;
@@ -572,10 +577,10 @@ bool CActorInstance::__CanPushDestActor(CActorInstance& rkActorDst)
 	if (rkActorDst.IsStun())
 		return true;
 
-	if (rkActorDst.__GetOwnerVID() != GetVirtualID())
+	if (rkActorDst.GetBattle().__GetOwnerVID() != m_rkOwner.GetVirtualID())
 		return false;
 
-	if (rkActorDst.__GetOwnerTime() > 3.0f)
+	if (rkActorDst.GetBattle().__GetOwnerTime() > 3.0f)
 		return false;
 
 	return true;
@@ -600,12 +605,12 @@ bool IS_PARTY_HUNTING_RACE(unsigned int vnum)
 	*/
 }
 
-void CActorInstance::__ProcessDataAttackSuccess(const NRaceData::TAttackData& c_rAttackData, CActorInstance& rVictim, const D3DXVECTOR3& c_rv3Position, uint32_t uiSkill, int32_t isSendPacket)
+void CActorInstanceBattle::__ProcessDataAttackSuccess(const NRaceData::TAttackData& c_rAttackData, CActorInstance& rVictim, const D3DXVECTOR3& c_rv3Position, uint32_t uiSkill, int32_t isSendPacket)
 {
 	if (NRaceData::HIT_TYPE_NONE == c_rAttackData.iHittingType)
 		return;
 
-	InsertDelay(c_rAttackData.fStiffenTime);
+	m_rkOwner.InsertDelay(c_rAttackData.fStiffenTime);
 
 	if (__CanPushDestActor(rVictim) && c_rAttackData.fExternalForce > 0.0f)
 	{
@@ -624,7 +629,7 @@ void CActorInstance::__ProcessDataAttackSuccess(const NRaceData::TAttackData& c_
 		if (uiSkill) // 파티 사냥 몬스터라도 스킬이면 무적시간 적용
 			rVictim.m_fInvisibleTime = CTimer::Instance().GetCurrentSecond() + c_rAttackData.fInvisibleTime;
 
-		if (m_isMain) // #0000794: [M2KR] 폴리모프 - 밸런싱 문제 타인 공격에 의한 무적 타임은 고려하지 않고 자신 공격에 의한것만 체크한다
+		if (m_rkOwner.m_isMain) // #0000794: [M2KR] 폴리모프 - 밸런싱 문제 타인 공격에 의한 무적 타임은 고려하지 않고 자신 공격에 의한것만 체크한다
 			rVictim.m_fInvisibleTime = CTimer::Instance().GetCurrentSecond() + c_rAttackData.fInvisibleTime;
 	}
 	else // 파티 사냥 몬스터가 아닐 경우만 적용
@@ -645,7 +650,7 @@ void CActorInstance::__ProcessDataAttackSuccess(const NRaceData::TAttackData& c_
 		vec3Effect = c_rv3Position;
 	}
 
-	const D3DXVECTOR3& v3Pos = GetPosition();
+	const D3DXVECTOR3& v3Pos = m_rkOwner.GetPosition();
 
 	float fHeight = D3DXToDegree(atan2(-vec3Effect.x + v3Pos.x, +vec3Effect.y - v3Pos.y));
 
@@ -657,16 +662,16 @@ void CActorInstance::__ProcessDataAttackSuccess(const NRaceData::TAttackData& c_
 		vec3Delta *= 30.0f;
 
 		CEffectManager& rkEftMgr = CEffectManager::Instance();
-		if (m_dwBattleHitEffectID)
-			rkEftMgr.CreateEffect(m_dwBattleHitEffectID, v3Pos + vec3Delta, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+		if (m_rkOwner.m_dwBattleHitEffectID)
+			rkEftMgr.CreateEffect(m_rkOwner.m_dwBattleHitEffectID, v3Pos + vec3Delta, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	}
 	else
 	{
 		CEffectManager& rkEftMgr = CEffectManager::Instance();
-		if (m_dwBattleHitEffectID)
-			rkEftMgr.CreateEffect(m_dwBattleHitEffectID, vec3Effect, D3DXVECTOR3(0.0f, 0.0f, fHeight));
-		if (m_dwBattleAttachEffectID)
-			rVictim.AttachEffectByID(0, NULL, m_dwBattleAttachEffectID);
+		if (m_rkOwner.m_dwBattleHitEffectID)
+			rkEftMgr.CreateEffect(m_rkOwner.m_dwBattleHitEffectID, vec3Effect, D3DXVECTOR3(0.0f, 0.0f, fHeight));
+		if (m_rkOwner.m_dwBattleAttachEffectID)
+			rVictim.GetAttach().AttachEffectByID(0, NULL, m_rkOwner.m_dwBattleAttachEffectID);
 	}
 
 	if (rVictim.IsBuilding())
@@ -695,7 +700,7 @@ void CActorInstance::__ProcessDataAttackSuccess(const NRaceData::TAttackData& c_
 		}
 	}
 
-	__OnHit(uiSkill, rVictim, isSendPacket);
+	m_rkOwner.__OnHit(uiSkill, rVictim, isSendPacket);
 }
 
 void CActorInstance::OnShootDamage()
@@ -706,33 +711,33 @@ void CActorInstance::OnShootDamage()
 	}
 	else
 	{
-		__Shake(100);
+		GetBattle().__Shake(100);
 
-		if (!isLock() && !__IsKnockDownMotion() && !__IsStandUpMotion())
+		if (!GetMotion().isLock() && !GetMotion().__IsKnockDownMotion() && !GetMotion().__IsStandUpMotion())
 		{
-			if (InterceptOnceMotion(CRaceMotionData::NAME_DAMAGE))
-				PushLoopMotion(CRaceMotionData::NAME_WAIT);
+			if (GetMotion().InterceptOnceMotion(CRaceMotionData::NAME_DAMAGE))
+				GetMotion().PushLoopMotion(CRaceMotionData::NAME_WAIT);
 		}
 	}
 }
 
-void CActorInstance::__Shake(uint32_t dwDuration)
+void CActorInstanceBattle::__Shake(uint32_t dwDuration)
 {
 	uint32_t dwCurTime = ELTimer_GetMSec();
-	m_dwShakeTime = dwCurTime + dwDuration;
+	m_rkOwner.m_dwShakeTime = dwCurTime + dwDuration;
 }
 
-void CActorInstance::ShakeProcess()
+void CActorInstanceBattle::ShakeProcess()
 {
-	if (m_dwShakeTime)
+	if (m_rkOwner.m_dwShakeTime)
 	{
 		D3DXVECTOR3 v3Pos(0.0f, 0.0f, 0.0f);
 
 		uint32_t dwCurTime = ELTimer_GetMSec();
 
-		if (m_dwShakeTime < dwCurTime)
+		if (m_rkOwner.m_dwShakeTime < dwCurTime)
 		{
-			m_dwShakeTime = 0;
+			m_rkOwner.m_dwShakeTime = 0;
 		}
 		else
 		{
@@ -769,13 +774,13 @@ void CActorInstance::ShakeProcess()
 			}
 		}
 
-		m_worldMatrix._41 += v3Pos.x;
-		m_worldMatrix._42 += v3Pos.y;
-		m_worldMatrix._43 += v3Pos.z;
+		m_rkOwner.m_worldMatrix._41 += v3Pos.x;
+		m_rkOwner.m_worldMatrix._42 += v3Pos.y;
+		m_rkOwner.m_worldMatrix._43 += v3Pos.z;
 	}
 }
 
-void CActorInstance::__HitStone(CActorInstance& rVictim)
+void CActorInstanceBattle::__HitStone(CActorInstance& rVictim)
 {
 	if (rVictim.IsStun())
 	{
@@ -783,11 +788,11 @@ void CActorInstance::__HitStone(CActorInstance& rVictim)
 	}
 	else
 	{
-		rVictim.__Shake(100);
+		rVictim.GetBattle().__Shake(100);
 	}
 }
 
-void CActorInstance::__HitGood(CActorInstance& rVictim)
+void CActorInstanceBattle::__HitGood(CActorInstance& rVictim)
 {
 	if (rVictim.IsKnockDown())
 		return;
@@ -798,11 +803,11 @@ void CActorInstance::__HitGood(CActorInstance& rVictim)
 	}
 	else
 	{
-		rVictim.__Shake(100);
+		rVictim.GetBattle().__Shake(100);
 
-		if (!rVictim.isLock())
+		if (!rVictim.GetMotion().isLock())
 		{
-			float fRotRad = D3DXToRadian(GetRotation());
+			float fRotRad = D3DXToRadian(m_rkOwner.GetRotation());
 			float fVictimRotRad = D3DXToRadian(rVictim.GetRotation());
 
 			D3DXVECTOR2 v2Normal(sin(fRotRad), cos(fRotRad));
@@ -815,30 +820,30 @@ void CActorInstance::__HitGood(CActorInstance& rVictim)
 
 			if (fScalar < 0.0f)
 			{
-				if (rVictim.InterceptOnceMotion(CRaceMotionData::NAME_DAMAGE))
-					rVictim.PushLoopMotion(CRaceMotionData::NAME_WAIT);
+				if (rVictim.GetMotion().InterceptOnceMotion(CRaceMotionData::NAME_DAMAGE))
+					rVictim.GetMotion().PushLoopMotion(CRaceMotionData::NAME_WAIT);
 			}
 			else
 			{
-				if (rVictim.InterceptOnceMotion(CRaceMotionData::NAME_DAMAGE_BACK))
-					rVictim.PushLoopMotion(CRaceMotionData::NAME_WAIT);
-				else if (rVictim.InterceptOnceMotion(CRaceMotionData::NAME_DAMAGE))
-					rVictim.PushLoopMotion(CRaceMotionData::NAME_WAIT);
+				if (rVictim.GetMotion().InterceptOnceMotion(CRaceMotionData::NAME_DAMAGE_BACK))
+					rVictim.GetMotion().PushLoopMotion(CRaceMotionData::NAME_WAIT);
+				else if (rVictim.GetMotion().InterceptOnceMotion(CRaceMotionData::NAME_DAMAGE))
+					rVictim.GetMotion().PushLoopMotion(CRaceMotionData::NAME_WAIT);
 			}
 		}
 	}
 }
 
-void CActorInstance::__HitGreate(CActorInstance& rVictim)
+void CActorInstanceBattle::__HitGreate(CActorInstance& rVictim)
 {
 	// DISABLE_KNOCKDOWN_ATTACK
 	if (rVictim.IsKnockDown())
 		return;
-	if (rVictim.__IsStandUpMotion())
+	if (rVictim.GetMotion().__IsStandUpMotion())
 		return;
 	// END_OF_DISABLE_KNOCKDOWN_ATTACK
 
-	float fRotRad = D3DXToRadian(GetRotation());
+	float fRotRad = D3DXToRadian(m_rkOwner.GetRotation());
 	float fVictimRotRad = D3DXToRadian(rVictim.GetRotation());
 
 	D3DXVECTOR2 v2Normal(sin(fRotRad), cos(fRotRad));
@@ -849,19 +854,19 @@ void CActorInstance::__HitGreate(CActorInstance& rVictim)
 
 	float fScalar = D3DXVec2Dot(&v2Normal, &v2VictimNormal);
 
-	rVictim.__Shake(100);
+	rVictim.GetBattle().__Shake(100);
 
-	if (rVictim.IsUsingSkill())
+	if (rVictim.GetMotion().IsUsingSkill())
 		return;
 
 	if (rVictim.IsStun())
 	{
 		if (fScalar < 0.0f)
-			rVictim.InterceptOnceMotion(CRaceMotionData::NAME_DAMAGE_FLYING);
+			rVictim.GetMotion().InterceptOnceMotion(CRaceMotionData::NAME_DAMAGE_FLYING);
 		else
 		{
-			if (!rVictim.InterceptOnceMotion(CRaceMotionData::NAME_DAMAGE_FLYING_BACK))
-				rVictim.InterceptOnceMotion(CRaceMotionData::NAME_DAMAGE_FLYING);
+			if (!rVictim.GetMotion().InterceptOnceMotion(CRaceMotionData::NAME_DAMAGE_FLYING_BACK))
+				rVictim.GetMotion().InterceptOnceMotion(CRaceMotionData::NAME_DAMAGE_FLYING);
 		}
 
 		rVictim.m_isRealDead = true;
@@ -870,68 +875,68 @@ void CActorInstance::__HitGreate(CActorInstance& rVictim)
 	{
 		if (fScalar < 0.0f)
 		{
-			if (rVictim.InterceptOnceMotion(CRaceMotionData::NAME_DAMAGE_FLYING))
+			if (rVictim.GetMotion().InterceptOnceMotion(CRaceMotionData::NAME_DAMAGE_FLYING))
 			{
-				rVictim.PushOnceMotion(CRaceMotionData::NAME_STAND_UP);
-				rVictim.PushLoopMotion(CRaceMotionData::NAME_WAIT);
+				rVictim.GetMotion().PushOnceMotion(CRaceMotionData::NAME_STAND_UP);
+				rVictim.GetMotion().PushLoopMotion(CRaceMotionData::NAME_WAIT);
 			}
 		}
 		else
 		{
-			if (!rVictim.InterceptOnceMotion(CRaceMotionData::NAME_DAMAGE_FLYING_BACK))
+			if (!rVictim.GetMotion().InterceptOnceMotion(CRaceMotionData::NAME_DAMAGE_FLYING_BACK))
 			{
-				if (rVictim.InterceptOnceMotion(CRaceMotionData::NAME_DAMAGE_FLYING))
+				if (rVictim.GetMotion().InterceptOnceMotion(CRaceMotionData::NAME_DAMAGE_FLYING))
 				{
-					rVictim.PushOnceMotion(CRaceMotionData::NAME_STAND_UP);
-					rVictim.PushLoopMotion(CRaceMotionData::NAME_WAIT);
+					rVictim.GetMotion().PushOnceMotion(CRaceMotionData::NAME_STAND_UP);
+					rVictim.GetMotion().PushLoopMotion(CRaceMotionData::NAME_WAIT);
 				}
 			}
 			else
 			{
-				rVictim.PushOnceMotion(CRaceMotionData::NAME_STAND_UP_BACK);
-				rVictim.PushLoopMotion(CRaceMotionData::NAME_WAIT);
+				rVictim.GetMotion().PushOnceMotion(CRaceMotionData::NAME_STAND_UP_BACK);
+				rVictim.GetMotion().PushLoopMotion(CRaceMotionData::NAME_WAIT);
 			}
 		}
 	}
 }
 
-void CActorInstance::SetBlendingPosition(const TPixelPosition& c_rPosition, float fBlendingTime)
+void CActorInstanceBattle::SetBlendingPosition(const TPixelPosition& c_rPosition, float fBlendingTime)
 {
 	// return;
 	TPixelPosition Position;
 
-	Position.x = c_rPosition.x - m_x;
-	Position.y = c_rPosition.y - m_y;
+	Position.x = c_rPosition.x - m_rkOwner.m_x;
+	Position.y = c_rPosition.y - m_rkOwner.m_y;
 	Position.z = 0;
 
-	m_PhysicsObject.SetLastPosition(Position, fBlendingTime);
+	m_rkOwner.m_PhysicsObject.SetLastPosition(Position, fBlendingTime);
 }
 
-void CActorInstance::ResetBlendingPosition()
+void CActorInstanceBattle::ResetBlendingPosition()
 {
-	m_PhysicsObject.Initialize();
+	m_rkOwner.m_PhysicsObject.Initialize();
 }
 
-void CActorInstance::GetBlendingPosition(TPixelPosition* pPosition)
+void CActorInstanceBattle::GetBlendingPosition(TPixelPosition* pPosition)
 {
-	if (m_PhysicsObject.isBlending())
+	if (m_rkOwner.m_PhysicsObject.isBlending())
 	{
-		m_PhysicsObject.GetLastPosition(pPosition);
-		pPosition->x += m_x;
-		pPosition->y += m_y;
-		pPosition->z += m_z;
+		m_rkOwner.m_PhysicsObject.GetLastPosition(pPosition);
+		pPosition->x += m_rkOwner.m_x;
+		pPosition->y += m_rkOwner.m_y;
+		pPosition->z += m_rkOwner.m_z;
 	}
 	else
 	{
-		pPosition->x = m_x;
-		pPosition->y = m_y;
-		pPosition->z = m_z;
+		pPosition->x = m_rkOwner.m_x;
+		pPosition->y = m_rkOwner.m_y;
+		pPosition->z = m_rkOwner.m_z;
 	}
 }
 
-void CActorInstance::__PushCircle(CActorInstance& rVictim)
+void CActorInstanceBattle::__PushCircle(CActorInstance& rVictim)
 {
-	const TPixelPosition& c_rkPPosAtk = NEW_GetAtkPixelPositionRef();
+	const TPixelPosition& c_rkPPosAtk = m_rkOwner.NEW_GetAtkPixelPositionRef();
 
 	D3DXVECTOR3 v3SrcPos(c_rkPPosAtk.x, -c_rkPPosAtk.y, c_rkPPosAtk.z);
 
@@ -944,33 +949,33 @@ void CActorInstance::__PushCircle(CActorInstance& rVictim)
 	v3Direction.z = 0.0f;
 	D3DXVec3Normalize(&v3Direction, &v3Direction);
 
-	rVictim.__SetFallingDirection(v3Direction.x, v3Direction.y);
+	rVictim.GetBattle().__SetFallingDirection(v3Direction.x, v3Direction.y);
 }
 
-void CActorInstance::__PushDirect(CActorInstance& rVictim)
+void CActorInstanceBattle::__PushDirect(CActorInstance& rVictim)
 {
 	D3DXVECTOR3 v3Direction;
-	v3Direction.x = cosf(D3DXToRadian(m_fcurRotation + 270.0f));
-	v3Direction.y = sinf(D3DXToRadian(m_fcurRotation + 270.0f));
+	v3Direction.x = cosf(D3DXToRadian(m_rkOwner.m_fcurRotation + 270.0f));
+	v3Direction.y = sinf(D3DXToRadian(m_rkOwner.m_fcurRotation + 270.0f));
 	v3Direction.z = 0.0f;
 
-	rVictim.__SetFallingDirection(v3Direction.x, v3Direction.y);
+	rVictim.GetBattle().__SetFallingDirection(v3Direction.x, v3Direction.y);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-bool CActorInstance::__isInvisible()
+bool CActorInstanceBattle::__isInvisible()
 {
-	if (IsDead())
+	if (m_rkOwner.IsDead())
 		return true;
 
-	if (CTimer::Instance().GetCurrentSecond() >= m_fInvisibleTime)
+	if (CTimer::Instance().GetCurrentSecond() >= m_rkOwner.m_fInvisibleTime)
 		return false;
 
 	return true;
 }
 
-void CActorInstance::__SetFallingDirection(float fx, float fy)
+void CActorInstanceBattle::__SetFallingDirection(float fx, float fy)
 {
-	m_PhysicsObject.SetDirection(D3DXVECTOR3(fx, fy, 0.0f));
+	m_rkOwner.m_PhysicsObject.SetDirection(D3DXVECTOR3(fx, fy, 0.0f));
 }

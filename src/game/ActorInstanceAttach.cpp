@@ -2,6 +2,7 @@
 #include <Neoeter/Effect/EffectManager.h>
 
 #include <Client/Game/ActorInstance.h>
+#include <Client/Game/CActorInstanceAttach.h>
 #include <Client/GameData/ItemData.h>
 #include <Client/GameData/ItemManager.h>
 #include <Client/Game/RaceData.h>
@@ -11,19 +12,23 @@ int32_t USE_WEAPON_SPECULAR = TRUE;
 
 static const uint32_t c_dwRaceAssassinMale = 5;
 
-uint32_t CActorInstance::AttachSmokeEffect(uint32_t eSmoke)
+CActorInstanceAttach::CActorInstanceAttach(CActorInstance& rkOwner) : m_rkOwner(rkOwner)
 {
-	if (!m_pkCurRaceData)
+}
+
+uint32_t CActorInstanceAttach::AttachSmokeEffect(uint32_t eSmoke)
+{
+	if (!m_rkOwner.m_pkCurRaceData)
 		return 0;
 
-	uint32_t dwSmokeEffectID = m_pkCurRaceData->GetSmokeEffectID(eSmoke);
+	uint32_t dwSmokeEffectID = m_rkOwner.m_pkCurRaceData->GetSmokeEffectID(eSmoke);
 
-	return AttachEffectByID(0, m_pkCurRaceData->GetSmokeBone().c_str(), dwSmokeEffectID);
+	return AttachEffectByID(0, m_rkOwner.m_pkCurRaceData->GetSmokeBone().c_str(), dwSmokeEffectID);
 }
 
-bool CActorInstance::__IsLeftHandWeapon(uint32_t type)
+bool CActorInstanceAttach::__IsLeftHandWeapon(uint32_t type)
 {
-	if (CItemData::WEAPON_DAGGER == type || (CItemData::WEAPON_FAN == type && __IsMountingHorse()))
+	if (CItemData::WEAPON_DAGGER == type || (CItemData::WEAPON_FAN == type && m_rkOwner.__IsMountingHorse()))
 		return true;
 	else if (CItemData::WEAPON_BOW == type)
 		return true;
@@ -31,9 +36,9 @@ bool CActorInstance::__IsLeftHandWeapon(uint32_t type)
 		return false;
 }
 
-bool CActorInstance::__IsRightHandWeapon(uint32_t type)
+bool CActorInstanceAttach::__IsRightHandWeapon(uint32_t type)
 {
-	if (CItemData::WEAPON_DAGGER == type || (CItemData::WEAPON_FAN == type && __IsMountingHorse()))
+	if (CItemData::WEAPON_DAGGER == type || (CItemData::WEAPON_FAN == type && m_rkOwner.__IsMountingHorse()))
 		return true;
 	else if (CItemData::WEAPON_BOW == type)
 		return false;
@@ -41,7 +46,7 @@ bool CActorInstance::__IsRightHandWeapon(uint32_t type)
 		return true;
 }
 
-bool CActorInstance::__IsWeaponTrace(uint32_t weaponType)
+bool CActorInstanceAttach::__IsWeaponTrace(uint32_t weaponType)
 {
 	switch (weaponType)
 	{
@@ -54,12 +59,12 @@ bool CActorInstance::__IsWeaponTrace(uint32_t weaponType)
 	}
 }
 
-bool CActorInstance::__GetWeaponAttachTransform(uint32_t dwPartIndex, D3DXMATRIX* pMat)
+bool CActorInstanceAttach::__GetWeaponAttachTransform(uint32_t dwPartIndex, D3DXMATRIX* pMat)
 {
-	if (CRaceData::PART_WEAPON != dwPartIndex || c_dwRaceAssassinMale != GetRace())
+	if (CRaceData::PART_WEAPON != dwPartIndex || c_dwRaceAssassinMale != m_rkOwner.GetRace())
 		return false;
 
-	uint32_t dwWeapon = GetPartItemID(CRaceData::PART_WEAPON);
+	uint32_t dwWeapon = m_rkOwner.GetPartItemID(CRaceData::PART_WEAPON);
 	CItemData* pItemData;
 	if (!CItemManager::Instance().GetItemDataPointer(dwWeapon, &pItemData))
 		return false;
@@ -79,27 +84,27 @@ bool CActorInstance::__GetWeaponAttachTransform(uint32_t dwPartIndex, D3DXMATRIX
 	}
 }
 
-void CActorInstance::AttachWeapon(uint32_t dwItemIndex, uint32_t dwParentPartIndex, uint32_t dwPartIndex)
+void CActorInstanceAttach::AttachWeapon(uint32_t dwItemIndex, uint32_t dwParentPartIndex, uint32_t dwPartIndex)
 {
 	if (dwPartIndex >= CRaceData::PART_MAX_NUM)
 		return;
 
-	m_adwPartItemID[dwPartIndex] = dwItemIndex;
+	m_rkOwner.m_adwPartItemID[dwPartIndex] = dwItemIndex;
 
 	CItemData* pItemData;
 	if (!CItemManager::Instance().GetItemDataPointer(dwItemIndex, &pItemData))
 	{
-		RegisterModelThing(dwPartIndex, NULL);
-		SetModelInstance(dwPartIndex, dwPartIndex, 0);
+		m_rkOwner.RegisterModelThing(dwPartIndex, NULL);
+		m_rkOwner.SetModelInstance(dwPartIndex, dwPartIndex, 0);
 
-		RegisterModelThing(CRaceData::PART_WEAPON_LEFT, NULL);
-		SetModelInstance(CRaceData::PART_WEAPON_LEFT, CRaceData::PART_WEAPON_LEFT, 0);
+		m_rkOwner.RegisterModelThing(CRaceData::PART_WEAPON_LEFT, NULL);
+		m_rkOwner.SetModelInstance(CRaceData::PART_WEAPON_LEFT, CRaceData::PART_WEAPON_LEFT, 0);
 
 		RefreshActorInstance();
 		return;
 	}
 
-	__DestroyWeaponTrace();
+	m_rkOwner.__DestroyWeaponTrace();
 	// 양손무기(자객 이도류) 왼손,오른손 모두에 장착.
 	if (__IsRightHandWeapon(pItemData->GetWeaponType()))
 		AttachWeapon(dwParentPartIndex, CRaceData::PART_WEAPON, pItemData);
@@ -107,14 +112,14 @@ void CActorInstance::AttachWeapon(uint32_t dwItemIndex, uint32_t dwParentPartInd
 		AttachWeapon(dwParentPartIndex, CRaceData::PART_WEAPON_LEFT, pItemData);
 }
 
-int32_t CActorInstance::GetAttachingBoneName(uint32_t dwPartIndex, const char** c_pszBoneName)
+int32_t CActorInstanceAttach::GetAttachingBoneName(uint32_t dwPartIndex, const char** c_pszBoneName)
 {
-	return m_pkCurRaceData->GetAttachingBoneName(dwPartIndex, c_pszBoneName);
+	return m_rkOwner.m_pkCurRaceData->GetAttachingBoneName(dwPartIndex, c_pszBoneName);
 }
 
-void CActorInstance::AttachWeapon(uint32_t dwParentPartIndex, uint32_t dwPartIndex, CItemData* pItemData)
+void CActorInstanceAttach::AttachWeapon(uint32_t dwParentPartIndex, uint32_t dwPartIndex, CItemData* pItemData)
 {
-	//	assert(m_pkCurRaceData);
+	//	assert(m_rkOwner.m_pkCurRaceData);
 	if (!pItemData)
 		return;
 
@@ -125,11 +130,11 @@ void CActorInstance::AttachWeapon(uint32_t dwParentPartIndex, uint32_t dwPartInd
 	// NOTE : (이도류처리)단도일 경우 형태가 다른 것으로 얻는다. 없을 경우 디폴트를 리턴
 	if (CRaceData::PART_WEAPON_LEFT == dwPartIndex)
 	{
-		RegisterModelThing(dwPartIndex, pItemData->GetSubModelThing());
+		m_rkOwner.RegisterModelThing(dwPartIndex, pItemData->GetSubModelThing());
 	}
 	else
 	{
-		RegisterModelThing(dwPartIndex, pItemData->GetModelThing());
+		m_rkOwner.RegisterModelThing(dwPartIndex, pItemData->GetModelThing());
 	}
 
 	for (uint32_t i = 0; i < pItemData->GetLODModelThingCount(); ++i)
@@ -139,19 +144,19 @@ void CActorInstance::AttachWeapon(uint32_t dwParentPartIndex, uint32_t dwPartInd
 		if (!pItemData->GetLODModelThingPointer(i, &pThing))
 			continue;
 
-		RegisterLODThing(dwPartIndex, pThing);
+		m_rkOwner.RegisterLODThing(dwPartIndex, pThing);
 	}
 
-	SetModelInstance(dwPartIndex, dwPartIndex, 0);
+	m_rkOwner.SetModelInstance(dwPartIndex, dwPartIndex, 0);
 
 	D3DXMATRIX matAttachTransform;
 	const D3DXMATRIX* c_pAttachTransform = NULL;
 	if (__GetWeaponAttachTransform(dwPartIndex, &matAttachTransform))
 		c_pAttachTransform = &matAttachTransform;
 
-	AttachModelInstance(dwParentPartIndex, szBoneName, dwPartIndex, c_pAttachTransform);
+	m_rkOwner.AttachModelInstance(dwParentPartIndex, szBoneName, dwPartIndex, c_pAttachTransform);
 
-	// 20041208.myevan.무기스펙큘러(값옷은 SetShape에서 직접 해준다.)
+	// 20041208.myevan.무기스펙큘러(값옷은 m_rkOwner.SetShape에서 직접 해준다.)
 	if (USE_WEAPON_SPECULAR)
 	{
 		SMaterialData kMaterialData;
@@ -159,29 +164,29 @@ void CActorInstance::AttachWeapon(uint32_t dwParentPartIndex, uint32_t dwPartInd
 		kMaterialData.isSpecularEnable = TRUE;
 		kMaterialData.fSpecularPower = pItemData->GetSpecularPowerf();
 		kMaterialData.bSphereMapIndex = 1;
-		SetMaterialData(dwPartIndex, NULL, kMaterialData);
+		m_rkOwner.SetMaterialData(dwPartIndex, NULL, kMaterialData);
 	}
 
 	// Weapon Trace
 	if (__IsWeaponTrace(pItemData->GetWeaponType()))
 	{
 		CWeaponTrace* pWeaponTrace = CWeaponTrace::New();
-		pWeaponTrace->SetWeaponInstance(this, dwPartIndex, szBoneName);
-		m_WeaponTraceVector.push_back(pWeaponTrace);
+		pWeaponTrace->SetWeaponInstance(&m_rkOwner, dwPartIndex, szBoneName);
+		m_rkOwner.m_WeaponTraceVector.push_back(pWeaponTrace);
 	}
 }
 
-void CActorInstance::DettachEffect(uint32_t dwEID)
+void CActorInstanceAttach::DettachEffect(uint32_t dwEID)
 {
-	std::list<TAttachingEffect>::iterator i = m_AttachingEffectList.begin();
+	std::list<CActorInstance::TAttachingEffect>::iterator i = m_rkOwner.m_AttachingEffectList.begin();
 
-	while (i != m_AttachingEffectList.end())
+	while (i != m_rkOwner.m_AttachingEffectList.end())
 	{
-		TAttachingEffect& rkAttEft = (*i);
+		CActorInstance::TAttachingEffect& rkAttEft = (*i);
 
 		if (rkAttEft.dwEffectIndex == dwEID)
 		{
-			i = m_AttachingEffectList.erase(i);
+			i = m_rkOwner.m_AttachingEffectList.erase(i);
 			CEffectManager::Instance().DestroyEffectInstance(dwEID);
 		}
 		else
@@ -191,7 +196,7 @@ void CActorInstance::DettachEffect(uint32_t dwEID)
 	}
 }
 
-uint32_t CActorInstance::AttachEffectByName(uint32_t dwParentPartIndex, const char* c_pszBoneName, const char* c_pszEffectName)
+uint32_t CActorInstanceAttach::AttachEffectByName(uint32_t dwParentPartIndex, const char* c_pszBoneName, const char* c_pszEffectName)
 {
 	std::string str;
 	uint32_t dwCRC;
@@ -201,10 +206,10 @@ uint32_t CActorInstance::AttachEffectByName(uint32_t dwParentPartIndex, const ch
 	return AttachEffectByID(dwParentPartIndex, c_pszBoneName, dwCRC);
 }
 
-uint32_t CActorInstance::AttachEffectByID(uint32_t dwParentPartIndex, const char* c_pszBoneName, uint32_t dwEffectID, const D3DXVECTOR3* c_pv3Position)
+uint32_t CActorInstanceAttach::AttachEffectByID(uint32_t dwParentPartIndex, const char* c_pszBoneName, uint32_t dwEffectID, const D3DXVECTOR3* c_pv3Position)
 {
-	TAttachingEffect ae;
-	ae.iLifeType = EFFECT_LIFE_INFINITE;
+	CActorInstance::TAttachingEffect ae;
+	ae.iLifeType = CActorInstance::EFFECT_LIFE_INFINITE;
 	ae.dwEndTime = 0;
 	ae.dwModelIndex = dwParentPartIndex;
 	ae.dwEffectIndex = CEffectManager::Instance().GetEmptyIndex();
@@ -226,7 +231,7 @@ uint32_t CActorInstance::AttachEffectByID(uint32_t dwParentPartIndex, const char
 	{
 		int iBoneIndex;
 
-		if (!FindBoneIndex(dwParentPartIndex, c_pszBoneName, &iBoneIndex))
+		if (!m_rkOwner.FindBoneIndex(dwParentPartIndex, c_pszBoneName, &iBoneIndex))
 		{
 			ae.iBoneIndex = -1;
 			// Tracef("Cannot get Bone Index\n");
@@ -237,7 +242,7 @@ uint32_t CActorInstance::AttachEffectByID(uint32_t dwParentPartIndex, const char
 			ae.iBoneIndex = iBoneIndex;
 
 			const char* c_szWeaponBoneName;
-			if (m_pkCurRaceData && GetAttachingBoneName(CRaceData::PART_WEAPON, &c_szWeaponBoneName) &&
+			if (m_rkOwner.m_pkCurRaceData && GetAttachingBoneName(CRaceData::PART_WEAPON, &c_szWeaponBoneName) &&
 				0 == strcmp(c_pszBoneName, c_szWeaponBoneName))
 			{
 				if (__GetWeaponAttachTransform(CRaceData::PART_WEAPON, &ae.matAttachTransform))
@@ -250,31 +255,31 @@ uint32_t CActorInstance::AttachEffectByID(uint32_t dwParentPartIndex, const char
 		ae.iBoneIndex = -1;
 	}
 
-	m_AttachingEffectList.push_back(ae);
+	m_rkOwner.m_AttachingEffectList.push_back(ae);
 
 	return ae.dwEffectIndex;
 }
 
-void CActorInstance::RefreshActorInstance()
+void CActorInstanceAttach::RefreshActorInstance()
 {
-	if (!m_pkCurRaceData)
+	if (!m_rkOwner.m_pkCurRaceData)
 	{
-		TraceError("void CActorInstance::RefreshActorInstance() - m_pkCurRaceData=NULL");
+		TraceError("void CActorInstanceAttach::RefreshActorInstance() - m_rkOwner.m_pkCurRaceData=NULL");
 		return;
 	}
 
 	// This is Temporary place before making the weapon detection system
 	// Setup Collison Detection Data
-	m_BodyPointInstanceList.clear();
+	m_rkOwner.m_BodyPointInstanceList.clear();
 	// m_AttackingPointInstanceList.clear();
-	m_DefendingPointInstanceList.clear();
+	m_rkOwner.m_DefendingPointInstanceList.clear();
 
 	// Base
-	for (uint32_t i = 0; i < m_pkCurRaceData->GetAttachingDataCount(); ++i)
+	for (uint32_t i = 0; i < m_rkOwner.m_pkCurRaceData->GetAttachingDataCount(); ++i)
 	{
 		const NRaceData::TAttachingData* c_pAttachingData;
 
-		if (!m_pkCurRaceData->GetAttachingDataPointer(i, &c_pAttachingData))
+		if (!m_rkOwner.m_pkCurRaceData->GetAttachingDataPointer(i, &c_pAttachingData))
 			continue;
 
 		switch (c_pAttachingData->dwType)
@@ -283,11 +288,11 @@ void CActorInstance::RefreshActorInstance()
 			{
 				const NRaceData::TCollisionData* c_pCollisionData = c_pAttachingData->pCollisionData;
 
-				TCollisionPointInstance PointInstance;
+				CActorInstance::TCollisionPointInstance PointInstance;
 				if (NRaceData::COLLISION_TYPE_ATTACKING == c_pCollisionData->iCollisionType)
 					continue;
 
-				if (!CreateCollisionInstancePiece(CRaceData::PART_MAIN, c_pAttachingData, &PointInstance))
+				if (!m_rkOwner.CreateCollisionInstancePiece(CRaceData::PART_MAIN, c_pAttachingData, &PointInstance))
 					continue;
 
 				switch (c_pCollisionData->iCollisionType)
@@ -296,24 +301,24 @@ void CActorInstance::RefreshActorInstance()
 						// m_AttackingPointInstanceList.push_back(PointInstance);
 						break;
 					case NRaceData::COLLISION_TYPE_DEFENDING:
-						m_DefendingPointInstanceList.push_back(PointInstance);
+						m_rkOwner.m_DefendingPointInstanceList.push_back(PointInstance);
 						break;
 					case NRaceData::COLLISION_TYPE_BODY:
-						m_BodyPointInstanceList.push_back(PointInstance);
+						m_rkOwner.m_BodyPointInstanceList.push_back(PointInstance);
 						break;
 				}
 			}
 			break;
 
 			case NRaceData::ATTACHING_DATA_TYPE_EFFECT:
-				//				if (!m_bEffectInitialized)
+				//				if (!m_rkOwner.m_bEffectInitialized)
 				//				{
 				//					uint32_t dwCRC;
 				//					StringPath(c_pAttachingData->pEffectData->strFileName);
 				//					dwCRC = GetCaseCRC32(c_pAttachingData->pEffectData->strFileName.c_str(),c_pAttachingData->pEffectData->strFileName.length());
 				//
-				//					TAttachingEffect ae;
-				//					ae.iLifeType = EFFECT_LIFE_INFINITE;
+				//					CActorInstance::TAttachingEffect ae;
+				//					ae.iLifeType = CActorInstance::EFFECT_LIFE_INFINITE;
 				//					ae.dwEndTime = 0;
 				//					ae.dwModelIndex = 0;
 				//					ae.dwEffectIndex = CEffectManager::Instance().GetEmptyIndex();
@@ -323,7 +328,7 @@ void CActorInstance::RefreshActorInstance()
 				//					if (c_pAttachingData->isAttaching)
 				//					{
 				//						int iBoneIndex;
-				//						if (!FindBoneIndex(0,c_pAttachingData->strAttachingBoneName.c_str(), &iBoneIndex))
+				//						if (!m_rkOwner.FindBoneIndex(0,c_pAttachingData->strAttachingBoneName.c_str(), &iBoneIndex))
 				//						{
 				//							Tracef("Cannot get Bone Index\n");
 				//							assert(false/*Cannot get Bone Index*/);
@@ -336,7 +341,7 @@ void CActorInstance::RefreshActorInstance()
 				//						ae.iBoneIndex = -1;
 				//					}
 				//
-				//					m_AttachingEffectList.push_back(ae);
+				//					m_rkOwner.m_AttachingEffectList.push_back(ae);
 				//				}
 
 				if (c_pAttachingData->isAttaching)
@@ -360,11 +365,11 @@ void CActorInstance::RefreshActorInstance()
 
 	for (uint32_t j = 0; j < CRaceData::PART_MAX_NUM; ++j)
 	{
-		if (0 == m_adwPartItemID[j])
+		if (0 == m_rkOwner.m_adwPartItemID[j])
 			continue;
 
 		CItemData* pItemData;
-		if (!CItemManager::Instance().GetItemDataPointer(m_adwPartItemID[j], &pItemData))
+		if (!CItemManager::Instance().GetItemDataPointer(m_rkOwner.m_adwPartItemID[j], &pItemData))
 			return;
 
 		for (uint32_t k = 0; k < pItemData->GetAttachingDataCount(); ++k)
@@ -382,10 +387,10 @@ void CActorInstance::RefreshActorInstance()
 
 					// FIXME : 첫번째 인자는 Part의 번호다.
 					//         Base는 무조건 0인가? - [levites]
-					TCollisionPointInstance PointInstance;
+					CActorInstance::TCollisionPointInstance PointInstance;
 					if (NRaceData::COLLISION_TYPE_ATTACKING == c_pCollisionData->iCollisionType)
 						continue;
-					if (!CreateCollisionInstancePiece(j, c_pAttachingData, &PointInstance))
+					if (!m_rkOwner.CreateCollisionInstancePiece(j, c_pAttachingData, &PointInstance))
 						continue;
 
 					switch (c_pCollisionData->iCollisionType)
@@ -394,24 +399,24 @@ void CActorInstance::RefreshActorInstance()
 							// m_AttackingPointInstanceList.push_back(PointInstance);
 							break;
 						case NRaceData::COLLISION_TYPE_DEFENDING:
-							m_DefendingPointInstanceList.push_back(PointInstance);
+							m_rkOwner.m_DefendingPointInstanceList.push_back(PointInstance);
 							break;
 						case NRaceData::COLLISION_TYPE_BODY:
-							m_BodyPointInstanceList.push_back(PointInstance);
+							m_rkOwner.m_BodyPointInstanceList.push_back(PointInstance);
 							break;
 					}
 				}
 				break;
 
 				case NRaceData::ATTACHING_DATA_TYPE_EFFECT:
-					if (!m_bEffectInitialized)
+					if (!m_rkOwner.m_bEffectInitialized)
 					{
 						uint32_t dwCRC;
 						StringPath(c_pAttachingData->pEffectData->strFileName);
 						dwCRC = GetCaseCRC32(c_pAttachingData->pEffectData->strFileName.c_str(), c_pAttachingData->pEffectData->strFileName.length());
 
-						TAttachingEffect ae;
-						ae.iLifeType = EFFECT_LIFE_INFINITE;
+						CActorInstance::TAttachingEffect ae;
+						ae.iLifeType = CActorInstance::EFFECT_LIFE_INFINITE;
 						ae.dwEndTime = 0;
 						ae.dwModelIndex = j;
 						ae.dwEffectIndex = CEffectManager::Instance().GetEmptyIndex();
@@ -422,7 +427,7 @@ void CActorInstance::RefreshActorInstance()
 						CEffectManager::Instance().CreateEffectInstance(ae.dwEffectIndex, dwCRC);
 
 						int iBoneIndex;
-						if (!FindBoneIndex(j, c_pAttachingData->strAttachingBoneName.c_str(), &iBoneIndex))
+						if (!m_rkOwner.FindBoneIndex(j, c_pAttachingData->strAttachingBoneName.c_str(), &iBoneIndex))
 						{
 							Tracef("Cannot get Bone Index\n");
 							assert(false /*Cannot get Bone Index*/);
@@ -431,7 +436,7 @@ void CActorInstance::RefreshActorInstance()
 
 						ae.iBoneIndex = iBoneIndex;
 
-						m_AttachingEffectList.push_back(ae);
+						m_rkOwner.m_AttachingEffectList.push_back(ae);
 					}
 					break;
 
@@ -445,53 +450,53 @@ void CActorInstance::RefreshActorInstance()
 		}
 	}
 
-	m_bEffectInitialized = true;
+	m_rkOwner.m_bEffectInitialized = true;
 }
 
-void CActorInstance::SetWeaponTraceTexture(const char* szTextureName)
+void CActorInstanceAttach::SetWeaponTraceTexture(const char* szTextureName)
 {
 	std::vector<CWeaponTrace*>::iterator it;
-	for (it = m_WeaponTraceVector.begin(); it != m_WeaponTraceVector.end(); ++it)
+	for (it = m_rkOwner.m_WeaponTraceVector.begin(); it != m_rkOwner.m_WeaponTraceVector.end(); ++it)
 	{
 		(*it)->SetTexture(szTextureName);
 	}
 }
 
-void CActorInstance::UseTextureWeaponTrace()
+void CActorInstanceAttach::UseTextureWeaponTrace()
 {
 	for_each(
-		m_WeaponTraceVector.begin(),
-		m_WeaponTraceVector.end(),
+		m_rkOwner.m_WeaponTraceVector.begin(),
+		m_rkOwner.m_WeaponTraceVector.end(),
 		std::void_mem_fun(&CWeaponTrace::UseTexture));
 }
 
-void CActorInstance::UseAlphaWeaponTrace()
+void CActorInstanceAttach::UseAlphaWeaponTrace()
 {
 	for_each(
-		m_WeaponTraceVector.begin(),
-		m_WeaponTraceVector.end(),
+		m_rkOwner.m_WeaponTraceVector.begin(),
+		m_rkOwner.m_WeaponTraceVector.end(),
 		std::void_mem_fun(&CWeaponTrace::UseAlpha));
 }
 
-void CActorInstance::UpdateAttachingInstances()
+void CActorInstanceAttach::UpdateAttachingInstances()
 {
 	CEffectManager& rkEftMgr = CEffectManager::Instance();
 
-	std::list<TAttachingEffect>::iterator it;
+	std::list<CActorInstance::TAttachingEffect>::iterator it;
 	uint32_t dwCurrentTime = CTimer::Instance().GetCurrentMillisecond();
-	for (it = m_AttachingEffectList.begin(); it != m_AttachingEffectList.end();)
+	for (it = m_rkOwner.m_AttachingEffectList.begin(); it != m_rkOwner.m_AttachingEffectList.end();)
 	{
-		if (EFFECT_LIFE_WITH_MOTION == it->iLifeType)
+		if (CActorInstance::EFFECT_LIFE_WITH_MOTION == it->iLifeType)
 		{
 			++it;
 			continue;
 		}
 
-		if ((EFFECT_LIFE_NORMAL == it->iLifeType && it->dwEndTime < dwCurrentTime) ||
+		if ((CActorInstance::EFFECT_LIFE_NORMAL == it->iLifeType && it->dwEndTime < dwCurrentTime) ||
 			!rkEftMgr.IsAliveEffect(it->dwEffectIndex))
 		{
 			rkEftMgr.DestroyEffectInstance(it->dwEffectIndex);
-			it = m_AttachingEffectList.erase(it);
+			it = m_rkOwner.m_AttachingEffectList.erase(it);
 		}
 		else
 		{
@@ -503,13 +508,13 @@ void CActorInstance::UpdateAttachingInstances()
 				{
 					D3DXMATRIX matTransform;
 					matTransform = it->matTranslation;
-					matTransform *= m_worldMatrix;
+					matTransform *= m_rkOwner.m_worldMatrix;
 					rkEftMgr.SetEffectInstanceGlobalMatrix(matTransform);
 				}
 				else
 				{
 					D3DXMATRIX* pBoneMat;
-					if (GetBoneMatrix(it->dwModelIndex, it->iBoneIndex, &pBoneMat))
+					if (m_rkOwner.GetBoneMatrix(it->dwModelIndex, it->iBoneIndex, &pBoneMat))
 					{
 						D3DXMATRIX matTransform;
 						if (it->bUseAttachTransform)
@@ -517,12 +522,12 @@ void CActorInstance::UpdateAttachingInstances()
 						else
 							matTransform = *pBoneMat;
 						matTransform *= it->matTranslation;
-						matTransform *= m_worldMatrix;
+						matTransform *= m_rkOwner.m_worldMatrix;
 						rkEftMgr.SetEffectInstanceGlobalMatrix(matTransform);
 					}
 					else
 					{
-						// TraceError("GetBoneMatrix(modelIndex(%d), boneIndex(%d)).NOT_FOUND_BONE",
+						// TraceError("m_rkOwner.GetBoneMatrix(modelIndex(%d), boneIndex(%d)).NOT_FOUND_BONE",
 						//	it->dwModelIndex, it->iBoneIndex);
 					}
 				}
@@ -533,34 +538,34 @@ void CActorInstance::UpdateAttachingInstances()
 	}
 }
 
-void CActorInstance::ShowAllAttachingEffect()
+void CActorInstanceAttach::ShowAllAttachingEffect()
 {
-	std::list<TAttachingEffect>::iterator it;
-	for (it = m_AttachingEffectList.begin(); it != m_AttachingEffectList.end(); ++it)
+	std::list<CActorInstance::TAttachingEffect>::iterator it;
+	for (it = m_rkOwner.m_AttachingEffectList.begin(); it != m_rkOwner.m_AttachingEffectList.end(); ++it)
 	{
 		CEffectManager::Instance().SelectEffectInstance(it->dwEffectIndex);
 		CEffectManager::Instance().ShowEffect();
 	}
 }
 
-void CActorInstance::HideAllAttachingEffect()
+void CActorInstanceAttach::HideAllAttachingEffect()
 {
-	std::list<TAttachingEffect>::iterator it;
-	for (it = m_AttachingEffectList.begin(); it != m_AttachingEffectList.end(); ++it)
+	std::list<CActorInstance::TAttachingEffect>::iterator it;
+	for (it = m_rkOwner.m_AttachingEffectList.begin(); it != m_rkOwner.m_AttachingEffectList.end(); ++it)
 	{
 		CEffectManager::Instance().SelectEffectInstance(it->dwEffectIndex);
 		CEffectManager::Instance().HideEffect();
 	}
 }
 
-void CActorInstance::__ClearAttachingEffect()
+void CActorInstanceAttach::__ClearAttachingEffect()
 {
-	m_bEffectInitialized = false;
+	m_rkOwner.m_bEffectInitialized = false;
 
-	std::list<TAttachingEffect>::iterator it;
-	for (it = m_AttachingEffectList.begin(); it != m_AttachingEffectList.end(); ++it)
+	std::list<CActorInstance::TAttachingEffect>::iterator it;
+	for (it = m_rkOwner.m_AttachingEffectList.begin(); it != m_rkOwner.m_AttachingEffectList.end(); ++it)
 	{
 		CEffectManager::Instance().DestroyEffectInstance(it->dwEffectIndex);
 	}
-	m_AttachingEffectList.clear();
+	m_rkOwner.m_AttachingEffectList.clear();
 }

@@ -1,60 +1,65 @@
 #include <Client/Game/StdAfx.h>
 #include <Client/Game/ActorInstance.h>
+#include <Client/Game/CActorInstanceMotion.h>
 #include <Client/Game/RaceData.h>
 #include <Client/Game/FlyHandler.h>
 
-uint32_t CActorInstance::__GetMotionType()
+CActorInstanceMotion::CActorInstanceMotion(CActorInstance& rkOwner) : m_rkOwner(rkOwner)
 {
-	if (!m_pkCurRaceMotionData)
-		return CRaceMotionData::TYPE_NONE;
-
-	return m_pkCurRaceMotionData->GetType();
 }
 
-void CActorInstance::__MotionEventProcess(int32_t isPC)
+uint32_t CActorInstanceMotion::__GetMotionType()
 {
-	if (isAttacking())
+	if (!m_rkOwner.m_pkCurRaceMotionData)
+		return CRaceMotionData::TYPE_NONE;
+
+	return m_rkOwner.m_pkCurRaceMotionData->GetType();
+}
+
+void CActorInstanceMotion::__MotionEventProcess(int32_t isPC)
+{
+	if (m_rkOwner.GetBattle().isAttacking())
 	{
-		uint32_t dwNextFrame = uint32_t(GetAttackingElapsedTime() * g_fGameFPS);
-		for (; m_kCurMotNode.dwcurFrame < dwNextFrame; ++m_kCurMotNode.dwcurFrame)
+		uint32_t dwNextFrame = uint32_t(m_rkOwner.GetBattle().GetAttackingElapsedTime() * g_fGameFPS);
+		for (; m_rkOwner.m_kCurMotNode.dwcurFrame < dwNextFrame; ++m_rkOwner.m_kCurMotNode.dwcurFrame)
 		{
-			MotionEventProcess();
-			SoundEventProcess(!isPC);
+			m_rkOwner.MotionEventProcess();
+			m_rkOwner.SoundEventProcess(!isPC);
 		}
 	}
 	else
 	{
-		MotionEventProcess();
-		SoundEventProcess(!isPC);
+		m_rkOwner.MotionEventProcess();
+		m_rkOwner.SoundEventProcess(!isPC);
 
-		++m_kCurMotNode.dwcurFrame;
+		++m_rkOwner.m_kCurMotNode.dwcurFrame;
 	}
 }
 
-void CActorInstance::MotionProcess(int32_t isPC)
+void CActorInstanceMotion::MotionProcess(int32_t isPC)
 {
 	__MotionEventProcess(isPC);
 	CurrentMotionProcess();
 	ReservingMotionProcess();
 }
 
-void CActorInstance::HORSE_MotionProcess(int32_t isPC)
+void CActorInstanceMotion::HORSE_MotionProcess(int32_t isPC)
 {
 	__MotionEventProcess(isPC);
 
-	if (MOTION_TYPE_LOOP == m_kCurMotNode.iMotionType)
-		if (m_kCurMotNode.dwcurFrame >= m_kCurMotNode.dwFrameCount)
-			m_kCurMotNode.dwcurFrame = 0;
+	if (MOTION_TYPE_LOOP == m_rkOwner.m_kCurMotNode.iMotionType)
+		if (m_rkOwner.m_kCurMotNode.dwcurFrame >= m_rkOwner.m_kCurMotNode.dwFrameCount)
+			m_rkOwner.m_kCurMotNode.dwcurFrame = 0;
 }
 
-void CActorInstance::ReservingMotionProcess()
+void CActorInstanceMotion::ReservingMotionProcess()
 {
-	if (m_MotionDeque.empty())
+	if (m_rkOwner.m_MotionDeque.empty())
 		return;
 
-	TReservingMotionNode& rReservingMotionNode = m_MotionDeque.front();
+	CActorInstance::TReservingMotionNode& rReservingMotionNode = m_rkOwner.m_MotionDeque.front();
 
-	float fCurrentTime = GetLocalTime();
+	float fCurrentTime = m_rkOwner.GetLocalTime();
 	if (rReservingMotionNode.fStartTime > fCurrentTime)
 		return;
 
@@ -63,17 +68,17 @@ void CActorInstance::ReservingMotionProcess()
 	{
 		case CRaceMotionData::NAME_STAND_UP:
 		case CRaceMotionData::NAME_STAND_UP_BACK:
-			if (IsFaint())
+			if (m_rkOwner.IsFaint())
 			{
 				// Tracenf("You tried to stand up but are fainted");
 
-				SetEndStopMotion();
+				m_rkOwner.SetEndStopMotion();
 
 				// 이후의 모션 전부 1초씩 딜레이
-				TMotionDeque::iterator itor = m_MotionDeque.begin();
-				for (; itor != m_MotionDeque.end(); ++itor)
+				CActorInstance::TMotionDeque::iterator itor = m_rkOwner.m_MotionDeque.begin();
+				for (; itor != m_rkOwner.m_MotionDeque.end(); ++itor)
 				{
-					TReservingMotionNode& rNode = *itor;
+					CActorInstance::TReservingMotionNode& rNode = *itor;
 					rNode.fStartTime += 1.0f;
 				}
 				return;
@@ -81,7 +86,7 @@ void CActorInstance::ReservingMotionProcess()
 			break;
 	}
 
-	SCurrentMotionNode kPrevMotionNode = m_kCurMotNode;
+	CActorInstance::SCurrentMotionNode kPrevMotionNode = m_rkOwner.m_kCurMotNode;
 
 	EMotionPushType iMotionType = rReservingMotionNode.iMotionType;
 	float fSpeedRatio = rReservingMotionNode.fSpeedRatio;
@@ -89,22 +94,22 @@ void CActorInstance::ReservingMotionProcess()
 
 	uint32_t dwMotionKey = rReservingMotionNode.dwMotionKey;
 
-	m_MotionDeque.pop_front();
+	m_rkOwner.m_MotionDeque.pop_front();
 
 	uint32_t dwCurrentMotionIndex = GET_MOTION_INDEX(dwMotionKey);
 	switch (dwCurrentMotionIndex)
 	{
 		case CRaceMotionData::NAME_STAND_UP:
 		case CRaceMotionData::NAME_STAND_UP_BACK:
-			if (IsDead())
+			if (m_rkOwner.IsDead())
 			{
 				// Tracenf("You tried to stand up but are dead");
 				//  예전 데이터로 복구
-				m_kCurMotNode = kPrevMotionNode;
+				m_rkOwner.m_kCurMotNode = kPrevMotionNode;
 				__ClearMotion();
 
 				// 이전 동작 마지막 상태 유지
-				SetEndStopMotion();
+				m_rkOwner.SetEndStopMotion();
 				return;
 			}
 			break;
@@ -141,63 +146,63 @@ void CActorInstance::ReservingMotionProcess()
 		bp++;
 	}
 
-	m_kCurMotNode.uSkill = 0;
-	m_kCurMotNode.iMotionType = iMotionType;
-	m_kCurMotNode.fSpeedRatio = fSpeedRatio;
-	m_kCurMotNode.fStartTime = fStartTime;
-	m_kCurMotNode.fEndTime = fEndTime;
-	m_kCurMotNode.dwMotionKey = dwRealMotionKey;
-	m_kCurMotNode.dwcurFrame = 0;
-	m_kCurMotNode.dwFrameCount = fDurationTime / (1.0f / g_fGameFPS);
+	m_rkOwner.m_kCurMotNode.uSkill = 0;
+	m_rkOwner.m_kCurMotNode.iMotionType = iMotionType;
+	m_rkOwner.m_kCurMotNode.fSpeedRatio = fSpeedRatio;
+	m_rkOwner.m_kCurMotNode.fStartTime = fStartTime;
+	m_rkOwner.m_kCurMotNode.fEndTime = fEndTime;
+	m_rkOwner.m_kCurMotNode.dwMotionKey = dwRealMotionKey;
+	m_rkOwner.m_kCurMotNode.dwcurFrame = 0;
+	m_rkOwner.m_kCurMotNode.dwFrameCount = fDurationTime / (1.0f / g_fGameFPS);
 }
 
-void CActorInstance::CurrentMotionProcess()
+void CActorInstanceMotion::CurrentMotionProcess()
 {
-	if (MOTION_TYPE_LOOP == m_kCurMotNode.iMotionType) // 임시다. 최종적인 목표는 Once도 절대로 넘어가선 안된다. - [levites]
-		if (m_kCurMotNode.dwcurFrame >= m_kCurMotNode.dwFrameCount)
-			m_kCurMotNode.dwcurFrame = 0;
+	if (MOTION_TYPE_LOOP == m_rkOwner.m_kCurMotNode.iMotionType) // 임시다. 최종적인 목표는 Once도 절대로 넘어가선 안된다. - [levites]
+		if (m_rkOwner.m_kCurMotNode.dwcurFrame >= m_rkOwner.m_kCurMotNode.dwFrameCount)
+			m_rkOwner.m_kCurMotNode.dwcurFrame = 0;
 
-	if (IsDead())
+	if (m_rkOwner.IsDead())
 		return;
 
-	if (!m_MotionDeque.empty())
+	if (!m_rkOwner.m_MotionDeque.empty())
 		return;
 
-	float fCurrentTime = GetLocalTime();
+	float fCurrentTime = m_rkOwner.GetLocalTime();
 
-	uint32_t dwMotionIndex = GET_MOTION_INDEX(m_kCurMotNode.dwMotionKey);
+	uint32_t dwMotionIndex = GET_MOTION_INDEX(m_rkOwner.m_kCurMotNode.dwMotionKey);
 
 	bool isLooping = false;
 
 	// 끝났다면 Playing Flag를 끈다
-	if (m_pkCurRaceMotionData && m_pkCurRaceMotionData->IsLoopMotion())
+	if (m_rkOwner.m_pkCurRaceMotionData && m_rkOwner.m_pkCurRaceMotionData->IsLoopMotion())
 	{
-		if (m_kCurMotNode.iLoopCount > 1 || m_kCurMotNode.iLoopCount == -1)
+		if (m_rkOwner.m_kCurMotNode.iLoopCount > 1 || m_rkOwner.m_kCurMotNode.iLoopCount == -1)
 		{
-			if (fCurrentTime - m_kCurMotNode.fStartTime > m_pkCurRaceMotionData->GetLoopEndTime())
+			if (fCurrentTime - m_rkOwner.m_kCurMotNode.fStartTime > m_rkOwner.m_pkCurRaceMotionData->GetLoopEndTime())
 			{
-				m_kCurMotNode.dwcurFrame = uint32_t(m_pkCurRaceMotionData->GetLoopStartTime() * g_fGameFPS);
-				__SetLocalTime(m_kCurMotNode.fStartTime + m_pkCurRaceMotionData->GetLoopStartTime());
-				if (-1 != m_kCurMotNode.iLoopCount)
-					--m_kCurMotNode.iLoopCount;
+				m_rkOwner.m_kCurMotNode.dwcurFrame = uint32_t(m_rkOwner.m_pkCurRaceMotionData->GetLoopStartTime() * g_fGameFPS);
+				m_rkOwner.__SetLocalTime(m_rkOwner.m_kCurMotNode.fStartTime + m_rkOwner.m_pkCurRaceMotionData->GetLoopStartTime());
+				if (-1 != m_rkOwner.m_kCurMotNode.iLoopCount)
+					--m_rkOwner.m_kCurMotNode.iLoopCount;
 
 				isLooping = true;
 			}
 		}
-		else if (!m_kQue_kFlyTarget.empty())
+		else if (!m_rkOwner.m_kQue_kFlyTarget.empty())
 		{
-			if (!m_kBackupFlyTarget.IsObject())
+			if (!m_rkOwner.m_kBackupFlyTarget.IsObject())
 			{
-				m_kBackupFlyTarget = m_kFlyTarget;
+				m_rkOwner.m_kBackupFlyTarget = m_rkOwner.m_kFlyTarget;
 			}
 
-			if (fCurrentTime - m_kCurMotNode.fStartTime > m_pkCurRaceMotionData->GetLoopEndTime())
+			if (fCurrentTime - m_rkOwner.m_kCurMotNode.fStartTime > m_rkOwner.m_pkCurRaceMotionData->GetLoopEndTime())
 			{
-				m_kCurMotNode.dwcurFrame = uint32_t(m_pkCurRaceMotionData->GetLoopStartTime() * g_fGameFPS);
-				__SetLocalTime(m_kCurMotNode.fStartTime + m_pkCurRaceMotionData->GetLoopStartTime());
+				m_rkOwner.m_kCurMotNode.dwcurFrame = uint32_t(m_rkOwner.m_pkCurRaceMotionData->GetLoopStartTime() * g_fGameFPS);
+				m_rkOwner.__SetLocalTime(m_rkOwner.m_kCurMotNode.fStartTime + m_rkOwner.m_pkCurRaceMotionData->GetLoopStartTime());
 
-				SetFlyTarget(m_kQue_kFlyTarget.front());
-				m_kQue_kFlyTarget.pop_front();
+				m_rkOwner.SetFlyTarget(m_rkOwner.m_kQue_kFlyTarget.front());
+				m_rkOwner.m_kQue_kFlyTarget.pop_front();
 
 				isLooping = true;
 			}
@@ -206,17 +211,17 @@ void CActorInstance::CurrentMotionProcess()
 
 	if (!isLooping)
 	{
-		if (fCurrentTime > m_kCurMotNode.fEndTime)
+		if (fCurrentTime > m_rkOwner.m_kCurMotNode.fEndTime)
 		{
-			if (m_kBackupFlyTarget.IsValidTarget())
+			if (m_rkOwner.m_kBackupFlyTarget.IsValidTarget())
 			{
-				m_kFlyTarget = m_kBackupFlyTarget;
-				m_kBackupFlyTarget.Clear();
+				m_rkOwner.m_kFlyTarget = m_rkOwner.m_kBackupFlyTarget;
+				m_rkOwner.m_kBackupFlyTarget.Clear();
 			}
 
 			////////////////////////////////////////////
 
-			if (MOTION_TYPE_ONCE == m_kCurMotNode.iMotionType)
+			if (MOTION_TYPE_ONCE == m_rkOwner.m_kCurMotNode.iMotionType)
 			{
 				switch (dwMotionIndex)
 				{
@@ -225,15 +230,15 @@ void CActorInstance::CurrentMotionProcess()
 					case CRaceMotionData::NAME_DEAD:
 					case CRaceMotionData::NAME_INTRO_SELECTED:
 					case CRaceMotionData::NAME_INTRO_NOT_SELECTED:
-						m_kCurMotNode.fEndTime += 3.0f;
-						SetEndStopMotion();
+						m_rkOwner.m_kCurMotNode.fEndTime += 3.0f;
+						m_rkOwner.SetEndStopMotion();
 						break;
 					default:
 						InterceptLoopMotion(CRaceMotionData::NAME_WAIT);
 						break;
 				}
 			}
-			else if (MOTION_TYPE_LOOP == m_kCurMotNode.iMotionType)
+			else if (MOTION_TYPE_LOOP == m_rkOwner.m_kCurMotNode.iMotionType)
 			{
 				if (CRaceMotionData::NAME_WAIT == dwMotionIndex)
 				{
@@ -244,34 +249,34 @@ void CActorInstance::CurrentMotionProcess()
 	}
 }
 
-void CActorInstance::SetMotionMode(int iMotionMode)
+void CActorInstanceMotion::SetMotionMode(int iMotionMode)
 {
-	if (IsPoly())
+	if (m_rkOwner.IsPoly())
 		iMotionMode = CRaceMotionData::MODE_GENERAL;
 
-	m_wcurMotionMode = iMotionMode;
+	m_rkOwner.m_wcurMotionMode = iMotionMode;
 }
 
-int CActorInstance::GetMotionMode()
+int CActorInstanceMotion::GetMotionMode()
 {
-	return m_wcurMotionMode;
+	return m_rkOwner.m_wcurMotionMode;
 }
 
-void CActorInstance::SetMotionLoopCount(int iCount)
+void CActorInstanceMotion::SetMotionLoopCount(int iCount)
 {
 	assert(iCount >= -1 && iCount < 100);
-	m_kCurMotNode.iLoopCount = iCount;
+	m_rkOwner.m_kCurMotNode.iLoopCount = iCount;
 }
 
-void CActorInstance::PushMotion(EMotionPushType iMotionType, uint32_t dwMotionKey, float fBlendTime, float fSpeedRatio)
+void CActorInstanceMotion::PushMotion(EMotionPushType iMotionType, uint32_t dwMotionKey, float fBlendTime, float fSpeedRatio)
 {
-	if (!CheckMotionThingIndex(dwMotionKey))
+	if (!m_rkOwner.CheckMotionThingIndex(dwMotionKey))
 	{
 		Tracef(" Error - Not found want to using motion : %d\n", GET_MOTION_INDEX(dwMotionKey));
 		return;
 	}
 
-	TReservingMotionNode MotionNode;
+	CActorInstance::TReservingMotionNode MotionNode;
 
 	MotionNode.iMotionType = iMotionType;
 	MotionNode.dwMotionKey = dwMotionKey;
@@ -280,33 +285,33 @@ void CActorInstance::PushMotion(EMotionPushType iMotionType, uint32_t dwMotionKe
 	MotionNode.fSpeedRatio = fSpeedRatio;
 	MotionNode.fDuration = GetMotionDuration(dwMotionKey);
 
-	m_MotionDeque.push_back(MotionNode);
+	m_rkOwner.m_MotionDeque.push_back(MotionNode);
 }
 
-bool CActorInstance::InterceptOnceMotion(uint32_t dwMotion, float fBlendTime, uint32_t uSkill, float fSpeedRatio)
+bool CActorInstanceMotion::InterceptOnceMotion(uint32_t dwMotion, float fBlendTime, uint32_t uSkill, float fSpeedRatio)
 {
 	return InterceptMotion(MOTION_TYPE_ONCE, dwMotion, fBlendTime, uSkill, fSpeedRatio);
 }
 
-bool CActorInstance::InterceptLoopMotion(uint32_t dwMotion, float fBlendTime)
+bool CActorInstanceMotion::InterceptLoopMotion(uint32_t dwMotion, float fBlendTime)
 {
 	return InterceptMotion(MOTION_TYPE_LOOP, dwMotion, fBlendTime);
 }
 
-void CActorInstance::SetLoopMotion(uint32_t dwMotion, float fBlendTime, float fSpeedRatio)
+void CActorInstanceMotion::SetLoopMotion(uint32_t dwMotion, float fBlendTime, float fSpeedRatio)
 {
-	if (!m_pkCurRaceData)
+	if (!m_rkOwner.m_pkCurRaceData)
 	{
-		Tracenf("CActorInstance::SetLoopMotion(dwMotion=%d, fBlendTime=%f, fSpeedRatio=%f)",
+		Tracenf("CActorInstanceMotion::SetLoopMotion(dwMotion=%d, fBlendTime=%f, fSpeedRatio=%f)",
 				dwMotion, fBlendTime, fSpeedRatio);
 		return;
 	}
 
 	MOTION_KEY dwMotionKey;
-	if (!m_pkCurRaceData->GetMotionKey(m_wcurMotionMode, dwMotion, &dwMotionKey))
+	if (!m_rkOwner.m_pkCurRaceData->GetMotionKey(m_rkOwner.m_wcurMotionMode, dwMotion, &dwMotionKey))
 	{
-		Tracenf("CActorInstance::SetLoopMotion(dwMotion=%d, fBlendTime=%f, fSpeedRatio=%f) - GetMotionKey(m_wcurMotionMode=%d, dwMotion=%d, &MotionKey) ERROR",
-				dwMotion, fBlendTime, fSpeedRatio, m_wcurMotionMode, dwMotion);
+		Tracenf("CActorInstanceMotion::SetLoopMotion(dwMotion=%d, fBlendTime=%f, fSpeedRatio=%f) - GetMotionKey(m_rkOwner.m_wcurMotionMode=%d, dwMotion=%d, &MotionKey) ERROR",
+				dwMotion, fBlendTime, fSpeedRatio, m_rkOwner.m_wcurMotionMode, dwMotion);
 		return;
 	}
 
@@ -322,30 +327,30 @@ void CActorInstance::SetLoopMotion(uint32_t dwMotion, float fBlendTime, float fS
 	if (0 == dwRealMotionKey)
 		return;
 
-	m_kCurMotNode.iMotionType = MOTION_TYPE_LOOP;
-	m_kCurMotNode.fStartTime = GetLocalTime();
-	m_kCurMotNode.dwMotionKey = dwRealMotionKey;
-	m_kCurMotNode.fEndTime = 0.0f;
-	m_kCurMotNode.fSpeedRatio = fSpeedRatio;
-	m_kCurMotNode.dwcurFrame = 0;
-	m_kCurMotNode.dwFrameCount = GetMotionDuration(dwRealMotionKey) / (1.0f / g_fGameFPS);
-	m_kCurMotNode.uSkill = 0;
+	m_rkOwner.m_kCurMotNode.iMotionType = MOTION_TYPE_LOOP;
+	m_rkOwner.m_kCurMotNode.fStartTime = m_rkOwner.GetLocalTime();
+	m_rkOwner.m_kCurMotNode.dwMotionKey = dwRealMotionKey;
+	m_rkOwner.m_kCurMotNode.fEndTime = 0.0f;
+	m_rkOwner.m_kCurMotNode.fSpeedRatio = fSpeedRatio;
+	m_rkOwner.m_kCurMotNode.dwcurFrame = 0;
+	m_rkOwner.m_kCurMotNode.dwFrameCount = GetMotionDuration(dwRealMotionKey) / (1.0f / g_fGameFPS);
+	m_rkOwner.m_kCurMotNode.uSkill = 0;
 }
 
 // 리턴값 == SetMotion의 리턴값 == 실제로 애니메이션 데이터를 플레이 했느냐?
-bool CActorInstance::InterceptMotion(EMotionPushType iMotionType, uint16_t wMotion, float fBlendTime, uint32_t uSkill, float fSpeedRatio)
+bool CActorInstanceMotion::InterceptMotion(EMotionPushType iMotionType, uint16_t wMotion, float fBlendTime, uint32_t uSkill, float fSpeedRatio)
 {
-	if (!m_pkCurRaceData)
+	if (!m_rkOwner.m_pkCurRaceData)
 	{
-		Tracef("CActorInstance::InterceptMotion(iMotionType=%d, wMotion=%d, fBlendTime=%f) - m_pkCurRaceData=NULL", iMotionType, wMotion, fBlendTime);
+		Tracef("CActorInstance::InterceptMotion(iMotionType=%d, wMotion=%d, fBlendTime=%f) - m_rkOwner.m_pkCurRaceData=NULL", iMotionType, wMotion, fBlendTime);
 		return false;
 	}
 
 	MOTION_KEY dwMotionKey;
-	if (!m_pkCurRaceData->GetMotionKey(m_wcurMotionMode, wMotion, &dwMotionKey))
+	if (!m_rkOwner.m_pkCurRaceData->GetMotionKey(m_rkOwner.m_wcurMotionMode, wMotion, &dwMotionKey))
 	{
-		Tracenf("CActorInstance::InterceptMotion(iLoopType=%d, wMotionMode=%d, wMotion=%d, fBlendTime=%f) - GetMotionKey(m_wcurMotionMode=%d, wMotion=%d, &MotionKey) ERROR",
-				iMotionType, m_wcurMotionMode, wMotion, fBlendTime, m_wcurMotionMode, wMotion);
+		Tracenf("CActorInstance::InterceptMotion(iLoopType=%d, wMotionMode=%d, wMotion=%d, fBlendTime=%f) - GetMotionKey(m_rkOwner.m_wcurMotionMode=%d, wMotion=%d, &MotionKey) ERROR",
+				iMotionType, m_rkOwner.m_wcurMotionMode, wMotion, fBlendTime, m_rkOwner.m_wcurMotionMode, wMotion);
 		return false;
 	}
 
@@ -369,68 +374,68 @@ bool CActorInstance::InterceptMotion(EMotionPushType iMotionType, uint16_t wMoti
 	if (0 == dwRealMotionKey)
 		return false;
 
-	if (m_pFlyEventHandler)
+	if (m_rkOwner.m_pFlyEventHandler)
 	{
 		if (__IsNeedFlyTargetMotion())
 		{
-			m_pFlyEventHandler->OnSetFlyTarget();
+			m_rkOwner.m_pFlyEventHandler->OnSetFlyTarget();
 		}
 	}
 
-	assert(NULL != m_pkCurRaceMotionData);
+	assert(NULL != m_rkOwner.m_pkCurRaceMotionData);
 
 	// FIX : 위에서 호출한 __SetMotion 함수 내에서 랜덤으로 다른 모션을 선택할 수도 있기 때문에 dwMotionKey값은 유효하지 않고
 	// 따라서 해당 키로 산출한 duration은 유효하지 않음. 당연히 현재 play중인 모션의 시간을 구해야 함.. -_-;;
 	// float fDuration=GetMotionDuration(dwMotionKey)/fSpeedRatio;
 	float fDuration = GetMotionDuration(dwRealMotionKey) / fSpeedRatio;
 
-	m_kCurMotNode.iMotionType = iMotionType;
-	m_kCurMotNode.fStartTime = GetLocalTime();
-	m_kCurMotNode.fEndTime = m_kCurMotNode.fStartTime + fDuration;
-	m_kCurMotNode.dwMotionKey = dwRealMotionKey;
-	m_kCurMotNode.dwcurFrame = 0;
-	m_kCurMotNode.dwFrameCount = fDuration / (1.0f / g_fGameFPS);
-	m_kCurMotNode.uSkill = uSkill;
-	m_kCurMotNode.fSpeedRatio = fSpeedRatio;
+	m_rkOwner.m_kCurMotNode.iMotionType = iMotionType;
+	m_rkOwner.m_kCurMotNode.fStartTime = m_rkOwner.GetLocalTime();
+	m_rkOwner.m_kCurMotNode.fEndTime = m_rkOwner.m_kCurMotNode.fStartTime + fDuration;
+	m_rkOwner.m_kCurMotNode.dwMotionKey = dwRealMotionKey;
+	m_rkOwner.m_kCurMotNode.dwcurFrame = 0;
+	m_rkOwner.m_kCurMotNode.dwFrameCount = fDuration / (1.0f / g_fGameFPS);
+	m_rkOwner.m_kCurMotNode.uSkill = uSkill;
+	m_rkOwner.m_kCurMotNode.fSpeedRatio = fSpeedRatio;
 
 	return true;
 }
 
-bool CActorInstance::PushOnceMotion(uint32_t dwMotion, float fBlendTime, float fSpeedRatio)
+bool CActorInstanceMotion::PushOnceMotion(uint32_t dwMotion, float fBlendTime, float fSpeedRatio)
 {
-	assert(m_pkCurRaceData);
+	assert(m_rkOwner.m_pkCurRaceData);
 
 	MOTION_KEY MotionKey;
-	if (!m_pkCurRaceData->GetMotionKey(m_wcurMotionMode, dwMotion, &MotionKey))
+	if (!m_rkOwner.m_pkCurRaceData->GetMotionKey(m_rkOwner.m_wcurMotionMode, dwMotion, &MotionKey))
 		return false;
 
 	PushMotion(MOTION_TYPE_ONCE, MotionKey, fBlendTime, fSpeedRatio);
 	return true;
 }
 
-bool CActorInstance::PushLoopMotion(uint32_t dwMotion, float fBlendTime, float fSpeedRatio)
+bool CActorInstanceMotion::PushLoopMotion(uint32_t dwMotion, float fBlendTime, float fSpeedRatio)
 {
-	assert(m_pkCurRaceData);
+	assert(m_rkOwner.m_pkCurRaceData);
 
 	MOTION_KEY MotionKey;
-	if (!m_pkCurRaceData->GetMotionKey(m_wcurMotionMode, dwMotion, &MotionKey))
+	if (!m_rkOwner.m_pkCurRaceData->GetMotionKey(m_rkOwner.m_wcurMotionMode, dwMotion, &MotionKey))
 		return false;
 
 	PushMotion(MOTION_TYPE_LOOP, MotionKey, fBlendTime, fSpeedRatio);
 	return true;
 }
 
-uint16_t CActorInstance::__GetCurrentMotionIndex()
+uint16_t CActorInstanceMotion::__GetCurrentMotionIndex()
 {
-	return GET_MOTION_INDEX(m_kCurMotNode.dwMotionKey);
+	return GET_MOTION_INDEX(m_rkOwner.m_kCurMotNode.dwMotionKey);
 }
 
-uint32_t CActorInstance::__GetCurrentMotionKey()
+uint32_t CActorInstanceMotion::__GetCurrentMotionKey()
 {
-	return m_kCurMotNode.dwMotionKey;
+	return m_rkOwner.m_kCurMotNode.dwMotionKey;
 }
 
-int32_t CActorInstance::IsUsingSkill()
+int32_t CActorInstanceMotion::IsUsingSkill()
 {
 	uint32_t dwCurMotionIndex = __GetCurrentMotionIndex();
 
@@ -451,9 +456,9 @@ int32_t CActorInstance::IsUsingSkill()
 	return FALSE;
 }
 
-int32_t CActorInstance::IsFishing()
+int32_t CActorInstanceMotion::IsFishing()
 {
-	if (!m_pkCurRaceMotionData)
+	if (!m_rkOwner.m_pkCurRaceMotionData)
 		return FALSE;
 
 	if (__GetCurrentMotionIndex() == CRaceMotionData::NAME_FISHING_WAIT ||
@@ -463,13 +468,13 @@ int32_t CActorInstance::IsFishing()
 	return FALSE;
 }
 
-int32_t CActorInstance::CanCancelSkill()
+int32_t CActorInstanceMotion::CanCancelSkill()
 {
 	assert(IsUsingSkill());
-	return m_pkCurRaceMotionData->IsCancelEnableSkill();
+	return m_rkOwner.m_pkCurRaceMotionData->IsCancelEnableSkill();
 }
 
-int32_t CActorInstance::isLock()
+int32_t CActorInstanceMotion::isLock()
 {
 	uint32_t dwCurMotionIndex = __GetCurrentMotionIndex();
 
@@ -538,7 +543,7 @@ int32_t CActorInstance::isLock()
 	// Locked during using skill
 	if (IsUsingSkill())
 	{
-		if (m_pkCurRaceMotionData->IsCancelEnableSkill())
+		if (m_rkOwner.m_pkCurRaceMotionData->IsCancelEnableSkill())
 			return FALSE;
 
 		return TRUE;
@@ -547,26 +552,26 @@ int32_t CActorInstance::isLock()
 	return FALSE;
 }
 
-float CActorInstance::GetLastMotionTime(float fBlendTime)
+float CActorInstanceMotion::GetLastMotionTime(float fBlendTime)
 {
-	if (m_MotionDeque.empty())
+	if (m_rkOwner.m_MotionDeque.empty())
 	{
-		if (MOTION_TYPE_ONCE == m_kCurMotNode.iMotionType)
-			return (m_kCurMotNode.fEndTime - fBlendTime);
+		if (MOTION_TYPE_ONCE == m_rkOwner.m_kCurMotNode.iMotionType)
+			return (m_rkOwner.m_kCurMotNode.fEndTime - fBlendTime);
 
-		return GetLocalTime();
+		return m_rkOwner.GetLocalTime();
 	}
 
-	TReservingMotionNode& rMotionNode = m_MotionDeque[m_MotionDeque.size() - 1];
+	CActorInstance::TReservingMotionNode& rMotionNode = m_rkOwner.m_MotionDeque[m_rkOwner.m_MotionDeque.size() - 1];
 
 	return rMotionNode.fStartTime + rMotionNode.fDuration - fBlendTime;
 }
 
-float CActorInstance::GetMotionDuration(uint32_t dwMotionKey)
+float CActorInstanceMotion::GetMotionDuration(uint32_t dwMotionKey)
 {
 	CGraphicThing* pMotion;
 
-	if (!GetMotionThingPointer(dwMotionKey, &pMotion))
+	if (!m_rkOwner.GetMotionThingPointer(dwMotionKey, &pMotion))
 	{
 		Tracenf("CActorInstance::GetMotionDuration - Cannot get motion: %d / %d",
 				GET_MOTION_MODE(dwMotionKey), GET_MOTION_INDEX(dwMotionKey));
@@ -586,7 +591,7 @@ float CActorInstance::GetMotionDuration(uint32_t dwMotionKey)
 	return pGrannyMotion->GetDuration();
 }
 
-MOTION_KEY CActorInstance::GetRandomMotionKey(MOTION_KEY dwMotionKey)
+MOTION_KEY CActorInstanceMotion::GetRandomMotionKey(MOTION_KEY dwMotionKey)
 {
 	// NOTE : 자주 호출 되는 부분은 아니지만 어느 정도의 최적화 여지가 있음 - [levites]
 	// FIXME : 처음에 선택된 모션이 없는 것에 대한 처리가 되어 있지 않다.
@@ -594,7 +599,7 @@ MOTION_KEY CActorInstance::GetRandomMotionKey(MOTION_KEY dwMotionKey)
 	uint16_t wIndex = GET_MOTION_INDEX(dwMotionKey);
 
 	const CRaceData::TMotionVector* c_pMotionVector;
-	if (m_pkCurRaceData->GetMotionVectorPointer(wMode, wIndex, &c_pMotionVector))
+	if (m_rkOwner.m_pkCurRaceData->GetMotionVectorPointer(wMode, wIndex, &c_pMotionVector))
 		if (c_pMotionVector->size() > 1)
 		{
 			int iPercentage = random() % 100;
@@ -609,7 +614,7 @@ MOTION_KEY CActorInstance::GetRandomMotionKey(MOTION_KEY dwMotionKey)
 
 					// Temporary
 					// NOTE: 현재로선 여기서 해봤자 의미없다. 전체적으로 확인결과 아래는 씹히는 코드고 다른곳에서 해결해야 하므로 일단 주석처리함. 나중에 통채로 지우자..
-					// m_kCurMotNode.fEndTime = m_kCurMotNode.fStartTime + GetMotionDuration(dwMotionKey);
+					// m_rkOwner.m_kCurMotNode.fEndTime = m_rkOwner.m_kCurMotNode.fStartTime + GetMotionDuration(dwMotionKey);
 					// Temporary
 
 					return dwMotionKey;
@@ -620,23 +625,23 @@ MOTION_KEY CActorInstance::GetRandomMotionKey(MOTION_KEY dwMotionKey)
 	return dwMotionKey;
 }
 
-void CActorInstance::PreAttack()
+void CActorInstanceMotion::PreAttack()
 {
 }
 
-void CActorInstance::__ClearMotion()
+void CActorInstanceMotion::__ClearMotion()
 {
-	__HideWeaponTrace();
+	m_rkOwner.__HideWeaponTrace();
 
-	m_MotionDeque.clear();
-	m_kCurMotNode.dwcurFrame = 0;
-	m_kCurMotNode.dwFrameCount = 0;
-	m_kCurMotNode.uSkill = 0;
-	m_kCurMotNode.iLoopCount = 0;
-	m_kCurMotNode.iMotionType = MOTION_TYPE_NONE;
+	m_rkOwner.m_MotionDeque.clear();
+	m_rkOwner.m_kCurMotNode.dwcurFrame = 0;
+	m_rkOwner.m_kCurMotNode.dwFrameCount = 0;
+	m_rkOwner.m_kCurMotNode.uSkill = 0;
+	m_rkOwner.m_kCurMotNode.iLoopCount = 0;
+	m_rkOwner.m_kCurMotNode.iMotionType = MOTION_TYPE_NONE;
 }
 
-uint32_t CActorInstance::__SetMotion(const SSetMotionData& c_rkSetMotData, uint32_t dwRandMotKey)
+uint32_t CActorInstanceMotion::__SetMotion(const SSetMotionData& c_rkSetMotData, uint32_t dwRandMotKey)
 {
 	uint32_t dwMotKey = dwRandMotKey;
 
@@ -645,26 +650,26 @@ uint32_t CActorInstance::__SetMotion(const SSetMotionData& c_rkSetMotData, uint3
 
 	uint32_t uNextMot = GET_MOTION_INDEX(c_rkSetMotData.dwMotKey);
 
-	if (IsDead())
+	if (m_rkOwner.IsDead())
 	{
 		if (uNextMot != CRaceMotionData::NAME_DAMAGE_FLYING && uNextMot != CRaceMotionData::NAME_DAMAGE_FLYING_BACK && uNextMot != CRaceMotionData::NAME_DEAD && uNextMot != CRaceMotionData::NAME_DEAD_BACK)
 			return 0;
 	}
 	if (IsUsingSkill())
 	{
-		__OnStop();
+		m_rkOwner.__OnStop();
 	}
 
 	if (__IsStandUpMotion())
 	{
-		__OnStop();
+		m_rkOwner.__OnStop();
 	}
 
 	if (__IsMoveMotion())
 	{
 		if (uNextMot == CRaceMotionData::NAME_DAMAGE || uNextMot == CRaceMotionData::NAME_DAMAGE_BACK || uNextMot == CRaceMotionData::NAME_DAMAGE_FLYING || uNextMot == CRaceMotionData::NAME_DAMAGE_FLYING_BACK)
 		{
-			if (!m_isMain)
+			if (!m_rkOwner.m_isMain)
 			{
 				Logn(0, "If you're not the main character, you're moving and don't do damage moves.");
 				return false;
@@ -673,62 +678,62 @@ uint32_t CActorInstance::__SetMotion(const SSetMotionData& c_rkSetMotData, uint3
 
 		if (uNextMot != CRaceMotionData::NAME_RUN &&
 			uNextMot != CRaceMotionData::NAME_WALK &&
-			!__IsMovingSkill(c_rkSetMotData.uSkill))
+			!m_rkOwner.GetBattle().__IsMovingSkill(c_rkSetMotData.uSkill))
 		{
-			__OnStop();
+			m_rkOwner.__OnStop();
 		}
 	}
 	else
 	{
-		if (uNextMot == CRaceMotionData::NAME_RUN || __IsMovingSkill(c_rkSetMotData.uSkill))
+		if (uNextMot == CRaceMotionData::NAME_RUN || m_rkOwner.GetBattle().__IsMovingSkill(c_rkSetMotData.uSkill))
 		{
-			__OnMove();
+			m_rkOwner.__OnMove();
 		}
 	}
 
 	// NOTE : 스킬 사용중 사라지는 문제를 위한 안전 장치 - [levites]
-	if (__IsHiding())
+	if (m_rkOwner.__IsHiding())
 	{
-		__ShowEvent();
+		m_rkOwner.__ShowEvent();
 	}
 
-	if (-1 != m_iFishingEffectID)
+	if (-1 != m_rkOwner.m_iFishingEffectID)
 	{
 		CEffectManager& rkEftMgr = CEffectManager::Instance();
-		rkEftMgr.DeactiveEffectInstance(m_iFishingEffectID);
+		rkEftMgr.DeactiveEffectInstance(m_rkOwner.m_iFishingEffectID);
 
-		m_iFishingEffectID = -1;
+		m_rkOwner.m_iFishingEffectID = -1;
 	}
 
-	if (m_pkHorse)
+	if (m_rkOwner.m_pkHorse)
 	{
 		uint16_t wMotionIndex = GET_MOTION_INDEX(dwMotKey);
 		uint16_t wMotionSubIndex = GET_MOTION_SUB_INDEX(dwMotKey);
-		uint32_t dwChildMotKey = MAKE_RANDOM_MOTION_KEY(m_pkHorse->m_wcurMotionMode, wMotionIndex, wMotionSubIndex);
+		uint32_t dwChildMotKey = MAKE_RANDOM_MOTION_KEY(m_rkOwner.m_pkHorse->m_wcurMotionMode, wMotionIndex, wMotionSubIndex);
 
 		if (CRaceMotionData::NAME_DEAD == wMotionIndex)
-			CGraphicThingInstance::ChangeMotion(dwMotKey, c_rkSetMotData.iLoopCount, c_rkSetMotData.fSpeedRatio);
+			m_rkOwner.ChangeMotion(dwMotKey, c_rkSetMotData.iLoopCount, c_rkSetMotData.fSpeedRatio);
 		else
-			CGraphicThingInstance::SetMotion(dwMotKey, c_rkSetMotData.fBlendTime, c_rkSetMotData.iLoopCount, c_rkSetMotData.fSpeedRatio);
+			m_rkOwner.SetMotion(dwMotKey, c_rkSetMotData.fBlendTime, c_rkSetMotData.iLoopCount, c_rkSetMotData.fSpeedRatio);
 
-		m_pkHorse->SetMotion(dwChildMotKey, c_rkSetMotData.fBlendTime, c_rkSetMotData.iLoopCount, c_rkSetMotData.fSpeedRatio);
-		m_pkHorse->__BindMotionData(dwChildMotKey);
+		m_rkOwner.m_pkHorse->SetMotion(dwChildMotKey, c_rkSetMotData.fBlendTime, c_rkSetMotData.iLoopCount, c_rkSetMotData.fSpeedRatio);
+		m_rkOwner.m_pkHorse->GetMotion().__BindMotionData(dwChildMotKey);
 
 		if (c_rkSetMotData.iLoopCount)
-			m_pkHorse->m_kCurMotNode.iMotionType = MOTION_TYPE_ONCE; // 무조건 이전 모션 타입으로 설정되고 있었음
+			m_rkOwner.m_pkHorse->m_kCurMotNode.iMotionType = MOTION_TYPE_ONCE; // 무조건 이전 모션 타입으로 설정되고 있었음
 		else
-			m_pkHorse->m_kCurMotNode.iMotionType = MOTION_TYPE_LOOP;
+			m_rkOwner.m_pkHorse->m_kCurMotNode.iMotionType = MOTION_TYPE_LOOP;
 
-		m_pkHorse->m_kCurMotNode.dwFrameCount = m_pkHorse->GetMotionDuration(dwChildMotKey) / (1.0f / g_fGameFPS);
-		m_pkHorse->m_kCurMotNode.dwcurFrame = 0;
-		m_pkHorse->m_kCurMotNode.dwMotionKey = dwChildMotKey;
+		m_rkOwner.m_pkHorse->m_kCurMotNode.dwFrameCount = m_rkOwner.m_pkHorse->GetMotion().GetMotionDuration(dwChildMotKey) / (1.0f / g_fGameFPS);
+		m_rkOwner.m_pkHorse->m_kCurMotNode.dwcurFrame = 0;
+		m_rkOwner.m_pkHorse->m_kCurMotNode.dwMotionKey = dwChildMotKey;
 	}
 	else
 	{
-		CGraphicThingInstance::SetMotion(dwMotKey, c_rkSetMotData.fBlendTime, c_rkSetMotData.iLoopCount, c_rkSetMotData.fSpeedRatio);
+		m_rkOwner.SetMotion(dwMotKey, c_rkSetMotData.fBlendTime, c_rkSetMotData.iLoopCount, c_rkSetMotData.fSpeedRatio);
 	}
 
-	__HideWeaponTrace();
+	m_rkOwner.__HideWeaponTrace();
 
 	if (__BindMotionData(dwMotKey))
 	{
@@ -738,9 +743,9 @@ uint32_t CActorInstance::__SetMotion(const SSetMotionData& c_rkSetMotData, uint3
 		if (__CanAttack())
 		{
 			// 여기서 공격 모션일 경우의 처리를 합니다 - [levites]
-			__ShowWeaponTrace();
+			m_rkOwner.__ShowWeaponTrace();
 
-			m_HitDataMap.clear();
+			m_rkOwner.m_HitDataMap.clear();
 			// PreAttack();
 		}
 
@@ -749,10 +754,10 @@ uint32_t CActorInstance::__SetMotion(const SSetMotionData& c_rkSetMotData, uint3
 			if (!__CanNextComboAttack())
 			{
 				// 2004.11.19.myevan.동물 변신시 이부분에서 바로 리셋되어 다음동작 안나온다
-				m_dwcurComboIndex = 0; // 콤보 리셋 - [levites]
+				m_rkOwner.m_dwcurComboIndex = 0; // 콤보 리셋 - [levites]
 
 				// NOTE : ClearCombo() 를 수행해서는 안된다.
-				//        콤보 다음에 스킬을 이어서 사용할 경우 m_pkCurRaceMotionData까지 초기화 되어 버린다.
+				//        콤보 다음에 스킬을 이어서 사용할 경우 m_rkOwner.m_pkCurRaceMotionData까지 초기화 되어 버린다.
 				// Tracef("MotionData does not contain combo data.\n");
 			}
 		}
@@ -761,75 +766,75 @@ uint32_t CActorInstance::__SetMotion(const SSetMotionData& c_rkSetMotData, uint3
 	return dwMotKey;
 }
 
-bool CActorInstance::__BindMotionData(uint32_t dwMotionKey)
+bool CActorInstanceMotion::__BindMotionData(uint32_t dwMotionKey)
 {
-	if (!m_pkCurRaceData->GetMotionDataPointer(dwMotionKey, &m_pkCurRaceMotionData))
+	if (!m_rkOwner.m_pkCurRaceData->GetMotionDataPointer(dwMotionKey, &m_rkOwner.m_pkCurRaceMotionData))
 	{
 		Tracen("Failed to bind motion.");
-		m_pkCurRaceMotionData = NULL;
-		m_dwcurComboIndex = 0;
+		m_rkOwner.m_pkCurRaceMotionData = NULL;
+		m_rkOwner.m_dwcurComboIndex = 0;
 		return false;
 	}
 
 	return true;
 }
 
-int CActorInstance::__GetLoopCount()
+int CActorInstanceMotion::__GetLoopCount()
 {
-	if (!m_pkCurRaceMotionData)
+	if (!m_rkOwner.m_pkCurRaceMotionData)
 	{
-		TraceError("CActorInstance::__GetLoopCount() - m_pkCurRaceMotionData==NULL");
+		TraceError("CActorInstanceMotion::__GetLoopCount() - m_rkOwner.m_pkCurRaceMotionData==NULL");
 		return -1;
 	}
 
-	return m_pkCurRaceMotionData->GetLoopCount();
+	return m_rkOwner.m_pkCurRaceMotionData->GetLoopCount();
 }
 
-bool CActorInstance::__CanAttack()
+bool CActorInstanceMotion::__CanAttack()
 {
-	if (!m_pkCurRaceMotionData)
+	if (!m_rkOwner.m_pkCurRaceMotionData)
 	{
-		TraceError("CActorInstance::__CanAttack() - m_pkCurRaceMotionData==NULL");
+		TraceError("CActorInstanceMotion::__CanAttack() - m_rkOwner.m_pkCurRaceMotionData==NULL");
 		return false;
 	}
 
-	if (!m_pkCurRaceMotionData->isAttackingMotion())
+	if (!m_rkOwner.m_pkCurRaceMotionData->isAttackingMotion())
 		return false;
 
 	return true;
 }
 
-bool CActorInstance::__CanNextComboAttack()
+bool CActorInstanceMotion::__CanNextComboAttack()
 {
-	if (!m_pkCurRaceMotionData)
+	if (!m_rkOwner.m_pkCurRaceMotionData)
 	{
-		TraceError("CActorInstance::__CanNextComboAttack() - m_pkCurRaceMotionData==NULL");
+		TraceError("CActorInstanceMotion::__CanNextComboAttack() - m_rkOwner.m_pkCurRaceMotionData==NULL");
 		return false;
 	}
 
-	if (!m_pkCurRaceMotionData->IsComboInputTimeData())
+	if (!m_rkOwner.m_pkCurRaceMotionData->IsComboInputTimeData())
 		return false;
 
 	return true;
 }
 
-bool CActorInstance::__IsComboAttacking()
+bool CActorInstanceMotion::__IsComboAttacking()
 {
-	if (0 == m_dwcurComboIndex)
+	if (0 == m_rkOwner.m_dwcurComboIndex)
 		return false;
 
 	return true;
 }
 
-bool CActorInstance::__IsNeedFlyTargetMotion()
+bool CActorInstanceMotion::__IsNeedFlyTargetMotion()
 {
-	if (!m_pkCurRaceMotionData)
+	if (!m_rkOwner.m_pkCurRaceMotionData)
 		return true;
 
-	for (uint32_t i = 0; i < m_pkCurRaceMotionData->GetMotionEventDataCount(); ++i)
+	for (uint32_t i = 0; i < m_rkOwner.m_pkCurRaceMotionData->GetMotionEventDataCount(); ++i)
 	{
 		const CRaceMotionData::TMotionEventData* c_pData;
-		if (!m_pkCurRaceMotionData->GetMotionEventDataPointer(i, &c_pData))
+		if (!m_rkOwner.m_pkCurRaceMotionData->GetMotionEventDataPointer(i, &c_pData))
 			continue;
 
 		if (c_pData->iType == CRaceMotionData::MOTION_EVENT_TYPE_WARP)
@@ -845,15 +850,15 @@ bool CActorInstance::__IsNeedFlyTargetMotion()
 	return false;
 }
 
-bool CActorInstance::__HasMotionFlyEvent()
+bool CActorInstanceMotion::__HasMotionFlyEvent()
 {
-	if (!m_pkCurRaceMotionData)
+	if (!m_rkOwner.m_pkCurRaceMotionData)
 		return true;
 
-	for (uint32_t i = 0; i < m_pkCurRaceMotionData->GetMotionEventDataCount(); ++i)
+	for (uint32_t i = 0; i < m_rkOwner.m_pkCurRaceMotionData->GetMotionEventDataCount(); ++i)
 	{
 		const CRaceMotionData::TMotionEventData* c_pData;
-		if (!m_pkCurRaceMotionData->GetMotionEventDataPointer(i, &c_pData))
+		if (!m_rkOwner.m_pkCurRaceMotionData->GetMotionEventDataPointer(i, &c_pData))
 			continue;
 
 		if (c_pData->iType == CRaceMotionData::MOTION_EVENT_TYPE_FLY)
@@ -862,37 +867,37 @@ bool CActorInstance::__HasMotionFlyEvent()
 	return false;
 }
 
-bool CActorInstance::__IsWaitMotion()
+bool CActorInstanceMotion::__IsWaitMotion()
 {
 	return (__GetMotionType() == CRaceMotionData::TYPE_WAIT);
 }
 
-bool CActorInstance::__IsMoveMotion()
+bool CActorInstanceMotion::__IsMoveMotion()
 {
 	return (__GetMotionType() == CRaceMotionData::TYPE_MOVE);
 }
 
-bool CActorInstance::__IsAttackMotion()
+bool CActorInstanceMotion::__IsAttackMotion()
 {
 	return (__GetMotionType() == CRaceMotionData::TYPE_ATTACK);
 }
 
-bool CActorInstance::__IsComboAttackMotion()
+bool CActorInstanceMotion::__IsComboAttackMotion()
 {
 	return (__GetMotionType() == CRaceMotionData::TYPE_COMBO);
 }
 
-bool CActorInstance::__IsDamageMotion()
+bool CActorInstanceMotion::__IsDamageMotion()
 {
 	return (__GetMotionType() == CRaceMotionData::TYPE_DAMAGE);
 }
 
-bool CActorInstance::__IsKnockDownMotion()
+bool CActorInstanceMotion::__IsKnockDownMotion()
 {
 	return (__GetMotionType() == CRaceMotionData::TYPE_KNOCKDOWN);
 }
 
-bool CActorInstance::__IsDieMotion()
+bool CActorInstanceMotion::__IsDieMotion()
 {
 	if (__IsKnockDownMotion())
 		return true;
@@ -900,7 +905,7 @@ bool CActorInstance::__IsDieMotion()
 	return (__GetMotionType() == CRaceMotionData::TYPE_DIE);
 }
 
-bool CActorInstance::__IsStandUpMotion()
+bool CActorInstanceMotion::__IsStandUpMotion()
 {
 	return (__GetMotionType() == CRaceMotionData::TYPE_STANDUP);
 }
