@@ -1,4 +1,5 @@
 #pragma once
+#include <Neoeter/Platform/Base/Singleton.h>
 
 class CPythonQuest : public CSingleton<CPythonQuest>
 {

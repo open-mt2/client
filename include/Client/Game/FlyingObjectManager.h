@@ -3,6 +3,8 @@
 #include <Client/Game/FlyTarget.h>
 
 #include <set>
+#include <Neoeter/Platform/Base/Singleton.h>
+#include <list>
 
 class CFlyingInstance;
 class CFlyingData;

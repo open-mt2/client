@@ -1,4 +1,8 @@
 #pragma once
+#include <Client/Game/ClientConstants.h>
+#include <Neoeter/Platform/Base/Singleton.h>
+#include <list>
+#include <map>
 
 /*
  *	NPC 데이터 프로토 타잎을 관리 한다.

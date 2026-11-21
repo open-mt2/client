@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Client/Protocol/Packet.h>
+#include <Client/Game/Affects.h>
 
 /*
  *	상점 처리

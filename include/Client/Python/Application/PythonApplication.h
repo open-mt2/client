@@ -2,6 +2,10 @@
 
 #include <Neoeter/Render/MSApplication.h>
 #include <Neoeter/Render/Input.h>
+#include <Neoeter/Python/Bindings/PythonWindow.h>
+#include <Neoeter/Python/Bindings/PythonWindowManager.h>
+#include <Neoeter/Python/Bindings/PythonGraphic.h>
+#include <Neoeter/Python/Host/Resource.h>
 #include <Neoeter/Render/Profiler.h>
 #include <Neoeter/Render/GrpDevice.h>
 #include <Neoeter/Render/NetDevice.h>

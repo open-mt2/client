@@ -1,4 +1,5 @@
 #pragma once
+#include <Neoeter/Platform/DirectXMathCompat.h>
 
 struct SParticleVertex
 {

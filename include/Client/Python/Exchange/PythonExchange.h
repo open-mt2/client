@@ -1,6 +1,8 @@
 #pragma once
 
 #include <Client/Protocol/Packet.h>
+#include <Client/Game/ClientConstants.h>
+#include <Client/Game/Affects.h>
 
 /*
  *	교환 창 관련

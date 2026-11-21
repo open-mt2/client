@@ -5,6 +5,8 @@
 #include <Client/Python/Skill/PythonSkill.h>
 #include <Client/Python/Player/PythonPlayerInput.h>
 #include <Client/Python/Player/PythonPlayerSkill.h>
+#include <Client/Game/ClientConstants.h>
+#include <Python.h>
 
 class CInstanceBase;
 

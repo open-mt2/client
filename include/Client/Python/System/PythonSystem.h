@@ -1,4 +1,6 @@
 #pragma once
+#include <Neoeter/Platform/Base/Singleton.h>
+#include <Python.h>
 
 class CPythonSystem : public CSingleton<CPythonSystem>
 {

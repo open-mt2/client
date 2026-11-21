@@ -1,4 +1,8 @@
 #pragma once
+#include <Neoeter/Platform/Base/Singleton.h>
+#include <set>
+#include <map>
+#include <Python.h>
 
 class CPythonMessenger : public CSingleton<CPythonMessenger>
 {

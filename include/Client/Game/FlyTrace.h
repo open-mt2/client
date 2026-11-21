@@ -1,5 +1,13 @@
 #pragma once
 
+#include <Neoeter/Render/GrpScreen.h>
+#include <Neoeter/Platform/DirectXMathCompat.h>
+#include <Client/Game/FlyingData.h>
+
+#include <cstdint>
+#include <deque>
+#include <utility>
+
 class CFlyTrace : public CScreen
 {
 	public:

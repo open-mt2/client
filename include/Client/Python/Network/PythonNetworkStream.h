@@ -9,6 +9,9 @@
 #include <Client/Protocol/Wire.h>
 #include <Client/Protocol/Decode.h>
 #include <Client/Session/NetworkStreamPhases.h>
+#include <Python.h>
+#include <Client/Game/Affects.h>
+#include <Client/Map/MapType.h>
 
 class CInstanceBase;
 class CNetworkActorManager;

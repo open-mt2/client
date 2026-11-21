@@ -5,6 +5,7 @@
 //        조금 난잡해진거 같기도 하다 - 2003. 01. 13. [levites]
 
 #include <Neoeter/Model/Grn/ThingInstance.h>
+#include <Client/Map/MapType.h>
 
 class CItemData;
 

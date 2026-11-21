@@ -3,6 +3,7 @@
 #include <Client/UI/AbstractCharacterManager.h>
 #include <Client/Actor/InstanceBase.h>
 #include <Client/Map/PhysicsObject.h>
+#include <Client/Game/ClientConstants.h>
 
 class CPythonCharacterManager : public CSingleton<CPythonCharacterManager>, public IAbstractCharacterManager, public IObjectManager
 {

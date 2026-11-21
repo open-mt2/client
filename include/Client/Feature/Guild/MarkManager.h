@@ -2,6 +2,8 @@
 #define __INC_METIN_II_GUILDLIB_MARK_MANAGER_H__
 
 #include <Client/Feature/Guild/MarkImage.h>
+#include <Neoeter/Platform/Base/Singleton.h>
+#include <set>
 
 class CGuildMarkManager : public singleton<CGuildMarkManager>
 {

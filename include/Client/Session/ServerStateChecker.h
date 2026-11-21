@@ -1,6 +1,9 @@
 #pragma once
 
 #include <Neoeter/Render/NetStream.h>
+#include <Neoeter/Platform/Base/Singleton.h>
+#include <Python.h>
+#include <list>
 
 class CServerStateChecker : public CSingleton<CServerStateChecker>
 {

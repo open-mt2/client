@@ -5,7 +5,10 @@
 #if !defined(AFX_MONSTERAREAINFO_H__B177E257_2EB2_4CE5_89D3_D06B5618BE1B__INCLUDED_)
 #define AFX_MONSTERAREAINFO_H__B177E257_2EB2_4CE5_89D3_D06B5618BE1B__INCLUDED_
 
+#include <Neoeter/Platform/DirectXMathCompat.h>
+
 #include <cstdint>
+#include <string>
 
 class CMonsterAreaInfo
 {

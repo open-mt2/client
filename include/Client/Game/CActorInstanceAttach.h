@@ -4,6 +4,7 @@
 #include <Client/Map/MapType.h>
 
 #include <cstdint>
+#include <Client/Game/RaceData.h>
 
 class CActorInstance;
 class CItemData;

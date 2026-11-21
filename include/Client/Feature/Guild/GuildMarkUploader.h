@@ -2,6 +2,7 @@
 
 #include <Neoeter/Render/NetStream.h>
 #include <Client/Feature/Guild/MarkImage.h>
+#include <Neoeter/Platform/Base/Singleton.h>
 
 #ifdef __VTUNE__
 

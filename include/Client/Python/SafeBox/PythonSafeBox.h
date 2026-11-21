@@ -1,4 +1,8 @@
 #pragma once
+#include <Neoeter/Platform/Base/Singleton.h>
+#include <Client/Game/Affects.h>
+
+#include <vector>
 
 class CPythonSafeBox : public CSingleton<CPythonSafeBox>
 {

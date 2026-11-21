@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Client/Utils/AbstractSingleton.h>
+#include <Neoeter/Platform/DirectXMathCompat.h>
 
 class IAbstractApplication : public TAbstractSingleton<IAbstractApplication>
 {

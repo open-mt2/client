@@ -1,6 +1,8 @@
 #pragma once
 
 #include <Client/Python/Background/PythonBackground.h>
+#include <Python.h>
+#include <Neoeter/Render/GrpExpandedImageInstance.h>
 
 class CPythonMiniMap : public CScreen, public CSingleton<CPythonMiniMap>
 {

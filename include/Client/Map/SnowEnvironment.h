@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Neoeter/Render/GrpScreen.h>
+#include <Neoeter/Render/GrpImageInstance.h>
 
 class CSnowParticle;
 

@@ -9,6 +9,7 @@
 #include <Neoeter/Render/Mutex.h>
 
 #include <atomic>
+#include <deque>
 
 class CTerrain;
 class CArea;

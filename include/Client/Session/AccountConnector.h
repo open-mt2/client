@@ -1,5 +1,7 @@
 #include <Neoeter/Render/NetStream.h>
 #include <Neoeter/Render/FuncObject.h>
+#include <Neoeter/Platform/Base/Singleton.h>
+#include <Python.h>
 
 class CAccountConnector : public CNetworkStream, public CSingleton<CAccountConnector>
 {

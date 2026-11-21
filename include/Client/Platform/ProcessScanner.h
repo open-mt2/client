@@ -1,4 +1,8 @@
 #pragma once
+#include <utility>
+#include <cstdint>
+#include <string>
+#include <vector>
 
 typedef std::pair<uint32_t, std::string> CRCPair;
 

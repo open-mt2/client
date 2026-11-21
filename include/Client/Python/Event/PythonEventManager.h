@@ -4,6 +4,9 @@
 
 #include <string>
 #include <map>
+#include <Neoeter/Render/GrpTextInstance.h>
+#include <Python.h>
+#include <Neoeter/Platform/Base/Singleton.h>
 
 class CPythonEventManager : public CSingleton<CPythonEventManager>
 {

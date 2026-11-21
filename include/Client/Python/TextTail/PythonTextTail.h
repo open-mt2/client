@@ -1,6 +1,12 @@
 #pragma once
 
 #include <Neoeter/Platform/Base/Singleton.h>
+#include <Neoeter/Render/GrpTextInstance.h>
+#include <Neoeter/Render/GrpMarkInstance.h>
+#include <Neoeter/Render/GrpObjectInstance.h>
+#include <Client/Map/MapType.h>
+
+#include <list>
 
 /*
  *	따라다니는 텍스트 처리

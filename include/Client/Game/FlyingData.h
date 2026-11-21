@@ -3,6 +3,8 @@
 #include <cstdint>
 #include <string>
 #include <vector>
+#include <Neoeter/Render/Pool.h>
+#include <Neoeter/Platform/DirectXMathCompat.h>
 
 class CFlyingData //: public CPooledObject<CFlyingData>
 {
