@@ -1,5 +1,5 @@
 #include <Client/UI/StdAfx.h>
-#include <Client/UI/AccountConnector.h>
+#include <Client/Session/AccountConnector.h>
 #include <Client/Protocol/Packet.h>
 #include <Client/Session/PythonNetworkStream.h>
 #include <Neoeter/Platform/Base/tea.h>

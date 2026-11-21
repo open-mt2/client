@@ -1,5 +1,5 @@
-#include <Client/UI/StdAfx.h>
-#include <Client/UI/Util/AffectFlagContainer.h>
+#include <Client/Game/StdAfx.h>
+#include <Client/Game/AffectFlagContainer.h>
 
 CAffectFlagContainer::CAffectFlagContainer()
 {

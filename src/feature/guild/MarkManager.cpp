@@ -396,7 +396,7 @@ void CGuildMarkManager::UploadSymbol(uint32_t guildID, int iSize, const uint8_t*
 
 #ifdef __UNITTEST__
 #include "lzo_manager.h"
-#include <Client/UI/ImageFile.h>
+#include <Client/Feature/Guild/ImageFile.h>
 
 Guild::CGuildMarkManager* mgr;
 

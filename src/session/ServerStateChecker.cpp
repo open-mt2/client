@@ -1,6 +1,6 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/Protocol/Packet.h>
-#include <Client/UI/ServerStateChecker.h>
+#include <Client/Session/ServerStateChecker.h>
 
 #include <Neoeter/Render/NetAddress.h>
 

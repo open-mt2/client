@@ -6,7 +6,7 @@
 uint32_t g_adwEncryptKey[4];
 uint32_t g_adwDecryptKey[4];
 
-#include <Client/UI/AccountConnector.h>
+#include <Client/Session/AccountConnector.h>
 
 inline const uint8_t* GetKey_20050304Myevan()
 {

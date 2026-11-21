@@ -3,7 +3,7 @@
 #include <Client/Session/NetworkStreamPhases.h>
 #include <Client/Protocol/Packet.h>
 #include <Client/Utils/Test.h>
-#include <Client/UI/AccountConnector.h>
+#include <Client/Session/AccountConnector.h>
 
 // Login ---------------------------------------------------------------------------
 void CPythonNetworkStream::LoginPhase()

@@ -1,7 +1,7 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/Session/PythonNetworkStream.h>
 // #include "PythonNetworkDatagram.h"
-#include <Client/UI/AccountConnector.h>
+#include <Client/Session/AccountConnector.h>
 #include <Client/Feature/Guild/PythonGuild.h>
 #include <Client/Utils/Test.h>
 

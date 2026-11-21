@@ -1,6 +1,6 @@
 #include <Client/UI/StdAfx.h>
 #include <Neoeter/Platform/Port.h>
-#include <Client/UI/ImageFile.h>
+#include <Client/Feature/Guild/ImageFile.h>
 #include <Client/UI/App/PythonApplication.h>
 #include <Neoeter/Render/Camera.h>
 

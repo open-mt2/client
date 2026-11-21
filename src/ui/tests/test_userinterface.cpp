@@ -1,9 +1,9 @@
 #include <Client/UI/StdAfx.h>
-#include <Client/UI/Util/AffectFlagContainer.h>
+#include <Client/Game/AffectFlagContainer.h>
 #include <Client/Feature/Chat/InsultChecker.h>
 #include <Client/Feature/System/PythonSystem.h>
 #include <Client/Protocol/Packet.h>
-#include <Client/UI/Affects.h>
+#include <Client/Game/Affects.h>
 #include <Client/UI/QuitRequest.h>
 #include <Neoeter/Audio/SoundManager.h>
 #include <Neoeter/Platform/PlatformWindow.h>

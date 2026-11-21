@@ -3,7 +3,7 @@
 #include <Client/Game/RaceData.h>
 #include <Client/Game/ActorInstance.h>
 
-#include <Client/UI/Util/AffectFlagContainer.h>
+#include <Client/Game/AffectFlagContainer.h>
 #include <Client/UI/Instance/InstanceBaseBattle.h>
 #include <Client/UI/Instance/InstanceBaseEffect.h>
 #include <Client/UI/Instance/InstanceBaseMovement.h>

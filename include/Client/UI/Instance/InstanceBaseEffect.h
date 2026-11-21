@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Client/UI/Util/AffectFlagContainer.h>
+#include <Client/Game/AffectFlagContainer.h>
 #include <Client/Map/MapType.h>
 
 #include <map>

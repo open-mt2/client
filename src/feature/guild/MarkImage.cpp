@@ -5,7 +5,7 @@
 #include <cstring>
 
 #include <Neoeter/Platform/Base/ImageLoaderCompat.h>
-#include <Client/UI/ImageFile.h>
+#include <Client/Feature/Guild/ImageFile.h>
 #include <Neoeter/Platform/Base/CRC32.h>
 #include <Neoeter/Platform/Base/lzo.h>
 #define sys_err TraceError

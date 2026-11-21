@@ -36,9 +36,9 @@
 #include <Client/Feature/Guild/GuildMarkDownloader.h>
 #include <Client/Feature/Guild/GuildMarkUploader.h>
 
-#include <Client/UI/AccountConnector.h>
+#include <Client/Session/AccountConnector.h>
 
-#include <Client/UI/ServerStateChecker.h>
+#include <Client/Session/ServerStateChecker.h>
 #include <Client/UI/AbstractApplication.h>
 #include <Client/UI/Camera/ApplicationCamera.h>
 #include <Client/UI/Cursor/ApplicationCursor.h>

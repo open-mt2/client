@@ -1,5 +1,5 @@
 #include <Client/UI/StdAfx.h>
-#include <Client/UI/ImageFile.h>
+#include <Client/Feature/Guild/ImageFile.h>
 
 #include <cstdio>
 #include <vector>

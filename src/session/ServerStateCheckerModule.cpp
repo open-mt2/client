@@ -1,5 +1,5 @@
 #include <Client/UI/StdAfx.h>
-#include <Client/UI/ServerStateChecker.h>
+#include <Client/Session/ServerStateChecker.h>
 
 PyObject* ServerStateCheckerCreate(PyObject* poSelf, PyObject* poArgs)
 {

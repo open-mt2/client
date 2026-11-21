@@ -2,7 +2,7 @@
 #include <Client/Feature/Guild/GuildMarkUploader.h>
 #include <Client/Protocol/Packet.h>
 #include <Client/Utils/Test.h>
-#include <Client/UI/ImageFile.h>
+#include <Client/Feature/Guild/ImageFile.h>
 
 #include <algorithm>
 #include <cstring>

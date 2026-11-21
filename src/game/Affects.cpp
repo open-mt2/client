@@ -1,5 +1,7 @@
-#include <Client/UI/StdAfx.h>
-#include <Client/UI/Affects.h>
+#include <Client/Game/StdAfx.h>
+#include <Neoeter/Render/ResourceManager.h>
+#include <Neoeter/Render/Resource.h>
+#include <Client/Game/Affects.h>
 
 std::string g_strResourcePath = "ymir work/";
 std::string g_strImagePath = "ymir work/ui/";

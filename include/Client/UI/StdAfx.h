@@ -15,7 +15,7 @@
 
 #include <Client/Locale/Locale.h>
 
-#include <Client/UI/Affects.h>
+#include <Client/Game/Affects.h>
 extern uint32_t __DEFAULT_CODE_PAGE__;
 
 #define APP_NAME "Metin 2"
