@@ -7,6 +7,8 @@
 #include <map>
 #include <set>
 
+class CProperty;
+
 class CPropertyManager : public CSingleton<CPropertyManager>
 {
 	public:

@@ -37,7 +37,7 @@ if(UNIX)
     )
 endif()
 
-if(BUILD_TESTS AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tests/CMakeLists.txt")
+if(BUILD_TESTS)
     enable_testing()
     add_subdirectory(tests)
 endif()
