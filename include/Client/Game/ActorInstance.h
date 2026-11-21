@@ -8,7 +8,7 @@
 #include <Client/Game/FlyTarget.h>
 #include <Client/Game/RaceData.h>
 #include <Client/Game/RaceMotionData.h>
-#include <Client/Game/PhysicsObject.h>
+#include <Client/Map/PhysicsObject.h>
 #include <Client/Game/ActorInstanceInterface.h>
 #include <Client/Game/Interface.h>
 // #include <Neoeter/Model/Grn/ThingInstance.h>

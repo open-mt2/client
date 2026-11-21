@@ -2,7 +2,7 @@
 #include <Neoeter/Render/GrpMath.h>
 #include <Neoeter/Effect/EffectManager.h>
 
-#include <Client/Game/MapManager.h>
+#include <Client/Map/MapManager.h>
 
 #include <Client/Game/FlyingData.h>
 #include <Client/Game/FlyTrace.h>

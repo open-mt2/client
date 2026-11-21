@@ -1,6 +1,6 @@
 #include <Client/Game/StdAfx.h>
 #include <Client/Game/ActorInstance.h>
-#include <Client/Game/AreaTerrain.h>
+#include <Client/Map/AreaTerrain.h>
 #include <Client/Game/RaceData.h>
 #include <Neoeter/Model/SpeedTree/CSpeedTreeDirectX.h>
 #include <Neoeter/Model/SpeedTree/SpeedTreeWrapper.h>

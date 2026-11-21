@@ -2,7 +2,7 @@
 
 #include <Client/UI/AbstractCharacterManager.h>
 #include <Client/UI/InstanceBase.h>
-#include <Client/Game/PhysicsObject.h>
+#include <Client/Map/PhysicsObject.h>
 
 class CPythonCharacterManager : public CSingleton<CPythonCharacterManager>, public IAbstractCharacterManager, public IObjectManager
 {

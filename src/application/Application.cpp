@@ -7,6 +7,9 @@
 
 #include <Client/GameData/FileSource.h>
 
+#include <Client/Game/MapActorFilter.h>
+#include <Client/Map/Map.h>
+
 #include <Client/UI/StdAfx.h>
 
 #include <Client/UI/LoadingScreen.h>
@@ -101,6 +104,7 @@ namespace Neoeter
 		static CPackFileSource s_packFileSource;
 
 		SetGameDataFileSource(&s_packFileSource);
+		Map::SetActorBlockerPredicate(&IsMapBuildingActor);
 
 		m_pythonApplication.reset(new CPythonApplication);
 		m_pythonApplication->Initialize(m_context.Instance());

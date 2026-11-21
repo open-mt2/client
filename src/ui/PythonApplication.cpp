@@ -11,9 +11,9 @@
 #include <Client/UI/GraphicsOptionsPanel.h>
 #include <Neoeter/Render/Camera.h>
 #include <Neoeter/Render/AttributeInstance.h>
-#include <Client/Game/AreaTerrain.h>
-#include <Client/Game/Lighting.h>
-#include <Client/Game/ScreenDepthOfField.h>
+#include <Client/Map/AreaTerrain.h>
+#include <Client/Map/Lighting.h>
+#include <Client/Map/ScreenDepthOfField.h>
 #include <Neoeter/Model/Grn/Material.h>
 
 #include <Client/UI/resource.h>

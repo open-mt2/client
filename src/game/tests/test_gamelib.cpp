@@ -1,6 +1,6 @@
 #include <Client/Game/StdAfx.h>
 #include <Client/Game/GameUtil.h>
-#include <Client/Game/Lighting.h>
+#include <Client/Map/Lighting.h>
 #include <Client/GameData/ItemManager.h>
 #include <Client/Game/RaceManager.h>
 #include <Client/GameData/PropertyManager.h>

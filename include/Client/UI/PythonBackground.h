@@ -5,9 +5,9 @@
 #if !defined(AFX_PYTHONBACKGROUND_H__A202CB18_9553_4CF3_8500_5D7062B55432__INCLUDED_)
 #define AFX_PYTHONBACKGROUND_H__A202CB18_9553_4CF3_8500_5D7062B55432__INCLUDED_
 
-#include <Client/Game/MapManager.h>
-#include <Client/Game/TerrainDecal.h>
-#include <Client/Game/SnowEnvironment.h>
+#include <Client/Map/MapManager.h>
+#include <Client/Map/TerrainDecal.h>
+#include <Client/Map/SnowEnvironment.h>
 
 class CInstanceBase;
 

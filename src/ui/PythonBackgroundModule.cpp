@@ -2,7 +2,7 @@
 #include <Client/UI/PythonSystem.h>
 #include <Client/UI/PythonBackground.h>
 #include <Neoeter/Render/StateManager.h>
-#include <Client/Game/MapOutdoor.h>
+#include <Client/Map/MapOutdoor.h>
 
 PyObject* backgroundIsSoftwareTiling(PyObject* poSelf, PyObject* poArgs)
 {

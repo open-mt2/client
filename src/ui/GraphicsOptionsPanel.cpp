@@ -4,7 +4,7 @@
 
 #include <Client/UI/GraphicsOptionsPanel.h>
 
-#include <Client/Game/ScreenDepthOfField.h>
+#include <Client/Map/ScreenDepthOfField.h>
 #include <Client/UI/PythonBackground.h>
 #include <Client/UI/PythonApplication.h>
 

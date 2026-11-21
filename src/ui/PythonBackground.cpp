@@ -6,8 +6,8 @@
 #include <Neoeter/Render/CullingManager.h>
 #include <Neoeter/Render/Camera.h>
 #include <Neoeter/IO/EterPackManager.h>
-#include <Client/Game/MapOutdoor.h>
-#include <Client/Game/Lighting.h>
+#include <Client/Map/MapOutdoor.h>
+#include <Client/Map/Lighting.h>
 
 #include <Client/UI/PythonBackground.h>
 #include <Client/UI/PythonCharacterManager.h>

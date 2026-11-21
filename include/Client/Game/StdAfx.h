@@ -15,8 +15,8 @@
 
 #include <Client/Game/GameType.h>
 #include <Client/Game/GameUtil.h>
-#include <Client/Game/MapType.h>
-#include <Client/Game/MapUtil.h>
+#include <Client/Map/MapType.h>
+#include <Client/Map/MapUtil.h>
 #include <Client/Game/Interface.h>
 
 // #include <Client/Game/FlyingObjectManager.h>
@@ -32,7 +32,7 @@
 
 // Actor
 // #include <Client/Game/WeaponTrace.h>
-// #include <Client/Game/PhysicsObject.h>
+// #include <Client/Map/PhysicsObject.h>
 // #include <Client/Game/RaceMotionData.h>
 // #include <Client/Game/RaceData.h>
 // #include <Client/Game/ActorInstance.h>
@@ -43,7 +43,7 @@
 // #include <Client/GameData/PropertyManager.h>
 
 // Map
-// #include <Client/Game/Area.h>
+// #include <Client/Map/Area.h>
 
 // Path Finder
 // #include "PathFinder.h"
