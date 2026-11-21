@@ -1,7 +1,7 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/Player/PythonPlayerEventHandler.h>
 #include <Client/Player/PythonPlayer.h>
-#include <Client/UI/PythonCharacterManager.h>
+#include <Client/Feature/Character/PythonCharacterManager.h>
 #include <Client/Session/PythonNetworkStream.h>
 
 CPythonPlayerEventHandler& CPythonPlayerEventHandler::GetSingleton()

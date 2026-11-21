@@ -1,8 +1,8 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/Session/PythonNetworkStream.h>
 #include <Client/Session/NetworkStreamPhases.h>
-#include <Client/UI/NetworkActorManager.h>
-#include <Client/UI/PythonBackground.h>
+#include <Client/Feature/Character/NetworkActorManager.h>
+#include <Client/Feature/Background/PythonBackground.h>
 
 #include <Client/UI/PythonApplication.h>
 #include <Client/UI/AbstractPlayer.h>

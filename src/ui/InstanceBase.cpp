@@ -1,9 +1,9 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/UI/InstanceBase.h>
-#include <Client/UI/PythonBackground.h>
-#include <Client/UI/PythonNonPlayer.h>
+#include <Client/Feature/Background/PythonBackground.h>
+#include <Client/Feature/NonPlayer/PythonNonPlayer.h>
 #include <Client/Player/PythonPlayer.h>
-#include <Client/UI/PythonCharacterManager.h>
+#include <Client/Feature/Character/PythonCharacterManager.h>
 #include <Client/UI/AbstractPlayer.h>
 #include <Client/UI/AbstractApplication.h>
 #include <Client/UI/Packet.h>

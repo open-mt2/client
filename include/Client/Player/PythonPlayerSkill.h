@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Client/UI/PythonSkill.h>
+#include <Client/Feature/Skill/PythonSkill.h>
 #include <Client/Game/GameType.h>
 #include <Client/Map/MapType.h>
 

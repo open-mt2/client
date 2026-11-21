@@ -1,11 +1,11 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/Session/PythonNetworkStream.h>
 #include <Client/Session/NetworkStreamPhases.h>
-#include <Client/UI/PythonItem.h>
-#include <Client/UI/PythonShop.h>
-#include <Client/UI/PythonExchange.h>
-#include <Client/UI/PythonSafeBox.h>
-#include <Client/UI/PythonCharacterManager.h>
+#include <Client/Feature/Item/PythonItem.h>
+#include <Client/Feature/Shop/PythonShop.h>
+#include <Client/Feature/Exchange/PythonExchange.h>
+#include <Client/Feature/SafeBox/PythonSafeBox.h>
+#include <Client/Feature/Character/PythonCharacterManager.h>
 
 #include <Client/UI/AbstractPlayer.h>
 

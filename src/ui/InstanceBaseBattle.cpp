@@ -1,7 +1,7 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/UI/InstanceBase.h>
-#include <Client/UI/PythonBackground.h>
-#include <Client/UI/PythonCharacterManager.h>
+#include <Client/Feature/Background/PythonBackground.h>
+#include <Client/Feature/Character/PythonCharacterManager.h>
 #include <Neoeter/Terrain/Terrain.h>
 
 float NEW_UnsignedDegreeToSignedDegree(float fUD)

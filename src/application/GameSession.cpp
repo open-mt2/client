@@ -9,7 +9,7 @@
 #include <Client/UI/LoadingScreen.h>
 #include <Client/UI/Locale.h>
 #include <Client/UI/PythonApplication.h>
-#include <Client/UI/PythonBackground.h>
+#include <Client/Feature/Background/PythonBackground.h>
 #include <Neoeter/IO/EterPackManager.h>
 #include <Neoeter/Platform/Base/Debug.h>
 #include <Neoeter/Render/Util.h>

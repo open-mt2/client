@@ -2,7 +2,7 @@
 #include <cstdio>
 
 #include <Client/UI/StdAfx.h>
-#include <Client/UI/PythonCharacterManager.h>
+#include <Client/Feature/Character/PythonCharacterManager.h>
 #include <Client/Player/PythonPlayer.h>
 
 int main()

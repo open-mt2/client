@@ -19,7 +19,7 @@
 #include <Client/UI/resource.h>
 #include <Client/UI/PythonApplication.h>
 #include <Client/GameData/GameData.h>
-#include <Client/UI/PythonCharacterManager.h>
+#include <Client/Feature/Character/PythonCharacterManager.h>
 #include <Client/UI/LoadingScreen.h>
 
 #include <Client/UI/ProcessScanner.h>

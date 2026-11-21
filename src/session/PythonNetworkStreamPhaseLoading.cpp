@@ -3,7 +3,7 @@
 #include <Client/Session/NetworkStreamPhases.h>
 #include <Client/UI/Packet.h>
 #include <Client/UI/PythonApplication.h>
-#include <Client/UI/NetworkActorManager.h>
+#include <Client/Feature/Character/NetworkActorManager.h>
 
 #include <Client/UI/AbstractPlayer.h>
 

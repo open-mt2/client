@@ -2,7 +2,7 @@
 
 #include <Client/UI/AbstractPlayer.h>
 #include <Client/UI/Packet.h>
-#include <Client/UI/PythonSkill.h>
+#include <Client/Feature/Skill/PythonSkill.h>
 #include <Client/Player/PythonPlayerInput.h>
 #include <Client/Player/PythonPlayerSkill.h>
 

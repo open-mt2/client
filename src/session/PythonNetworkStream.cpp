@@ -5,7 +5,7 @@
 #include <Client/UI/AbstractPlayer.h>
 #include <Client/UI/Packet.h>
 #include <Client/UI/QuitRequest.h>
-#include <Client/UI/NetworkActorManager.h>
+#include <Client/Feature/Character/NetworkActorManager.h>
 
 #include <Client/UI/GuildMarkDownloader.h>
 #include <Client/UI/GuildMarkUploader.h>

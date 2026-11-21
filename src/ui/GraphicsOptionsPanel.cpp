@@ -5,7 +5,7 @@
 #include <Client/UI/GraphicsOptionsPanel.h>
 
 #include <Client/Map/ScreenDepthOfField.h>
-#include <Client/UI/PythonBackground.h>
+#include <Client/Feature/Background/PythonBackground.h>
 #include <Client/UI/PythonApplication.h>
 
 #include <Neoeter/Debug/Debug.h>

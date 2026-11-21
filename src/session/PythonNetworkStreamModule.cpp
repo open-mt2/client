@@ -2,7 +2,7 @@
 #include <Client/Session/PythonNetworkStream.h>
 // #include "PythonNetworkDatagram.h"
 #include <Client/UI/AccountConnector.h>
-#include <Client/UI/PythonGuild.h>
+#include <Client/Feature/Guild/PythonGuild.h>
 #include <Client/UI/Test.h>
 
 #include <Client/UI/AbstractPlayer.h>

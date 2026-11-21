@@ -1,11 +1,11 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/UI/InstanceBase.h>
 #include <Client/UI/InstanceBaseEffect.h>
-#include <Client/UI/PythonTextTail.h>
+#include <Client/Feature/TextTail/PythonTextTail.h>
 #include <Client/UI/AbstractApplication.h>
 #include <Client/UI/AbstractPlayer.h>
 #include <Client/Player/PythonPlayer.h>
-#include <Client/UI/PythonSystem.h>
+#include <Client/Feature/System/PythonSystem.h>
 
 #include <Neoeter/Effect/EffectManager.h>
 #include <Neoeter/Effect/ParticleSystemData.h>

@@ -13,25 +13,25 @@
 #include <Client/Game/GameEventManager.h>
 #include <Neoeter/Audio/SoundManager.h>
 
-#include <Client/UI/PythonEventManager.h>
+#include <Client/Feature/Event/PythonEventManager.h>
 #include <Client/Player/PythonPlayer.h>
-#include <Client/UI/PythonNonPlayer.h>
-#include <Client/UI/PythonMiniMap.h>
-#include <Client/UI/PythonIME.h>
-#include <Client/UI/PythonItem.h>
-#include <Client/UI/PythonShop.h>
-#include <Client/UI/PythonExchange.h>
-#include <Client/UI/PythonChat.h>
-#include <Client/UI/PythonTextTail.h>
-#include <Client/UI/PythonSkill.h>
-#include <Client/UI/PythonSystem.h>
+#include <Client/Feature/NonPlayer/PythonNonPlayer.h>
+#include <Client/Feature/Minimap/PythonMiniMap.h>
+#include <Client/Feature/Ime/PythonIME.h>
+#include <Client/Feature/Item/PythonItem.h>
+#include <Client/Feature/Shop/PythonShop.h>
+#include <Client/Feature/Exchange/PythonExchange.h>
+#include <Client/Feature/Chat/PythonChat.h>
+#include <Client/Feature/TextTail/PythonTextTail.h>
+#include <Client/Feature/Skill/PythonSkill.h>
+#include <Client/Feature/System/PythonSystem.h>
 // #include "PythonNetworkDatagram.h"
 #include <Client/Session/PythonNetworkStream.h>
-#include <Client/UI/PythonCharacterManager.h>
-#include <Client/UI/PythonQuest.h>
-#include <Client/UI/PythonMessenger.h>
-#include <Client/UI/PythonSafeBox.h>
-#include <Client/UI/PythonGuild.h>
+#include <Client/Feature/Character/PythonCharacterManager.h>
+#include <Client/Feature/Quest/PythonQuest.h>
+#include <Client/Feature/Messenger/PythonMessenger.h>
+#include <Client/Feature/SafeBox/PythonSafeBox.h>
+#include <Client/Feature/Guild/PythonGuild.h>
 
 #include <Client/UI/GuildMarkDownloader.h>
 #include <Client/UI/GuildMarkUploader.h>

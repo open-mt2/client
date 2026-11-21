@@ -1,11 +1,11 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/Player/PythonPlayer.h>
 #include <Client/Player/PythonPlayerSkill.h>
-#include <Client/UI/PythonTextTail.h>
+#include <Client/Feature/TextTail/PythonTextTail.h>
 #include <Client/Session/PythonNetworkStream.h>
 #include <Client/UI/InstanceBase.h>
-#include <Client/UI/PythonChat.h>
-#include <Client/UI/PythonGuild.h>
+#include <Client/Feature/Chat/PythonChat.h>
+#include <Client/Feature/Guild/PythonGuild.h>
 #include <Client/GameData/ItemManager.h>
 
 CPythonPlayerSkill::CPythonPlayerSkill(CPythonPlayer& rkOwner) : m_rkOwner(rkOwner)
