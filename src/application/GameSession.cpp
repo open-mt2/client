@@ -73,10 +73,6 @@ namespace Neoeter
 		extern bool g_isScreenShotKey;
 		g_isScreenShotKey = true;
 #endif
-#ifdef LOCALE_SERVICE_VIETNAM_MILD
-		extern int32_t USE_VIETNAM_CONVERT_WEAPON_VNUM;
-		USE_VIETNAM_CONVERT_WEAPON_VNUM = true;
-#endif
 
 		if (_access("perf_game_update.txt", 0) == 0)
 			DeleteFile("perf_game_update.txt");
