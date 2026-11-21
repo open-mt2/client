@@ -215,7 +215,7 @@ PyObject* playerIsPVPInstance(PyObject* poSelf, PyObject* poArgs)
 	if (!pTargetInstance)
 		return Py_BuildValue("i", 0);
 
-	return Py_BuildValue("i", pMainInstance->IsPVPInstance(*pTargetInstance));
+	return Py_BuildValue("i", pMainInstance->GetEffect().IsPVPInstance(*pTargetInstance));
 }
 
 PyObject* playerIsSameEmpire(PyObject* poSelf, PyObject* poArgs)

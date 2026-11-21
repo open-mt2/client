@@ -822,9 +822,9 @@ bool CPythonNetworkStream::RecvSpecialEffect(const protocol::Packet& value)
 		if (pInstance)
 		{
 			if (bAttachEffect)
-				pInstance->AttachSpecialEffect(effect);
+				pInstance->GetEffect().AttachSpecialEffect(effect);
 			else
-				pInstance->CreateSpecialEffect(effect);
+				pInstance->GetEffect().CreateSpecialEffect(effect);
 		}
 	}
 
@@ -839,8 +839,8 @@ bool CPythonNetworkStream::RecvSpecificEffect(const protocol::Packet& value)
 	// EFFECT_TEMP
 	if (pInstance)
 	{
-		CInstanceBase::RegisterEffect(CInstanceBase::EFFECT_TEMP, "", kSpecificEffect.effect_file, false);
-		pInstance->AttachSpecialEffect(CInstanceBase::EFFECT_TEMP);
+		CInstanceBaseEffect::RegisterEffect(CInstanceBase::EFFECT_TEMP, "", kSpecificEffect.effect_file, false);
+		pInstance->GetEffect().AttachSpecialEffect(CInstanceBase::EFFECT_TEMP);
 	}
 
 	return true;

@@ -452,7 +452,7 @@ void CInstanceBaseBattle::InputNormalAttack(float fAtkDirRot)
 void CInstanceBaseBattle::InputComboAttack(float fAtkDirRot)
 {
 	m_rkOwner.m_GraphicThingInstance.InputComboAttackCommand(fAtkDirRot);
-	m_rkOwner.__ComboProcess();
+	m_rkOwner.GetEffect().__ComboProcess();
 }
 
 void CInstanceBaseBattle::RunNormalAttack(float fAtkDirRot)
@@ -686,7 +686,7 @@ void CInstanceBaseBattle::Stun()
 	m_rkOwner.GetMovement().NEW_Stop();
 	m_rkOwner.m_GraphicThingInstance.Stun();
 
-	m_rkOwner.__AttachEffect(CInstanceBase::EFFECT_STUN);
+	m_rkOwner.GetEffect().__AttachEffect(CInstanceBase::EFFECT_STUN);
 }
 
 void CInstanceBaseBattle::Die()
@@ -694,11 +694,11 @@ void CInstanceBaseBattle::Die()
 	m_rkOwner.__DetachHorseSaddle();
 
 	if (IsAffect(CInstanceBase::AFFECT_SPAWN))
-		m_rkOwner.__AttachEffect(CInstanceBase::EFFECT_SPAWN_DISAPPEAR);
+		m_rkOwner.GetEffect().__AttachEffect(CInstanceBase::EFFECT_SPAWN_DISAPPEAR);
 
 	// 2004.07.25.이펙트 안붙는 문제해결
 	////////////////////////////////////////
-	m_rkOwner.__ClearAffects();
+	m_rkOwner.GetEffect().__ClearAffects();
 	////////////////////////////////////////
 
 	m_rkOwner.OnUnselected();

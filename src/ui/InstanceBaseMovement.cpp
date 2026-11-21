@@ -153,11 +153,11 @@ void CInstanceBaseMovement::StartWalking()
 
 	if (m_rkOwner.GetBattle().IsAffect(CInstanceBase::AFFECT_GYEONGGONG))
 	{
-		m_rkOwner.m_adwCRCAffectEffect[CInstanceBase::AFFECT_GYEONGGONG] = m_rkOwner.__EffectContainer_AttachEffect(CInstanceBase::EFFECT_AFFECT_GYEONGGONG);
+		m_rkOwner.m_adwCRCAffectEffect[CInstanceBase::AFFECT_GYEONGGONG] = m_rkOwner.GetEffect().__EffectContainer_AttachEffect(CInstanceBase::EFFECT_AFFECT_GYEONGGONG);
 	}
 	else if (m_rkOwner.GetBattle().IsAffect(CInstanceBase::AFFECT_KWAESOK))
 	{
-		m_rkOwner.m_adwCRCAffectEffect[CInstanceBase::AFFECT_KWAESOK] = m_rkOwner.__EffectContainer_AttachEffect(CInstanceBase::EFFECT_AFFECT_KWAESOK);
+		m_rkOwner.m_adwCRCAffectEffect[CInstanceBase::AFFECT_KWAESOK] = m_rkOwner.GetEffect().__EffectContainer_AttachEffect(CInstanceBase::EFFECT_AFFECT_KWAESOK);
 	}
 }
 
@@ -173,11 +173,11 @@ void CInstanceBaseMovement::EndWalking(float fBlendingTime)
 		m_rkOwner.m_GraphicThingInstance.Stop(fBlendingTime);
 		if (m_rkOwner.GetBattle().IsAffect(CInstanceBase::AFFECT_GYEONGGONG))
 		{
-			m_rkOwner.__EffectContainer_DetachEffect(CInstanceBase::EFFECT_AFFECT_GYEONGGONG);
+			m_rkOwner.GetEffect().__EffectContainer_DetachEffect(CInstanceBase::EFFECT_AFFECT_GYEONGGONG);
 		}
 		else if (m_rkOwner.GetBattle().IsAffect(CInstanceBase::AFFECT_KWAESOK))
 		{
-			m_rkOwner.__EffectContainer_DetachEffect(CInstanceBase::EFFECT_AFFECT_KWAESOK);
+			m_rkOwner.GetEffect().__EffectContainer_DetachEffect(CInstanceBase::EFFECT_AFFECT_KWAESOK);
 		}
 	}
 }

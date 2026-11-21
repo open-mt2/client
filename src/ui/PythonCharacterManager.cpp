@@ -56,28 +56,28 @@ void CPythonCharacterManager::EnableSortRendering(bool isEnable)
 
 void CPythonCharacterManager::InsertPVPKey(uint32_t dwVIDSrc, uint32_t dwVIDDst)
 {
-	CInstanceBase::InsertPVPKey(dwVIDSrc, dwVIDDst);
+	CInstanceBaseEffect::InsertPVPKey(dwVIDSrc, dwVIDDst);
 
 	CInstanceBase* pkInstSrc = GetInstancePtr(dwVIDSrc);
 	if (pkInstSrc)
-		pkInstSrc->RefreshTextTail();
+		pkInstSrc->GetEffect().RefreshTextTail();
 
 	CInstanceBase* pkInstDst = GetInstancePtr(dwVIDDst);
 	if (pkInstDst)
-		pkInstDst->RefreshTextTail();
+		pkInstDst->GetEffect().RefreshTextTail();
 }
 
 void CPythonCharacterManager::RemovePVPKey(uint32_t dwVIDSrc, uint32_t dwVIDDst)
 {
-	CInstanceBase::RemovePVPKey(dwVIDSrc, dwVIDDst);
+	CInstanceBaseEffect::RemovePVPKey(dwVIDSrc, dwVIDDst);
 
 	CInstanceBase* pkInstSrc = GetInstancePtr(dwVIDSrc);
 	if (pkInstSrc)
-		pkInstSrc->RefreshTextTail();
+		pkInstSrc->GetEffect().RefreshTextTail();
 
 	CInstanceBase* pkInstDst = GetInstancePtr(dwVIDDst);
 	if (pkInstDst)
-		pkInstDst->RefreshTextTail();
+		pkInstDst->GetEffect().RefreshTextTail();
 }
 
 void CPythonCharacterManager::ChangeGVG(uint32_t dwSrcGuildID, uint32_t dwDstGuildID)
@@ -90,7 +90,7 @@ void CPythonCharacterManager::ChangeGVG(uint32_t dwSrcGuildID, uint32_t dwDstGui
 		uint32_t dwInstanceGuildID = pInstance->GetGuildID();
 		if (dwSrcGuildID == dwInstanceGuildID || dwDstGuildID == dwInstanceGuildID)
 		{
-			pInstance->RefreshTextTail();
+			pInstance->GetEffect().RefreshTextTail();
 		}
 	}
 }
@@ -238,10 +238,10 @@ void CPythonCharacterManager::ShowPointEffect(uint32_t ePoint, uint32_t dwVID)
 	switch (ePoint)
 	{
 		case POINT_LEVEL:
-			pkInstSel->LevelUp();
+			pkInstSel->GetEffect().LevelUp();
 			break;
 		case POINT_LEVEL_STEP:
-			pkInstSel->SkillUp();
+			pkInstSel->GetEffect().SkillUp();
 			break;
 	}
 }
@@ -338,7 +338,7 @@ void CPythonCharacterManager::UpdateDeleting()
 	{
 		CInstanceBase* pInstance = *itor;
 
-		if (pInstance->UpdateDeleting())
+		if (pInstance->GetEffect().UpdateDeleting())
 		{
 			++itor;
 		}
@@ -600,7 +600,7 @@ void CPythonCharacterManager::DeleteInstance(uint32_t dwDelVID)
 
 void CPythonCharacterManager::__DeleteBlendOutInstance(CInstanceBase* pkInstDel)
 {
-	pkInstDel->DeleteBlendOut();
+	pkInstDel->GetEffect().DeleteBlendOut();
 	m_kDeadInstList.push_back(pkInstDel);
 
 	IAbstractPlayer& rkPlayer = IAbstractPlayer::GetSingleton();
@@ -887,7 +887,7 @@ void CPythonCharacterManager::RefreshAllPCTextTail()
 		if (!pInstance->IsPC())
 			continue;
 
-		pInstance->RefreshTextTail();
+		pInstance->GetEffect().RefreshTextTail();
 	}
 }
 
@@ -902,7 +902,7 @@ void CPythonCharacterManager::RefreshAllGuildMark()
 			continue;
 
 		pInstance->ChangeGuild(pInstance->GetGuildID());
-		pInstance->RefreshTextTail();
+		pInstance->GetEffect().RefreshTextTail();
 	}
 }
 

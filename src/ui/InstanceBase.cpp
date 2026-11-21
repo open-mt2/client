@@ -584,12 +584,12 @@ void CInstanceBase::OnSelected()
 	if (IsDead())
 		return;
 
-	__AttachSelectEffect();
+	GetEffect().__AttachSelectEffect();
 }
 
 void CInstanceBase::OnUnselected()
 {
-	__DetachSelectEffect();
+	GetEffect().__DetachSelectEffect();
 }
 
 void CInstanceBase::OnTargeted()
@@ -605,12 +605,12 @@ void CInstanceBase::OnTargeted()
 	if (IsDead())
 		return;
 
-	__AttachTargetEffect();
+	GetEffect().__AttachTargetEffect();
 }
 
 void CInstanceBase::OnUntargeted()
 {
-	__DetachTargetEffect();
+	GetEffect().__DetachTargetEffect();
 }
 
 void CInstanceBase::DestroySystem()
@@ -775,17 +775,17 @@ bool CInstanceBase::Create(const SCreateData& c_rkCreateData)
 
 	if (!IsGuildWall())
 	{
-		SetAffectFlagContainer(c_rkCreateData.m_kAffectFlags);
+		GetEffect().SetAffectFlagContainer(c_rkCreateData.m_kAffectFlags);
 	}
 
 	// NOTE : 반드시 Affect 셋팅 후에 해야 함
-	AttachTextTail();
-	RefreshTextTail();
+	GetEffect().AttachTextTail();
+	GetEffect().RefreshTextTail();
 
 	if (c_rkCreateData.m_dwStateFlags & ADD_CHARACTER_STATE_SPAWN)
 	{
 		if (GetBattle().IsAffect(AFFECT_SPAWN))
-			__AttachEffect(EFFECT_SPAWN_APPEAR);
+			GetEffect().__AttachEffect(EFFECT_SPAWN_APPEAR);
 
 		if (IsPC())
 		{
@@ -801,7 +801,7 @@ bool CInstanceBase::Create(const SCreateData& c_rkCreateData)
 		Refresh(CRaceMotionData::NAME_WAIT, true);
 	}
 
-	__AttachEmpireEffect(c_rkCreateData.m_dwEmpireID);
+	GetEffect().__AttachEmpireEffect(c_rkCreateData.m_dwEmpireID);
 
 	RegisterBoundingSphere();
 
@@ -1032,9 +1032,9 @@ void CInstanceBase::ChangeGuild(uint32_t dwGuildID)
 {
 	m_dwGuildID = dwGuildID;
 
-	DetachTextTail();
-	AttachTextTail();
-	RefreshTextTail();
+	GetEffect().DetachTextTail();
+	GetEffect().AttachTextTail();
+	GetEffect().RefreshTextTail();
 }
 
 uint32_t CInstanceBase::GetPart(CRaceData::EParts part)
@@ -1778,7 +1778,7 @@ void CInstanceBase::MovementProcess()
 				if (fDustDistance > ms_fHorseDustGap)
 				{
 					GetTransform().NEW_GetPixelPosition(&m_kPPosDust);
-					__AttachEffect(EFFECT_HORSE_DUST);
+					GetEffect().__AttachEffect(EFFECT_HORSE_DUST);
 				}
 			}
 			else
@@ -1786,7 +1786,7 @@ void CInstanceBase::MovementProcess()
 				if (fDustDistance > ms_fDustGap)
 				{
 					GetTransform().NEW_GetPixelPosition(&m_kPPosDust);
-					__AttachEffect(EFFECT_DUST);
+					GetEffect().__AttachEffect(EFFECT_DUST);
 				}
 			}
 		}
@@ -1885,9 +1885,9 @@ void CInstanceBase::Update()
 		m_kHorse.m_pkActor->HORSE_MotionProcess(FALSE);
 	}
 
-	__ComboProcess();
+	GetEffect().__ComboProcess();
 
-	ProcessDamage();
+	GetEffect().ProcessDamage();
 }
 
 void CInstanceBase::Transform()
@@ -2028,7 +2028,7 @@ void CInstanceBase::SetInstanceType(int iInstanceType)
 void CInstanceBase::SetAlignment(short sAlignment)
 {
 	m_sAlignment = sAlignment;
-	RefreshTextTailTitle();
+	GetEffect().RefreshTextTailTitle();
 }
 
 void CInstanceBase::SetPKMode(uint8_t byPKMode)
@@ -2051,7 +2051,7 @@ void CInstanceBase::SetKiller(bool bFlag)
 		return;
 
 	m_isKiller = bFlag;
-	RefreshTextTail();
+	GetEffect().RefreshTextTail();
 }
 
 void CInstanceBase::SetPartyMemberFlag(bool bFlag)
@@ -2149,7 +2149,7 @@ bool CInstanceBase::IsAttackableInstance(CInstanceBase& rkInstVictim)
 					case DUEL_CANNOTATTACK:
 						return false;
 					case DUEL_START:
-						if (__FindDUELKey(GetVirtualID(), rkInstVictim.GetVirtualID()))
+						if (GetEffect().__FindDUELKey(GetVirtualID(), rkInstVictim.GetVirtualID()))
 							return true;
 						else
 							return false;
@@ -2182,7 +2182,7 @@ bool CInstanceBase::IsAttackableInstance(CInstanceBase& rkInstVictim)
 
 			if (IsSameEmpire(rkInstVictim))
 			{
-				if (IsPVPInstance(rkInstVictim))
+				if (GetEffect().IsPVPInstance(rkInstVictim))
 					return true;
 
 				if (PK_MODE_REVENGE == GetPKMode())
@@ -2632,12 +2632,12 @@ void CInstanceBase::__ClearWeaponRefineEffect()
 {
 	if (m_swordRefineEffectRight)
 	{
-		__DetachEffect(m_swordRefineEffectRight);
+		GetEffect().__DetachEffect(m_swordRefineEffectRight);
 		m_swordRefineEffectRight = 0;
 	}
 	if (m_swordRefineEffectLeft)
 	{
-		__DetachEffect(m_swordRefineEffectLeft);
+		GetEffect().__DetachEffect(m_swordRefineEffectLeft);
 		m_swordRefineEffectLeft = 0;
 	}
 }
@@ -2646,7 +2646,7 @@ void CInstanceBase::__ClearArmorRefineEffect()
 {
 	if (m_armorRefineEffect)
 	{
-		__DetachEffect(m_armorRefineEffect);
+		GetEffect().__DetachEffect(m_armorRefineEffect);
 		m_armorRefineEffect = 0;
 	}
 }
@@ -2680,9 +2680,9 @@ uint32_t CInstanceBase::__GetRefinedEffect(CItemData* pItem)
 					m_swordRefineEffectRight = EFFECT_REFINED + EFFECT_SWORD_REFINED7 + refine - 7;
 			}
 			if (m_swordRefineEffectRight)
-				m_swordRefineEffectRight = __AttachEffect(m_swordRefineEffectRight);
+				m_swordRefineEffectRight = GetEffect().__AttachEffect(m_swordRefineEffectRight);
 			if (m_swordRefineEffectLeft)
-				m_swordRefineEffectLeft = __AttachEffect(m_swordRefineEffectLeft);
+				m_swordRefineEffectLeft = GetEffect().__AttachEffect(m_swordRefineEffectLeft);
 			break;
 		case CItemData::ITEM_TYPE_ARMOR:
 			__ClearArmorRefineEffect();
@@ -2694,8 +2694,8 @@ uint32_t CInstanceBase::__GetRefinedEffect(CItemData* pItem)
 
 				if (12010 <= vnum && vnum <= 12049)
 				{
-					__AttachEffect(EFFECT_REFINED + EFFECT_BODYARMOR_SPECIAL);
-					__AttachEffect(EFFECT_REFINED + EFFECT_BODYARMOR_SPECIAL2);
+					GetEffect().__AttachEffect(EFFECT_REFINED + EFFECT_BODYARMOR_SPECIAL);
+					GetEffect().__AttachEffect(EFFECT_REFINED + EFFECT_BODYARMOR_SPECIAL2);
 				}
 			}
 
@@ -2705,7 +2705,7 @@ uint32_t CInstanceBase::__GetRefinedEffect(CItemData* pItem)
 			if (pItem->GetSubType() == CItemData::ARMOR_BODY)
 			{
 				m_armorRefineEffect = EFFECT_REFINED + EFFECT_BODYARMOR_REFINED7 + refine - 7;
-				__AttachEffect(m_armorRefineEffect);
+				GetEffect().__AttachEffect(m_armorRefineEffect);
 			}
 			break;
 	}
@@ -2768,7 +2768,7 @@ bool CInstanceBase::ChangeArmor(uint32_t dwArmor)
 
 	// 2004.07.25.myevan.이펙트 안 붙는 문제
 	//////////////////////////////////////////////////////
-	__ClearAffects();
+	GetEffect().__ClearAffects();
 	//////////////////////////////////////////////////////
 
 	if (!SetRace(dwRace))
@@ -2790,7 +2790,7 @@ bool CInstanceBase::ChangeArmor(uint32_t dwArmor)
 
 	// 2004.07.25.myevan.이펙트 안 붙는 문제
 	/////////////////////////////////////////////////
-	SetAffectFlagContainer(kAffectFlagContainer);
+	GetEffect().SetAffectFlagContainer(kAffectFlagContainer);
 	/////////////////////////////////////////////////
 
 	CActorInstance::IEventHandler& rkEventHandler = GetEventHandlerRef();
@@ -2965,14 +2965,14 @@ void CInstanceBase::DestroyDeviceObjects()
 
 void CInstanceBase::Destroy()
 {
-	DetachTextTail();
+	GetEffect().DetachTextTail();
 
 	DismountHorse();
 
 	m_kQue_kCmdNew.clear();
 
-	__EffectContainer_Destroy();
-	__StoneSmoke_Destroy();
+	GetEffect().__EffectContainer_Destroy();
+	GetEffect().__StoneSmoke_Destroy();
 
 	if (__IsMainInstance())
 		__ClearMainInstance();
@@ -2995,8 +2995,8 @@ void CInstanceBase::__Warrior_Initialize()
 void CInstanceBase::__Initialize()
 {
 	__Warrior_Initialize();
-	__StoneSmoke_Inialize();
-	__EffectContainer_Initialize();
+	GetEffect().__StoneSmoke_Inialize();
+	GetEffect().__EffectContainer_Initialize();
 	__InitializeRotationSpeed();
 
 	SetEventHandler(CActorInstance::IEventHandler::GetEmptyPtr());
@@ -3066,9 +3066,15 @@ void CInstanceBase::__Initialize()
 CInstanceBase::CInstanceBase() : m_kMotion(*this),
 								 m_kTransform(*this),
 								 m_kBattle(*this),
-								 m_kMovement(*this)
+								 m_kMovement(*this),
+								 m_kEffect(*this)
 {
 	__Initialize();
+}
+
+CInstanceBaseEffect& CInstanceBase::GetEffect()
+{
+	return m_kEffect;
 }
 
 CInstanceBaseMovement& CInstanceBase::GetMovement()

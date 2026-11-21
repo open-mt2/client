@@ -269,7 +269,7 @@ PyObject* chrSetBlendRenderMode(PyObject* poSelf, PyObject* poArgs)
 	if (!pkInst)
 		return Py_BuildNone();
 
-	pkInst->SetAlpha(fAlpha);
+	pkInst->GetEffect().SetAlpha(fAlpha);
 
 	return Py_BuildNone();
 }

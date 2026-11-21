@@ -456,7 +456,7 @@ void CNetworkActorManager::UpdateActor(const SNetworkUpdateActorData& c_rkNetUpd
 		pkInstFind->ChangeWeapon(c_rkNetUpdateActorData.m_dwWeapon);
 		pkInstFind->ChangeHair(c_rkNetUpdateActorData.m_dwHair);
 		pkInstFind->ChangeGuild(c_rkNetUpdateActorData.m_dwGuildID);
-		pkInstFind->SetAffectFlagContainer(c_rkNetUpdateActorData.m_kAffectFlags);
+		pkInstFind->GetEffect().SetAffectFlagContainer(c_rkNetUpdateActorData.m_kAffectFlags);
 		pkInstFind->GetMovement().SetMoveSpeed(c_rkNetUpdateActorData.m_dwMovSpd);
 		pkInstFind->GetMovement().SetAttackSpeed(c_rkNetUpdateActorData.m_dwAtkSpd);
 		pkInstFind->SetAlignment(c_rkNetUpdateActorData.m_sAlignment);

@@ -5,6 +5,7 @@
 
 #include <Client/UI/AffectFlagContainer.h>
 #include <Client/UI/InstanceBaseBattle.h>
+#include <Client/UI/InstanceBaseEffect.h>
 #include <Client/UI/InstanceBaseMovement.h>
 #include <Client/UI/InstanceBaseMotion.h>
 #include <Client/UI/InstanceBaseTransform.h>
@@ -388,17 +389,9 @@ class CInstanceBase
 	public:
 		static void DestroySystem();
 		static void CreateSystem(uint32_t uCapacity);
-		static bool RegisterEffect(uint32_t eEftType, const char* c_szEftAttachBone, const char* c_szEftName, bool isCache);
-		static void RegisterTitleName(int iIndex, const char* c_szTitleName);
-		static bool RegisterNameColor(uint32_t uIndex, uint32_t r, uint32_t g, uint32_t b);
-		static bool RegisterTitleColor(uint32_t uIndex, uint32_t r, uint32_t g, uint32_t b);
 		static bool ChangeEffectTexture(uint32_t eEftType, const char* c_szSrcFileName, const char* c_szDstFileName);
 
-		static void SetDustGap(float fDustGap);
-		static void SetHorseDustGap(float fDustGap);
 
-		static void SetEmpireNameMode(bool isEnable);
-		static const D3DXCOLOR& GetIndexedNameColor(uint32_t eNameColor);
 
 	public:
 		void SetMainInstance();
@@ -415,13 +408,8 @@ class CInstanceBase
 		float __GetBowRange();
 
 	protected:
-		uint32_t __AttachEffect(uint32_t eEftType);
-		uint32_t __AttachEffect(char filename[128]);
-		void __DetachEffect(uint32_t dwEID);
 
 	public:
-		void CreateSpecialEffect(uint32_t iEffectIndex);
-		void AttachSpecialEffect(uint32_t effect);
 
 	protected:
 		static std::string ms_astAffectEffectAttachBone[EFFECT_NUM];
@@ -439,20 +427,12 @@ class CInstanceBase
 		void DismountHorse();
 
 		// 스크립트용 테스트 함수. 나중에 없에자
-		void SCRIPT_SetAffect(uint32_t eAffect, bool isVisible);
 
 		float CalculateDistanceSq3d(const TPixelPosition& c_rkPPosDst);
 
-		void SetAlpha(float fAlpha);
 
-		void DeleteBlendOut();
 
-		void AttachTextTail();
-		void DetachTextTail();
-		void UpdateTextTailLevel(uint32_t level);
 
-		void RefreshTextTail();
-		void RefreshTextTailTitle();
 
 		bool Create(const SCreateData& c_rkCreateData);
 
@@ -462,7 +442,6 @@ class CInstanceBase
 		void Destroy();
 
 		void Update();
-		bool UpdateDeleting();
 
 		void Transform();
 		void Deform();
@@ -514,8 +493,6 @@ class CInstanceBase
 		bool IsKiller();
 		bool IsPartyMember();
 
-		void LevelUp();
-		void SkillUp();
 		void UseSpinTop();
 
 		bool CanAct();
@@ -526,7 +503,6 @@ class CInstanceBase
 		bool IsConflictAlignmentInstance(CInstanceBase& rkInstVictim);
 		bool IsAttackableInstance(CInstanceBase& rkInstVictim);
 		bool IsTargetableInstance(CInstanceBase& rkInstVictim);
-		bool IsPVPInstance(CInstanceBase& rkInstVictim);
 		bool CanChangeTarget();
 		bool CanPickInstance();
 		bool CanViewTargetHP(CInstanceBase& rkInstVictim);
@@ -601,6 +577,7 @@ class CInstanceBase
 		CInstanceBaseMotion& GetMotion();
 		CInstanceBaseBattle& GetBattle();
 		CInstanceBaseMovement& GetMovement();
+		CInstanceBaseEffect& GetEffect();
 
 		// Intersect
 		bool IntersectDefendingSphere();
@@ -625,20 +602,11 @@ class CInstanceBase
 
 		// 2004.07.25.myevan.이펙트 안나오는 문제
 		/////////////////////////////////////////////////////////////
-		void __ClearAffectFlagContainer();
-		void __ClearAffects();
 		/////////////////////////////////////////////////////////////
 
-		void __SetAffect(uint32_t eAffect, bool isVisible);
 
-		void SetAffectFlagContainer(const CAffectFlagContainer& c_rkAffectFlagContainer);
 
-		void __SetNormalAffectFlagContainer(const CAffectFlagContainer& c_rkAffectFlagContainer);
-		void __SetStoneSmokeFlagContainer(const CAffectFlagContainer& c_rkAffectFlagContainer);
 
-		void SetEmoticon(uint32_t eEmoticon);
-		void SetFishEmoticon();
-		bool IsPossibleEmoticon();
 
 	protected:
 		uint32_t __LessRenderOrder_GetLODLevel();
@@ -662,10 +630,6 @@ class CInstanceBase
 
 		void __ClearMainInstance();
 
-		void __Shaman_SetParalysis(bool isParalysis);
-		void __Warrior_SetGeomgyeongAffect(bool isVisible);
-		void __Assassin_SetEunhyeongAffect(bool isVisible);
-		void __SetReviveInvisibilityAffect(bool isVisible);
 
 		int32_t __CanProcessNetworkStatePacket();
 
@@ -717,7 +681,6 @@ class CInstanceBase
 		void __SetAlphaValue(float fAlpha);
 		float __GetAlphaValue();
 
-		void __ComboProcess();
 		void MovementProcess();
 		void TodoProcess();
 		void StateProcess();
@@ -764,13 +727,8 @@ class CInstanceBase
 		void __ClearArmorRefineEffect();
 
 	protected:
-		void __AttachSelectEffect();
-		void __DetachSelectEffect();
 
-		void __AttachTargetEffect();
-		void __DetachTargetEffect();
 
-		void __AttachEmpireEffect(uint32_t eEmpire);
 
 	protected:
 		struct SEffectContainer
@@ -779,13 +737,8 @@ class CInstanceBase
 				Dict m_kDct_dwEftID;
 		} m_kEffectContainer;
 
-		void __EffectContainer_Initialize();
-		void __EffectContainer_Destroy();
 
-		uint32_t __EffectContainer_AttachEffect(uint32_t eEffect);
-		void __EffectContainer_DetachEffect(uint32_t eEffect);
 
-		SEffectContainer::Dict& __EffectContainer_GetDict();
 
 	protected:
 		struct SStoneSmoke
@@ -793,9 +746,6 @@ class CInstanceBase
 				uint32_t m_dwEftID;
 		} m_kStoneSmoke;
 
-		void __StoneSmoke_Inialize();
-		void __StoneSmoke_Destroy();
-		void __StoneSmoke_Create(uint32_t eSmoke);
 
 	protected:
 		// Emoticon
@@ -886,10 +836,8 @@ class CInstanceBase
 		typedef std::list<SEffectDamage> CommandDamageQueue;
 		CommandDamageQueue m_DamageQueue;
 
-		void ProcessDamage();
 
 	public:
-		void AddDamageEffect(uint32_t damage, uint8_t flag, int32_t bSelf, int32_t bTarget);
 
 	protected:
 		struct SWarrior
@@ -902,28 +850,13 @@ class CInstanceBase
 		void __Warrior_Initialize();
 
 	public:
-		static void ClearPVPKeySystem();
 
-		static void InsertPVPKey(uint32_t dwSrcVID, uint32_t dwDstVID);
-		static void InsertPVPReadyKey(uint32_t dwSrcVID, uint32_t dwDstVID);
-		static void RemovePVPKey(uint32_t dwSrcVID, uint32_t dwDstVID);
 
-		static void InsertGVGKey(uint32_t dwSrcGuildVID, uint32_t dwDstGuildVID);
-		static void RemoveGVGKey(uint32_t dwSrcGuildVID, uint32_t dwDstGuildVID);
 
-		static void InsertDUELKey(uint32_t dwSrcVID, uint32_t dwDstVID);
 
-		uint32_t GetNameColorIndex();
 
-		const D3DXCOLOR& GetNameColor();
-		const D3DXCOLOR& GetTitleColor();
 
 	protected:
-		static uint32_t __GetPVPKey(uint32_t dwSrcVID, uint32_t dwDstVID);
-		static bool __FindPVPKey(uint32_t dwSrcVID, uint32_t dwDstVID);
-		static bool __FindPVPReadyKey(uint32_t dwSrcVID, uint32_t dwDstVID);
-		static bool __FindGVGKey(uint32_t dwSrcGuildID, uint32_t dwDstGuildID);
-		static bool __FindDUELKey(uint32_t dwSrcGuildID, uint32_t dwDstGuildID);
 
 	protected:
 		CActorInstance::IEventHandler* GetEventHandlerPtr();
@@ -961,11 +894,13 @@ class CInstanceBase
 		friend class CInstanceBaseTransform;
 		friend class CInstanceBaseBattle;
 		friend class CInstanceBaseMovement;
+		friend class CInstanceBaseEffect;
 
 		CInstanceBaseMotion m_kMotion;
 		CInstanceBaseTransform m_kTransform;
 		CInstanceBaseBattle m_kBattle;
 		CInstanceBaseMovement m_kMovement;
+		CInstanceBaseEffect m_kEffect;
 };
 
 inline int RaceToJob(int race)

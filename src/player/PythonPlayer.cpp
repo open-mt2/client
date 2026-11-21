@@ -419,7 +419,7 @@ void CPythonPlayer::SetStatus(uint32_t dwType, long lValue)
 		CInstanceBase* pkPlayer = NEW_GetMainActorPtr();
 
 		if (pkPlayer)
-			pkPlayer->UpdateTextTailLevel(lValue);
+			pkPlayer->GetEffect().UpdateTextTailLevel(lValue);
 	}
 
 	switch (dwType)
@@ -1280,7 +1280,7 @@ void CPythonPlayer::LinkPartyMember(uint32_t dwPID, uint32_t dwVID)
 
 	CInstanceBase* pInstance = NEW_FindActorPtr(dwVID);
 	if (pInstance)
-		pInstance->RefreshTextTail();
+		pInstance->GetEffect().RefreshTextTail();
 }
 
 void CPythonPlayer::UnlinkPartyMember(uint32_t dwPID)
@@ -1341,7 +1341,7 @@ void CPythonPlayer::RemovePartyMember(uint32_t dwPID)
 	{
 		CInstanceBase* pInstance = NEW_FindActorPtr(dwVID);
 		if (pInstance)
-			pInstance->RefreshTextTail();
+			pInstance->GetEffect().RefreshTextTail();
 	}
 }
 

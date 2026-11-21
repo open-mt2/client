@@ -14,7 +14,7 @@ PyObject* chrmgrSetEmpireNameMode(PyObject* poSelf, PyObject* poArgs)
 	if (!PyTuple_GetInteger(poArgs, 0, &iEnable))
 		return Py_BadArgument();
 
-	CInstanceBase::SetEmpireNameMode(iEnable ? true : false);
+	CInstanceBaseEffect::SetEmpireNameMode(iEnable ? true : false);
 	CPythonCharacterManager::Instance().RefreshAllPCTextTail();
 
 	return Py_BuildNone();
@@ -29,7 +29,7 @@ PyObject* chrmgrRegisterTitleName(PyObject* poSelf, PyObject* poArgs)
 	if (!PyTuple_GetString(poArgs, 1, &szTitleName))
 		return Py_BadArgument();
 
-	CInstanceBase::RegisterTitleName(iIndex, szTitleName);
+	CInstanceBaseEffect::RegisterTitleName(iIndex, szTitleName);
 	return Py_BuildNone();
 }
 
@@ -49,7 +49,7 @@ PyObject* chrmgrRegisterNameColor(PyObject* poSelf, PyObject* poArgs)
 	if (!PyTuple_GetInteger(poArgs, 3, &ib))
 		return Py_BadArgument();
 
-	CInstanceBase::RegisterNameColor(index, ir, ig, ib);
+	CInstanceBaseEffect::RegisterNameColor(index, ir, ig, ib);
 	return Py_BuildNone();
 }
 
@@ -68,7 +68,7 @@ PyObject* chrmgrRegisterTitleColor(PyObject* poSelf, PyObject* poArgs)
 	if (!PyTuple_GetInteger(poArgs, 3, &ib))
 		return Py_BadArgument();
 
-	CInstanceBase::RegisterTitleColor(iIndex, ir, ig, ib);
+	CInstanceBaseEffect::RegisterTitleColor(iIndex, ir, ig, ib);
 	return Py_BuildNone();
 }
 
@@ -551,7 +551,7 @@ PyObject* chrmgrRegisterEffect(PyObject* poSelf, PyObject* poArgs)
 	if (!PyTuple_GetString(poArgs, 2, &szPathName))
 		return Py_BadArgument();
 
-	CInstanceBase::RegisterEffect(eEftType, szBoneName, szPathName, false);
+	CInstanceBaseEffect::RegisterEffect(eEftType, szBoneName, szPathName, false);
 	return Py_BuildNone();
 }
 
@@ -569,7 +569,7 @@ PyObject* chrmgrRegisterCacheEffect(PyObject* poSelf, PyObject* poArgs)
 	if (!PyTuple_GetString(poArgs, 2, &szPathName))
 		return Py_BadArgument();
 
-	CInstanceBase::RegisterEffect(eEftType, szBoneName, szPathName, true);
+	CInstanceBaseEffect::RegisterEffect(eEftType, szBoneName, szPathName, true);
 
 	return Py_BuildNone();
 }
@@ -580,7 +580,7 @@ PyObject* chrmgrSetDustGap(PyObject* poSelf, PyObject* poArgs)
 	if (!PyTuple_GetInteger(poArgs, 0, &nGap))
 		return Py_BadArgument();
 
-	CInstanceBase::SetDustGap(nGap);
+	CInstanceBaseEffect::SetDustGap(nGap);
 	return Py_BuildNone();
 }
 
@@ -590,7 +590,7 @@ PyObject* chrmgrSetHorseDustGap(PyObject* poSelf, PyObject* poArgs)
 	if (!PyTuple_GetInteger(poArgs, 0, &nGap))
 		return Py_BadArgument();
 
-	CInstanceBase::SetHorseDustGap(nGap);
+	CInstanceBaseEffect::SetHorseDustGap(nGap);
 	return Py_BuildNone();
 }
 
@@ -639,7 +639,7 @@ void CPythonCharacterManager::SCRIPT_SetAffect(uint32_t dwVID, uint32_t eState, 
 	if (!pkInstSel)
 		return;
 
-	pkInstSel->SCRIPT_SetAffect(eState, isVisible ? true : false);
+	pkInstSel->GetEffect().SCRIPT_SetAffect(eState, isVisible ? true : false);
 }
 
 PyObject* chrmgrSetAffect(PyObject* poSelf, PyObject* poArgs)
@@ -667,7 +667,7 @@ void CPythonCharacterManager::SetEmoticon(uint32_t dwVID, uint32_t eState)
 	if (!pkInstSel)
 		return;
 
-	pkInstSel->SetEmoticon(eState);
+	pkInstSel->GetEffect().SetEmoticon(eState);
 }
 
 bool CPythonCharacterManager::IsPossibleEmoticon(uint32_t dwVID)
@@ -676,7 +676,7 @@ bool CPythonCharacterManager::IsPossibleEmoticon(uint32_t dwVID)
 	if (!pkInstSel)
 		return false;
 
-	return pkInstSel->IsPossibleEmoticon();
+	return pkInstSel->GetEffect().IsPossibleEmoticon();
 }
 
 PyObject* chrmgrSetEmoticon(PyObject* poSelf, PyObject* poArgs)

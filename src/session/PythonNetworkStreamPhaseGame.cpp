@@ -499,7 +499,7 @@ void CPythonNetworkStream::__ShowMapName(int32_t lLocalX, int32_t lLocalY)
 
 void CPythonNetworkStream::__LeaveGamePhase()
 {
-	CInstanceBase::ClearPVPKeySystem();
+	CInstanceBaseEffect::ClearPVPKeySystem();
 
 	__ClearNetworkActorManager();
 
@@ -603,7 +603,7 @@ bool CPythonNetworkStream::RecvDuelStartPacket()
 	for (uint32_t i = 0; i < count; i++)
 	{
 		Recv(sizeof(dwVIDDest), &dwVIDDest);
-		CInstanceBase::InsertDUELKey(dwVIDSrc, dwVIDDest);
+		CInstanceBaseEffect::InsertDUELKey(dwVIDSrc, dwVIDDest);
 	}
 
 	if (count == 0)
@@ -979,7 +979,7 @@ bool CPythonNetworkStream::RecvChatPacket()
 
 				if (ParseEmoticon(p, &dwEmoticon))
 				{
-					pkInstChatter->SetEmoticon(dwEmoticon);
+					pkInstChatter->GetEffect().SetEmoticon(dwEmoticon);
 					return true;
 				}
 				else
@@ -1161,7 +1161,7 @@ bool CPythonNetworkStream::RecvPointChange(const protocol::Packet& value)
 		{
 			CInstanceBase* pOtherInstance = CPythonCharacterManager::Instance().GetInstancePtr(PointChange.dwVID);
 			if (pOtherInstance)
-				pOtherInstance->UpdateTextTailLevel(PointChange.value);
+				pOtherInstance->GetEffect().UpdateTextTailLevel(PointChange.value);
 		}
 	}
 
@@ -1973,7 +1973,7 @@ bool CPythonNetworkStream::RecvDamageInfoPacket(const protocol::Packet& value)
 	if (pInstTarget)
 	{
 		if (DamageInfoPacket.damage >= 0)
-			pInstTarget->AddDamageEffect(DamageInfoPacket.damage, DamageInfoPacket.flag, bSelf, bTarget);
+			pInstTarget->GetEffect().AddDamageEffect(DamageInfoPacket.damage, DamageInfoPacket.flag, bSelf, bTarget);
 		else
 			TraceError("Damage is equal or below 0.");
 	}
@@ -3197,7 +3197,7 @@ bool CPythonNetworkStream::RecvGuild()
 					return false;
 
 				Tracef(" >> GulidWarList [%d vs %d]\n", dwSrcGuildID, dwDstGuildID);
-				CInstanceBase::InsertGVGKey(dwSrcGuildID, dwDstGuildID);
+				CInstanceBaseEffect::InsertGVGKey(dwSrcGuildID, dwDstGuildID);
 				CPythonCharacterManager::Instance().ChangeGVG(dwSrcGuildID, dwDstGuildID);
 				iPacketSize -= nItemSize;
 			}
@@ -3223,7 +3223,7 @@ bool CPythonNetworkStream::RecvGuild()
 					return false;
 
 				Tracef(" >> GulidWarEndList [%d vs %d]\n", dwSrcGuildID, dwDstGuildID);
-				CInstanceBase::RemoveGVGKey(dwSrcGuildID, dwDstGuildID);
+				CInstanceBaseEffect::RemoveGVGKey(dwSrcGuildID, dwDstGuildID);
 				CPythonCharacterManager::Instance().ChangeGVG(dwSrcGuildID, dwDstGuildID);
 				iPacketSize -= nItemSize;
 			}
@@ -3313,7 +3313,7 @@ bool CPythonNetworkStream::RecvFishing(const protocol::Packet& value)
 		case FISHING_SUBHEADER_GC_REACT:
 			if (pFishingInstance->IsFishing())
 			{
-				pFishingInstance->SetFishEmoticon(); // Fish Emoticon
+				pFishingInstance->GetEffect().SetFishEmoticon(); // Fish Emoticon
 				pFishingInstance->GetMotion().ReactFishing();
 			}
 			break;
