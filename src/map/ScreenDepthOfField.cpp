@@ -20,7 +20,7 @@ CScreenDepthOfField& CScreenDepthOfField::Instance()
 
 CScreenDepthOfField::CScreenDepthOfField()
 {
-	m_bEnabled = false;
+	m_bEnabled = true;
 	m_bInScene = false;
 	m_bUseDepthOfField = true;
 	m_bDepthOfFieldActive = false;

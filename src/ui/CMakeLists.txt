@@ -68,17 +68,13 @@ target_sources(client_ui PRIVATE
 
 if(WIN32)
     target_sources(client_ui PRIVATE
-        "${CMAKE_CURRENT_SOURCE_DIR}/../platform/adapters/win32/MovieMan.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/../platform/adapters/win32/ProcessCRC.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/../platform/adapters/win32/ProcessScanner.cpp"
-        "${CMAKE_CURRENT_SOURCE_DIR}/../platform/adapters/win32/PythonApplicationLogo.cpp"
     )
 else()
     target_sources(client_ui PRIVATE
-        "${CMAKE_CURRENT_SOURCE_DIR}/../platform/adapters/posix/MovieMan.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/../platform/adapters/posix/ProcessCRC.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/../platform/adapters/posix/ProcessScanner.cpp"
-        "${CMAKE_CURRENT_SOURCE_DIR}/../platform/adapters/posix/PythonApplicationLogo.cpp"
     )
 endif()
 add_library(Client::UI ALIAS client_ui)
@@ -117,8 +113,6 @@ target_link_libraries(client_ui
         ${PYTHON_LIBRARIES}
         $<$<PLATFORM_ID:Linux>:pthread>
         $<$<PLATFORM_ID:Linux>:dl>
-    $<$<PLATFORM_ID:Windows>:dmoguids>
-    $<$<PLATFORM_ID:Windows>:strmiids>
 )
 
 if(TARGET imgui)

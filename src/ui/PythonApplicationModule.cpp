@@ -1089,27 +1089,21 @@ PyObject* appLogoOpen(PyObject* poSelf, PyObject* poArgs)
 	if (!PyTuple_GetString(poArgs, 0, &szName))
 		return Py_BuildException();
 
-	int nIsSuccess = 1; // CPythonApplication::Instance().OnLogoOpen(szName);
-	CMovieMan::Instance().PlayLogo(szName);
-
-	return Py_BuildValue("i", nIsSuccess);
+	return Py_BuildValue("i", 1);
 }
 
 PyObject* appLogoUpdate(PyObject* poSelf, PyObject* poArgs)
 {
-	int nIsRun = 0; // CPythonApplication::Instance().OnLogoUpdate();
-	return Py_BuildValue("i", nIsRun);
+	return Py_BuildValue("i", 0);
 }
 
 PyObject* appLogoRender(PyObject* poSelf, PyObject* poArgs)
 {
-	// CPythonApplication::Instance().OnLogoRender();
 	return Py_BuildNone();
 }
 
 PyObject* appLogoClose(PyObject* poSelf, PyObject* poArgs)
 {
-	// CPythonApplication::Instance().OnLogoClose();
 	return Py_BuildNone();
 }
 

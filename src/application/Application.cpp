@@ -17,7 +17,6 @@
 #include <Client/UI/PythonApplication.h>
 #include <Client/Utils/PythonUtils.h>
 #include <Neoeter/IO/EterPackManager.h>
-#include <Neoeter/Platform/Port.h>
 #include <Neoeter/Platform/Base/Debug.h>
 #include <Neoeter/Platform/Base/lzo.h>
 #include <Neoeter/Render/MSWindow.h>
@@ -142,7 +141,6 @@ namespace Neoeter
 	void Application::Shutdown()
 	{
 		SetGameDataFileSource(NULL);
-		Neoeter::Platform::ShutdownCom();
 		m_pythonApplication.reset();
 	}
 }
