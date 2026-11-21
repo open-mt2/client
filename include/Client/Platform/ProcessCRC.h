@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 extern bool GetExeCRC(uint32_t& r_dwProcCRC, uint32_t& r_dwFileCRC);
 
 extern void BuildProcessCRC();

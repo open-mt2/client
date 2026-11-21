@@ -5,6 +5,10 @@
 #if !defined(AFX_TERRAINQUADTREENODE_H__C788298F_1098_4CEE_B6F3_5975D618BBF3__INCLUDED_)
 #define AFX_TERRAINQUADTREENODE_H__C788298F_1098_4CEE_B6F3_5975D618BBF3__INCLUDED_
 
+#include <Neoeter/Platform/DirectXMathCompat.h>
+
+#include <cstdint>
+
 class CTerrainQuadtreeNode
 {
 	public:

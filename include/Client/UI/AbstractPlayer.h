@@ -1,6 +1,8 @@
 #pragma once
 
 #include <Client/Utils/AbstractSingleton.h>
+#include <Client/Game/Affects.h>
+#include <Client/GameData/ItemData.h>
 
 class CInstanceBase;
 

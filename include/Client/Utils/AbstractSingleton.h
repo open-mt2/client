@@ -1,5 +1,11 @@
 #pragma once
 
+#include <Neoeter/Platform/Platform.h>
+#include <Neoeter/Platform/Base/Singleton.h>
+
+#include <cassert>
+#include <cstdint>
+
 template <typename T>
 class TAbstractSingleton
 {

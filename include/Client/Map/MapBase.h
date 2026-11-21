@@ -1,5 +1,10 @@
 #pragma once
 
+#include <Neoeter/Render/GrpScreen.h>
+#include <Client/Map/MapType.h>
+
+#include <cstdint>
+
 class CMapBase : public CScreen
 {
 	public:

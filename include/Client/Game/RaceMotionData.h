@@ -2,6 +2,7 @@
 
 #include <Neoeter/Audio/Type.h>
 #include <Client/Game/RaceMotionDataEvent.h>
+#include <Client/Map/MapType.h>
 
 class CRaceMotionData
 {

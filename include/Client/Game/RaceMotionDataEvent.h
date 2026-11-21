@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Neoeter/Effect/EffectManager.h>
+#include <Client/Game/GameType.h>
 #include <Client/Game/FlyingObjectManager.h>
 
 namespace NMotionEvent

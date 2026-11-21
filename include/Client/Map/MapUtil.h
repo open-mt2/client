@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Client/Map/MapType.h>
+
 void Environment_Init(SEnvironmentData& envData);
 bool Environment_Load(SEnvironmentData& envData, const char* envFileName);
 

@@ -1,5 +1,10 @@
 #pragma once
 
+#include <Neoeter/Platform/Platform.h>
+#include <Neoeter/Platform/DirectXMathCompat.h>
+
+#include <set>
+
 class CFlyTarget;
 
 class IFlyTargetableObject

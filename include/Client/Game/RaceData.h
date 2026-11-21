@@ -2,6 +2,8 @@
 
 #include <Neoeter/Model/Grn/Thing.h>
 
+#include <Client/Game/GameType.h>
+
 class CRaceMotionData;
 class CAttributeData;
 

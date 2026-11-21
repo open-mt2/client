@@ -1,5 +1,9 @@
 #pragma once
 
+#include <cstdint>
+#include <string>
+#include <vector>
+
 class CFlyingData //: public CPooledObject<CFlyingData>
 {
 	public:
