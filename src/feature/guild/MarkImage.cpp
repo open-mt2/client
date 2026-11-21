@@ -1,5 +1,5 @@
 #include <Client/UI/StdAfx.h>
-#include <Client/UI/Marks/MarkImage.h>
+#include <Client/Feature/Guild/MarkImage.h>
 
 #include <algorithm>
 #include <cstring>

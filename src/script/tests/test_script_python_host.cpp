@@ -1,6 +1,6 @@
 #include <Client/Script/PythonHostAdapter.h>
 
-#include <Client/UI/Test.h>
+#include <Client/Utils/Test.h>
 
 #include <Neoeter/IO/EterPackManager.h>
 

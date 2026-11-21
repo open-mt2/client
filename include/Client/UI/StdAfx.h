@@ -13,7 +13,7 @@
 #define __D3DRM_H__
 #endif
 
-#include <Client/UI/Locale.h>
+#include <Client/Locale/Locale.h>
 
 #include <Client/UI/Affects.h>
 extern uint32_t __DEFAULT_CODE_PAGE__;

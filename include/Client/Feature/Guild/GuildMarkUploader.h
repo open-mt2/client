@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Neoeter/Render/NetStream.h>
-#include <Client/UI/Marks/MarkImage.h>
+#include <Client/Feature/Guild/MarkImage.h>
 
 #ifdef __VTUNE__
 

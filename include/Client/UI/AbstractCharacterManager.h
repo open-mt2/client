@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Client/UI/AbstractSingleton.h>
+#include <Client/Utils/AbstractSingleton.h>
 
 class CInstanceBase;
 

@@ -1,5 +1,5 @@
 #include <Client/UI/StdAfx.h>
-#include <Client/UI/Util/ProcessScanner.h>
+#include <Client/Platform/ProcessScanner.h>
 void ProcessScanner_Destroy() {}
 bool ProcessScanner_Create() { return true; }
 void ProcessScanner_ReleaseQuitEvent() {}

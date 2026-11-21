@@ -1,5 +1,5 @@
 #include <Client/UI/StdAfx.h>
-#include <Client/UI/Util/ProcessCRC.h>
+#include <Client/Platform/ProcessCRC.h>
 
 #include <tlhelp32.h>
 

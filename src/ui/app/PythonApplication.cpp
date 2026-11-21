@@ -22,7 +22,7 @@
 #include <Client/Feature/Character/PythonCharacterManager.h>
 #include <Client/UI/Widget/LoadingScreen.h>
 
-#include <Client/UI/Util/ProcessScanner.h>
+#include <Client/Platform/ProcessScanner.h>
 
 #ifndef OPENMT2_CLIENT_VERSION
 #define OPENMT2_CLIENT_VERSION "unknown"

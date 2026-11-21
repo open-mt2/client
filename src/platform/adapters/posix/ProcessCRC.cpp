@@ -1,5 +1,5 @@
 #include <Client/UI/StdAfx.h>
-#include <Client/UI/Util/ProcessCRC.h>
+#include <Client/Platform/ProcessCRC.h>
 bool GetExeCRC(uint32_t& r_dwProcCRC, uint32_t& r_dwFileCRC)
 {
 	r_dwProcCRC = 0;

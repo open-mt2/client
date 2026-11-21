@@ -2,7 +2,7 @@
 #include <Client/Script/PackManifest.h>
 #include <Client/Script/ScriptHost.h>
 
-#include <Client/UI/Test.h>
+#include <Client/Utils/Test.h>
 
 #include <support/TestAssert.h>
 

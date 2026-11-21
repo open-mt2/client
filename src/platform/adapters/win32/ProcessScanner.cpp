@@ -1,5 +1,5 @@
 #include <Client/UI/StdAfx.h>
-#include <Client/UI/Util/ProcessScanner.h>
+#include <Client/Platform/ProcessScanner.h>
 
 #include <tlhelp32.h>
 

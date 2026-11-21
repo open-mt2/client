@@ -6,8 +6,8 @@
 #include <Client/Feature/TextTail/PythonTextTail.h>
 #include <Client/Feature/Character/PythonCharacterManager.h>
 #include <Client/Feature/Guild/PythonGuild.h>
-#include <Client/UI/Locale.h>
-#include <Client/UI/Marks/MarkManager.h>
+#include <Client/Locale/Locale.h>
+#include <Client/Feature/Guild/MarkManager.h>
 
 const D3DXCOLOR c_TextTail_Player_Color = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 const D3DXCOLOR c_TextTail_Monster_Color = D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f);

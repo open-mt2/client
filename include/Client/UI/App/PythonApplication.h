@@ -33,8 +33,8 @@
 #include <Client/Feature/SafeBox/PythonSafeBox.h>
 #include <Client/Feature/Guild/PythonGuild.h>
 
-#include <Client/UI/Marks/GuildMarkDownloader.h>
-#include <Client/UI/Marks/GuildMarkUploader.h>
+#include <Client/Feature/Guild/GuildMarkDownloader.h>
+#include <Client/Feature/Guild/GuildMarkUploader.h>
 
 #include <Client/UI/AccountConnector.h>
 

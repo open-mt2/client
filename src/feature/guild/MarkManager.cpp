@@ -1,5 +1,5 @@
 #include <Client/UI/StdAfx.h>
-#include <Client/UI/Marks/MarkManager.h>
+#include <Client/Feature/Guild/MarkManager.h>
 
 #include <Neoeter/Platform/Base/CRC32.h>
 #include <Neoeter/Platform/Port.h>

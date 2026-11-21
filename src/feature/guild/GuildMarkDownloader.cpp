@@ -1,8 +1,8 @@
 #include <Client/UI/StdAfx.h>
-#include <Client/UI/Marks/GuildMarkDownloader.h>
+#include <Client/Feature/Guild/GuildMarkDownloader.h>
 #include <Client/Feature/Character/PythonCharacterManager.h>
 #include <Client/Protocol/Packet.h>
-#include <Client/UI/Test.h>
+#include <Client/Utils/Test.h>
 
 // MARK_BUG_FIX
 struct SMarkIndex

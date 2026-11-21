@@ -1,8 +1,8 @@
 #include <Client/Application/CLI.h>
 
 #include <Client/Application/Context.h>
-#include <Client/UI/Locale.h>
-#include <Client/UI/Version.h>
+#include <Client/Locale/Locale.h>
+#include <Client/Application/Version.h>
 #include <Neoeter/Platform/Base/Debug.h>
 #include <Neoeter/Platform/Base/Utils.h>
 #include <Neoeter/Render/Util.h>

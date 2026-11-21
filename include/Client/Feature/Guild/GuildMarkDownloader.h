@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Neoeter/Render/NetStream.h>
-#include <Client/UI/Marks/MarkManager.h>
+#include <Client/Feature/Guild/MarkManager.h>
 
 class CGuildMarkDownloader : public CNetworkStream, public CSingleton<CGuildMarkDownloader>
 {

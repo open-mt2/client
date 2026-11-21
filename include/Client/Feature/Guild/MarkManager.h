@@ -1,7 +1,7 @@
 #ifndef __INC_METIN_II_GUILDLIB_MARK_MANAGER_H__
 #define __INC_METIN_II_GUILDLIB_MARK_MANAGER_H__
 
-#include <Client/UI/Marks/MarkImage.h>
+#include <Client/Feature/Guild/MarkImage.h>
 
 class CGuildMarkManager : public singleton<CGuildMarkManager>
 {

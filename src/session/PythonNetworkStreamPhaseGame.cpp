@@ -25,7 +25,7 @@
 #include <Client/UI/AbstractCharacterManager.h>
 #include <Client/UI/Instance/InstanceBase.h>
 
-#include <Client/UI/Util/ProcessCRC.h>
+#include <Client/Platform/ProcessCRC.h>
 
 int32_t gs_bEmpireLanuageEnable = TRUE;
 

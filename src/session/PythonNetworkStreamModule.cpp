@@ -3,7 +3,7 @@
 // #include "PythonNetworkDatagram.h"
 #include <Client/UI/AccountConnector.h>
 #include <Client/Feature/Guild/PythonGuild.h>
-#include <Client/UI/Test.h>
+#include <Client/Utils/Test.h>
 
 #include <Client/UI/AbstractPlayer.h>
 
@@ -1588,8 +1588,8 @@ PyObject* netSetSkillGroupFake(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildNone();
 }
 
-#include <Client/UI/Marks/GuildMarkUploader.h>
-#include <Client/UI/Marks/GuildMarkDownloader.h>
+#include <Client/Feature/Guild/GuildMarkUploader.h>
+#include <Client/Feature/Guild/GuildMarkDownloader.h>
 
 PyObject* netSendGuildSymbol(PyObject* poSelf, PyObject* poArgs)
 {

@@ -4,7 +4,7 @@
 #include <Neoeter/Render/NetStream.h>
 #include <Neoeter/Render/NetPacketHeaderMap.h>
 
-#include <Client/UI/Util/InsultChecker.h>
+#include <Client/Feature/Chat/InsultChecker.h>
 
 #include <Client/Protocol/Wire.h>
 #include <Client/Protocol/Decode.h>

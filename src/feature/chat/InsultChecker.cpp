@@ -1,5 +1,5 @@
 #include <Client/UI/StdAfx.h>
-#include <Client/UI/Util/InsultChecker.h>
+#include <Client/Feature/Chat/InsultChecker.h>
 
 namespace
 {
