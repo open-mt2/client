@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.20)
 project(Client VERSION 0.1.8 LANGUAGES C CXX)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 set(OPENMT2_CLIENT_VERSION "${PROJECT_VERSION}")
 
 # Game layer: GameLib + UserInterface. One header root, one
