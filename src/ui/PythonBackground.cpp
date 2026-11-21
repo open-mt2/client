@@ -465,7 +465,7 @@ void CPythonBackground::Update(float fCenterX, float fCenterY, float fCenterZ)
 				continue;
 
 			TPixelPosition kPixelPosition;
-			pInstance->NEW_GetPixelPosition(&kPixelPosition);
+			pInstance->GetTransform().NEW_GetPixelPosition(&kPixelPosition);
 
 			CreateSpecialEffect(dwTargetID,
 								+kPixelPosition.x,

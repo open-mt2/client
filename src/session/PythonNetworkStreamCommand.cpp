@@ -335,7 +335,7 @@ void CPythonNetworkStream::ServerCommand(char* c_szCommand)
 
 		TPixelPosition PixelPosition;
 		D3DXVECTOR3 v3Rotation(0.0f, 0.0f, fAngle);
-		pInstance->NEW_GetPixelPosition(&PixelPosition);
+		pInstance->GetTransform().NEW_GetPixelPosition(&PixelPosition);
 
 		PixelPosition.y *= -1.0f;
 
@@ -422,7 +422,7 @@ void CPythonNetworkStream::ServerCommand(char* c_szCommand)
 		CInstanceBase* pInstance1 = rkChrMgr.GetInstancePtr(iVID1);
 		CInstanceBase* pInstance2 = rkChrMgr.GetInstancePtr(iVID2);
 		if (pInstance1 && pInstance2)
-			pInstance1->ActDualEmotion(*pInstance2, CRaceMotionData::NAME_FRENCH_KISS_START, CRaceMotionData::NAME_FRENCH_KISS_START);
+			pInstance1->GetMotion().ActDualEmotion(*pInstance2, CRaceMotionData::NAME_FRENCH_KISS_START, CRaceMotionData::NAME_FRENCH_KISS_START);
 	}
 	else if (!strcmpi(szCmd, "kiss"))
 	{
@@ -433,7 +433,7 @@ void CPythonNetworkStream::ServerCommand(char* c_szCommand)
 		CInstanceBase* pInstance1 = rkChrMgr.GetInstancePtr(iVID1);
 		CInstanceBase* pInstance2 = rkChrMgr.GetInstancePtr(iVID2);
 		if (pInstance1 && pInstance2)
-			pInstance1->ActDualEmotion(*pInstance2, CRaceMotionData::NAME_KISS_START, CRaceMotionData::NAME_KISS_START);
+			pInstance1->GetMotion().ActDualEmotion(*pInstance2, CRaceMotionData::NAME_KISS_START, CRaceMotionData::NAME_KISS_START);
 	}
 	else if (!strcmpi(szCmd, "slap"))
 	{
@@ -444,7 +444,7 @@ void CPythonNetworkStream::ServerCommand(char* c_szCommand)
 		CInstanceBase* pInstance1 = rkChrMgr.GetInstancePtr(iVID1);
 		CInstanceBase* pInstance2 = rkChrMgr.GetInstancePtr(iVID2);
 		if (pInstance1 && pInstance2)
-			pInstance1->ActDualEmotion(*pInstance2, CRaceMotionData::NAME_SLAP_HURT_START, CRaceMotionData::NAME_SLAP_HIT_START);
+			pInstance1->GetMotion().ActDualEmotion(*pInstance2, CRaceMotionData::NAME_SLAP_HURT_START, CRaceMotionData::NAME_SLAP_HIT_START);
 	}
 	else if (!strcmpi(szCmd, "clap"))
 	{
@@ -452,7 +452,7 @@ void CPythonNetworkStream::ServerCommand(char* c_szCommand)
 		IAbstractCharacterManager& rkChrMgr = IAbstractCharacterManager::GetSingleton();
 		CInstanceBase* pInstance = rkChrMgr.GetInstancePtr(iVID);
 		if (pInstance)
-			pInstance->ActEmotion(CRaceMotionData::NAME_CLAP);
+			pInstance->GetMotion().ActEmotion(CRaceMotionData::NAME_CLAP);
 	}
 	else if (!strcmpi(szCmd, "cheer1"))
 	{
@@ -460,7 +460,7 @@ void CPythonNetworkStream::ServerCommand(char* c_szCommand)
 		IAbstractCharacterManager& rkChrMgr = IAbstractCharacterManager::GetSingleton();
 		CInstanceBase* pInstance = rkChrMgr.GetInstancePtr(iVID);
 		if (pInstance)
-			pInstance->ActEmotion(CRaceMotionData::NAME_CHEERS_1);
+			pInstance->GetMotion().ActEmotion(CRaceMotionData::NAME_CHEERS_1);
 	}
 	else if (!strcmpi(szCmd, "cheer2"))
 	{
@@ -468,7 +468,7 @@ void CPythonNetworkStream::ServerCommand(char* c_szCommand)
 		IAbstractCharacterManager& rkChrMgr = IAbstractCharacterManager::GetSingleton();
 		CInstanceBase* pInstance = rkChrMgr.GetInstancePtr(iVID);
 		if (pInstance)
-			pInstance->ActEmotion(CRaceMotionData::NAME_CHEERS_2);
+			pInstance->GetMotion().ActEmotion(CRaceMotionData::NAME_CHEERS_2);
 	}
 	else if (!strcmpi(szCmd, "dance1"))
 	{
@@ -476,7 +476,7 @@ void CPythonNetworkStream::ServerCommand(char* c_szCommand)
 		IAbstractCharacterManager& rkChrMgr = IAbstractCharacterManager::GetSingleton();
 		CInstanceBase* pInstance = rkChrMgr.GetInstancePtr(iVID);
 		if (pInstance)
-			pInstance->ActEmotion(CRaceMotionData::NAME_DANCE_1);
+			pInstance->GetMotion().ActEmotion(CRaceMotionData::NAME_DANCE_1);
 	}
 	else if (!strcmpi(szCmd, "dance2"))
 	{
@@ -484,7 +484,7 @@ void CPythonNetworkStream::ServerCommand(char* c_szCommand)
 		IAbstractCharacterManager& rkChrMgr = IAbstractCharacterManager::GetSingleton();
 		CInstanceBase* pInstance = rkChrMgr.GetInstancePtr(iVID);
 		if (pInstance)
-			pInstance->ActEmotion(CRaceMotionData::NAME_DANCE_2);
+			pInstance->GetMotion().ActEmotion(CRaceMotionData::NAME_DANCE_2);
 	}
 	else if (!strcmpi(szCmd, "dig_motion"))
 	{
@@ -492,7 +492,7 @@ void CPythonNetworkStream::ServerCommand(char* c_szCommand)
 		IAbstractCharacterManager& rkChrMgr = IAbstractCharacterManager::GetSingleton();
 		CInstanceBase* pInstance = rkChrMgr.GetInstancePtr(iVID);
 		if (pInstance)
-			pInstance->ActEmotion(CRaceMotionData::NAME_DIG);
+			pInstance->GetMotion().ActEmotion(CRaceMotionData::NAME_DIG);
 	}
 	// Emotion End
 	else
@@ -533,7 +533,7 @@ void CPythonNetworkStream::ServerCommand(char* c_szCommand)
 			CInstanceBase* pInstance = rkChrMgr.GetInstancePtr(iVID);
 
 			if (pInstance)
-				pInstance->ActEmotion(emotionIndex);
+				pInstance->GetMotion().ActEmotion(emotionIndex);
 		}
 	}
 }

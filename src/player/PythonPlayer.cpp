@@ -93,7 +93,7 @@ void CPythonPlayer::NEW_GetMainActorPosition(TPixelPosition* pkPPosActor)
 	CInstanceBase* pInstance = rkPlayer.NEW_GetMainActorPtr();
 	if (pInstance)
 	{
-		pInstance->NEW_GetPixelPosition(pkPPosActor);
+		pInstance->GetTransform().NEW_GetPixelPosition(pkPPosActor);
 	}
 	else
 	{
@@ -149,7 +149,7 @@ void CPythonPlayer::Update()
 		if (pInstance)
 		{
 			TPixelPosition PixelPosition;
-			pInstance->NEW_GetPixelPosition(&PixelPosition);
+			pInstance->GetTransform().NEW_GetPixelPosition(&PixelPosition);
 
 			if (abs(int(PixelPosition.x) - m_ixDestPos) + abs(int(PixelPosition.y) - m_iyDestPos) < 10000)
 			{
@@ -251,7 +251,7 @@ void CPythonPlayer::__Update_NotifyGuildAreaEvent()
 	if (pkInstMain)
 	{
 		TPixelPosition kPixelPosition;
-		pkInstMain->NEW_GetPixelPosition(&kPixelPosition);
+		pkInstMain->GetTransform().NEW_GetPixelPosition(&kPixelPosition);
 
 		uint32_t dwAreaID = CPythonMiniMap::Instance().GetGuildAreaID(
 			uint32_t(kPixelPosition.x), uint32_t(kPixelPosition.y));
@@ -1242,7 +1242,7 @@ void CPythonPlayer::AlarmHaveToGo()
 		return;
 
 	TPixelPosition PixelPosition;
-	pInstance->NEW_GetPixelPosition(&PixelPosition);
+	pInstance->GetTransform().NEW_GetPixelPosition(&PixelPosition);
 
 	float fAngle = GetDegreeFromPosition2(PixelPosition.x, PixelPosition.y, float(m_ixDestPos), float(m_iyDestPos));
 	fAngle = fmod(540.0f - fAngle, 360.0f);

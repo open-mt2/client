@@ -3304,24 +3304,24 @@ bool CPythonNetworkStream::RecvFishing(const protocol::Packet& value)
 	switch (FishingPacket.subheader)
 	{
 		case FISHING_SUBHEADER_GC_START:
-			pFishingInstance->StartFishing(float(FishingPacket.dir) * 5.0f);
+			pFishingInstance->GetMotion().StartFishing(float(FishingPacket.dir) * 5.0f);
 			break;
 		case FISHING_SUBHEADER_GC_STOP:
 			if (pFishingInstance->IsFishing())
-				pFishingInstance->StopFishing();
+				pFishingInstance->GetMotion().StopFishing();
 			break;
 		case FISHING_SUBHEADER_GC_REACT:
 			if (pFishingInstance->IsFishing())
 			{
 				pFishingInstance->SetFishEmoticon(); // Fish Emoticon
-				pFishingInstance->ReactFishing();
+				pFishingInstance->GetMotion().ReactFishing();
 			}
 			break;
 		case FISHING_SUBHEADER_GC_SUCCESS:
-			pFishingInstance->CatchSuccess();
+			pFishingInstance->GetMotion().CatchSuccess();
 			break;
 		case FISHING_SUBHEADER_GC_FAIL:
-			pFishingInstance->CatchFail();
+			pFishingInstance->GetMotion().CatchFail();
 			if (pFishingInstance == CPythonCharacterManager::Instance().GetMainInstancePtr())
 			{
 				PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OnFishingFailure", Py_BuildValue("()"));
@@ -3872,10 +3872,10 @@ bool CPythonNetworkStream::RecvDigMotionPacket(const protocol::Packet& value)
 		return true;
 
 	if (pkInstTarget)
-		pkInstMain->NEW_LookAtDestInstance(*pkInstTarget);
+		pkInstMain->GetTransform().NEW_LookAtDestInstance(*pkInstTarget);
 
 	for (int i = 0; i < kDigMotion.count; ++i)
-		pkInstMain->PushOnceMotion(CRaceMotionData::NAME_DIG);
+		pkInstMain->GetMotion().PushOnceMotion(CRaceMotionData::NAME_DIG);
 
 	return true;
 }

@@ -424,7 +424,7 @@ bool CPythonPlayer::__ProcessEnemySkillTargetRange(CInstanceBase& rkInstMain, CI
 
 	// 2004.07.05.myevan. 궁신탄영 사용시 맵에 끼임. 사용하기전 갈수 있는곳 체크
 	TPixelPosition kPPosTarget;
-	rkInstTarget.NEW_GetPixelPosition(&kPPosTarget);
+	rkInstTarget.GetTransform().NEW_GetPixelPosition(&kPPosTarget);
 
 	IBackground& rkBG = IBackground::Instance();
 	if (rkBG.IsBlock(kPPosTarget.x, kPPosTarget.y))
@@ -606,11 +606,11 @@ bool CPythonPlayer::__UseSkill(uint32_t dwSlotIndex)
 			{
 				if (pkInstMain->IsFlyTargetObject())
 				{
-					pkInstMain->NEW_LookAtFlyTarget();
+					pkInstMain->GetTransform().NEW_LookAtFlyTarget();
 				}
 				else
 				{
-					pkInstMain->NEW_LookAtDestInstance(*pkInstTarget);
+					pkInstMain->GetTransform().NEW_LookAtDestInstance(*pkInstTarget);
 				}
 			}
 		}
@@ -657,17 +657,17 @@ bool CPythonPlayer::__UseSkill(uint32_t dwSlotIndex)
 
 		if (pkInstTarget && pkInstTarget != pkInstMain)
 		{
-			pkInstMain->NEW_LookAtDestInstance(*pkInstTarget);
+			pkInstMain->GetTransform().NEW_LookAtDestInstance(*pkInstTarget);
 		}
 		else if (__GetPickedActorID(&dwPickedActorID))
 		{
 			CInstanceBase* pkInstVictim = NEW_FindActorPtr(dwPickedActorID);
 			if (pkInstVictim)
-				pkInstMain->NEW_LookAtDestInstance(*pkInstVictim);
+				pkInstMain->GetTransform().NEW_LookAtDestInstance(*pkInstVictim);
 		}
 		else if (__GetPickedGroundPos(&kPPosPickedGround))
 		{
-			pkInstMain->NEW_LookAtDestPixelPosition(kPPosPickedGround);
+			pkInstMain->GetTransform().NEW_LookAtDestPixelPosition(kPPosPickedGround);
 		}
 		else
 		{

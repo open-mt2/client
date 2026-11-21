@@ -596,7 +596,7 @@ PyObject* chrSetMotionMode(PyObject* poSelf, PyObject* poArgs)
 	if (!pkInst)
 		return Py_BuildNone();
 
-	pkInst->SetMotionMode(iMotionMode);
+	pkInst->GetMotion().SetMotionMode(iMotionMode);
 	return Py_BuildNone();
 }
 
@@ -609,7 +609,7 @@ PyObject* chrSetLoopMotion(PyObject* poSelf, PyObject* poArgs)
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 	if (!pkInst)
 		return Py_BuildNone();
-	pkInst->SetLoopMotion(uint16_t(iMotionIndex));
+	pkInst->GetMotion().SetLoopMotion(uint16_t(iMotionIndex));
 
 	return Py_BuildNone();
 }
@@ -626,7 +626,7 @@ PyObject* chrBlendLoopMotion(PyObject* poSelf, PyObject* poArgs)
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 	if (!pkInst)
 		return Py_BuildNone();
-	pkInst->SetLoopMotion(uint16_t(iMotionIndex), fBlendTime);
+	pkInst->GetMotion().SetLoopMotion(uint16_t(iMotionIndex), fBlendTime);
 
 	return Py_BuildNone();
 }
@@ -646,7 +646,7 @@ PyObject* chrPushOnceMotion(PyObject* poSelf, PyObject* poArgs)
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 	if (!pkInst)
 		return Py_BuildNone();
-	pkInst->PushOnceMotion(uint16_t(iMotionIndex), fBlendTime);
+	pkInst->GetMotion().PushOnceMotion(uint16_t(iMotionIndex), fBlendTime);
 
 	return Py_BuildNone();
 }
@@ -666,7 +666,7 @@ PyObject* chrPushLoopMotion(PyObject* poSelf, PyObject* poArgs)
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 	if (!pkInst)
 		return Py_BuildNone();
-	pkInst->PushLoopMotion(uint16_t(iMotionIndex), fBlendTime);
+	pkInst->GetMotion().PushLoopMotion(uint16_t(iMotionIndex), fBlendTime);
 
 	return Py_BuildNone();
 }
@@ -687,11 +687,11 @@ PyObject* chrSetPixelPosition(PyObject* poSelf, PyObject* poArgs)
 	int iZ;
 	if (PyTuple_GetInteger(poArgs, 2, &iZ))
 	{
-		pkInst->NEW_SetPixelPosition(TPixelPosition(iX, iY, iZ));
+		pkInst->GetTransform().NEW_SetPixelPosition(TPixelPosition(iX, iY, iZ));
 	}
 	else
 	{
-		pkInst->SCRIPT_SetPixelPosition(iX, iY);
+		pkInst->GetTransform().SCRIPT_SetPixelPosition(iX, iY);
 	}
 	return Py_BuildNone();
 }
@@ -703,7 +703,7 @@ PyObject* chrSetDirection(PyObject* poSelf, PyObject* poArgs)
 		return Py_BuildException();
 
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
-	pkInst->SetDirection(iDirection);
+	pkInst->GetTransform().SetDirection(iDirection);
 	return Py_BuildNone();
 }
 
@@ -719,7 +719,7 @@ PyObject* chrGetPixelPosition(PyObject* poSelf, PyObject* poArgs)
 		return Py_BuildException();
 
 	TPixelPosition PixelPosition;
-	pkInst->NEW_GetPixelPosition(&PixelPosition);
+	pkInst->GetTransform().NEW_GetPixelPosition(&PixelPosition);
 
 	return Py_BuildValue("fff", PixelPosition.x, PixelPosition.y, PixelPosition.z);
 }
@@ -737,7 +737,7 @@ PyObject* chrSetRotation(PyObject* poSelf, PyObject* poArgs)
 
 	fRotation = fmod(fRotation + 180.0f, 360.0f);
 
-	pCharacterInstance->SetRotation(fRotation);
+	pCharacterInstance->GetTransform().SetRotation(fRotation);
 
 	return Py_BuildNone();
 }
@@ -777,7 +777,7 @@ PyObject* chrBlendRotation(PyObject* poSelf, PyObject* poArgs)
 	CInstanceBase* pCharacterInstance = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 	if (!pCharacterInstance)
 		return Py_BuildNone();
-	pCharacterInstance->BlendRotation(fRotation, fBlendTime);
+	pCharacterInstance->GetTransform().BlendRotation(fRotation, fBlendTime);
 
 	return Py_BuildNone();
 }
@@ -789,7 +789,7 @@ PyObject* chrGetRotation(PyObject* poSelf, PyObject* poArgs)
 	if (!pCharacterInstance)
 		return Py_BuildValue("f", 0.0f);
 
-	float fRotation = pCharacterInstance->GetRotation();
+	float fRotation = pCharacterInstance->GetTransform().GetRotation();
 
 	return Py_BuildValue("f", 360.0f - fRotation);
 }
@@ -857,7 +857,7 @@ PyObject* chrGetProjectPosition(PyObject* poSelf, PyObject* poArgs)
 		return Py_BuildValue("ii", -100, -100);
 
 	TPixelPosition PixelPosition;
-	pInstance->NEW_GetPixelPosition(&PixelPosition);
+	pInstance->GetTransform().NEW_GetPixelPosition(&PixelPosition);
 
 	CPythonGraphic& rpyGraphic = CPythonGraphic::Instance();
 

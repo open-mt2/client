@@ -96,7 +96,7 @@ PyObject* chrmgrGetVIDInfo(PyObject* poSelf, PyObject* poArgs)
 	if (pkInstBase)
 	{
 		TPixelPosition kPPosInst;
-		pkInstBase->NEW_GetPixelPosition(&kPPosInst);
+		pkInstBase->GetTransform().NEW_GetPixelPosition(&kPPosInst);
 
 		int32_t xInst = kPPosInst.x;
 		int32_t yInst = kPPosInst.y;

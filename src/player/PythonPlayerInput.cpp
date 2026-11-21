@@ -31,7 +31,7 @@ void CPythonPlayer::PickCloseMoney()
 		return;
 
 	TPixelPosition kPPosMain;
-	pkInstMain->NEW_GetPixelPosition(&kPPosMain);
+	pkInstMain->GetTransform().NEW_GetPixelPosition(&kPPosMain);
 
 	uint32_t dwItemID;
 	CPythonItem& rkItem = CPythonItem::Instance();
@@ -48,7 +48,7 @@ void CPythonPlayer::PickCloseItem()
 		return;
 
 	TPixelPosition kPPosMain;
-	pkInstMain->NEW_GetPixelPosition(&kPPosMain);
+	pkInstMain->GetTransform().NEW_GetPixelPosition(&kPPosMain);
 
 	uint32_t dwItemID;
 	CPythonItem& rkItem = CPythonItem::Instance();
@@ -449,7 +449,7 @@ bool CPythonPlayer::NEW_MoveToDirection(float fDirRot)
 	if (!pkInstMain)
 		return false;
 
-	if (pkInstMain->isLock())
+	if (pkInstMain->GetMotion().isLock())
 		if (!pkInstMain->IsUsingMovingSkill())
 			return true;
 
@@ -533,7 +533,7 @@ void CPythonPlayer::NEW_Fishing()
 		if (pkInstMain->CanFishing())
 		{
 			int irot;
-			if (pkInstMain->GetFishingRot(&irot))
+			if (pkInstMain->GetMotion().GetFishingRot(&irot))
 				CPythonNetworkStream::Instance().SendFishingPacket(irot);
 			else
 			{
@@ -580,7 +580,7 @@ void CPythonPlayer::NEW_Attack()
 
 			if (pkInstMain->IsAttackableInstance(*pkInstTarget))
 			{
-				pkInstMain->NEW_LookAtDestInstance(*pkInstTarget);
+				pkInstMain->GetTransform().NEW_LookAtDestInstance(*pkInstTarget);
 				pkInstMain->NEW_AttackToDestInstanceDirection(*pkInstTarget);
 			}
 		}
@@ -717,7 +717,7 @@ bool CPythonPlayer::__OLD_CanMove()
 	if (pkInstMain->IsStun())
 		return false;
 
-	if (pkInstMain->isLock())
+	if (pkInstMain->GetMotion().isLock())
 		return false;
 
 	if (pkInstMain->IsParalysis())

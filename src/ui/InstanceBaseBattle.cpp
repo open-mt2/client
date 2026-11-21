@@ -50,7 +50,7 @@ void CInstanceBase::ClearFlyTargetInstance()
 void CInstanceBase::SetFlyTargetInstance(CInstanceBase& rkInstDst)
 {
 	// NOTE : NEW_Attack 때 Target을 바꿀때 여기서 리턴 되어버림 - [levites]
-	//	if (isLock())
+	//	if (GetMotion().isLock())
 	//		return;
 
 	m_GraphicThingInstance.SetFlyTarget(rkInstDst.GetGraphicThingInstancePtr());
@@ -69,7 +69,7 @@ void CInstanceBase::AddFlyTargetInstance(CInstanceBase& rkInstDst)
 float CInstanceBase::NEW_GetDistanceFromDestInstance(CInstanceBase& rkInstDst)
 {
 	TPixelPosition kPPosDst;
-	rkInstDst.NEW_GetPixelPosition(&kPPosDst);
+	rkInstDst.GetTransform().NEW_GetPixelPosition(&kPPosDst);
 
 	return NEW_GetDistanceFromDestPixelPosition(kPPosDst);
 }
@@ -77,7 +77,7 @@ float CInstanceBase::NEW_GetDistanceFromDestInstance(CInstanceBase& rkInstDst)
 float CInstanceBase::NEW_GetDistanceFromDestPixelPosition(const TPixelPosition& c_rkPPosDst)
 {
 	TPixelPosition kPPosCur;
-	NEW_GetPixelPosition(&kPPosCur);
+	GetTransform().NEW_GetPixelPosition(&kPPosCur);
 
 	TPixelPosition kPPosDir;
 	kPPosDir = c_rkPPosDst - kPPosCur;
@@ -92,7 +92,7 @@ float CInstanceBase::NEW_GetDistanceFromDirPixelPosition(const TPixelPosition& c
 
 float CInstanceBase::NEW_GetRotation()
 {
-	float fCurRot = GetRotation();
+	float fCurRot = GetTransform().GetRotation();
 	return NEW_UnsignedDegreeToSignedDegree(fCurRot);
 }
 
@@ -104,7 +104,7 @@ float CInstanceBase::NEW_GetRotationFromDirPixelPosition(const TPixelPosition& c
 float CInstanceBase::NEW_GetRotationFromDestPixelPosition(const TPixelPosition& c_rkPPosDst)
 {
 	TPixelPosition kPPosCur;
-	NEW_GetPixelPosition(&kPPosCur);
+	GetTransform().NEW_GetPixelPosition(&kPPosCur);
 
 	TPixelPosition kPPosDir;
 	kPPosDir = c_rkPPosDst - kPPosCur;
@@ -115,7 +115,7 @@ float CInstanceBase::NEW_GetRotationFromDestPixelPosition(const TPixelPosition& 
 float CInstanceBase::NEW_GetRotationFromDestInstance(CInstanceBase& rkInstDst)
 {
 	TPixelPosition kPPosDst;
-	rkInstDst.NEW_GetPixelPosition(&kPPosDst);
+	rkInstDst.GetTransform().NEW_GetPixelPosition(&kPPosDst);
 
 	return NEW_GetRotationFromDestPixelPosition(kPPosDst);
 }
@@ -347,7 +347,7 @@ bool CInstanceBase::NEW_UseSkill(uint32_t uSkill, uint32_t uMot, uint32_t uMotLo
 
 void CInstanceBase::NEW_Attack()
 {
-	float fDirRot = GetRotation();
+	float fDirRot = GetTransform().GetRotation();
 	NEW_Attack(fDirRot);
 }
 
@@ -402,7 +402,7 @@ bool CInstanceBase::NEW_AttackToDestInstanceDirection(CInstanceBase& rkInstDst, 
 bool CInstanceBase::NEW_AttackToDestInstanceDirection(CInstanceBase& rkInstDst)
 {
 	TPixelPosition kPPosDst;
-	rkInstDst.NEW_GetPixelPosition(&kPPosDst);
+	rkInstDst.GetTransform().NEW_GetPixelPosition(&kPPosDst);
 	NEW_AttackToDestPixelPositionDirection(kPPosDst);
 
 	return true;

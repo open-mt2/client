@@ -116,7 +116,7 @@ void CPythonMiniMap::Update(float fCenterX, float fCenterY)
 		CInstanceBase* pkInstEach = *i;
 
 		TPixelPosition kInstancePosition;
-		pkInstEach->NEW_GetPixelPosition(&kInstancePosition);
+		pkInstEach->GetTransform().NEW_GetPixelPosition(&kInstancePosition);
 		float fDistanceFromCenterX = (kInstancePosition.x - m_fCenterX) * fooCellScale * m_fScale;
 		float fDistanceFromCenterY = (kInstancePosition.y - m_fCenterY) * fooCellScale * m_fScale;
 		if (fabs(fDistanceFromCenterX) >= m_fMiniMapRadius || fabs(fDistanceFromCenterY) >= m_fMiniMapRadius)
@@ -218,7 +218,7 @@ void CPythonMiniMap::Update(float fCenterX, float fCenterY)
 				if (pInstance)
 				{
 					TPixelPosition kPixelPosition;
-					pInstance->NEW_GetPixelPosition(&kPixelPosition);
+					pInstance->GetTransform().NEW_GetPixelPosition(&kPixelPosition);
 					__UpdateWayPoint(&rAtlasMarkInfo, kPixelPosition.x, kPixelPosition.y);
 				}
 			}
@@ -442,7 +442,7 @@ void CPythonMiniMap::Render(float fScreenX, float fScreenY)
 	if (pkInst)
 	{
 		float fRotation;
-		fRotation = (540.0f - pkInst->GetRotation());
+		fRotation = (540.0f - pkInst->GetTransform().GetRotation());
 		while (fRotation > 360.0f)
 			fRotation -= 360.0f;
 		while (fRotation < 0.0f)
@@ -930,10 +930,10 @@ void CPythonMiniMap::UpdateAtlas()
 	if (pkInst)
 	{
 		TPixelPosition kInstPos;
-		pkInst->NEW_GetPixelPosition(&kInstPos);
+		pkInst->GetTransform().NEW_GetPixelPosition(&kInstPos);
 
 		float fRotation;
-		fRotation = (540.0f - pkInst->GetRotation());
+		fRotation = (540.0f - pkInst->GetTransform().GetRotation());
 		while (fRotation > 360.0f)
 			fRotation -= 360.0f;
 		while (fRotation < 0.0f)
@@ -1068,7 +1068,7 @@ bool CPythonMiniMap::GetPickedInstanceInfo(float fScreenX, float fScreenY, std::
 	if (pkInst)
 	{
 		TPixelPosition kInstPos;
-		pkInst->NEW_GetPixelPosition(&kInstPos);
+		pkInst->GetTransform().NEW_GetPixelPosition(&kInstPos);
 
 		if (fabs(kInstPos.x - fRealX) < ((float)CTerrainImpl::CELLSCALE) * 6.0f / m_fScale &&
 			fabs(kInstPos.y - fRealY) < ((float)CTerrainImpl::CELLSCALE) * 6.0f / m_fScale)
@@ -1094,7 +1094,7 @@ bool CPythonMiniMap::GetPickedInstanceInfo(float fScreenX, float fScreenY, std::
 		if (m_fScale < 2.0f && (pkInstEach->IsEnemy() || pkInstEach->IsPC()))
 			continue;
 		TPixelPosition kInstancePosition;
-		pkInstEach->NEW_GetPixelPosition(&kInstancePosition);
+		pkInstEach->GetTransform().NEW_GetPixelPosition(&kInstancePosition);
 
 		if (fabs(kInstancePosition.x - fRealX) < ((float)CTerrainImpl::CELLSCALE) * 3.0f / m_fScale &&
 			fabs(kInstancePosition.y - fRealY) < ((float)CTerrainImpl::CELLSCALE) * 3.0f / m_fScale)
@@ -1123,7 +1123,7 @@ bool CPythonMiniMap::GetAtlasInfo(float fScreenX, float fScreenY, std::string& r
 	if (pkInst)
 	{
 		TPixelPosition kInstPos;
-		pkInst->NEW_GetPixelPosition(&kInstPos);
+		pkInst->GetTransform().NEW_GetPixelPosition(&kInstPos);
 
 		if (kInstPos.x - fCheckWidth < fRealX && kInstPos.x + fCheckWidth > fRealX &&
 			kInstPos.y - fCheckHeight < fRealY && kInstPos.y + fCheckHeight > fRealY)

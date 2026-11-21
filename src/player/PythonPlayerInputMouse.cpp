@@ -291,9 +291,9 @@ void CPythonPlayer::NEW_RefreshMouseWalkingDirection()
 					CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 
 					TPixelPosition kPPosCur;
-					pkInstMain->NEW_GetPixelPosition(&kPPosCur);
+					pkInstMain->GetTransform().NEW_GetPixelPosition(&kPPosCur);
 
-					float fCurRot = pkInstMain->GetRotation();
+					float fCurRot = pkInstMain->GetTransform().GetRotation();
 					rkNetStream.SendCharacterStatePacket(kPPosCur, fCurRot, CInstanceBase::FUNC_WAIT, 0);
 					SendClickItemPacket(m_dwIIDReserved);
 
@@ -322,7 +322,7 @@ void CPythonPlayer::NEW_RefreshMouseWalkingDirection()
 
 		case MODE_CLICK_POSITION:
 		{
-			if (!pkInstMain->isLock())
+			if (!pkInstMain->GetMotion().isLock())
 				if (NEW_IsEmptyReservedDelayTime(CPythonApplication::Instance().GetGlobalElapsedTime()))
 				{
 					pkInstMain->NEW_MoveToDestPixelPositionDirection(m_kPPosReserved);

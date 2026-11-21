@@ -250,7 +250,7 @@ void CNetworkActorManager::__UpdateMainActor()
 		return;
 
 	TPixelPosition kPPosMain;
-	pkInstMain->NEW_GetPixelPosition(&kPPosMain);
+	pkInstMain->GetTransform().NEW_GetPixelPosition(&kPPosMain);
 
 	m_lMainPosX = int32_t(kPPosMain.x);
 	m_lMainPosY = int32_t(kPPosMain.y);

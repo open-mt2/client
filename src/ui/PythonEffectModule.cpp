@@ -32,7 +32,7 @@ PyObject* effectCreateEffect(PyObject* poSelf, PyObject* poArgs)
 
 	CInstanceBase* pInstance = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 	TPixelPosition PixelPosition;
-	pInstance->NEW_GetPixelPosition(&PixelPosition);
+	pInstance->GetTransform().NEW_GetPixelPosition(&PixelPosition);
 	int iIndex = CEffectManager::Instance().CreateEffect(szEffectName, PixelPosition, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	return Py_BuildValue("i", iIndex);

@@ -4,6 +4,8 @@
 #include <Client/Game/ActorInstance.h>
 
 #include <Client/UI/AffectFlagContainer.h>
+#include <Client/UI/InstanceBaseMotion.h>
+#include <Client/UI/InstanceBaseTransform.h>
 
 class CInstanceBase
 {
@@ -522,8 +524,6 @@ class CInstanceBase
 		bool IsKiller();
 		bool IsPartyMember();
 
-		void ActDualEmotion(CInstanceBase& rkDstInst, uint16_t dwMotionNumber1, uint16_t dwMotionNumber2);
-		void ActEmotion(uint32_t dwMotionNumber);
 		void LevelUp();
 		void SkillUp();
 		void UseSpinTop();
@@ -660,8 +660,6 @@ class CInstanceBase
 		void NEW_SyncPixelPosition(long nPPosX, long nPPosY);
 		void NEW_SyncCurrentPixelPosition();
 
-		void NEW_SetPixelPosition(const TPixelPosition& c_rkPPosDst);
-
 		bool NEW_IsLastPixelPosition();
 		const TPixelPosition& NEW_GetLastPixelPositionRef();
 
@@ -691,14 +689,6 @@ class CInstanceBase
 		void GetBlendingPosition(TPixelPosition* pPixelPosition);
 		void SetBlendingPosition(const TPixelPosition& c_rPixelPosition);
 
-		// Fishing
-		void StartFishing(float frot);
-		void StopFishing();
-		void ReactFishing();
-		void CatchSuccess();
-		void CatchFail();
-		int32_t GetFishingRot(int* pirot);
-
 		// Render Mode
 		void RestoreRenderMode();
 		void SetAddRenderMode();
@@ -707,37 +697,8 @@ class CInstanceBase
 		void SetAddColor(const D3DXCOLOR& c_rColor);
 
 		// Position
-		void SCRIPT_SetPixelPosition(float fx, float fy);
-		void NEW_GetPixelPosition(TPixelPosition* pPixelPosition);
-
-		// Rotation
-		void NEW_LookAtFlyTarget();
-		void NEW_LookAtDestInstance(CInstanceBase& rkInstDst);
-		void NEW_LookAtDestPixelPosition(const TPixelPosition& c_rkPPosDst);
-
-		float GetRotation();
-		float GetAdvancingRotation();
-		void SetRotation(float fRotation);
-		void BlendRotation(float fRotation, float fBlendTime = 0.1f);
-
-		void SetDirection(int dir);
-		void BlendDirection(int dir, float blendTime);
-		float GetDegreeFromDirection(int dir);
-
-		// Motion
-		//	Motion Deque
-		int32_t isLock();
-
-		void SetMotionMode(int iMotionMode);
-		int GetMotionMode(uint32_t dwMotionIndex);
-
-		// Motion
-		//	Pushing Motion
-		void ResetLocalTime();
-		void SetLoopMotion(uint16_t wMotion, float fBlendTime = 0.1f, float fSpeedRatio = 1.0f);
-		void PushOnceMotion(uint16_t wMotion, float fBlendTime = 0.1f, float fSpeedRatio = 1.0f);
-		void PushLoopMotion(uint16_t wMotion, float fBlendTime = 0.1f, float fSpeedRatio = 1.0f);
-		void SetEndStopMotion();
+		CInstanceBaseTransform& GetTransform();
+		CInstanceBaseMotion& GetMotion();
 
 		// Intersect
 		bool IntersectDefendingSphere();
@@ -810,8 +771,6 @@ class CInstanceBase
 
 		// Emotion
 		void __ProcessFunctionEmotion(uint32_t dwMotionNumber, uint32_t dwTargetVID, const TPixelPosition& c_rkPosDst);
-		void __EnableChangingTCPState();
-		void __DisableChangingTCPState();
 		int32_t __IsEnableTCPProcess(uint32_t eCurFunc);
 
 		// 2004.07.17.levites.isShow를 ViewFrustumCheck로 변경
@@ -1096,6 +1055,13 @@ class CInstanceBase
 	protected:
 		uint32_t m_dwDuelMode;
 		uint32_t m_dwEmoticonTime;
+
+	protected:
+		friend class CInstanceBaseMotion;
+		friend class CInstanceBaseTransform;
+
+		CInstanceBaseMotion m_kMotion;
+		CInstanceBaseTransform m_kTransform;
 };
 
 inline int RaceToJob(int race)

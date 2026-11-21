@@ -229,7 +229,7 @@ CPythonPlayerEventHandler::CPythonPlayerEventHandler()
 void CPythonPlayerEventHandler::CNormalBowAttack_FlyEventHandler_AutoClear::OnSetFlyTarget()
 {
 	SState s;
-	m_pInstMain->NEW_GetPixelPosition(&s.kPPosSelf);
+	m_pInstMain->GetTransform().NEW_GetPixelPosition(&s.kPPosSelf);
 	s.fAdvRotSelf = m_pInstMain->GetGraphicThingInstancePtr()->GetTargetRotation();
 
 	CPythonNetworkStream& rpns = CPythonNetworkStream::Instance();

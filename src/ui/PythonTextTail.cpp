@@ -56,7 +56,7 @@ void CPythonTextTail::UpdateAllTextTail()
 	if (pInstance)
 	{
 		TPixelPosition pixelPos;
-		pInstance->NEW_GetPixelPosition(&pixelPos);
+		pInstance->GetTransform().NEW_GetPixelPosition(&pixelPos);
 
 		TTextTailMap::iterator itorMap;
 

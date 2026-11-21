@@ -732,11 +732,11 @@ bool CInstanceBase::Create(const SCreateData& c_rkCreateData)
 		c_rkCreateData.m_kAffectFlags.ConvertToPosition(&center_x, &center_y);
 
 		float center_z = __GetBackgroundHeight(center_x, center_y);
-		NEW_SetPixelPosition(TPixelPosition(float(c_rkCreateData.m_lPosX), float(c_rkCreateData.m_lPosY), center_z));
+		GetTransform().NEW_SetPixelPosition(TPixelPosition(float(c_rkCreateData.m_lPosX), float(c_rkCreateData.m_lPosY), center_z));
 	}
 	else
 	{
-		SCRIPT_SetPixelPosition(float(c_rkCreateData.m_lPosX), float(c_rkCreateData.m_lPosY));
+		GetTransform().SCRIPT_SetPixelPosition(float(c_rkCreateData.m_lPosX), float(c_rkCreateData.m_lPosY));
 	}
 
 	if (0 != c_rkCreateData.m_dwMountVnum)
@@ -757,7 +757,7 @@ bool CInstanceBase::Create(const SCreateData& c_rkCreateData)
 	m_dwEmpireID = c_rkCreateData.m_dwEmpireID;
 
 	SetVirtualNumber(c_rkCreateData.m_dwRace);
-	SetRotation(c_rkCreateData.m_fRot);
+	GetTransform().SetRotation(c_rkCreateData.m_fRot);
 
 	SetAlignment(c_rkCreateData.m_sAlignment);
 	SetPKMode(c_rkCreateData.m_byPKMode);
@@ -941,7 +941,7 @@ void CInstanceBase::MountHorse(uint32_t eRace)
 	m_kHorse.Destroy();
 	m_kHorse.Create(m_GraphicThingInstance.NEW_GetCurPixelPositionRef(), eRace, ms_adwCRCAffectEffect[EFFECT_HIT]);
 
-	SetMotionMode(CRaceMotionData::MODE_HORSE);
+	GetMotion().SetMotionMode(CRaceMotionData::MODE_HORSE);
 	SetRotationSpeed(c_fDefaultHorseRotationSpeed);
 
 	m_GraphicThingInstance.MountHorse(m_kHorse.GetActorPtr());
@@ -1283,7 +1283,7 @@ void CInstanceBase::StateProcess()
 		uint32_t uTargetVID = kCmdTop.m_uTargetVID;
 
 		TPixelPosition kPPosCur;
-		NEW_GetPixelPosition(&kPPosCur);
+		GetTransform().NEW_GetPixelPosition(&kPPosCur);
 
 		/*
 		if (IsPC())
@@ -1343,9 +1343,9 @@ void CInstanceBase::StateProcess()
 					if (!IsWaiting())
 						EndWalking();
 
-					SCRIPT_SetPixelPosition(kPPosDst.x, kPPosDst.y);
+					GetTransform().SCRIPT_SetPixelPosition(kPPosDst.x, kPPosDst.y);
 					SetAdvancingRotation(fRotDst);
-					SetRotation(fRotDst);
+					GetTransform().SetRotation(fRotDst);
 				}
 				break;
 			}
@@ -1400,7 +1400,7 @@ void CInstanceBase::StateProcess()
 					if (IsWalking())
 						EndWalking();
 
-					SCRIPT_SetPixelPosition(kPPosDst.x, kPPosDst.y);
+					GetTransform().SCRIPT_SetPixelPosition(kPPosDst.x, kPPosDst.y);
 					RunComboAttack(fRotDst, uArg);
 				}
 				break;
@@ -1435,8 +1435,8 @@ void CInstanceBase::StateProcess()
 					if (IsWalking())
 						EndWalking();
 
-					SCRIPT_SetPixelPosition(kPPosDst.x, kPPosDst.y);
-					BlendRotation(fRotDst);
+					GetTransform().SCRIPT_SetPixelPosition(kPPosDst.x, kPPosDst.y);
+					GetTransform().BlendRotation(fRotDst);
 
 					RunNormalAttack(fRotDst);
 
@@ -1468,8 +1468,8 @@ void CInstanceBase::StateProcess()
 					if (IsWalking())
 						EndWalking();
 
-					SCRIPT_SetPixelPosition(kPPosDst.x, kPPosDst.y);
-					BlendRotation(fRotDst);
+					GetTransform().SCRIPT_SetPixelPosition(kPPosDst.x, kPPosDst.y);
+					GetTransform().BlendRotation(fRotDst);
 
 					m_GraphicThingInstance.InterceptOnceMotion(CRaceMotionData::NAME_SPECIAL_1 + uArg);
 				}
@@ -1535,9 +1535,9 @@ void CInstanceBase::StateProcess()
 						if (IsWalking())
 							EndWalking();
 
-						SCRIPT_SetPixelPosition(kPPosDst.x, kPPosDst.y);
+						GetTransform().SCRIPT_SetPixelPosition(kPPosDst.x, kPPosDst.y);
 						SetAdvancingRotation(fRotDst);
-						SetRotation(fRotDst);
+						GetTransform().SetRotation(fRotDst);
 
 						NEW_UseSkill(0, eFunc & 0x7f, uArg & 0x0f, (uArg >> 4) ? true : false);
 						// Tracen("Warp Attack due to proximity");
@@ -1552,7 +1552,7 @@ void CInstanceBase::StateProcess()
 void CInstanceBase::MovementProcess()
 {
 	TPixelPosition kPPosCur;
-	NEW_GetPixelPosition(&kPPosCur);
+	GetTransform().NEW_GetPixelPosition(&kPPosCur);
 
 	// 렌더링 좌표계이므로 y를 -화해서 더한다.
 
@@ -1653,9 +1653,9 @@ void CInstanceBase::MovementProcess()
 							m_isGoing = FALSE;
 
 							BlockMovement();
-							SCRIPT_SetPixelPosition(NEW_GetDstPixelPositionRef().x, NEW_GetDstPixelPositionRef().y);
+							GetTransform().SCRIPT_SetPixelPosition(NEW_GetDstPixelPositionRef().x, NEW_GetDstPixelPositionRef().y);
 							SetAdvancingRotation(m_fDstRot);
-							SetRotation(m_fDstRot);
+							GetTransform().SetRotation(m_fDstRot);
 
 							RunNormalAttack(m_fDstRot);
 							break;
@@ -1670,7 +1670,7 @@ void CInstanceBase::MovementProcess()
 							m_isGoing = FALSE;
 
 							BlockMovement();
-							SCRIPT_SetPixelPosition(NEW_GetDstPixelPositionRef().x, NEW_GetDstPixelPositionRef().y);
+							GetTransform().SCRIPT_SetPixelPosition(NEW_GetDstPixelPositionRef().x, NEW_GetDstPixelPositionRef().y);
 							RunComboAttack(m_fDstRot, m_kMovAfterFunc.uArg);
 							break;
 						}
@@ -1702,9 +1702,9 @@ void CInstanceBase::MovementProcess()
 							m_isGoing = FALSE;
 
 							BlockMovement();
-							SCRIPT_SetPixelPosition(NEW_GetDstPixelPositionRef().x, NEW_GetDstPixelPositionRef().y);
+							GetTransform().SCRIPT_SetPixelPosition(NEW_GetDstPixelPositionRef().x, NEW_GetDstPixelPositionRef().y);
 							SetAdvancingRotation(m_fDstRot);
-							SetRotation(m_fDstRot);
+							GetTransform().SetRotation(m_fDstRot);
 
 							m_GraphicThingInstance.InterceptOnceMotion(CRaceMotionData::NAME_SPECIAL_1 + m_kMovAfterFunc.uArg);
 							break;
@@ -1715,7 +1715,7 @@ void CInstanceBase::MovementProcess()
 							if (m_kMovAfterFunc.eFunc & FUNC_SKILL)
 							{
 								SetAdvancingRotation(m_fDstRot);
-								BlendRotation(m_fDstRot);
+								GetTransform().BlendRotation(m_fDstRot);
 								NEW_UseSkill(0, m_kMovAfterFunc.eFunc & 0x7f, m_kMovAfterFunc.uArg & 0x0f, (m_kMovAfterFunc.uArg >> 4) ? true : false);
 							}
 							else
@@ -1726,9 +1726,9 @@ void CInstanceBase::MovementProcess()
 								m_isGoing = FALSE;
 
 								BlockMovement();
-								SCRIPT_SetPixelPosition(NEW_GetDstPixelPositionRef().x, NEW_GetDstPixelPositionRef().y);
+								GetTransform().SCRIPT_SetPixelPosition(NEW_GetDstPixelPositionRef().x, NEW_GetDstPixelPositionRef().y);
 								SetAdvancingRotation(m_fDstRot);
-								BlendRotation(m_fDstRot);
+								GetTransform().BlendRotation(m_fDstRot);
 								if (!IsWaiting())
 								{
 									EndWalking();
@@ -1777,7 +1777,7 @@ void CInstanceBase::MovementProcess()
 			{
 				if (fDustDistance > ms_fHorseDustGap)
 				{
-					NEW_GetPixelPosition(&m_kPPosDust);
+					GetTransform().NEW_GetPixelPosition(&m_kPPosDust);
 					__AttachEffect(EFFECT_HORSE_DUST);
 				}
 			}
@@ -1785,7 +1785,7 @@ void CInstanceBase::MovementProcess()
 			{
 				if (fDustDistance > ms_fDustGap)
 				{
-					NEW_GetPixelPosition(&m_kPPosDust);
+					GetTransform().NEW_GetPixelPosition(&m_kPPosDust);
 					__AttachEffect(EFFECT_DUST);
 				}
 			}
@@ -1798,13 +1798,13 @@ void CInstanceBase::__ProcessFunctionEmotion(uint32_t dwMotionNumber, uint32_t d
 	if (IsWalking())
 		EndWalkingWithoutBlending();
 
-	__EnableChangingTCPState();
-	SCRIPT_SetPixelPosition(c_rkPosDst.x, c_rkPosDst.y);
+	GetMotion().EnableChangingTCPState();
+	GetTransform().SCRIPT_SetPixelPosition(c_rkPosDst.x, c_rkPosDst.y);
 
 	CInstanceBase* pTargetInstance = CPythonCharacterManager::Instance().GetInstancePtr(dwTargetVID);
 	if (pTargetInstance)
 	{
-		pTargetInstance->__EnableChangingTCPState();
+		pTargetInstance->GetMotion().EnableChangingTCPState();
 
 		if (pTargetInstance->IsWalking())
 			pTargetInstance->EndWalkingWithoutBlending();
@@ -1815,12 +1815,12 @@ void CInstanceBase::__ProcessFunctionEmotion(uint32_t dwMotionNumber, uint32_t d
 		int src_job = RaceToJob(GetRace());
 		int dst_job = RaceToJob(pTargetInstance->GetRace());
 
-		NEW_LookAtDestInstance(*pTargetInstance);
+		GetTransform().NEW_LookAtDestInstance(*pTargetInstance);
 		m_GraphicThingInstance.InterceptOnceMotion(wMotionNumber1 + dst_job);
 		m_GraphicThingInstance.SetRotation(m_GraphicThingInstance.GetTargetRotation());
 		m_GraphicThingInstance.SetAdvancingRotation(m_GraphicThingInstance.GetTargetRotation());
 
-		pTargetInstance->NEW_LookAtDestInstance(*this);
+		pTargetInstance->GetTransform().NEW_LookAtDestInstance(*this);
 		pTargetInstance->m_GraphicThingInstance.InterceptOnceMotion(wMotionNumber2 + src_job);
 		pTargetInstance->m_GraphicThingInstance.SetRotation(pTargetInstance->m_GraphicThingInstance.GetTargetRotation());
 		pTargetInstance->m_GraphicThingInstance.SetAdvancingRotation(pTargetInstance->m_GraphicThingInstance.GetTargetRotation());
@@ -1857,14 +1857,14 @@ void CInstanceBase::Update()
 	if (m_GraphicThingInstance.IsMovement())
 	{
 		TPixelPosition kPPosCur;
-		NEW_GetPixelPosition(&kPPosCur);
+		GetTransform().NEW_GetPixelPosition(&kPPosCur);
 
 		uint32_t dwCurTime = ELTimer_GetFrameMSec();
 		// if (m_dwNextUpdateHeightTime<dwCurTime)
 		{
 			m_dwNextUpdateHeightTime = dwCurTime;
 			kPPosCur.z = __GetBackgroundHeight(kPPosCur.x, kPPosCur.y);
-			NEW_SetPixelPosition(kPPosCur);
+			GetTransform().NEW_SetPixelPosition(kPPosCur);
 		}
 
 		// SetMaterialColor
@@ -2760,8 +2760,8 @@ bool CInstanceBase::ChangeArmor(uint32_t dwArmor)
 	uint32_t dwRace = GetRace();
 	uint32_t eHair = GetPart(CRaceData::PART_HAIR);
 	uint32_t eWeapon = GetPart(CRaceData::PART_WEAPON);
-	float fRot = GetRotation();
-	float fAdvRot = GetAdvancingRotation();
+	float fRot = GetTransform().GetRotation();
+	float fAdvRot = GetTransform().GetAdvancingRotation();
 
 	if (IsWalking())
 		EndWalking();
@@ -2781,7 +2781,7 @@ bool CInstanceBase::ChangeArmor(uint32_t dwArmor)
 	SetHair(eHair);
 	SetWeapon(eWeapon);
 
-	SetRotation(fRot);
+	GetTransform().SetRotation(fRot);
 	SetAdvancingRotation(fAdvRot);
 
 	__AttachHorseSaddle();
@@ -2833,32 +2833,32 @@ void CInstanceBase::RefreshState(uint32_t dwMotIndex, bool isLoop)
 
 	if (IsPoly())
 	{
-		SetMotionMode(CRaceMotionData::MODE_GENERAL);
+		GetMotion().SetMotionMode(CRaceMotionData::MODE_GENERAL);
 	}
 	else if (IsWearingDress())
 	{
-		SetMotionMode(CRaceMotionData::MODE_WEDDING_DRESS);
+		GetMotion().SetMotionMode(CRaceMotionData::MODE_WEDDING_DRESS);
 	}
 	else if (IsHoldingPickAxe())
 	{
 		if (m_kHorse.IsMounting())
 		{
-			SetMotionMode(CRaceMotionData::MODE_HORSE);
+			GetMotion().SetMotionMode(CRaceMotionData::MODE_HORSE);
 		}
 		else
 		{
-			SetMotionMode(CRaceMotionData::MODE_GENERAL);
+			GetMotion().SetMotionMode(CRaceMotionData::MODE_GENERAL);
 		}
 	}
 	else if (CItemData::ITEM_TYPE_ROD == byItemType)
 	{
 		if (m_kHorse.IsMounting())
 		{
-			SetMotionMode(CRaceMotionData::MODE_HORSE);
+			GetMotion().SetMotionMode(CRaceMotionData::MODE_HORSE);
 		}
 		else
 		{
-			SetMotionMode(CRaceMotionData::MODE_FISHING);
+			GetMotion().SetMotionMode(CRaceMotionData::MODE_FISHING);
 		}
 	}
 	else if (m_kHorse.IsMounting())
@@ -2866,31 +2866,31 @@ void CInstanceBase::RefreshState(uint32_t dwMotIndex, bool isLoop)
 		switch (bySubType)
 		{
 			case CItemData::WEAPON_SWORD:
-				SetMotionMode(CRaceMotionData::MODE_HORSE_ONEHAND_SWORD);
+				GetMotion().SetMotionMode(CRaceMotionData::MODE_HORSE_ONEHAND_SWORD);
 				break;
 
 			case CItemData::WEAPON_TWO_HANDED:
-				SetMotionMode(CRaceMotionData::MODE_HORSE_TWOHAND_SWORD); // Only Warrior
+				GetMotion().SetMotionMode(CRaceMotionData::MODE_HORSE_TWOHAND_SWORD); // Only Warrior
 				break;
 
 			case CItemData::WEAPON_DAGGER:
-				SetMotionMode(CRaceMotionData::MODE_HORSE_DUALHAND_SWORD); // Only Assassin
+				GetMotion().SetMotionMode(CRaceMotionData::MODE_HORSE_DUALHAND_SWORD); // Only Assassin
 				break;
 
 			case CItemData::WEAPON_FAN:
-				SetMotionMode(CRaceMotionData::MODE_HORSE_FAN); // Only Shaman
+				GetMotion().SetMotionMode(CRaceMotionData::MODE_HORSE_FAN); // Only Shaman
 				break;
 
 			case CItemData::WEAPON_BELL:
-				SetMotionMode(CRaceMotionData::MODE_HORSE_BELL); // Only Shaman
+				GetMotion().SetMotionMode(CRaceMotionData::MODE_HORSE_BELL); // Only Shaman
 				break;
 
 			case CItemData::WEAPON_BOW:
-				SetMotionMode(CRaceMotionData::MODE_HORSE_BOW); // Only Shaman
+				GetMotion().SetMotionMode(CRaceMotionData::MODE_HORSE_BOW); // Only Shaman
 				break;
 
 			default:
-				SetMotionMode(CRaceMotionData::MODE_HORSE);
+				GetMotion().SetMotionMode(CRaceMotionData::MODE_HORSE);
 				break;
 		}
 	}
@@ -2899,32 +2899,32 @@ void CInstanceBase::RefreshState(uint32_t dwMotIndex, bool isLoop)
 		switch (bySubType)
 		{
 			case CItemData::WEAPON_SWORD:
-				SetMotionMode(CRaceMotionData::MODE_ONEHAND_SWORD);
+				GetMotion().SetMotionMode(CRaceMotionData::MODE_ONEHAND_SWORD);
 				break;
 
 			case CItemData::WEAPON_TWO_HANDED:
-				SetMotionMode(CRaceMotionData::MODE_TWOHAND_SWORD); // Only Warrior
+				GetMotion().SetMotionMode(CRaceMotionData::MODE_TWOHAND_SWORD); // Only Warrior
 				break;
 
 			case CItemData::WEAPON_DAGGER:
-				SetMotionMode(CRaceMotionData::MODE_DUALHAND_SWORD); // Only Assassin
+				GetMotion().SetMotionMode(CRaceMotionData::MODE_DUALHAND_SWORD); // Only Assassin
 				break;
 
 			case CItemData::WEAPON_BOW:
-				SetMotionMode(CRaceMotionData::MODE_BOW); // Only Assassin
+				GetMotion().SetMotionMode(CRaceMotionData::MODE_BOW); // Only Assassin
 				break;
 
 			case CItemData::WEAPON_FAN:
-				SetMotionMode(CRaceMotionData::MODE_FAN); // Only Shaman
+				GetMotion().SetMotionMode(CRaceMotionData::MODE_FAN); // Only Shaman
 				break;
 
 			case CItemData::WEAPON_BELL:
-				SetMotionMode(CRaceMotionData::MODE_BELL); // Only Shaman
+				GetMotion().SetMotionMode(CRaceMotionData::MODE_BELL); // Only Shaman
 				break;
 
 			case CItemData::WEAPON_ARROW:
 			default:
-				SetMotionMode(CRaceMotionData::MODE_GENERAL);
+				GetMotion().SetMotionMode(CRaceMotionData::MODE_GENERAL);
 				break;
 		}
 	}
@@ -3063,9 +3063,20 @@ void CInstanceBase::__Initialize()
 	m_dwEmoticonTime = 0;
 }
 
-CInstanceBase::CInstanceBase()
+CInstanceBase::CInstanceBase() : m_kMotion(*this),
+								 m_kTransform(*this)
 {
 	__Initialize();
+}
+
+CInstanceBaseTransform& CInstanceBase::GetTransform()
+{
+	return m_kTransform;
+}
+
+CInstanceBaseMotion& CInstanceBase::GetMotion()
+{
+	return m_kMotion;
 }
 
 CInstanceBase::~CInstanceBase()

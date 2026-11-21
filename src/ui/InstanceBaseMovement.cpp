@@ -31,7 +31,7 @@ void CInstanceBase::NEW_Stop()
 	if (__IsSyncing())
 		return;
 
-	if (isLock())
+	if (GetMotion().isLock())
 		return;
 
 	if (IsUsingSkill())
@@ -51,7 +51,7 @@ void CInstanceBase::NEW_SyncPixelPosition(long nPPosX, long nPPosY)
 bool CInstanceBase::NEW_CanMoveToDestPixelPosition(const TPixelPosition& c_rkPPosDst)
 {
 	TPixelPosition kPPosCur;
-	NEW_GetPixelPosition(&kPPosCur);
+	GetTransform().NEW_GetPixelPosition(&kPPosCur);
 
 	if (kPPosCur.x == c_rkPPosDst.x && kPPosCur.y == c_rkPPosDst.y)
 		return false;
@@ -84,7 +84,7 @@ float CInstanceBase::NEW_GetAdvancingRotationFromDirPixelPosition(const TPixelPo
 float CInstanceBase::NEW_GetAdvancingRotationFromDestPixelPosition(const TPixelPosition& c_rkPPosDst)
 {
 	TPixelPosition kPPosCur;
-	NEW_GetPixelPosition(&kPPosCur);
+	GetTransform().NEW_GetPixelPosition(&kPPosCur);
 	return NEW_GetAdvancingRotationFromPixelPosition(kPPosCur, c_rkPPosDst);
 }
 
@@ -123,14 +123,14 @@ bool CInstanceBase::NEW_SetAdvancingRotationFromDestPixelPosition(const TPixelPo
 	}
 
 	TPixelPosition kPPosSrc;
-	NEW_GetPixelPosition(&kPPosSrc);
+	GetTransform().NEW_GetPixelPosition(&kPPosSrc);
 	NEW_SetAdvancingRotationFromPixelPosition(kPPosSrc, c_rkPPosDst);
 	return true;
 }
 
 void CInstanceBase::SetAdvancingRotation(float fRotation)
 {
-	float frotDifference = GetDegreeDifference(GetRotation(), fRotation);
+	float frotDifference = GetDegreeDifference(GetTransform().GetRotation(), fRotation);
 
 	if (frotDifference > 45.0f)
 		m_fRotSpd = m_fMaxRotSpd;
@@ -230,7 +230,7 @@ int32_t CInstanceBase::IsGoing()
 void CInstanceBase::NEW_MoveToDestInstanceDirection(CInstanceBase& rkInstDst)
 {
 	TPixelPosition kPPosDst;
-	rkInstDst.NEW_GetPixelPosition(&kPPosDst);
+	rkInstDst.GetTransform().NEW_GetPixelPosition(&kPPosDst);
 
 	NEW_MoveToDestPixelPositionDirection(kPPosDst);
 }
@@ -238,7 +238,7 @@ void CInstanceBase::NEW_MoveToDestInstanceDirection(CInstanceBase& rkInstDst)
 bool CInstanceBase::NEW_MoveToDestPixelPositionDirection(const TPixelPosition& c_rkPPosDst)
 {
 	TPixelPosition kPPosCur;
-	NEW_GetPixelPosition(&kPPosCur);
+	GetTransform().NEW_GetPixelPosition(&kPPosCur);
 	float fDstRot = NEW_GetAdvancingRotationFromPixelPosition(kPPosCur, c_rkPPosDst);
 
 	return NEW_Goto(c_rkPPosDst, fDstRot);
@@ -257,7 +257,7 @@ bool CInstanceBase::NEW_Goto(const TPixelPosition& c_rkPPosDst, float fDstRot)
 		return true;
 	}
 
-	if (isLock())
+	if (GetMotion().isLock())
 	{
 		return false;
 	}
@@ -297,7 +297,7 @@ void CInstanceBase::NEW_MoveToDirection(float fDirRot)
 		return;
 	}
 
-	if (isLock())
+	if (GetMotion().isLock())
 		return;
 
 	m_isGoing = FALSE;
@@ -310,7 +310,7 @@ void CInstanceBase::NEW_MoveToDirection(float fDirRot)
 	}
 
 	TPixelPosition kPPosCur;
-	NEW_GetPixelPosition(&kPPosCur);
+	GetTransform().NEW_GetPixelPosition(&kPPosCur);
 
 	D3DXVECTOR3 kD3DVt3Cur(kPPosCur.x, -kPPosCur.y, kPPosCur.z);
 	D3DXVECTOR3 kD3DVt3Dst;

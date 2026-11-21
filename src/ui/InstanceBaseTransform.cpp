@@ -1,80 +1,84 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/UI/InstanceBase.h>
+#include <Client/UI/InstanceBaseTransform.h>
 #include <Client/UI/PythonBackground.h>
 
-void CInstanceBase::SCRIPT_SetPixelPosition(float fx, float fy)
+CInstanceBaseTransform::CInstanceBaseTransform(CInstanceBase& rkOwner) : m_rkOwner(rkOwner)
 {
-	float fz = __GetBackgroundHeight(fx, fy);
+}
+
+void CInstanceBaseTransform::SCRIPT_SetPixelPosition(float fx, float fy)
+{
+	float fz = m_rkOwner.__GetBackgroundHeight(fx, fy);
 	NEW_SetPixelPosition(TPixelPosition(fx, fy, fz));
 }
 
-void CInstanceBase::NEW_SetPixelPosition(const TPixelPosition& c_rPixelPosition)
+void CInstanceBaseTransform::NEW_SetPixelPosition(const TPixelPosition& c_rPixelPosition)
 {
-	m_GraphicThingInstance.SetCurPixelPosition(c_rPixelPosition);
+	m_rkOwner.m_GraphicThingInstance.SetCurPixelPosition(c_rPixelPosition);
 }
 
-void CInstanceBase::NEW_GetPixelPosition(TPixelPosition* pPixelPosition)
+void CInstanceBaseTransform::NEW_GetPixelPosition(TPixelPosition* pPixelPosition)
 {
-	*pPixelPosition = m_GraphicThingInstance.NEW_GetCurPixelPositionRef();
+	*pPixelPosition = m_rkOwner.m_GraphicThingInstance.NEW_GetCurPixelPositionRef();
 }
 
-void CInstanceBase::SetRotation(float fRotation)
+void CInstanceBaseTransform::SetRotation(float fRotation)
 {
-	m_GraphicThingInstance.SetRotation(fRotation);
+	m_rkOwner.m_GraphicThingInstance.SetRotation(fRotation);
 }
 
-void CInstanceBase::BlendRotation(float fRotation, float fBlendTime)
+void CInstanceBaseTransform::BlendRotation(float fRotation, float fBlendTime)
 {
-	m_GraphicThingInstance.BlendRotation(fRotation, fBlendTime);
+	m_rkOwner.m_GraphicThingInstance.BlendRotation(fRotation, fBlendTime);
 }
 
-void CInstanceBase::NEW_LookAtFlyTarget()
+void CInstanceBaseTransform::NEW_LookAtFlyTarget()
 {
-	m_GraphicThingInstance.LookAtFlyTarget();
+	m_rkOwner.m_GraphicThingInstance.LookAtFlyTarget();
 }
 
-void CInstanceBase::NEW_LookAtDestPixelPosition(const TPixelPosition& c_rkPPosDst)
+void CInstanceBaseTransform::NEW_LookAtDestPixelPosition(const TPixelPosition& c_rkPPosDst)
 {
-	m_GraphicThingInstance.LookAt(c_rkPPosDst.x, -c_rkPPosDst.y);
+	m_rkOwner.m_GraphicThingInstance.LookAt(c_rkPPosDst.x, -c_rkPPosDst.y);
 }
 
-void CInstanceBase::NEW_LookAtDestInstance(CInstanceBase& rkInstDst)
+void CInstanceBaseTransform::NEW_LookAtDestInstance(CInstanceBase& rkInstDst)
 {
-	m_GraphicThingInstance.LookAt(&rkInstDst.m_GraphicThingInstance);
-	// 	Tracenf("LookAt %f", m_GraphicThingInstance.GetTargetRotation());
+	m_rkOwner.m_GraphicThingInstance.LookAt(&rkInstDst.m_GraphicThingInstance);
 }
 
-float CInstanceBase::GetRotation()
+float CInstanceBaseTransform::GetRotation()
 {
-	return m_GraphicThingInstance.GetRotation();
+	return m_rkOwner.m_GraphicThingInstance.GetRotation();
 }
 
-float CInstanceBase::GetAdvancingRotation()
+float CInstanceBaseTransform::GetAdvancingRotation()
 {
-	return m_GraphicThingInstance.GetAdvancingRotation();
+	return m_rkOwner.m_GraphicThingInstance.GetAdvancingRotation();
 }
 
-void CInstanceBase::SetDirection(int dir)
+void CInstanceBaseTransform::SetDirection(int dir)
 {
 	float fDegree = GetDegreeFromDirection(dir);
 	SetRotation(fDegree);
-	SetAdvancingRotation(fDegree);
+	m_rkOwner.m_GraphicThingInstance.SetAdvancingRotation(fDegree);
 }
 
-void CInstanceBase::BlendDirection(int dir, float blendTime)
+void CInstanceBaseTransform::BlendDirection(int dir, float blendTime)
 {
-	m_GraphicThingInstance.BlendRotation(GetDegreeFromDirection(dir), blendTime);
+	m_rkOwner.m_GraphicThingInstance.BlendRotation(GetDegreeFromDirection(dir), blendTime);
 }
 
-float CInstanceBase::GetDegreeFromDirection(int dir)
+float CInstanceBaseTransform::GetDegreeFromDirection(int dir)
 {
 	if (dir < 0)
 		return 0.0f;
 
-	if (dir >= DIR_MAX_NUM)
+	if (dir >= CInstanceBase::DIR_MAX_NUM)
 		return 0.0f;
 
-	static float s_dirRot[DIR_MAX_NUM] =
+	static float s_dirRot[CInstanceBase::DIR_MAX_NUM] =
 		{
 			+45.0f * 4,
 			+45.0f * 3,
