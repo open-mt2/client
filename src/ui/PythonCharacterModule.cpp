@@ -1124,7 +1124,7 @@ PyObject* chrSetMoveSpeed(PyObject* poSelf, PyObject* poArgs)
 	// if (!pCharacterInstance)
 	//	return Py_BuildValue("i", 0);
 
-	// pCharacterInstance->SetMoveSpeed(iSpeed);
+	// pCharacterInstance->GetMovement().SetMoveSpeed(iSpeed);
 
 	return Py_BuildNone();
 }
@@ -1140,7 +1140,7 @@ PyObject* chrSetAttackSpeed(PyObject* poSelf, PyObject* poArgs)
 	// if (!pCharacterInstance)
 	//	return Py_BuildValue("i", 0);
 
-	// pCharacterInstance->SetAttackSpeed(iSpeed);
+	// pCharacterInstance->GetMovement().SetAttackSpeed(iSpeed);
 
 	return Py_BuildNone();
 }
@@ -1196,7 +1196,7 @@ PyObject* chrMoveToDestPosition(PyObject* poSelf, PyObject* poArgs)
 	if (!pCharacterInstance)
 		return Py_BuildNone();
 
-	pCharacterInstance->NEW_MoveToDestPixelPositionDirection(TPixelPosition(ix, iy, 0.0f));
+	pCharacterInstance->GetMovement().NEW_MoveToDestPixelPositionDirection(TPixelPosition(ix, iy, 0.0f));
 
 	return Py_BuildNone();
 }

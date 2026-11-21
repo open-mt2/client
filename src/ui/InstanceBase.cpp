@@ -762,8 +762,8 @@ bool CInstanceBase::Create(const SCreateData& c_rkCreateData)
 	SetAlignment(c_rkCreateData.m_sAlignment);
 	SetPKMode(c_rkCreateData.m_byPKMode);
 
-	SetMoveSpeed(c_rkCreateData.m_dwMovSpd);
-	SetAttackSpeed(c_rkCreateData.m_dwAtkSpd);
+	GetMovement().SetMoveSpeed(c_rkCreateData.m_dwMovSpd);
+	GetMovement().SetAttackSpeed(c_rkCreateData.m_dwAtkSpd);
 
 	// NOTE : Dress 를 입고 있으면 Alpha 를 넣지 않는다.
 	if (!IsWearingDress())
@@ -942,7 +942,7 @@ void CInstanceBase::MountHorse(uint32_t eRace)
 	m_kHorse.Create(m_GraphicThingInstance.NEW_GetCurPixelPositionRef(), eRace, ms_adwCRCAffectEffect[EFFECT_HIT]);
 
 	GetMotion().SetMotionMode(CRaceMotionData::MODE_HORSE);
-	SetRotationSpeed(c_fDefaultHorseRotationSpeed);
+	GetMovement().SetRotationSpeed(c_fDefaultHorseRotationSpeed);
 
 	m_GraphicThingInstance.MountHorse(m_kHorse.GetActorPtr());
 	m_GraphicThingInstance.Stop();
@@ -1329,8 +1329,8 @@ void CInstanceBase::StateProcess()
 
 					m_kMovAfterFunc.eFunc = FUNC_WAIT;
 
-					if (!IsWalking())
-						StartWalking();
+					if (!GetMovement().IsWalking())
+						GetMovement().StartWalking();
 
 					// Tracen("Target Stop");
 				}
@@ -1340,11 +1340,11 @@ void CInstanceBase::StateProcess()
 
 					m_isGoing = FALSE;
 
-					if (!IsWaiting())
-						EndWalking();
+					if (!GetMovement().IsWaiting())
+						GetMovement().EndWalking();
 
 					GetTransform().SCRIPT_SetPixelPosition(kPPosDst.x, kPPosDst.y);
-					SetAdvancingRotation(fRotDst);
+					GetMovement().SetAdvancingRotation(fRotDst);
 					GetTransform().SetRotation(fRotDst);
 				}
 				break;
@@ -1363,10 +1363,10 @@ void CInstanceBase::StateProcess()
 
 				m_kMovAfterFunc.eFunc = FUNC_MOVE;
 
-				if (!IsWalking())
+				if (!GetMovement().IsWalking())
 				{
 					// Tracen("I'm not walking, start walking");
-					StartWalking();
+					GetMovement().StartWalking();
 				}
 				else
 				{
@@ -1388,8 +1388,8 @@ void CInstanceBase::StateProcess()
 					m_kMovAfterFunc.eFunc = FUNC_COMBO;
 					m_kMovAfterFunc.uArg = uArg;
 
-					if (!IsWalking())
-						StartWalking();
+					if (!GetMovement().IsWalking())
+						GetMovement().StartWalking();
 				}
 				else
 				{
@@ -1397,8 +1397,8 @@ void CInstanceBase::StateProcess()
 
 					m_isGoing = FALSE;
 
-					if (IsWalking())
-						EndWalking();
+					if (GetMovement().IsWalking())
+						GetMovement().EndWalking();
 
 					GetTransform().SCRIPT_SetPixelPosition(kPPosDst.x, kPPosDst.y);
 					GetBattle().RunComboAttack(fRotDst, uArg);
@@ -1421,8 +1421,8 @@ void CInstanceBase::StateProcess()
 
 					m_kMovAfterFunc.eFunc = FUNC_ATTACK;
 
-					if (!IsWalking())
-						StartWalking();
+					if (!GetMovement().IsWalking())
+						GetMovement().StartWalking();
 
 					// Tracen("Attack after moving too far away");
 				}
@@ -1432,8 +1432,8 @@ void CInstanceBase::StateProcess()
 
 					m_isGoing = FALSE;
 
-					if (IsWalking())
-						EndWalking();
+					if (GetMovement().IsWalking())
+						GetMovement().EndWalking();
 
 					GetTransform().SCRIPT_SetPixelPosition(kPPosDst.x, kPPosDst.y);
 					GetTransform().BlendRotation(fRotDst);
@@ -1458,15 +1458,15 @@ void CInstanceBase::StateProcess()
 					m_kMovAfterFunc.eFunc = FUNC_MOB_SKILL;
 					m_kMovAfterFunc.uArg = uArg;
 
-					if (!IsWalking())
-						StartWalking();
+					if (!GetMovement().IsWalking())
+						GetMovement().StartWalking();
 				}
 				else
 				{
 					m_isGoing = FALSE;
 
-					if (IsWalking())
-						EndWalking();
+					if (GetMovement().IsWalking())
+						GetMovement().EndWalking();
 
 					GetTransform().SCRIPT_SetPixelPosition(kPPosDst.x, kPPosDst.y);
 					GetTransform().BlendRotation(fRotDst);
@@ -1493,8 +1493,8 @@ void CInstanceBase::StateProcess()
 					m_kMovAfterFunc.uArgExpanded = uTargetVID;
 					m_kMovAfterFunc.kPosDst = kPPosDst;
 
-					if (!IsWalking())
-						StartWalking();
+					if (!GetMovement().IsWalking())
+						GetMovement().StartWalking();
 				}
 				else
 				{
@@ -1521,8 +1521,8 @@ void CInstanceBase::StateProcess()
 						m_kMovAfterFunc.eFunc = eFunc;
 						m_kMovAfterFunc.uArg = uArg;
 
-						if (!IsWalking())
-							StartWalking();
+						if (!GetMovement().IsWalking())
+							GetMovement().StartWalking();
 
 						// Tracen("Attack after moving too far away");
 					}
@@ -1532,11 +1532,11 @@ void CInstanceBase::StateProcess()
 
 						m_isGoing = FALSE;
 
-						if (IsWalking())
-							EndWalking();
+						if (GetMovement().IsWalking())
+							GetMovement().EndWalking();
 
 						GetTransform().SCRIPT_SetPixelPosition(kPPosDst.x, kPPosDst.y);
-						SetAdvancingRotation(fRotDst);
+						GetMovement().SetAdvancingRotation(fRotDst);
 						GetTransform().SetRotation(fRotDst);
 
 						GetBattle().NEW_UseSkill(0, eFunc & 0x7f, uArg & 0x0f, (uArg >> 4) ? true : false);
@@ -1576,16 +1576,16 @@ void CInstanceBase::MovementProcess()
 
 	if (__IsMainInstance())
 	{
-		if (m_isGoing && IsWalking())
+		if (m_isGoing && GetMovement().IsWalking())
 		{
-			float fDstRot = NEW_GetAdvancingRotationFromPixelPosition(NEW_GetSrcPixelPositionRef(), NEW_GetDstPixelPositionRef());
+			float fDstRot = GetMovement().NEW_GetAdvancingRotationFromPixelPosition(NEW_GetSrcPixelPositionRef(), NEW_GetDstPixelPositionRef());
 
-			SetAdvancingRotation(fDstRot);
+			GetMovement().SetAdvancingRotation(fDstRot);
 
 			if (fRestLen <= 0.0)
 			{
-				if (IsWalking())
-					EndWalking();
+				if (GetMovement().IsWalking())
+					GetMovement().EndWalking();
 
 				// Tracen("Stop reaching goals");
 
@@ -1606,19 +1606,19 @@ void CInstanceBase::MovementProcess()
 	}
 	else
 	{
-		if (m_isGoing && IsWalking())
+		if (m_isGoing && GetMovement().IsWalking())
 		{
-			float fDstRot = NEW_GetAdvancingRotationFromPixelPosition(NEW_GetSrcPixelPositionRef(), NEW_GetDstPixelPositionRef());
+			float fDstRot = GetMovement().NEW_GetAdvancingRotationFromPixelPosition(NEW_GetSrcPixelPositionRef(), NEW_GetDstPixelPositionRef());
 
-			SetAdvancingRotation(fDstRot);
+			GetMovement().SetAdvancingRotation(fDstRot);
 
 			// 만약 렌턴시가 늦어 너무 많이 이동했다면..
 			if (fRestLen < -100.0f)
 			{
 				NEW_SetSrcPixelPosition(kPPosCur);
 
-				float fDstRot = NEW_GetAdvancingRotationFromPixelPosition(kPPosCur, NEW_GetDstPixelPositionRef());
-				SetAdvancingRotation(fDstRot);
+				float fDstRot = GetMovement().NEW_GetAdvancingRotationFromPixelPosition(kPPosCur, NEW_GetDstPixelPositionRef());
+				GetMovement().SetAdvancingRotation(fDstRot);
 				// Tracenf("VID %d Over Orientation (%f, %f) %f rest %f", GetVirtualID(), kPPosCur.x, kPPosCur.y, fDstRot, fRestLen);
 
 				// 이동중이라면 다음번에 멈추게 한다
@@ -1646,15 +1646,15 @@ void CInstanceBase::MovementProcess()
 					{
 						case FUNC_ATTACK:
 						{
-							if (IsWalking())
-								EndWalking();
+							if (GetMovement().IsWalking())
+								GetMovement().EndWalking();
 
 							__DisableSkipCollision();
 							m_isGoing = FALSE;
 
 							BlockMovement();
 							GetTransform().SCRIPT_SetPixelPosition(NEW_GetDstPixelPositionRef().x, NEW_GetDstPixelPositionRef().y);
-							SetAdvancingRotation(m_fDstRot);
+							GetMovement().SetAdvancingRotation(m_fDstRot);
 							GetTransform().SetRotation(m_fDstRot);
 
 							GetBattle().RunNormalAttack(m_fDstRot);
@@ -1663,8 +1663,8 @@ void CInstanceBase::MovementProcess()
 
 						case FUNC_COMBO:
 						{
-							if (IsWalking())
-								EndWalking();
+							if (GetMovement().IsWalking())
+								GetMovement().EndWalking();
 
 							__DisableSkipCollision();
 							m_isGoing = FALSE;
@@ -1695,15 +1695,15 @@ void CInstanceBase::MovementProcess()
 
 						case FUNC_MOB_SKILL:
 						{
-							if (IsWalking())
-								EndWalking();
+							if (GetMovement().IsWalking())
+								GetMovement().EndWalking();
 
 							__DisableSkipCollision();
 							m_isGoing = FALSE;
 
 							BlockMovement();
 							GetTransform().SCRIPT_SetPixelPosition(NEW_GetDstPixelPositionRef().x, NEW_GetDstPixelPositionRef().y);
-							SetAdvancingRotation(m_fDstRot);
+							GetMovement().SetAdvancingRotation(m_fDstRot);
 							GetTransform().SetRotation(m_fDstRot);
 
 							m_GraphicThingInstance.InterceptOnceMotion(CRaceMotionData::NAME_SPECIAL_1 + m_kMovAfterFunc.uArg);
@@ -1714,7 +1714,7 @@ void CInstanceBase::MovementProcess()
 						{
 							if (m_kMovAfterFunc.eFunc & FUNC_SKILL)
 							{
-								SetAdvancingRotation(m_fDstRot);
+								GetMovement().SetAdvancingRotation(m_fDstRot);
 								GetTransform().BlendRotation(m_fDstRot);
 								GetBattle().NEW_UseSkill(0, m_kMovAfterFunc.eFunc & 0x7f, m_kMovAfterFunc.uArg & 0x0f, (m_kMovAfterFunc.uArg >> 4) ? true : false);
 							}
@@ -1727,14 +1727,14 @@ void CInstanceBase::MovementProcess()
 
 								BlockMovement();
 								GetTransform().SCRIPT_SetPixelPosition(NEW_GetDstPixelPositionRef().x, NEW_GetDstPixelPositionRef().y);
-								SetAdvancingRotation(m_fDstRot);
+								GetMovement().SetAdvancingRotation(m_fDstRot);
 								GetTransform().BlendRotation(m_fDstRot);
-								if (!IsWaiting())
+								if (!GetMovement().IsWaiting())
 								{
-									EndWalking();
+									GetMovement().EndWalking();
 								}
 
-								// Tracenf("VID %d Stop (%f, %f) rot %f IsWalking %d", GetVirtualID(), NEW_GetDstPixelPositionRef().x, NEW_GetDstPixelPositionRef().y, m_fDstRot, IsWalking());
+								// Tracenf("VID %d Stop (%f, %f) rot %f IsWalking %d", GetVirtualID(), NEW_GetDstPixelPositionRef().x, NEW_GetDstPixelPositionRef().y, m_fDstRot, GetMovement().IsWalking());
 							}
 							break;
 						}
@@ -1744,7 +1744,7 @@ void CInstanceBase::MovementProcess()
 		}
 	}
 
-	if (IsWalking() || m_GraphicThingInstance.IsUsingMovingSkill())
+	if (GetMovement().IsWalking() || m_GraphicThingInstance.IsUsingMovingSkill())
 	{
 		float fRotation = m_GraphicThingInstance.GetRotation();
 		float fAdvancingRotation = m_GraphicThingInstance.GetAdvancingRotation();
@@ -1795,8 +1795,8 @@ void CInstanceBase::MovementProcess()
 
 void CInstanceBase::__ProcessFunctionEmotion(uint32_t dwMotionNumber, uint32_t dwTargetVID, const TPixelPosition& c_rkPosDst)
 {
-	if (IsWalking())
-		EndWalkingWithoutBlending();
+	if (GetMovement().IsWalking())
+		GetMovement().EndWalkingWithoutBlending();
 
 	GetMotion().EnableChangingTCPState();
 	GetTransform().SCRIPT_SetPixelPosition(c_rkPosDst.x, c_rkPosDst.y);
@@ -1806,8 +1806,8 @@ void CInstanceBase::__ProcessFunctionEmotion(uint32_t dwMotionNumber, uint32_t d
 	{
 		pTargetInstance->GetMotion().EnableChangingTCPState();
 
-		if (pTargetInstance->IsWalking())
-			pTargetInstance->EndWalkingWithoutBlending();
+		if (pTargetInstance->GetMovement().IsWalking())
+			pTargetInstance->GetMovement().EndWalkingWithoutBlending();
 
 		uint16_t wMotionNumber1 = HIWORD(dwMotionNumber);
 		uint16_t wMotionNumber2 = LOWORD(dwMotionNumber);
@@ -1898,7 +1898,7 @@ void CInstanceBase::Transform()
 	}
 	else
 	{
-		if (IsWalking() || m_GraphicThingInstance.IsUsingMovingSkill())
+		if (GetMovement().IsWalking() || m_GraphicThingInstance.IsUsingMovingSkill())
 		{
 			const D3DXVECTOR3& c_rv3Movment = m_GraphicThingInstance.GetMovementVectorRef();
 
@@ -2763,8 +2763,8 @@ bool CInstanceBase::ChangeArmor(uint32_t dwArmor)
 	float fRot = GetTransform().GetRotation();
 	float fAdvRot = GetTransform().GetAdvancingRotation();
 
-	if (IsWalking())
-		EndWalking();
+	if (GetMovement().IsWalking())
+		GetMovement().EndWalking();
 
 	// 2004.07.25.myevan.이펙트 안 붙는 문제
 	//////////////////////////////////////////////////////
@@ -2782,7 +2782,7 @@ bool CInstanceBase::ChangeArmor(uint32_t dwArmor)
 	SetWeapon(eWeapon);
 
 	GetTransform().SetRotation(fRot);
-	SetAdvancingRotation(fAdvRot);
+	GetMovement().SetAdvancingRotation(fAdvRot);
 
 	__AttachHorseSaddle();
 
@@ -2984,7 +2984,7 @@ void CInstanceBase::Destroy()
 
 void CInstanceBase::__InitializeRotationSpeed()
 {
-	SetRotationSpeed(c_fDefaultRotationSpeed);
+	GetMovement().SetRotationSpeed(c_fDefaultRotationSpeed);
 }
 
 void CInstanceBase::__Warrior_Initialize()
@@ -3065,9 +3065,15 @@ void CInstanceBase::__Initialize()
 
 CInstanceBase::CInstanceBase() : m_kMotion(*this),
 								 m_kTransform(*this),
-								 m_kBattle(*this)
+								 m_kBattle(*this),
+								 m_kMovement(*this)
 {
 	__Initialize();
+}
+
+CInstanceBaseMovement& CInstanceBase::GetMovement()
+{
+	return m_kMovement;
 }
 
 CInstanceBaseBattle& CInstanceBase::GetBattle()

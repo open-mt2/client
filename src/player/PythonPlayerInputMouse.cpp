@@ -172,7 +172,7 @@ void CPythonPlayer::__OnClickSmart(CInstanceBase& rkInstMain, bool isAuto)
 	}
 	else
 	{
-		rkInstMain.NEW_Stop();
+		rkInstMain.GetMovement().NEW_Stop();
 	}
 }
 
@@ -297,13 +297,13 @@ void CPythonPlayer::NEW_RefreshMouseWalkingDirection()
 					rkNetStream.SendCharacterStatePacket(kPPosCur, fCurRot, CInstanceBase::FUNC_WAIT, 0);
 					SendClickItemPacket(m_dwIIDReserved);
 
-					pkInstMain->NEW_Stop();
+					pkInstMain->GetMovement().NEW_Stop();
 
 					__ClearReservedAction();
 				}
 				else
 				{
-					pkInstMain->NEW_MoveToDestPixelPositionDirection(kPPosPickedItem);
+					pkInstMain->GetMovement().NEW_MoveToDestPixelPositionDirection(kPPosPickedItem);
 				}
 			}
 			else
@@ -325,7 +325,7 @@ void CPythonPlayer::NEW_RefreshMouseWalkingDirection()
 			if (!pkInstMain->GetMotion().isLock())
 				if (NEW_IsEmptyReservedDelayTime(CPythonApplication::Instance().GetGlobalElapsedTime()))
 				{
-					pkInstMain->NEW_MoveToDestPixelPositionDirection(m_kPPosReserved);
+					pkInstMain->GetMovement().NEW_MoveToDestPixelPositionDirection(m_kPPosReserved);
 					__ClearReservedAction();
 				}
 			break;
@@ -354,7 +354,7 @@ void CPythonPlayer::NEW_RefreshMouseWalkingDirection()
 				}
 				else
 				{
-					pkInstMain->NEW_MoveToDestInstanceDirection(*pkInstReserved);
+					pkInstMain->GetMovement().NEW_MoveToDestInstanceDirection(*pkInstReserved);
 				}
 			}
 			else

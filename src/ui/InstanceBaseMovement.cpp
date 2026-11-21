@@ -1,57 +1,62 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/UI/InstanceBase.h>
+#include <Client/UI/InstanceBaseMovement.h>
 #include <Client/UI/PythonBackground.h>
 #include <Neoeter/Render/GrpMath.h>
 
-void CInstanceBase::SetAttackSpeed(uint32_t uAtkSpd)
+CInstanceBaseMovement::CInstanceBaseMovement(CInstanceBase& rkOwner) : m_rkOwner(rkOwner)
+{
+}
+
+void CInstanceBaseMovement::SetAttackSpeed(uint32_t uAtkSpd)
 {
 	if (uAtkSpd > 1100)
 		uAtkSpd = 0;
 
-	m_GraphicThingInstance.SetAttackSpeed(uAtkSpd / 100.0f);
-	m_kHorse.SetAttackSpeed(uAtkSpd);
+	m_rkOwner.m_GraphicThingInstance.SetAttackSpeed(uAtkSpd / 100.0f);
+	m_rkOwner.m_kHorse.SetAttackSpeed(uAtkSpd);
 }
 
-void CInstanceBase::SetMoveSpeed(uint32_t uMovSpd)
+void CInstanceBaseMovement::SetMoveSpeed(uint32_t uMovSpd)
 {
 	if (uMovSpd > 1100)
 		uMovSpd = 0;
 
-	m_GraphicThingInstance.SetMoveSpeed(uMovSpd / 100.0f);
-	m_kHorse.SetMoveSpeed(uMovSpd);
+	m_rkOwner.m_GraphicThingInstance.SetMoveSpeed(uMovSpd / 100.0f);
+	m_rkOwner.m_kHorse.SetMoveSpeed(uMovSpd);
 }
 
-void CInstanceBase::SetRotationSpeed(float fRotSpd)
+void CInstanceBaseMovement::SetRotationSpeed(float fRotSpd)
 {
-	m_fMaxRotSpd = fRotSpd;
+	m_rkOwner.m_fMaxRotSpd = fRotSpd;
 }
 
-void CInstanceBase::NEW_Stop()
+void CInstanceBaseMovement::NEW_Stop()
 {
-	if (__IsSyncing())
+	if (m_rkOwner.__IsSyncing())
 		return;
 
-	if (GetMotion().isLock())
+	if (m_rkOwner.GetMotion().isLock())
 		return;
 
-	if (GetBattle().IsUsingSkill())
+	if (m_rkOwner.GetBattle().IsUsingSkill())
 		return;
 
 	if (!IsWaiting())
 		EndWalking();
 
-	m_GraphicThingInstance.__OnStop();
+	m_rkOwner.m_GraphicThingInstance.__OnStop();
 }
 
-void CInstanceBase::NEW_SyncPixelPosition(long nPPosX, long nPPosY)
+void CInstanceBaseMovement::NEW_SyncPixelPosition(long nPPosX, long nPPosY)
 {
-	m_GraphicThingInstance.TEMP_Push(nPPosX, nPPosY);
+	m_rkOwner.m_GraphicThingInstance.TEMP_Push(nPPosX, nPPosY);
 }
 
-bool CInstanceBase::NEW_CanMoveToDestPixelPosition(const TPixelPosition& c_rkPPosDst)
+bool CInstanceBaseMovement::NEW_CanMoveToDestPixelPosition(const TPixelPosition& c_rkPPosDst)
 {
 	TPixelPosition kPPosCur;
-	GetTransform().NEW_GetPixelPosition(&kPPosCur);
+	m_rkOwner.GetTransform().NEW_GetPixelPosition(&kPPosCur);
 
 	if (kPPosCur.x == c_rkPPosDst.x && kPPosCur.y == c_rkPPosDst.y)
 		return false;
@@ -73,7 +78,7 @@ float CInstanceBase_GetDegreeFromPosition(float x, float y)
 	return ret;
 }
 
-float CInstanceBase::NEW_GetAdvancingRotationFromDirPixelPosition(const TPixelPosition& c_rkPPosDir)
+float CInstanceBaseMovement::NEW_GetAdvancingRotationFromDirPixelPosition(const TPixelPosition& c_rkPPosDir)
 {
 	float fDirRot = CInstanceBase_GetDegreeFromPosition(c_rkPPosDir.x, -c_rkPPosDir.y);
 	float fClampDirRot = ClampDegree(fDirRot);
@@ -81,32 +86,32 @@ float CInstanceBase::NEW_GetAdvancingRotationFromDirPixelPosition(const TPixelPo
 	return fClampDirRot;
 }
 
-float CInstanceBase::NEW_GetAdvancingRotationFromDestPixelPosition(const TPixelPosition& c_rkPPosDst)
+float CInstanceBaseMovement::NEW_GetAdvancingRotationFromDestPixelPosition(const TPixelPosition& c_rkPPosDst)
 {
 	TPixelPosition kPPosCur;
-	GetTransform().NEW_GetPixelPosition(&kPPosCur);
+	m_rkOwner.GetTransform().NEW_GetPixelPosition(&kPPosCur);
 	return NEW_GetAdvancingRotationFromPixelPosition(kPPosCur, c_rkPPosDst);
 }
 
-float CInstanceBase::NEW_GetAdvancingRotationFromPixelPosition(const TPixelPosition& c_rkPPosSrc, const TPixelPosition& c_rkPPosDst)
+float CInstanceBaseMovement::NEW_GetAdvancingRotationFromPixelPosition(const TPixelPosition& c_rkPPosSrc, const TPixelPosition& c_rkPPosDst)
 {
 	TPixelPosition kPPosDelta;
 	kPPosDelta = c_rkPPosDst - c_rkPPosSrc;
 	return NEW_GetAdvancingRotationFromDirPixelPosition(kPPosDelta);
 }
 
-void CInstanceBase::NEW_SetAdvancingRotationFromDirPixelPosition(const TPixelPosition& c_rkPPosDir)
+void CInstanceBaseMovement::NEW_SetAdvancingRotationFromDirPixelPosition(const TPixelPosition& c_rkPPosDir)
 {
 	float fClampDirRot = NEW_GetAdvancingRotationFromDirPixelPosition(c_rkPPosDir);
-	m_GraphicThingInstance.SetAdvancingRotation(fClampDirRot);
+	m_rkOwner.m_GraphicThingInstance.SetAdvancingRotation(fClampDirRot);
 
-	float fCurRot = m_GraphicThingInstance.GetRotation();
-	float fAdvRot = m_GraphicThingInstance.GetAdvancingRotation();
+	float fCurRot = m_rkOwner.m_GraphicThingInstance.GetRotation();
+	float fAdvRot = m_rkOwner.m_GraphicThingInstance.GetAdvancingRotation();
 
-	m_iRotatingDirection = GetRotatingDirection(fCurRot, fAdvRot);
+	m_rkOwner.m_iRotatingDirection = GetRotatingDirection(fCurRot, fAdvRot);
 }
 
-void CInstanceBase::NEW_SetAdvancingRotationFromPixelPosition(const TPixelPosition& c_rkPPosSrc, const TPixelPosition& c_rkPPosDst)
+void CInstanceBaseMovement::NEW_SetAdvancingRotationFromPixelPosition(const TPixelPosition& c_rkPPosSrc, const TPixelPosition& c_rkPPosDst)
 {
 	TPixelPosition kPPosDelta;
 	kPPosDelta = c_rkPPosDst - c_rkPPosSrc;
@@ -114,7 +119,7 @@ void CInstanceBase::NEW_SetAdvancingRotationFromPixelPosition(const TPixelPositi
 	NEW_SetAdvancingRotationFromDirPixelPosition(kPPosDelta);
 }
 
-bool CInstanceBase::NEW_SetAdvancingRotationFromDestPixelPosition(const TPixelPosition& c_rkPPosDst)
+bool CInstanceBaseMovement::NEW_SetAdvancingRotationFromDestPixelPosition(const TPixelPosition& c_rkPPosDst)
 {
 	if (!NEW_CanMoveToDestPixelPosition(c_rkPPosDst))
 	{
@@ -123,111 +128,111 @@ bool CInstanceBase::NEW_SetAdvancingRotationFromDestPixelPosition(const TPixelPo
 	}
 
 	TPixelPosition kPPosSrc;
-	GetTransform().NEW_GetPixelPosition(&kPPosSrc);
+	m_rkOwner.GetTransform().NEW_GetPixelPosition(&kPPosSrc);
 	NEW_SetAdvancingRotationFromPixelPosition(kPPosSrc, c_rkPPosDst);
 	return true;
 }
 
-void CInstanceBase::SetAdvancingRotation(float fRotation)
+void CInstanceBaseMovement::SetAdvancingRotation(float fRotation)
 {
-	float frotDifference = GetDegreeDifference(GetTransform().GetRotation(), fRotation);
+	float frotDifference = GetDegreeDifference(m_rkOwner.GetTransform().GetRotation(), fRotation);
 
 	if (frotDifference > 45.0f)
-		m_fRotSpd = m_fMaxRotSpd;
+		m_rkOwner.m_fRotSpd = m_rkOwner.m_fMaxRotSpd;
 	else
-		m_fRotSpd = m_fMaxRotSpd * 5 / 12;
+		m_rkOwner.m_fRotSpd = m_rkOwner.m_fMaxRotSpd * 5 / 12;
 
-	m_GraphicThingInstance.SetAdvancingRotation(ClampDegree(fRotation));
-	m_iRotatingDirection = GetRotatingDirection(m_GraphicThingInstance.GetRotation(),
-												m_GraphicThingInstance.GetAdvancingRotation());
+	m_rkOwner.m_GraphicThingInstance.SetAdvancingRotation(ClampDegree(fRotation));
+	m_rkOwner.m_iRotatingDirection = GetRotatingDirection(m_rkOwner.m_GraphicThingInstance.GetRotation(),
+												m_rkOwner.m_GraphicThingInstance.GetAdvancingRotation());
 }
 
-void CInstanceBase::StartWalking()
+void CInstanceBaseMovement::StartWalking()
 {
-	m_GraphicThingInstance.Move();
+	m_rkOwner.m_GraphicThingInstance.Move();
 
-	if (GetBattle().IsAffect(AFFECT_GYEONGGONG))
+	if (m_rkOwner.GetBattle().IsAffect(CInstanceBase::AFFECT_GYEONGGONG))
 	{
-		m_adwCRCAffectEffect[AFFECT_GYEONGGONG] = __EffectContainer_AttachEffect(EFFECT_AFFECT_GYEONGGONG);
+		m_rkOwner.m_adwCRCAffectEffect[CInstanceBase::AFFECT_GYEONGGONG] = m_rkOwner.__EffectContainer_AttachEffect(CInstanceBase::EFFECT_AFFECT_GYEONGGONG);
 	}
-	else if (GetBattle().IsAffect(AFFECT_KWAESOK))
+	else if (m_rkOwner.GetBattle().IsAffect(CInstanceBase::AFFECT_KWAESOK))
 	{
-		m_adwCRCAffectEffect[AFFECT_KWAESOK] = __EffectContainer_AttachEffect(EFFECT_AFFECT_KWAESOK);
+		m_rkOwner.m_adwCRCAffectEffect[CInstanceBase::AFFECT_KWAESOK] = m_rkOwner.__EffectContainer_AttachEffect(CInstanceBase::EFFECT_AFFECT_KWAESOK);
 	}
 }
 
-void CInstanceBase::EndWalking(float fBlendingTime)
+void CInstanceBaseMovement::EndWalking(float fBlendingTime)
 {
-	assert(!IsWaiting() && "CInstanceBase::EndWalking");
+	assert(!IsWaiting() && "CInstanceBaseMovement::EndWalking");
 
-	m_isGoing = FALSE;
+	m_rkOwner.m_isGoing = FALSE;
 
 	// 걷고 있을때는 무조건 멈추게 해야 한다
 	if (IsWalking() || !IsAttacked())
 	{
-		m_GraphicThingInstance.Stop(fBlendingTime);
-		if (GetBattle().IsAffect(AFFECT_GYEONGGONG))
+		m_rkOwner.m_GraphicThingInstance.Stop(fBlendingTime);
+		if (m_rkOwner.GetBattle().IsAffect(CInstanceBase::AFFECT_GYEONGGONG))
 		{
-			__EffectContainer_DetachEffect(EFFECT_AFFECT_GYEONGGONG);
+			m_rkOwner.__EffectContainer_DetachEffect(CInstanceBase::EFFECT_AFFECT_GYEONGGONG);
 		}
-		else if (GetBattle().IsAffect(AFFECT_KWAESOK))
+		else if (m_rkOwner.GetBattle().IsAffect(CInstanceBase::AFFECT_KWAESOK))
 		{
-			__EffectContainer_DetachEffect(EFFECT_AFFECT_KWAESOK);
+			m_rkOwner.__EffectContainer_DetachEffect(CInstanceBase::EFFECT_AFFECT_KWAESOK);
 		}
 	}
 }
 
-void CInstanceBase::EndWalkingWithoutBlending()
+void CInstanceBaseMovement::EndWalkingWithoutBlending()
 {
 	EndWalking(0.0f);
 }
 
-int32_t CInstanceBase::IsWaiting()
+int32_t CInstanceBaseMovement::IsWaiting()
 {
-	return m_GraphicThingInstance.IsWaiting();
+	return m_rkOwner.m_GraphicThingInstance.IsWaiting();
 }
 
-int32_t CInstanceBase::IsWalking()
+int32_t CInstanceBaseMovement::IsWalking()
 {
-	return m_GraphicThingInstance.IsMoving();
+	return m_rkOwner.m_GraphicThingInstance.IsMoving();
 }
 
-int32_t CInstanceBase::IsPushing()
+int32_t CInstanceBaseMovement::IsPushing()
 {
-	return m_GraphicThingInstance.IsPushing();
+	return m_rkOwner.m_GraphicThingInstance.IsPushing();
 }
 
-int32_t CInstanceBase::IsAttacked()
+int32_t CInstanceBaseMovement::IsAttacked()
 {
-	return m_GraphicThingInstance.IsAttacked();
+	return m_rkOwner.m_GraphicThingInstance.IsAttacked();
 }
 
-int32_t CInstanceBase::IsKnockDown()
+int32_t CInstanceBaseMovement::IsKnockDown()
 {
-	if (!m_GraphicThingInstance.IsKnockDown())
+	if (!m_rkOwner.m_GraphicThingInstance.IsKnockDown())
 		return FALSE;
 
 	return TRUE;
 }
 
-int32_t CInstanceBase::IsAttacking()
+int32_t CInstanceBaseMovement::IsAttacking()
 {
-	return m_GraphicThingInstance.isAttacking();
+	return m_rkOwner.m_GraphicThingInstance.isAttacking();
 }
 
-int32_t CInstanceBase::IsActingEmotion()
+int32_t CInstanceBaseMovement::IsActingEmotion()
 {
-	return m_GraphicThingInstance.IsActEmotion();
+	return m_rkOwner.m_GraphicThingInstance.IsActEmotion();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-int32_t CInstanceBase::IsGoing()
+int32_t CInstanceBaseMovement::IsGoing()
 {
-	return m_isGoing;
+	return m_rkOwner.m_isGoing;
 }
 
-void CInstanceBase::NEW_MoveToDestInstanceDirection(CInstanceBase& rkInstDst)
+void CInstanceBaseMovement::NEW_MoveToDestInstanceDirection(CInstanceBase& rkInstDst)
 {
 	TPixelPosition kPPosDst;
 	rkInstDst.GetTransform().NEW_GetPixelPosition(&kPPosDst);
@@ -235,29 +240,29 @@ void CInstanceBase::NEW_MoveToDestInstanceDirection(CInstanceBase& rkInstDst)
 	NEW_MoveToDestPixelPositionDirection(kPPosDst);
 }
 
-bool CInstanceBase::NEW_MoveToDestPixelPositionDirection(const TPixelPosition& c_rkPPosDst)
+bool CInstanceBaseMovement::NEW_MoveToDestPixelPositionDirection(const TPixelPosition& c_rkPPosDst)
 {
 	TPixelPosition kPPosCur;
-	GetTransform().NEW_GetPixelPosition(&kPPosCur);
+	m_rkOwner.GetTransform().NEW_GetPixelPosition(&kPPosCur);
 	float fDstRot = NEW_GetAdvancingRotationFromPixelPosition(kPPosCur, c_rkPPosDst);
 
 	return NEW_Goto(c_rkPPosDst, fDstRot);
 }
 
-bool CInstanceBase::NEW_Goto(const TPixelPosition& c_rkPPosDst, float fDstRot)
+bool CInstanceBaseMovement::NEW_Goto(const TPixelPosition& c_rkPPosDst, float fDstRot)
 {
-	if (__IsSyncing())
+	if (m_rkOwner.__IsSyncing())
 	{
 		return false;
 	}
 
-	if (m_GraphicThingInstance.IsUsingMovingSkill())
+	if (m_rkOwner.m_GraphicThingInstance.IsUsingMovingSkill())
 	{
 		SetAdvancingRotation(fDstRot);
 		return true;
 	}
 
-	if (GetMotion().isLock())
+	if (m_rkOwner.GetMotion().isLock())
 	{
 		return false;
 	}
@@ -270,37 +275,37 @@ bool CInstanceBase::NEW_Goto(const TPixelPosition& c_rkPPosDst, float fDstRot)
 		return true;
 	}
 
-	NEW_SetSrcPixelPosition(NEW_GetCurPixelPositionRef());
-	NEW_SetDstPixelPosition(c_rkPPosDst);
-	NEW_SetDstPixelPositionZ(NEW_GetSrcPixelPositionRef().z);
-	m_fDstRot = fDstRot;
-	m_isGoing = TRUE;
+	m_rkOwner.NEW_SetSrcPixelPosition(m_rkOwner.NEW_GetCurPixelPositionRef());
+	m_rkOwner.NEW_SetDstPixelPosition(c_rkPPosDst);
+	m_rkOwner.NEW_SetDstPixelPositionZ(m_rkOwner.NEW_GetSrcPixelPositionRef().z);
+	m_rkOwner.m_fDstRot = fDstRot;
+	m_rkOwner.m_isGoing = TRUE;
 
 	if (!IsWalking())
 	{
 		StartWalking();
 	}
 
-	NEW_SetAdvancingRotationFromPixelPosition(NEW_GetSrcPixelPositionRef(), NEW_GetDstPixelPositionRef());
+	NEW_SetAdvancingRotationFromPixelPosition(m_rkOwner.NEW_GetSrcPixelPositionRef(), m_rkOwner.NEW_GetDstPixelPositionRef());
 
 	return true;
 }
 
-void CInstanceBase::NEW_MoveToDirection(float fDirRot)
+void CInstanceBaseMovement::NEW_MoveToDirection(float fDirRot)
 {
-	if (__IsSyncing())
+	if (m_rkOwner.__IsSyncing())
 		return;
 
-	if (m_GraphicThingInstance.IsUsingMovingSkill())
+	if (m_rkOwner.m_GraphicThingInstance.IsUsingMovingSkill())
 	{
 		SetAdvancingRotation(fDirRot);
 		return;
 	}
 
-	if (GetMotion().isLock())
+	if (m_rkOwner.GetMotion().isLock())
 		return;
 
-	m_isGoing = FALSE;
+	m_rkOwner.m_isGoing = FALSE;
 
 	SetAdvancingRotation(fDirRot);
 
@@ -310,7 +315,7 @@ void CInstanceBase::NEW_MoveToDirection(float fDirRot)
 	}
 
 	TPixelPosition kPPosCur;
-	GetTransform().NEW_GetPixelPosition(&kPPosCur);
+	m_rkOwner.GetTransform().NEW_GetPixelPosition(&kPPosCur);
 
 	D3DXVECTOR3 kD3DVt3Cur(kPPosCur.x, -kPPosCur.y, kPPosCur.z);
 	D3DXVECTOR3 kD3DVt3Dst;
@@ -327,26 +332,26 @@ void CInstanceBase::NEW_MoveToDirection(float fDirRot)
 	kPPosDst.y = -kD3DVt3Dst.y;
 	kPPosDst.z = +kD3DVt3Dst.z;
 
-	NEW_SetSrcPixelPosition(kPPosCur);
-	NEW_SetDstPixelPosition(kPPosDst);
+	m_rkOwner.NEW_SetSrcPixelPosition(kPPosCur);
+	m_rkOwner.NEW_SetDstPixelPosition(kPPosDst);
 }
 
-void CInstanceBase::EndGoing()
+void CInstanceBaseMovement::EndGoing()
 {
 	if (!IsWaiting())
 		EndWalking();
 
 	// Tracen("EndGoing");
 
-	m_isGoing = FALSE;
+	m_rkOwner.m_isGoing = FALSE;
 }
 
-void CInstanceBase::SetRunMode()
+void CInstanceBaseMovement::SetRunMode()
 {
-	m_GraphicThingInstance.SetRunMode();
+	m_rkOwner.m_GraphicThingInstance.SetRunMode();
 }
 
-void CInstanceBase::SetWalkMode()
+void CInstanceBaseMovement::SetWalkMode()
 {
-	m_GraphicThingInstance.SetWalkMode();
+	m_rkOwner.m_GraphicThingInstance.SetWalkMode();
 }

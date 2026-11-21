@@ -457,8 +457,8 @@ void CNetworkActorManager::UpdateActor(const SNetworkUpdateActorData& c_rkNetUpd
 		pkInstFind->ChangeHair(c_rkNetUpdateActorData.m_dwHair);
 		pkInstFind->ChangeGuild(c_rkNetUpdateActorData.m_dwGuildID);
 		pkInstFind->SetAffectFlagContainer(c_rkNetUpdateActorData.m_kAffectFlags);
-		pkInstFind->SetMoveSpeed(c_rkNetUpdateActorData.m_dwMovSpd);
-		pkInstFind->SetAttackSpeed(c_rkNetUpdateActorData.m_dwAtkSpd);
+		pkInstFind->GetMovement().SetMoveSpeed(c_rkNetUpdateActorData.m_dwMovSpd);
+		pkInstFind->GetMovement().SetAttackSpeed(c_rkNetUpdateActorData.m_dwAtkSpd);
 		pkInstFind->SetAlignment(c_rkNetUpdateActorData.m_sAlignment);
 		pkInstFind->SetPKMode(c_rkNetUpdateActorData.m_byPKMode);
 		pkInstFind->SetStateFlags(c_rkNetUpdateActorData.m_dwStateFlags);
@@ -534,7 +534,7 @@ void CNetworkActorManager::SyncActor(uint32_t dwVID, int32_t lPosX, int32_t lPos
 	CInstanceBase* pkInstFind = __FindActor(rkNetActorData);
 	if (pkInstFind)
 	{
-		pkInstFind->NEW_SyncPixelPosition(lPosX, lPosY);
+		pkInstFind->GetMovement().NEW_SyncPixelPosition(lPosX, lPosY);
 	}
 
 	rkNetActorData.SetPosition(lPosX, lPosY);

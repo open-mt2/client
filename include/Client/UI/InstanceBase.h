@@ -5,6 +5,7 @@
 
 #include <Client/UI/AffectFlagContainer.h>
 #include <Client/UI/InstanceBaseBattle.h>
+#include <Client/UI/InstanceBaseMovement.h>
 #include <Client/UI/InstanceBaseMotion.h>
 #include <Client/UI/InstanceBaseTransform.h>
 
@@ -496,9 +497,6 @@ class CInstanceBase
 		uint32_t GetWeaponType();
 
 		void SetComboType(uint32_t uComboType);
-		void SetAttackSpeed(uint32_t uAtkSpd);
-		void SetMoveSpeed(uint32_t uMovSpd);
-		void SetRotationSpeed(float fRotSpd);
 
 		const char* GetNameString();
 		int GetInstanceType();
@@ -534,13 +532,6 @@ class CInstanceBase
 		bool CanViewTargetHP(CInstanceBase& rkInstVictim);
 
 		// Movement
-		int32_t IsGoing();
-		bool NEW_Goto(const TPixelPosition& c_rkPPosDst, float fDstRot);
-		void EndGoing();
-
-		void SetRunMode();
-		void SetWalkMode();
-
 		int32_t IsInvisibility();
 		int32_t IsParalysis();
 		int32_t IsGameMaster();
@@ -576,51 +567,18 @@ class CInstanceBase
 		int32_t IsStun();
 		int32_t IsSleep();
 		int32_t __IsSyncing();
-		int32_t IsWaiting();
-		int32_t IsWalking();
-		int32_t IsPushing();
-		int32_t IsAttacking();
-		int32_t IsActingEmotion();
-		int32_t IsAttacked();
-		int32_t IsKnockDown();
 
 #ifdef __MOVIE_MODE__
 		int32_t IsMovieMode(); // 운영자용 완전히 안보이는거
 #endif
-		bool NEW_CanMoveToDestPixelPosition(const TPixelPosition& c_rkPPosDst);
 
-		void NEW_SetAdvancingRotationFromPixelPosition(const TPixelPosition& c_rkPPosSrc, const TPixelPosition& c_rkPPosDst);
-		void NEW_SetAdvancingRotationFromDirPixelPosition(const TPixelPosition& c_rkPPosDir);
-		bool NEW_SetAdvancingRotationFromDestPixelPosition(const TPixelPosition& c_rkPPosDst);
-		void SetAdvancingRotation(float fRotation);
-
-		void EndWalking(float fBlendingTime = 0.15f);
-		void EndWalkingWithoutBlending();
-
-		// Battle
 		void SetEventHandler(CActorInstance::IEventHandler* pkEventHandler);
 
 		void PushUDPState(uint32_t dwCmdTime, const TPixelPosition& c_rkPPosDst, float fDstRot, uint32_t eFunc, uint32_t uArg);
 		void PushTCPState(uint32_t dwCmdTime, const TPixelPosition& c_rkPPosDst, float fDstRot, uint32_t eFunc, uint32_t uArg);
 		void PushTCPStateExpanded(uint32_t dwCmdTime, const TPixelPosition& c_rkPPosDst, float fDstRot, uint32_t eFunc, uint32_t uArg, uint32_t uTargetVID);
 
-		void NEW_Stop();
-
-		bool NEW_MoveToDestPixelPositionDirection(const TPixelPosition& c_rkPPosDst);
-		void NEW_MoveToDestInstanceDirection(CInstanceBase& rkInstDst);
-		void NEW_MoveToDirection(float fDirRot);
-
-		float NEW_GetAdvancingRotationFromDirPixelPosition(const TPixelPosition& c_rkPPosDir);
-		float NEW_GetAdvancingRotationFromDestPixelPosition(const TPixelPosition& c_rkPPosDst);
-		float NEW_GetAdvancingRotationFromPixelPosition(const TPixelPosition& c_rkPPosSrc, const TPixelPosition& c_rkPPosDst);
-
-		bool NEW_GetFrontInstance(CInstanceBase** ppoutTargetInstance, float fDistance);
-		void NEW_GetRandomPositionInFanRange(CInstanceBase& rkInstTarget, TPixelPosition* pkPPosDst);
-		bool NEW_GetInstanceVectorInFanRange(float fSkillDistance, CInstanceBase& rkInstTarget, std::vector<CInstanceBase*>* pkVct_pkInst);
-		bool NEW_GetInstanceVectorInCircleRange(float fSkillDistance, std::vector<CInstanceBase*>* pkVct_pkInst);
-
 		void NEW_SetOwner(uint32_t dwOwnerVID);
-		void NEW_SyncPixelPosition(long nPPosX, long nPPosY);
 		void NEW_SyncCurrentPixelPosition();
 
 		bool NEW_IsLastPixelPosition();
@@ -642,6 +600,7 @@ class CInstanceBase
 		CInstanceBaseTransform& GetTransform();
 		CInstanceBaseMotion& GetMotion();
 		CInstanceBaseBattle& GetBattle();
+		CInstanceBaseMovement& GetMovement();
 
 		// Intersect
 		bool IntersectDefendingSphere();
@@ -763,7 +722,6 @@ class CInstanceBase
 		void TodoProcess();
 		void StateProcess();
 
-		void StartWalking();
 		float GetLocalTime();
 
 		void RefreshState(uint32_t dwMotIndex, bool isLoop);
@@ -1002,10 +960,12 @@ class CInstanceBase
 		friend class CInstanceBaseMotion;
 		friend class CInstanceBaseTransform;
 		friend class CInstanceBaseBattle;
+		friend class CInstanceBaseMovement;
 
 		CInstanceBaseMotion m_kMotion;
 		CInstanceBaseTransform m_kTransform;
 		CInstanceBaseBattle m_kBattle;
+		CInstanceBaseMovement m_kMovement;
 };
 
 inline int RaceToJob(int race)

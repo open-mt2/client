@@ -388,7 +388,7 @@ bool CPythonNetworkStream::RecvSyncPositionPacket()
 
 		if (pkChrInst)
 		{
-			pkChrInst->NEW_SyncPixelPosition(kSyncPos.lX, kSyncPos.lY);
+			pkChrInst->GetMovement().NEW_SyncPixelPosition(kSyncPos.lX, kSyncPos.lY);
 		}
 		*/
 	}

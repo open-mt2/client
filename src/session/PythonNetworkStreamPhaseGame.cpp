@@ -1778,7 +1778,7 @@ bool CPythonNetworkStream::__IsPlayerAttacking()
 	if (!pkInstMain)
 		return false;
 
-	if (!pkInstMain->IsAttacking())
+	if (!pkInstMain->GetMovement().IsAttacking())
 		return false;
 
 	return true;
@@ -3463,11 +3463,11 @@ bool CPythonNetworkStream::RecvWalkModePacket(const protocol::Packet& value)
 	{
 		if (WALKMODE_RUN == WalkModePacket.mode)
 		{
-			pInstance->SetRunMode();
+			pInstance->GetMovement().SetRunMode();
 		}
 		else
 		{
-			pInstance->SetWalkMode();
+			pInstance->GetMovement().SetWalkMode();
 		}
 	}
 

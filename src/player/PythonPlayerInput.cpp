@@ -295,7 +295,7 @@ void CPythonPlayer::__OnClickActor(CInstanceBase& rkInstMain, uint32_t dwPickedA
 		__SendClickActorPacket(rkInstVictim);
 	}
 
-	rkInstMain.NEW_Stop();
+	rkInstMain.GetMovement().NEW_Stop();
 	return;
 }
 
@@ -383,7 +383,7 @@ void CPythonPlayer::__OnPressItem(CInstanceBase& rkInstMain, uint32_t dwPickedIt
 		return;
 	}
 
-	rkInstMain.NEW_Stop();
+	rkInstMain.GetMovement().NEW_Stop();
 	SendClickItemPacket(dwPickedItemID);
 }
 
@@ -392,7 +392,7 @@ void CPythonPlayer::__OnClickGround(CInstanceBase& rkInstMain, const TPixelPosit
 	if (!__IsMovableGroundDistance(rkInstMain, c_rkPPosPickedGround))
 		return;
 
-	if (rkInstMain.NEW_MoveToDestPixelPositionDirection(c_rkPPosPickedGround))
+	if (rkInstMain.GetMovement().NEW_MoveToDestPixelPositionDirection(c_rkPPosPickedGround))
 		__ShowPickedEffect(c_rkPPosPickedGround);
 }
 
@@ -423,7 +423,7 @@ void CPythonPlayer::__OnPressGround(CInstanceBase& rkInstMain, const TPixelPosit
 	if (!__IsMovableGroundDistance(rkInstMain, c_rkPPosPickedGround))
 		return;
 
-	if (!rkInstMain.NEW_MoveToDestPixelPositionDirection(c_rkPPosPickedGround))
+	if (!rkInstMain.GetMovement().NEW_MoveToDestPixelPositionDirection(c_rkPPosPickedGround))
 	{
 		__ReserveClickGround(c_rkPPosPickedGround);
 		return;
@@ -480,7 +480,7 @@ bool CPythonPlayer::NEW_MoveToDirection(float fDirRot)
 		fDirRot = fmod(360.0f + fCmrCurRot + fDirRot, 360.0f);
 	}
 
-	pkInstMain->NEW_MoveToDirection(fDirRot);
+	pkInstMain->GetMovement().NEW_MoveToDirection(fDirRot);
 
 	return true;
 }
@@ -491,7 +491,7 @@ void CPythonPlayer::NEW_Stop()
 	if (!pkInstMain)
 		return;
 
-	pkInstMain->NEW_Stop();
+	pkInstMain->GetMovement().NEW_Stop();
 	m_isLeft = FALSE;
 	m_isRight = FALSE;
 	m_isUp = FALSE;
@@ -877,13 +877,13 @@ void CPythonPlayer::__ReserveProcess_ClickActor()
 
 	if (!pkInstMain->GetBattle().NEW_IsClickableDistanceDestInstance(*pkInstReserved))
 	{
-		pkInstMain->NEW_MoveToDestInstanceDirection(*pkInstReserved);
+		pkInstMain->GetMovement().NEW_MoveToDestInstanceDirection(*pkInstReserved);
 		return;
 	}
 
 	if (!pkInstMain->IsAttackableInstance(*pkInstReserved))
 	{
-		pkInstMain->NEW_Stop();
+		pkInstMain->GetMovement().NEW_Stop();
 		__SendClickActorPacket(*pkInstReserved);
 		__ClearReservedAction();
 		return;
@@ -898,7 +898,7 @@ void CPythonPlayer::__ReserveProcess_ClickActor()
 	if (pkInstMain->IsInSafe())
 	{
 		PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotAttack", Py_BuildValue("(is)", GetMainCharacterIndex(), "IN_SAFE"));
-		pkInstMain->NEW_Stop();
+		pkInstMain->GetMovement().NEW_Stop();
 		__ClearReservedAction();
 		return;
 	}
@@ -906,7 +906,7 @@ void CPythonPlayer::__ReserveProcess_ClickActor()
 	if (pkInstReserved->IsInSafe())
 	{
 		PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotAttack", Py_BuildValue("(is)", GetMainCharacterIndex(), "DEST_IN_SAFE"));
-		pkInstMain->NEW_Stop();
+		pkInstMain->GetMovement().NEW_Stop();
 		__ClearReservedAction();
 		return;
 	}
@@ -924,7 +924,7 @@ void CPythonPlayer::__ReserveProcess_ClickActor()
 		if (!__HasEnoughArrow())
 		{
 			PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotShot", Py_BuildValue("(is)", GetMainCharacterIndex(), "EMPTY_ARROW"));
-			pkInstMain->NEW_Stop();
+			pkInstMain->GetMovement().NEW_Stop();
 			__ClearReservedAction();
 			return;
 		}
@@ -951,12 +951,12 @@ if (pkInstReserved)
 				if (pkInstMain->IsInSafe())
 				{
 					PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotAttack", Py_BuildValue("(is)", GetMainCharacterIndex(), "IN_SAFE"));
-					pkInstMain->NEW_Stop();
+					pkInstMain->GetMovement().NEW_Stop();
 				}
 				else if (pkInstReserved->IsInSafe())
 				{
 					PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotAttack", Py_BuildValue("(is)", GetMainCharacterIndex(), "DEST_IN_SAFE"));
-					pkInstMain->NEW_Stop();
+					pkInstMain->GetMovement().NEW_Stop();
 				}
 				else
 				{
@@ -965,7 +965,7 @@ if (pkInstReserved)
 						if (!__HasEnoughArrow())
 						{
 							PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotShot", Py_BuildValue("(is)", GetMainCharacterIndex(), "EMPTY_ARROW"));
-							pkInstMain->NEW_Stop();
+							pkInstMain->GetMovement().NEW_Stop();
 							__ClearReservedAction();
 							break;
 						}
@@ -984,7 +984,7 @@ if (pkInstReserved)
 		{
 			__SendClickActorPacket(*pkInstReserved);
 
-			pkInstMain->NEW_Stop();
+			pkInstMain->GetMovement().NEW_Stop();
 		}
 
 		__ClearReservedAction();
@@ -992,7 +992,7 @@ if (pkInstReserved)
 	else
 	{
 		//Tracen("ReservedMode: MOVE");
-		pkInstMain->NEW_MoveToDestInstanceDirection(*pkInstReserved);
+		pkInstMain->GetMovement().NEW_MoveToDestInstanceDirection(*pkInstReserved);
 	}
 }
 else

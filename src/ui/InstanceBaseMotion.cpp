@@ -137,11 +137,11 @@ void CInstanceBaseMotion::DisableChangingTCPState()
 
 void CInstanceBaseMotion::ActDualEmotion(CInstanceBase& rkDstInst, uint16_t wMotionNumber1, uint16_t wMotionNumber2)
 {
-	if (!m_rkOwner.IsWaiting())
+	if (!m_rkOwner.GetMovement().IsWaiting())
 	{
 		m_rkOwner.m_GraphicThingInstance.SetLoopMotion(CRaceMotionData::NAME_WAIT, 0.05f);
 	}
-	if (!rkDstInst.IsWaiting())
+	if (!rkDstInst.GetMovement().IsWaiting())
 	{
 		rkDstInst.m_GraphicThingInstance.SetLoopMotion(CRaceMotionData::NAME_WAIT, 0.05f);
 	}

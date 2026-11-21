@@ -657,7 +657,7 @@ bool CPythonBackground::CheckAdvancing(CInstanceBase* pInstance)
 		}
 		else
 		{
-			pInstance->NEW_MoveToDestPixelPositionDirection(pInstance->NEW_GetDstPixelPositionRef());
+			pInstance->GetMovement().NEW_MoveToDestPixelPositionDirection(pInstance->NEW_GetDstPixelPositionRef());
 		}
 		return false;
 	}

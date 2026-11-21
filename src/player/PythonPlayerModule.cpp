@@ -199,7 +199,7 @@ PyObject* playerIsActingEmotion(PyObject* poSelf, PyObject* poArgs)
 	if (!pMainInstance)
 		return Py_BuildValue("i", 0);
 
-	return Py_BuildValue("i", pMainInstance->IsActingEmotion());
+	return Py_BuildValue("i", pMainInstance->GetMovement().IsActingEmotion());
 }
 
 PyObject* playerIsPVPInstance(PyObject* poSelf, PyObject* poArgs)

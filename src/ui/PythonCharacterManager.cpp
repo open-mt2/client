@@ -276,7 +276,7 @@ void CPythonCharacterManager::UpdateTransform()
 
 			// 2004.08.02.myevan.IsAttacked 일 경우 죽었을때도 체크하므로,
 			// 실질적으로 거리가 변경되는 IsPushing일때만 체크하도록 한다
-			if (pSrcInstance->IsPushing())
+			if (pSrcInstance->GetMovement().IsPushing())
 				rkBG.CheckAdvancing(pSrcInstance);
 		}
 #ifdef __PERFORMANCE_CHECKER__

@@ -318,26 +318,26 @@ bool CInstanceBaseBattle::NEW_UseSkill(uint32_t uSkill, uint32_t uMot, uint32_t 
 	if (m_rkOwner.IsStun())
 		return false;
 
-	if (m_rkOwner.IsKnockDown())
+	if (m_rkOwner.GetMovement().IsKnockDown())
 		return false;
 
 	if (isMovingSkill)
 	{
-		if (!m_rkOwner.IsWalking())
-			m_rkOwner.StartWalking();
+		if (!m_rkOwner.GetMovement().IsWalking())
+			m_rkOwner.GetMovement().StartWalking();
 
 		m_rkOwner.m_isGoing = TRUE;
 	}
 	else
 	{
-		if (m_rkOwner.IsWalking())
-			m_rkOwner.EndWalking();
+		if (m_rkOwner.GetMovement().IsWalking())
+			m_rkOwner.GetMovement().EndWalking();
 
 		m_rkOwner.m_isGoing = FALSE;
 	}
 
 	float fCurRot = m_rkOwner.m_GraphicThingInstance.GetTargetRotation();
-	m_rkOwner.SetAdvancingRotation(fCurRot);
+	m_rkOwner.GetMovement().SetAdvancingRotation(fCurRot);
 
 	m_rkOwner.m_GraphicThingInstance.InterceptOnceMotion(CRaceMotionData::NAME_SKILL + uMot, 0.1f, uSkill, 1.0f);
 
@@ -363,14 +363,14 @@ void CInstanceBaseBattle::NEW_Attack(float fDirRot)
 	if (m_rkOwner.IsStun())
 		return;
 
-	if (m_rkOwner.IsKnockDown())
+	if (m_rkOwner.GetMovement().IsKnockDown())
 		return;
 
 	if (IsUsingSkill())
 		return;
 
-	if (m_rkOwner.IsWalking())
-		m_rkOwner.EndWalking();
+	if (m_rkOwner.GetMovement().IsWalking())
+		m_rkOwner.GetMovement().EndWalking();
 
 	m_rkOwner.m_isGoing = FALSE;
 
@@ -457,13 +457,13 @@ void CInstanceBaseBattle::InputComboAttack(float fAtkDirRot)
 
 void CInstanceBaseBattle::RunNormalAttack(float fAtkDirRot)
 {
-	m_rkOwner.EndGoing();
+	m_rkOwner.GetMovement().EndGoing();
 	m_rkOwner.m_GraphicThingInstance.NormalAttack(fAtkDirRot);
 }
 
 void CInstanceBaseBattle::RunComboAttack(float fAtkDirRot, uint32_t wMotionIndex)
 {
-	m_rkOwner.EndGoing();
+	m_rkOwner.GetMovement().EndGoing();
 	m_rkOwner.m_GraphicThingInstance.ComboAttack(wMotionIndex, fAtkDirRot);
 }
 
@@ -474,9 +474,9 @@ int32_t CInstanceBaseBattle::CheckAdvancing()
 	if (IsMovieMode())
 		return FALSE;
 #endif
-	if (!m_rkOwner.__IsMainInstance() && !m_rkOwner.IsAttacking())
+	if (!m_rkOwner.__IsMainInstance() && !m_rkOwner.GetMovement().IsAttacking())
 	{
-		if (m_rkOwner.IsPC() && m_rkOwner.IsWalking())
+		if (m_rkOwner.IsPC() && m_rkOwner.GetMovement().IsWalking())
 		{
 			CPythonCharacterManager& rkChrMgr = CPythonCharacterManager::Instance();
 			for (CPythonCharacterManager::CharacterIterator i = rkChrMgr.CharacterInstanceBegin(); i != rkChrMgr.CharacterInstanceEnd(); ++i)
@@ -540,7 +540,7 @@ int32_t CInstanceBaseBattle::CheckAdvancing()
 			}
 			else
 			{
-				m_rkOwner.NEW_MoveToDestPixelPositionDirection(m_rkOwner.NEW_GetDstPixelPositionRef());
+				m_rkOwner.GetMovement().NEW_MoveToDestPixelPositionDirection(m_rkOwner.NEW_GetDstPixelPositionRef());
 			}
 		}
 	}
@@ -683,7 +683,7 @@ void CInstanceBaseBattle::Revive()
 
 void CInstanceBaseBattle::Stun()
 {
-	m_rkOwner.NEW_Stop();
+	m_rkOwner.GetMovement().NEW_Stop();
 	m_rkOwner.m_GraphicThingInstance.Stun();
 
 	m_rkOwner.__AttachEffect(CInstanceBase::EFFECT_STUN);

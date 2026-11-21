@@ -532,7 +532,7 @@ PyObject* chrmgrSetMovingSpeed(PyObject* poSelf, PyObject* poArgs)
 	if (!pkInst)
 		return Py_BuildException("MainCharacter has not selected!");
 
-	pkInst->SetMoveSpeed(nMovSpd);
+	pkInst->GetMovement().SetMoveSpeed(nMovSpd);
 #endif
 	return Py_BuildNone();
 }

@@ -897,7 +897,7 @@ void CInstanceBase::__SetAffect(uint32_t eAffect, bool isVisible)
 		case AFFECT_KWAESOK:
 			// 경공술, 쾌속은 뛸때만 Attaching 시킵니다. - [levites]
 			if (isVisible)
-				if (!IsWalking())
+				if (!GetMovement().IsWalking())
 					return;
 			break;
 		case AFFECT_INVISIBILITY:
