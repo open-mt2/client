@@ -26,6 +26,7 @@ target_link_libraries(client_gamedata
         neoeter_render
         neoeter_image
         neoeter_model_grn
+        neoeter_audio
 )
 
 if(UNIX)
