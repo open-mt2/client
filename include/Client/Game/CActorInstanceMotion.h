@@ -59,19 +59,19 @@ class CActorInstanceMotion
 		void PushMotion(EMotionPushType iMotionType, uint32_t dwMotionKey, float fBlendTime, float fSpeedRatio = 1.0f);
 		bool InterceptMotion(EMotionPushType iMotionType, uint16_t wMotion, float fBlendTime = 0.1f, uint32_t uSkill = 0, float fSpeedRatio = 1.0f);
 		uint32_t __SetMotion(const SSetMotionData& c_rkSetMotData, uint32_t dwRandMotKey = 0);
-		void SetMotionMode(int iMotionMode); // FIXME : 모드의 시간차 적용이 가능하게끔 한다.
+		void SetMotionMode(int iMotionMode);		 // FIXME : 모드의 시간차 적용이 가능하게끔 한다.
 		bool __BindMotionData(uint32_t dwMotionKey); // 모션 데이터를 바인딩
-		bool __CanAttack();			 // 공격 할수 있는가?
-		bool __CanNextComboAttack(); // 다음 콤보 어택이 가능한가?
+		bool __CanAttack();							 // 공격 할수 있는가?
+		bool __CanNextComboAttack();				 // 다음 콤보 어택이 가능한가?
 		void __ClearMotion();
 		uint16_t __GetCurrentMotionIndex();
 		uint32_t __GetCurrentMotionKey();
 		int __GetLoopCount();
-		uint32_t __GetMotionType(); // 모션 타입 얻기
+		uint32_t __GetMotionType();		// 모션 타입 얻기
 		bool __HasMotionFlyEvent();		// 무언가를 쏘는가?
 		bool __IsAttackMotion();		// 공격 모션 인가?
 		bool __IsComboAttackMotion();	// 콤보 공격 모션 인가?
-		bool __IsComboAttacking();	// 콤보 공격중인가?
+		bool __IsComboAttacking();		// 콤보 공격중인가?
 		bool __IsDamageMotion();		// 데미지 모션인가?
 		bool __IsDieMotion();			// 사망 모션 인가?
 		bool __IsKnockDownMotion();		// 넉다운 모션인가?

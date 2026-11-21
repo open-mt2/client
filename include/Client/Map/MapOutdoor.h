@@ -101,8 +101,6 @@ class CMapOutdoor : public CMapBase
 	public:
 		void Clear();
 
-
-
 		void ApplyLight(uint32_t dwVersion, const D3DLIGHT9& c_rkLight);
 		void SetEnvironmentScreenFilter();
 		void SetEnvironmentSkyBox();
@@ -111,13 +109,11 @@ class CMapOutdoor : public CMapBase
 		void RefreshEnvironmentLensFlare();
 		void ApplyEnvironmentSkyColors();
 
-
 		void ClearGuildArea();
 		void RegisterGuildArea(int isx, int isy, int iex, int iey);
 
 		void VisibleMarkedArea();
 		void DisableMarkedArea();
-
 
 		void SetWireframe(bool bWireFrame);
 		bool IsWireframe();
@@ -141,9 +137,6 @@ class CMapOutdoor : public CMapBase
 
 	protected:
 		bool __PickTerrainHeight(float& fPos, const D3DXVECTOR3& v3Start, const D3DXVECTOR3& v3End, float fStep, float fRayRange, float fLimitRange, D3DXVECTOR3* pv3Pick);
-
-
-
 
 		void SaveAlphaFogOperation();
 		void RestoreAlphaFogOperation();
@@ -198,9 +191,6 @@ class CMapOutdoor : public CMapBase
 		void CreateTerrainPatchProxyList();
 		void DestroyTerrainPatchProxyList();
 
-
-
-
 		//////////////////////////////////////////////////////////////////////////
 		// Index Buffer
 
@@ -209,7 +199,6 @@ class CMapOutdoor : public CMapBase
 		float GetTerrainHeight(float fx, float fy);
 		bool GetWaterHeight(int iX, int iY, long* plWaterHeight);
 		bool GetNormal(int ix, int iy, D3DXVECTOR3* pv3Normal);
-
 
 		long GetViewRadius() { return m_lViewRadius; }
 		float GetHeightScale() { return m_fHeightScale; }
@@ -231,7 +220,6 @@ class CMapOutdoor : public CMapBase
 #endif
 
 		void __BuildDynamicSphereInstanceVector();
-
 
 		void ConvertToMapCoords(float fx, float fy, int* iCellX, int* iCellY, uint8_t* pucSubCellX, uint8_t* pucSubCellY, uint16_t* pwTerrainNumX, uint16_t* pwTerrainNumY);
 
@@ -267,8 +255,6 @@ class CMapOutdoor : public CMapBase
 		// Octree
 		//////////////////////////////////////////////////////////////////////////
 		CTerrainQuadtreeNode* m_pRootNode;
-
-
 
 		struct TPatchDrawStruct
 		{
@@ -340,9 +326,6 @@ class CMapOutdoor : public CMapBase
 		std::vector<std::pair<float, long>> m_PatchVector;
 		std::vector<TPatchDrawStruct> m_PatchDrawStructVector;
 
-
-
-
 		bool m_bDrawWireFrame;
 		bool m_bDrawShadow;
 		bool m_bDrawChrShadow;
@@ -389,7 +372,6 @@ class CMapOutdoor : public CMapBase
 		CScreenFilter m_ScreenFilter;
 
 	protected:
-
 		D3DXMATRIX m_matWorldForCommonUse;
 		D3DXMATRIX m_matViewInverse;
 
@@ -471,8 +453,6 @@ class CMapOutdoor : public CMapBase
 		};
 
 	protected:
-
-
 	protected:
 		uint32_t m_dwVisiblePartFlags;
 
@@ -496,9 +476,6 @@ class CMapOutdoor : public CMapBase
 		SoftwareTransformPatch_SData m_kSTPD;
 
 		void __SoftwareTransformPatch_BuildPipeline_BuildFogFuncTable(SoftwareTransformPatch_SRenderState& rkTPRS);
-
-
-
 
 	protected:
 		std::vector<CGraphicObjectInstance*> m_ShadowReceiverVector;
@@ -528,7 +505,6 @@ class CMapOutdoor : public CMapBase
 		TMonsterAreaInfoPtrVectorIterator m_MonsterAreaInfoPtrVectorIterator;
 
 	public:
-
 		CMonsterAreaInfo* AddMonsterAreaInfo(long lOriginX, long lOriginY, long lSizeX, long lSizeY);
 		void RemoveAllMonsterAreaInfo();
 

@@ -181,15 +181,9 @@ class CPythonPlayer : public CSingleton<CPythonPlayer>, public IAbstractPlayer
 		void SetObserverMode(bool isEnable);
 		bool IsObserverMode();
 
-
-
 		void NEW_GetMainActorPosition(TPixelPosition* pkPPosActor);
 
 		bool RegisterEffect(uint32_t dwEID, const char* c_szEftFileName, bool isCache);
-
-
-
-
 
 		void NEW_LookAtFocusActor();
 		bool NEW_IsAttackableDistanceFocusActor();
@@ -303,7 +297,6 @@ class CPythonPlayer : public CSingleton<CPythonPlayer>, public IAbstractPlayer
 		bool AffectIndexToSkillSlotIndex(uint32_t uAffect, uint32_t* pdwSkillSlotIndex);
 		bool AffectIndexToSkillIndex(uint32_t dwAffectIndex, uint32_t* pdwSkillIndex);
 
-
 		// Target
 
 		// Party
@@ -376,24 +369,15 @@ class CPythonPlayer : public CSingleton<CPythonPlayer>, public IAbstractPlayer
 		void __DeactivateSkillSlot(uint32_t dwSlotIndex);
 		void __ActivateSkillSlot(uint32_t dwSlotIndex);
 
-
-
-
-
 		bool __GetPickedActorPtr(CInstanceBase** pkInstPicked);
 
 		bool __GetPickedActorID(uint32_t* pdwActorID);
 		bool __GetPickedItemID(uint32_t* pdwItemID);
 		bool __GetPickedGroundPos(TPixelPosition* pkPPosPicked);
 
-
-
 		void __SendClickActorPacket(CInstanceBase& rkInstVictim);
 
-
 		void NEW_ShowEffect(int dwEID, TPixelPosition kPPosDst);
-
-
 
 		bool CheckCategory(int iCategory);
 		bool CheckAbilitySlot(int iSlotIndex);
@@ -403,25 +387,16 @@ class CPythonPlayer : public CSingleton<CPythonPlayer>, public IAbstractPlayer
 		// Instances
 		void RefreshInstances();
 
-
-
-
 		void __UseChargeSkill(uint32_t dwSkillSlotIndex);
-
-
-
 
 		bool __IsMeleeSkill(CPythonSkill::TSkillData& rkSkillData);
 		bool __IsChargeSkill(CPythonSkill::TSkillData& rkSkillData);
 		bool __SearchNearTarget();
 		bool __IsUsingChargeSkill();
 
-
 		// Item
 
 		// Target
-
-
 
 		// Update
 		void __Update_AutoAttack();

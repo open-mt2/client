@@ -401,10 +401,6 @@ class CPythonNetworkStream : public CNetworkStream, public CSingleton<CPythonNet
 		bool RecvSyncPositionPacket();
 		bool RecvWhisperPacket();
 
-
-
-
-
 		bool RecvShopPacket();
 
 		// Quest

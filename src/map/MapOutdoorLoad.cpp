@@ -136,7 +136,7 @@ void CMapOutdoorLoad::AssignTerrainPtr()
 			usCoordY <= sReferenceCoordMaxY)
 		{
 			m_rkOwner.m_pTerrain[(usCoordY - m_rkOwner.m_CurCoordinate.m_sTerrainCoordY + LOAD_SIZE_WIDTH) * 3 +
-					   (usCoordX - m_rkOwner.m_CurCoordinate.m_sTerrainCoordX + LOAD_SIZE_WIDTH)] = pTerrain;
+								 (usCoordX - m_rkOwner.m_CurCoordinate.m_sTerrainCoordX + LOAD_SIZE_WIDTH)] = pTerrain;
 		}
 	}
 
@@ -152,7 +152,7 @@ void CMapOutdoorLoad::AssignTerrainPtr()
 			usCoordY <= sReferenceCoordMaxY)
 		{
 			m_rkOwner.m_pArea[(usCoordY - m_rkOwner.m_CurCoordinate.m_sTerrainCoordY + LOAD_SIZE_WIDTH) * 3 +
-					(usCoordX - m_rkOwner.m_CurCoordinate.m_sTerrainCoordX + LOAD_SIZE_WIDTH)] = pArea;
+							  (usCoordX - m_rkOwner.m_CurCoordinate.m_sTerrainCoordX + LOAD_SIZE_WIDTH)] = pArea;
 		}
 	}
 }

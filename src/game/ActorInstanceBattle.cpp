@@ -248,8 +248,8 @@ void CActorInstanceBattle::ComboProcess()
 	{
 		m_rkOwner.m_isPreInput = FALSE;
 
-		if (!m_rkOwner.GetMotion().IsUsingSkill())	  // m_rkOwner.m_isNextPreInput는 활모드 일때만 사용하는 변수
-			if (m_rkOwner.m_isNextPreInput) // 활일때만 스킬이 캔슬 되는건 이곳 때문임
+		if (!m_rkOwner.GetMotion().IsUsingSkill()) // m_rkOwner.m_isNextPreInput는 활모드 일때만 사용하는 변수
+			if (m_rkOwner.m_isNextPreInput)		   // 활일때만 스킬이 캔슬 되는건 이곳 때문임
 			{
 				__RunNextCombo();
 				m_rkOwner.m_isNextPreInput = FALSE;

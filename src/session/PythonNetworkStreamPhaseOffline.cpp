@@ -37,8 +37,7 @@ ENetworkStreamPhaseResult CNetworkStreamOfflinePhase::Handle(uint8_t header, con
 			Handler handler;
 	};
 
-	static const FEntry entries[] = {
-	};
+	static const FEntry entries[] = {};
 
 	for (const FEntry& entry : entries)
 	{

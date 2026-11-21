@@ -391,8 +391,6 @@ class CInstanceBase
 		static void CreateSystem(uint32_t uCapacity);
 		static bool ChangeEffectTexture(uint32_t eEftType, const char* c_szSrcFileName, const char* c_szDstFileName);
 
-
-
 	public:
 		void SetMainInstance();
 
@@ -408,9 +406,7 @@ class CInstanceBase
 		float __GetBowRange();
 
 	protected:
-
 	public:
-
 	protected:
 		static std::string ms_astAffectEffectAttachBone[EFFECT_NUM];
 		static uint32_t ms_adwCRCAffectEffect[EFFECT_NUM];
@@ -429,10 +425,6 @@ class CInstanceBase
 		// 스크립트용 테스트 함수. 나중에 없에자
 
 		float CalculateDistanceSq3d(const TPixelPosition& c_rkPPosDst);
-
-
-
-
 
 		bool Create(const SCreateData& c_rkCreateData);
 
@@ -604,10 +596,6 @@ class CInstanceBase
 		/////////////////////////////////////////////////////////////
 		/////////////////////////////////////////////////////////////
 
-
-
-
-
 	protected:
 		uint32_t __LessRenderOrder_GetLODLevel();
 		void __Initialize();
@@ -629,7 +617,6 @@ class CInstanceBase
 		void __DisableSkipCollision();
 
 		void __ClearMainInstance();
-
 
 		int32_t __CanProcessNetworkStatePacket();
 
@@ -727,9 +714,6 @@ class CInstanceBase
 		void __ClearArmorRefineEffect();
 
 	protected:
-
-
-
 	protected:
 		struct SEffectContainer
 		{
@@ -737,15 +721,11 @@ class CInstanceBase
 				Dict m_kDct_dwEftID;
 		} m_kEffectContainer;
 
-
-
-
 	protected:
 		struct SStoneSmoke
 		{
 				uint32_t m_dwEftID;
 		} m_kStoneSmoke;
-
 
 	protected:
 		// Emoticon
@@ -836,9 +816,7 @@ class CInstanceBase
 		typedef std::list<SEffectDamage> CommandDamageQueue;
 		CommandDamageQueue m_DamageQueue;
 
-
 	public:
-
 	protected:
 		struct SWarrior
 		{
@@ -850,14 +828,7 @@ class CInstanceBase
 		void __Warrior_Initialize();
 
 	public:
-
-
-
-
-
-
 	protected:
-
 	protected:
 		CActorInstance::IEventHandler* GetEventHandlerPtr();
 		CActorInstance::IEventHandler& GetEventHandlerRef();

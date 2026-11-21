@@ -74,7 +74,6 @@ class CActorInstance : public IActorInstance, public IFlyTargetableObject
 		static IBackground& GetBackground();
 
 	public:
-
 	public:
 		enum EType
 		{
@@ -160,7 +159,6 @@ class CActorInstance : public IActorInstance, public IFlyTargetableObject
 		typedef std::list<TCollisionPointInstance> TCollisionPointInstanceList;
 		typedef TCollisionPointInstanceList::iterator TCollisionPointInstanceListIterator;
 
-
 		typedef std::map<CActorInstance*, float> THittedInstanceMap;
 		typedef std::map<const NRaceData::THitData*, THittedInstanceMap> THitDataMap;
 		struct SSplashArea
@@ -225,7 +223,6 @@ class CActorInstance : public IActorInstance, public IFlyTargetableObject
 		bool CreateCollisionInstancePiece(uint32_t dwAttachingModelIndex, const NRaceData::TAttachingData* c_pAttachingData, TCollisionPointInstance* pPointInstance);
 		void UpdatePointInstance(TCollisionPointInstance* pPointInstance);
 
-
 		// 20041201.myevan.인스턴스베이스용 함수
 		void INSTANCEBASE_Transform();
 		void INSTANCEBASE_Deform();
@@ -245,7 +242,6 @@ class CActorInstance : public IActorInstance, public IFlyTargetableObject
 		void SetAttackSpeed(float fAtkSpd);
 		void SetMoveSpeed(float fMovSpd);
 
-
 		void SetEventHandler(IEventHandler* pkEventHandler);
 
 		bool SetRace(uint32_t eRace);
@@ -264,7 +260,6 @@ class CActorInstance : public IActorInstance, public IFlyTargetableObject
 		uint32_t GetActorType() const;
 		void SetActorType(uint32_t eType);
 
-
 		bool IsPC();
 		bool IsNPC();
 		bool IsEnemy();
@@ -281,7 +276,6 @@ class CActorInstance : public IActorInstance, public IFlyTargetableObject
 		bool IsBowMode();
 		bool IsTwoHandMode();
 
-
 		uint32_t GetPartItemID(uint32_t dwPartIndex);
 
 		// Attach Effect
@@ -296,18 +290,12 @@ class CActorInstance : public IActorInstance, public IFlyTargetableObject
 		/////////////////////////////////////////////////////////////////////////////////////
 		// Collison Detection
 
-
 		// Collision Detection Checking
-
-
 
 		/////////////////////////////////////////////////////////////////////////////////////
 
 	protected:
-
 	public:
-
-
 		/////////////////////////////////////////////////////////////////////////////////////
 
 		/////////////////////////////////////////////////////////////////////////////////////
@@ -318,7 +306,6 @@ class CActorInstance : public IActorInstance, public IFlyTargetableObject
 		// 조건 검사가 필요 없다.
 
 		// Command
-
 
 		void Revive();
 
@@ -338,7 +325,6 @@ class CActorInstance : public IActorInstance, public IFlyTargetableObject
 		void Stun();
 		void Die();
 		void DieEnd();
-
 
 		MOTION_KEY GetNormalAttackIndex();
 		/////////////////////////////////////////////////////////////////////////////////////
@@ -396,17 +382,12 @@ class CActorInstance : public IActorInstance, public IFlyTargetableObject
 		// Rendering Functions - Temporary Place
 		int32_t IsMovement();
 
-
-
 		void SetBlendRenderMode();
 		void SetAlphaValue(float fAlpha);
 		float GetAlphaValue();
 		void BlendAlphaValue(float fDstAlpha, float fDuration);
 		void SetSpecularInfo(int32_t bEnable, int iPart, float fAlpha);
 		void SetSpecularInfoForce(int32_t bEnable, int iPart, float fAlpha);
-
-
-
 
 		void RenderTrace();
 
@@ -431,7 +412,6 @@ class CActorInstance : public IActorInstance, public IFlyTargetableObject
 		// As a Flying Target
 	public:
 		virtual D3DXVECTOR3 OnGetFlyTargetPosition();
-
 
 		// As a Shooter
 		// NOTE : target and target position are exclusive
@@ -463,19 +443,14 @@ class CActorInstance : public IActorInstance, public IFlyTargetableObject
 		void __AccumulationMovement(float fRot);
 
 	private:
-
 	protected:
 		CFlyTarget m_kFlyTarget;
 		CFlyTarget m_kBackupFlyTarget;
 		std::deque<CFlyTarget> m_kQue_kFlyTarget;
 
 	protected:
-
 		void OnUpdate();
 		void OnRender();
-
-
-
 
 		void ProcessMotionEventEffectEvent(const CRaceMotionData::TMotionEventData* c_pData);
 		void ProcessMotionEventEffectToTargetEvent(const CRaceMotionData::TMotionEventData* c_pData);
@@ -486,7 +461,6 @@ class CActorInstance : public IActorInstance, public IFlyTargetableObject
 
 		void AddMovement(float fx, float fy, float fz);
 
-
 	protected:
 		void __InitializeMovement();
 
@@ -495,14 +469,11 @@ class CActorInstance : public IActorInstance, public IFlyTargetableObject
 
 	protected:
 		float __GetAttackSpeed();
-		void __ClearHittedActorInstanceMap();		 // 때려진 액터 인스턴스 맵을 지운다
-
+		void __ClearHittedActorInstanceMap(); // 때려진 액터 인스턴스 맵을 지운다
 
 		bool __IsMountingHorse();
 
-
 		void __CancelComboAttack(); // 콤보 공격 취소
-
 
 		uint16_t __GetCurrentComboType();
 
@@ -676,9 +647,7 @@ class CActorInstance : public IActorInstance, public IFlyTargetableObject
 		void __OnHit(uint32_t uSkill, CActorInstance& rkInstVictm, int32_t isSendPacket);
 
 	public:
-
 	protected:
-
 		bool m_canSkipCollision;
 
 	protected:

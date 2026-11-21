@@ -144,7 +144,7 @@ void CInstanceBaseMovement::SetAdvancingRotation(float fRotation)
 
 	m_rkOwner.m_GraphicThingInstance.SetAdvancingRotation(ClampDegree(fRotation));
 	m_rkOwner.m_iRotatingDirection = GetRotatingDirection(m_rkOwner.m_GraphicThingInstance.GetRotation(),
-												m_rkOwner.m_GraphicThingInstance.GetAdvancingRotation());
+														  m_rkOwner.m_GraphicThingInstance.GetAdvancingRotation());
 }
 
 void CInstanceBaseMovement::StartWalking()

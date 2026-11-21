@@ -1657,7 +1657,7 @@ CPythonPlayerInput& CPythonPlayer::GetInput()
 }
 
 CPythonPlayer::CPythonPlayer(void) : m_kInput(*this),
-									m_kSkill(*this)
+									 m_kSkill(*this)
 {
 	m_kInput.SetMovableGroundDistance(40.0f);
 

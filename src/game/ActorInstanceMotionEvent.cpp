@@ -128,9 +128,9 @@ void CActorInstance::ProcessMotionEventEffectEvent(const CRaceMotionData::TMotio
 		if (c_pEffectData->isFollowing)
 		{
 			GetAttach().AttachEffectByID(0,
-							 c_pEffectData->strAttachingBoneName.c_str(),
-							 c_pEffectData->dwEffectIndex,
-							 &c_pEffectData->v3EffectPosition);
+										 c_pEffectData->strAttachingBoneName.c_str(),
+										 c_pEffectData->dwEffectIndex,
+										 &c_pEffectData->v3EffectPosition);
 		}
 		else
 		{

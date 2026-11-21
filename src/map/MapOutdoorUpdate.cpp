@@ -899,9 +899,9 @@ void CMapOutdoorUpdate::UpdateAreaList(long lCenterX, long lCenterY)
 		eDeleteTBDir = CMapOutdoor::FPushToDeleteVector::DELETE_BOTTOM;
 
 	CMapOutdoor::FPushTerrainToDeleteVector rPushTerrainToDeleteVector = std::for_each(m_rkOwner.m_TerrainVector.begin(), m_rkOwner.m_TerrainVector.end(),
-																		  CMapOutdoor::FPushTerrainToDeleteVector(eDeleteLRDir, eDeleteTBDir, m_rkOwner.m_CurCoordinate));
+																					   CMapOutdoor::FPushTerrainToDeleteVector(eDeleteLRDir, eDeleteTBDir, m_rkOwner.m_CurCoordinate));
 	CMapOutdoor::FPushAreaToDeleteVector rPushAreaToDeleteVector = std::for_each(m_rkOwner.m_AreaVector.begin(), m_rkOwner.m_AreaVector.end(),
-																	CMapOutdoor::FPushAreaToDeleteVector(eDeleteLRDir, eDeleteTBDir, m_rkOwner.m_CurCoordinate));
+																				 CMapOutdoor::FPushAreaToDeleteVector(eDeleteLRDir, eDeleteTBDir, m_rkOwner.m_CurCoordinate));
 
 	if (!rPushTerrainToDeleteVector.m_ReturnTerrainVector.empty())
 	{
