@@ -2,7 +2,7 @@
 // 캐릭터를 따라다니는 텍스트 관련 소스 (이름, 길드이름, 길드마크 등)
 //
 #include <Client/UI/StdAfx.h>
-#include <Client/Actor/InstanceBase.h>
+#include <Client/Instance/InstanceBase.h>
 #include <Client/Python/TextTail/PythonTextTail.h>
 #include <Client/Python/Character/PythonCharacterManager.h>
 #include <Client/Python/Guild/PythonGuild.h>

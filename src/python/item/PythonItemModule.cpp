@@ -2,7 +2,7 @@
 #include <Client/Python/Item/PythonItem.h>
 
 #include <Client/GameData/ItemManager.h>
-#include <Client/Actor/InstanceBase.h>
+#include <Client/Instance/InstanceBase.h>
 #include <Client/Application/AbstractApplication.h>
 
 extern int TWOHANDED_WEWAPON_ATT_SPEED_DECREASE_VALUE;

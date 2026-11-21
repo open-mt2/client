@@ -4,7 +4,7 @@
 #include <Client/Map/MapType.h>
 
 #include <cstdint>
-#include <Client/Actor/InstanceBase.h>
+#include <Client/Instance/InstanceBase.h>
 #include <Client/Python/Skill/PythonSkill.h>
 
 class CPythonPlayer;

@@ -1,6 +1,6 @@
 #include <Client/UI/StdAfx.h>
-#include <Client/Actor/InstanceBase.h>
-#include <Client/Actor/InstanceBaseEffect.h>
+#include <Client/Instance/InstanceBase.h>
+#include <Client/Instance/InstanceBaseEffect.h>
 #include <Client/Python/TextTail/PythonTextTail.h>
 #include <Client/Application/AbstractApplication.h>
 #include <Client/UI/AbstractPlayer.h>

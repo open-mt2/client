@@ -3,7 +3,7 @@
 
 #include <Neoeter/Platform/Base/Poly/Poly.h>
 #include <Neoeter/IO/EterPackManager.h>
-#include <Client/Actor/InstanceBase.h>
+#include <Client/Instance/InstanceBase.h>
 #include <Client/Python/Player/PythonPlayer.h>
 
 std::map<std::string, uint32_t> CPythonSkill::SSkillData::ms_StatusNameMap;

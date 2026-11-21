@@ -6,7 +6,7 @@
 #include <Client/UI/AbstractPlayer.h>
 #include <Client/UI/AbstractCharacterManager.h>
 #include <Client/UI/AbstractChat.h>
-#include <Client/Actor/InstanceBase.h>
+#include <Client/Instance/InstanceBase.h>
 
 #define ishan(ch) (((ch) & 0xE0) > 0x90)
 #define ishanasc(ch) (isascii(ch) || ishan(ch))

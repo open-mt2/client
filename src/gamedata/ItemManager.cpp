@@ -6,12 +6,7 @@
 
 #include <sstream>
 
-static uint32_t s_adwItemProtoKey[4] =
-	{
-		173217,
-		72619434,
-		408587239,
-		27973291};
+static uint32_t s_adwItemProtoKey[4] = {173217, 72619434, 408587239, 27973291};
 
 int32_t CItemManager::SelectItemData(uint32_t dwIndex)
 {

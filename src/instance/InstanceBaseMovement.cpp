@@ -1,6 +1,6 @@
 #include <Client/UI/StdAfx.h>
-#include <Client/Actor/InstanceBase.h>
-#include <Client/Actor/InstanceBaseMovement.h>
+#include <Client/Instance/InstanceBase.h>
+#include <Client/Instance/InstanceBaseMovement.h>
 #include <Client/Python/Background/PythonBackground.h>
 #include <Neoeter/Render/GrpMath.h>
 

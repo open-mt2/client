@@ -4,7 +4,7 @@
 #include <Client/Game/FlyHandler.h>
 
 #include <Client/Python/Network/PythonNetworkStream.h>
-#include <Client/Actor/InstanceBase.h>
+#include <Client/Instance/InstanceBase.h>
 
 class CPythonPlayerEventHandler : public CActorInstance::IEventHandler
 {

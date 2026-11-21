@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Client/UI/AbstractCharacterManager.h>
-#include <Client/Actor/InstanceBase.h>
+#include <Client/Instance/InstanceBase.h>
 #include <Client/Map/PhysicsObject.h>
 #include <Client/Game/ClientConstants.h>
 
