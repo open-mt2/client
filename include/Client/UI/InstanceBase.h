@@ -442,9 +442,6 @@ class CInstanceBase
 
 		float CalculateDistanceSq3d(const TPixelPosition& c_rkPPosDst);
 
-		// Instance Data
-		float GetFlyTargetDistance();
-
 		void SetAlpha(float fAlpha);
 
 		void DeleteBlendOut();
