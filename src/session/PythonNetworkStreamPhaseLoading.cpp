@@ -2,7 +2,7 @@
 #include <Client/Session/PythonNetworkStream.h>
 #include <Client/Session/NetworkStreamPhases.h>
 #include <Client/Protocol/Packet.h>
-#include <Client/UI/App/PythonApplication.h>
+#include <Client/Application/PythonApplication.h>
 #include <Client/Feature/Character/NetworkActorManager.h>
 
 #include <Client/UI/AbstractPlayer.h>

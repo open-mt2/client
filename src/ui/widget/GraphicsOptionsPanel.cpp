@@ -6,7 +6,7 @@
 
 #include <Client/Map/ScreenDepthOfField.h>
 #include <Client/Feature/Background/PythonBackground.h>
-#include <Client/UI/App/PythonApplication.h>
+#include <Client/Application/PythonApplication.h>
 
 #include <Neoeter/Debug/Debug.h>
 

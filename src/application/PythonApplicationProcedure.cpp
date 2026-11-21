@@ -1,7 +1,7 @@
 #include <Client/UI/StdAfx.h>
-#include <Client/UI/App/PythonApplication.h>
+#include <Client/Application/PythonApplication.h>
 #include <Client/UI/Cursor/SdlCursor.h>
-#include <Client/UI/QuitRequest.h>
+#include <Client/Application/QuitRequest.h>
 #include <Neoeter/Render/Camera.h>
 
 static int gs_nMouseCaptureRef = 0;

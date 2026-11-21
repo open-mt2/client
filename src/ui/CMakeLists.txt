@@ -72,7 +72,11 @@ file(GLOB_RECURSE ACTOR_SOURCES CONFIGURE_DEPENDS
     "${CMAKE_CURRENT_SOURCE_DIR}/../actor/*.cpp"
 )
 list(FILTER ACTOR_SOURCES EXCLUDE REGEX "/tests/")
-list(APPEND USERINTERFACE_SOURCES ${FEATURE_SOURCES} ${ACTOR_SOURCES})
+file(GLOB_RECURSE CAMERA_SOURCES CONFIGURE_DEPENDS
+    "${CMAKE_CURRENT_SOURCE_DIR}/../camera/*.cpp"
+)
+list(FILTER CAMERA_SOURCES EXCLUDE REGEX "/tests/")
+list(APPEND USERINTERFACE_SOURCES ${FEATURE_SOURCES} ${ACTOR_SOURCES} ${CAMERA_SOURCES})
 
 add_library(client_ui STATIC ${USERINTERFACE_SOURCES})
 target_sources(client_ui PRIVATE
@@ -134,6 +138,11 @@ if(TARGET imgui)
 elseif(TARGET Neoeter::ImGui)
     target_link_libraries(client_ui PRIVATE Neoeter::ImGui)
 endif()
+
+# The application object (CPythonApplication) builds the widgets and the
+# widgets call back into it, so client_ui and client_application reference
+# each other. CMake repeats the two static libraries on the link line.
+target_link_libraries(client_ui PRIVATE client_application)
 
 if(UNIX)
     target_compile_definitions(client_ui PUBLIC

@@ -40,7 +40,7 @@
 
 #include <Client/Session/ServerStateChecker.h>
 #include <Client/UI/AbstractApplication.h>
-#include <Client/UI/Camera/ApplicationCamera.h>
+#include <Client/Camera/ApplicationCamera.h>
 #include <Client/UI/Cursor/ApplicationCursor.h>
 
 class CPythonApplication : public CMSApplication, public CInputKeyboard, public IAbstractApplication

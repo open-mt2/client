@@ -2,7 +2,7 @@
 #include <Client/Player/PythonPlayer.h>
 #include <Client/Player/PythonPlayerInput.h>
 #include <Client/Player/PythonPlayerEventHandler.h>
-#include <Client/UI/App/PythonApplication.h>
+#include <Client/Application/PythonApplication.h>
 #include <Neoeter/Render/Camera.h>
 #include <Neoeter/Platform/Base/Timer.h>
 

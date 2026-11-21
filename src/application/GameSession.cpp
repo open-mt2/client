@@ -8,7 +8,7 @@
 #include <Client/Script/PythonHostAdapter.h>
 #include <Client/UI/Widget/LoadingScreen.h>
 #include <Client/Locale/Locale.h>
-#include <Client/UI/App/PythonApplication.h>
+#include <Client/Application/PythonApplication.h>
 #include <Client/Feature/Background/PythonBackground.h>
 #include <Neoeter/IO/EterPackManager.h>
 #include <Neoeter/Platform/Base/Debug.h>

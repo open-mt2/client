@@ -1,7 +1,7 @@
 #include <Client/UI/StdAfx.h>
 #include <SDL2/SDL.h>
 #include <Client/UI/Cursor/SdlCursor.h>
-#include <Client/UI/QuitRequest.h>
+#include <Client/Application/QuitRequest.h>
 #include <Client/UI/Widget/FrameClear.h>
 #include <Neoeter/Platform/Base/error.h>
 #include <Neoeter/Platform/Base/Version.h>
@@ -17,7 +17,7 @@
 #include <Neoeter/Model/Grn/Material.h>
 
 #include <Client/UI/resource.h>
-#include <Client/UI/App/PythonApplication.h>
+#include <Client/Application/PythonApplication.h>
 #include <Client/GameData/GameData.h>
 #include <Client/Feature/Character/PythonCharacterManager.h>
 #include <Client/UI/Widget/LoadingScreen.h>

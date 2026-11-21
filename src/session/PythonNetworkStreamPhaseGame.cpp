@@ -16,7 +16,7 @@
 #include <Client/Feature/Quest/PythonQuest.h>
 #include <Client/Feature/Event/PythonEventManager.h>
 #include <Client/Feature/Messenger/PythonMessenger.h>
-#include <Client/UI/App/PythonApplication.h>
+#include <Client/Application/PythonApplication.h>
 
 #include <Neoeter/IO/EterPackManager.h>
 #include <Client/GameData/ItemManager.h>

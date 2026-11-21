@@ -1,7 +1,7 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/Session/PythonNetworkStream.h>
 #include <Client/Session/NetworkStreamPhases.h>
-#include <Client/UI/App/PythonApplication.h>
+#include <Client/Application/PythonApplication.h>
 #include <Client/Protocol/Packet.h>
 
 void CPythonNetworkStream::OffLinePhase()

@@ -1,6 +1,6 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/Player/PythonPlayer.h>
-#include <Client/UI/App/PythonApplication.h>
+#include <Client/Application/PythonApplication.h>
 
 extern const uint32_t c_iSkillIndex_Tongsol = 121;
 extern const uint32_t c_iSkillIndex_Combo = 122;

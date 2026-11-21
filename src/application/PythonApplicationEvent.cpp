@@ -1,5 +1,5 @@
 #include <Client/UI/StdAfx.h>
-#include <Client/UI/App/PythonApplication.h>
+#include <Client/Application/PythonApplication.h>
 #include <Neoeter/Debug/Debug.h>
 #include <Neoeter/Render/Camera.h>
 #include <Neoeter/Platform/PlatformWindow.h>

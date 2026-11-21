@@ -4,7 +4,7 @@
 #include <Client/Session/PythonNetworkStream.h>
 #include <Client/UI/AbstractPlayer.h>
 #include <Client/Protocol/Packet.h>
-#include <Client/UI/QuitRequest.h>
+#include <Client/Application/QuitRequest.h>
 #include <Client/Feature/Character/NetworkActorManager.h>
 
 #include <Client/Feature/Guild/GuildMarkDownloader.h>

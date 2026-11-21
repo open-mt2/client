@@ -1,7 +1,7 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/Session/PythonNetworkStream.h>
 #include <Client/Feature/NonPlayer/PythonNonPlayer.h>
-#include <Client/UI/QuitRequest.h>
+#include <Client/Application/QuitRequest.h>
 #include <Client/UI/AbstractApplication.h>
 #include <Client/UI/AbstractPlayer.h>
 #include <Client/UI/AbstractCharacterManager.h>

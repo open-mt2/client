@@ -14,7 +14,7 @@
 #include <Client/Session/PythonNetworkStream.h>
 #include <Client/Feature/Minimap/PythonMiniMap.h>
 #include <Client/Feature/System/PythonSystem.h>
-#include <Client/UI/QuitRequest.h>
+#include <Client/Application/QuitRequest.h>
 
 std::string g_strEffectName = "ymir work/effect/etc/direction/direction_land.mse";
 

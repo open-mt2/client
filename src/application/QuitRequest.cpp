@@ -1,5 +1,5 @@
 #include <Client/UI/StdAfx.h>
-#include <Client/UI/QuitRequest.h>
+#include <Client/Application/QuitRequest.h>
 #include <Neoeter/Platform/PlatformWindow.h>
 
 void Client_RequestQuit()
