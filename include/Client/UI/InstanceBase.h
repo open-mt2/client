@@ -4,6 +4,7 @@
 #include <Client/Game/ActorInstance.h>
 
 #include <Client/UI/AffectFlagContainer.h>
+#include <Client/UI/InstanceBaseBattle.h>
 #include <Client/UI/InstanceBaseMotion.h>
 #include <Client/UI/InstanceBaseTransform.h>
 
@@ -442,12 +443,6 @@ class CInstanceBase
 		float CalculateDistanceSq3d(const TPixelPosition& c_rkPPosDst);
 
 		// Instance Data
-		bool IsFlyTargetObject();
-		void ClearFlyTargetInstance();
-		void SetFlyTargetInstance(CInstanceBase& rkInstDst);
-		void AddFlyTargetInstance(CInstanceBase& rkInstDst);
-		void AddFlyTargetPosition(const TPixelPosition& c_rkPPosDst);
-
 		float GetFlyTargetDistance();
 
 		void SetAlpha(float fAlpha);
@@ -527,11 +522,6 @@ class CInstanceBase
 		void LevelUp();
 		void SkillUp();
 		void UseSpinTop();
-		void Revive();
-		void Stun();
-		void Die();
-		void Hide();
-		void Show();
 
 		bool CanAct();
 		bool CanMove();
@@ -554,7 +544,6 @@ class CInstanceBase
 		void SetRunMode();
 		void SetWalkMode();
 
-		bool IsAffect(uint32_t uAffect);
 		int32_t IsInvisibility();
 		int32_t IsParalysis();
 		int32_t IsGameMaster();
@@ -597,10 +586,6 @@ class CInstanceBase
 		int32_t IsActingEmotion();
 		int32_t IsAttacked();
 		int32_t IsKnockDown();
-		int32_t IsUsingSkill();
-		int32_t IsUsingMovingSkill();
-		int32_t CanCancelSkill();
-		int32_t CanAttackHorseLevel();
 
 #ifdef __MOVIE_MODE__
 		int32_t IsMovieMode(); // 운영자용 완전히 안보이는거
@@ -624,32 +609,13 @@ class CInstanceBase
 
 		void NEW_Stop();
 
-		bool NEW_UseSkill(uint32_t uSkill, uint32_t uMot, uint32_t uMotLoopCount, bool isMovingSkill);
-		void NEW_Attack();
-		void NEW_Attack(float fDirRot);
-		void NEW_AttackToDestPixelPositionDirection(const TPixelPosition& c_rkPPosDst);
-		bool NEW_AttackToDestInstanceDirection(CInstanceBase& rkInstDst, IFlyEventHandler* pkFlyHandler);
-		bool NEW_AttackToDestInstanceDirection(CInstanceBase& rkInstDst);
-
 		bool NEW_MoveToDestPixelPositionDirection(const TPixelPosition& c_rkPPosDst);
 		void NEW_MoveToDestInstanceDirection(CInstanceBase& rkInstDst);
 		void NEW_MoveToDirection(float fDirRot);
 
-		float NEW_GetDistanceFromDirPixelPosition(const TPixelPosition& c_rkPPosDir);
-		float NEW_GetDistanceFromDestPixelPosition(const TPixelPosition& c_rkPPosDst);
-		float NEW_GetDistanceFromDestInstance(CInstanceBase& rkInstDst);
-
-		float NEW_GetRotation();
-		float NEW_GetRotationFromDestPixelPosition(const TPixelPosition& c_rkPPosDst);
-		float NEW_GetRotationFromDirPixelPosition(const TPixelPosition& c_rkPPosDir);
-		float NEW_GetRotationFromDestInstance(CInstanceBase& rkInstDst);
-
 		float NEW_GetAdvancingRotationFromDirPixelPosition(const TPixelPosition& c_rkPPosDir);
 		float NEW_GetAdvancingRotationFromDestPixelPosition(const TPixelPosition& c_rkPPosDst);
 		float NEW_GetAdvancingRotationFromPixelPosition(const TPixelPosition& c_rkPPosSrc, const TPixelPosition& c_rkPPosDst);
-
-		int32_t NEW_IsClickableDistanceDestPixelPosition(const TPixelPosition& c_rkPPosDst);
-		int32_t NEW_IsClickableDistanceDestInstance(CInstanceBase& rkInstDst);
 
 		bool NEW_GetFrontInstance(CInstanceBase** ppoutTargetInstance, float fDistance);
 		void NEW_GetRandomPositionInFanRange(CInstanceBase& rkInstTarget, TPixelPosition* pkPPosDst);
@@ -663,32 +629,11 @@ class CInstanceBase
 		bool NEW_IsLastPixelPosition();
 		const TPixelPosition& NEW_GetLastPixelPositionRef();
 
-		// Battle
-		int32_t isNormalAttacking();
-		int32_t isComboAttacking();
-		MOTION_KEY GetNormalAttackIndex();
-		uint32_t GetComboIndex();
-		float GetAttackingElapsedTime();
-		void InputNormalAttack(float fAtkDirRot);
-		void InputComboAttack(float fAtkDirRot);
-
-		void RunNormalAttack(float fAtkDirRot);
-		void RunComboAttack(float fAtkDirRot, uint32_t wMotionIndex);
-
-		CInstanceBase* FindNearestVictim();
-		int32_t CheckAdvancing();
-
 		bool AvoidObject(const CGraphicObjectInstance& c_rkBGObj);
 		bool IsBlockObject(const CGraphicObjectInstance& c_rkBGObj);
 		void BlockMovement();
 
 	public:
-		int32_t CheckAttacking(CInstanceBase& rkInstVictim);
-		void ProcessHitting(uint32_t dwMotionKey, CInstanceBase* pVictimInstance);
-		void ProcessHitting(uint32_t dwMotionKey, uint8_t byEventIndex, CInstanceBase* pVictimInstance);
-		void GetBlendingPosition(TPixelPosition* pPixelPosition);
-		void SetBlendingPosition(const TPixelPosition& c_rPixelPosition);
-
 		// Render Mode
 		void RestoreRenderMode();
 		void SetAddRenderMode();
@@ -699,6 +644,7 @@ class CInstanceBase
 		// Position
 		CInstanceBaseTransform& GetTransform();
 		CInstanceBaseMotion& GetMotion();
+		CInstanceBaseBattle& GetBattle();
 
 		// Intersect
 		bool IntersectDefendingSphere();
@@ -819,7 +765,6 @@ class CInstanceBase
 		void MovementProcess();
 		void TodoProcess();
 		void StateProcess();
-		void AttackProcess();
 
 		void StartWalking();
 		float GetLocalTime();
@@ -1059,9 +1004,11 @@ class CInstanceBase
 	protected:
 		friend class CInstanceBaseMotion;
 		friend class CInstanceBaseTransform;
+		friend class CInstanceBaseBattle;
 
 		CInstanceBaseMotion m_kMotion;
 		CInstanceBaseTransform m_kTransform;
+		CInstanceBaseBattle m_kBattle;
 };
 
 inline int RaceToJob(int race)

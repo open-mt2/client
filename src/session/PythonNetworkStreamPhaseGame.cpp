@@ -1180,9 +1180,9 @@ bool CPythonNetworkStream::RecvStunPacket(const protocol::Packet& value)
 	if (pkInstSel)
 	{
 		if (CPythonCharacterManager::Instance().GetMainInstancePtr() == pkInstSel)
-			pkInstSel->Die();
+			pkInstSel->GetBattle().Die();
 		else
-			pkInstSel->Stun();
+			pkInstSel->GetBattle().Stun();
 	}
 
 	return true;
@@ -1207,7 +1207,7 @@ bool CPythonNetworkStream::RecvDeadPacket(const protocol::Packet& value)
 			CPythonPlayer::Instance().NotifyDeadMainCharacter();
 		}
 
-		pkChrInstSel->Die();
+		pkChrInstSel->GetBattle().Die();
 	}
 
 	return true;

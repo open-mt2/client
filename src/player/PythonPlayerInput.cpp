@@ -97,7 +97,7 @@ void CPythonPlayer::__ClearTarget()
 	if (!pkInstMain)
 		return;
 
-	pkInstMain->ClearFlyTargetInstance();
+	pkInstMain->GetBattle().ClearFlyTargetInstance();
 
 	CInstanceBase* pTargetedInstance = __GetTargetActorPtr();
 	if (pTargetedInstance)
@@ -129,7 +129,7 @@ void CPythonPlayer::SetTarget(uint32_t dwVID, int32_t bForceChange)
 			__SetTargetVID(0);
 
 			pkInstMain->OnUntargeted();
-			pkInstMain->ClearFlyTargetInstance();
+			pkInstMain->GetBattle().ClearFlyTargetInstance();
 			CPythonNetworkStream::Instance().SendTargetPacket(0);
 			return;
 		}
@@ -166,7 +166,7 @@ void CPythonPlayer::SetTarget(uint32_t dwVID, int32_t bForceChange)
 			__SetTargetVID(dwVID);
 
 			pkInstTarget->OnTargeted();
-			pkInstMain->SetFlyTargetInstance(*pkInstTarget);
+			pkInstMain->GetBattle().SetFlyTargetInstance(*pkInstTarget);
 			pkInstMain->GetGraphicThingInstanceRef().SetFlyEventHandler(CPythonPlayerEventHandler::GetSingleton().GetNormalBowAttackFlyEventHandler(pkInstMain, pkInstTarget));
 			CPythonNetworkStream::Instance().SendTargetPacket(dwVID);
 
@@ -176,7 +176,7 @@ void CPythonPlayer::SetTarget(uint32_t dwVID, int32_t bForceChange)
 
 	__SetTargetVID(0);
 
-	pkInstMain->ClearFlyTargetInstance();
+	pkInstMain->GetBattle().ClearFlyTargetInstance();
 	CPythonNetworkStream::Instance().SendTargetPacket(0);
 }
 
@@ -284,7 +284,7 @@ void CPythonPlayer::__OnClickActor(CInstanceBase& rkInstMain, uint32_t dwPickedA
 		if (!__CanAttack())
 			return;
 
-	if (!rkInstMain.NEW_IsClickableDistanceDestInstance(rkInstVictim))
+	if (!rkInstMain.GetBattle().NEW_IsClickableDistanceDestInstance(rkInstVictim))
 	{
 		__ReserveClickActor(dwPickedActorID);
 		return;
@@ -343,7 +343,7 @@ void CPythonPlayer::__OnPressActor(CInstanceBase& rkInstMain, uint32_t dwPickedA
 				return;
 	}
 
-	if (!rkInstMain.NEW_IsClickableDistanceDestInstance(rkInstVictim))
+	if (!rkInstMain.GetBattle().NEW_IsClickableDistanceDestInstance(rkInstVictim))
 	{
 		__ReserveClickActor(dwPickedActorID);
 		return;
@@ -355,7 +355,7 @@ void CPythonPlayer::__OnPressActor(CInstanceBase& rkInstMain, uint32_t dwPickedA
 	}
 
 	CPythonPlayerEventHandler& rkPlayerEventHandler = CPythonPlayerEventHandler::GetSingleton();
-	rkInstMain.NEW_AttackToDestInstanceDirection(rkInstVictim, rkPlayerEventHandler.GetNormalBowAttackFlyEventHandler(&rkInstMain, &rkInstVictim));
+	rkInstMain.GetBattle().NEW_AttackToDestInstanceDirection(rkInstVictim, rkPlayerEventHandler.GetNormalBowAttackFlyEventHandler(&rkInstMain, &rkInstVictim));
 }
 
 void CPythonPlayer::__OnPressItem(CInstanceBase& rkInstMain, uint32_t dwPickedItemID)
@@ -377,7 +377,7 @@ void CPythonPlayer::__OnPressItem(CInstanceBase& rkInstMain, uint32_t dwPickedIt
 	if (!rkItem.GetGroundItemPosition(dwPickedItemID, &kPPosPickedItem))
 		return;
 
-	if (!rkInstMain.NEW_IsClickableDistanceDestPixelPosition(kPPosPickedItem))
+	if (!rkInstMain.GetBattle().NEW_IsClickableDistanceDestPixelPosition(kPPosPickedItem))
 	{
 		__ReserveClickItem(dwPickedItemID);
 		return;
@@ -403,7 +403,7 @@ void CPythonPlayer::SetMovableGroundDistance(float fDistance)
 
 bool CPythonPlayer::__IsMovableGroundDistance(CInstanceBase& rkInstMain, const TPixelPosition& c_rkPPosPickedGround)
 {
-	float fDistance = rkInstMain.NEW_GetDistanceFromDestPixelPosition(c_rkPPosPickedGround);
+	float fDistance = rkInstMain.GetBattle().NEW_GetDistanceFromDestPixelPosition(c_rkPPosPickedGround);
 
 	if (fDistance < MOVABLE_GROUND_DISTANCE)
 		return false;
@@ -450,7 +450,7 @@ bool CPythonPlayer::NEW_MoveToDirection(float fDirRot)
 		return false;
 
 	if (pkInstMain->GetMotion().isLock())
-		if (!pkInstMain->IsUsingMovingSkill())
+		if (!pkInstMain->GetBattle().IsUsingMovingSkill())
 			return true;
 
 	CCamera* pkCmrCur = CCameraManager::Instance().GetCurrentCamera();
@@ -572,7 +572,7 @@ void CPythonPlayer::NEW_Attack()
 			if (!__CanShot(*pkInstMain, *pkInstTarget))
 				return;
 
-			if (!pkInstMain->NEW_IsClickableDistanceDestInstance(*pkInstTarget))
+			if (!pkInstMain->GetBattle().NEW_IsClickableDistanceDestInstance(*pkInstTarget))
 			{
 				__ReserveClickActor(pkInstTarget->GetVirtualID());
 				return;
@@ -581,7 +581,7 @@ void CPythonPlayer::NEW_Attack()
 			if (pkInstMain->IsAttackableInstance(*pkInstTarget))
 			{
 				pkInstMain->GetTransform().NEW_LookAtDestInstance(*pkInstTarget);
-				pkInstMain->NEW_AttackToDestInstanceDirection(*pkInstTarget);
+				pkInstMain->GetBattle().NEW_AttackToDestInstanceDirection(*pkInstTarget);
 			}
 		}
 		else
@@ -603,7 +603,7 @@ void CPythonPlayer::NEW_Attack()
 			fDirRot = fmod(360.0f + fCmrCurRot + fDirRot, 360.0f);
 		}
 
-		pkInstMain->NEW_Attack(fDirRot);
+		pkInstMain->GetBattle().NEW_Attack(fDirRot);
 	}
 	else
 	{
@@ -614,7 +614,7 @@ void CPythonPlayer::NEW_Attack()
 				return;
 		}
 
-		pkInstMain->NEW_Attack();
+		pkInstMain->GetBattle().NEW_Attack();
 	}
 }
 
@@ -693,7 +693,7 @@ bool CPythonPlayer::__CanMove()
 
 	if (!pkInstMain->CanMove())
 	{
-		if (!pkInstMain->IsUsingMovingSkill())
+		if (!pkInstMain->GetBattle().IsUsingMovingSkill())
 			return false;
 	}
 
@@ -875,7 +875,7 @@ void CPythonPlayer::__ReserveProcess_ClickActor()
 		return;
 	}
 
-	if (!pkInstMain->NEW_IsClickableDistanceDestInstance(*pkInstReserved))
+	if (!pkInstMain->GetBattle().NEW_IsClickableDistanceDestInstance(*pkInstReserved))
 	{
 		pkInstMain->NEW_MoveToDestInstanceDirection(*pkInstReserved);
 		return;
@@ -935,14 +935,14 @@ void CPythonPlayer::__ReserveProcess_ClickActor()
 		SetTarget(pkInstReserved->GetVirtualID());
 	}
 
-	pkInstMain->NEW_AttackToDestInstanceDirection(*pkInstReserved);
+	pkInstMain->GetBattle().NEW_AttackToDestInstanceDirection(*pkInstReserved);
 	__ClearReservedAction();
 }
 /*
 CInstanceBase* pkInstReserved=NEW_FindActorPtr(m_dwVIDReserved);
 if (pkInstReserved)
 {
-	if (pkInstMain->NEW_IsClickableDistanceDestInstance(*pkInstReserved))
+	if (pkInstMain->GetBattle().NEW_IsClickableDistanceDestInstance(*pkInstReserved))
 	{
 		if (pkInstMain->IsAttackableInstance(*pkInstReserved) )
 		{
@@ -976,7 +976,7 @@ if (pkInstReserved)
 						SetTarget(pkInstReserved->GetVirtualID());
 					}
 
-					pkInstMain->NEW_AttackToDestInstanceDirection(*pkInstReserved);
+					pkInstMain->GetBattle().NEW_AttackToDestInstanceDirection(*pkInstReserved);
 				}
 			}
 		}

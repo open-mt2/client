@@ -303,7 +303,7 @@ PyObject* chrHide(PyObject* poSelf, PyObject* poArgs)
 	if (!pkInst)
 		return Py_BuildNone();
 
-	pkInst->Hide();
+	pkInst->GetBattle().Hide();
 	return Py_BuildNone();
 }
 
@@ -313,7 +313,7 @@ PyObject* chrShow(PyObject* poSelf, PyObject* poArgs)
 	if (!pkInst)
 		return Py_BuildNone();
 
-	pkInst->Show();
+	pkInst->GetBattle().Show();
 	return Py_BuildNone();
 }
 
@@ -556,7 +556,7 @@ PyObject* chrRevive(PyObject* poSelf, PyObject* poArgs)
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 	if (!pkInst)
 		return Py_BuildNone();
-	pkInst->Revive();
+	pkInst->GetBattle().Revive();
 	return Py_BuildNone();
 }
 
@@ -565,7 +565,7 @@ PyObject* chrDie(PyObject* poSelf, PyObject* poArgs)
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 	if (!pkInst)
 		return Py_BuildNone();
-	pkInst->Die();
+	pkInst->GetBattle().Die();
 	return Py_BuildNone();
 }
 

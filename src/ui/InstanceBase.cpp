@@ -388,7 +388,7 @@ bool CInstanceBase::__IsInDustRange()
 
 	CInstanceBase* pkInstMain = __GetMainInstancePtr();
 
-	float fDistance = NEW_GetDistanceFromDestInstance(*pkInstMain);
+	float fDistance = GetBattle().NEW_GetDistanceFromDestInstance(*pkInstMain);
 
 	if (IsPC())
 	{
@@ -433,7 +433,7 @@ float CInstanceBase::__GetBackgroundHeight(float x, float y)
 
 int32_t CInstanceBase::IsMovieMode()
 {
-	if (IsAffect(AFFECT_INVISIBILITY))
+	if (GetBattle().IsAffect(AFFECT_INVISIBILITY))
 		return true;
 
 	return false;
@@ -443,7 +443,7 @@ int32_t CInstanceBase::IsMovieMode()
 
 int32_t CInstanceBase::IsInvisibility()
 {
-	if (IsAffect(AFFECT_INVISIBILITY))
+	if (GetBattle().IsAffect(AFFECT_INVISIBILITY))
 		return true;
 
 	return false;
@@ -682,7 +682,7 @@ bool CInstanceBase::__MainCanSeeHiddenThing()
 {
 	return false;
 	//	CInstanceBase * pInstance = __GetMainInstancePtr();
-	//	return pInstance->IsAffect(AFFECT_GAMJI);
+	//	return pInstance->GetBattle().IsAffect(AFFECT_GAMJI);
 }
 
 float CInstanceBase::__GetBowRange()
@@ -784,7 +784,7 @@ bool CInstanceBase::Create(const SCreateData& c_rkCreateData)
 
 	if (c_rkCreateData.m_dwStateFlags & ADD_CHARACTER_STATE_SPAWN)
 	{
-		if (IsAffect(AFFECT_SPAWN))
+		if (GetBattle().IsAffect(AFFECT_SPAWN))
 			__AttachEffect(EFFECT_SPAWN_APPEAR);
 
 		if (IsPC())
@@ -1401,7 +1401,7 @@ void CInstanceBase::StateProcess()
 						EndWalking();
 
 					GetTransform().SCRIPT_SetPixelPosition(kPPosDst.x, kPPosDst.y);
-					RunComboAttack(fRotDst, uArg);
+					GetBattle().RunComboAttack(fRotDst, uArg);
 				}
 				break;
 			}
@@ -1438,7 +1438,7 @@ void CInstanceBase::StateProcess()
 					GetTransform().SCRIPT_SetPixelPosition(kPPosDst.x, kPPosDst.y);
 					GetTransform().BlendRotation(fRotDst);
 
-					RunNormalAttack(fRotDst);
+					GetBattle().RunNormalAttack(fRotDst);
 
 					// Tracen("Warp Attack due to proximity");
 				}
@@ -1539,7 +1539,7 @@ void CInstanceBase::StateProcess()
 						SetAdvancingRotation(fRotDst);
 						GetTransform().SetRotation(fRotDst);
 
-						NEW_UseSkill(0, eFunc & 0x7f, uArg & 0x0f, (uArg >> 4) ? true : false);
+						GetBattle().NEW_UseSkill(0, eFunc & 0x7f, uArg & 0x0f, (uArg >> 4) ? true : false);
 						// Tracen("Warp Attack due to proximity");
 					}
 				}
@@ -1657,7 +1657,7 @@ void CInstanceBase::MovementProcess()
 							SetAdvancingRotation(m_fDstRot);
 							GetTransform().SetRotation(m_fDstRot);
 
-							RunNormalAttack(m_fDstRot);
+							GetBattle().RunNormalAttack(m_fDstRot);
 							break;
 						}
 
@@ -1671,7 +1671,7 @@ void CInstanceBase::MovementProcess()
 
 							BlockMovement();
 							GetTransform().SCRIPT_SetPixelPosition(NEW_GetDstPixelPositionRef().x, NEW_GetDstPixelPositionRef().y);
-							RunComboAttack(m_fDstRot, m_kMovAfterFunc.uArg);
+							GetBattle().RunComboAttack(m_fDstRot, m_kMovAfterFunc.uArg);
 							break;
 						}
 
@@ -1716,7 +1716,7 @@ void CInstanceBase::MovementProcess()
 							{
 								SetAdvancingRotation(m_fDstRot);
 								GetTransform().BlendRotation(m_fDstRot);
-								NEW_UseSkill(0, m_kMovAfterFunc.eFunc & 0x7f, m_kMovAfterFunc.uArg & 0x0f, (m_kMovAfterFunc.uArg >> 4) ? true : false);
+								GetBattle().NEW_UseSkill(0, m_kMovAfterFunc.eFunc & 0x7f, m_kMovAfterFunc.uArg & 0x0f, (m_kMovAfterFunc.uArg >> 4) ? true : false);
 							}
 							else
 							{
@@ -1772,7 +1772,7 @@ void CInstanceBase::MovementProcess()
 
 		if (__IsInDustRange())
 		{
-			float fDustDistance = NEW_GetDistanceFromDestPixelPosition(m_kPPosDust);
+			float fDustDistance = GetBattle().NEW_GetDistanceFromDestPixelPosition(m_kPPosDust);
 			if (IsMountingHorse())
 			{
 				if (fDustDistance > ms_fHorseDustGap)
@@ -1876,7 +1876,7 @@ void CInstanceBase::Update()
 
 	m_GraphicThingInstance.UpdateAdvancingPointInstance();
 
-	AttackProcess();
+	GetBattle().AttackProcess();
 	MovementProcess();
 
 	m_GraphicThingInstance.MotionProcess(IsPC());
@@ -1995,7 +1995,7 @@ void CInstanceBase::RenderToShadowMap()
 
 	const float SHADOW_APPLY_DISTANCE = 2500.0f;
 
-	float fDistance = NEW_GetDistanceFromDestInstance(*pkInstMain);
+	float fDistance = GetBattle().NEW_GetDistanceFromDestInstance(*pkInstMain);
 	if (fDistance >= SHADOW_APPLY_DISTANCE)
 		return;
 
@@ -2246,14 +2246,14 @@ bool CInstanceBase::CanPickInstance()
 
 	if (IsPC())
 	{
-		if (IsAffect(AFFECT_EUNHYEONG))
+		if (GetBattle().IsAffect(AFFECT_EUNHYEONG))
 		{
 			if (!__MainCanSeeHiddenThing())
 				return false;
 		}
-		if (IsAffect(AFFECT_REVIVE_INVISIBILITY))
+		if (GetBattle().IsAffect(AFFECT_REVIVE_INVISIBILITY))
 			return false;
-		if (IsAffect(AFFECT_INVISIBILITY))
+		if (GetBattle().IsAffect(AFFECT_INVISIBILITY))
 			return false;
 	}
 
@@ -2395,7 +2395,7 @@ int32_t CInstanceBase::IsFlag()
 
 int32_t CInstanceBase::IsForceVisible()
 {
-	if (IsAffect(AFFECT_SHOW_ALWAYS))
+	if (GetBattle().IsAffect(AFFECT_SHOW_ALWAYS))
 		return TRUE;
 
 	if (IsObject() || IsBuilding() || IsDoor())
@@ -2429,7 +2429,7 @@ bool CInstanceBase::__CanRender()
 {
 	if (!__IsInViewFrustum())
 		return false;
-	if (IsAffect(AFFECT_INVISIBILITY))
+	if (GetBattle().IsAffect(AFFECT_INVISIBILITY))
 		return false;
 
 	return true;
@@ -3064,9 +3064,15 @@ void CInstanceBase::__Initialize()
 }
 
 CInstanceBase::CInstanceBase() : m_kMotion(*this),
-								 m_kTransform(*this)
+								 m_kTransform(*this),
+								 m_kBattle(*this)
 {
 	__Initialize();
+}
+
+CInstanceBaseBattle& CInstanceBase::GetBattle()
+{
+	return m_kBattle;
 }
 
 CInstanceBaseTransform& CInstanceBase::GetTransform()

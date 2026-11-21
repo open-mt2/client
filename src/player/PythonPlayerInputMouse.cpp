@@ -286,7 +286,7 @@ void CPythonPlayer::NEW_RefreshMouseWalkingDirection()
 			TPixelPosition kPPosPickedItem;
 			if (rkIT.GetGroundItemPosition(m_dwIIDReserved, &kPPosPickedItem))
 			{
-				if (pkInstMain->NEW_GetDistanceFromDestPixelPosition(kPPosPickedItem) < 20.0f)
+				if (pkInstMain->GetBattle().NEW_GetDistanceFromDestPixelPosition(kPPosPickedItem) < 20.0f)
 				{
 					CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 
@@ -380,7 +380,7 @@ void CPythonPlayer::NEW_RefreshMouseWalkingDirection()
 	if (m_isAtkKey)
 		NEW_Attack();
 
-	m_iComboOld = pkInstMain->GetComboIndex();
+	m_iComboOld = pkInstMain->GetBattle().GetComboIndex();
 }
 
 int32_t CPythonPlayer::__IsRightButtonSkillMode()

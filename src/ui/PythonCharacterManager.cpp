@@ -176,7 +176,7 @@ void CPythonCharacterManager::Update()
 				continue;
 			}
 
-			int nDistance = int(pkInstEach->NEW_GetDistanceFromDestInstance(*pkInstMain));
+			int nDistance = int(pkInstEach->GetBattle().NEW_GetDistanceFromDestInstance(*pkInstMain));
 			if (nDistance > CHAR_STAGE_VIEW_BOUND + 10)
 			{
 				__DeleteBlendOutInstance(pkInstEach);
@@ -272,7 +272,7 @@ void CPythonCharacterManager::UpdateTransform()
 		{
 			CInstanceBase* pSrcInstance = i->second;
 
-			pSrcInstance->CheckAdvancing();
+			pSrcInstance->GetBattle().CheckAdvancing();
 
 			// 2004.08.02.myevan.IsAttacked 일 경우 죽었을때도 체크하므로,
 			// 실질적으로 거리가 변경되는 IsPushing일때만 체크하도록 한다

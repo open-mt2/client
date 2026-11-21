@@ -34,7 +34,7 @@ void CInstanceBase::NEW_Stop()
 	if (GetMotion().isLock())
 		return;
 
-	if (IsUsingSkill())
+	if (GetBattle().IsUsingSkill())
 		return;
 
 	if (!IsWaiting())
@@ -146,11 +146,11 @@ void CInstanceBase::StartWalking()
 {
 	m_GraphicThingInstance.Move();
 
-	if (IsAffect(AFFECT_GYEONGGONG))
+	if (GetBattle().IsAffect(AFFECT_GYEONGGONG))
 	{
 		m_adwCRCAffectEffect[AFFECT_GYEONGGONG] = __EffectContainer_AttachEffect(EFFECT_AFFECT_GYEONGGONG);
 	}
-	else if (IsAffect(AFFECT_KWAESOK))
+	else if (GetBattle().IsAffect(AFFECT_KWAESOK))
 	{
 		m_adwCRCAffectEffect[AFFECT_KWAESOK] = __EffectContainer_AttachEffect(EFFECT_AFFECT_KWAESOK);
 	}
@@ -166,11 +166,11 @@ void CInstanceBase::EndWalking(float fBlendingTime)
 	if (IsWalking() || !IsAttacked())
 	{
 		m_GraphicThingInstance.Stop(fBlendingTime);
-		if (IsAffect(AFFECT_GYEONGGONG))
+		if (GetBattle().IsAffect(AFFECT_GYEONGGONG))
 		{
 			__EffectContainer_DetachEffect(EFFECT_AFFECT_GYEONGGONG);
 		}
-		else if (IsAffect(AFFECT_KWAESOK))
+		else if (GetBattle().IsAffect(AFFECT_KWAESOK))
 		{
 			__EffectContainer_DetachEffect(EFFECT_AFFECT_KWAESOK);
 		}

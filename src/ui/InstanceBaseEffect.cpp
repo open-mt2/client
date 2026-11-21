@@ -306,7 +306,7 @@ void CInstanceBase::__AttachEmpireEffect(uint32_t eEmpire)
 			return;
 
 		// HIDE_OTHER_EMPIRE_EUNHYEONG_ASSASSIN
-		if (IsAffect(AFFECT_EUNHYEONG))
+		if (GetBattle().IsAffect(AFFECT_EUNHYEONG))
 			return;
 		// END_OF_HIDE_OTHER_EMPIRE_EUNHYEONG_ASSASSIN
 	}
@@ -848,7 +848,7 @@ void CInstanceBase::__SetAffect(uint32_t eAffect, bool isVisible)
 	switch (eAffect)
 	{
 		case AFFECT_YMIR:
-			if (IsAffect(AFFECT_INVISIBILITY))
+			if (GetBattle().IsAffect(AFFECT_INVISIBILITY))
 				return;
 			break;
 			/*
@@ -1020,7 +1020,7 @@ void CInstanceBase::__DetachEffect(uint32_t dwEID)
 uint32_t CInstanceBase::__AttachEffect(uint32_t eEftType)
 {
 	// 2004.07.17.levites.isShow를 ViewFrustumCheck로 변경
-	if (IsAffect(AFFECT_INVISIBILITY))
+	if (GetBattle().IsAffect(AFFECT_INVISIBILITY))
 		return 0;
 
 	if (eEftType >= EFFECT_NUM)
@@ -1068,7 +1068,7 @@ void CInstanceBase::__ComboProcess()
 	{
 		if (m_dwLastComboIndex != m_GraphicThingInstance.GetComboIndex())
 		{
-			if (!m_GraphicThingInstance.IsHandMode() & IsAffect(AFFECT_HWAYEOM))
+			if (!m_GraphicThingInstance.IsHandMode() & GetBattle().IsAffect(AFFECT_HWAYEOM))
 			{
 				__AttachEffect(EFFECT_FLAME_ATTACK);
 			}

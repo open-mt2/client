@@ -227,7 +227,7 @@ void CPythonPlayer::__Update_AutoAttack()
 		{
 			__ClearAutoAttackTargetActorID();
 		}
-		else if (pkInstMain->IsMountingHorse() && !pkInstMain->CanAttackHorseLevel())
+		else if (pkInstMain->IsMountingHorse() && !pkInstMain->GetBattle().CanAttackHorseLevel())
 		{
 			__ClearAutoAttackTargetActorID();
 		}

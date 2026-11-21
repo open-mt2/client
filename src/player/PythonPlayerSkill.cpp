@@ -134,7 +134,7 @@ void CPythonPlayer::ClickSkillSlot(uint32_t dwSlotIndex)
 				CInstanceBase* pkInstMain = NEW_GetMainActorPtr();
 				if (!pkInstMain)
 					return;
-				if (pkInstMain->IsUsingSkill())
+				if (pkInstMain->GetBattle().IsUsingSkill())
 					return;
 
 				CPythonNetworkStream::Instance().SendUseSkillPacket(rkSkillInst.dwIndex);
@@ -380,7 +380,7 @@ bool CPythonPlayer::__CheckRestSkillCoolTime(uint32_t dwSlotIndex)
 
 bool CPythonPlayer::__CheckDashAffect(CInstanceBase& rkInstMain)
 {
-	return rkInstMain.IsAffect(CInstanceBase::AFFECT_DASH);
+	return rkInstMain.GetBattle().IsAffect(CInstanceBase::AFFECT_DASH);
 }
 
 void CPythonPlayer::__UseCurrentSkill()
@@ -510,7 +510,7 @@ bool CPythonPlayer::__UseSkill(uint32_t dwSlotIndex)
 		return false;
 	}
 
-	if (pkInstMain->IsUsingSkill())
+	if (pkInstMain->GetBattle().IsUsingSkill())
 	{
 		return false;
 	}
@@ -600,11 +600,11 @@ bool CPythonPlayer::__UseSkill(uint32_t dwSlotIndex)
 				}
 			}
 
-			pkInstMain->SetFlyTargetInstance(*pkInstTarget);
+			pkInstMain->GetBattle().SetFlyTargetInstance(*pkInstTarget);
 
 			if (pkInstMain != pkInstTarget)
 			{
-				if (pkInstMain->IsFlyTargetObject())
+				if (pkInstMain->GetBattle().IsFlyTargetObject())
 				{
 					pkInstMain->GetTransform().NEW_LookAtFlyTarget();
 				}
@@ -618,7 +618,7 @@ bool CPythonPlayer::__UseSkill(uint32_t dwSlotIndex)
 		{
 			if (pSkillData->IsAutoSearchTarget())
 			{
-				if (pkInstMain->NEW_GetFrontInstance(&pkInstTarget, 2000.0f))
+				if (pkInstMain->GetBattle().NEW_GetFrontInstance(&pkInstTarget, 2000.0f))
 				{
 					SetTarget(pkInstTarget->GetVirtualID());
 					if (!__ProcessEnemySkillTargetRange(*pkInstMain, *pkInstTarget, *pSkillData, dwSlotIndex))
@@ -634,7 +634,7 @@ bool CPythonPlayer::__UseSkill(uint32_t dwSlotIndex)
 			if (pSkillData->CanUseForMe())
 			{
 				pkInstTarget = pkInstMain;
-				pkInstMain->SetFlyTargetInstance(*pkInstMain);
+				pkInstMain->GetBattle().SetFlyTargetInstance(*pkInstMain);
 				Tracef(" [ALERT] Use on player because there are no targets\n");
 			}
 			else if (pSkillData->IsNeedCorpse())
@@ -685,7 +685,7 @@ bool CPythonPlayer::__UseSkill(uint32_t dwSlotIndex)
 
 		if (pSkillData->IsFanRange())
 		{
-			if (pkInstMain->NEW_GetInstanceVectorInFanRange(float(dwRange), *pkInstTarget, &kVct_pkInstTarget))
+			if (pkInstMain->GetBattle().NEW_GetInstanceVectorInFanRange(float(dwRange), *pkInstTarget, &kVct_pkInstTarget))
 			{
 				std::vector<CInstanceBase*>::iterator i;
 				for (i = kVct_pkInstTarget.begin(); i != kVct_pkInstTarget.end(); ++i)
@@ -697,7 +697,7 @@ bool CPythonPlayer::__UseSkill(uint32_t dwSlotIndex)
 
 					if (pkInstTarget != pkInstEach && !pkInstEach->IsDead())
 					{
-						pkInstMain->AddFlyTargetInstance(*pkInstEach);
+						pkInstMain->GetBattle().AddFlyTargetInstance(*pkInstEach);
 						CPythonNetworkStream::Instance().SendAddFlyTargetingPacket(pkInstEach->GetVirtualID(), pkInstEach->GetGraphicThingInstanceRef().OnGetFlyTargetPosition());
 
 						dwTargetCount++;
@@ -707,7 +707,7 @@ bool CPythonPlayer::__UseSkill(uint32_t dwSlotIndex)
 		}
 		else if (pSkillData->IsCircleRange())
 		{
-			if (pkInstMain->NEW_GetInstanceVectorInCircleRange(float(dwRange), &kVct_pkInstTarget))
+			if (pkInstMain->GetBattle().NEW_GetInstanceVectorInCircleRange(float(dwRange), &kVct_pkInstTarget))
 			{
 				std::vector<CInstanceBase*>::iterator i;
 				for (i = kVct_pkInstTarget.begin(); i != kVct_pkInstTarget.end(); ++i)
@@ -719,7 +719,7 @@ bool CPythonPlayer::__UseSkill(uint32_t dwSlotIndex)
 
 					if (pkInstTarget != pkInstEach && !pkInstEach->IsDead())
 					{
-						pkInstMain->AddFlyTargetInstance(*pkInstEach);
+						pkInstMain->GetBattle().AddFlyTargetInstance(*pkInstEach);
 						CPythonNetworkStream::Instance().SendAddFlyTargetingPacket(pkInstEach->GetVirtualID(), pkInstEach->GetGraphicThingInstanceRef().OnGetFlyTargetPosition());
 
 						dwTargetCount++;
@@ -733,12 +733,12 @@ bool CPythonPlayer::__UseSkill(uint32_t dwSlotIndex)
 			while (dwTargetCount < dwTargetMaxCount)
 			{
 				TPixelPosition kPPosDst;
-				pkInstMain->NEW_GetRandomPositionInFanRange(*pkInstTarget, &kPPosDst);
+				pkInstMain->GetBattle().NEW_GetRandomPositionInFanRange(*pkInstTarget, &kPPosDst);
 
 				kPPosDst.x = kPPosDst.x;
 				kPPosDst.y = -kPPosDst.y;
 
-				pkInstMain->AddFlyTargetPosition(kPPosDst);
+				pkInstMain->GetBattle().AddFlyTargetPosition(kPPosDst);
 				CPythonNetworkStream::Instance().SendAddFlyTargetingPacket(0, kPPosDst);
 
 				dwTargetCount++;
@@ -755,7 +755,7 @@ bool CPythonPlayer::__UseSkill(uint32_t dwSlotIndex)
 	{
 		uint32_t dwMotionIndex = pSkillData->GetSkillMotionIndex(rkSkillInst.iGrade);
 		uint32_t dwLoopCount = pSkillData->GetMotionLoopCount(rkSkillInst.fcurEfficientPercentage);
-		if (!pkInstMain->NEW_UseSkill(rkSkillInst.dwIndex, dwMotionIndex, dwLoopCount, pSkillData->IsMovingSkill() ? true : false))
+		if (!pkInstMain->GetBattle().NEW_UseSkill(rkSkillInst.dwIndex, dwMotionIndex, dwLoopCount, pSkillData->IsMovingSkill() ? true : false))
 		{
 			Tracenf("CPythonPlayer::__UseSkill(%d) - pkInstMain->NEW_UseSkill - ERROR", dwSlotIndex);
 			return false;
@@ -901,7 +901,7 @@ void CPythonPlayer::UseGuildSkill(uint32_t dwSkillSlotIndex)
 	}
 
 	uint32_t dwMotionIndex = pSkillData->GetSkillMotionIndex();
-	if (!pkInstMain->NEW_UseSkill(dwSkillIndex, dwMotionIndex, 1, false))
+	if (!pkInstMain->GetBattle().NEW_UseSkill(dwSkillIndex, dwMotionIndex, 1, false))
 	{
 		Tracenf("CPythonPlayer::UseGuildSkill(%d) - pkInstMain->NEW_UseSkill - ERROR", dwSkillIndex);
 	}
