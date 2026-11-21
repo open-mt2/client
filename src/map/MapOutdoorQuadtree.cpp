@@ -1,30 +1,34 @@
 #include <Client/Map/StdAfx.h>
 #include <Client/Map/MapOutdoor.h>
+#include <Client/Map/CMapOutdoorRender.h>
+#include <Client/Map/CMapOutdoorIndexBuffer.h>
+#include <Client/Map/CMapOutdoorLoad.h>
+#include <Client/Map/CMapOutdoorUpdate.h>
 #include <Client/Map/TerrainQuadtree.h>
 
 //////////////////////////////////////////////////////////////////////////
 // QuadTree
 //////////////////////////////////////////////////////////////////////////
-void CMapOutdoor::BuildQuadTree()
+void CMapOutdoorRender::BuildQuadTree()
 {
 	FreeQuadTree();
 
-	// m_wPatchCount는 ConvertPatchSplat에서도 정한다, 안전을 위해 여기서 체크한다.
-	if (0 == m_wPatchCount)
+	// m_rkOwner.m_wPatchCount는 ConvertPatchSplat에서도 정한다, 안전을 위해 여기서 체크한다.
+	if (0 == m_rkOwner.m_wPatchCount)
 	{
-		TraceError("MapOutdoor::BuildQuadTree : m_wPatchCount is zero, you must call ConvertPatchSplat before call this method.");
+		TraceError("MapOutdoor::BuildQuadTree : m_rkOwner.m_wPatchCount is zero, you must call ConvertPatchSplat before call this method.");
 		return;
 	}
 
-	m_pRootNode = AllocQuadTreeNode(0, 0, m_wPatchCount - 1, m_wPatchCount - 1);
-	if (!m_pRootNode)
-		TraceError("CMapOutdoor::BuildQuadTree() RootNode is NULL");
+	m_rkOwner.m_pRootNode = AllocQuadTreeNode(0, 0, m_rkOwner.m_wPatchCount - 1, m_rkOwner.m_wPatchCount - 1);
+	if (!m_rkOwner.m_pRootNode)
+		TraceError("CMapOutdoorRender::BuildQuadTree() RootNode is NULL");
 
-	if (m_pRootNode->Size > 1)
-		SubDivideNode(m_pRootNode);
+	if (m_rkOwner.m_pRootNode->Size > 1)
+		SubDivideNode(m_rkOwner.m_pRootNode);
 }
 
-CTerrainQuadtreeNode* CMapOutdoor::AllocQuadTreeNode(long x0, long y0, long x1, long y1)
+CTerrainQuadtreeNode* CMapOutdoorRender::AllocQuadTreeNode(long x0, long y0, long x1, long y1)
 {
 	CTerrainQuadtreeNode* Node;
 	long xsize, ysize;
@@ -45,15 +49,15 @@ CTerrainQuadtreeNode* CMapOutdoor::AllocQuadTreeNode(long x0, long y0, long x1, 
 	else
 		Node->Size = xsize;
 
-	Node->PatchNum = y0 * m_wPatchCount + x0;
+	Node->PatchNum = y0 * m_rkOwner.m_wPatchCount + x0;
 
 	/*
-		const float fTerrainMin = -(float) (m_lViewRadius * m_lCellScale);
+		const float fTerrainMin = -(float) (m_rkOwner.m_lViewRadius * m_rkOwner.m_lCellScale);
 
-		minx = fTerrainMin + x0 * c_byPatchSize * m_lCellScale;
-		maxx = fTerrainMin + (x1 + 1) * c_byPatchSize * m_lCellScale;
-		miny = fTerrainMin + y0 * c_byPatchSize * m_lCellScale;
-		maxy = fTerrainMin + (y1 + 1) * c_byPatchSize * m_lCellScale;
+		minx = fTerrainMin + x0 * c_byPatchSize * m_rkOwner.m_lCellScale;
+		maxx = fTerrainMin + (x1 + 1) * c_byPatchSize * m_rkOwner.m_lCellScale;
+		miny = fTerrainMin + y0 * c_byPatchSize * m_rkOwner.m_lCellScale;
+		maxy = fTerrainMin + (y1 + 1) * c_byPatchSize * m_rkOwner.m_lCellScale;
 		minz = 0.0f;
 		maxz = 0.0f;
 
@@ -78,7 +82,7 @@ CTerrainQuadtreeNode* CMapOutdoor::AllocQuadTreeNode(long x0, long y0, long x1, 
 	return Node;
 }
 
-void CMapOutdoor::SubDivideNode(CTerrainQuadtreeNode* Node)
+void CMapOutdoorRender::SubDivideNode(CTerrainQuadtreeNode* Node)
 {
 	long nw_size;
 	CTerrainQuadtreeNode* tempnode;
@@ -112,22 +116,22 @@ void CMapOutdoor::RecurseDeleteQuadTree(CTerrainQuadtreeNode *Node)
 
 	if (Node->NW_Node != NULL)
 	{
-		RecurseDeleteQuadTree(Node->NW_Node);
+		m_rkOwner.RecurseDeleteQuadTree(Node->NW_Node);
 		Node->NW_Node = NULL;
 	}
 	if (Node->NE_Node != NULL)
 	{
-		RecurseDeleteQuadTree(Node->NE_Node);
+		m_rkOwner.RecurseDeleteQuadTree(Node->NE_Node);
 		Node->NE_Node = NULL;
 	}
 	if (Node->SW_Node != NULL)
 	{
-		RecurseDeleteQuadTree(Node->SW_Node);
+		m_rkOwner.RecurseDeleteQuadTree(Node->SW_Node);
 		Node->SW_Node = NULL;
 	}
 	if (Node->SE_Node != NULL)
 	{
-		RecurseDeleteQuadTree(Node->SE_Node);
+		m_rkOwner.RecurseDeleteQuadTree(Node->SE_Node);
 		Node->SE_Node = NULL;
 	}
 
@@ -135,32 +139,32 @@ void CMapOutdoor::RecurseDeleteQuadTree(CTerrainQuadtreeNode *Node)
 }
 */
 
-void CMapOutdoor::FreeQuadTree()
+void CMapOutdoorRender::FreeQuadTree()
 {
-	if (NULL == m_pRootNode)
+	if (NULL == m_rkOwner.m_pRootNode)
 		return;
 
-	if (m_pRootNode->NW_Node)
+	if (m_rkOwner.m_pRootNode->NW_Node)
 	{
-		delete m_pRootNode->NW_Node;
-		m_pRootNode->NW_Node = NULL;
+		delete m_rkOwner.m_pRootNode->NW_Node;
+		m_rkOwner.m_pRootNode->NW_Node = NULL;
 	}
-	if (m_pRootNode->NE_Node)
+	if (m_rkOwner.m_pRootNode->NE_Node)
 	{
-		delete m_pRootNode->NE_Node;
-		m_pRootNode->NE_Node = NULL;
+		delete m_rkOwner.m_pRootNode->NE_Node;
+		m_rkOwner.m_pRootNode->NE_Node = NULL;
 	}
-	if (m_pRootNode->SW_Node)
+	if (m_rkOwner.m_pRootNode->SW_Node)
 	{
-		delete m_pRootNode->SW_Node;
-		m_pRootNode->SW_Node = NULL;
+		delete m_rkOwner.m_pRootNode->SW_Node;
+		m_rkOwner.m_pRootNode->SW_Node = NULL;
 	}
-	if (m_pRootNode->SE_Node)
+	if (m_rkOwner.m_pRootNode->SE_Node)
 	{
-		delete m_pRootNode->SE_Node;
-		m_pRootNode->SE_Node = NULL;
+		delete m_rkOwner.m_pRootNode->SE_Node;
+		m_rkOwner.m_pRootNode->SE_Node = NULL;
 	}
 
-	delete m_pRootNode;
-	m_pRootNode = NULL;
+	delete m_rkOwner.m_pRootNode;
+	m_rkOwner.m_pRootNode = NULL;
 }

@@ -3,21 +3,25 @@
 #include <Neoeter/Render/Camera.h>
 
 #include <Client/Map/MapOutdoor.h>
+#include <Client/Map/CMapOutdoorRender.h>
+#include <Client/Map/CMapOutdoorIndexBuffer.h>
+#include <Client/Map/CMapOutdoorLoad.h>
+#include <Client/Map/CMapOutdoorUpdate.h>
 
 static int recreate = false;
 
-void CMapOutdoor::SetShadowTextureSize(uint16_t size)
+void CMapOutdoorRender::SetShadowTextureSize(uint16_t size)
 {
-	if (m_wShadowMapSize != size)
+	if (m_rkOwner.m_wShadowMapSize != size)
 	{
 		recreate = true;
-		Tracenf("ShadowTextureSize changed %d -> %d", m_wShadowMapSize, size);
+		Tracenf("ShadowTextureSize changed %d -> %d", m_rkOwner.m_wShadowMapSize, size);
 	}
 
-	m_wShadowMapSize = size;
+	m_rkOwner.m_wShadowMapSize = size;
 }
 
-void CMapOutdoor::CreateCharacterShadowTexture()
+void CMapOutdoorRender::CreateCharacterShadowTexture()
 {
 	extern bool GRAPHICS_CAPS_CAN_NOT_DRAW_SHADOW;
 
@@ -26,51 +30,51 @@ void CMapOutdoor::CreateCharacterShadowTexture()
 
 	ReleaseCharacterShadowTexture();
 
-	if (IsLowTextureMemory())
+	if (m_rkOwner.IsLowTextureMemory())
 		SetShadowTextureSize(128);
 
-	m_ShadowMapViewport.X = 1;
-	m_ShadowMapViewport.Y = 1;
-	m_ShadowMapViewport.Width = m_wShadowMapSize - 2;
-	m_ShadowMapViewport.Height = m_wShadowMapSize - 2;
-	m_ShadowMapViewport.MinZ = 0.0f;
-	m_ShadowMapViewport.MaxZ = 1.0f;
+	m_rkOwner.m_ShadowMapViewport.X = 1;
+	m_rkOwner.m_ShadowMapViewport.Y = 1;
+	m_rkOwner.m_ShadowMapViewport.Width = m_rkOwner.m_wShadowMapSize - 2;
+	m_rkOwner.m_ShadowMapViewport.Height = m_rkOwner.m_wShadowMapSize - 2;
+	m_rkOwner.m_ShadowMapViewport.MinZ = 0.0f;
+	m_rkOwner.m_ShadowMapViewport.MaxZ = 1.0f;
 
-	if (FAILED(ms_lpd3dDevice->CreateTexture(m_wShadowMapSize, m_wShadowMapSize, 1, D3DUSAGE_RENDERTARGET, D3DFMT_R5G6B5, D3DPOOL_DEFAULT, &m_lpCharacterShadowMapTexture, NULL)))
+	if (FAILED(m_rkOwner.ms_lpd3dDevice->CreateTexture(m_rkOwner.m_wShadowMapSize, m_rkOwner.m_wShadowMapSize, 1, D3DUSAGE_RENDERTARGET, D3DFMT_R5G6B5, D3DPOOL_DEFAULT, &m_rkOwner.m_lpCharacterShadowMapTexture, NULL)))
 	{
 		TraceError("CMapOutdoor Unable to create Character Shadow render target texture\n");
 		return;
 	}
 
-	if (FAILED(m_lpCharacterShadowMapTexture->GetSurfaceLevel(0, &m_lpCharacterShadowMapRenderTargetSurface)))
+	if (FAILED(m_rkOwner.m_lpCharacterShadowMapTexture->GetSurfaceLevel(0, &m_rkOwner.m_lpCharacterShadowMapRenderTargetSurface)))
 	{
 		TraceError("CMapOutdoor Unable to GetSurfaceLevel Character Shadow render target texture\n");
 		return;
 	}
 
 	IDirect3DSurface9* pBackBufferSurface;
-	ms_lpd3dDevice->GetBackBuffer(0, 0, D3DBACKBUFFER_TYPE_MONO, &pBackBufferSurface);
+	m_rkOwner.ms_lpd3dDevice->GetBackBuffer(0, 0, D3DBACKBUFFER_TYPE_MONO, &pBackBufferSurface);
 	D3DSURFACE_DESC kDesc;
 	pBackBufferSurface->GetDesc(&kDesc);
 	pBackBufferSurface->Release();
 
-	if (FAILED(ms_lpd3dDevice->CreateDepthStencilSurface(m_wShadowMapSize, m_wShadowMapSize, D3DFMT_D16, kDesc.MultiSampleType, kDesc.MultiSampleQuality, FALSE, &m_lpCharacterShadowMapDepthSurface, NULL)))
+	if (FAILED(m_rkOwner.ms_lpd3dDevice->CreateDepthStencilSurface(m_rkOwner.m_wShadowMapSize, m_rkOwner.m_wShadowMapSize, D3DFMT_D16, kDesc.MultiSampleType, kDesc.MultiSampleQuality, FALSE, &m_rkOwner.m_lpCharacterShadowMapDepthSurface, NULL)))
 	{
 		TraceError("CMapOutdoor Unable to create Character Shadow depth Surface\n");
 		return;
 	}
 }
 
-void CMapOutdoor::ReleaseCharacterShadowTexture()
+void CMapOutdoorRender::ReleaseCharacterShadowTexture()
 {
-	SAFE_RELEASE(m_lpCharacterShadowMapRenderTargetSurface);
-	SAFE_RELEASE(m_lpCharacterShadowMapDepthSurface);
-	SAFE_RELEASE(m_lpCharacterShadowMapTexture);
+	SAFE_RELEASE(m_rkOwner.m_lpCharacterShadowMapRenderTargetSurface);
+	SAFE_RELEASE(m_rkOwner.m_lpCharacterShadowMapDepthSurface);
+	SAFE_RELEASE(m_rkOwner.m_lpCharacterShadowMapTexture);
 }
 
 uint32_t dwLightEnable = FALSE;
 
-bool CMapOutdoor::BeginRenderCharacterShadowToTexture()
+bool CMapOutdoorRender::BeginRenderCharacterShadowToTexture()
 {
 	D3DXMATRIX matLightView, matLightProj;
 
@@ -113,43 +117,43 @@ bool CMapOutdoor::BeginRenderCharacterShadowToTexture()
 	bool bSuccess = true;
 
 	// Backup Device Context
-	if (FAILED(ms_lpd3dDevice->GetRenderTarget(0, &m_lpBackupRenderTargetSurface)))
+	if (FAILED(m_rkOwner.ms_lpd3dDevice->GetRenderTarget(0, &m_rkOwner.m_lpBackupRenderTargetSurface)))
 	{
 		TraceError("CMapOutdoor::BeginRenderCharacterShadowToTexture : Unable to Save Window Render Target\n");
 		bSuccess = false;
 	}
 
-	if (FAILED(ms_lpd3dDevice->GetDepthStencilSurface(&m_lpBackupDepthSurface)))
+	if (FAILED(m_rkOwner.ms_lpd3dDevice->GetDepthStencilSurface(&m_rkOwner.m_lpBackupDepthSurface)))
 	{
 		TraceError("CMapOutdoor::BeginRenderCharacterShadowToTexture : Unable to Save Window Depth Surface\n");
 		bSuccess = false;
 	}
 
-	if (FAILED(ms_lpd3dDevice->SetRenderTarget(0, m_lpCharacterShadowMapRenderTargetSurface)))
+	if (FAILED(m_rkOwner.ms_lpd3dDevice->SetRenderTarget(0, m_rkOwner.m_lpCharacterShadowMapRenderTargetSurface)))
 	{
 		TraceError("CMapOutdoor::BeginRenderCharacterShadowToTexture : Unable to Set Shadow Map Render Target\n");
 		bSuccess = false;
 	}
 
-	if (FAILED(ms_lpd3dDevice->SetDepthStencilSurface(m_lpCharacterShadowMapDepthSurface)))
+	if (FAILED(m_rkOwner.ms_lpd3dDevice->SetDepthStencilSurface(m_rkOwner.m_lpCharacterShadowMapDepthSurface)))
 	{
 		TraceError("CMapOutdoor::BeginRenderCharacterShadowToTexture : Unable to Set Shadow Map Depth Surface\n");
 		bSuccess = false;
 	}
 
-	if (FAILED(ms_lpd3dDevice->Clear(0L, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0xFF, 0xFF, 0xFF), 1.0f, 0)))
+	if (FAILED(m_rkOwner.ms_lpd3dDevice->Clear(0L, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0xFF, 0xFF, 0xFF), 1.0f, 0)))
 	{
 		TraceError("CMapOutdoor::BeginRenderCharacterShadowToTexture : Unable to Clear Render Target");
 		bSuccess = false;
 	}
 
-	if (FAILED(ms_lpd3dDevice->GetViewport(&m_BackupViewport)))
+	if (FAILED(m_rkOwner.ms_lpd3dDevice->GetViewport(&m_rkOwner.m_BackupViewport)))
 	{
 		TraceError("CMapOutdoor::BeginRenderCharacterShadowToTexture : Unable to Save Window Viewport\n");
 		bSuccess = false;
 	}
 
-	if (FAILED(ms_lpd3dDevice->SetViewport(&m_ShadowMapViewport)))
+	if (FAILED(m_rkOwner.ms_lpd3dDevice->SetViewport(&m_rkOwner.m_ShadowMapViewport)))
 	{
 		TraceError("CMapOutdoor::BeginRenderCharacterShadowToTexture : Unable to Set Shadow Map viewport\n");
 		bSuccess = false;
@@ -158,15 +162,15 @@ bool CMapOutdoor::BeginRenderCharacterShadowToTexture()
 	return bSuccess;
 }
 
-void CMapOutdoor::EndRenderCharacterShadowToTexture()
+void CMapOutdoorRender::EndRenderCharacterShadowToTexture()
 {
-	ms_lpd3dDevice->SetViewport(&m_BackupViewport);
+	m_rkOwner.ms_lpd3dDevice->SetViewport(&m_rkOwner.m_BackupViewport);
 
-	ms_lpd3dDevice->SetRenderTarget(0, m_lpBackupRenderTargetSurface);
-	ms_lpd3dDevice->SetDepthStencilSurface(m_lpBackupDepthSurface);
+	m_rkOwner.ms_lpd3dDevice->SetRenderTarget(0, m_rkOwner.m_lpBackupRenderTargetSurface);
+	m_rkOwner.ms_lpd3dDevice->SetDepthStencilSurface(m_rkOwner.m_lpBackupDepthSurface);
 
-	SAFE_RELEASE(m_lpBackupRenderTargetSurface);
-	SAFE_RELEASE(m_lpBackupDepthSurface);
+	SAFE_RELEASE(m_rkOwner.m_lpBackupRenderTargetSurface);
+	SAFE_RELEASE(m_rkOwner.m_lpBackupDepthSurface);
 
 	STATEMANAGER.RestoreTransform(D3DTS_VIEW);
 	STATEMANAGER.RestoreTransform(D3DTS_PROJECTION);

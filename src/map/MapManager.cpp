@@ -206,7 +206,7 @@ bool CMapManager::LoadMap(const std::string& c_rstrMapName, float x, float y, fl
 			return false;
 		}
 
-		RegisterEnvironmentData(0, rkMap.GetEnvironmentDataName().c_str());
+		RegisterEnvironmentData(0, rkMap.GetLoad().GetEnvironmentDataName().c_str());
 
 		SetEnvironmentData(0);
 	}
@@ -765,7 +765,7 @@ std::vector<int>& CMapManager::GetRenderedSplatNum(int* piPatch, int* piSplat, f
 	}
 
 	CMapOutdoor& rkMap = GetMapOutdoorRef();
-	return rkMap.GetRenderedSplatNum(piPatch, piSplat, pfSplatRatio);
+	return rkMap.GetRender().GetRenderedSplatNum(piPatch, piSplat, pfSplatRatio);
 }
 
 CArea::TCRCWithNumberVector& CMapManager::GetRenderedGraphicThingInstanceNum(uint32_t* pdwGraphicThingInstanceNum, uint32_t* pdwCRCNum)
@@ -779,7 +779,7 @@ CArea::TCRCWithNumberVector& CMapManager::GetRenderedGraphicThingInstanceNum(uin
 	}
 
 	CMapOutdoor& rkMap = GetMapOutdoorRef();
-	return rkMap.GetRenderedGraphicThingInstanceNum(pdwGraphicThingInstanceNum, pdwCRCNum);
+	return rkMap.GetRender().GetRenderedGraphicThingInstanceNum(pdwGraphicThingInstanceNum, pdwCRCNum);
 }
 
 bool CMapManager::GetNormal(int ix, int iy, D3DXVECTOR3* pv3Normal)

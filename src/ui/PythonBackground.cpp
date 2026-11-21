@@ -29,7 +29,7 @@ bool CPythonBackground::SetVisiblePart(int eMapOutDoorPart, bool isVisible)
 		return false;
 
 	CMapOutdoor& rkMap = GetMapOutdoorRef();
-	rkMap.SetVisiblePart(eMapOutDoorPart, isVisible);
+	rkMap.GetRender().SetVisiblePart(eMapOutDoorPart, isVisible);
 	return true;
 }
 
@@ -48,7 +48,7 @@ bool CPythonBackground::SetSplatLimit(int iSplatNum)
 		return false;
 
 	CMapOutdoor& rkMap = GetMapOutdoorRef();
-	rkMap.SetSplatLimit(iSplatNum);
+	rkMap.GetRender().SetSplatLimit(iSplatNum);
 	return true;
 }
 
@@ -58,7 +58,7 @@ void CPythonBackground::CreateCharacterShadowTexture()
 		return;
 
 	CMapOutdoor& rkMap = GetMapOutdoorRef();
-	rkMap.CreateCharacterShadowTexture();
+	rkMap.GetRender().CreateCharacterShadowTexture();
 }
 
 void CPythonBackground::ReleaseCharacterShadowTexture()
@@ -67,7 +67,7 @@ void CPythonBackground::ReleaseCharacterShadowTexture()
 		return;
 
 	CMapOutdoor& rkMap = GetMapOutdoorRef();
-	rkMap.ReleaseCharacterShadowTexture();
+	rkMap.GetRender().ReleaseCharacterShadowTexture();
 }
 
 void CPythonBackground::RefreshShadowLevel()
@@ -91,37 +91,37 @@ bool CPythonBackground::SetShadowLevel(int eLevel)
 	{
 		case SHADOW_NONE:
 			rkMap.SetDrawShadow(false);
-			rkMap.SetShadowTextureSize(512);
+			rkMap.GetRender().SetShadowTextureSize(512);
 			break;
 
 		case SHADOW_GROUND:
 			rkMap.SetDrawShadow(true);
 			rkMap.SetDrawCharacterShadow(false);
-			rkMap.SetShadowTextureSize(512);
+			rkMap.GetRender().SetShadowTextureSize(512);
 			break;
 
 		case SHADOW_GROUND_AND_SOLO:
 			rkMap.SetDrawShadow(true);
 			rkMap.SetDrawCharacterShadow(true);
-			rkMap.SetShadowTextureSize(512);
+			rkMap.GetRender().SetShadowTextureSize(512);
 			break;
 
 		case SHADOW_ALL:
 			rkMap.SetDrawShadow(true);
 			rkMap.SetDrawCharacterShadow(true);
-			rkMap.SetShadowTextureSize(512);
+			rkMap.GetRender().SetShadowTextureSize(512);
 			break;
 
 		case SHADOW_ALL_HIGH:
 			rkMap.SetDrawShadow(true);
 			rkMap.SetDrawCharacterShadow(true);
-			rkMap.SetShadowTextureSize(1024);
+			rkMap.GetRender().SetShadowTextureSize(1024);
 			break;
 
 		case SHADOW_ALL_MAX:
 			rkMap.SetDrawShadow(true);
 			rkMap.SetDrawCharacterShadow(true);
-			rkMap.SetShadowTextureSize(2048);
+			rkMap.GetRender().SetShadowTextureSize(2048);
 			break;
 	}
 
@@ -530,7 +530,7 @@ void CPythonBackground::Render()
 	CMapOutdoor& rkMap = GetMapOutdoorRef();
 	rkMap.Render();
 	if (m_bVisibleGuildArea)
-		rkMap.RenderMarkedArea();
+		rkMap.GetRender().RenderMarkedArea();
 }
 
 void CPythonBackground::RenderSnow()
@@ -544,7 +544,7 @@ void CPythonBackground::RenderPCBlocker()
 		return;
 
 	CMapOutdoor& rkMap = GetMapOutdoorRef();
-	rkMap.RenderPCBlocker();
+	rkMap.GetRender().RenderPCBlocker();
 }
 
 void CPythonBackground::RenderCollision()
@@ -553,7 +553,7 @@ void CPythonBackground::RenderCollision()
 		return;
 
 	CMapOutdoor& rkMap = GetMapOutdoorRef();
-	rkMap.RenderCollision();
+	rkMap.GetRender().RenderCollision();
 }
 
 void CPythonBackground::RenderCharacterShadowToTexture()
@@ -576,7 +576,7 @@ void CPythonBackground::RenderCharacterShadowToTexture()
 		D3DXMATRIX matWorld;
 		STATEMANAGER.GetTransform(D3DTS_WORLD, &matWorld);
 
-		bool canRender = rkMap.BeginRenderCharacterShadowToTexture();
+		bool canRender = rkMap.GetRender().BeginRenderCharacterShadowToTexture();
 		if (canRender)
 		{
 			CPythonCharacterManager& rkChrMgr = CPythonCharacterManager::Instance();
@@ -586,7 +586,7 @@ void CPythonBackground::RenderCharacterShadowToTexture()
 			else
 				rkChrMgr.RenderShadowAllInstances();
 		}
-		rkMap.EndRenderCharacterShadowToTexture();
+		rkMap.GetRender().EndRenderCharacterShadowToTexture();
 
 		STATEMANAGER.SetTransform(D3DTS_WORLD, &matWorld);
 	}
@@ -670,7 +670,7 @@ void CPythonBackground::RenderSky()
 		return;
 
 	CMapOutdoor& rkMap = GetMapOutdoorRef();
-	rkMap.RenderSky();
+	rkMap.GetRender().RenderSky();
 }
 
 void CPythonBackground::RenderCloud()
@@ -679,7 +679,7 @@ void CPythonBackground::RenderCloud()
 		return;
 
 	CMapOutdoor& rkMap = GetMapOutdoorRef();
-	rkMap.RenderCloud();
+	rkMap.GetRender().RenderCloud();
 }
 
 void CPythonBackground::RenderWater()
@@ -688,7 +688,7 @@ void CPythonBackground::RenderWater()
 		return;
 
 	CMapOutdoor& rkMap = GetMapOutdoorRef();
-	rkMap.RenderWater();
+	rkMap.GetRender().RenderWater();
 }
 
 void CPythonBackground::RenderEffect()
@@ -697,7 +697,7 @@ void CPythonBackground::RenderEffect()
 		return;
 
 	CMapOutdoor& rkMap = GetMapOutdoorRef();
-	rkMap.RenderEffect();
+	rkMap.GetRender().RenderEffect();
 }
 
 void CPythonBackground::RenderBeforeLensFlare()
@@ -706,7 +706,7 @@ void CPythonBackground::RenderBeforeLensFlare()
 		return;
 
 	CMapOutdoor& rkMap = GetMapOutdoorRef();
-	rkMap.RenderBeforeLensFlare();
+	rkMap.GetRender().RenderBeforeLensFlare();
 }
 
 void CPythonBackground::RenderAfterLensFlare()
@@ -715,7 +715,7 @@ void CPythonBackground::RenderAfterLensFlare()
 		return;
 
 	CMapOutdoor& rkMap = GetMapOutdoorRef();
-	rkMap.RenderAfterLensFlare();
+	rkMap.GetRender().RenderAfterLensFlare();
 }
 
 void CPythonBackground::ClearGuildArea()

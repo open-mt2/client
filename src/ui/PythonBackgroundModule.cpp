@@ -312,7 +312,7 @@ PyObject* backgroundRenderCharacterShadowToTexture(PyObject* poSelf, PyObject* p
 
 PyObject* backgroundRenderDungeon(PyObject* poSelf, PyObject* poArgs)
 {
-	assert(!"background.RenderDungeon() - \xBB\xE7\xBF\xEB\xC7\xCF\xC1\xF6 \xBE\xCA\xB4\xC2 \xC7\xD4\xBC\xF6\xC0\xD4\xB4\xCF\xB4\xD9 - [levites]");
+	assert(!"background.GetRender().RenderDungeon() - \xBB\xE7\xBF\xEB\xC7\xCF\xC1\xF6 \xBE\xCA\xB4\xC2 \xC7\xD4\xBC\xF6\xC0\xD4\xB4\xCF\xB4\xD9 - [levites]");
 	return Py_BuildNone();
 }
 
@@ -424,7 +424,7 @@ PyObject* backgroundSetSpaltLimit(PyObject* poSelf, PyObject* poArgs)
 		return Py_BadArgument();
 
 	if (iSplatNum < 0)
-		return Py_BuildException("background.SetSplatLimit(iSplatNum(%d)>=0)", iSplatNum);
+		return Py_BuildException("background.GetRender().SetSplatLimit(iSplatNum(%d)>=0)", iSplatNum);
 
 	CPythonBackground& rkBG = CPythonBackground::Instance();
 	rkBG.SetSplatLimit(iSplatNum);

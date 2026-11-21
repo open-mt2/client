@@ -3,31 +3,35 @@
 #include <Neoeter/Render/ResourceManager.h>
 
 #include <Client/Map/MapOutdoor.h>
+#include <Client/Map/CMapOutdoorRender.h>
+#include <Client/Map/CMapOutdoorIndexBuffer.h>
+#include <Client/Map/CMapOutdoorLoad.h>
+#include <Client/Map/CMapOutdoorUpdate.h>
 #include <Client/Map/TerrainPatch.h>
 
-void CMapOutdoor::LoadWaterTexture()
+void CMapOutdoorRender::LoadWaterTexture()
 {
 	UnloadWaterTexture();
 	char buf[256];
 	for (int i = 0; i < 30; ++i)
 	{
 		sprintf(buf, "ymir work/special/water/%02d.dds", i + 1);
-		m_WaterInstances[i].SetImagePointer((CGraphicImage*)CResourceManager::Instance().GetResourcePointer(buf));
+		m_rkOwner.m_WaterInstances[i].SetImagePointer((CGraphicImage*)CResourceManager::Instance().GetResourcePointer(buf));
 	}
 }
 
-void CMapOutdoor::UnloadWaterTexture()
+void CMapOutdoorRender::UnloadWaterTexture()
 {
 	for (int i = 0; i < 30; ++i)
-		m_WaterInstances[i].Destroy();
+		m_rkOwner.m_WaterInstances[i].Destroy();
 }
 
-void CMapOutdoor::RenderWater()
+void CMapOutdoorRender::RenderWater()
 {
-	if (m_PatchVector.empty())
+	if (m_rkOwner.m_PatchVector.empty())
 		return;
 
-	if (!IsVisiblePart(PART_WATER))
+	if (!IsVisiblePart(CMapOutdoor::CMapOutdoor::PART_WATER))
 		return;
 
 	//////////////////////////////////////////////////////////////////////////
@@ -40,10 +44,10 @@ void CMapOutdoor::RenderWater()
 	STATEMANAGER.SaveRenderState(D3DRS_DIFFUSEMATERIALSOURCE, D3DMCS_COLOR1);
 	STATEMANAGER.SaveRenderState(D3DRS_COLORVERTEX, TRUE);
 
-	STATEMANAGER.SetTexture(0, m_WaterInstances[((ELTimer_GetMSec() / 70) % 30)].GetTexturePointer()->GetD3DTexture());
+	STATEMANAGER.SetTexture(0, m_rkOwner.m_WaterInstances[((ELTimer_GetMSec() / 70) % 30)].GetTexturePointer()->GetD3DTexture());
 
-	D3DXMatrixScaling(&matTexTransformWater, m_fWaterTexCoordBase, -m_fWaterTexCoordBase, 0.0f);
-	D3DXMatrixMultiply(&matTexTransformWater, &m_matViewInverse, &matTexTransformWater);
+	D3DXMatrixScaling(&matTexTransformWater, m_rkOwner.m_fWaterTexCoordBase, -m_rkOwner.m_fWaterTexCoordBase, 0.0f);
+	D3DXMatrixMultiply(&matTexTransformWater, &m_rkOwner.m_matViewInverse, &matTexTransformWater);
 
 	STATEMANAGER.SaveTransform(D3DTS_TEXTURE0, &matTexTransformWater);
 	STATEMANAGER.SaveFVF(D3DFVF_XYZ | D3DFVF_DIFFUSE);
@@ -90,17 +94,17 @@ void CMapOutdoor::RenderWater()
 	}
 
 	s_fWaterHeightCurrent = s_fWaterHeightBegin + (s_fWaterHeightEnd - s_fWaterHeightBegin) * (float)((CTimer::Instance().GetCurrentMillisecond() - s_dwLastHeightChangeTime) / (float)s_dwBlendtime);
-	m_matWorldForCommonUse._43 = s_fWaterHeightCurrent;
+	m_rkOwner.m_matWorldForCommonUse._43 = s_fWaterHeightCurrent;
 
-	m_matWorldForCommonUse._41 = 0.0f;
-	m_matWorldForCommonUse._42 = 0.0f;
-	STATEMANAGER.SetTransform(D3DTS_WORLD, &m_matWorldForCommonUse);
+	m_rkOwner.m_matWorldForCommonUse._41 = 0.0f;
+	m_rkOwner.m_matWorldForCommonUse._42 = 0.0f;
+	STATEMANAGER.SetTransform(D3DTS_WORLD, &m_rkOwner.m_matWorldForCommonUse);
 
 	float fFogDistance = __GetFogDistance();
 
 	std::vector<std::pair<float, long>>::iterator i;
 
-	for (i = m_PatchVector.begin(); i != m_PatchVector.end(); ++i)
+	for (i = m_rkOwner.m_PatchVector.begin(); i != m_rkOwner.m_PatchVector.end(); ++i)
 	{
 		if (i->first < fFogDistance)
 			DrawWater(i->second);
@@ -109,14 +113,14 @@ void CMapOutdoor::RenderWater()
 	STATEMANAGER.SetTexture(0, NULL);
 	STATEMANAGER.SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 
-	for (i = m_PatchVector.begin(); i != m_PatchVector.end(); ++i)
+	for (i = m_rkOwner.m_PatchVector.begin(); i != m_rkOwner.m_PatchVector.end(); ++i)
 	{
 		if (i->first >= fFogDistance)
 			DrawWater(i->second);
 	}
 
 	// 렌더링 한 후에는 물 z 위치를 복구
-	m_matWorldForCommonUse._43 = 0.0f;
+	m_rkOwner.m_matWorldForCommonUse._43 = 0.0f;
 
 	//////////////////////////////////////////////////////////////////////////
 	// RenderState
@@ -137,13 +141,13 @@ void CMapOutdoor::RenderWater()
 	STATEMANAGER.RestoreRenderState(D3DRS_CULLMODE);
 }
 
-void CMapOutdoor::DrawWater(long patchnum)
+void CMapOutdoorRender::DrawWater(long patchnum)
 {
-	assert(NULL != m_pTerrainPatchProxyList);
-	if (!m_pTerrainPatchProxyList)
+	assert(NULL != m_rkOwner.m_pTerrainPatchProxyList);
+	if (!m_rkOwner.m_pTerrainPatchProxyList)
 		return;
 
-	CTerrainPatchProxy& rkTerrainPatchProxy = m_pTerrainPatchProxyList[patchnum];
+	CTerrainPatchProxy& rkTerrainPatchProxy = m_rkOwner.m_pTerrainPatchProxyList[patchnum];
 
 	if (!rkTerrainPatchProxy.isUsed())
 		return;
@@ -165,5 +169,5 @@ void CMapOutdoor::DrawWater(long patchnum)
 	STATEMANAGER.SetStreamSource(0, pkVB->GetD3DVertexBuffer(), sizeof(SWaterVertex));
 	STATEMANAGER.DrawPrimitive(D3DPT_TRIANGLELIST, 0, uPriCount);
 
-	ms_faceCount += uPriCount;
+	m_rkOwner.ms_faceCount += uPriCount;
 }

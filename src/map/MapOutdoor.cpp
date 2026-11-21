@@ -67,7 +67,10 @@ struct FGetPickingPoint
 		}
 };
 
-CMapOutdoor::CMapOutdoor()
+CMapOutdoor::CMapOutdoor() : m_kRender(*this),
+							 m_kIndexBuffer(*this),
+							 m_kLoad(*this),
+							 m_kUpdate(*this)
 {
 	CGraphicImage* pAlphaFogImage = (CGraphicImage*)CResourceManager::Instance().GetResourcePointer("ymir work/special/fog.tga");
 	CGraphicImage* pAttrImage = (CGraphicImage*)CResourceManager::Instance().GetResourcePointer("ymir work/special/white.dds");
@@ -78,13 +81,13 @@ CMapOutdoor::CMapOutdoor()
 
 	Initialize();
 
-	__SoftwareTransformPatch_Initialize();
-	__SoftwareTransformPatch_Create();
+	m_kRender.__SoftwareTransformPatch_Initialize();
+	m_kRender.__SoftwareTransformPatch_Create();
 }
 
 CMapOutdoor::~CMapOutdoor()
 {
-	__SoftwareTransformPatch_Destroy();
+	m_kRender.__SoftwareTransformPatch_Destroy();
 
 	// 2004.10.14.myevan.TEMP_CAreaLoaderThread
 	// ms_AreaLoaderThread.Shutdown();
@@ -174,7 +177,7 @@ bool CMapOutdoor::Initialize()
 	D3DXMatrixIdentity(&m_matWorldForCommonUse);
 
 	InitializeFog();
-	InitializeVisibleParts();
+	m_kRender.InitializeVisibleParts();
 
 	m_dwBaseX = 0;
 	m_dwBaseY = 0;
@@ -206,8 +209,8 @@ bool CMapOutdoor::Destroy()
 	DestroyArea();
 	DestroyTerrainPatchProxyList();
 
-	FreeQuadTree();
-	ReleaseCharacterShadowTexture();
+	m_kRender.FreeQuadTree();
+	m_kRender.ReleaseCharacterShadowTexture();
 
 	CTerrain::DestroySystem();
 	CArea::DestroySystem();
@@ -225,7 +228,7 @@ bool CMapOutdoor::Destroy()
 
 void CMapOutdoor::Clear()
 {
-	UnloadWaterTexture();
+	m_kRender.UnloadWaterTexture();
 	Destroy();	  // 해제
 	Initialize(); // 초기화
 }
@@ -442,7 +445,7 @@ void CMapOutdoor::CreateTerrainPatchProxyList()
 	m_iPatchTerrainVertexSize = 24;
 	m_iPatchWaterVertexSize = 16;
 
-	SetIndexBuffer();
+	m_kIndexBuffer.SetIndexBuffer();
 }
 
 void CMapOutdoor::DestroyTerrainPatchProxyList()
@@ -1666,4 +1669,49 @@ void CMapOutdoor::ConvertToMapCoords(float fx, float fy, int* iCellX, int* iCell
 	PR_FLOAT_TO_INT(fSubcellY, *pucSubCellY);
 	*pucSubCellX = (*pucSubCellX) % CTerrainImpl::HEIGHT_TILE_XRATIO;
 	*pucSubCellY = (*pucSubCellY) % CTerrainImpl::HEIGHT_TILE_YRATIO;
+}
+
+CMapOutdoorRender& CMapOutdoor::GetRender()
+{
+	return m_kRender;
+}
+
+CMapOutdoorIndexBuffer& CMapOutdoor::GetIndexBuffer()
+{
+	return m_kIndexBuffer;
+}
+
+CMapOutdoorLoad& CMapOutdoor::GetLoad()
+{
+	return m_kLoad;
+}
+
+CMapOutdoorUpdate& CMapOutdoor::GetUpdate()
+{
+	return m_kUpdate;
+}
+
+void CMapOutdoor::OnRender()
+{
+	m_kRender.OnRender();
+}
+
+void CMapOutdoor::ApplyLight(uint32_t dwVersion, const D3DLIGHT9& c_rkLight)
+{
+	m_kRender.ApplyLight(dwVersion, c_rkLight);
+}
+
+bool CMapOutdoor::Load(float x, float y, float z)
+{
+	return m_kLoad.Load(x, y, z);
+}
+
+bool CMapOutdoor::Update(float fX, float fY, float fZ)
+{
+	return m_kUpdate.Update(fX, fY, fZ);
+}
+
+void CMapOutdoor::UpdateAroundAmbience(float fX, float fY, float fZ)
+{
+	m_kUpdate.UpdateAroundAmbience(fX, fY, fZ);
 }

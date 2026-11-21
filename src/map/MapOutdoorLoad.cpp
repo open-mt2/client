@@ -1,5 +1,9 @@
 #include <Client/Map/StdAfx.h>
 #include <Client/Map/MapOutdoor.h>
+#include <Client/Map/CMapOutdoorRender.h>
+#include <Client/Map/CMapOutdoorIndexBuffer.h>
+#include <Client/Map/CMapOutdoorLoad.h>
+#include <Client/Map/CMapOutdoorUpdate.h>
 #include <Client/Map/AreaTerrain.h>
 #include <Client/Map/AreaLoaderThread.h>
 #include <Neoeter/Render/ResourceManager.h>
@@ -7,21 +11,21 @@
 
 // CAreaLoaderThread CMapOutdoor::ms_AreaLoaderThread;
 
-bool CMapOutdoor::Load(float x, float y, float z)
+bool CMapOutdoorLoad::Load(float x, float y, float z)
 {
-	Destroy();
+	m_rkOwner.Destroy();
 
 	CEterPackManager& rkPackMgr = CEterPackManager::Instance();
 	{
 		static std::string s_strOldPathName = "";
 
 		// 2004.08.09.myevan.Pack파일을 찾을때.. 폴더명만으로는 그냥 리턴되는 부분이 있다
-		std::string c_rstrNewPathName = GetName() + "\\cache";
+		std::string c_rstrNewPathName = m_rkOwner.GetName() + "\\cache";
 
 		s_strOldPathName = c_rstrNewPathName;
 	}
 
-	std::string strFileName = GetMapDataDirectory() + "\\Setting.txt";
+	std::string strFileName = m_rkOwner.GetMapDataDirectory() + "\\Setting.txt";
 
 	if (!LoadSetting(strFileName.c_str()))
 		TraceError("CMapOutdoor::Load : LoadSetting(%s) Failed", strFileName.c_str());
@@ -29,52 +33,52 @@ bool CMapOutdoor::Load(float x, float y, float z)
 	if (!LoadMonsterAreaInfo())
 		TraceError("CMapOutdoor::Load - LoadMonsterAreaInfo ERROR");
 
-	CreateTerrainPatchProxyList();
-	BuildQuadTree();
-	LoadWaterTexture();
-	CreateCharacterShadowTexture();
+	m_rkOwner.CreateTerrainPatchProxyList();
+	m_rkOwner.GetRender().BuildQuadTree();
+	m_rkOwner.GetRender().LoadWaterTexture();
+	m_rkOwner.GetRender().CreateCharacterShadowTexture();
 
-	m_lOldReadX = -1;
+	m_rkOwner.m_lOldReadX = -1;
 
 	// TODO: SetRenderingDevice에서 Environment로 부터 라이트 속성을 넘겨줘야 스태틱 라이트가 제대로 작동한다.
 	CSpeedTreeDirectX::Instance().SetRenderingDevice();
 
-	Update(x, y, z);
+	m_rkOwner.Update(x, y, z);
 
-	__HeightCache_Init();
+	m_rkOwner.__HeightCache_Init();
 
 	// LOCAL_ENVIRONMENT_DATA
-	std::string local_envDataName = GetMapDataDirectory() + "\\" + m_settings_envDataName;
+	std::string local_envDataName = m_rkOwner.GetMapDataDirectory() + "\\" + m_rkOwner.m_settings_envDataName;
 	if (rkPackMgr.isExist(local_envDataName.c_str()))
 	{
-		m_envDataName = local_envDataName;
+		m_rkOwner.m_envDataName = local_envDataName;
 	}
 	else
 	{
 		const std::string& c_rstrEnvironmentRoot = "ymir work/environment/";
-		const std::string& c_rstrMapName = GetName();
-		m_envDataName = c_rstrEnvironmentRoot + m_settings_envDataName;
+		const std::string& c_rstrMapName = m_rkOwner.GetName();
+		m_rkOwner.m_envDataName = c_rstrEnvironmentRoot + m_rkOwner.m_settings_envDataName;
 
-		if (0 == m_envDataName.compare(c_rstrEnvironmentRoot))
+		if (0 == m_rkOwner.m_envDataName.compare(c_rstrEnvironmentRoot))
 		{
 			const std::string& strAppendName = c_rstrMapName.substr(c_rstrMapName.size() - 2, 2);
-			m_envDataName = c_rstrEnvironmentRoot + strAppendName + ".msenv";
+			m_rkOwner.m_envDataName = c_rstrEnvironmentRoot + strAppendName + ".msenv";
 		}
 	}
 	// LOCAL_ENVIRONMENT_DATA_END
 	return true;
 }
 
-std::string& CMapOutdoor::GetEnvironmentDataName()
+std::string& CMapOutdoorLoad::GetEnvironmentDataName()
 {
-	return m_envDataName;
+	return m_rkOwner.m_envDataName;
 }
 
-bool CMapOutdoor::isTerrainLoaded(uint16_t wX, uint16_t wY)
+bool CMapOutdoorLoad::isTerrainLoaded(uint16_t wX, uint16_t wY)
 {
-	for (uint32_t i = 0; i < m_TerrainVector.size(); ++i)
+	for (uint32_t i = 0; i < m_rkOwner.m_TerrainVector.size(); ++i)
 	{
-		CTerrain* pTerrain = m_TerrainVector[i];
+		CTerrain* pTerrain = m_rkOwner.m_TerrainVector[i];
 		uint16_t usCoordX, usCoordY;
 		pTerrain->GetCoordinate(&usCoordX, &usCoordY);
 
@@ -84,11 +88,11 @@ bool CMapOutdoor::isTerrainLoaded(uint16_t wX, uint16_t wY)
 	return false;
 }
 
-bool CMapOutdoor::isAreaLoaded(uint16_t wX, uint16_t wY)
+bool CMapOutdoorLoad::isAreaLoaded(uint16_t wX, uint16_t wY)
 {
-	for (uint32_t i = 0; i < m_AreaVector.size(); ++i)
+	for (uint32_t i = 0; i < m_rkOwner.m_AreaVector.size(); ++i)
 	{
-		CArea* pArea = m_AreaVector[i];
+		CArea* pArea = m_rkOwner.m_AreaVector[i];
 		uint16_t usCoordX, usCoordY;
 		pArea->GetCoordinate(&usCoordX, &usCoordY);
 
@@ -99,30 +103,30 @@ bool CMapOutdoor::isAreaLoaded(uint16_t wX, uint16_t wY)
 }
 
 // 현재 좌표를 기반으로 주위(ex. 3x3)에 있는 Terrain과 Area포인터를
-// m_pTerrain과 m_pArea에 연결한다.
-void CMapOutdoor::AssignTerrainPtr()
+// m_rkOwner.m_pTerrain과 m_rkOwner.m_pArea에 연결한다.
+void CMapOutdoorLoad::AssignTerrainPtr()
 {
 	// 월드에디터에서 화면을 죽죽죽 넘길 때 터레인을 저장해야 하기
 	// 때문에 이 virtual method를 호출 한다. 이 메소드는 CMapOutDoor에서는 아무 행동도
 	// 하지 않는다.
-	OnPreAssignTerrainPtr();
+	m_rkOwner.OnPreAssignTerrainPtr();
 
 	short sReferenceCoordMinX, sReferenceCoordMaxX, sReferenceCoordMinY, sReferenceCoordMaxY;
-	sReferenceCoordMinX = max(m_CurCoordinate.m_sTerrainCoordX - LOAD_SIZE_WIDTH, 0);
-	sReferenceCoordMaxX = min(m_CurCoordinate.m_sTerrainCoordX + LOAD_SIZE_WIDTH, m_sTerrainCountX - 1);
-	sReferenceCoordMinY = max(m_CurCoordinate.m_sTerrainCoordY - LOAD_SIZE_WIDTH, 0);
-	sReferenceCoordMaxY = min(m_CurCoordinate.m_sTerrainCoordY + LOAD_SIZE_WIDTH, m_sTerrainCountY - 1);
+	sReferenceCoordMinX = max(m_rkOwner.m_CurCoordinate.m_sTerrainCoordX - LOAD_SIZE_WIDTH, 0);
+	sReferenceCoordMaxX = min(m_rkOwner.m_CurCoordinate.m_sTerrainCoordX + LOAD_SIZE_WIDTH, m_rkOwner.m_sTerrainCountX - 1);
+	sReferenceCoordMinY = max(m_rkOwner.m_CurCoordinate.m_sTerrainCoordY - LOAD_SIZE_WIDTH, 0);
+	sReferenceCoordMaxY = min(m_rkOwner.m_CurCoordinate.m_sTerrainCoordY + LOAD_SIZE_WIDTH, m_rkOwner.m_sTerrainCountY - 1);
 
 	uint32_t i;
 	for (i = 0; i < AROUND_AREA_NUM; ++i)
 	{
-		m_pArea[i] = NULL;
-		m_pTerrain[i] = NULL;
+		m_rkOwner.m_pArea[i] = NULL;
+		m_rkOwner.m_pTerrain[i] = NULL;
 	}
 
-	for (i = 0; i < m_TerrainVector.size(); ++i)
+	for (i = 0; i < m_rkOwner.m_TerrainVector.size(); ++i)
 	{
-		CTerrain* pTerrain = m_TerrainVector[i];
+		CTerrain* pTerrain = m_rkOwner.m_TerrainVector[i];
 		uint16_t usCoordX, usCoordY;
 		pTerrain->GetCoordinate(&usCoordX, &usCoordY);
 
@@ -131,14 +135,14 @@ void CMapOutdoor::AssignTerrainPtr()
 			usCoordY >= sReferenceCoordMinY &&
 			usCoordY <= sReferenceCoordMaxY)
 		{
-			m_pTerrain[(usCoordY - m_CurCoordinate.m_sTerrainCoordY + LOAD_SIZE_WIDTH) * 3 +
-					   (usCoordX - m_CurCoordinate.m_sTerrainCoordX + LOAD_SIZE_WIDTH)] = pTerrain;
+			m_rkOwner.m_pTerrain[(usCoordY - m_rkOwner.m_CurCoordinate.m_sTerrainCoordY + LOAD_SIZE_WIDTH) * 3 +
+					   (usCoordX - m_rkOwner.m_CurCoordinate.m_sTerrainCoordX + LOAD_SIZE_WIDTH)] = pTerrain;
 		}
 	}
 
-	for (i = 0; i < m_AreaVector.size(); ++i)
+	for (i = 0; i < m_rkOwner.m_AreaVector.size(); ++i)
 	{
-		CArea* pArea = m_AreaVector[i];
+		CArea* pArea = m_rkOwner.m_AreaVector[i];
 		uint16_t usCoordX, usCoordY;
 		pArea->GetCoordinate(&usCoordX, &usCoordY);
 
@@ -147,13 +151,13 @@ void CMapOutdoor::AssignTerrainPtr()
 			usCoordY >= sReferenceCoordMinY &&
 			usCoordY <= sReferenceCoordMaxY)
 		{
-			m_pArea[(usCoordY - m_CurCoordinate.m_sTerrainCoordY + LOAD_SIZE_WIDTH) * 3 +
-					(usCoordX - m_CurCoordinate.m_sTerrainCoordX + LOAD_SIZE_WIDTH)] = pArea;
+			m_rkOwner.m_pArea[(usCoordY - m_rkOwner.m_CurCoordinate.m_sTerrainCoordY + LOAD_SIZE_WIDTH) * 3 +
+					(usCoordX - m_rkOwner.m_CurCoordinate.m_sTerrainCoordX + LOAD_SIZE_WIDTH)] = pArea;
 		}
 	}
 }
 
-bool CMapOutdoor::LoadArea(uint16_t wAreaCoordX, uint16_t wAreaCoordY, uint16_t wCellCoordX, uint16_t wCellCoordY)
+bool CMapOutdoorLoad::LoadArea(uint16_t wAreaCoordX, uint16_t wAreaCoordY, uint16_t wCellCoordX, uint16_t wCellCoordY)
 {
 	if (isAreaLoaded(wAreaCoordX, wAreaCoordY))
 		return true;
@@ -162,10 +166,10 @@ bool CMapOutdoor::LoadArea(uint16_t wAreaCoordX, uint16_t wAreaCoordY, uint16_t 
 #endif
 	unsigned long ulID = (unsigned long)(wAreaCoordX) * 1000L + (unsigned long)(wAreaCoordY);
 	char szAreaPathName[64 + 1];
-	_snprintf(szAreaPathName, sizeof(szAreaPathName), "%s\\%06lu\\", GetMapDataDirectory().c_str(), ulID);
+	_snprintf(szAreaPathName, sizeof(szAreaPathName), "%s\\%06lu\\", m_rkOwner.GetMapDataDirectory().c_str(), ulID);
 
 	CArea* pArea = CArea::New();
-	pArea->SetMapOutDoor(this);
+	pArea->SetMapOutDoor(&m_rkOwner);
 #ifdef _DEBUG
 	Tracef("CMapOutdoor::LoadArea1 %d\n", ELTimer_GetMSec() - dwStartTime);
 	dwStartTime = ELTimer_GetMSec();
@@ -173,15 +177,15 @@ bool CMapOutdoor::LoadArea(uint16_t wAreaCoordX, uint16_t wAreaCoordY, uint16_t 
 
 	pArea->SetCoordinate(wAreaCoordX, wAreaCoordY);
 	if (!pArea->Load(szAreaPathName))
-		TraceError(" CMapOutdoor::LoadArea(%d, %d) LoadShadowMap ERROR", wAreaCoordX, wAreaCoordY);
+		TraceError(" CMapOutdoorLoad::LoadArea(%d, %d) LoadShadowMap ERROR", wAreaCoordX, wAreaCoordY);
 #ifdef _DEBUG
 	Tracef("CMapOutdoor::LoadArea2 %d\n", ELTimer_GetMSec() - dwStartTime);
 	dwStartTime = ELTimer_GetMSec();
 #endif
 
-	m_AreaVector.push_back(pArea);
+	m_rkOwner.m_AreaVector.push_back(pArea);
 
-	pArea->EnablePortal(m_bEnablePortal);
+	pArea->EnablePortal(m_rkOwner.m_bEnablePortal);
 #ifdef _DEBUG
 	Tracef("CMapOutdoor::LoadArea3 %d\n", ELTimer_GetMSec() - dwStartTime);
 #endif
@@ -189,7 +193,11 @@ bool CMapOutdoor::LoadArea(uint16_t wAreaCoordX, uint16_t wAreaCoordY, uint16_t 
 	return true;
 }
 
-bool CMapOutdoor::LoadTerrain(uint16_t wTerrainCoordX, uint16_t wTerrainCoordY, uint16_t wCellCoordX, uint16_t wCellCoordY)
+CMapOutdoorLoad::CMapOutdoorLoad(CMapOutdoor& rkOwner) : m_rkOwner(rkOwner)
+{
+}
+
+bool CMapOutdoorLoad::LoadTerrain(uint16_t wTerrainCoordX, uint16_t wTerrainCoordY, uint16_t wCellCoordX, uint16_t wCellCoordY)
 {
 	if (isTerrainLoaded(wTerrainCoordX, wTerrainCoordY))
 		return true;
@@ -199,7 +207,7 @@ bool CMapOutdoor::LoadTerrain(uint16_t wTerrainCoordX, uint16_t wTerrainCoordY, 
 
 	unsigned long ulID = (unsigned long)(wTerrainCoordX) * 1000L + (unsigned long)(wTerrainCoordY);
 	char filename[256];
-	sprintf(filename, "%s\\%06lu\\AreaProperty.txt", GetMapDataDirectory().c_str(), ulID);
+	sprintf(filename, "%s\\%06lu\\AreaProperty.txt", m_rkOwner.GetMapDataDirectory().c_str(), ulID);
 
 	CTokenVectorMap stTokenVectorMap;
 
@@ -233,7 +241,7 @@ bool CMapOutdoor::LoadTerrain(uint16_t wTerrainCoordX, uint16_t wTerrainCoordY, 
 	CTerrain* pTerrain = CTerrain::New();
 
 	pTerrain->Clear();
-	pTerrain->SetMapOutDoor(this);
+	pTerrain->SetMapOutDoor(&m_rkOwner);
 
 	pTerrain->SetCoordinate(wTerrainCoordX, wTerrainCoordY);
 
@@ -247,30 +255,30 @@ bool CMapOutdoor::LoadTerrain(uint16_t wTerrainCoordX, uint16_t wTerrainCoordY, 
 	char szMiniMapTexName[64 + 1];
 	char szSplatName[64 + 1];
 
-	_snprintf(szRawHeightFieldname, sizeof(szRawHeightFieldname), "%s\\%06lu\\height.raw", GetMapDataDirectory().c_str(), ulID);
-	_snprintf(szSplatName, sizeof(szSplatName), "%s\\%06lu\\tile.raw", GetMapDataDirectory().c_str(), ulID);
-	_snprintf(szAttrMapName, sizeof(szAttrMapName), "%s\\%06lu\\attr.atr", GetMapDataDirectory().c_str(), ulID);
-	_snprintf(szWaterMapName, sizeof(szWaterMapName), "%s\\%06lu\\water.wtr", GetMapDataDirectory().c_str(), ulID);
-	_snprintf(szShadowTexName, sizeof(szShadowTexName), "%s\\%06lu\\shadowmap.dds", GetMapDataDirectory().c_str(), ulID);
-	_snprintf(szShadowMapName, sizeof(szShadowMapName), "%s\\%06lu\\shadowmap.raw", GetMapDataDirectory().c_str(), ulID);
-	_snprintf(szMiniMapTexName, sizeof(szMiniMapTexName), "%s\\%06lu\\minimap.dds", GetMapDataDirectory().c_str(), ulID);
+	_snprintf(szRawHeightFieldname, sizeof(szRawHeightFieldname), "%s\\%06lu\\height.raw", m_rkOwner.GetMapDataDirectory().c_str(), ulID);
+	_snprintf(szSplatName, sizeof(szSplatName), "%s\\%06lu\\tile.raw", m_rkOwner.GetMapDataDirectory().c_str(), ulID);
+	_snprintf(szAttrMapName, sizeof(szAttrMapName), "%s\\%06lu\\attr.atr", m_rkOwner.GetMapDataDirectory().c_str(), ulID);
+	_snprintf(szWaterMapName, sizeof(szWaterMapName), "%s\\%06lu\\water.wtr", m_rkOwner.GetMapDataDirectory().c_str(), ulID);
+	_snprintf(szShadowTexName, sizeof(szShadowTexName), "%s\\%06lu\\shadowmap.dds", m_rkOwner.GetMapDataDirectory().c_str(), ulID);
+	_snprintf(szShadowMapName, sizeof(szShadowMapName), "%s\\%06lu\\shadowmap.raw", m_rkOwner.GetMapDataDirectory().c_str(), ulID);
+	_snprintf(szMiniMapTexName, sizeof(szMiniMapTexName), "%s\\%06lu\\minimap.dds", m_rkOwner.GetMapDataDirectory().c_str(), ulID);
 
 	if (!pTerrain->LoadWaterMap(szWaterMapName))
-		TraceError(" CMapOutdoor::LoadTerrain(%d, %d) LoadWaterMap ERROR", wTerrainCoordX, wTerrainCoordY);
+		TraceError(" CMapOutdoorLoad::LoadTerrain(%d, %d) LoadWaterMap ERROR", wTerrainCoordX, wTerrainCoordY);
 
 	if (!pTerrain->LoadHeightMap(szRawHeightFieldname))
-		TraceError(" CMapOutdoor::LoadTerrain(%d, %d) LoadHeightMap ERROR", wTerrainCoordX, wTerrainCoordY);
+		TraceError(" CMapOutdoorLoad::LoadTerrain(%d, %d) LoadHeightMap ERROR", wTerrainCoordX, wTerrainCoordY);
 
 	if (!pTerrain->LoadAttrMap(szAttrMapName))
-		TraceError(" CMapOutdoor::LoadTerrain(%d, %d) LoadAttrMap ERROR", wTerrainCoordX, wTerrainCoordY);
+		TraceError(" CMapOutdoorLoad::LoadTerrain(%d, %d) LoadAttrMap ERROR", wTerrainCoordX, wTerrainCoordY);
 
 	if (!pTerrain->RAW_LoadTileMap(szSplatName))
-		TraceError(" CMapOutdoor::LoadTerrain(%d, %d) RAW_LoadTileMap ERROR", wTerrainCoordX, wTerrainCoordY);
+		TraceError(" CMapOutdoorLoad::LoadTerrain(%d, %d) RAW_LoadTileMap ERROR", wTerrainCoordX, wTerrainCoordY);
 
 	pTerrain->LoadShadowTexture(szShadowTexName);
 
 	if (!pTerrain->LoadShadowMap(szShadowMapName))
-		TraceError(" CMapOutdoor::LoadTerrain(%d, %d) LoadShadowMap ERROR", wTerrainCoordX, wTerrainCoordY);
+		TraceError(" CMapOutdoorLoad::LoadTerrain(%d, %d) LoadShadowMap ERROR", wTerrainCoordX, wTerrainCoordY);
 
 	pTerrain->LoadMiniMapTexture(szMiniMapTexName);
 	pTerrain->SetName(c_rstrAreaName.c_str());
@@ -280,12 +288,12 @@ bool CMapOutdoor::LoadTerrain(uint16_t wTerrainCoordX, uint16_t wTerrainCoordY, 
 
 	Tracef("CMapOutdoor::LoadTerrain %d\n", ELTimer_GetMSec() - dwStartTime);
 
-	m_TerrainVector.push_back(pTerrain);
+	m_rkOwner.m_TerrainVector.push_back(pTerrain);
 
 	return true;
 }
 
-bool CMapOutdoor::LoadSetting(const char* c_szFileName)
+bool CMapOutdoorLoad::LoadSetting(const char* c_szFileName)
 {
 	CTokenVectorMap stTokenVectorMap;
 
@@ -333,11 +341,11 @@ bool CMapOutdoor::LoadSetting(const char* c_szFileName)
 
 	if (stTokenVectorMap.end() != stTokenVectorMap.find("terrainvisible"))
 	{
-		m_bSettingTerrainVisible = (bool)(atoi(stTokenVectorMap["terrainvisible"][0].c_str()) != 0);
+		m_rkOwner.m_bSettingTerrainVisible = (bool)(atoi(stTokenVectorMap["terrainvisible"][0].c_str()) != 0);
 	}
 	else
 	{
-		m_bSettingTerrainVisible = true;
+		m_rkOwner.m_bSettingTerrainVisible = true;
 	}
 
 	const std::string& c_rstrType = stTokenVectorMap["scripttype"][0];
@@ -360,29 +368,29 @@ bool CMapOutdoor::LoadSetting(const char* c_szFileName)
 		return false;
 	}
 
-	m_lViewRadius = atol(c_rstrViewRadius.c_str());
+	m_rkOwner.m_lViewRadius = atol(c_rstrViewRadius.c_str());
 
 #ifdef WORLD_EDITOR
-	m_lViewRadius <<= 1;
+	m_rkOwner.m_lViewRadius <<= 1;
 #endif
 
-	if (0L >= m_lViewRadius)
+	if (0L >= m_rkOwner.m_lViewRadius)
 	{
 		TraceError("MapOutdoor::LoadSetting(c_szFileName=%s) - VIEWRADIUS IS NOT GREATER THAN 0", c_szFileName);
 		return false;
 	}
 
-	m_fHeightScale = atof(c_rstrHeightScale.c_str());
+	m_rkOwner.m_fHeightScale = atof(c_rstrHeightScale.c_str());
 
-	SetTerrainCount(atoi(c_rstrMapSizeX.c_str()), atoi(c_rstrMapSizeY.c_str()));
+	m_rkOwner.SetTerrainCount(atoi(c_rstrMapSizeX.c_str()), atoi(c_rstrMapSizeY.c_str()));
 
-	m_fTerrainTexCoordBase = 1.0f / (float)(CTerrainImpl::PATCH_XSIZE * CTerrainImpl::CELLSCALE);
+	m_rkOwner.m_fTerrainTexCoordBase = 1.0f / (float)(CTerrainImpl::PATCH_XSIZE * CTerrainImpl::CELLSCALE);
 
 	if (stTokenVectorMap.end() != stTokenVectorMap.find("baseposition"))
 	{
 		const std::string& c_rstrMapBaseX = stTokenVectorMap["baseposition"][0];
 		const std::string& c_rstrMapBaseY = stTokenVectorMap["baseposition"][1];
-		SetBaseXY((uint32_t)atol(c_rstrMapBaseX.c_str()), (uint32_t)atol(c_rstrMapBaseY.c_str()));
+		m_rkOwner.SetBaseXY((uint32_t)atol(c_rstrMapBaseX.c_str()), (uint32_t)atol(c_rstrMapBaseY.c_str()));
 	}
 
 	std::string stTextureSetFileName = strTextureSet;
@@ -391,7 +399,7 @@ bool CMapOutdoor::LoadSetting(const char* c_szFileName)
 	if (0 != stTextureSetFileName.find_first_of("textureset", 0))
 		stTextureSetFileName = "textureset\\" + strTextureSet;
 
-	if (!m_TextureSet.Load(stTextureSetFileName.c_str(), m_fTerrainTexCoordBase))
+	if (!m_rkOwner.m_TextureSet.Load(stTextureSetFileName.c_str(), m_rkOwner.m_fTerrainTexCoordBase))
 	{
 #ifdef WORLD_EDITOR
 		// TextureSet 이 적용되어 있지 않아도 진행
@@ -402,51 +410,51 @@ bool CMapOutdoor::LoadSetting(const char* c_szFileName)
 #endif
 	}
 
-	CTerrain::SetTextureSet(&m_TextureSet);
+	CTerrain::SetTextureSet(&m_rkOwner.m_TextureSet);
 
 	if (stTokenVectorMap.end() != stTokenVectorMap.find("environment"))
 	{
 		const CTokenVector& c_rEnvironmentVector = stTokenVectorMap["environment"];
 		if (!c_rEnvironmentVector.empty())
-			m_settings_envDataName = c_rEnvironmentVector[0];
+			m_rkOwner.m_settings_envDataName = c_rEnvironmentVector[0];
 		else
-			TraceError("CMapOutdoor::LoadSetting(c_szFileName=%s) - Failed to load environment data\n", c_szFileName);
+			TraceError("CMapOutdoorLoad::LoadSetting(c_szFileName=%s) - Failed to load environment data\n", c_szFileName);
 	}
 
-	m_fWaterTexCoordBase = 1.0f / (float)(CTerrainImpl::CELLSCALE * 4);
+	m_rkOwner.m_fWaterTexCoordBase = 1.0f / (float)(CTerrainImpl::CELLSCALE * 4);
 
-	D3DXMatrixScaling(&m_matSplatAlpha,
-					  +m_fTerrainTexCoordBase * 2.0f * (float)(CTerrainImpl::PATCH_XSIZE) / (float)(CTerrainImpl::SPLATALPHA_RAW_XSIZE - 2),
-					  -m_fTerrainTexCoordBase * 2.0f * (float)(CTerrainImpl::PATCH_YSIZE) / (float)(CTerrainImpl::SPLATALPHA_RAW_XSIZE - 2),
+	D3DXMatrixScaling(&m_rkOwner.m_matSplatAlpha,
+					  +m_rkOwner.m_fTerrainTexCoordBase * 2.0f * (float)(CTerrainImpl::PATCH_XSIZE) / (float)(CTerrainImpl::SPLATALPHA_RAW_XSIZE - 2),
+					  -m_rkOwner.m_fTerrainTexCoordBase * 2.0f * (float)(CTerrainImpl::PATCH_YSIZE) / (float)(CTerrainImpl::SPLATALPHA_RAW_XSIZE - 2),
 					  0.0f);
-	m_matSplatAlpha._41 = m_fTerrainTexCoordBase * 4.6f;
-	m_matSplatAlpha._42 = m_fTerrainTexCoordBase * 4.6f;
+	m_rkOwner.m_matSplatAlpha._41 = m_rkOwner.m_fTerrainTexCoordBase * 4.6f;
+	m_rkOwner.m_matSplatAlpha._42 = m_rkOwner.m_fTerrainTexCoordBase * 4.6f;
 
-	D3DXMatrixScaling(&m_matStaticShadow,
-					  +m_fTerrainTexCoordBase * ((float)CTerrainImpl::PATCH_XSIZE / CTerrainImpl::XSIZE),
-					  -m_fTerrainTexCoordBase * ((float)CTerrainImpl::PATCH_YSIZE / CTerrainImpl::XSIZE),
+	D3DXMatrixScaling(&m_rkOwner.m_matStaticShadow,
+					  +m_rkOwner.m_fTerrainTexCoordBase * ((float)CTerrainImpl::PATCH_XSIZE / CTerrainImpl::XSIZE),
+					  -m_rkOwner.m_fTerrainTexCoordBase * ((float)CTerrainImpl::PATCH_YSIZE / CTerrainImpl::XSIZE),
 					  0.0f);
-	m_matStaticShadow._41 = 0.0f;
-	m_matStaticShadow._42 = 0.0f;
+	m_rkOwner.m_matStaticShadow._41 = 0.0f;
+	m_rkOwner.m_matStaticShadow._42 = 0.0f;
 
-	D3DXMatrixScaling(&m_matDynamicShadowScale, 1.0f / 2550.0f, -1.0f / 2550.0f, 1.0f);
-	m_matDynamicShadowScale._41 = 0.5f;
-	m_matDynamicShadowScale._42 = 0.5f;
+	D3DXMatrixScaling(&m_rkOwner.m_matDynamicShadowScale, 1.0f / 2550.0f, -1.0f / 2550.0f, 1.0f);
+	m_rkOwner.m_matDynamicShadowScale._41 = 0.5f;
+	m_rkOwner.m_matDynamicShadowScale._42 = 0.5f;
 
 	// Transform
-	D3DXMatrixScaling(&m_matBuildingTransparent, 1.0f / ((float)ms_iWidth), -1.0f / ((float)ms_iHeight), 1.0f);
-	m_matBuildingTransparent._41 = 0.5f;
-	m_matBuildingTransparent._42 = 0.5f;
+	D3DXMatrixScaling(&m_rkOwner.m_matBuildingTransparent, 1.0f / ((float)m_rkOwner.ms_iWidth), -1.0f / ((float)m_rkOwner.ms_iHeight), 1.0f);
+	m_rkOwner.m_matBuildingTransparent._41 = 0.5f;
+	m_rkOwner.m_matBuildingTransparent._42 = 0.5f;
 
 	return true;
 }
 
-bool CMapOutdoor::LoadMonsterAreaInfo()
+bool CMapOutdoorLoad::LoadMonsterAreaInfo()
 {
-	RemoveAllMonsterAreaInfo();
+	m_rkOwner.RemoveAllMonsterAreaInfo();
 
 	char c_szFileName[256];
-	sprintf(c_szFileName, "%s\\regen.txt", GetMapDataDirectory().c_str());
+	sprintf(c_szFileName, "%s\\regen.txt", m_rkOwner.GetMapDataDirectory().c_str());
 
 	CEterPackManager::TPackDataPtr modelData;
 	CMemoryTextFileLoader textFileLoader;
@@ -516,10 +524,10 @@ bool CMapOutdoor::LoadMonsterAreaInfo()
 			dwMonsterCount = (uint32_t)atoi(c_rstrCount.c_str());
 			dwMonsterVID = (uint32_t)atoi(c_rstrVID.c_str());
 
-			//			lOriginX -= m_dwBaseX / 100;
-			//			lOriginY -= m_dwBaseY / 100;
+			//			lOriginX -= m_rkOwner.m_dwBaseX / 100;
+			//			lOriginY -= m_rkOwner.m_dwBaseY / 100;
 
-			CMonsterAreaInfo* pMonsterAreaInfo = AddMonsterAreaInfo(lOriginX, lOriginY, lSizeX, lSizeY);
+			CMonsterAreaInfo* pMonsterAreaInfo = m_rkOwner.AddMonsterAreaInfo(lOriginX, lOriginY, lSizeX, lSizeY);
 			pMonsterAreaInfo->SetMonsterAreaInfoType(eMonsterAreaInfoType);
 			if (CMonsterAreaInfo::MONSTERAREAINFOTYPE_MONSTER == eMonsterAreaInfoType)
 				pMonsterAreaInfo->SetMonsterVID(dwMonsterVID);

@@ -1,7 +1,15 @@
 #include <Client/Map/StdAfx.h>
 #include <Client/Map/MapOutdoor.h>
+#include <Client/Map/CMapOutdoorRender.h>
+#include <Client/Map/CMapOutdoorIndexBuffer.h>
+#include <Client/Map/CMapOutdoorLoad.h>
+#include <Client/Map/CMapOutdoorUpdate.h>
 
-void CMapOutdoor::SetIndexBuffer()
+CMapOutdoorIndexBuffer::CMapOutdoorIndexBuffer(CMapOutdoor& rkOwner) : m_rkOwner(rkOwner)
+{
+}
+
+void CMapOutdoorIndexBuffer::SetIndexBuffer()
 {
 	void* pIndices;
 	long x, y;
@@ -9,13 +17,13 @@ void CMapOutdoor::SetIndexBuffer()
 	uint32_t dwIndexNum = TERRAIN_PATCHSIZE * TERRAIN_PATCHSIZE * 4;
 
 #ifdef WORLD_EDITOR
-	m_pwIndices = new uint16_t[dwIndexNum];
-	if (!m_pwIndices)
-		TraceError("CMapOutdoor::SetIndexBuffer() IndexBuffer is NULL");
+	m_rkOwner.m_pwIndices = new uint16_t[dwIndexNum];
+	if (!m_rkOwner.m_pwIndices)
+		TraceError("CMapOutdoorIndexBuffer::SetIndexBuffer() IndexBuffer is NULL");
 
-	memset(m_pwIndices, 0, sizeof(uint16_t) * dwIndexNum);
-	if (!m_IndexBuffer.Create(dwIndexNum, D3DFMT_INDEX16))
-		TraceError("CMapOutdoor::SetIndexBuffer() IndexBuffer Create Error");
+	memset(m_rkOwner.m_pwIndices, 0, sizeof(uint16_t) * dwIndexNum);
+	if (!m_rkOwner.m_IndexBuffer.Create(dwIndexNum, D3DFMT_INDEX16))
+		TraceError("CMapOutdoorIndexBuffer::SetIndexBuffer() IndexBuffer Create Error");
 
 	uint16_t count = 0;
 	uint16_t count2 = 0;
@@ -27,59 +35,59 @@ void CMapOutdoor::SetIndexBuffer()
 	{
 		if (ry % 2 == 0)
 		{
-			m_pwIndices[count++] = count2;
-			m_pwIndices[count++] = count2 + ucNumLineWarp;
+			m_rkOwner.m_pwIndices[count++] = count2;
+			m_rkOwner.m_pwIndices[count++] = count2 + ucNumLineWarp;
 		}
 		else
 		{
-			m_pwIndices[count++] = count2 + ucNumLineWarp;
-			m_pwIndices[count++] = count2;
+			m_rkOwner.m_pwIndices[count++] = count2 + ucNumLineWarp;
+			m_rkOwner.m_pwIndices[count++] = count2;
 		}
 
 		for (x = 0; x < TERRAIN_PATCHSIZE; x++)
 		{
 			if (ry % 2 == 1)
 			{
-				m_pwIndices[count++] = (uint16_t)(count2 + ucNumLineWarp - 1);
-				m_pwIndices[count++] = (uint16_t)(count2 - 1);
+				m_rkOwner.m_pwIndices[count++] = (uint16_t)(count2 + ucNumLineWarp - 1);
+				m_rkOwner.m_pwIndices[count++] = (uint16_t)(count2 - 1);
 				count2 -= (short)1;
 			}
 			else
 			{
-				m_pwIndices[count++] = (uint16_t)(count2 + 1);
-				m_pwIndices[count++] = (uint16_t)(count2 + ucNumLineWarp + 1);
+				m_rkOwner.m_pwIndices[count++] = (uint16_t)(count2 + 1);
+				m_rkOwner.m_pwIndices[count++] = (uint16_t)(count2 + ucNumLineWarp + 1);
 				count2 += (short)1;
 			}
 		}
 
 		if (y < TERRAIN_PATCHSIZE - 1)
 		{
-			m_pwIndices[count++] = (uint16_t)(count2 + ucNumLineWarp);
-			m_pwIndices[count++] = (uint16_t)(count2 + ucNumLineWarp);
+			m_rkOwner.m_pwIndices[count++] = (uint16_t)(count2 + ucNumLineWarp);
+			m_rkOwner.m_pwIndices[count++] = (uint16_t)(count2 + ucNumLineWarp);
 			count2 += ucNumLineWarp;
 		}
 		ry++;
 	}
 
-	m_wNumIndices = count;
-	if (!m_IndexBuffer.Lock((void**)&pIndices))
-		TraceError("CMapOutdoor::SetIndexBuffer() IndexBuffer Unlock Error");
-	memcpy(pIndices, m_pwIndices, count * sizeof(uint16_t));
-	m_IndexBuffer.Unlock();
+	m_rkOwner.m_wNumIndices = count;
+	if (!m_rkOwner.m_IndexBuffer.Lock((void**)&pIndices))
+		TraceError("CMapOutdoorIndexBuffer::SetIndexBuffer() IndexBuffer Unlock Error");
+	memcpy(pIndices, m_rkOwner.m_pwIndices, count * sizeof(uint16_t));
+	m_rkOwner.m_IndexBuffer.Unlock();
 
-	delete[] m_pwIndices;
-	m_pwIndices = NULL;
+	delete[] m_rkOwner.m_pwIndices;
+	m_rkOwner.m_pwIndices = NULL;
 #else
 	uint16_t count[TERRAINPATCH_LODMAX], count2[TERRAINPATCH_LODMAX];
 	uint8_t uci;
 	for (uci = 0; uci < TERRAINPATCH_LODMAX; ++uci)
 	{
-		m_pwaIndices[uci] = new uint16_t[dwIndexNum];
-		memset(m_pwaIndices[uci], 0, sizeof(uint16_t) * dwIndexNum);
+		m_rkOwner.m_pwaIndices[uci] = new uint16_t[dwIndexNum];
+		memset(m_rkOwner.m_pwaIndices[uci], 0, sizeof(uint16_t) * dwIndexNum);
 		count[uci] = 0;
 		count2[uci] = 0;
-		if (!m_IndexBuffer[uci].Create(dwIndexNum, D3DFMT_INDEX16))
-			TraceError("CMapOutdoor::SetIndexBuffer() IndexBuffer Create Error");
+		if (!m_rkOwner.m_IndexBuffer[uci].Create(dwIndexNum, D3DFMT_INDEX16))
+			TraceError("CMapOutdoorIndexBuffer::SetIndexBuffer() IndexBuffer Create Error");
 	}
 
 	uint8_t ucNumLineWarp = TERRAIN_PATCHSIZE + 1;
@@ -88,27 +96,27 @@ void CMapOutdoor::SetIndexBuffer()
 	{
 		if (y % 2 == 0)
 		{
-			m_pwaIndices[0][(count[0])++] = count2[0];
-			m_pwaIndices[0][(count[0])++] = count2[0] + ucNumLineWarp;
+			m_rkOwner.m_pwaIndices[0][(count[0])++] = count2[0];
+			m_rkOwner.m_pwaIndices[0][(count[0])++] = count2[0] + ucNumLineWarp;
 		}
 		else
 		{
-			m_pwaIndices[0][(count[0])++] = count2[0] + ucNumLineWarp;
-			m_pwaIndices[0][(count[0])++] = count2[0];
+			m_rkOwner.m_pwaIndices[0][(count[0])++] = count2[0] + ucNumLineWarp;
+			m_rkOwner.m_pwaIndices[0][(count[0])++] = count2[0];
 		}
 
 		for (x = 0; x < TERRAIN_PATCHSIZE; x++)
 		{
 			if (y % 2 == 0)
 			{
-				m_pwaIndices[0][(count[0])++] = (uint16_t)(count2[0] + 1);
-				m_pwaIndices[0][(count[0])++] = (uint16_t)(count2[0] + ucNumLineWarp + 1);
+				m_rkOwner.m_pwaIndices[0][(count[0])++] = (uint16_t)(count2[0] + 1);
+				m_rkOwner.m_pwaIndices[0][(count[0])++] = (uint16_t)(count2[0] + ucNumLineWarp + 1);
 				count2[0] += (short)1;
 			}
 			else
 			{
-				m_pwaIndices[0][(count[0])++] = (uint16_t)(count2[0] + ucNumLineWarp - 1);
-				m_pwaIndices[0][(count[0])++] = (uint16_t)(count2[0] - 1);
+				m_rkOwner.m_pwaIndices[0][(count[0])++] = (uint16_t)(count2[0] + ucNumLineWarp - 1);
+				m_rkOwner.m_pwaIndices[0][(count[0])++] = (uint16_t)(count2[0] - 1);
 				count2[0] -= (short)1;
 			}
 
@@ -117,29 +125,29 @@ void CMapOutdoor::SetIndexBuffer()
 				if (0 == y)
 				{
 					if (0 == x)
-						ADDLvl1TL(m_pwaIndices[1], count[1], count2[1], ucNumLineWarp);
+						ADDLvl1TL(m_rkOwner.m_pwaIndices[1], count[1], count2[1], ucNumLineWarp);
 					else if ((TERRAIN_PATCHSIZE - 2) == x)
-						ADDLvl1TR(m_pwaIndices[1], count[1], count2[1], ucNumLineWarp);
+						ADDLvl1TR(m_rkOwner.m_pwaIndices[1], count[1], count2[1], ucNumLineWarp);
 					else
-						ADDLvl1T(m_pwaIndices[1], count[1], count2[1], ucNumLineWarp);
+						ADDLvl1T(m_rkOwner.m_pwaIndices[1], count[1], count2[1], ucNumLineWarp);
 				}
 				else if ((TERRAIN_PATCHSIZE - 2) == y)
 				{
 					if (0 == x)
-						ADDLvl1BL(m_pwaIndices[1], count[1], count2[1], ucNumLineWarp);
+						ADDLvl1BL(m_rkOwner.m_pwaIndices[1], count[1], count2[1], ucNumLineWarp);
 					else if ((TERRAIN_PATCHSIZE - 2) == x)
-						ADDLvl1BR(m_pwaIndices[1], count[1], count2[1], ucNumLineWarp);
+						ADDLvl1BR(m_rkOwner.m_pwaIndices[1], count[1], count2[1], ucNumLineWarp);
 					else
-						ADDLvl1B(m_pwaIndices[1], count[1], count2[1], ucNumLineWarp);
+						ADDLvl1B(m_rkOwner.m_pwaIndices[1], count[1], count2[1], ucNumLineWarp);
 				}
 				else if (0 == y % 2)
 				{
 					if (0 == x)
-						ADDLvl1L(m_pwaIndices[1], count[1], count2[1], ucNumLineWarp);
+						ADDLvl1L(m_rkOwner.m_pwaIndices[1], count[1], count2[1], ucNumLineWarp);
 					else if ((TERRAIN_PATCHSIZE - 2) == x)
-						ADDLvl1R(m_pwaIndices[1], count[1], count2[1], ucNumLineWarp);
+						ADDLvl1R(m_rkOwner.m_pwaIndices[1], count[1], count2[1], ucNumLineWarp);
 					else
-						ADDLvl1M(m_pwaIndices[1], count[1], count2[1], ucNumLineWarp);
+						ADDLvl1M(m_rkOwner.m_pwaIndices[1], count[1], count2[1], ucNumLineWarp);
 				}
 				count2[1] += 2;
 			}
@@ -149,29 +157,29 @@ void CMapOutdoor::SetIndexBuffer()
 				if (0 == y)
 				{
 					if (0 == x)
-						ADDLvl2TL(m_pwaIndices[2], count[2], count2[2], ucNumLineWarp);
+						ADDLvl2TL(m_rkOwner.m_pwaIndices[2], count[2], count2[2], ucNumLineWarp);
 					else if ((TERRAIN_PATCHSIZE - 4) == x)
-						ADDLvl2TR(m_pwaIndices[2], count[2], count2[2], ucNumLineWarp);
+						ADDLvl2TR(m_rkOwner.m_pwaIndices[2], count[2], count2[2], ucNumLineWarp);
 					else
-						ADDLvl2T(m_pwaIndices[2], count[2], count2[2], ucNumLineWarp);
+						ADDLvl2T(m_rkOwner.m_pwaIndices[2], count[2], count2[2], ucNumLineWarp);
 				}
 				else if ((TERRAIN_PATCHSIZE - 4) == y)
 				{
 					if (0 == x)
-						ADDLvl2BL(m_pwaIndices[2], count[2], count2[2], ucNumLineWarp);
+						ADDLvl2BL(m_rkOwner.m_pwaIndices[2], count[2], count2[2], ucNumLineWarp);
 					else if ((TERRAIN_PATCHSIZE - 4) == x)
-						ADDLvl2BR(m_pwaIndices[2], count[2], count2[2], ucNumLineWarp);
+						ADDLvl2BR(m_rkOwner.m_pwaIndices[2], count[2], count2[2], ucNumLineWarp);
 					else
-						ADDLvl2B(m_pwaIndices[2], count[2], count2[2], ucNumLineWarp);
+						ADDLvl2B(m_rkOwner.m_pwaIndices[2], count[2], count2[2], ucNumLineWarp);
 				}
 				else if (0 == y % 4)
 				{
 					if (0 == x)
-						ADDLvl2L(m_pwaIndices[2], count[2], count2[2], ucNumLineWarp);
+						ADDLvl2L(m_rkOwner.m_pwaIndices[2], count[2], count2[2], ucNumLineWarp);
 					else if ((TERRAIN_PATCHSIZE - 4) == x)
-						ADDLvl2R(m_pwaIndices[2], count[2], count2[2], ucNumLineWarp);
+						ADDLvl2R(m_rkOwner.m_pwaIndices[2], count[2], count2[2], ucNumLineWarp);
 					else
-						ADDLvl2M(m_pwaIndices[2], count[2], count2[2], ucNumLineWarp);
+						ADDLvl2M(m_rkOwner.m_pwaIndices[2], count[2], count2[2], ucNumLineWarp);
 				}
 				count2[2] += 4;
 			}
@@ -179,8 +187,8 @@ void CMapOutdoor::SetIndexBuffer()
 
 		if (y < TERRAIN_PATCHSIZE - 1)
 		{
-			m_pwaIndices[0][(count[0])++] = (uint16_t)(count2[0] + ucNumLineWarp);
-			m_pwaIndices[0][(count[0])++] = (uint16_t)(count2[0] + ucNumLineWarp);
+			m_rkOwner.m_pwaIndices[0][(count[0])++] = (uint16_t)(count2[0] + ucNumLineWarp);
+			m_rkOwner.m_pwaIndices[0][(count[0])++] = (uint16_t)(count2[0] + ucNumLineWarp);
 			count2[0] += ucNumLineWarp;
 			if (0 == y % 2)
 				count2[1] += 2;
@@ -191,18 +199,18 @@ void CMapOutdoor::SetIndexBuffer()
 
 	for (uci = 0; uci < TERRAINPATCH_LODMAX; ++uci)
 	{
-		m_wNumIndices[uci] = count[uci];
-		if (!m_IndexBuffer[uci].Lock((void**)&pIndices))
-			TraceError("CMapOutdoor::SetIndexBuffer() IndexBuffer Unlock Error");
-		memcpy(pIndices, m_pwaIndices[uci], count[uci] * sizeof(uint16_t));
-		m_IndexBuffer[uci].Unlock();
-		delete[] m_pwaIndices[uci];
-		m_pwaIndices[uci] = NULL;
+		m_rkOwner.m_wNumIndices[uci] = count[uci];
+		if (!m_rkOwner.m_IndexBuffer[uci].Lock((void**)&pIndices))
+			TraceError("CMapOutdoorIndexBuffer::SetIndexBuffer() IndexBuffer Unlock Error");
+		memcpy(pIndices, m_rkOwner.m_pwaIndices[uci], count[uci] * sizeof(uint16_t));
+		m_rkOwner.m_IndexBuffer[uci].Unlock();
+		delete[] m_rkOwner.m_pwaIndices[uci];
+		m_rkOwner.m_pwaIndices[uci] = NULL;
 	}
 #endif
 }
 
-void CMapOutdoor::ADDLvl1TL(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp)
+void CMapOutdoorIndexBuffer::ADDLvl1TL(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp)
 {
 	pIndices[rwCount++] = c_rwCurCount;
 	pIndices[rwCount++] = c_rwCurCount + c_rucNumLineWarp;
@@ -229,7 +237,7 @@ void CMapOutdoor::ADDLvl1TL(uint16_t* pIndices, uint16_t& rwCount, const uint16_
 	pIndices[rwCount++] = c_rwCurCount;
 }
 
-void CMapOutdoor::ADDLvl1T(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp)
+void CMapOutdoorIndexBuffer::ADDLvl1T(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp)
 {
 	pIndices[rwCount++] = c_rwCurCount;
 	pIndices[rwCount++] = c_rwCurCount + c_rucNumLineWarp * 2;
@@ -252,7 +260,7 @@ void CMapOutdoor::ADDLvl1T(uint16_t* pIndices, uint16_t& rwCount, const uint16_t
 	pIndices[rwCount++] = c_rwCurCount + c_rucNumLineWarp + 1;
 }
 
-void CMapOutdoor::ADDLvl1TR(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp)
+void CMapOutdoorIndexBuffer::ADDLvl1TR(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp)
 {
 	pIndices[rwCount++] = c_rwCurCount;
 	pIndices[rwCount++] = c_rwCurCount + c_rucNumLineWarp * 2;
@@ -279,7 +287,7 @@ void CMapOutdoor::ADDLvl1TR(uint16_t* pIndices, uint16_t& rwCount, const uint16_
 	pIndices[rwCount++] = c_rwCurCount + c_rucNumLineWarp + 1;
 }
 
-void CMapOutdoor::ADDLvl1L(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp)
+void CMapOutdoorIndexBuffer::ADDLvl1L(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp)
 {
 	pIndices[rwCount++] = c_rwCurCount;
 	pIndices[rwCount++] = c_rwCurCount + c_rucNumLineWarp;
@@ -302,7 +310,7 @@ void CMapOutdoor::ADDLvl1L(uint16_t* pIndices, uint16_t& rwCount, const uint16_t
 	pIndices[rwCount++] = c_rwCurCount + c_rucNumLineWarp + 1;
 }
 
-void CMapOutdoor::ADDLvl1R(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp)
+void CMapOutdoorIndexBuffer::ADDLvl1R(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp)
 {
 	pIndices[rwCount++] = c_rwCurCount;
 	pIndices[rwCount++] = c_rwCurCount + c_rucNumLineWarp * 2;
@@ -325,7 +333,7 @@ void CMapOutdoor::ADDLvl1R(uint16_t* pIndices, uint16_t& rwCount, const uint16_t
 	pIndices[rwCount++] = c_rwCurCount + c_rucNumLineWarp + 1;
 }
 
-void CMapOutdoor::ADDLvl1BL(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp)
+void CMapOutdoorIndexBuffer::ADDLvl1BL(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp)
 {
 	pIndices[rwCount++] = c_rwCurCount;
 	pIndices[rwCount++] = c_rwCurCount + c_rucNumLineWarp;
@@ -352,7 +360,7 @@ void CMapOutdoor::ADDLvl1BL(uint16_t* pIndices, uint16_t& rwCount, const uint16_
 	pIndices[rwCount++] = c_rwCurCount + c_rucNumLineWarp + 1;
 }
 
-void CMapOutdoor::ADDLvl1B(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp)
+void CMapOutdoorIndexBuffer::ADDLvl1B(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp)
 {
 	pIndices[rwCount++] = c_rwCurCount;
 	pIndices[rwCount++] = c_rwCurCount + c_rucNumLineWarp * 2;
@@ -375,7 +383,7 @@ void CMapOutdoor::ADDLvl1B(uint16_t* pIndices, uint16_t& rwCount, const uint16_t
 	pIndices[rwCount++] = c_rwCurCount + c_rucNumLineWarp + 1;
 }
 
-void CMapOutdoor::ADDLvl1BR(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp)
+void CMapOutdoorIndexBuffer::ADDLvl1BR(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp)
 {
 	pIndices[rwCount++] = c_rwCurCount;
 	pIndices[rwCount++] = c_rwCurCount + c_rucNumLineWarp * 2;
@@ -402,7 +410,7 @@ void CMapOutdoor::ADDLvl1BR(uint16_t* pIndices, uint16_t& rwCount, const uint16_
 	pIndices[rwCount++] = c_rwCurCount + c_rucNumLineWarp + 1;
 }
 
-void CMapOutdoor::ADDLvl1M(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp)
+void CMapOutdoorIndexBuffer::ADDLvl1M(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp)
 {
 	pIndices[rwCount++] = c_rwCurCount;
 	pIndices[rwCount++] = c_rwCurCount + c_rucNumLineWarp * 2;
@@ -413,7 +421,7 @@ void CMapOutdoor::ADDLvl1M(uint16_t* pIndices, uint16_t& rwCount, const uint16_t
 	pIndices[rwCount++] = c_rwCurCount + 2;
 }
 
-void CMapOutdoor::ADDLvl2TL(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp)
+void CMapOutdoorIndexBuffer::ADDLvl2TL(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp)
 {
 	ADDLvl1TL(pIndices, rwCount, c_rwCurCount, c_rucNumLineWarp);
 	ADDLvl1T(pIndices, rwCount, c_rwCurCount + 2, c_rucNumLineWarp);
@@ -421,7 +429,7 @@ void CMapOutdoor::ADDLvl2TL(uint16_t* pIndices, uint16_t& rwCount, const uint16_
 	ADDLvl1M(pIndices, rwCount, c_rwCurCount + c_rucNumLineWarp * 2 + 2, c_rucNumLineWarp);
 }
 
-void CMapOutdoor::ADDLvl2T(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp)
+void CMapOutdoorIndexBuffer::ADDLvl2T(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp)
 {
 	ADDLvl1T(pIndices, rwCount, c_rwCurCount, c_rucNumLineWarp);
 	ADDLvl1T(pIndices, rwCount, c_rwCurCount + 2, c_rucNumLineWarp);
@@ -439,7 +447,7 @@ void CMapOutdoor::ADDLvl2T(uint16_t* pIndices, uint16_t& rwCount, const uint16_t
 	pIndices[rwCount++] = c_rwCurCount + c_rucNumLineWarp * 2 + 2;
 }
 
-void CMapOutdoor::ADDLvl2TR(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp)
+void CMapOutdoorIndexBuffer::ADDLvl2TR(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp)
 {
 	ADDLvl1T(pIndices, rwCount, c_rwCurCount, c_rucNumLineWarp);
 	ADDLvl1TR(pIndices, rwCount, c_rwCurCount + 2, c_rucNumLineWarp);
@@ -447,7 +455,7 @@ void CMapOutdoor::ADDLvl2TR(uint16_t* pIndices, uint16_t& rwCount, const uint16_
 	ADDLvl1R(pIndices, rwCount, c_rwCurCount + c_rucNumLineWarp * 2 + 2, c_rucNumLineWarp);
 }
 
-void CMapOutdoor::ADDLvl2L(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp)
+void CMapOutdoorIndexBuffer::ADDLvl2L(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp)
 {
 	ADDLvl1L(pIndices, rwCount, c_rwCurCount, c_rucNumLineWarp);
 	ADDLvl1L(pIndices, rwCount, c_rwCurCount + c_rucNumLineWarp * 2, c_rucNumLineWarp);
@@ -465,7 +473,7 @@ void CMapOutdoor::ADDLvl2L(uint16_t* pIndices, uint16_t& rwCount, const uint16_t
 	pIndices[rwCount++] = c_rwCurCount + c_rucNumLineWarp * 4 + 2;
 }
 
-void CMapOutdoor::ADDLvl2R(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp)
+void CMapOutdoorIndexBuffer::ADDLvl2R(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp)
 {
 	ADDLvl1R(pIndices, rwCount, c_rwCurCount + 2, c_rucNumLineWarp);
 	ADDLvl1R(pIndices, rwCount, c_rwCurCount + c_rucNumLineWarp * 2 + 2, c_rucNumLineWarp);
@@ -483,7 +491,7 @@ void CMapOutdoor::ADDLvl2R(uint16_t* pIndices, uint16_t& rwCount, const uint16_t
 	pIndices[rwCount++] = c_rwCurCount + c_rucNumLineWarp * 4 + 2;
 }
 
-void CMapOutdoor::ADDLvl2BL(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp)
+void CMapOutdoorIndexBuffer::ADDLvl2BL(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp)
 {
 	ADDLvl1L(pIndices, rwCount, c_rwCurCount, c_rucNumLineWarp);
 	ADDLvl1M(pIndices, rwCount, c_rwCurCount + 2, c_rucNumLineWarp);
@@ -491,7 +499,7 @@ void CMapOutdoor::ADDLvl2BL(uint16_t* pIndices, uint16_t& rwCount, const uint16_
 	ADDLvl1B(pIndices, rwCount, c_rwCurCount + c_rucNumLineWarp * 2 + 2, c_rucNumLineWarp);
 }
 
-void CMapOutdoor::ADDLvl2B(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp)
+void CMapOutdoorIndexBuffer::ADDLvl2B(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp)
 {
 	pIndices[rwCount++] = c_rwCurCount + c_rucNumLineWarp * 2;
 	pIndices[rwCount++] = c_rwCurCount + c_rucNumLineWarp * 2 + 2;
@@ -509,7 +517,7 @@ void CMapOutdoor::ADDLvl2B(uint16_t* pIndices, uint16_t& rwCount, const uint16_t
 	ADDLvl1B(pIndices, rwCount, c_rwCurCount + c_rucNumLineWarp * 2 + 2, c_rucNumLineWarp);
 }
 
-void CMapOutdoor::ADDLvl2BR(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp)
+void CMapOutdoorIndexBuffer::ADDLvl2BR(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp)
 {
 	ADDLvl1M(pIndices, rwCount, c_rwCurCount, c_rucNumLineWarp);
 	ADDLvl1R(pIndices, rwCount, c_rwCurCount + 2, c_rucNumLineWarp);
@@ -517,7 +525,7 @@ void CMapOutdoor::ADDLvl2BR(uint16_t* pIndices, uint16_t& rwCount, const uint16_
 	ADDLvl1BR(pIndices, rwCount, c_rwCurCount + c_rucNumLineWarp * 2 + 2, c_rucNumLineWarp);
 }
 
-void CMapOutdoor::ADDLvl2M(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp)
+void CMapOutdoorIndexBuffer::ADDLvl2M(uint16_t* pIndices, uint16_t& rwCount, const uint16_t& c_rwCurCount, const uint8_t& c_rucNumLineWarp)
 {
 	pIndices[rwCount++] = c_rwCurCount;
 	pIndices[rwCount++] = c_rwCurCount + c_rucNumLineWarp * 4;
