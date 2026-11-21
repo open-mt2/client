@@ -11,11 +11,15 @@
 #include <Client/Game/AreaTerrain.h>
 #include <Client/Game/MapOutdoor.h>
 
+#ifdef CreateSemaphore
+#undef CreateSemaphore
+#endif
+
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-TEMP_CAreaLoaderThread::TEMP_CAreaLoaderThread() : m_pArg(NULL), m_workPending(false), m_bShutdowned(false), m_finished(false)
+TEMP_CAreaLoaderThread::TEMP_CAreaLoaderThread() : m_hThread(NULL), m_pArg(NULL), m_hSemaphore(NULL), m_bShutdowned(false)
 {
 }
 
@@ -27,12 +31,29 @@ TEMP_CAreaLoaderThread::~TEMP_CAreaLoaderThread()
 
 bool TEMP_CAreaLoaderThread::Create(void* arg)
 {
-	if (m_thread.joinable())
+	if (m_hThread != NULL)
+		return false;
+
+	m_hSemaphore = Neoeter::Platform::CreateSemaphore(0, 65535);
+	if (m_hSemaphore == NULL)
 		return false;
 
 	Arg(arg);
-	m_thread = std::thread(&TEMP_CAreaLoaderThread::Run, this, arg);
+	m_hThread = Neoeter::Platform::StartThread(&TEMP_CAreaLoaderThread::EntryPoint, this);
+	if (m_hThread == NULL)
+	{
+		Neoeter::Platform::CloseSemaphore(m_hSemaphore);
+		m_hSemaphore = NULL;
+		return false;
+	}
+
 	return true;
+}
+
+uint32_t TEMP_CAreaLoaderThread::EntryPoint(void* pThis)
+{
+	TEMP_CAreaLoaderThread* thread = static_cast<TEMP_CAreaLoaderThread*>(pThis);
+	return thread->Run(thread->Arg());
 }
 
 uint32_t TEMP_CAreaLoaderThread::Run(void* arg)
@@ -69,69 +90,40 @@ void TEMP_CAreaLoaderThread::Destroy()
 
 void TEMP_CAreaLoaderThread::Shutdown()
 {
-	{
-		std::lock_guard<std::mutex> lock(m_waitMutex);
-		m_bShutdowned = true;
-	}
-	m_workAvailable.notify_all();
-
-	if (!m_thread.joinable())
+	if (m_bShutdowned.exchange(true))
 		return;
 
-	std::unique_lock<std::mutex> lock(m_waitMutex);
-	if (!m_workAvailable.wait_for(lock, std::chrono::seconds(10), [this]
-								  { return m_finished; }))
+	if (m_hSemaphore != NULL)
+		Neoeter::Platform::ReleaseSemaphore(m_hSemaphore, 1);
+
+	bool joined = true;
+	if (m_hThread != NULL)
 	{
-		lock.unlock();
-		m_thread.detach();
-		return;
+		joined = Neoeter::Platform::JoinThread(m_hThread, 10000);
+		Neoeter::Platform::CloseThread(m_hThread);
+		m_hThread = NULL;
 	}
 
-	lock.unlock();
-	m_thread.join();
-}
-
-bool TEMP_CAreaLoaderThread::HasQueuedWork()
-{
-	m_TerrainRequestMutex.Lock();
-	const bool terrain = !m_pTerrainRequestDeque.empty();
-	m_TerrainRequestMutex.Unlock();
-
-	if (terrain)
-		return true;
-
-	m_AreaRequestMutex.Lock();
-	const bool area = !m_pAreaRequestDeque.empty();
-	m_AreaRequestMutex.Unlock();
-	return area;
+	if (joined && m_hSemaphore != NULL)
+	{
+		Neoeter::Platform::CloseSemaphore(m_hSemaphore);
+		m_hSemaphore = NULL;
+	}
 }
 
 uint32_t TEMP_CAreaLoaderThread::Execute(void* pvArg)
 {
-	while (true)
+	while (!m_bShutdowned.load())
 	{
-		std::unique_lock<std::mutex> lock(m_waitMutex);
-		m_workAvailable.wait(lock, [this]
-							 { return m_bShutdowned || m_workPending; });
-
-		if (m_bShutdowned)
+		if (!Neoeter::Platform::WaitSemaphore(m_hSemaphore, Neoeter::Platform::kPlatformInfinite))
 			break;
 
-		m_workPending = false;
-		lock.unlock();
+		if (m_bShutdowned.load())
+			break;
 
 		ProcessTerrain();
 		ProcessArea();
-
-		lock.lock();
-		m_workPending = HasQueuedWork();
 	}
-
-	{
-		std::lock_guard<std::mutex> lock(m_waitMutex);
-		m_finished = true;
-	}
-	m_workAvailable.notify_all();
 
 	Destroy();
 	return 1;
@@ -143,11 +135,8 @@ void TEMP_CAreaLoaderThread::Request(CTerrain* pTerrain) // called in main threa
 	m_pTerrainRequestDeque.push_back(pTerrain);
 	m_TerrainRequestMutex.Unlock();
 
-	{
-		std::lock_guard<std::mutex> lock(m_waitMutex);
-		m_workPending = true;
-	}
-	m_workAvailable.notify_one();
+	if (!Neoeter::Platform::ReleaseSemaphore(m_hSemaphore, 1))
+		TraceError("TEMP_CAreaLoaderThread::Request: ReleaseSemaphore error");
 }
 
 bool TEMP_CAreaLoaderThread::Fetch(CTerrain** ppTerrain) // called in main thread
@@ -173,11 +162,8 @@ void TEMP_CAreaLoaderThread::Request(CArea* pArea) // called in main thread
 	m_pAreaRequestDeque.push_back(pArea);
 	m_AreaRequestMutex.Unlock();
 
-	{
-		std::lock_guard<std::mutex> lock(m_waitMutex);
-		m_workPending = true;
-	}
-	m_workAvailable.notify_one();
+	if (!Neoeter::Platform::ReleaseSemaphore(m_hSemaphore, 1))
+		TraceError("TEMP_CAreaLoaderThread::Request: ReleaseSemaphore error");
 }
 
 bool TEMP_CAreaLoaderThread::Fetch(CArea** ppArea) // called in main thread
