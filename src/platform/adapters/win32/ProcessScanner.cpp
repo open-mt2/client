@@ -1,22 +1,11 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/UI/ProcessScanner.h>
 
-#ifdef OPENMT2_PLATFORM_LINUX
-
-void ProcessScanner_Destroy() {}
-bool ProcessScanner_Create() { return true; }
-void ProcessScanner_ReleaseQuitEvent() {}
-bool ProcessScanner_PopProcessQueue(std::vector<CRCPair>*) { return false; }
-
-#else
-
-#include <tlhelp32.h>
-
 static std::vector<CRCPair> gs_kVct_crcPair;
 static CRITICAL_SECTION gs_csData;
-static HANDLE gs_evReqExit = NULL;
-static HANDLE gs_evResExit = NULL;
-static HANDLE gs_hThread = NULL;
+static PlatformHandle gs_evReqExit = NULL;
+static PlatformHandle gs_evResExit = NULL;
+static PlatformHandle gs_hThread = NULL;
 
 void ScanProcessList(std::map<uint32_t, uint32_t>& rkMap_crcProc, std::vector<CRCPair>* pkVct_crcPair)
 {
@@ -30,16 +19,16 @@ void ScanProcessList(std::map<uint32_t, uint32_t>& rkMap_crcProc, std::vector<CR
 	LPPROCESSENTRY32 Entry;
 	Entry = &pro;
 
-	HANDLE process = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+	PlatformHandle process = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
 
 	int32_t bOK = Process32First(process, Entry);
 
 	while (bOK)
 	{
-		HANDLE hProc = OpenProcess(PROCESS_VM_READ, FALSE, Entry->th32ProcessID);
+		PlatformHandle hProc = OpenProcess(PROCESS_VM_READ, FALSE, Entry->th32ProcessID);
 		if (hProc)
 		{
-			HANDLE hModuleSnap = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, Entry->th32ProcessID);
+			PlatformHandle hModuleSnap = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, Entry->th32ProcessID);
 			if (hModuleSnap != INVALID_HANDLE_VALUE)
 			{
 				MODULEENTRY32 me32;
@@ -132,7 +121,7 @@ bool ProcessScanner_Create()
 	gs_evReqExit = CreateEvent(NULL, FALSE, FALSE, "ProcessScanner_ReqExit");
 	gs_evResExit = CreateEvent(NULL, FALSE, FALSE, "ProcessScanner_ResExit");
 
-	gs_hThread = (HANDLE)_beginthread(ProcessScanner_Thread, 64 * 1024, NULL);
+	gs_hThread = (PlatformHandle)_beginthread(ProcessScanner_Thread, 64 * 1024, NULL);
 	if (INVALID_HANDLE_VALUE == gs_hThread)
 	{
 		LogBox("CreateThread Error");
@@ -147,4 +136,3 @@ bool ProcessScanner_Create()
 
 	return true;
 }
-#endif

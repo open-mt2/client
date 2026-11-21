@@ -168,7 +168,7 @@ bool CPythonApplication::CreateOfficialCursors()
 			return false;
 		}
 
-		m_CursorHandleMap.insert(TCursorHandleMap::value_type(i, reinterpret_cast<HANDLE>(pCursor)));
+		m_CursorHandleMap.insert(TCursorHandleMap::value_type(i, reinterpret_cast<PlatformHandle>(pCursor)));
 	}
 
 	return true;
@@ -211,7 +211,7 @@ bool CPythonApplication::CreateCursors()
 
 	for (int i = 0; i < CURSOR_COUNT; ++i)
 	{
-		HANDLE hCursor = Platform_CreateSystemCursor(s_systemCursors[i]);
+		PlatformHandle hCursor = Platform_CreateSystemCursor(s_systemCursors[i]);
 
 		if (NULL == hCursor)
 			return false;
@@ -300,7 +300,7 @@ int32_t CPythonApplication::SetCursorNum(int iCursorNum)
 		if (m_CursorHandleMap.end() == itor)
 			return FALSE;
 
-		HANDLE hCursor = itor->second;
+		PlatformHandle hCursor = itor->second;
 
 		Platform_SetCursorHandle(hCursor);
 		m_hCurrentCursor = hCursor;

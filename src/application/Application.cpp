@@ -11,6 +11,7 @@
 #include <Client/UI/PythonApplication.h>
 #include <Client/Utils/PythonUtils.h>
 #include <Neoeter/IO/EterPackManager.h>
+#include <Neoeter/Platform/Port.h>
 #include <Neoeter/Platform/Base/Debug.h>
 #include <Neoeter/Platform/Base/lzo.h>
 #include <Neoeter/Render/MSWindow.h>
@@ -25,18 +26,6 @@ extern bool Platform_DecodeImage(const void* data, size_t size, uint32_t* outW, 
 void* g_pForceLinkImageLoader[] = {
 	(void*)&Platform_GetImageInfo,
 	(void*)&Platform_DecodeImage};
-
-#ifndef OPENMT2_PLATFORM_LINUX
-extern "C"
-{
-#if defined(_MSC_VER)
-	extern int32_t _fltused;
-	volatile int32_t _AVOID_FLOATING_POINT_LIBRARY_BUG = _fltused;
-#endif
-	__declspec(dllexport) uint32_t NvOptimusEnablement = 0x00000001;
-	__declspec(dllexport) int32_t AmdPowerXpressRequestHighPerformance = 1;
-};
-#endif
 
 namespace Neoeter
 {
@@ -142,7 +131,7 @@ namespace Neoeter
 
 	void Application::Shutdown()
 	{
-		::CoUninitialize();
+		Neoeter::Platform::ShutdownCom();
 		m_pythonApplication.reset();
 	}
 }

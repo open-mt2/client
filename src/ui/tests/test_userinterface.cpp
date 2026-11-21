@@ -6,7 +6,7 @@
 #include <Client/UI/GameType.h>
 #include <Client/UI/QuitRequest.h>
 #include <Neoeter/Audio/SoundManager.h>
-#include <Neoeter/Render/SdlPlatform.h>
+#include <Neoeter/Platform/PlatformWindow.h>
 #include <cassert>
 #include <cstdio>
 #include <cstring>

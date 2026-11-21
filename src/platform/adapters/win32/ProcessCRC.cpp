@@ -1,20 +1,6 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/UI/ProcessCRC.h>
 
-#ifdef OPENMT2_PLATFORM_LINUX
-
-bool GetExeCRC(uint32_t& r_dwProcCRC, uint32_t& r_dwFileCRC)
-{
-	r_dwProcCRC = 0;
-	r_dwFileCRC = 0;
-	return true;
-}
-
-void BuildProcessCRC() {}
-uint8_t GetProcessCRCMagicCubePiece() { return 0; }
-
-#else
-
 #include <tlhelp32.h>
 
 static uint8_t abCRCMagicCube[8] = {0, 0, 0, 0, 0, 0, 0, 0};
@@ -35,7 +21,7 @@ const char* stristr(const char* big, const char* little)
 
 bool GetProcessInformation(std::string& exeFileName, LPCVOID* ppvAddress)
 {
-	HANDLE hModuleSnap = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, GetCurrentProcessId());
+	PlatformHandle hModuleSnap = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, GetCurrentProcessId());
 	if (hModuleSnap != INVALID_HANDLE_VALUE)
 	{
 		std::string filename;
@@ -72,7 +58,7 @@ bool GetProcessInformation(std::string& exeFileName, LPCVOID* ppvAddress)
 
 uint32_t GetProcessMemoryCRC(LPCVOID c_pvBaseAddress)
 {
-	HANDLE hProcess = GetCurrentProcess();
+	PlatformHandle hProcess = GetCurrentProcess();
 	char* pBuf = new char[1024 * 1024];
 	size_t dwBytesRead;
 
@@ -136,4 +122,3 @@ uint8_t GetProcessCRCMagicCubePiece()
 
 	return bPiece;
 }
-#endif

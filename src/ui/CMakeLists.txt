@@ -65,6 +65,22 @@ target_sources(client_ui PRIVATE
     $<TARGET_OBJECTS:client_session>
     $<TARGET_OBJECTS:client_player>
 )
+
+if(WIN32)
+    target_sources(client_ui PRIVATE
+        "${CMAKE_CURRENT_SOURCE_DIR}/../platform/adapters/win32/MovieMan.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/../platform/adapters/win32/ProcessCRC.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/../platform/adapters/win32/ProcessScanner.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/../platform/adapters/win32/PythonApplicationLogo.cpp"
+    )
+else()
+    target_sources(client_ui PRIVATE
+        "${CMAKE_CURRENT_SOURCE_DIR}/../platform/adapters/posix/MovieMan.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/../platform/adapters/posix/ProcessCRC.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/../platform/adapters/posix/ProcessScanner.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/../platform/adapters/posix/PythonApplicationLogo.cpp"
+    )
+endif()
 add_library(Client::UI ALIAS client_ui)
 
 target_include_directories(client_ui
@@ -129,6 +145,11 @@ target_compile_definitions(client_ui PRIVATE OPENMT2_CLIENT_VERSION="${OPENMT2_C
 if(NOT USERINTERFACE_STANDALONE)
     add_executable(openmt2
         "${CMAKE_CURRENT_SOURCE_DIR}/../Main.cpp")
+    if(WIN32)
+        target_sources(openmt2 PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../platform/adapters/win32/ApplicationExports.cpp")
+    else()
+        target_sources(openmt2 PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../platform/adapters/posix/ApplicationExports.cpp")
+    endif()
     set_target_properties(openmt2 PROPERTIES
         OUTPUT_NAME "openmt2"
         RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"

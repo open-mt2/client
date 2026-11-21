@@ -11,20 +11,22 @@
 // The helpers keep the Windows-only SetCursor/ShowCursor/DestroyCursor calls in
 // one place so the call sites stay platform-neutral.
 
+#include <Neoeter/Platform/PortTypes.h>
+
 #include <SDL2/SDL.h>
 
-inline HANDLE Platform_CreateSystemCursor(SDL_SystemCursor cursor)
+inline PlatformHandle Platform_CreateSystemCursor(SDL_SystemCursor cursor)
 {
-	return reinterpret_cast<HANDLE>(SDL_CreateSystemCursor(cursor));
+	return reinterpret_cast<PlatformHandle>(SDL_CreateSystemCursor(cursor));
 }
 
-inline void Platform_DestroyCursor(HANDLE handle)
+inline void Platform_DestroyCursor(PlatformHandle handle)
 {
 	if (handle)
 		SDL_FreeCursor(reinterpret_cast<SDL_Cursor*>(handle));
 }
 
-inline void Platform_SetCursorHandle(HANDLE handle)
+inline void Platform_SetCursorHandle(PlatformHandle handle)
 {
 	SDL_SetCursor(reinterpret_cast<SDL_Cursor*>(handle));
 }
@@ -35,9 +37,3 @@ inline int Platform_ShowCursorFlag(int32_t show)
 {
 	return SDL_ShowCursor(show ? SDL_ENABLE : SDL_DISABLE);
 }
-
-#if defined(_WIN32) || defined(_WIN64)
-// The engine's SdlPlatform.h owns the real implementation; the client does not
-// include it, so keep the Windows resize hook identical to the Linux branch.
-inline void Platform_SetWindowResolution(int /*w*/, int /*h*/) {}
-#endif

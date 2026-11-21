@@ -4,10 +4,6 @@
 #include <Client/UI/QuitRequest.h>
 #include <Neoeter/Render/Camera.h>
 
-#ifndef OPENMT2_PLATFORM_LINUX
-#include <winuser.h>
-#endif
-
 static int gs_nMouseCaptureRef = 0;
 
 void CPythonApplication::SafeSetCapture()
@@ -34,7 +30,7 @@ void CPythonApplication::ResetMouseCapture()
 	ReleaseCapture();
 }
 
-intptr_t CPythonApplication::WindowProcedure(HWND hWnd, uint32_t uiMsg, uintptr_t wParam, intptr_t lParam)
+intptr_t CPythonApplication::WindowProcedure(PlatformWindow hWnd, uint32_t uiMsg, uintptr_t wParam, intptr_t lParam)
 {
 	const int c_DoubleClickTime = 300;
 	const int c_DoubleClickBox = 5;

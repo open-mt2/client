@@ -1,6 +1,6 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/UI/QuitRequest.h>
-#include <Neoeter/Render/SdlPlatform.h>
+#include <Neoeter/Platform/PlatformWindow.h>
 
 void Client_RequestQuit()
 {

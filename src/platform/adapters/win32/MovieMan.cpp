@@ -1,13 +1,9 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/UI/MovieMan.h>
-#include <Client/UI/PythonApplication.h>
-#if defined(_WIN32)
+
 #include <dshow.h>
 #include <dmodshow.h>
 #include <dmoreg.h>
-#endif
-
-#if defined(_WIN32)
 // mingw-w64 ships ddraw.h but no import library, so resolve the entry point at
 // run time and keep the SDK signature at the call site (T1.9).
 namespace
@@ -29,15 +25,6 @@ namespace
 }
 #define DirectDrawCreate DirectDrawCreate_Load
 #endif
-
-#ifdef OPENMT2_PLATFORM_LINUX
-
-void CMovieMan::ClearToBlack() {}
-void CMovieMan::PlayLogo(const char* pcszName) {}
-void CMovieMan::PlayIntro() {}
-int32_t CMovieMan::PlayTutorial(int32_t nIdx) { return TRUE; }
-
-#else
 
 #define LOGO_PMANG_FILE "ymir.mpg"
 #define LOGO_NW_FILE "logoNW.mpg"
@@ -704,4 +691,3 @@ int32_t CMovieMan::BuildFilterGraphManually(
 //	}
 // }
 // #endif
-#endif

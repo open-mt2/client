@@ -4,6 +4,7 @@
 
 #include <Client/Game/StdAfx.h>
 
+#include <Neoeter/Platform/Port.h>
 #include <Neoeter/Render/ResourceManager.h>
 
 #include <Client/Game/AreaLoaderThread.h>
@@ -14,51 +15,34 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-TEMP_CAreaLoaderThread::TEMP_CAreaLoaderThread() : m_hThread(NULL), m_pArg(NULL), m_uThreadID(0), m_bShutdowned(false)
+TEMP_CAreaLoaderThread::TEMP_CAreaLoaderThread() : m_pArg(NULL), m_workPending(false), m_bShutdowned(false), m_finished(false)
 {
 }
 
 TEMP_CAreaLoaderThread::~TEMP_CAreaLoaderThread()
 {
+	Shutdown();
 	Destroy();
 }
 
 bool TEMP_CAreaLoaderThread::Create(void* arg)
 {
-	Arg(arg);
-	m_hThread = (HANDLE)_beginthreadex(NULL, 0, EntryPoint, this, 0, &m_uThreadID);
-
-	if (!m_hThread)
+	if (m_thread.joinable())
 		return false;
 
-	SetThreadPriority(m_hThread, THREAD_PRIORITY_NORMAL);
+	Arg(arg);
+	m_thread = std::thread(&TEMP_CAreaLoaderThread::Run, this, arg);
 	return true;
 }
 
 uint32_t TEMP_CAreaLoaderThread::Run(void* arg)
 {
-	if (!Setup())
-		return 0;
-
-	return (Execute(arg));
-}
-
-/* Static */
-uint32_t CALLBACK TEMP_CAreaLoaderThread::EntryPoint(void* pThis)
-{
-	TEMP_CAreaLoaderThread* pThread = (TEMP_CAreaLoaderThread*)pThis;
-	return pThread->Run(pThread->Arg());
+	return Execute(arg);
 }
 
 //////////////////////////////////////////////////////////////////////////
 void TEMP_CAreaLoaderThread::Destroy()
 {
-	if (m_hSemaphore)
-	{
-		CloseHandle(m_hSemaphore);
-		m_hSemaphore = NULL;
-	}
-
 	/*
 		while(!m_pTerrainRequestDeque.empty())
 		{
@@ -83,60 +67,71 @@ void TEMP_CAreaLoaderThread::Destroy()
 	stl_wipe(m_pAreaCompleteDeque);*/
 }
 
-uint32_t TEMP_CAreaLoaderThread::Setup()
-{
-	m_hSemaphore = CreateSemaphore(NULL,  // no security attributes
-								   0,	  // initial count
-								   65535, // maximum count
-								   NULL); // unnamed semaphore
-	if (!m_hSemaphore)
-		return 0;
-
-	return 1;
-}
-
 void TEMP_CAreaLoaderThread::Shutdown()
 {
-	if (!m_hSemaphore)
+	{
+		std::lock_guard<std::mutex> lock(m_waitMutex);
+		m_bShutdowned = true;
+	}
+	m_workAvailable.notify_all();
+
+	if (!m_thread.joinable())
 		return;
 
-	int32_t bRet;
-
-	m_bShutdowned = true;
-
-	do
+	std::unique_lock<std::mutex> lock(m_waitMutex);
+	if (!m_workAvailable.wait_for(lock, std::chrono::seconds(10), [this]
+								  { return m_finished; }))
 	{
-		bRet = ReleaseSemaphore(m_hSemaphore, 1, NULL);
-	} while (!bRet);
+		lock.unlock();
+		m_thread.detach();
+		return;
+	}
 
-	WaitForSingleObject(m_hThread, 10000); // 쓰레드가 종료 되기를 10초 기다림
+	lock.unlock();
+	m_thread.join();
+}
+
+bool TEMP_CAreaLoaderThread::HasQueuedWork()
+{
+	m_TerrainRequestMutex.Lock();
+	const bool terrain = !m_pTerrainRequestDeque.empty();
+	m_TerrainRequestMutex.Unlock();
+
+	if (terrain)
+		return true;
+
+	m_AreaRequestMutex.Lock();
+	const bool area = !m_pAreaRequestDeque.empty();
+	m_AreaRequestMutex.Unlock();
+	return area;
 }
 
 uint32_t TEMP_CAreaLoaderThread::Execute(void* pvArg)
 {
-	bool bProcessTerrain = true;
-	while (!m_bShutdowned)
+	while (true)
 	{
-		uint32_t dwWaitResult;
-
-		dwWaitResult = WaitForSingleObject(m_hSemaphore, INFINITE);
+		std::unique_lock<std::mutex> lock(m_waitMutex);
+		m_workAvailable.wait(lock, [this]
+							 { return m_bShutdowned || m_workPending; });
 
 		if (m_bShutdowned)
 			break;
 
-		switch (dwWaitResult)
-		{
-			case WAIT_OBJECT_0:
-				if (bProcessTerrain)
-					ProcessTerrain();
-				else
-					ProcessArea();
-				break;
-			case WAIT_TIMEOUT:
-				TraceError("TEMP_CAreaLoaderThread::Execute: Timeout occured while time-out interval is INIFITE");
-				break;
-		}
+		m_workPending = false;
+		lock.unlock();
+
+		ProcessTerrain();
+		ProcessArea();
+
+		lock.lock();
+		m_workPending = HasQueuedWork();
 	}
+
+	{
+		std::lock_guard<std::mutex> lock(m_waitMutex);
+		m_finished = true;
+	}
+	m_workAvailable.notify_all();
 
 	Destroy();
 	return 1;
@@ -148,12 +143,11 @@ void TEMP_CAreaLoaderThread::Request(CTerrain* pTerrain) // called in main threa
 	m_pTerrainRequestDeque.push_back(pTerrain);
 	m_TerrainRequestMutex.Unlock();
 
-	++m_iRestSemCount;
-
-	if (!ReleaseSemaphore(m_hSemaphore, m_iRestSemCount, NULL))
-		TraceError("TEMP_CAreaLoaderThread::Request: ReleaseSemaphore error");
-
-	--m_iRestSemCount;
+	{
+		std::lock_guard<std::mutex> lock(m_waitMutex);
+		m_workPending = true;
+	}
+	m_workAvailable.notify_one();
 }
 
 bool TEMP_CAreaLoaderThread::Fetch(CTerrain** ppTerrain) // called in main thread
@@ -179,12 +173,11 @@ void TEMP_CAreaLoaderThread::Request(CArea* pArea) // called in main thread
 	m_pAreaRequestDeque.push_back(pArea);
 	m_AreaRequestMutex.Unlock();
 
-	++m_iRestSemCount;
-
-	if (!ReleaseSemaphore(m_hSemaphore, m_iRestSemCount, NULL))
-		TraceError("TEMP_CAreaLoaderThread::Request: ReleaseSemaphore error");
-
-	--m_iRestSemCount;
+	{
+		std::lock_guard<std::mutex> lock(m_waitMutex);
+		m_workPending = true;
+	}
+	m_workAvailable.notify_one();
 }
 
 bool TEMP_CAreaLoaderThread::Fetch(CArea** ppArea) // called in main thread
@@ -240,7 +233,7 @@ void TEMP_CAreaLoaderThread::ProcessArea() // called in loader thread
 	m_pAreaCompleteDeque.push_back(pArea);
 	m_AreaCompleteMutex.Unlock();
 
-	Sleep(g_iLoadingDelayTime);
+	Neoeter::Platform::SleepMillis(g_iLoadingDelayTime);
 }
 
 void TEMP_CAreaLoaderThread::ProcessTerrain() // called in loader thread
@@ -275,7 +268,7 @@ void TEMP_CAreaLoaderThread::ProcessTerrain() // called in loader thread
 	if (!LoadMultipleTextData(filename, stTokenVectorMap))
 		return;
 
-	Sleep(g_iLoadingDelayTime);
+	Neoeter::Platform::SleepMillis(g_iLoadingDelayTime);
 
 	if (stTokenVectorMap.end() == stTokenVectorMap.find("scripttype"))
 		return;
@@ -308,23 +301,23 @@ void TEMP_CAreaLoaderThread::ProcessTerrain() // called in loader thread
 	pTerrain->CopySettingFromGlobalSetting();
 
 	pTerrain->LoadWaterMap(szWaterMapName);
-	Sleep(g_iLoadingDelayTime);
+	Neoeter::Platform::SleepMillis(g_iLoadingDelayTime);
 	pTerrain->LoadHeightMap(szRawHeightFieldname);
-	Sleep(g_iLoadingDelayTime);
+	Neoeter::Platform::SleepMillis(g_iLoadingDelayTime);
 	pTerrain->LoadAttrMap(szAttrMapName);
-	Sleep(g_iLoadingDelayTime);
+	Neoeter::Platform::SleepMillis(g_iLoadingDelayTime);
 	pTerrain->RAW_LoadTileMap(szSplatName, true);
-	Sleep(g_iLoadingDelayTime);
+	Neoeter::Platform::SleepMillis(g_iLoadingDelayTime);
 	pTerrain->LoadShadowTexture(szShadowTexName);
-	Sleep(g_iLoadingDelayTime);
+	Neoeter::Platform::SleepMillis(g_iLoadingDelayTime);
 	pTerrain->LoadShadowMap(szShadowMapName);
-	Sleep(g_iLoadingDelayTime);
+	Neoeter::Platform::SleepMillis(g_iLoadingDelayTime);
 	pTerrain->LoadMiniMapTexture(szMiniMapTexName);
-	Sleep(g_iLoadingDelayTime);
+	Neoeter::Platform::SleepMillis(g_iLoadingDelayTime);
 	pTerrain->SetName(c_rstrAreaName.c_str());
-	Sleep(g_iLoadingDelayTime);
+	Neoeter::Platform::SleepMillis(g_iLoadingDelayTime);
 	pTerrain->CalculateTerrainPatch();
-	Sleep(g_iLoadingDelayTime);
+	Neoeter::Platform::SleepMillis(g_iLoadingDelayTime);
 
 	pTerrain->SetReady();
 
@@ -334,5 +327,5 @@ void TEMP_CAreaLoaderThread::ProcessTerrain() // called in loader thread
 	m_pTerrainCompleteDeque.push_back(pTerrain);
 	m_TerrainCompleteMutex.Unlock();
 
-	Sleep(g_iLoadingDelayTime);
+	Neoeter::Platform::SleepMillis(g_iLoadingDelayTime);
 }

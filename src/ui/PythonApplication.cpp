@@ -5,6 +5,7 @@
 #include <Client/UI/FrameClear.h>
 #include <Neoeter/Platform/Base/error.h>
 #include <Neoeter/Platform/Base/Version.h>
+#include <Neoeter/Platform/Port.h>
 #include <Neoeter/Debug/Debug.h>
 #include <Client/UI/DebugPacksPanel.h>
 #include <Client/UI/GraphicsOptionsPanel.h>
@@ -505,10 +506,8 @@ void CPythonApplication::SkipRenderBuffering(uint32_t dwSleepMSec)
 
 bool CPythonApplication::Process()
 {
-#if defined(OPENMT2_PLATFORM_LINUX)
-	if (Platform_IsQuitRequested())
+	if (Neoeter::Platform::IsLinux() && Platform_IsQuitRequested())
 		return false;
-#endif
 
 	ELTimer_SetFrameMSec();
 
@@ -964,7 +963,7 @@ bool CPythonApplication::Process()
 	if (rest > 0 && !bCurrentLateUpdate)
 	{
 		s_uiLoad -= rest; // 쉰 시간은 로드에서 뺀다..
-		Sleep(rest);
+		Neoeter::Platform::SleepMillis(rest);
 	}
 
 	++s_dwUpdateFrameCount;
@@ -1318,11 +1317,7 @@ bool CPythonApplication::CreateStartupWindow()
 
 	m_dwWidth = width;
 	m_dwHeight = height;
-#if defined(OPENMT2_PLATFORM_LINUX)
-	m_isWindowed = true;
-#else
-	m_isWindowed = m_pySystem.IsWindowed();
-#endif
+	m_isWindowed = Neoeter::Platform::IsLinux() ? true : m_pySystem.IsWindowed();
 	Platform_SetWindowResolution(width, height);
 
 	uint32_t WindowMode = __GetWindowMode(true);
@@ -1346,11 +1341,7 @@ bool CPythonApplication::Create(PyObject* poSelf, const char* c_szName, int widt
 
 	Tracef("[PythonApplication] Create(name='%s', width=%d, height=%d, Windowed=%d)\n", c_szName, width, height, Windowed);
 
-#if defined(OPENMT2_PLATFORM_LINUX)
-	Windowed = 1;
-#else
-	Windowed = CPythonSystem::Instance().IsWindowed() ? 1 : 0;
-#endif
+	Windowed = Neoeter::Platform::IsLinux() ? 1 : (CPythonSystem::Instance().IsWindowed() ? 1 : 0);
 
 	bool bHasWindow = GetWindowHandle() != NULL;
 	int existingWidth = 0;
@@ -1359,12 +1350,10 @@ bool CPythonApplication::Create(PyObject* poSelf, const char* c_szName, int widt
 	if (existingWindow)
 		SDL_GetWindowSize(existingWindow, &existingWidth, &existingHeight);
 
-#if !defined(OPENMT2_PLATFORM_LINUX)
 	bool bAnotherWindow = false;
 
-	if (!bHasWindow && FindWindow(NULL, GetWindowTitle().c_str()))
+	if (!Neoeter::Platform::IsLinux() && !bHasWindow && FindWindow(NULL, GetWindowTitle().c_str()))
 		bAnotherWindow = true;
-#endif
 
 	m_dwWidth = width;
 	m_dwHeight = height;
@@ -1376,9 +1365,8 @@ bool CPythonApplication::Create(PyObject* poSelf, const char* c_szName, int widt
 
 	if (bHasWindow)
 	{
-#if !defined(OPENMT2_PLATFORM_LINUX)
-		SetText(GetWindowTitle().c_str());
-#endif
+		if (!Neoeter::Platform::IsLinux())
+			SetText(GetWindowTitle().c_str());
 		if (existingWidth != width || existingHeight != height)
 			SetSize(width, height);
 	}
@@ -1395,21 +1383,22 @@ bool CPythonApplication::Create(PyObject* poSelf, const char* c_szName, int widt
 		CPythonIME::Instance().UseDefaultIME();
 	}
 
-#if defined(OPENMT2_PLATFORM_LINUX)
-	m_isWindowed = true;
-	if (!bHasWindow || existingWidth != width || existingHeight != height)
-		AdjustSize(width, height);
-
-	if (SDL_Window* window = CMSWindow::GetSDLWindow())
+	if (Neoeter::Platform::IsLinux())
 	{
-		Uint32 flags = SDL_GetWindowFlags(window);
-		if (flags & (SDL_WINDOW_FULLSCREEN | SDL_WINDOW_FULLSCREEN_DESKTOP))
-			SDL_SetWindowFullscreen(window, 0);
-		if (flags & SDL_WINDOW_MAXIMIZED)
-			SDL_RestoreWindow(window);
+		m_isWindowed = true;
+		if (!bHasWindow || existingWidth != width || existingHeight != height)
+			AdjustSize(width, height);
+
+		if (SDL_Window* window = CMSWindow::GetSDLWindow())
+		{
+			Uint32 flags = SDL_GetWindowFlags(window);
+			if (flags & (SDL_WINDOW_FULLSCREEN | SDL_WINDOW_FULLSCREEN_DESKTOP))
+				SDL_SetWindowFullscreen(window, 0);
+			if (flags & SDL_WINDOW_MAXIMIZED)
+				SDL_RestoreWindow(window);
+		}
 	}
-#else
-	if (!m_pySystem.IsWindowed())
+	else if (!m_pySystem.IsWindowed())
 	{
 		m_isWindowed = false;
 		m_isWindowFullScreenEnable = FALSE;
@@ -1457,7 +1446,6 @@ bool CPythonApplication::Create(PyObject* poSelf, const char* c_szName, int widt
 			CMSApplication::SetPosition(GetScreenWidth() - windowWidth, GetScreenHeight() - 60 - windowHeight);
 		}
 	}
-#endif
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////

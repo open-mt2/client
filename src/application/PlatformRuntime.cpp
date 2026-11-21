@@ -3,7 +3,7 @@
 #include <Neoeter/Model/Grn/GrannyCompat.h>
 #include <Neoeter/Platform/Base/Debug.h>
 #include <Neoeter/Platform/Base/Utils.h>
-#include <Neoeter/Platform/Platform.h>
+#include <Neoeter/Platform/Port.h>
 
 namespace
 {
@@ -26,12 +26,11 @@ namespace Neoeter
 
 	bool PlatformRuntime::Initialize()
 	{
-		TIMECAPS timeCaps;
-		if (timeGetDevCaps(&timeCaps, sizeof(TIMECAPS)) != TIMERR_NOERROR)
+		uint32_t period = 0;
+		if (!Neoeter::Platform::RaiseTimerResolution(&period))
 			return false;
 
-		m_timerResolution = MINMAX(timeCaps.wPeriodMin, 1, timeCaps.wPeriodMax);
-		timeBeginPeriod(m_timerResolution);
+		m_timerResolution = period;
 		m_timerRaised = true;
 
 		granny_log_callback callback;
@@ -47,7 +46,7 @@ namespace Neoeter
 		if (!m_timerRaised)
 			return;
 
-		timeEndPeriod(m_timerResolution);
+		Neoeter::Platform::RestoreTimerResolution(m_timerResolution);
 		m_timerRaised = false;
 	}
 }

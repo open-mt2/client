@@ -18,7 +18,7 @@ class CPythonIME : public IIMEEventSink,
 		void SetCursorPosition(int iPosition);
 		void Delete();
 
-		void Create(HWND hWnd);
+		void Create(PlatformWindow hWnd);
 
 	protected:
 		virtual void OnTab();

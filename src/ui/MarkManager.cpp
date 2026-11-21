@@ -2,6 +2,7 @@
 #include <Client/UI/MarkManager.h>
 
 #include <Neoeter/Platform/Base/CRC32.h>
+#include <Neoeter/Platform/Port.h>
 #define sys_err TraceError
 #define sys_log(...) ((void)0)
 #define thecore_memcpy memcpy
@@ -19,9 +20,7 @@ void CGuildMarkManager::__DeleteImage(CGuildMarkImage* pkImgDel)
 
 CGuildMarkManager::CGuildMarkManager()
 {
-#if _MSC_VER >= 1200
-	mkdir("mark");
-#endif
+	Neoeter::Platform::CreateDirectory("mark");
 	// 남은 mark id 셋을 만든다. (서버용)
 	for (uint32_t i = 0; i < MAX_IMAGE_COUNT * CGuildMarkImage::MARK_TOTAL_COUNT; ++i)
 		m_setFreeMarkID.insert(i);

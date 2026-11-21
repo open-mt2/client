@@ -15,7 +15,7 @@ namespace Neoeter
 			Context(const Context&) = delete;
 			Context& operator=(const Context&) = delete;
 
-			HINSTANCE Instance() const;
+			PlatformInstance Instance() const;
 
 			static bool IsDebug();
 			static bool IsLinux();
@@ -32,6 +32,6 @@ namespace Neoeter
 			static const char* ErrorString();
 
 		private:
-			HINSTANCE m_instance;
+			PlatformInstance m_instance;
 	};
 }

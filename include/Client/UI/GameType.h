@@ -203,8 +203,8 @@ typedef struct SItemPos
 			return protocol::ItemPos(window_type, cell);
 		}
 
-		// 기존에 cell의 형을 보면 BYTE가 대부분이지만, oi
-		// 어떤 부분은 int, 어떤 부분은 WORD로 되어있어,
+		// 기존에 cell의 형을 보면 uint8_t가 대부분이지만, oi
+		// 어떤 부분은 int, 어떤 부분은 uint16_t로 되어있어,
 		// 가장 큰 자료형인 int로 받는다.
 		//  int operator=(const int _cell)
 		//  {

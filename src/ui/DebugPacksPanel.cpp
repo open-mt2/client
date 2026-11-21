@@ -383,10 +383,10 @@ namespace
 		device->SetViewport(&viewport);
 		device->Clear(0, nullptr, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0xFF20242C, 1.0f, 0);
 
-		DWORD previousZEnable = TRUE;
-		DWORD previousZWriteEnable = TRUE;
-		DWORD previousZFunc = D3DCMP_LESSEQUAL;
-		DWORD previousCullMode = D3DCULL_CW;
+		uint32_t previousZEnable = TRUE;
+		uint32_t previousZWriteEnable = TRUE;
+		uint32_t previousZFunc = D3DCMP_LESSEQUAL;
+		uint32_t previousCullMode = D3DCULL_CW;
 		device->GetRenderState(D3DRS_ZENABLE, &previousZEnable);
 		device->GetRenderState(D3DRS_ZWRITEENABLE, &previousZWriteEnable);
 		device->GetRenderState(D3DRS_ZFUNC, &previousZFunc);

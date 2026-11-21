@@ -1,15 +1,5 @@
 #pragma once
 
-#ifdef _MSC_VER
-#pragma warning(disable : 4702)
-#pragma warning(disable : 4100)
-#pragma warning(disable : 4201)
-#pragma warning(disable : 4511)
-#pragma warning(disable : 4663)
-#pragma warning(disable : 4018)
-#pragma warning(disable : 4245)
-#endif
-
 #include <Neoeter/Render/StdAfx.h>
 #include <Neoeter/Python/Bindings/StdAfx.h>
 #include <Client/Game/StdAfx.h>
@@ -21,11 +11,6 @@
 
 #ifndef __D3DRM_H__
 #define __D3DRM_H__
-#endif
-
-#ifndef OPENMT2_PLATFORM_LINUX
-#include <dshow.h>
-#include <qedit.h>
 #endif
 
 #include <Client/UI/Locale.h>

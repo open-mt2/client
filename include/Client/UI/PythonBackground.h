@@ -5,10 +5,6 @@
 #if !defined(AFX_PYTHONBACKGROUND_H__A202CB18_9553_4CF3_8500_5D7062B55432__INCLUDED_)
 #define AFX_PYTHONBACKGROUND_H__A202CB18_9553_4CF3_8500_5D7062B55432__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
-
 #include <Client/Game/MapManager.h>
 #include <Client/Game/TerrainDecal.h>
 #include <Client/Game/SnowEnvironment.h>

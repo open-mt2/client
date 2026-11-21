@@ -2,7 +2,7 @@
 #include <Client/UI/PythonApplication.h>
 #include <Neoeter/Debug/Debug.h>
 #include <Neoeter/Render/Camera.h>
-#include <Neoeter/Render/SdlPlatform.h>
+#include <Neoeter/Platform/PlatformWindow.h>
 
 void CPythonApplication::OnCameraUpdate()
 {

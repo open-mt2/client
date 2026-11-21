@@ -2019,7 +2019,7 @@ enum EPVPModes
 typedef struct packet_duel_start
 {
 		uint8_t header;
-		uint16_t wSize; // DWORD가 몇개? 개수 = (wSize - sizeof(TPacketGCPVPList)) / 4
+		uint16_t wSize; // uint32_t가 몇개? 개수 = (wSize - sizeof(TPacketGCPVPList)) / 4
 } TPacketGCDuelStart;
 
 typedef struct packet_pvp

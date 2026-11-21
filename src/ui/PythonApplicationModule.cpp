@@ -1,4 +1,5 @@
 #include <Client/UI/StdAfx.h>
+#include <Neoeter/Platform/Port.h>
 #include <Client/UI/ImageFile.h>
 #include <Client/UI/PythonApplication.h>
 #include <Neoeter/Render/Camera.h>
@@ -151,9 +152,7 @@ PyObject* appSetCameraMaxDistance(PyObject* poSelf, PyObject* poArgs)
 
 PyObject* appSetControlFP(PyObject* poSelf, PyObject* poArgs)
 {
-#ifndef OPENMT2_PLATFORM_LINUX
-	_controlfp(_PC_24, _MCW_PC);
-#endif
+	Neoeter::Platform::SetFloatingPointPrecision();
 	return Py_BuildNone();
 }
 
@@ -323,19 +322,10 @@ PyObject* appGetFileList(PyObject* poSelf, PyObject* poArgs)
 
 	PyObject* poList = PyList_New(0);
 
-	WIN32_FIND_DATA wfd;
-	memset(&wfd, 0, sizeof(wfd));
-
-	HANDLE hFind = FindFirstFile(szFilter, &wfd);
-	if (hFind != INVALID_HANDLE_VALUE)
+	for (const std::string& fileName : Neoeter::Platform::FindFiles(szFilter))
 	{
-		do
-		{
-			PyObject* poFileName = PyString_FromString(wfd.cFileName);
-			PyList_Append(poList, poFileName);
-		} while (FindNextFile(hFind, &wfd));
-
-		FindClose(hFind);
+		PyObject* poFileName = PyString_FromString(fileName.c_str());
+		PyList_Append(poList, poFileName);
 	}
 
 	return poList;
@@ -792,7 +782,7 @@ PyObject* appSleep(PyObject* poSelf, PyObject* poArgs)
 	if (!PyTuple_GetInteger(poArgs, 0, &iTime))
 		return Py_BuildException();
 
-	Sleep(iTime);
+	Neoeter::Platform::SleepMillis(iTime);
 
 	return Py_BuildNone();
 }

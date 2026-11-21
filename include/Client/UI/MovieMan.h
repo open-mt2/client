@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Neoeter/Platform/Port.h>
+
 // 페이드아웃 길이(초)
 #define MOVIEMAN_FADE_DURATION 1300
 #define MOVIEMAN_SKIPPABLE_YES true
@@ -29,16 +31,12 @@ class CMovieMan : public CSingleton<CMovieMan>
 			  m_pPrimarySurface(NULL),
 			  m_pBasicAudio(NULL)
 		{
-#ifndef OPENMT2_PLATFORM_LINUX
-			CoInitialize(NULL);
-#endif
+			Neoeter::Platform::InitializeCom();
 		};
 
 		virtual ~CMovieMan()
 		{
-#ifndef OPENMT2_PLATFORM_LINUX
-			CoUninitialize();
-#endif
+			Neoeter::Platform::ShutdownCom();
 		};
 
 		void ClearToBlack();

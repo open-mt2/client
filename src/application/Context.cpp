@@ -1,4 +1,5 @@
 #include <Client/Application/Context.h>
+#include <Neoeter/Platform/Port.h>
 
 #ifdef _DEBUG
 #include <crtdbg.h>
@@ -15,13 +16,13 @@ namespace
 
 namespace Neoeter
 {
-	Context::Context() : m_instance(reinterpret_cast<HINSTANCE>(GetModuleHandle(NULL)))
+	Context::Context() : m_instance(Neoeter::Platform::ModuleHandle())
 	{
 	}
 
 	Context::~Context() = default;
 
-	HINSTANCE Context::Instance() const
+	PlatformInstance Context::Instance() const
 	{
 		return m_instance;
 	}
@@ -37,11 +38,7 @@ namespace Neoeter
 
 	bool Context::IsLinux()
 	{
-#ifdef OPENMT2_PLATFORM_LINUX
-		return true;
-#else
-		return false;
-#endif
+		return Neoeter::Platform::IsLinux();
 	}
 
 	bool Context::IsDistribute()
@@ -81,11 +78,7 @@ namespace Neoeter
 
 	int Context::CompilerVersion()
 	{
-#ifdef _MSC_VER
-		return _MSC_VER;
-#else
-		return 1900;
-#endif
+		return Neoeter::Platform::CompilerVersion();
 	}
 
 	void Context::SetErrorString(const char* error)

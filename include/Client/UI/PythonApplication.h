@@ -272,7 +272,7 @@ class CPythonApplication : public CMSApplication, public CInputKeyboard, public 
 		int m_nLeft, m_nRight, m_nTop, m_nBottom;
 
 	protected:
-		intptr_t WindowProcedure(HWND hWnd, uint32_t uiMsg, uintptr_t wParam, intptr_t lParam);
+		intptr_t WindowProcedure(PlatformWindow hWnd, uint32_t uiMsg, uintptr_t wParam, intptr_t lParam);
 
 		void OnCameraUpdate();
 
@@ -421,9 +421,9 @@ class CPythonApplication : public CMSApplication, public CInputKeyboard, public 
 		uint32_t m_dwLButtonDownTime;
 		uint32_t m_dwLButtonUpTime;
 
-		typedef std::map<int, HANDLE> TCursorHandleMap;
+		typedef std::map<int, PlatformHandle> TCursorHandleMap;
 		TCursorHandleMap m_CursorHandleMap;
-		HANDLE m_hCurrentCursor;
+		PlatformHandle m_hCurrentCursor;
 
 		int32_t m_bCursorVisible;
 		bool m_bLiarCursorOn;

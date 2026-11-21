@@ -13,7 +13,7 @@ CPythonIME::~CPythonIME()
 	Tracen("PythonIME Clear");
 }
 
-void CPythonIME::Create(HWND hWnd)
+void CPythonIME::Create(PlatformWindow hWnd)
 {
 	Initialize(hWnd);
 }
