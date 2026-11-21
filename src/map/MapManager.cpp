@@ -99,7 +99,9 @@ CMapManager::CMapManager() : mc_pcurEnvironmentData(NULL),
 							 m_bDayNightFogColorValid(false),
 							 m_bDayNightApplied(false),
 							 m_bEnvironmentLightingPushed(false),
-							 m_bLastDayNightTintValid(false)
+							 m_bLastDayNightTintValid(false),
+							 m_dwBaseX(0),
+							 m_dwBaseY(0)
 {
 	m_pkMap = NULL;
 	m_isSoftwareTilingEnableReserved = false;
@@ -291,6 +293,35 @@ bool CMapManager::GetWaterHeight(int iX, int iY, long* plWaterHeight)
 
 	CMapOutdoor& rkMap = GetMapOutdoorRef();
 	return rkMap.GetWaterHeight(iX, iY, plWaterHeight);
+}
+
+float CMapManager::HeightAt(float fx, float fy)
+{
+	return GetHeight(fx, fy);
+}
+
+bool CMapManager::RegionAt(int32_t globalX, int32_t globalY, Map::SRegion* region)
+{
+	TMapInfo* pRegion = GlobalPositionToMapInfo(static_cast<uint32_t>(globalX), static_cast<uint32_t>(globalY));
+	if (!pRegion)
+		return false;
+
+	region->m_strName = pRegion->m_strName.c_str();
+	region->m_dwBaseX = pRegion->m_dwBaseX;
+	region->m_dwBaseY = pRegion->m_dwBaseY;
+	region->m_dwEndX = pRegion->m_dwEndX;
+	region->m_dwEndY = pRegion->m_dwEndY;
+	return true;
+}
+
+void CMapManager::GlobalPositionToLocalPosition(int32_t& rGlobalX, int32_t& rGlobalY)
+{
+	Map::GlobalPositionToLocalPosition(rGlobalX, rGlobalY, m_dwBaseX, m_dwBaseY);
+}
+
+void CMapManager::LocalPositionToGlobalPosition(int32_t& rLocalX, int32_t& rLocalY)
+{
+	Map::LocalPositionToGlobalPosition(rLocalX, rLocalY, m_dwBaseX, m_dwBaseY);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -859,6 +890,35 @@ void CMapManager::GetBaseXY(uint32_t* pdwBaseX, uint32_t* pdwBaseY)
 
 	CMapOutdoor& rkMap = GetMapOutdoorRef();
 	rkMap.GetBaseXY(pdwBaseX, pdwBaseY);
+}
+
+struct FFindRegion
+{
+		uint32_t m_dwX;
+		uint32_t m_dwY;
+
+		FFindRegion(uint32_t dwX, uint32_t dwY)
+		{
+			m_dwX = dwX;
+			m_dwY = dwY;
+		}
+
+		bool operator()(const CMapManager::TMapInfo& rMapInfo) const
+		{
+			if (m_dwX < rMapInfo.m_dwBaseX || m_dwX >= rMapInfo.m_dwEndX)
+				return false;
+
+			return m_dwY >= rMapInfo.m_dwBaseY && m_dwY < rMapInfo.m_dwEndY;
+		}
+};
+
+CMapManager::TMapInfo* CMapManager::GlobalPositionToMapInfo(uint32_t dwGlobalX, uint32_t dwGlobalY)
+{
+	TMapInfoVector::iterator it = std::find_if(m_kVct_kMapInfo.begin(), m_kVct_kMapInfo.end(), FFindRegion(dwGlobalX, dwGlobalY));
+	if (it == m_kVct_kMapInfo.end())
+		return nullptr;
+
+	return &(*it);
 }
 
 void CMapManager::__LoadMapInfoVector()

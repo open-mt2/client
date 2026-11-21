@@ -57,9 +57,6 @@ class CPythonBackground : public CMapManager, public CSingleton<CPythonBackgroun
 		void Destroy();
 		void Create();
 
-		void GlobalPositionToLocalPosition(int32_t& rGlobalX, int32_t& rGlobalY);
-		void LocalPositionToGlobalPosition(int32_t& rLocalX, int32_t& rLocalY);
-
 		void EnableTerrainOnlyForHeight();
 		bool SetSplatLimit(int iSplatNum);
 		bool SetVisiblePart(int ePart, bool isVisible);
@@ -130,7 +127,6 @@ class CPythonBackground : public CMapManager, public CSingleton<CPythonBackgroun
 		void DisableGuildArea();
 
 		void RegisterDungeonMapName(const char* c_szMapName);
-		TMapInfo* GlobalPositionToMapInfo(uint32_t dwGlobalX, uint32_t dwGlobalY);
 		const char* GetWarpMapName();
 
 	protected:
@@ -153,9 +149,6 @@ class CPythonBackground : public CMapManager, public CSingleton<CPythonBackgroun
 
 		uint32_t m_dwRenderShadowTime;
 
-		uint32_t m_dwBaseX;
-		uint32_t m_dwBaseY;
-
 		TVIEWDISTANCESET m_ViewDistanceSet[NUM_DISTANCE_SET];
 		float m_fFogDistance;
 
@@ -169,22 +162,6 @@ class CPythonBackground : public CMapManager, public CSingleton<CPythonBackgroun
 				int ily;
 		};
 		std::map<uint32_t, SReserveTargetEffect> m_kMap_dwID_kReserveTargetEffect;
-
-		struct FFindWarpMapName
-		{
-				uint32_t m_dwX, m_dwY;
-				FFindWarpMapName(uint32_t dwX, uint32_t dwY)
-				{
-					m_dwX = dwX;
-					m_dwY = dwY;
-				}
-				bool operator()(TMapInfo& rMapInfo)
-				{
-					if (m_dwX < rMapInfo.m_dwBaseX || m_dwX >= rMapInfo.m_dwEndX || m_dwY < rMapInfo.m_dwBaseY || m_dwY >= rMapInfo.m_dwEndY)
-						return false;
-					return true;
-				}
-		};
 };
 
 #endif // !defined(AFX_PYTHONBACKGROUND_H__A202CB18_9553_4CF3_8500_5D7062B55432__INCLUDED_)

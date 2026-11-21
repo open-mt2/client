@@ -4,13 +4,14 @@ class CMapBase;
 #include <Client/Map/Lighting.h>
 #include <Client/Map/MapOutdoor.h>
 #include <Client/GameData/PropertyManager.h>
+#include <Client/Map/Map.h>
 
 // VICTIM_COLLISION_TEST
 #include <Client/Map/PhysicsObject.h>
 // VICTIM_COLLISION_TEST_END
 
 // Map Manager
-class CMapManager : public CScreen, public IPhysicsWorld
+class CMapManager : public CScreen, public IPhysicsWorld, public Map::IQuery
 {
 	public:
 		CMapManager();
@@ -46,6 +47,11 @@ class CMapManager : public CScreen, public IPhysicsWorld
 		float GetHeight(float fx, float fy);
 		float GetTerrainHeight(float fx, float fy);
 		bool GetWaterHeight(int iX, int iY, long* plWaterHeight);
+
+		float HeightAt(float fx, float fy) override;
+		bool RegionAt(int32_t globalX, int32_t globalY, Map::SRegion* region) override;
+		void GlobalPositionToLocalPosition(int32_t& rGlobalX, int32_t& rGlobalY) override;
+		void LocalPositionToGlobalPosition(int32_t& rLocalX, int32_t& rLocalY) override;
 
 		bool GetNormal(int ix, int iy, D3DXVECTOR3* pv3Normal);
 
@@ -128,6 +134,8 @@ class CMapManager : public CScreen, public IPhysicsWorld
 		//////////////////////////////////////////////////////////////////////////
 		CMapOutdoor* m_pkMap;
 		CSpeedTreeDirectX m_Forest;
+		uint32_t m_dwBaseX;
+		uint32_t m_dwBaseY;
 
 	public:
 		// 2004.10.14.myevan.TEMP_CAreaLoaderThread
@@ -185,6 +193,8 @@ class CMapManager : public CScreen, public IPhysicsWorld
 		{
 			m_stAtlasInfoFileName = filename;
 		}
+
+		TMapInfo* GlobalPositionToMapInfo(uint32_t dwGlobalX, uint32_t dwGlobalY);
 
 	private:
 		std::string m_stAtlasInfoFileName;

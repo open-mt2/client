@@ -6,17 +6,16 @@
 #include <Client/UI/PythonApplication.h>
 #include <Client/UI/AbstractPlayer.h>
 #include <Client/Game/ActorInstance.h>
+#include <Client/Map/Map.h>
 
 void CPythonNetworkStream::__GlobalPositionToLocalPosition(int32_t& rGlobalX, int32_t& rGlobalY)
 {
-	CPythonBackground& rkBgMgr = CPythonBackground::Instance();
-	rkBgMgr.GlobalPositionToLocalPosition(rGlobalX, rGlobalY);
+	Map::GlobalPositionToLocalPosition(rGlobalX, rGlobalY);
 }
 
 void CPythonNetworkStream::__LocalPositionToGlobalPosition(int32_t& rLocalX, int32_t& rLocalY)
 {
-	CPythonBackground& rkBgMgr = CPythonBackground::Instance();
-	rkBgMgr.LocalPositionToGlobalPosition(rLocalX, rLocalY);
+	Map::LocalPositionToGlobalPosition(rLocalX, rLocalY);
 }
 
 bool CPythonNetworkStream::__CanActMainInstance()

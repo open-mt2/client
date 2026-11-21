@@ -276,8 +276,6 @@ CPythonBackground::CPythonBackground()
 	m_eViewDistanceNum = 0;
 	m_eViewDistanceNum = 0;
 	m_eShadowLevel = SHADOW_NONE;
-	m_dwBaseX = 0;
-	m_dwBaseY = 0;
 	m_strMapName = "";
 	m_iDayMode = DAY_MODE_LIGHT;
 	m_iXMasTreeGrade = 0;
@@ -306,6 +304,7 @@ void CPythonBackground::Initialize()
 	stAtlasInfoFileName += "/AtlasInfo.txt";
 	SetAtlasInfoFileName(stAtlasInfoFileName.c_str());
 	CMapManager::Initialize();
+	Map::SetQuery(this);
 }
 
 void CPythonBackground::__CreateProperty()
@@ -758,30 +757,9 @@ void CPythonBackground::SetBackgroundDirLight()
 	STATEMANAGER.SetLight(0, &mc_pcurEnvironmentData->DirLights[ENV_DIRLIGHT_BACKGROUND]);
 }
 
-void CPythonBackground::GlobalPositionToLocalPosition(int32_t& rGlobalX, int32_t& rGlobalY)
-{
-	rGlobalX -= m_dwBaseX;
-	rGlobalY -= m_dwBaseY;
-}
-
-void CPythonBackground::LocalPositionToGlobalPosition(int32_t& rLocalX, int32_t& rLocalY)
-{
-	rLocalX += m_dwBaseX;
-	rLocalY += m_dwBaseY;
-}
-
 void CPythonBackground::RegisterDungeonMapName(const char* c_szMapName)
 {
 	m_kSet_strDungeonMapName.insert(c_szMapName);
-}
-
-CPythonBackground::TMapInfo* CPythonBackground::GlobalPositionToMapInfo(uint32_t dwGlobalX, uint32_t dwGlobalY)
-{
-	TMapInfoVector::iterator f = std::find_if(m_kVct_kMapInfo.begin(), m_kVct_kMapInfo.end(), FFindWarpMapName(dwGlobalX, dwGlobalY));
-	if (f == m_kVct_kMapInfo.end())
-		return NULL;
-
-	return &(*f);
 }
 
 void CPythonBackground::Warp(uint32_t dwX, uint32_t dwY)
