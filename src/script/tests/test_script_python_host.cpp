@@ -22,10 +22,10 @@ int main()
 	CEterPackManager packManager;
 	packManager.SetSearchMode(false);
 
-	Neoeter::ScriptHost script;
-	script.RegisterHost("python", &Neoeter::CreatePythonHost);
+	OMT2Client::Script::ScriptHost script;
+	script.RegisterHost("python", &OMT2Client::Python::Host::CreatePythonHost);
 
-	Neoeter::ScriptContext context;
+	OMT2Client::Script::ScriptContext context;
 	context.commandLine = "-test";
 	context.debug = true;
 
@@ -35,8 +35,8 @@ int main()
 		"host=python\n"
 		"entry=test_script_python_host_entry.py\n";
 
-	const Neoeter::ScriptHost::Result result = script.Start(manifest, context);
-	TEST_ASSERT_MSG(result == Neoeter::ScriptHost::Result::Success, script.LastError().c_str());
+	const OMT2Client::Script::ScriptHost::Result result = script.Start(manifest, context);
+	TEST_ASSERT_MSG(result == OMT2Client::Script::ScriptHost::Result::Success, script.LastError().c_str());
 	TEST_ASSERT(script.IsRunning());
 
 	script.Stop();

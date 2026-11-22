@@ -70,7 +70,7 @@ bool CPythonNetworkStream::SendSafeBoxItemMovePacket(uint8_t bySourcePos, uint8_
 	return SendSequence();
 }
 
-bool CNetworkStreamGameItemPhase::RecvSafeBoxSetPacket(const protocol::Packet& value)
+bool CNetworkStreamGameItemPhase::RecvSafeBoxSetPacket(const OMT2Client::Protocol::Packet& value)
 {
 	TPacketGCItemSet2 kItemSet = value.Get<TPacketGCItemSet2>();
 
@@ -91,7 +91,7 @@ bool CNetworkStreamGameItemPhase::RecvSafeBoxSetPacket(const protocol::Packet& v
 	return true;
 }
 
-bool CNetworkStreamGameItemPhase::RecvSafeBoxDelPacket(const protocol::Packet& value)
+bool CNetworkStreamGameItemPhase::RecvSafeBoxDelPacket(const OMT2Client::Protocol::Packet& value)
 {
 	TPacketGCItemDel kItemDel = value.Get<TPacketGCItemDel>();
 
@@ -102,14 +102,14 @@ bool CNetworkStreamGameItemPhase::RecvSafeBoxDelPacket(const protocol::Packet& v
 	return true;
 }
 
-bool CNetworkStreamGameItemPhase::RecvSafeBoxWrongPasswordPacket(const protocol::Packet& value)
+bool CNetworkStreamGameItemPhase::RecvSafeBoxWrongPasswordPacket(const OMT2Client::Protocol::Packet& value)
 {
 	PyCallClassMemberFunc(m_rkStream.m_apoPhaseWnd[CPythonNetworkStream::PHASE_WINDOW_GAME], "OnSafeBoxError", Py_BuildValue("()"));
 
 	return true;
 }
 
-bool CNetworkStreamGameItemPhase::RecvSafeBoxSizePacket(const protocol::Packet& value)
+bool CNetworkStreamGameItemPhase::RecvSafeBoxSizePacket(const OMT2Client::Protocol::Packet& value)
 {
 	TPacketGCSafeboxSize kSafeBoxSize = value.Get<TPacketGCSafeboxSize>();
 
@@ -119,7 +119,7 @@ bool CNetworkStreamGameItemPhase::RecvSafeBoxSizePacket(const protocol::Packet& 
 	return true;
 }
 
-bool CNetworkStreamGameItemPhase::RecvSafeBoxMoneyChangePacket(const protocol::Packet& value)
+bool CNetworkStreamGameItemPhase::RecvSafeBoxMoneyChangePacket(const OMT2Client::Protocol::Packet& value)
 {
 	TPacketGCSafeboxMoneyChange kMoneyChange = value.Get<TPacketGCSafeboxMoneyChange>();
 
@@ -148,7 +148,7 @@ bool CPythonNetworkStream::SendMallCheckoutPacket(uint8_t byMallPos, TItemPos In
 	return SendSequence();
 }
 
-bool CNetworkStreamGameItemPhase::RecvMallOpenPacket(const protocol::Packet& value)
+bool CNetworkStreamGameItemPhase::RecvMallOpenPacket(const OMT2Client::Protocol::Packet& value)
 {
 	TPacketGCMallOpen kMallOpen = value.Get<TPacketGCMallOpen>();
 
@@ -157,7 +157,7 @@ bool CNetworkStreamGameItemPhase::RecvMallOpenPacket(const protocol::Packet& val
 
 	return true;
 }
-bool CNetworkStreamGameItemPhase::RecvMallItemSetPacket(const protocol::Packet& value)
+bool CNetworkStreamGameItemPhase::RecvMallItemSetPacket(const OMT2Client::Protocol::Packet& value)
 {
 	TPacketGCItemSet2 kItemSet = value.Get<TPacketGCItemSet2>();
 
@@ -177,7 +177,7 @@ bool CNetworkStreamGameItemPhase::RecvMallItemSetPacket(const protocol::Packet& 
 
 	return true;
 }
-bool CNetworkStreamGameItemPhase::RecvMallItemDelPacket(const protocol::Packet& value)
+bool CNetworkStreamGameItemPhase::RecvMallItemDelPacket(const OMT2Client::Protocol::Packet& value)
 {
 	TPacketGCItemDel kItemDel = value.Get<TPacketGCItemDel>();
 
@@ -193,7 +193,7 @@ bool CNetworkStreamGameItemPhase::RecvMallItemDelPacket(const protocol::Packet& 
 
 // Item
 // Recieve
-bool CNetworkStreamGameItemPhase::RecvItemSetPacket(const protocol::Packet& value)
+bool CNetworkStreamGameItemPhase::RecvItemSetPacket(const OMT2Client::Protocol::Packet& value)
 {
 	TPacketGCItemSet packet_item_set = value.Get<TPacketGCItemSet>();
 
@@ -214,7 +214,7 @@ bool CNetworkStreamGameItemPhase::RecvItemSetPacket(const protocol::Packet& valu
 	return true;
 }
 
-bool CNetworkStreamGameItemPhase::RecvItemSetPacket2(const protocol::Packet& value)
+bool CNetworkStreamGameItemPhase::RecvItemSetPacket2(const OMT2Client::Protocol::Packet& value)
 {
 	TPacketGCItemSet2 packet_item_set = value.Get<TPacketGCItemSet2>();
 
@@ -239,13 +239,13 @@ bool CNetworkStreamGameItemPhase::RecvItemSetPacket2(const protocol::Packet& val
 	return true;
 }
 
-bool CNetworkStreamGameItemPhase::RecvItemUsePacket(const protocol::Packet& value)
+bool CNetworkStreamGameItemPhase::RecvItemUsePacket(const OMT2Client::Protocol::Packet& value)
 {
 	m_rkStream.__RefreshInventoryWindow();
 	return true;
 }
 
-bool CNetworkStreamGameItemPhase::RecvItemUpdatePacket(const protocol::Packet& value)
+bool CNetworkStreamGameItemPhase::RecvItemUpdatePacket(const OMT2Client::Protocol::Packet& value)
 {
 	TPacketGCItemUpdate packet_item_update = value.Get<TPacketGCItemUpdate>();
 
@@ -260,7 +260,7 @@ bool CNetworkStreamGameItemPhase::RecvItemUpdatePacket(const protocol::Packet& v
 	return true;
 }
 
-bool CNetworkStreamGameItemPhase::RecvItemGroundAddPacket(const protocol::Packet& value)
+bool CNetworkStreamGameItemPhase::RecvItemGroundAddPacket(const OMT2Client::Protocol::Packet& value)
 {
 	TPacketGCItemGroundAdd packet_item_ground_add = value.Get<TPacketGCItemGroundAdd>();
 
@@ -274,7 +274,7 @@ bool CNetworkStreamGameItemPhase::RecvItemGroundAddPacket(const protocol::Packet
 	return true;
 }
 
-bool CNetworkStreamGameItemPhase::RecvItemOwnership(const protocol::Packet& value)
+bool CNetworkStreamGameItemPhase::RecvItemOwnership(const OMT2Client::Protocol::Packet& value)
 {
 	TPacketGCItemOwnership ownership = value.Get<TPacketGCItemOwnership>();
 
@@ -282,7 +282,7 @@ bool CNetworkStreamGameItemPhase::RecvItemOwnership(const protocol::Packet& valu
 	return true;
 }
 
-bool CNetworkStreamGameItemPhase::RecvItemGroundDelPacket(const protocol::Packet& value)
+bool CNetworkStreamGameItemPhase::RecvItemGroundDelPacket(const OMT2Client::Protocol::Packet& value)
 {
 	TPacketGCItemGroundDel packet_item_ground_del = value.Get<TPacketGCItemGroundDel>();
 
@@ -290,7 +290,7 @@ bool CNetworkStreamGameItemPhase::RecvItemGroundDelPacket(const protocol::Packet
 	return true;
 }
 
-bool CNetworkStreamGameItemPhase::RecvQuickSlotAddPacket(const protocol::Packet& value)
+bool CNetworkStreamGameItemPhase::RecvQuickSlotAddPacket(const OMT2Client::Protocol::Packet& value)
 {
 	TPacketGCQuickSlotAdd packet = value.Get<TPacketGCQuickSlotAdd>();
 
@@ -302,7 +302,7 @@ bool CNetworkStreamGameItemPhase::RecvQuickSlotAddPacket(const protocol::Packet&
 	return true;
 }
 
-bool CNetworkStreamGameItemPhase::RecvQuickSlotDelPacket(const protocol::Packet& value)
+bool CNetworkStreamGameItemPhase::RecvQuickSlotDelPacket(const OMT2Client::Protocol::Packet& value)
 {
 	TPacketGCQuickSlotDel packet = value.Get<TPacketGCQuickSlotDel>();
 
@@ -314,7 +314,7 @@ bool CNetworkStreamGameItemPhase::RecvQuickSlotDelPacket(const protocol::Packet&
 	return true;
 }
 
-bool CNetworkStreamGameItemPhase::RecvQuickSlotMovePacket(const protocol::Packet& value)
+bool CNetworkStreamGameItemPhase::RecvQuickSlotMovePacket(const OMT2Client::Protocol::Packet& value)
 {
 	TPacketGCQuickSlotSwap packet_quick_slot_swap = value.Get<TPacketGCQuickSlotSwap>();
 
@@ -710,7 +710,7 @@ bool CPythonNetworkStream::SendQuickSlotMovePacket(uint8_t pos, uint8_t change_p
 	return SendSequence();
 }
 
-bool CNetworkStreamGameItemPhase::RecvSpecialEffect(const protocol::Packet& value)
+bool CNetworkStreamGameItemPhase::RecvSpecialEffect(const OMT2Client::Protocol::Packet& value)
 {
 	TPacketGCSpecialEffect kSpecialEffect = value.Get<TPacketGCSpecialEffect>();
 
@@ -832,7 +832,7 @@ bool CNetworkStreamGameItemPhase::RecvSpecialEffect(const protocol::Packet& valu
 	return true;
 }
 
-bool CNetworkStreamGameItemPhase::RecvSpecificEffect(const protocol::Packet& value)
+bool CNetworkStreamGameItemPhase::RecvSpecificEffect(const OMT2Client::Protocol::Packet& value)
 {
 	TPacketGCSpecificEffect kSpecificEffect = value.Get<TPacketGCSpecificEffect>();
 
@@ -847,7 +847,7 @@ bool CNetworkStreamGameItemPhase::RecvSpecificEffect(const protocol::Packet& val
 	return true;
 }
 
-bool CNetworkStreamGameItemPhase::RecvDragonSoulRefine(const protocol::Packet& value)
+bool CNetworkStreamGameItemPhase::RecvDragonSoulRefine(const OMT2Client::Protocol::Packet& value)
 {
 	TPacketGCDragonSoulRefine kDragonSoul = value.Get<TPacketGCDragonSoulRefine>();
 
@@ -877,9 +877,9 @@ CNetworkStreamGameItemPhase::CNetworkStreamGameItemPhase(CPythonNetworkStream& r
 {
 }
 
-ENetworkStreamPhaseResult CNetworkStreamGameItemPhase::Handle(uint8_t header, const protocol::Packet& value)
+ENetworkStreamPhaseResult CNetworkStreamGameItemPhase::Handle(uint8_t header, const OMT2Client::Protocol::Packet& value)
 {
-	using Handler = bool (CNetworkStreamGameItemPhase::*)(const protocol::Packet&);
+	using Handler = bool (CNetworkStreamGameItemPhase::*)(const OMT2Client::Protocol::Packet&);
 
 	struct FEntry
 	{

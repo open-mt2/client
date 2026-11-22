@@ -86,7 +86,7 @@ void CPythonNetworkStream::LoadingPhase()
 	if (!CheckPacket(&header))
 		return;
 
-	if (protocol::Has(header))
+	if (OMT2Client::Protocol::Has(header))
 	{
 		if (!DecodeProtocolPacket(header))
 			RecvErrorPacket(header);
@@ -129,7 +129,7 @@ void CPythonNetworkStream::SetLoadingPhase()
 	__DirectEnterMode_Initialize();
 }
 
-bool CNetworkStreamLoadingPhase::RecvMainCharacter(const protocol::Packet& value)
+bool CNetworkStreamLoadingPhase::RecvMainCharacter(const OMT2Client::Protocol::Packet& value)
 {
 	TPacketGCMainCharacter MainChrPacket = value.Get<TPacketGCMainCharacter>();
 
@@ -150,7 +150,7 @@ bool CNetworkStreamLoadingPhase::RecvMainCharacter(const protocol::Packet& value
 }
 
 // SUPPORT_BGM
-bool CNetworkStreamLoadingPhase::RecvMainCharacter2_EMPIRE(const protocol::Packet& value)
+bool CNetworkStreamLoadingPhase::RecvMainCharacter2_EMPIRE(const OMT2Client::Protocol::Packet& value)
 {
 	TPacketGCMainCharacter2_EMPIRE mainChrPacket = value.Get<TPacketGCMainCharacter2_EMPIRE>();
 
@@ -170,7 +170,7 @@ bool CNetworkStreamLoadingPhase::RecvMainCharacter2_EMPIRE(const protocol::Packe
 	return true;
 }
 
-bool CNetworkStreamLoadingPhase::RecvMainCharacter3_BGM(const protocol::Packet& value)
+bool CNetworkStreamLoadingPhase::RecvMainCharacter3_BGM(const OMT2Client::Protocol::Packet& value)
 {
 	TPacketGCMainCharacter3_BGM mainChrPacket = value.Get<TPacketGCMainCharacter3_BGM>();
 
@@ -192,7 +192,7 @@ bool CNetworkStreamLoadingPhase::RecvMainCharacter3_BGM(const protocol::Packet& 
 	return true;
 }
 
-bool CNetworkStreamLoadingPhase::RecvMainCharacter4_BGM_VOL(const protocol::Packet& value)
+bool CNetworkStreamLoadingPhase::RecvMainCharacter4_BGM_VOL(const OMT2Client::Protocol::Packet& value)
 {
 	TPacketGCMainCharacter4_BGM_VOL mainChrPacket = value.Get<TPacketGCMainCharacter4_BGM_VOL>();
 
@@ -239,7 +239,7 @@ float CPythonNetworkStream::GetFieldMusicVolume()
 }
 // END_OF_SUPPORT_BGM
 
-bool CNetworkStreamLoadingPhase::__RecvPlayerPoints(const protocol::Packet& value)
+bool CNetworkStreamLoadingPhase::__RecvPlayerPoints(const OMT2Client::Protocol::Packet& value)
 {
 	TPacketGCPoints PointsPacket = value.Get<TPacketGCPoints>();
 
@@ -278,9 +278,9 @@ CNetworkStreamLoadingPhase::CNetworkStreamLoadingPhase(CPythonNetworkStream& rkS
 {
 }
 
-ENetworkStreamPhaseResult CNetworkStreamLoadingPhase::Handle(uint8_t header, const protocol::Packet& value)
+ENetworkStreamPhaseResult CNetworkStreamLoadingPhase::Handle(uint8_t header, const OMT2Client::Protocol::Packet& value)
 {
-	using Handler = bool (CNetworkStreamLoadingPhase::*)(const protocol::Packet&);
+	using Handler = bool (CNetworkStreamLoadingPhase::*)(const OMT2Client::Protocol::Packet&);
 
 	struct FEntry
 	{

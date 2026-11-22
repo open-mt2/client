@@ -5,8 +5,6 @@
 #include <crtdbg.h>
 #endif
 
-#include <cstring>
-
 bool __IS_TEST_SERVER_MODE__ = false;
 
 namespace
@@ -14,7 +12,7 @@ namespace
 	char gs_errorString[512] = "";
 }
 
-namespace Neoeter
+namespace OMT2Client::Application
 {
 	Context::Context() : m_instance(Neoeter::Platform::ModuleHandle())
 	{
@@ -101,5 +99,5 @@ namespace Neoeter
 
 void ApplicationSetErrorString(const char* szErrorString)
 {
-	Neoeter::Context::SetErrorString(szErrorString);
+	OMT2Client::Application::Context::SetErrorString(szErrorString);
 }

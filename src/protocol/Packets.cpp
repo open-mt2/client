@@ -10,10 +10,10 @@ namespace
 	constexpr uint8_t kItemOwnershipHeader = 31;
 	constexpr uint8_t kTargetHeader = 63;
 
-	const protocol::SizeEntry* Find(uint8_t header)
+	const OMT2Client::Protocol::SizeEntry* Find(uint8_t header)
 	{
 		std::size_t count = 0;
-		const protocol::SizeEntry* entries = protocol::SizeTable(&count);
+		const OMT2Client::Protocol::SizeEntry* entries = OMT2Client::Protocol::SizeTable(&count);
 
 		for (std::size_t i = 0; i < count; ++i)
 		{
@@ -24,7 +24,7 @@ namespace
 		return nullptr;
 	}
 
-	const protocol::SizeEntry kSizeTable[] = {
+	const OMT2Client::Protocol::SizeEntry kSizeTable[] = {
 		{kQuickSlotAddHeader, sizeof(TPacketGCQuickSlotAdd), false, true},
 		{kQuickSlotDelHeader, sizeof(TPacketGCQuickSlotDel), false, true},
 		{kItemOwnershipHeader, sizeof(TPacketGCItemOwnership), false, true},
@@ -103,7 +103,6 @@ namespace
 		{HEADER_GC_SAFEBOX_MONEY_CHANGE, sizeof(TPacketGCSafeboxMoneyChange), false, true},
 		{HEADER_GC_FISHING, sizeof(TPacketGCFishing), false, true},
 		{HEADER_GC_DUNGEON, sizeof(TPacketGCDungeon), true, false},
-		// Set(HEADER_GC_SLOW_TIMER, CNetworkPacketHeaderMap::TPacketType(sizeof(uint8_t), STATIC_SIZE_PACKET));, false},
 		{HEADER_GC_TIME, sizeof(TPacketGCTime), false, true},
 		{HEADER_GC_WALK_MODE, sizeof(TPacketGCWalkMode), false, true},
 		{HEADER_GC_CHANGE_SKILL_GROUP, sizeof(TPacketGCChangeSkillGroup), false, true},
@@ -138,24 +137,24 @@ namespace
 	};
 }
 
-bool protocol::Has(uint8_t header)
+bool OMT2Client::Protocol::Has(uint8_t header)
 {
 	const SizeEntry* entry = Find(header);
 	return entry && entry->decoded;
 }
 
-bool protocol::IsRegistered(uint8_t header)
+bool OMT2Client::Protocol::IsRegistered(uint8_t header)
 {
 	return Find(header) != nullptr;
 }
 
-bool protocol::IsDynamic(uint8_t header)
+bool OMT2Client::Protocol::IsDynamic(uint8_t header)
 {
 	const SizeEntry* entry = Find(header);
 	return entry && entry->dynamic;
 }
 
-bool protocol::Size(uint8_t header, std::size_t* size)
+bool OMT2Client::Protocol::Size(uint8_t header, std::size_t* size)
 {
 	const SizeEntry* entry = Find(header);
 
@@ -168,7 +167,7 @@ bool protocol::Size(uint8_t header, std::size_t* size)
 	return true;
 }
 
-const protocol::SizeEntry* protocol::SizeTable(std::size_t* count)
+const OMT2Client::Protocol::SizeEntry* OMT2Client::Protocol::SizeTable(std::size_t* count)
 {
 	if (count)
 		*count = sizeof(kSizeTable) / sizeof(kSizeTable[0]);
@@ -176,7 +175,7 @@ const protocol::SizeEntry* protocol::SizeTable(std::size_t* count)
 	return kSizeTable;
 }
 
-bool protocol::Decode(uint8_t header, const void* bytes, std::size_t size, Packet* packet)
+bool OMT2Client::Protocol::Decode(uint8_t header, const void* bytes, std::size_t size, Packet* packet)
 {
 	if (!packet || !bytes)
 		return false;

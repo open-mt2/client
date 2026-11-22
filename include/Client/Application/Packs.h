@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace Neoeter
+namespace OMT2Client::Application
 {
 	class Packs
 	{

@@ -13,7 +13,7 @@ namespace
 	}
 }
 
-namespace Neoeter
+namespace OMT2Client::Application
 {
 	PlatformRuntime::PlatformRuntime() : m_timerRaised(false), m_timerResolution(0)
 	{

@@ -3,9 +3,7 @@
 #include <Neoeter/Render/FuncObject.h>
 #include <Neoeter/Render/NetStream.h>
 #include <Neoeter/Render/NetPacketHeaderMap.h>
-
 #include <Client/Feature/Chat/InsultChecker.h>
-
 #include <Client/Protocol/Wire.h>
 #include <Client/Protocol/Decode.h>
 #include <Client/Session/NetworkStreamPhases.h>
@@ -26,7 +24,6 @@ class CPythonNetworkStream : public CNetworkStream, public CSingleton<CPythonNet
 			SERVER_COMMAND_LOG_OUT = 0,
 			SERVER_COMMAND_RETURN_TO_SELECT_CHARACTER = 1,
 			SERVER_COMMAND_QUIT = 2,
-
 			MAX_ACCOUNT_PLAYER
 		};
 
@@ -38,11 +35,8 @@ class CPythonNetworkStream : public CNetworkStream, public CSingleton<CPythonNet
 			ERROR_LOAD_MARK,
 			ERROR_MARK_WIDTH,
 			ERROR_MARK_HEIGHT,
-
-			// MARK_BUG_FIX
 			ERROR_MARK_UPLOAD_NEED_RECONNECT,
 			ERROR_MARK_CHECK_NEED_RECONNECT,
-			// END_OF_MARK_BUG_FIX
 		};
 
 		enum
@@ -112,10 +106,8 @@ class CPythonNetworkStream : public CNetworkStream, public CSingleton<CPythonNet
 		uint32_t GetAccountCharacterSlotDatau(uint32_t iSlot, uint32_t eType);
 		const char* GetAccountCharacterSlotDataz(uint32_t iSlot, uint32_t eType);
 
-		// SUPPORT_BGM
 		const char* GetFieldMusicFileName();
 		float GetFieldMusicVolume();
-		// END_OF_SUPPORT_BGM
 
 		bool IsSelectedEmpire();
 
@@ -271,9 +263,6 @@ class CPythonNetworkStream : public CNetworkStream, public CSingleton<CPythonNet
 		uint32_t GetEmpireID();
 		void __TEST_SetSkillGroupFake(int iIndex);
 
-		//////////////////////////////////////////////////////////////////////////
-		// Phase 관련
-		//////////////////////////////////////////////////////////////////////////
 	public:
 		void SetOffLinePhase();
 		void SetHandShakePhase();
@@ -380,11 +369,11 @@ class CPythonNetworkStream : public CNetworkStream, public CSingleton<CPythonNet
 
 		// Common
 		bool RecvErrorPacket(int header);
-		bool RecvPingPacket(const protocol::Packet& value);
+		bool RecvPingPacket(const OMT2Client::Protocol::Packet& value);
 		bool RecvDefaultPacket(int header);
-		bool RecvPhasePacket(const protocol::Packet& value);
+		bool RecvPhasePacket(const OMT2Client::Protocol::Packet& value);
 		bool DecodeProtocolPacket(TPacketHeader header);
-		bool DispatchProtocolPacket(const protocol::Packet& value);
+		bool DispatchProtocolPacket(const OMT2Client::Protocol::Packet& value);
 
 		// Login Phase
 

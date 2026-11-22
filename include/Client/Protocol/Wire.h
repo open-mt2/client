@@ -583,14 +583,14 @@ typedef struct command_whisper
 {
 		uint8_t bHeader;
 		uint16_t wSize;
-		char szNameTo[protocol::kCharacterNameMaxLen + 1];
+		char szNameTo[OMT2Client::Protocol::kCharacterNameMaxLen + 1];
 } TPacketCGWhisper;
 
 typedef struct command_sms
 {
 		uint8_t bHeader;
 		uint16_t wSize;
-		char szNameTo[protocol::kCharacterNameMaxLen + 1];
+		char szNameTo[OMT2Client::Protocol::kCharacterNameMaxLen + 1];
 } TPacketCGSMS;
 
 enum EBattleMode
@@ -607,27 +607,27 @@ typedef struct command_EnterFrontGame
 typedef struct command_item_use
 {
 		uint8_t header;
-		protocol::ItemPos pos;
+		OMT2Client::Protocol::ItemPos pos;
 } TPacketCGItemUse;
 
 typedef struct command_item_use_to_item
 {
 		uint8_t header;
-		protocol::ItemPos source_pos;
-		protocol::ItemPos target_pos;
+		OMT2Client::Protocol::ItemPos source_pos;
+		OMT2Client::Protocol::ItemPos target_pos;
 } TPacketCGItemUseToItem;
 
 typedef struct command_item_drop
 {
 		uint8_t header;
-		protocol::ItemPos pos;
+		OMT2Client::Protocol::ItemPos pos;
 		uint32_t elk;
 } TPacketCGItemDrop;
 
 typedef struct command_item_drop2
 {
 		uint8_t header;
-		protocol::ItemPos pos;
+		OMT2Client::Protocol::ItemPos pos;
 		uint32_t gold;
 		uint8_t count;
 } TPacketCGItemDrop2;
@@ -635,8 +635,8 @@ typedef struct command_item_drop2
 typedef struct command_item_move
 {
 		uint8_t header;
-		protocol::ItemPos pos;
-		protocol::ItemPos change_pos;
+		OMT2Client::Protocol::ItemPos pos;
+		OMT2Client::Protocol::ItemPos change_pos;
 		uint8_t num;
 } TPacketCGItemMove;
 
@@ -702,7 +702,7 @@ typedef struct command_exchange
 		uint8_t subheader;
 		uint32_t arg1;
 		uint8_t arg2;
-		protocol::ItemPos Pos;
+		OMT2Client::Protocol::ItemPos Pos;
 } TPacketCGExchange;
 
 typedef struct command_position
@@ -862,21 +862,21 @@ typedef struct command_safebox_checkout
 {
 		uint8_t bHeader;
 		uint8_t bSafePos;
-		protocol::ItemPos ItemPos;
+		OMT2Client::Protocol::ItemPos ItemPos;
 } TPacketCGSafeboxCheckout;
 
 typedef struct command_safebox_checkin
 {
 		uint8_t bHeader;
 		uint8_t bSafePos;
-		protocol::ItemPos ItemPos;
+		OMT2Client::Protocol::ItemPos ItemPos;
 } TPacketCGSafeboxCheckin;
 
 typedef struct command_mall_checkout
 {
 		uint8_t bHeader;
 		uint8_t bMallPos;
-		protocol::ItemPos ItemPos;
+		OMT2Client::Protocol::ItemPos ItemPos;
 } TPacketCGMallCheckout;
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -972,7 +972,7 @@ typedef struct command_give_item
 {
 		uint8_t byHeader;
 		uint32_t dwTargetVID;
-		protocol::ItemPos ItemPos;
+		OMT2Client::Protocol::ItemPos ItemPos;
 		uint8_t byItemCount;
 } TPacketCGGiveItem;
 
@@ -994,9 +994,9 @@ typedef struct SShopItemTable
 		uint32_t vnum;
 		uint8_t count;
 
-		protocol::ItemPos pos; // PC 상점에만 이용
-		uint32_t price;		   // PC 상점에만 이용
-		uint8_t display_pos;   //	PC 상점에만 이용, 보일 위치.
+		OMT2Client::Protocol::ItemPos pos; // PC 상점에만 이용
+		uint32_t price;					  // PC 상점에만 이용
+		uint8_t display_pos;			  //	PC 상점에만 이용, 보일 위치.
 } TShopItemTable;
 
 typedef struct SPacketCGMyShop
@@ -1017,7 +1017,7 @@ typedef struct SPacketCGChangeName
 {
 		uint8_t header;
 		uint8_t index;
-		char name[protocol::kCharacterNameMaxLen + 1];
+		char name[OMT2Client::Protocol::kCharacterNameMaxLen + 1];
 } TPacketCGChangeName;
 
 typedef struct command_client_version
@@ -1144,7 +1144,7 @@ typedef struct packet_header_dynamic_size
 typedef struct SSimplePlayerInformation
 {
 		uint32_t dwID;
-		char szName[protocol::kCharacterNameMaxLen + 1];
+		char szName[OMT2Client::Protocol::kCharacterNameMaxLen + 1];
 		uint8_t byJob;
 		uint8_t byLevel;
 		uint32_t dwPlayMinutes;
@@ -1194,7 +1194,7 @@ typedef struct command_player_create
 {
 		uint8_t header;
 		uint8_t index;
-		char name[protocol::kCharacterNameMaxLen + 1];
+		char name[OMT2Client::Protocol::kCharacterNameMaxLen + 1];
 		uint16_t job;
 		uint8_t shape;
 		uint8_t CON;
@@ -1263,7 +1263,7 @@ typedef struct packet_char_additional_info
 {
 		uint8_t header;
 		uint32_t dwVID;
-		char name[protocol::kCharacterNameMaxLen + 1];
+		char name[OMT2Client::Protocol::kCharacterNameMaxLen + 1];
 		uint16_t awPart[CHR_EQUIPPART_NUM];
 		uint8_t bEmpire;
 		uint32_t dwGuildID;
@@ -1279,7 +1279,7 @@ typedef struct packet_add_char
 
 		uint32_t dwVID;
 
-		// char        name[protocol::kCharacterNameMaxLen + 1];
+		// char        name[OMT2Client::Protocol::kCharacterNameMaxLen + 1];
 
 		float angle;
 		int32_t x;
@@ -1307,7 +1307,7 @@ typedef struct packet_add_char2
 
 		uint32_t dwVID;
 
-		char name[protocol::kCharacterNameMaxLen + 1];
+		char name[OMT2Client::Protocol::kCharacterNameMaxLen + 1];
 
 		float angle;
 		int32_t x;
@@ -1406,7 +1406,7 @@ typedef struct packet_whisper // 가변 패킷
 		uint8_t bHeader;
 		uint16_t wSize;
 		uint8_t bType;
-		char szNameFrom[protocol::kCharacterNameMaxLen + 1];
+		char szNameFrom[OMT2Client::Protocol::kCharacterNameMaxLen + 1];
 } TPacketGCWhisper;
 
 typedef struct packet_stun
@@ -1426,7 +1426,7 @@ typedef struct packet_main_character
 		uint8_t header;
 		uint32_t dwVID;
 		uint16_t wRaceNum;
-		char szName[protocol::kCharacterNameMaxLen + 1];
+		char szName[OMT2Client::Protocol::kCharacterNameMaxLen + 1];
 		int32_t lX, lY, lZ;
 		uint8_t bySkillGroup;
 } TPacketGCMainCharacter;
@@ -1437,7 +1437,7 @@ typedef struct packet_main_character2_empire
 		uint8_t header;
 		uint32_t dwVID;
 		uint16_t wRaceNum;
-		char szName[protocol::kCharacterNameMaxLen + 1];
+		char szName[OMT2Client::Protocol::kCharacterNameMaxLen + 1];
 		int32_t lX, lY, lZ;
 		uint8_t byEmpire;
 		uint8_t bySkillGroup;
@@ -1452,7 +1452,7 @@ typedef struct packet_main_character3_bgm
 		uint8_t header;
 		uint32_t dwVID;
 		uint16_t wRaceNum;
-		char szUserName[protocol::kCharacterNameMaxLen + 1];
+		char szUserName[OMT2Client::Protocol::kCharacterNameMaxLen + 1];
 		char szBGMName[MUSIC_NAME_MAX_LEN + 1];
 		int32_t lX, lY, lZ;
 		uint8_t byEmpire;
@@ -1468,7 +1468,7 @@ typedef struct packet_main_character4_bgm_vol
 		uint8_t header;
 		uint32_t dwVID;
 		uint16_t wRaceNum;
-		char szUserName[protocol::kCharacterNameMaxLen + 1];
+		char szUserName[OMT2Client::Protocol::kCharacterNameMaxLen + 1];
 		char szBGMName[MUSIC_NAME_MAX_LEN + 1];
 		float fBGMVol;
 		int32_t lX, lY, lZ;
@@ -1642,13 +1642,13 @@ enum EPointTypes
 	POINT_MAX_MAGIC_WEP,
 	POINT_HIT_RATE,
 
-	// protocol::kPointMaxNum = 255,=>stdafx.h 로/
+	// OMT2Client::Protocol::kPointMaxNum = 255,=>stdafx.h 로/
 };
 
 typedef struct packet_points
 {
 		uint8_t header;
-		int32_t points[protocol::kPointMaxNum];
+		int32_t points[OMT2Client::Protocol::kPointMaxNum];
 } TPacketGCPoints;
 
 typedef struct packet_point_change
@@ -1686,8 +1686,8 @@ struct TPacketGCItemDelDeprecate
 		uint8_t pos;
 		uint32_t vnum;
 		uint8_t count;
-		int32_t alSockets[protocol::kItemSocketSlotMaxNum];
-		TPlayerItemAttribute aAttr[protocol::kItemAttributeSlotMaxNum];
+		int32_t alSockets[OMT2Client::Protocol::kItemSocketSlotMaxNum];
+		TPlayerItemAttribute aAttr[OMT2Client::Protocol::kItemAttributeSlotMaxNum];
 };
 
 typedef struct packet_set_item
@@ -1697,8 +1697,8 @@ typedef struct packet_set_item
 		uint32_t vnum;
 		uint8_t count;
 		uint32_t flags; // 플래그 추가
-		int32_t alSockets[protocol::kItemSocketSlotMaxNum];
-		TPlayerItemAttribute aAttr[protocol::kItemAttributeSlotMaxNum];
+		int32_t alSockets[OMT2Client::Protocol::kItemSocketSlotMaxNum];
+		TPlayerItemAttribute aAttr[OMT2Client::Protocol::kItemAttributeSlotMaxNum];
 } TPacketGCItemSet;
 
 typedef struct packet_item_del
@@ -1710,24 +1710,24 @@ typedef struct packet_item_del
 typedef struct packet_set_item
 {
 		uint8_t header;
-		protocol::ItemPos Cell;
+		OMT2Client::Protocol::ItemPos Cell;
 		uint32_t vnum;
 		uint8_t count;
-		int32_t alSockets[protocol::kItemSocketSlotMaxNum];
-		TPlayerItemAttribute aAttr[protocol::kItemAttributeSlotMaxNum];
+		int32_t alSockets[OMT2Client::Protocol::kItemSocketSlotMaxNum];
+		TPlayerItemAttribute aAttr[OMT2Client::Protocol::kItemAttributeSlotMaxNum];
 } TPacketGCItemSet;
 
 typedef struct packet_set_item2
 {
 		uint8_t header;
-		protocol::ItemPos Cell;
+		OMT2Client::Protocol::ItemPos Cell;
 		uint32_t vnum;
 		uint8_t count;
 		uint32_t flags;		 // 플래그 추가
 		uint32_t anti_flags; // 플래그 추가
 		bool highlight;
-		int32_t alSockets[protocol::kItemSocketSlotMaxNum];
-		TPlayerItemAttribute aAttr[protocol::kItemAttributeSlotMaxNum];
+		int32_t alSockets[OMT2Client::Protocol::kItemSocketSlotMaxNum];
+		TPlayerItemAttribute aAttr[OMT2Client::Protocol::kItemAttributeSlotMaxNum];
 } TPacketGCItemSet2;
 #endif
 
@@ -1740,7 +1740,7 @@ typedef struct packet_item_del
 typedef struct packet_use_item
 {
 		uint8_t header;
-		protocol::ItemPos Cell;
+		OMT2Client::Protocol::ItemPos Cell;
 		uint32_t ch_vid;
 		uint32_t victim_vid;
 
@@ -1750,10 +1750,10 @@ typedef struct packet_use_item
 typedef struct packet_update_item
 {
 		uint8_t header;
-		protocol::ItemPos Cell;
+		OMT2Client::Protocol::ItemPos Cell;
 		uint8_t count;
-		int32_t alSockets[protocol::kItemSocketSlotMaxNum];
-		TPlayerItemAttribute aAttr[protocol::kItemAttributeSlotMaxNum];
+		int32_t alSockets[OMT2Client::Protocol::kItemSocketSlotMaxNum];
+		TPlayerItemAttribute aAttr[OMT2Client::Protocol::kItemAttributeSlotMaxNum];
 } TPacketGCItemUpdate;
 
 typedef struct packet_ground_add_item
@@ -1837,10 +1837,10 @@ typedef struct packet_exchange
 		uint8_t subheader;
 		uint8_t is_me;
 		uint32_t arg1;
-		protocol::ItemPos arg2;
+		OMT2Client::Protocol::ItemPos arg2;
 		uint32_t arg3;
-		int32_t alValues[protocol::kItemSocketSlotMaxNum];
-		TPlayerItemAttribute aAttr[protocol::kItemAttributeSlotMaxNum];
+		int32_t alValues[OMT2Client::Protocol::kItemSocketSlotMaxNum];
+		TPlayerItemAttribute aAttr[OMT2Client::Protocol::kItemAttributeSlotMaxNum];
 } TPacketGCExchange;
 
 enum
@@ -2055,7 +2055,7 @@ typedef struct packet_party_add
 {
 		uint8_t header;
 		uint32_t pid;
-		char name[protocol::kCharacterNameMaxLen + 1];
+		char name[OMT2Client::Protocol::kCharacterNameMaxLen + 1];
 } TPacketGCPartyAdd;
 
 typedef struct packet_party_update
@@ -2358,7 +2358,7 @@ typedef struct SPacketGCNPCPosition
 struct TNPCPosition
 {
 		uint8_t bType;
-		char name[protocol::kCharacterNameMaxLen + 1];
+		char name[OMT2Client::Protocol::kCharacterNameMaxLen + 1];
 		int32_t x;
 		int32_t y;
 };
@@ -2367,7 +2367,7 @@ typedef struct SPacketGCChangeName
 {
 		uint8_t header;
 		uint32_t pid;
-		char name[protocol::kCharacterNameMaxLen + 1];
+		char name[OMT2Client::Protocol::kCharacterNameMaxLen + 1];
 } TPacketGCChangeName;
 
 enum EBlockAction
@@ -2427,8 +2427,8 @@ typedef struct SEquipmentItemSet
 {
 		uint32_t vnum;
 		uint8_t count;
-		int32_t alSockets[protocol::kItemSocketSlotMaxNum];
-		TPlayerItemAttribute aAttr[protocol::kItemAttributeSlotMaxNum];
+		int32_t alSockets[OMT2Client::Protocol::kItemSocketSlotMaxNum];
+		TPlayerItemAttribute aAttr[OMT2Client::Protocol::kItemAttributeSlotMaxNum];
 } TEquipmentItemSet;
 
 typedef struct pakcet_view_equip
@@ -2520,7 +2520,7 @@ typedef struct packet_mall_open
 typedef struct packet_lover_info
 {
 		uint8_t bHeader;
-		char szName[protocol::kCharacterNameMaxLen + 1];
+		char szName[OMT2Client::Protocol::kCharacterNameMaxLen + 1];
 		uint8_t byLovePoint;
 } TPacketGCLoverInfo;
 
@@ -2560,7 +2560,7 @@ typedef struct packet_state
 		uint8_t bRot;
 		uint32_t dwVID;
 		uint32_t dwTime;
-		protocol::Vector3 kPPos;
+		OMT2Client::Protocol::Vector3 kPPos;
 } TPacketCCState;
 
 // AUTOBAN
@@ -2631,7 +2631,7 @@ typedef struct SPacketCGDragonSoulRefine
 		}
 		uint8_t header;
 		uint8_t bSubType;
-		protocol::ItemPos ItemGrid[protocol::kDragonSoulRefineWindowMaxNum];
+		OMT2Client::Protocol::ItemPos ItemGrid[OMT2Client::Protocol::kDragonSoulRefineWindowMaxNum];
 } TPacketCGDragonSoulRefine;
 
 typedef struct SPacketGCDragonSoulRefine
@@ -2641,7 +2641,7 @@ typedef struct SPacketGCDragonSoulRefine
 		}
 		uint8_t header;
 		uint8_t bSubType;
-		protocol::ItemPos Pos;
+		OMT2Client::Protocol::ItemPos Pos;
 } TPacketGCDragonSoulRefine;
 
 typedef struct SChannelStatus
@@ -2668,7 +2668,7 @@ typedef struct packet_item_ownership
 {
 		uint8_t header;
 		uint32_t vid;
-		char name[protocol::kCharacterNameMaxLen + 1];
+		char name[OMT2Client::Protocol::kCharacterNameMaxLen + 1];
 } TPacketGCItemOwnership;
 
 typedef struct packet_target

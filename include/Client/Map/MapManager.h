@@ -91,7 +91,7 @@ class CMapManager : public CScreen, public IPhysicsWorld, public Map::IQuery
 		uint32_t GetShadowMapColor(float fx, float fy);
 
 		// VICITM_COLLISION_TEST
-		virtual bool isPhysicalCollision(const D3DXVECTOR3& c_rvCheckPosition);
+		virtual bool isPhysicalCollision(const D3DXVECTOR3& c_rvCheckPosition) override;
 		// VICITM_COLLISION_TEST_END
 
 		bool isAttrOn(float fX, float fY, uint8_t byAttr);

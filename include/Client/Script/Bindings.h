@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-namespace Neoeter
+namespace OMT2Client::Script
 {
 	using RegisterModule = void (*)();
 

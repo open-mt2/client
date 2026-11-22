@@ -30,7 +30,7 @@ namespace
 
 	FakeHostState g_fake;
 
-	class FakeHost : public Neoeter::IHost
+	class FakeHost : public OMT2Client::Script::IHost
 	{
 		public:
 			~FakeHost() override
@@ -38,7 +38,7 @@ namespace
 				++g_fake.destroys;
 			}
 
-			bool Load(const Neoeter::PackManifest& manifest, const Neoeter::ScriptContext& context, const Neoeter::ModuleTable& modules, std::string* error) override
+			bool Load(const OMT2Client::Script::PackManifest& manifest, const OMT2Client::Script::ScriptContext& context, const OMT2Client::Script::ModuleTable& modules, std::string* error) override
 			{
 				++g_fake.loads;
 				g_fake.pack = manifest.Name();
@@ -62,9 +62,9 @@ namespace
 			}
 	};
 
-	std::unique_ptr<Neoeter::IHost> CreateFakeHost()
+	std::unique_ptr<OMT2Client::Script::IHost> CreateFakeHost()
 	{
-		return std::unique_ptr<Neoeter::IHost>(new FakeHost());
+		return std::unique_ptr<OMT2Client::Script::IHost>(new FakeHost());
 	}
 
 	const char* kManifest =
@@ -79,19 +79,19 @@ namespace
 int main()
 {
 	TEST_SECTION("manifest parsing");
-	Neoeter::PackManifest manifest;
-	TEST_ASSERT(Neoeter::PackManifest::Parse(kManifest, &manifest) == Neoeter::PackManifest::Result::Success);
+	OMT2Client::Script::PackManifest manifest;
+	TEST_ASSERT(OMT2Client::Script::PackManifest::Parse(kManifest, &manifest) == OMT2Client::Script::PackManifest::Result::Success);
 	TEST_ASSERT(manifest.Version() == 1);
 	TEST_ASSERT(manifest.Name() == "root");
 	TEST_ASSERT(manifest.Host() == "fake");
 	TEST_ASSERT(manifest.Entry() == "entry.py");
 
-	TEST_ASSERT(Neoeter::PackManifest::Parse("version=1\nname=root\nhost=fake\n", &manifest) == Neoeter::PackManifest::Result::MissingField);
-	TEST_ASSERT(Neoeter::PackManifest::Parse("version=2\nname=root\nhost=fake\nentry=entry.py\n", &manifest) == Neoeter::PackManifest::Result::UnsupportedVersion);
-	TEST_ASSERT(Neoeter::PackManifest::Parse("version=1\nnot a pair\n", &manifest) == Neoeter::PackManifest::Result::InvalidLine);
+	TEST_ASSERT(OMT2Client::Script::PackManifest::Parse("version=1\nname=root\nhost=fake\n", &manifest) == OMT2Client::Script::PackManifest::Result::MissingField);
+	TEST_ASSERT(OMT2Client::Script::PackManifest::Parse("version=2\nname=root\nhost=fake\nentry=entry.py\n", &manifest) == OMT2Client::Script::PackManifest::Result::UnsupportedVersion);
+	TEST_ASSERT(OMT2Client::Script::PackManifest::Parse("version=1\nnot a pair\n", &manifest) == OMT2Client::Script::PackManifest::Result::InvalidLine);
 
 	TEST_SECTION("module table");
-	const Neoeter::ModuleTable& modules = Neoeter::ClientModules();
+	const OMT2Client::Script::ModuleTable& modules = OMT2Client::Script::ClientModules();
 	TEST_ASSERT(modules.count == 33);
 	for (uint32_t i = 0; i < modules.count; ++i)
 	{
@@ -104,14 +104,14 @@ int main()
 	}
 
 	TEST_SECTION("host selection and lifecycle");
-	Neoeter::ScriptHost script;
+	OMT2Client::Script::ScriptHost script;
 	script.RegisterHost("fake", &CreateFakeHost);
 
-	Neoeter::ScriptContext context;
+	OMT2Client::Script::ScriptContext context;
 	context.commandLine = "-test";
 	context.debug = true;
 
-	TEST_ASSERT(script.Start(kManifest, context) == Neoeter::ScriptHost::Result::Success);
+	TEST_ASSERT(script.Start(kManifest, context) == OMT2Client::Script::ScriptHost::Result::Success);
 	TEST_ASSERT(script.IsRunning());
 	TEST_ASSERT(g_fake.loads == 1);
 	TEST_ASSERT(g_fake.pack == "root");
@@ -126,20 +126,20 @@ int main()
 	TEST_ASSERT(g_fake.destroys == 1);
 
 	TEST_SECTION("unknown host");
-	TEST_ASSERT(script.Start("version=1\nname=root\nhost=none\nentry=entry.py\n", context) == Neoeter::ScriptHost::Result::HostUnavailable);
+	TEST_ASSERT(script.Start("version=1\nname=root\nhost=none\nentry=entry.py\n", context) == OMT2Client::Script::ScriptHost::Result::HostUnavailable);
 	TEST_ASSERT(!script.IsRunning());
 	TEST_ASSERT(script.LastError().find("none") != std::string::npos);
 	TEST_ASSERT(g_fake.loads == 1);
 
 	TEST_SECTION("host load failure");
 	g_fake.fail = true;
-	TEST_ASSERT(script.Start(kManifest, context) == Neoeter::ScriptHost::Result::LoadError);
+	TEST_ASSERT(script.Start(kManifest, context) == OMT2Client::Script::ScriptHost::Result::LoadError);
 	TEST_ASSERT(!script.IsRunning());
 	TEST_ASSERT(script.LastError() == "fake host rejected the pack");
 	g_fake.fail = false;
 
 	TEST_SECTION("manifest failure");
-	TEST_ASSERT(script.Start("name=root\n", context) == Neoeter::ScriptHost::Result::ManifestError);
+	TEST_ASSERT(script.Start("name=root\n", context) == OMT2Client::Script::ScriptHost::Result::ManifestError);
 	TEST_ASSERT(!script.IsRunning());
 
 	std::printf("[PASS] script seam\n");

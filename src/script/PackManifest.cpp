@@ -3,7 +3,7 @@
 #include <cstddef>
 #include <vector>
 
-namespace Neoeter
+namespace OMT2Client::Script
 {
 	namespace
 	{

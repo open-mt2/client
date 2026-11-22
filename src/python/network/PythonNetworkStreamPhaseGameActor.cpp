@@ -75,7 +75,7 @@ bool IsInvisibleRace(uint16_t raceNum)
 
 static SNetworkActorData s_kNetActorData;
 
-bool CNetworkStreamGameActorPhase::RecvCharacterAppendPacket(const protocol::Packet& value)
+bool CNetworkStreamGameActorPhase::RecvCharacterAppendPacket(const OMT2Client::Protocol::Packet& value)
 {
 	TPacketGCCharacterAdd chrAddPacket = value.Get<TPacketGCCharacterAdd>();
 
@@ -138,7 +138,7 @@ bool CNetworkStreamGameActorPhase::RecvCharacterAppendPacket(const protocol::Pac
 	return true;
 }
 
-bool CNetworkStreamGameActorPhase::RecvCharacterAdditionalInfo(const protocol::Packet& value)
+bool CNetworkStreamGameActorPhase::RecvCharacterAdditionalInfo(const OMT2Client::Protocol::Packet& value)
 {
 	TPacketGCCharacterAdditionalInfo chrInfoPacket = value.Get<TPacketGCCharacterAdditionalInfo>();
 
@@ -169,7 +169,7 @@ bool CNetworkStreamGameActorPhase::RecvCharacterAdditionalInfo(const protocol::P
 	return true;
 }
 
-bool CNetworkStreamGameActorPhase::RecvCharacterAppendPacketNew(const protocol::Packet& value)
+bool CNetworkStreamGameActorPhase::RecvCharacterAppendPacketNew(const OMT2Client::Protocol::Packet& value)
 {
 	TraceError("TPacketGCCharacterAdd2 is an unwritten packet.");
 	TPacketGCCharacterAdd2 chrAddPacket = value.Get<TPacketGCCharacterAdd2>();
@@ -204,7 +204,7 @@ bool CNetworkStreamGameActorPhase::RecvCharacterAppendPacketNew(const protocol::
 	return true;
 }
 
-bool CNetworkStreamGameActorPhase::RecvCharacterUpdatePacket(const protocol::Packet& value)
+bool CNetworkStreamGameActorPhase::RecvCharacterUpdatePacket(const OMT2Client::Protocol::Packet& value)
 {
 	TPacketGCCharacterUpdate chrUpdatePacket = value.Get<TPacketGCCharacterUpdate>();
 
@@ -227,7 +227,7 @@ bool CNetworkStreamGameActorPhase::RecvCharacterUpdatePacket(const protocol::Pac
 	return true;
 }
 
-bool CNetworkStreamGameActorPhase::RecvCharacterUpdatePacketNew(const protocol::Packet& value)
+bool CNetworkStreamGameActorPhase::RecvCharacterUpdatePacketNew(const OMT2Client::Protocol::Packet& value)
 {
 	TPacketGCCharacterUpdate2 chrUpdatePacket = value.Get<TPacketGCCharacterUpdate2>();
 
@@ -315,7 +315,7 @@ void CPythonNetworkStream::__RecvCharacterUpdatePacket(SNetworkUpdateActorData* 
 	}
 }
 
-bool CNetworkStreamGameActorPhase::RecvCharacterDeletePacket(const protocol::Packet& value)
+bool CNetworkStreamGameActorPhase::RecvCharacterDeletePacket(const OMT2Client::Protocol::Packet& value)
 {
 	TPacketGCCharacterDelete chrDelPacket = value.Get<TPacketGCCharacterDelete>();
 
@@ -330,7 +330,7 @@ bool CNetworkStreamGameActorPhase::RecvCharacterDeletePacket(const protocol::Pac
 	return true;
 }
 
-bool CNetworkStreamGameActorPhase::RecvCharacterMovePacket(const protocol::Packet& value)
+bool CNetworkStreamGameActorPhase::RecvCharacterMovePacket(const OMT2Client::Protocol::Packet& value)
 {
 	TPacketGCMove kMovePacket = value.Get<TPacketGCMove>();
 
@@ -351,7 +351,7 @@ bool CNetworkStreamGameActorPhase::RecvCharacterMovePacket(const protocol::Packe
 	return true;
 }
 
-bool CNetworkStreamGameActorPhase::RecvOwnerShipPacket(const protocol::Packet& value)
+bool CNetworkStreamGameActorPhase::RecvOwnerShipPacket(const OMT2Client::Protocol::Packet& value)
 {
 	TPacketGCOwnership kPacketOwnership = value.Get<TPacketGCOwnership>();
 
@@ -398,7 +398,7 @@ bool CPythonNetworkStream::RecvSyncPositionPacket()
 }
 
 /*
-bool CNetworkStreamGameActorPhase::RecvCharacterAppendPacket(const protocol::Packet& value)
+bool CNetworkStreamGameActorPhase::RecvCharacterAppendPacket(const OMT2Client::Protocol::Packet& value)
 {
 	TPacketGCCharacterAdd chrAddPacket = value.Get<TPacketGCCharacterAdd>();
 
@@ -429,9 +429,9 @@ CNetworkStreamGameActorPhase::CNetworkStreamGameActorPhase(CPythonNetworkStream&
 {
 }
 
-ENetworkStreamPhaseResult CNetworkStreamGameActorPhase::Handle(uint8_t header, const protocol::Packet& value)
+ENetworkStreamPhaseResult CNetworkStreamGameActorPhase::Handle(uint8_t header, const OMT2Client::Protocol::Packet& value)
 {
-	using Handler = bool (CNetworkStreamGameActorPhase::*)(const protocol::Packet&);
+	using Handler = bool (CNetworkStreamGameActorPhase::*)(const OMT2Client::Protocol::Packet&);
 
 	struct FEntry
 	{

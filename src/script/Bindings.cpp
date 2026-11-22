@@ -4,7 +4,7 @@
 
 #include <Neoeter/Python/Host/PythonModules.h>
 
-namespace Neoeter
+namespace OMT2Client::Script
 {
 	const ModuleTable& ClientModules()
 	{

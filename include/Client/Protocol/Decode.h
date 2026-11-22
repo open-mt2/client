@@ -8,7 +8,7 @@
 
 #include <Client/Protocol/Types.h>
 
-namespace protocol
+namespace OMT2Client::Protocol
 {
 	constexpr std::size_t kMaxPacketSize = 4096;
 

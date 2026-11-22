@@ -19,7 +19,7 @@ namespace
 	// them from the module table.  A new module is added to the table, not here.
 	void RegisterClientModules()
 	{
-		const Neoeter::ModuleTable& modules = Neoeter::ClientModules();
+		const OMT2Client::Script::ModuleTable& modules = OMT2Client::Script::ClientModules();
 		for (uint32_t i = 0; i < modules.count; ++i)
 			modules.entries[i].register_module();
 	}

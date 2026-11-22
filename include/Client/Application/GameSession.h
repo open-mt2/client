@@ -3,7 +3,7 @@
 #include <Client/Application/PlatformRuntime.h>
 #include <Client/Script/ScriptHost.h>
 
-namespace Neoeter
+namespace OMT2Client::Application
 {
 	class CommandLine;
 	class Context;
@@ -11,7 +11,7 @@ namespace Neoeter
 
 class CPythonApplication;
 
-namespace Neoeter
+namespace OMT2Client::Application
 {
 	class GameSession
 	{
@@ -38,6 +38,6 @@ namespace Neoeter
 			Context& m_context;
 			CPythonApplication& m_application;
 			PlatformRuntime m_platform;
-			ScriptHost m_script;
+			OMT2Client::Script::ScriptHost m_script;
 	};
 }

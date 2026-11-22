@@ -1,17 +1,12 @@
 #include <Client/Application/Application.h>
-
 #include <Client/Application/CLI.h>
 #include <Client/Application/Context.h>
 #include <Client/Application/GameSession.h>
 #include <Client/Application/PackFileSource.h>
-
 #include <Client/GameData/FileSource.h>
-
 #include <Client/Game/MapActorFilter.h>
 #include <Client/Map/Map.h>
-
 #include <Client/UI/StdAfx.h>
-
 #include <Client/UI/Widget/LoadingScreen.h>
 #include <Client/Locale/Locale.h>
 #include <Client/Python/Application/PythonApplication.h>
@@ -22,22 +17,9 @@
 #include <Neoeter/Render/MSWindow.h>
 #include <Neoeter/Render/Util.h>
 
-#include <cstddef>
-#include <cstdint>
-#include <vector>
-
-extern bool Platform_GetImageInfo(const void* data, size_t size, uint32_t* outW, uint32_t* outH, uint32_t* outFormat);
-extern bool Platform_DecodeImage(const void* data, size_t size, uint32_t* outW, uint32_t* outH, std::vector<uint8_t>& outPixels);
-void* g_pForceLinkImageLoader[] = {
-	(void*)&Platform_GetImageInfo,
-	(void*)&Platform_DecodeImage};
-
-namespace Neoeter
+namespace OMT2Client::Application
 {
-	Application::Application() : m_context(), m_pythonApplication()
-	{
-	}
-
+	Application::Application() : m_context(), m_pythonApplication() {}
 	Application::~Application() = default;
 
 	int Application::Run(int argc, char** argv)
@@ -54,11 +36,6 @@ namespace Neoeter
 		return Run(commandLine);
 	}
 
-	/**
-	 * OpenMT2 Client Application Entry point
-	 * Initialize components
-	 * Parses CLI arguments
-	 */
 	int Application::Run(const std::string& commandLine)
 	{
 		Initialize();

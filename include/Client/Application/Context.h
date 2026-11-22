@@ -2,9 +2,7 @@
 
 #include <Neoeter/Platform/Platform.h>
 
-#include <string>
-
-namespace Neoeter
+namespace OMT2Client::Application
 {
 	class Context
 	{

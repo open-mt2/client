@@ -12,7 +12,7 @@ void CPythonNetworkStream::LoginPhase()
 	if (!CheckPacket(&header))
 		return;
 
-	if (protocol::Has(header))
+	if (OMT2Client::Protocol::Has(header))
 	{
 		if (DecodeProtocolPacket(header))
 			return;
@@ -78,7 +78,7 @@ void CPythonNetworkStream::SetLoginPhase()
 	}
 }
 
-bool CNetworkStreamLoginPhase::__RecvEmpirePacket(const protocol::Packet& value)
+bool CNetworkStreamLoginPhase::__RecvEmpirePacket(const OMT2Client::Protocol::Packet& value)
 {
 	TPacketGCEmpire kPacketEmpire = value.Get<TPacketGCEmpire>();
 
@@ -86,7 +86,7 @@ bool CNetworkStreamLoginPhase::__RecvEmpirePacket(const protocol::Packet& value)
 	return true;
 }
 
-bool CNetworkStreamLoginPhase::__RecvLoginSuccessPacket3(const protocol::Packet& value)
+bool CNetworkStreamLoginPhase::__RecvLoginSuccessPacket3(const OMT2Client::Protocol::Packet& value)
 {
 	TPacketGCLoginSuccess3 kPacketLoginSuccess = value.Get<TPacketGCLoginSuccess3>();
 
@@ -111,7 +111,7 @@ bool CNetworkStreamLoginPhase::__RecvLoginSuccessPacket3(const protocol::Packet&
 	return true;
 }
 
-bool CNetworkStreamLoginPhase::__RecvLoginSuccessPacket4(const protocol::Packet& value)
+bool CNetworkStreamLoginPhase::__RecvLoginSuccessPacket4(const OMT2Client::Protocol::Packet& value)
 {
 	TPacketGCLoginSuccess4 kPacketLoginSuccess = value.Get<TPacketGCLoginSuccess4>();
 
@@ -148,7 +148,7 @@ void CPythonNetworkStream::OnConnectFailure()
 	}
 }
 
-bool CNetworkStreamLoginPhase::__RecvLoginFailurePacket(const protocol::Packet& value)
+bool CNetworkStreamLoginPhase::__RecvLoginFailurePacket(const OMT2Client::Protocol::Packet& value)
 {
 	TPacketGCLoginFailure packet_failure = value.Get<TPacketGCLoginFailure>();
 
@@ -226,7 +226,7 @@ bool CPythonNetworkStream::SendLoginPacketNew(const char* c_szName, const char* 
 	return true;
 }
 
-bool CNetworkStreamLoginPhase::__RecvRunupMatrixQuizPacket(const protocol::Packet& value)
+bool CNetworkStreamLoginPhase::__RecvRunupMatrixQuizPacket(const OMT2Client::Protocol::Packet& value)
 {
 	TPacketGCRunupMatrixQuiz kMatrixQuizPacket = value.Get<TPacketGCRunupMatrixQuiz>();
 
@@ -248,13 +248,13 @@ bool CPythonNetworkStream::SendRunupMatrixAnswerPacket(const char* c_szMatrixCar
 	return SendSequence();
 }
 
-bool CNetworkStreamLoginPhase::__RecvNEWCIBNPasspodRequestPacket(const protocol::Packet& value)
+bool CNetworkStreamLoginPhase::__RecvNEWCIBNPasspodRequestPacket(const OMT2Client::Protocol::Packet& value)
 {
 	PyCallClassMemberFunc(m_rkStream.m_apoPhaseWnd[CPythonNetworkStream::PHASE_WINDOW_LOGIN], "BINARY_OnNEWCIBNPasspodRequest", Py_BuildValue("()"));
 	return true;
 }
 
-bool CNetworkStreamLoginPhase::__RecvNEWCIBNPasspodFailurePacket(const protocol::Packet& value)
+bool CNetworkStreamLoginPhase::__RecvNEWCIBNPasspodFailurePacket(const OMT2Client::Protocol::Packet& value)
 {
 	PyCallClassMemberFunc(m_rkStream.m_apoPhaseWnd[CPythonNetworkStream::PHASE_WINDOW_LOGIN], "BINARY_OnNEWCIBNPasspodFailure", Py_BuildValue("()"));
 	return true;
@@ -295,7 +295,7 @@ bool CPythonNetworkStream::SendChinaMatrixCardPacket(const char* c_szMatrixCardS
 #define ROW(rows, i) ((rows >> ((4 - i - 1) * 8)) & 0x000000FF)
 #define COL(cols, i) ((cols >> ((4 - i - 1) * 8)) & 0x000000FF)
 
-bool CNetworkStreamLoginPhase::__RecvChinaMatrixCardPacket(const protocol::Packet& value)
+bool CNetworkStreamLoginPhase::__RecvChinaMatrixCardPacket(const OMT2Client::Protocol::Packet& value)
 {
 	TPacketGCChinaMatrixCard kMatrixCardPacket = value.Get<TPacketGCChinaMatrixCard>();
 
@@ -311,7 +311,7 @@ bool CNetworkStreamLoginPhase::__RecvChinaMatrixCardPacket(const protocol::Packe
 	return true;
 }
 
-bool CNetworkStreamLoginPhase::__RecvLoginKeyPacket(const protocol::Packet& value)
+bool CNetworkStreamLoginPhase::__RecvLoginKeyPacket(const OMT2Client::Protocol::Packet& value)
 {
 	TPacketGCLoginKey kLoginKeyPacket = value.Get<TPacketGCLoginKey>();
 
@@ -325,9 +325,9 @@ CNetworkStreamLoginPhase::CNetworkStreamLoginPhase(CPythonNetworkStream& rkStrea
 {
 }
 
-ENetworkStreamPhaseResult CNetworkStreamLoginPhase::Handle(uint8_t header, const protocol::Packet& value)
+ENetworkStreamPhaseResult CNetworkStreamLoginPhase::Handle(uint8_t header, const OMT2Client::Protocol::Packet& value)
 {
-	using Handler = bool (CNetworkStreamLoginPhase::*)(const protocol::Packet&);
+	using Handler = bool (CNetworkStreamLoginPhase::*)(const OMT2Client::Protocol::Packet&);
 
 	struct FEntry
 	{

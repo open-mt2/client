@@ -13,7 +13,7 @@ void CPythonNetworkStream::HandShakePhase()
 	if (!CheckPacket(&header))
 		return;
 
-	if (protocol::Has(header))
+	if (OMT2Client::Protocol::Has(header))
 	{
 		if (DecodeProtocolPacket(header))
 			return;
@@ -112,7 +112,7 @@ bool CPythonNetworkStream::RecvHandshakePacket()
 	return true;
 }
 
-bool CNetworkStreamHandShakePhase::RecvHandshakeOKPacket(const protocol::Packet& value)
+bool CNetworkStreamHandShakePhase::RecvHandshakeOKPacket(const OMT2Client::Protocol::Packet& value)
 {
 	uint32_t dwDelta = ELTimer_GetMSec() - m_rkStream.m_kServerTimeSync.m_dwChangeClientTime;
 	ELTimer_SetServerMSec(m_rkStream.m_kServerTimeSync.m_dwChangeServerTime + dwDelta);
@@ -126,9 +126,9 @@ CNetworkStreamHandShakePhase::CNetworkStreamHandShakePhase(CPythonNetworkStream&
 {
 }
 
-ENetworkStreamPhaseResult CNetworkStreamHandShakePhase::Handle(uint8_t header, const protocol::Packet& value)
+ENetworkStreamPhaseResult CNetworkStreamHandShakePhase::Handle(uint8_t header, const OMT2Client::Protocol::Packet& value)
 {
-	using Handler = bool (CNetworkStreamHandShakePhase::*)(const protocol::Packet&);
+	using Handler = bool (CNetworkStreamHandShakePhase::*)(const OMT2Client::Protocol::Packet&);
 
 	struct FEntry
 	{

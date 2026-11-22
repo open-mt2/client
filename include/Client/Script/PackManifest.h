@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <string>
 
-namespace Neoeter
+namespace OMT2Client::Script
 {
 	class PackManifest
 	{

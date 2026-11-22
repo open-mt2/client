@@ -88,7 +88,6 @@ enum EDragonSoulGradeTypes
 	DRAGON_SOUL_GRADE_ANCIENT,
 	DRAGON_SOUL_GRADE_LEGENDARY,
 	DRAGON_SOUL_GRADE_MAX,
-
 };
 
 enum EDragonSoulStepTypes
@@ -193,14 +192,14 @@ typedef struct SItemPos
 			window_type = _window_type;
 			cell = _cell;
 		}
-		SItemPos(const protocol::ItemPos& pos)
+		SItemPos(const OMT2Client::Protocol::ItemPos& pos)
 		{
 			window_type = pos.window_type;
 			cell = pos.cell;
 		}
-		operator protocol::ItemPos() const
+		operator OMT2Client::Protocol::ItemPos() const
 		{
-			return protocol::ItemPos(window_type, cell);
+			return OMT2Client::Protocol::ItemPos(window_type, cell);
 		}
 
 		// 기존에 cell의 형을 보면 uint8_t가 대부분이지만, oi
@@ -307,8 +306,8 @@ const float c_fRunDistance = 310.0f;
 
 enum
 {
-	ITEM_SOCKET_SLOT_MAX_NUM = protocol::kItemSocketSlotMaxNum,
-	ITEM_ATTRIBUTE_SLOT_MAX_NUM = protocol::kItemAttributeSlotMaxNum,
+	ITEM_SOCKET_SLOT_MAX_NUM = OMT2Client::Protocol::kItemSocketSlotMaxNum,
+	ITEM_ATTRIBUTE_SLOT_MAX_NUM = OMT2Client::Protocol::kItemAttributeSlotMaxNum,
 };
 
 #pragma pack(push)

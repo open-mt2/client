@@ -42,7 +42,7 @@ void CPythonNetworkStream::SelectPhase()
 	if (!CheckPacket(&header))
 		return;
 
-	if (protocol::Has(header))
+	if (OMT2Client::Protocol::Has(header))
 	{
 		if (DecodeProtocolPacket(header))
 			return;
@@ -148,7 +148,7 @@ bool CPythonNetworkStream::SendChangeNamePacket(uint8_t index, const char* name)
 	return SendSequence();
 }
 
-bool CNetworkStreamSelectPhase::__RecvPlayerCreateSuccessPacket(const protocol::Packet& value)
+bool CNetworkStreamSelectPhase::__RecvPlayerCreateSuccessPacket(const OMT2Client::Protocol::Packet& value)
 {
 	const TPacketGCPlayerCreateSuccess kCreateSuccessPacket = value.Get<TPacketGCPlayerCreateSuccess>();
 
@@ -164,7 +164,7 @@ bool CNetworkStreamSelectPhase::__RecvPlayerCreateSuccessPacket(const protocol::
 	return true;
 }
 
-bool CNetworkStreamSelectPhase::__RecvPlayerCreateFailurePacket(const protocol::Packet& value)
+bool CNetworkStreamSelectPhase::__RecvPlayerCreateFailurePacket(const OMT2Client::Protocol::Packet& value)
 {
 	const TPacketGCCreateFailure packet = value.Get<TPacketGCCreateFailure>();
 
@@ -173,7 +173,7 @@ bool CNetworkStreamSelectPhase::__RecvPlayerCreateFailurePacket(const protocol::
 	return true;
 }
 
-bool CNetworkStreamSelectPhase::__RecvPlayerDestroySuccessPacket(const protocol::Packet& value)
+bool CNetworkStreamSelectPhase::__RecvPlayerDestroySuccessPacket(const OMT2Client::Protocol::Packet& value)
 {
 	const TPacketGCDestroyCharacterSuccess packet = value.Get<TPacketGCDestroyCharacterSuccess>();
 
@@ -185,13 +185,13 @@ bool CNetworkStreamSelectPhase::__RecvPlayerDestroySuccessPacket(const protocol:
 	return true;
 }
 
-bool CNetworkStreamSelectPhase::__RecvPlayerDestroyFailurePacket(const protocol::Packet& value)
+bool CNetworkStreamSelectPhase::__RecvPlayerDestroyFailurePacket(const OMT2Client::Protocol::Packet& value)
 {
 	PyCallClassMemberFunc(m_rkStream.m_apoPhaseWnd[CPythonNetworkStream::PHASE_WINDOW_SELECT], "OnDeleteFailure", Py_BuildValue("()"));
 	return true;
 }
 
-bool CNetworkStreamSelectPhase::__RecvChangeName(const protocol::Packet& value)
+bool CNetworkStreamSelectPhase::__RecvChangeName(const OMT2Client::Protocol::Packet& value)
 {
 	const TPacketGCChangeName ChangeNamePacket = value.Get<TPacketGCChangeName>();
 
@@ -215,9 +215,9 @@ CNetworkStreamSelectPhase::CNetworkStreamSelectPhase(CPythonNetworkStream& rkStr
 {
 }
 
-ENetworkStreamPhaseResult CNetworkStreamSelectPhase::Handle(uint8_t header, const protocol::Packet& value)
+ENetworkStreamPhaseResult CNetworkStreamSelectPhase::Handle(uint8_t header, const OMT2Client::Protocol::Packet& value)
 {
-	using Handler = bool (CNetworkStreamSelectPhase::*)(const protocol::Packet&);
+	using Handler = bool (CNetworkStreamSelectPhase::*)(const OMT2Client::Protocol::Packet&);
 
 	struct FEntry
 	{

@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-namespace Neoeter
+namespace OMT2Client::Script
 {
 	struct ScriptContext
 	{

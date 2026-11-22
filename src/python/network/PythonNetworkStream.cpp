@@ -26,7 +26,7 @@ namespace
 			CPacketHeaderMap()
 			{
 				std::size_t count = 0;
-				const protocol::SizeEntry* entries = protocol::SizeTable(&count);
+				const OMT2Client::Protocol::SizeEntry* entries = OMT2Client::Protocol::SizeTable(&count);
 
 				for (std::size_t i = 0; i < count; ++i)
 					Set(entries[i].header, TPacketType(entries[i].size, entries[i].dynamic));
@@ -423,9 +423,9 @@ bool CPythonNetworkStream::CheckPacket(TPacketHeader* pRetHeader)
 	return true;
 }
 
-bool CPythonNetworkStream::DispatchProtocolPacket(const protocol::Packet& value)
+bool CPythonNetworkStream::DispatchProtocolPacket(const OMT2Client::Protocol::Packet& value)
 {
-	using Handler = bool (CPythonNetworkStream::*)(const protocol::Packet&);
+	using Handler = bool (CPythonNetworkStream::*)(const OMT2Client::Protocol::Packet&);
 
 	struct FEntry
 	{
@@ -476,17 +476,17 @@ bool CPythonNetworkStream::DecodeProtocolPacket(TPacketHeader header)
 {
 	std::size_t size = 0;
 
-	if (!protocol::Size(header, &size) || size > protocol::kMaxPacketSize)
+	if (!OMT2Client::Protocol::Size(header, &size) || size > OMT2Client::Protocol::kMaxPacketSize)
 		return false;
 
-	std::array<uint8_t, protocol::kMaxPacketSize> bytes;
+	std::array<uint8_t, OMT2Client::Protocol::kMaxPacketSize> bytes;
 
 	if (!Peek(static_cast<int>(size), bytes.data()))
 		return false;
 
-	protocol::Packet value;
+	OMT2Client::Protocol::Packet value;
 
-	if (!protocol::Decode(header, bytes.data(), size, &value))
+	if (!OMT2Client::Protocol::Decode(header, bytes.data(), size, &value))
 		return false;
 
 	if (!Recv(static_cast<int>(size)))
@@ -504,7 +504,7 @@ bool CPythonNetworkStream::RecvErrorPacket(int header)
 	return true;
 }
 
-bool CPythonNetworkStream::RecvPhasePacket(const protocol::Packet& value)
+bool CPythonNetworkStream::RecvPhasePacket(const OMT2Client::Protocol::Packet& value)
 {
 	const TPacketGCPhase packet_phase = value.Get<TPacketGCPhase>();
 
@@ -547,7 +547,7 @@ bool CPythonNetworkStream::RecvPhasePacket(const protocol::Packet& value)
 	return true;
 }
 
-bool CPythonNetworkStream::RecvPingPacket(const protocol::Packet& value)
+bool CPythonNetworkStream::RecvPingPacket(const OMT2Client::Protocol::Packet& value)
 {
 	Tracef("recv ping packet.\n");
 

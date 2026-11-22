@@ -11,7 +11,7 @@ void CPythonNetworkStream::OffLinePhase()
 	if (!CheckPacket(&header))
 		return;
 
-	if (protocol::Has(header))
+	if (OMT2Client::Protocol::Has(header))
 	{
 		if (DecodeProtocolPacket(header))
 			return;
@@ -27,9 +27,9 @@ CNetworkStreamOfflinePhase::CNetworkStreamOfflinePhase(CPythonNetworkStream& rkS
 {
 }
 
-ENetworkStreamPhaseResult CNetworkStreamOfflinePhase::Handle(uint8_t header, const protocol::Packet& value)
+ENetworkStreamPhaseResult CNetworkStreamOfflinePhase::Handle(uint8_t header, const OMT2Client::Protocol::Packet& value)
 {
-	using Handler = bool (CNetworkStreamOfflinePhase::*)(const protocol::Packet&);
+	using Handler = bool (CNetworkStreamOfflinePhase::*)(const OMT2Client::Protocol::Packet&);
 
 	struct FEntry
 	{

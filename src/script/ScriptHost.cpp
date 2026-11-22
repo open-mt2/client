@@ -1,6 +1,6 @@
 #include <Client/Script/ScriptHost.h>
 
-namespace Neoeter
+namespace OMT2Client::Script
 {
 	void ScriptHost::RegisterHost(const std::string& name, HostFactory factory)
 	{

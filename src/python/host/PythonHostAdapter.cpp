@@ -5,11 +5,11 @@
 #include <cstring>
 #include <vector>
 
-namespace Neoeter
+namespace OMT2Client::Python::Host
 {
 	namespace
 	{
-		class PythonHost : public IHost
+		class PythonHost : public OMT2Client::Script::IHost
 		{
 			public:
 				PythonHost()
@@ -22,7 +22,7 @@ namespace Neoeter
 					neoeter_python_host_destroy(m_host);
 				}
 
-				bool Load(const PackManifest& manifest, const ScriptContext& context, const ModuleTable& modules, std::string* error) override
+				bool Load(const OMT2Client::Script::PackManifest& manifest, const OMT2Client::Script::ScriptContext& context, const OMT2Client::Script::ModuleTable& modules, std::string* error) override
 				{
 					if (!m_host)
 					{
@@ -67,8 +67,8 @@ namespace Neoeter
 		};
 	}
 
-	std::unique_ptr<IHost> CreatePythonHost()
+	std::unique_ptr<OMT2Client::Script::IHost> CreatePythonHost()
 	{
-		return std::unique_ptr<IHost>(new PythonHost());
+		return std::unique_ptr<OMT2Client::Script::IHost>(new PythonHost());
 	}
 }

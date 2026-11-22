@@ -7,7 +7,7 @@
 
 class CPythonApplication;
 
-namespace Neoeter
+namespace OMT2Client::Application
 {
 	class CommandLine;
 

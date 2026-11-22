@@ -11,7 +11,7 @@
 #include <Neoeter/Render/TextFileLoader.h>
 #include <Neoeter/Platform/Platform.h>
 
-namespace Neoeter
+namespace OMT2Client::Application
 {
 	bool Packs::Mount(const std::string& folder)
 	{

@@ -11,7 +11,7 @@
 #include <cstring>
 #include <vector>
 
-namespace Neoeter
+namespace OMT2Client::Application
 {
 	CommandLine::CommandLine(const std::string& commandLine)
 		: m_commandLine(commandLine), m_pythonCommandLine(NormalizePythonCommandLine()), m_argv(nullptr), m_count(0), m_pauseBeforeScript(false)

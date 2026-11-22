@@ -3,7 +3,7 @@
 #include <cstddef>
 #include <cstdint>
 
-namespace protocol
+namespace OMT2Client::Protocol
 {
 	constexpr std::size_t kCharacterNameMaxLen = 24;
 	constexpr std::size_t kPointMaxNum = 255;
@@ -59,7 +59,7 @@ typedef struct packet_shop_item
 		uint32_t price;
 		uint8_t count;
 		uint8_t display_pos;
-		int32_t alSockets[protocol::kItemSocketSlotMaxNum];
-		TPlayerItemAttribute aAttr[protocol::kItemAttributeSlotMaxNum];
+		int32_t alSockets[OMT2Client::Protocol::kItemSocketSlotMaxNum];
+		TPlayerItemAttribute aAttr[OMT2Client::Protocol::kItemAttributeSlotMaxNum];
 } TShopItemData;
 #pragma pack(pop)

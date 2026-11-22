@@ -20,7 +20,7 @@
 #include <ctime>
 #include <string>
 
-namespace Neoeter
+namespace OMT2Client::Application
 {
 	GameSession::GameSession(Context& context, CPythonApplication& application)
 		: m_context(context), m_application(application), m_platform(), m_script()
@@ -65,24 +65,24 @@ namespace Neoeter
 
 		const std::string manifestText(manifestData->begin(), manifestData->end());
 
-		m_script.RegisterHost("python", &CreatePythonHost);
+		m_script.RegisterHost("python", &OMT2Client::Python::Host::CreatePythonHost);
 
-		ScriptContext scriptContext;
+		OMT2Client::Script::ScriptContext scriptContext;
 		scriptContext.commandLine = arguments.PythonCommandLine();
 		scriptContext.debug = !Context::IsDistribute();
 
-		const ScriptHost::Result scriptResult = m_script.Start(manifestText, scriptContext);
-		if (scriptResult != ScriptHost::Result::Success)
+		const OMT2Client::Script::ScriptHost::Result scriptResult = m_script.Start(manifestText, scriptContext);
+		if (scriptResult != OMT2Client::Script::ScriptHost::Result::Success)
 			TraceError("%s", m_script.LastError().c_str());
 
-		if (scriptResult == ScriptHost::Result::LoadError)
+		if (scriptResult == OMT2Client::Script::ScriptHost::Result::LoadError)
 			LoadingScreen_ShowError("The pack script failed. Check log.txt.");
-		else if (scriptResult != ScriptHost::Result::Success)
+		else if (scriptResult != OMT2Client::Script::ScriptHost::Result::Success)
 			LoadingScreen_ShowError(m_script.LastError().c_str());
 
 		Cleanup();
 
-		return scriptResult == ScriptHost::Result::Success ? Result::Success : Result::Failure;
+		return scriptResult == OMT2Client::Script::ScriptHost::Result::Success ? Result::Success : Result::Failure;
 	}
 
 	bool GameSession::Prepare()
