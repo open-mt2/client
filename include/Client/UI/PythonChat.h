@@ -207,7 +207,7 @@ class CPythonChat : public CSingleton<CPythonChat>, public IAbstractChat
 		void AppendWhisper(int iType, const char* c_szName, const char* c_szChat);
 		void ClearWhisper(const char* c_szName);
 		BOOL GetWhisper(const char* c_szName, CWhisper** ppWhisper);
-		void InitWhisper(PyObject* ppyObject);
+		void InitWhisper(ScriptObject* ppyObject);
 
 	protected:
 		void __Initialize();

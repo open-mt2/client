@@ -1,3 +1,4 @@
+#include <Neoeter/Python/Host/StdAfx.h>
 #include <Client/UI/StdAfx.h>
 #include <Neoeter/Python/Host/PythonLauncher.h>
 

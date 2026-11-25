@@ -186,7 +186,7 @@ class CPythonPlayer : public CSingleton<CPythonPlayer>, public IAbstractPlayer
 		void PickCloseMoney();
 		void PickCloseItem();
 
-		void SetGameWindow(PyObject* ppyObject);
+		void SetGameWindow(ScriptObject* ppyObject);
 
 		void SetObserverMode(bool isEnable);
 		bool IsObserverMode();
@@ -534,7 +534,7 @@ class CPythonPlayer : public CSingleton<CPythonPlayer>, public IAbstractPlayer
 		BOOL __IsProcessingEmotion();
 
 	protected:
-		PyObject* m_ppyGameWindow;
+		ScriptObject* m_ppyGameWindow;
 
 		// Client Player Data
 		std::map<DWORD, DWORD> m_skillSlotDict;

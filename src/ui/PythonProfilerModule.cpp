@@ -1,33 +1,33 @@
 #include <Client/UI/StdAfx.h>
 #include <Neoeter/Render/Profiler.h>
 
-PyObject* profilerPush(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* profilerPush(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szName;
-	if (!PyTuple_GetString(poArgs, 0, &szName))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szName))
+		return Script_BuildException();
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* profilerPop(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* profilerPop(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szName;
-	if (!PyTuple_GetString(poArgs, 0, &szName))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szName))
+		return Script_BuildException();
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
 void initProfiler()
 {
-	static PyMethodDef s_methods[] =
+	static ScriptMethodDef s_methods[] =
 		{
-			{"Push", profilerPush, METH_VARARGS, NULL},
-			{"Pop", profilerPop, METH_VARARGS, NULL},
+			{"Push", profilerPush, SCRIPT_VARARGS, NULL},
+			{"Pop", profilerPop, SCRIPT_VARARGS, NULL},
 
 			{NULL, NULL, 0, NULL},
 		};
 
-	Py_InitModule("profiler", s_methods);
+	ScriptModule_Create("profiler", s_methods);
 }

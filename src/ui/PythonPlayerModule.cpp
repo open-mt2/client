@@ -107,477 +107,477 @@ class CBeltInventoryHelper
 };
 #endif
 
-PyObject* playerPickCloseItem(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerPickCloseItem(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonPlayer::Instance().PickCloseItem();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* playerSetGameWindow(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerSetGameWindow(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	PyObject* pyHandle;
-	if (!PyTuple_GetObject(poArgs, 0, &pyHandle))
-		return Py_BadArgument();
+	ScriptObject* pyHandle;
+	if (!ScriptTuple_GetObject(poArgs, 0, &pyHandle))
+		return Script_BadArgument();
 
 	CPythonPlayer& rkPlayer = CPythonPlayer::Instance();
 	rkPlayer.SetGameWindow(pyHandle);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* playerSetQuickCameraMode(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerSetQuickCameraMode(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int nIsEnable;
-	if (!PyTuple_GetInteger(poArgs, 0, &nIsEnable))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &nIsEnable))
+		return Script_BadArgument();
 
 	CPythonPlayer& rkPlayer = CPythonPlayer::Instance();
 	rkPlayer.SetQuickCameraMode(nIsEnable ? true : false);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
 // Test Code
-PyObject* playerSetMainCharacterIndex(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerSetMainCharacterIndex(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iVID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iVID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iVID))
+		return Script_BuildException();
 
 	CPythonPlayer::Instance().SetMainCharacterIndex(iVID);
 	CPythonCharacterManager::Instance().SetMainInstance(iVID);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 // Test Code
 
-PyObject* playerGetMainCharacterIndex(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerGetMainCharacterIndex(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", CPythonPlayer::Instance().GetMainCharacterIndex());
+	return Script_BuildValue("i", CPythonPlayer::Instance().GetMainCharacterIndex());
 }
 
-PyObject* playerGetMainCharacterName(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerGetMainCharacterName(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("s", CPythonPlayer::Instance().GetName());
+	return Script_BuildValue("s", CPythonPlayer::Instance().GetName());
 }
 
-PyObject* playerGetMainCharacterPosition(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerGetMainCharacterPosition(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	TPixelPosition kPPosMainActor;
 	CPythonPlayer& rkPlayer = CPythonPlayer::Instance();
 	rkPlayer.NEW_GetMainActorPosition(&kPPosMainActor);
-	return Py_BuildValue("fff", kPPosMainActor.x, kPPosMainActor.y, kPPosMainActor.z);
+	return Script_BuildValue("fff", kPPosMainActor.x, kPPosMainActor.y, kPPosMainActor.z);
 }
 
-PyObject* playerIsMainCharacterIndex(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerIsMainCharacterIndex(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iVID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iVID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iVID))
+		return Script_BuildException();
 
-	return Py_BuildValue("i", CPythonPlayer::Instance().IsMainCharacterIndex(iVID));
+	return Script_BuildValue("i", CPythonPlayer::Instance().IsMainCharacterIndex(iVID));
 }
 
-PyObject* playerCanAttackInstance(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerCanAttackInstance(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iVID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iVID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iVID))
+		return Script_BuildException();
 
 	CInstanceBase* pMainInstance = CPythonPlayer::Instance().NEW_GetMainActorPtr();
 	CInstanceBase* pTargetInstance = CPythonCharacterManager::Instance().GetInstancePtr(iVID);
 	if (!pMainInstance)
-		return Py_BuildValue("i", 0);
+		return Script_BuildValue("i", 0);
 	if (!pTargetInstance)
-		return Py_BuildValue("i", 0);
+		return Script_BuildValue("i", 0);
 
-	return Py_BuildValue("i", pMainInstance->IsAttackableInstance(*pTargetInstance));
+	return Script_BuildValue("i", pMainInstance->IsAttackableInstance(*pTargetInstance));
 }
 
-PyObject* playerIsActingEmotion(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerIsActingEmotion(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CInstanceBase* pMainInstance = CPythonPlayer::Instance().NEW_GetMainActorPtr();
 	if (!pMainInstance)
-		return Py_BuildValue("i", 0);
+		return Script_BuildValue("i", 0);
 
-	return Py_BuildValue("i", pMainInstance->IsActingEmotion());
+	return Script_BuildValue("i", pMainInstance->IsActingEmotion());
 }
 
-PyObject* playerIsPVPInstance(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerIsPVPInstance(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iVID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iVID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iVID))
+		return Script_BuildException();
 
 	CInstanceBase* pMainInstance = CPythonPlayer::Instance().NEW_GetMainActorPtr();
 	CInstanceBase* pTargetInstance = CPythonCharacterManager::Instance().GetInstancePtr(iVID);
 	if (!pMainInstance)
-		return Py_BuildValue("i", 0);
+		return Script_BuildValue("i", 0);
 	if (!pTargetInstance)
-		return Py_BuildValue("i", 0);
+		return Script_BuildValue("i", 0);
 
-	return Py_BuildValue("i", pMainInstance->IsPVPInstance(*pTargetInstance));
+	return Script_BuildValue("i", pMainInstance->IsPVPInstance(*pTargetInstance));
 }
 
-PyObject* playerIsSameEmpire(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerIsSameEmpire(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iVID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iVID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iVID))
+		return Script_BuildException();
 
 	CInstanceBase* pMainInstance = CPythonPlayer::Instance().NEW_GetMainActorPtr();
 	CInstanceBase* pTargetInstance = CPythonCharacterManager::Instance().GetInstancePtr(iVID);
 	if (!pMainInstance)
-		return Py_BuildValue("i", FALSE);
+		return Script_BuildValue("i", FALSE);
 	if (!pTargetInstance)
-		return Py_BuildValue("i", FALSE);
+		return Script_BuildValue("i", FALSE);
 
-	return Py_BuildValue("i", pMainInstance->IsSameEmpire(*pTargetInstance));
+	return Script_BuildValue("i", pMainInstance->IsSameEmpire(*pTargetInstance));
 }
 
-PyObject* playerIsChallengeInstance(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerIsChallengeInstance(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iVID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iVID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iVID))
+		return Script_BuildException();
 
-	return Py_BuildValue("i", CPythonPlayer::Instance().IsChallengeInstance(iVID));
+	return Script_BuildValue("i", CPythonPlayer::Instance().IsChallengeInstance(iVID));
 }
 
-PyObject* playerIsRevengeInstance(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerIsRevengeInstance(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iVID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iVID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iVID))
+		return Script_BuildException();
 
-	return Py_BuildValue("i", CPythonPlayer::Instance().IsRevengeInstance(iVID));
+	return Script_BuildValue("i", CPythonPlayer::Instance().IsRevengeInstance(iVID));
 }
 
-PyObject* playerIsCantFightInstance(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerIsCantFightInstance(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iVID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iVID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iVID))
+		return Script_BuildException();
 
-	return Py_BuildValue("i", CPythonPlayer::Instance().IsCantFightInstance(iVID));
+	return Script_BuildValue("i", CPythonPlayer::Instance().IsCantFightInstance(iVID));
 }
 
-PyObject* playerGetCharacterDistance(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerGetCharacterDistance(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iVID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iVID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iVID))
+		return Script_BuildException();
 
 	CInstanceBase* pMainInstance = CPythonPlayer::Instance().NEW_GetMainActorPtr();
 	CInstanceBase* pTargetInstance = CPythonCharacterManager::Instance().GetInstancePtr(iVID);
 	if (!pMainInstance)
-		return Py_BuildValue("f", -1.0f);
+		return Script_BuildValue("f", -1.0f);
 	if (!pTargetInstance)
-		return Py_BuildValue("f", -1.0f);
+		return Script_BuildValue("f", -1.0f);
 
-	return Py_BuildValue("f", pMainInstance->GetDistance(pTargetInstance));
+	return Script_BuildValue("f", pMainInstance->GetDistance(pTargetInstance));
 }
 
-PyObject* playerIsInSafeArea(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerIsInSafeArea(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CInstanceBase* pMainInstance = CPythonPlayer::Instance().NEW_GetMainActorPtr();
 	if (!pMainInstance)
-		return Py_BuildValue("i", FALSE);
+		return Script_BuildValue("i", FALSE);
 
-	return Py_BuildValue("i", pMainInstance->IsInSafe());
+	return Script_BuildValue("i", pMainInstance->IsInSafe());
 }
 
-PyObject* playerIsMountingHorse(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerIsMountingHorse(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CInstanceBase* pMainInstance = CPythonPlayer::Instance().NEW_GetMainActorPtr();
 	if (!pMainInstance)
-		return Py_BuildValue("i", FALSE);
+		return Script_BuildValue("i", FALSE);
 
-	return Py_BuildValue("i", pMainInstance->IsMountingHorse());
+	return Script_BuildValue("i", pMainInstance->IsMountingHorse());
 }
 
-PyObject* playerIsObserverMode(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerIsObserverMode(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonPlayer& rkPlayer = CPythonPlayer::Instance();
-	return Py_BuildValue("i", rkPlayer.IsObserverMode());
+	return Script_BuildValue("i", rkPlayer.IsObserverMode());
 }
 
-PyObject* playerActEmotion(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerActEmotion(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iVID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iVID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iVID))
+		return Script_BuildException();
 
 	CPythonPlayer& rkPlayer = CPythonPlayer::Instance();
 	rkPlayer.ActEmotion(iVID);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* playerShowPlayer(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerShowPlayer(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CInstanceBase* pMainInstance = CPythonPlayer::Instance().NEW_GetMainActorPtr();
 	if (pMainInstance)
 		pMainInstance->GetGraphicThingInstanceRef().Show();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* playerHidePlayer(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerHidePlayer(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CInstanceBase* pMainInstance = CPythonPlayer::Instance().NEW_GetMainActorPtr();
 	if (pMainInstance)
 		pMainInstance->GetGraphicThingInstanceRef().Hide();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* playerComboAttack(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerComboAttack(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonPlayer::Instance().NEW_Attack();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* playerRegisterEffect(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerRegisterEffect(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iEft;
-	if (!PyTuple_GetInteger(poArgs, 0, &iEft))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iEft))
+		return Script_BadArgument();
 
 	char* szFileName;
-	if (!PyTuple_GetString(poArgs, 1, &szFileName))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetString(poArgs, 1, &szFileName))
+		return Script_BadArgument();
 
 	CPythonPlayer& rkPlayer = CPythonPlayer::Instance();
 	if (!rkPlayer.RegisterEffect(iEft, szFileName, false))
-		return Py_BuildException("CPythonPlayer::RegisterEffect(eEft=%d, szFileName=%s", iEft, szFileName);
+		return Script_BuildException("CPythonPlayer::RegisterEffect(eEft=%d, szFileName=%s", iEft, szFileName);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* playerRegisterCacheEffect(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerRegisterCacheEffect(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iEft;
-	if (!PyTuple_GetInteger(poArgs, 0, &iEft))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iEft))
+		return Script_BadArgument();
 
 	char* szFileName;
-	if (!PyTuple_GetString(poArgs, 1, &szFileName))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetString(poArgs, 1, &szFileName))
+		return Script_BadArgument();
 
 	CPythonPlayer& rkPlayer = CPythonPlayer::Instance();
 	if (!rkPlayer.RegisterEffect(iEft, szFileName, true))
-		return Py_BuildException("CPythonPlayer::RegisterEffect(eEft=%d, szFileName=%s", iEft, szFileName);
+		return Script_BuildException("CPythonPlayer::RegisterEffect(eEft=%d, szFileName=%s", iEft, szFileName);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* playerSetAttackKeyState(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerSetAttackKeyState(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int isPressed;
-	if (!PyTuple_GetInteger(poArgs, 0, &isPressed))
-		return Py_BuildException("playerSetAttackKeyState(isPressed) - There is no first argument");
+	if (!ScriptTuple_GetInteger(poArgs, 0, &isPressed))
+		return Script_BuildException("playerSetAttackKeyState(isPressed) - There is no first argument");
 
 	CPythonPlayer& rkPlayer = CPythonPlayer::Instance();
 	rkPlayer.SetAttackKeyState(isPressed ? true : false);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* playerSetSingleDIKKeyState(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerSetSingleDIKKeyState(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int eDIK;
-	if (!PyTuple_GetInteger(poArgs, 0, &eDIK))
-		return Py_BuildException("playerSetSingleDIKKeyState(eDIK, isPressed) - There is no first argument");
+	if (!ScriptTuple_GetInteger(poArgs, 0, &eDIK))
+		return Script_BuildException("playerSetSingleDIKKeyState(eDIK, isPressed) - There is no first argument");
 
 	int isPressed;
-	if (!PyTuple_GetInteger(poArgs, 1, &isPressed))
-		return Py_BuildException("playerSetSingleDIKKeyState(eDIK, isPressed) - There is no second argument");
+	if (!ScriptTuple_GetInteger(poArgs, 1, &isPressed))
+		return Script_BuildException("playerSetSingleDIKKeyState(eDIK, isPressed) - There is no second argument");
 
 	CPythonPlayer& rkPlayer = CPythonPlayer::Instance();
 	rkPlayer.NEW_SetSingleDIKKeyState(eDIK, isPressed ? true : false);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* playerEndKeyWalkingImmediately(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerEndKeyWalkingImmediately(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonPlayer::Instance().NEW_Stop();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* playerStartMouseWalking(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerStartMouseWalking(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* playerEndMouseWalking(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerEndMouseWalking(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* playerResetCameraRotation(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerResetCameraRotation(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonPlayer::Instance().NEW_ResetCameraRotation();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* playerSetAutoCameraRotationSpeed(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerSetAutoCameraRotationSpeed(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	float fCmrRotSpd;
-	if (!PyTuple_GetFloat(poArgs, 0, &fCmrRotSpd))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 0, &fCmrRotSpd))
+		return Script_BuildException();
 
 	CPythonPlayer& rkPlayer = CPythonPlayer::Instance();
 	rkPlayer.NEW_SetAutoCameraRotationSpeed(fCmrRotSpd);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* playerSetMouseState(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerSetMouseState(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int eMBT;
-	if (!PyTuple_GetInteger(poArgs, 0, &eMBT))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &eMBT))
+		return Script_BuildException();
 
 	int eMBS;
-	if (!PyTuple_GetInteger(poArgs, 1, &eMBS))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &eMBS))
+		return Script_BuildException();
 
 	CPythonPlayer& rkPlayer = CPythonPlayer::Instance();
 	rkPlayer.NEW_SetMouseState(eMBT, eMBS);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* playerSetMouseFunc(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerSetMouseFunc(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int eMBT;
-	if (!PyTuple_GetInteger(poArgs, 0, &eMBT))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &eMBT))
+		return Script_BuildException();
 
 	int eMBS;
-	if (!PyTuple_GetInteger(poArgs, 1, &eMBS))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &eMBS))
+		return Script_BuildException();
 
 	CPythonPlayer& rkPlayer = CPythonPlayer::Instance();
 	rkPlayer.NEW_SetMouseFunc(eMBT, eMBS);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* playerGetMouseFunc(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerGetMouseFunc(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int eMBT;
-	if (!PyTuple_GetInteger(poArgs, 0, &eMBT))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &eMBT))
+		return Script_BuildException();
 
 	CPythonPlayer& rkPlayer = CPythonPlayer::Instance();
-	return Py_BuildValue("i", rkPlayer.NEW_GetMouseFunc(eMBT));
+	return Script_BuildValue("i", rkPlayer.NEW_GetMouseFunc(eMBT));
 }
 
-PyObject* playerSetMouseMiddleButtonState(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerSetMouseMiddleButtonState(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int eMBS;
-	if (!PyTuple_GetInteger(poArgs, 0, &eMBS))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &eMBS))
+		return Script_BuildException();
 
 	CPythonPlayer& rkPlayer = CPythonPlayer::Instance();
 	rkPlayer.NEW_SetMouseMiddleButtonState(eMBS);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-PyObject* playerGetName(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerGetName(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("s", CPythonPlayer::Instance().GetName());
+	return Script_BuildValue("s", CPythonPlayer::Instance().GetName());
 }
 
-PyObject* playerGetRace(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerGetRace(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", CPythonPlayer::Instance().GetRace());
+	return Script_BuildValue("i", CPythonPlayer::Instance().GetRace());
 }
 
-PyObject* playerGetJob(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerGetJob(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int race = CPythonPlayer::Instance().GetRace();
 	int job = RaceToJob(race);
-	return Py_BuildValue("i", job);
+	return Script_BuildValue("i", job);
 }
 
-PyObject* playerGetPlayTime(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerGetPlayTime(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", CPythonPlayer::Instance().GetPlayTime());
+	return Script_BuildValue("i", CPythonPlayer::Instance().GetPlayTime());
 }
 
-PyObject* playerSetPlayTime(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerSetPlayTime(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iTime;
-	if (!PyTuple_GetInteger(poArgs, 0, &iTime))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iTime))
+		return Script_BuildException();
 
 	CPythonPlayer::Instance().SetPlayTime(iTime);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* playerIsSkillCoolTime(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerIsSkillCoolTime(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSlotIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSlotIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSlotIndex))
+		return Script_BuildException();
 
-	return Py_BuildValue("i", CPythonPlayer::Instance().IsSkillCoolTime(iSlotIndex));
+	return Script_BuildValue("i", CPythonPlayer::Instance().IsSkillCoolTime(iSlotIndex));
 }
 
-PyObject* playerGetSkillCoolTime(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerGetSkillCoolTime(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSlotIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSlotIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSlotIndex))
+		return Script_BuildException();
 
 	float fCoolTime = CPythonPlayer::Instance().GetSkillCoolTime(iSlotIndex);
 	float fElapsedCoolTime = CPythonPlayer::Instance().GetSkillElapsedCoolTime(iSlotIndex);
-	return Py_BuildValue("ff", fCoolTime, fElapsedCoolTime);
+	return Script_BuildValue("ff", fCoolTime, fElapsedCoolTime);
 }
 
-PyObject* playerIsSkillActive(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerIsSkillActive(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSlotIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSlotIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSlotIndex))
+		return Script_BuildException();
 
-	return Py_BuildValue("i", CPythonPlayer::Instance().IsSkillActive(iSlotIndex));
+	return Script_BuildValue("i", CPythonPlayer::Instance().IsSkillActive(iSlotIndex));
 }
 
-PyObject* playerUseGuildSkill(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerUseGuildSkill(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSkillSlotIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSkillSlotIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSkillSlotIndex))
+		return Script_BuildException();
 
 	CPythonPlayer::Instance().UseGuildSkill(iSkillSlotIndex);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* playerAffectIndexToSkillIndex(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerAffectIndexToSkillIndex(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iAffectIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iAffectIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iAffectIndex))
+		return Script_BuildException();
 
 	DWORD dwSkillIndex;
 	if (!CPythonPlayer::Instance().AffectIndexToSkillIndex(iAffectIndex, &dwSkillIndex))
-		return Py_BuildValue("i", 0);
+		return Script_BuildValue("i", 0);
 
-	return Py_BuildValue("i", dwSkillIndex);
+	return Script_BuildValue("i", dwSkillIndex);
 }
 
-PyObject* playerGetEXP(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerGetEXP(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	DWORD dwEXP = CPythonPlayer::Instance().GetStatus(POINT_EXP);
-	return Py_BuildValue("l", dwEXP);
+	return Script_BuildValue("l", dwEXP);
 }
 
-PyObject* playerGetStatus(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerGetStatus(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iType;
-	if (!PyTuple_GetInteger(poArgs, 0, &iType))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iType))
+		return Script_BuildException();
 
 	long iValue = CPythonPlayer::Instance().GetStatus(iType);
 
@@ -590,37 +590,37 @@ PyObject* playerGetStatus(PyObject* poSelf, PyObject* poArgs)
 		}
 	}
 
-	return Py_BuildValue("i", iValue);
+	return Script_BuildValue("i", iValue);
 }
 
-PyObject* playerSetStatus(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerSetStatus(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iType;
-	if (!PyTuple_GetInteger(poArgs, 0, &iType))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iType))
+		return Script_BuildException();
 
 	int iValue;
-	if (!PyTuple_GetInteger(poArgs, 1, &iValue))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iValue))
+		return Script_BuildException();
 
 	CPythonPlayer::Instance().SetStatus(iType, iValue);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* playerGetElk(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerGetElk(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", CPythonPlayer::Instance().GetStatus(POINT_GOLD));
+	return Script_BuildValue("i", CPythonPlayer::Instance().GetStatus(POINT_GOLD));
 }
 
-PyObject* playerGetGuildID(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerGetGuildID(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CInstanceBase* pInstance = CPythonPlayer::Instance().NEW_GetMainActorPtr();
 	if (!pInstance)
-		return Py_BuildValue("i", 0);
-	return Py_BuildValue("i", pInstance->GetGuildID());
+		return Script_BuildValue("i", 0);
+	return Script_BuildValue("i", pInstance->GetGuildID());
 }
 
-PyObject* playerGetGuildName(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerGetGuildName(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CInstanceBase* pInstance = CPythonPlayer::Instance().NEW_GetMainActorPtr();
 	if (pInstance)
@@ -628,12 +628,12 @@ PyObject* playerGetGuildName(PyObject* poSelf, PyObject* poArgs)
 		DWORD dwID = pInstance->GetGuildID();
 		std::string strName;
 		if (CPythonGuild::Instance().GetGuildName(dwID, &strName))
-			return Py_BuildValue("s", strName.c_str());
+			return Script_BuildValue("s", strName.c_str());
 	}
-	return Py_BuildValue("s", "");
+	return Script_BuildValue("s", "");
 }
 
-PyObject* playerGetAlignmentData(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerGetAlignmentData(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CInstanceBase* pInstance = CPythonPlayer::Instance().NEW_GetMainActorPtr();
 	int iAlignmentPoint = 0;
@@ -643,374 +643,374 @@ PyObject* playerGetAlignmentData(PyObject* poSelf, PyObject* poArgs)
 		iAlignmentPoint = pInstance->GetAlignment();
 		iAlignmentGrade = pInstance->GetAlignmentGrade();
 	}
-	return Py_BuildValue("ii", iAlignmentPoint, iAlignmentGrade);
+	return Script_BuildValue("ii", iAlignmentPoint, iAlignmentGrade);
 }
 
-PyObject* playerSetSkill(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerSetSkill(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSlotIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSlotIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSlotIndex))
+		return Script_BuildException();
 
 	int iSkillIndex;
-	if (!PyTuple_GetInteger(poArgs, 1, &iSkillIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iSkillIndex))
+		return Script_BuildException();
 
 	CPythonPlayer::Instance().SetSkill(iSlotIndex, iSkillIndex);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* playerGetSkillIndex(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerGetSkillIndex(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSlotIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSlotIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSlotIndex))
+		return Script_BuildException();
 
-	return Py_BuildValue("i", CPythonPlayer::Instance().GetSkillIndex(iSlotIndex));
+	return Script_BuildValue("i", CPythonPlayer::Instance().GetSkillIndex(iSlotIndex));
 }
 
-PyObject* playerGetSkillSlotIndex(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerGetSkillSlotIndex(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSkillIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSkillIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSkillIndex))
+		return Script_BuildException();
 
 	DWORD dwSlotIndex;
 	if (!CPythonPlayer::Instance().GetSkillSlotIndex(iSkillIndex, &dwSlotIndex))
-		return Py_BuildException();
+		return Script_BuildException();
 
-	return Py_BuildValue("i", dwSlotIndex);
+	return Script_BuildValue("i", dwSlotIndex);
 }
 
-PyObject* playerGetSkillGrade(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerGetSkillGrade(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSlotIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSlotIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSlotIndex))
+		return Script_BuildException();
 
-	return Py_BuildValue("i", CPythonPlayer::Instance().GetSkillGrade(iSlotIndex));
+	return Script_BuildValue("i", CPythonPlayer::Instance().GetSkillGrade(iSlotIndex));
 }
 
-PyObject* playerGetSkillLevel(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerGetSkillLevel(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSlotIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSlotIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSlotIndex))
+		return Script_BuildException();
 
-	return Py_BuildValue("i", CPythonPlayer::Instance().GetSkillLevel(iSlotIndex));
+	return Script_BuildValue("i", CPythonPlayer::Instance().GetSkillLevel(iSlotIndex));
 }
 
-PyObject* playerGetSkillCurrentEfficientPercentage(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerGetSkillCurrentEfficientPercentage(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSlotIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSlotIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSlotIndex))
+		return Script_BuildException();
 
-	return Py_BuildValue("f", CPythonPlayer::Instance().GetSkillCurrentEfficientPercentage(iSlotIndex));
+	return Script_BuildValue("f", CPythonPlayer::Instance().GetSkillCurrentEfficientPercentage(iSlotIndex));
 }
-PyObject* playerGetSkillNextEfficientPercentage(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerGetSkillNextEfficientPercentage(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSlotIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSlotIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSlotIndex))
+		return Script_BuildException();
 
-	return Py_BuildValue("f", CPythonPlayer::Instance().GetSkillNextEfficientPercentage(iSlotIndex));
+	return Script_BuildValue("f", CPythonPlayer::Instance().GetSkillNextEfficientPercentage(iSlotIndex));
 }
 
-PyObject* playerClickSkillSlot(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerClickSkillSlot(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSkillSlot;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSkillSlot))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSkillSlot))
+		return Script_BadArgument();
 
 	CPythonPlayer::Instance().ClickSkillSlot(iSkillSlot);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* playerChangeCurrentSkillNumberOnly(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerChangeCurrentSkillNumberOnly(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSlotIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSlotIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSlotIndex))
+		return Script_BadArgument();
 
 	CPythonPlayer::Instance().ChangeCurrentSkillNumberOnly(iSlotIndex);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* playerClearSkillDict(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerClearSkillDict(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonPlayer::Instance().ClearSkillDict();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* playerMoveItem(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerMoveItem(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	TItemPos srcCell;
 	TItemPos dstCell;
-	switch (PyTuple_Size(poArgs))
+	switch (ScriptTuple_Size(poArgs))
 	{
 		case 2:
-			if (!PyTuple_GetInteger(poArgs, 0, &srcCell.cell))
-				return Py_BuildException();
-			if (!PyTuple_GetInteger(poArgs, 1, &dstCell.cell))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 0, &srcCell.cell))
+				return Script_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 1, &dstCell.cell))
+				return Script_BuildException();
 			break;
 		case 4:
-			if (!PyTuple_GetByte(poArgs, 0, &srcCell.window_type))
-				return Py_BuildException();
-			if (!PyTuple_GetInteger(poArgs, 1, &srcCell.cell))
-				return Py_BuildException();
-			if (!PyTuple_GetByte(poArgs, 2, &dstCell.window_type))
-				return Py_BuildException();
-			if (!PyTuple_GetInteger(poArgs, 3, &dstCell.cell))
-				return Py_BuildException();
+			if (!ScriptTuple_GetByte(poArgs, 0, &srcCell.window_type))
+				return Script_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 1, &srcCell.cell))
+				return Script_BuildException();
+			if (!ScriptTuple_GetByte(poArgs, 2, &dstCell.window_type))
+				return Script_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 3, &dstCell.cell))
+				return Script_BuildException();
 			break;
 		default:
-			return Py_BuildException();
+			return Script_BuildException();
 	}
 
 	CPythonPlayer::Instance().MoveItemData(srcCell, dstCell);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* playerSendClickItemPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerSendClickItemPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int ivid;
-	if (!PyTuple_GetInteger(poArgs, 0, &ivid))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &ivid))
+		return Script_BuildException();
 
 	CPythonPlayer::Instance().SendClickItemPacket(ivid);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* playerGetItemIndex(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerGetItemIndex(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	switch (PyTuple_Size(poArgs))
+	switch (ScriptTuple_Size(poArgs))
 	{
 		case 1:
 		{
 			int iSlotIndex;
-			if (!PyTuple_GetInteger(poArgs, 0, &iSlotIndex))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 0, &iSlotIndex))
+				return Script_BuildException();
 
 			int ItemIndex = CPythonPlayer::Instance().GetItemIndex(TItemPos(INVENTORY, iSlotIndex));
-			return Py_BuildValue("i", ItemIndex);
+			return Script_BuildValue("i", ItemIndex);
 		}
 		case 2:
 		{
 			TItemPos Cell;
-			if (!PyTuple_GetByte(poArgs, 0, &Cell.window_type))
-				return Py_BuildException();
-			if (!PyTuple_GetInteger(poArgs, 1, &Cell.cell))
-				return Py_BuildException();
+			if (!ScriptTuple_GetByte(poArgs, 0, &Cell.window_type))
+				return Script_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 1, &Cell.cell))
+				return Script_BuildException();
 
 			int ItemIndex = CPythonPlayer::Instance().GetItemIndex(Cell);
-			return Py_BuildValue("i", ItemIndex);
+			return Script_BuildValue("i", ItemIndex);
 		}
 		default:
-			return Py_BuildException();
+			return Script_BuildException();
 	}
 }
 
-PyObject* playerGetItemFlags(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerGetItemFlags(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	switch (PyTuple_Size(poArgs))
+	switch (ScriptTuple_Size(poArgs))
 	{
 		case 1:
 		{
 			int iSlotIndex;
-			if (!PyTuple_GetInteger(poArgs, 0, &iSlotIndex))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 0, &iSlotIndex))
+				return Script_BuildException();
 
 			DWORD flags = CPythonPlayer::Instance().GetItemFlags(TItemPos(INVENTORY, iSlotIndex));
-			return Py_BuildValue("i", flags);
+			return Script_BuildValue("i", flags);
 		}
 		case 2:
 		{
 			TItemPos Cell;
-			if (!PyTuple_GetByte(poArgs, 0, &Cell.window_type))
-				return Py_BuildException();
+			if (!ScriptTuple_GetByte(poArgs, 0, &Cell.window_type))
+				return Script_BuildException();
 
-			if (!PyTuple_GetInteger(poArgs, 1, &Cell.cell))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 1, &Cell.cell))
+				return Script_BuildException();
 
 			DWORD flags = CPythonPlayer::Instance().GetItemFlags(Cell);
-			return Py_BuildValue("i", flags);
+			return Script_BuildValue("i", flags);
 		}
 		default:
-			return Py_BuildException();
+			return Script_BuildException();
 	}
 }
 
-PyObject* playerGetItemCount(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerGetItemCount(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	switch (PyTuple_Size(poArgs))
+	switch (ScriptTuple_Size(poArgs))
 	{
 		case 1:
 		{
 			int iSlotIndex;
-			if (!PyTuple_GetInteger(poArgs, 0, &iSlotIndex))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 0, &iSlotIndex))
+				return Script_BuildException();
 
 			int ItemNum = CPythonPlayer::Instance().GetItemCount(TItemPos(INVENTORY, iSlotIndex));
-			return Py_BuildValue("i", ItemNum);
+			return Script_BuildValue("i", ItemNum);
 		}
 		case 2:
 		{
 			TItemPos Cell;
-			if (!PyTuple_GetByte(poArgs, 0, &Cell.window_type))
-				return Py_BuildException();
+			if (!ScriptTuple_GetByte(poArgs, 0, &Cell.window_type))
+				return Script_BuildException();
 
-			if (!PyTuple_GetInteger(poArgs, 1, &Cell.cell))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 1, &Cell.cell))
+				return Script_BuildException();
 
 			int ItemNum = CPythonPlayer::Instance().GetItemCount(Cell);
 
-			return Py_BuildValue("i", ItemNum);
+			return Script_BuildValue("i", ItemNum);
 		}
 		default:
-			return Py_BuildException();
+			return Script_BuildException();
 	}
 }
 
-PyObject* playerSetItemCount(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerSetItemCount(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	switch (PyTuple_Size(poArgs))
+	switch (ScriptTuple_Size(poArgs))
 	{
 		case 2:
 		{
 			int iSlotIndex;
-			if (!PyTuple_GetInteger(poArgs, 0, &iSlotIndex))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 0, &iSlotIndex))
+				return Script_BuildException();
 
 			BYTE bCount;
-			if (!PyTuple_GetInteger(poArgs, 1, &bCount))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 1, &bCount))
+				return Script_BuildException();
 
 			if (0 == bCount)
-				return Py_BuildException();
+				return Script_BuildException();
 
 			CPythonPlayer::Instance().SetItemCount(TItemPos(INVENTORY, iSlotIndex), bCount);
-			return Py_BuildNone();
+			return Script_BuildNone();
 		}
 		case 3:
 		{
 			TItemPos Cell;
-			if (!PyTuple_GetByte(poArgs, 0, &Cell.window_type))
-				return Py_BuildException();
+			if (!ScriptTuple_GetByte(poArgs, 0, &Cell.window_type))
+				return Script_BuildException();
 
-			if (!PyTuple_GetInteger(poArgs, 1, &Cell.cell))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 1, &Cell.cell))
+				return Script_BuildException();
 
 			BYTE bCount;
-			if (!PyTuple_GetInteger(poArgs, 2, &bCount))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 2, &bCount))
+				return Script_BuildException();
 
 			CPythonPlayer::Instance().SetItemCount(Cell, bCount);
 
-			return Py_BuildNone();
+			return Script_BuildNone();
 		}
 		default:
-			return Py_BuildException();
+			return Script_BuildException();
 	}
 }
 
-PyObject* playerGetItemCountByVnum(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerGetItemCountByVnum(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int ivnum;
-	if (!PyTuple_GetInteger(poArgs, 0, &ivnum))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &ivnum))
+		return Script_BuildException();
 
 	int ItemNum = CPythonPlayer::Instance().GetItemCountByVnum(ivnum);
-	return Py_BuildValue("i", ItemNum);
+	return Script_BuildValue("i", ItemNum);
 }
 
-PyObject* playerGetItemMetinSocket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerGetItemMetinSocket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	TItemPos Cell;
 	int iMetinSocketIndex;
 
-	switch (PyTuple_Size(poArgs))
+	switch (ScriptTuple_Size(poArgs))
 	{
 		case 2:
-			if (!PyTuple_GetInteger(poArgs, 0, &Cell.cell))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 0, &Cell.cell))
+				return Script_BuildException();
 
-			if (!PyTuple_GetInteger(poArgs, 1, &iMetinSocketIndex))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 1, &iMetinSocketIndex))
+				return Script_BuildException();
 
 			break;
 		case 3:
-			if (!PyTuple_GetByte(poArgs, 0, &Cell.window_type))
-				return Py_BuildException();
-			if (!PyTuple_GetInteger(poArgs, 1, &Cell.cell))
-				return Py_BuildException();
-			if (!PyTuple_GetInteger(poArgs, 2, &iMetinSocketIndex))
-				return Py_BuildException();
+			if (!ScriptTuple_GetByte(poArgs, 0, &Cell.window_type))
+				return Script_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 1, &Cell.cell))
+				return Script_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 2, &iMetinSocketIndex))
+				return Script_BuildException();
 
 			break;
 
 		default:
-			return Py_BuildException();
+			return Script_BuildException();
 	}
 	int nMetinSocketValue = CPythonPlayer::Instance().GetItemMetinSocket(Cell, iMetinSocketIndex);
-	return Py_BuildValue("i", nMetinSocketValue);
+	return Script_BuildValue("i", nMetinSocketValue);
 }
 
-PyObject* playerGetItemAttribute(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerGetItemAttribute(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	TItemPos Cell;
 	int iAttributeSlotIndex;
-	switch (PyTuple_Size(poArgs))
+	switch (ScriptTuple_Size(poArgs))
 	{
 		case 2:
-			if (!PyTuple_GetInteger(poArgs, 0, &Cell.cell))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 0, &Cell.cell))
+				return Script_BuildException();
 
-			if (!PyTuple_GetInteger(poArgs, 1, &iAttributeSlotIndex))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 1, &iAttributeSlotIndex))
+				return Script_BuildException();
 
 			break;
 		case 3:
-			if (!PyTuple_GetByte(poArgs, 0, &Cell.window_type))
-				return Py_BuildException();
+			if (!ScriptTuple_GetByte(poArgs, 0, &Cell.window_type))
+				return Script_BuildException();
 
-			if (!PyTuple_GetInteger(poArgs, 1, &Cell.cell))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 1, &Cell.cell))
+				return Script_BuildException();
 
-			if (!PyTuple_GetInteger(poArgs, 2, &iAttributeSlotIndex))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 2, &iAttributeSlotIndex))
+				return Script_BuildException();
 			break;
 		default:
-			return Py_BuildException();
+			return Script_BuildException();
 	}
 	BYTE byType;
 	short sValue;
 	CPythonPlayer::Instance().GetItemAttribute(Cell, iAttributeSlotIndex, &byType, &sValue);
 
-	return Py_BuildValue("ii", byType, sValue);
+	return Script_BuildValue("ii", byType, sValue);
 }
 
-PyObject* playerGetItemLink(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerGetItemLink(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	TItemPos Cell;
 
-	switch (PyTuple_Size(poArgs))
+	switch (ScriptTuple_Size(poArgs))
 	{
 		case 1:
-			if (!PyTuple_GetInteger(poArgs, 0, &Cell.cell))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 0, &Cell.cell))
+				return Script_BuildException();
 			break;
 		case 2:
-			if (!PyTuple_GetByte(poArgs, 0, &Cell.window_type))
-				return Py_BuildException();
-			if (!PyTuple_GetInteger(poArgs, 1, &Cell.cell))
-				return Py_BuildException();
+			if (!ScriptTuple_GetByte(poArgs, 0, &Cell.window_type))
+				return Script_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 1, &Cell.cell))
+				return Script_BuildException();
 			break;
 		default:
-			return Py_BuildException();
+			return Script_BuildException();
 	}
 	const TItemData* pPlayerItem = CPythonPlayer::Instance().GetItemData(Cell);
 	CItemData* pItemData = NULL;
@@ -1054,32 +1054,32 @@ PyObject* playerGetItemLink(PyObject* poSelf, PyObject* poArgs)
 	else
 		buf[0] = '\0';
 
-	return Py_BuildValue("s", buf);
+	return Script_BuildValue("s", buf);
 }
 
-PyObject* playerGetISellItemPrice(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerGetISellItemPrice(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	TItemPos Cell;
 
-	switch (PyTuple_Size(poArgs))
+	switch (ScriptTuple_Size(poArgs))
 	{
 		case 1:
-			if (!PyTuple_GetInteger(poArgs, 0, &Cell.cell))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 0, &Cell.cell))
+				return Script_BuildException();
 			break;
 		case 2:
-			if (!PyTuple_GetByte(poArgs, 0, &Cell.window_type))
-				return Py_BuildException();
-			if (!PyTuple_GetInteger(poArgs, 1, &Cell.cell))
-				return Py_BuildException();
+			if (!ScriptTuple_GetByte(poArgs, 0, &Cell.window_type))
+				return Script_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 1, &Cell.cell))
+				return Script_BuildException();
 			break;
 		default:
-			return Py_BuildException();
+			return Script_BuildException();
 	}
 	CItemData* pItemData;
 
 	if (!CItemManager::Instance().GetItemDataPointer(CPythonPlayer::Instance().GetItemIndex(Cell), &pItemData))
-		return Py_BuildValue("i", 0);
+		return Script_BuildValue("i", 0);
 
 	int iPrice;
 
@@ -1089,39 +1089,39 @@ PyObject* playerGetISellItemPrice(PyObject* poSelf, PyObject* poArgs)
 		iPrice = pItemData->GetISellItemPrice() * CPythonPlayer::Instance().GetItemCount(Cell);
 
 	iPrice /= 5;
-	return Py_BuildValue("i", iPrice);
+	return Script_BuildValue("i", iPrice);
 }
 
-PyObject* playerGetQuickPage(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerGetQuickPage(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", CPythonPlayer::Instance().GetQuickPage());
+	return Script_BuildValue("i", CPythonPlayer::Instance().GetQuickPage());
 }
 
-PyObject* playerSetQuickPage(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerSetQuickPage(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iPageIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iPageIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iPageIndex))
+		return Script_BuildException();
 
 	CPythonPlayer::Instance().SetQuickPage(iPageIndex);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* playerLocalQuickSlotIndexToGlobalQuickSlotIndex(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerLocalQuickSlotIndexToGlobalQuickSlotIndex(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iLocalSlotIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iLocalSlotIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iLocalSlotIndex))
+		return Script_BuildException();
 
 	CPythonPlayer& rkPlayer = CPythonPlayer::Instance();
-	return Py_BuildValue("i", rkPlayer.LocalQuickSlotIndexToGlobalQuickSlotIndex(iLocalSlotIndex));
+	return Script_BuildValue("i", rkPlayer.LocalQuickSlotIndexToGlobalQuickSlotIndex(iLocalSlotIndex));
 }
 
-PyObject* playerGetLocalQuickSlot(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerGetLocalQuickSlot(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSlotIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSlotIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSlotIndex))
+		return Script_BuildException();
 
 	DWORD dwWndType;
 	DWORD dwWndItemPos;
@@ -1129,14 +1129,14 @@ PyObject* playerGetLocalQuickSlot(PyObject* poSelf, PyObject* poArgs)
 	CPythonPlayer& rkPlayer = CPythonPlayer::Instance();
 	rkPlayer.GetLocalQuickSlotData(iSlotIndex, &dwWndType, &dwWndItemPos);
 
-	return Py_BuildValue("ii", dwWndType, dwWndItemPos);
+	return Script_BuildValue("ii", dwWndType, dwWndItemPos);
 }
 
-PyObject* playerGetGlobalQuickSlot(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerGetGlobalQuickSlot(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSlotIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSlotIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSlotIndex))
+		return Script_BuildException();
 
 	DWORD dwWndType;
 	DWORD dwWndItemPos;
@@ -1144,198 +1144,198 @@ PyObject* playerGetGlobalQuickSlot(PyObject* poSelf, PyObject* poArgs)
 	CPythonPlayer& rkPlayer = CPythonPlayer::Instance();
 	rkPlayer.GetGlobalQuickSlotData(iSlotIndex, &dwWndType, &dwWndItemPos);
 
-	return Py_BuildValue("ii", dwWndType, dwWndItemPos);
+	return Script_BuildValue("ii", dwWndType, dwWndItemPos);
 }
 
-PyObject* playerRequestAddLocalQuickSlot(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerRequestAddLocalQuickSlot(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int nSlotIndex;
 	int nWndType;
 	int nWndItemPos;
 
-	if (!PyTuple_GetInteger(poArgs, 0, &nSlotIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &nSlotIndex))
+		return Script_BuildException();
 
-	if (!PyTuple_GetInteger(poArgs, 1, &nWndType))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &nWndType))
+		return Script_BuildException();
 
-	if (!PyTuple_GetInteger(poArgs, 2, &nWndItemPos))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 2, &nWndItemPos))
+		return Script_BuildException();
 
 	CPythonPlayer& rkPlayer = CPythonPlayer::Instance();
 	rkPlayer.RequestAddLocalQuickSlot(nSlotIndex, nWndType, nWndItemPos);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* playerRequestAddToEmptyLocalQuickSlot(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerRequestAddToEmptyLocalQuickSlot(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int nWndType;
-	if (!PyTuple_GetInteger(poArgs, 0, &nWndType))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &nWndType))
+		return Script_BuildException();
 
 	int nWndItemPos;
-	if (!PyTuple_GetInteger(poArgs, 1, &nWndItemPos))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &nWndItemPos))
+		return Script_BuildException();
 
 	CPythonPlayer& rkPlayer = CPythonPlayer::Instance();
 	rkPlayer.RequestAddToEmptyLocalQuickSlot(nWndType, nWndItemPos);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* playerRequestDeleteGlobalQuickSlot(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerRequestDeleteGlobalQuickSlot(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int nGlobalSlotIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &nGlobalSlotIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &nGlobalSlotIndex))
+		return Script_BuildException();
 
 	CPythonPlayer& rkPlayer = CPythonPlayer::Instance();
 	rkPlayer.RequestDeleteGlobalQuickSlot(nGlobalSlotIndex);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* playerRequestMoveGlobalQuickSlotToLocalQuickSlot(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerRequestMoveGlobalQuickSlotToLocalQuickSlot(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int nGlobalSrcSlotIndex;
 	int nLocalDstSlotIndex;
 
-	if (!PyTuple_GetInteger(poArgs, 0, &nGlobalSrcSlotIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &nGlobalSrcSlotIndex))
+		return Script_BuildException();
 
-	if (!PyTuple_GetInteger(poArgs, 1, &nLocalDstSlotIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &nLocalDstSlotIndex))
+		return Script_BuildException();
 
 	CPythonPlayer& rkPlayer = CPythonPlayer::Instance();
 	rkPlayer.RequestMoveGlobalQuickSlotToLocalQuickSlot(nGlobalSrcSlotIndex, nLocalDstSlotIndex);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* playerRequestUseLocalQuickSlot(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerRequestUseLocalQuickSlot(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iLocalPosition;
-	if (!PyTuple_GetInteger(poArgs, 0, &iLocalPosition))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iLocalPosition))
+		return Script_BuildException();
 
 	CPythonPlayer::Instance().RequestUseLocalQuickSlot(iLocalPosition);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* playerRemoveQuickSlotByValue(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerRemoveQuickSlotByValue(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iType;
-	if (!PyTuple_GetInteger(poArgs, 0, &iType))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iType))
+		return Script_BuildException();
 
 	int iPosition;
-	if (!PyTuple_GetInteger(poArgs, 1, &iPosition))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iPosition))
+		return Script_BuildException();
 
 	CPythonPlayer::Instance().RemoveQuickSlotByValue(iType, iPosition);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* playerisItem(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerisItem(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSlotIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSlotIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSlotIndex))
+		return Script_BuildException();
 
 	char Flag = CPythonPlayer::Instance().IsItem(TItemPos(INVENTORY, iSlotIndex));
 
-	return Py_BuildValue("i", Flag);
+	return Script_BuildValue("i", Flag);
 }
 
 #ifdef ENABLE_NEW_EQUIPMENT_SYSTEM
-PyObject* playerIsBeltInventorySlot(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerIsBeltInventorySlot(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSlotIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSlotIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSlotIndex))
+		return Script_BuildException();
 
 	char Flag = CPythonPlayer::Instance().IsBeltInventorySlot(TItemPos(INVENTORY, iSlotIndex));
 
-	return Py_BuildValue("i", Flag);
+	return Script_BuildValue("i", Flag);
 }
 #endif
 
-PyObject* playerIsEquipmentSlot(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerIsEquipmentSlot(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSlotIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSlotIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSlotIndex))
+		return Script_BuildException();
 
 	if (iSlotIndex >= c_Equipment_Start)
 		if (iSlotIndex <= c_DragonSoul_Equip_End)
-			return Py_BuildValue("i", 1);
+			return Script_BuildValue("i", 1);
 
-	return Py_BuildValue("i", 0);
+	return Script_BuildValue("i", 0);
 }
 
-PyObject* playerIsDSEquipmentSlot(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerIsDSEquipmentSlot(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	BYTE bWindowType;
-	if (!PyTuple_GetInteger(poArgs, 0, &bWindowType))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &bWindowType))
+		return Script_BuildException();
 	int iSlotIndex;
-	if (!PyTuple_GetInteger(poArgs, 1, &iSlotIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iSlotIndex))
+		return Script_BuildException();
 
 	if (INVENTORY == bWindowType)
 		if (iSlotIndex >= c_DragonSoul_Equip_Start)
 			if (iSlotIndex <= c_DragonSoul_Equip_End)
-				return Py_BuildValue("i", 1);
+				return Script_BuildValue("i", 1);
 
-	return Py_BuildValue("i", 0);
+	return Script_BuildValue("i", 0);
 }
 
-PyObject* playerIsCostumeSlot(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerIsCostumeSlot(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSlotIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSlotIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSlotIndex))
+		return Script_BuildException();
 
 #ifdef ENABLE_COSTUME_SYSTEM
 	if (iSlotIndex >= c_Costume_Slot_Start)
 		if (iSlotIndex <= c_Costume_Slot_End)
-			return Py_BuildValue("i", 1);
+			return Script_BuildValue("i", 1);
 #endif
 
-	return Py_BuildValue("i", 0);
+	return Script_BuildValue("i", 0);
 }
 
-PyObject* playerIsOpenPrivateShop(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerIsOpenPrivateShop(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", CPythonPlayer::Instance().IsOpenPrivateShop());
+	return Script_BuildValue("i", CPythonPlayer::Instance().IsOpenPrivateShop());
 }
 
-PyObject* playerIsValuableItem(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerIsValuableItem(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	TItemPos SlotIndex;
 
-	switch (PyTuple_Size(poArgs))
+	switch (ScriptTuple_Size(poArgs))
 	{
 		case 1:
-			if (!PyTuple_GetInteger(poArgs, 0, &SlotIndex.cell))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 0, &SlotIndex.cell))
+				return Script_BuildException();
 			break;
 		case 2:
-			if (!PyTuple_GetInteger(poArgs, 0, &SlotIndex.window_type))
-				return Py_BuildException();
-			if (!PyTuple_GetInteger(poArgs, 0, &SlotIndex.cell))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 0, &SlotIndex.window_type))
+				return Script_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 0, &SlotIndex.cell))
+				return Script_BuildException();
 			break;
 		default:
-			return Py_BuildException();
+			return Script_BuildException();
 	}
 
 	DWORD dwItemIndex = CPythonPlayer::Instance().GetItemIndex(SlotIndex);
 	CItemManager::Instance().SelectItemData(dwItemIndex);
 	CItemData* pItemData = CItemManager::Instance().GetSelectedItemDataPointer();
 	if (!pItemData)
-		return Py_BuildException("Can't find item data");
+		return Script_BuildException("Can't find item data");
 
 	BOOL hasMetinSocket = FALSE;
 	BOOL isHighPrice = FALSE;
@@ -1348,7 +1348,7 @@ PyObject* playerIsValuableItem(PyObject* poSelf, PyObject* poArgs)
 	if (dwValue > 5000)
 		isHighPrice = TRUE;
 
-	return Py_BuildValue("i", hasMetinSocket || isHighPrice);
+	return Script_BuildValue("i", hasMetinSocket || isHighPrice);
 }
 
 int GetItemGrade(const char* c_szItemName)
@@ -1365,42 +1365,42 @@ int GetItemGrade(const char* c_szItemName)
 	return iGrade;
 }
 
-PyObject* playerGetItemGrade(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerGetItemGrade(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	TItemPos SlotIndex;
-	switch (PyTuple_Size(poArgs))
+	switch (ScriptTuple_Size(poArgs))
 	{
 		case 1:
-			if (!PyTuple_GetInteger(poArgs, 0, &SlotIndex.cell))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 0, &SlotIndex.cell))
+				return Script_BuildException();
 			break;
 		case 2:
-			if (!PyTuple_GetInteger(poArgs, 0, &SlotIndex.window_type))
-				return Py_BuildException();
-			if (!PyTuple_GetInteger(poArgs, 1, &SlotIndex.cell))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 0, &SlotIndex.window_type))
+				return Script_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 1, &SlotIndex.cell))
+				return Script_BuildException();
 			break;
 		default:
-			return Py_BuildException();
+			return Script_BuildException();
 	}
 
 	int iItemIndex = CPythonPlayer::Instance().GetItemIndex(SlotIndex);
 	CItemManager::Instance().SelectItemData(iItemIndex);
 	CItemData* pItemData = CItemManager::Instance().GetSelectedItemDataPointer();
 	if (!pItemData)
-		return Py_BuildException("Can't find item data");
+		return Script_BuildException("Can't find item data");
 
-	return Py_BuildValue("i", GetItemGrade(pItemData->GetName()));
+	return Script_BuildValue("i", GetItemGrade(pItemData->GetName()));
 }
 
 #if defined(GAIDEN)
-PyObject* playerGetItemUnbindTime(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerGetItemUnbindTime(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSlotIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSlotIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSlotIndex))
+		return Script_BuildException();
 
-	return Py_BuildValue("i", (int)CPythonPlayer::instance().GetItemUnbindTime(iSlotIndex));
+	return Script_BuildValue("i", (int)CPythonPlayer::instance().GetItemUnbindTime(iSlotIndex));
 }
 #endif
 
@@ -1422,69 +1422,69 @@ enum
 	REFINE_CANT_REFINE_ROD,
 };
 
-PyObject* playerCanRefine(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerCanRefine(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iScrollItemIndex;
 	TItemPos TargetSlotIndex;
 
-	switch (PyTuple_Size(poArgs))
+	switch (ScriptTuple_Size(poArgs))
 	{
 		case 2:
-			if (!PyTuple_GetInteger(poArgs, 0, &iScrollItemIndex))
-				return Py_BadArgument();
-			if (!PyTuple_GetInteger(poArgs, 1, &TargetSlotIndex.cell))
-				return Py_BadArgument();
+			if (!ScriptTuple_GetInteger(poArgs, 0, &iScrollItemIndex))
+				return Script_BadArgument();
+			if (!ScriptTuple_GetInteger(poArgs, 1, &TargetSlotIndex.cell))
+				return Script_BadArgument();
 			break;
 		case 3:
-			if (!PyTuple_GetInteger(poArgs, 0, &iScrollItemIndex))
-				return Py_BadArgument();
-			if (!PyTuple_GetInteger(poArgs, 1, &TargetSlotIndex.window_type))
-				return Py_BadArgument();
-			if (!PyTuple_GetInteger(poArgs, 2, &TargetSlotIndex.cell))
-				return Py_BadArgument();
+			if (!ScriptTuple_GetInteger(poArgs, 0, &iScrollItemIndex))
+				return Script_BadArgument();
+			if (!ScriptTuple_GetInteger(poArgs, 1, &TargetSlotIndex.window_type))
+				return Script_BadArgument();
+			if (!ScriptTuple_GetInteger(poArgs, 2, &TargetSlotIndex.cell))
+				return Script_BadArgument();
 			break;
 		default:
-			return Py_BadArgument();
+			return Script_BadArgument();
 	}
 
 	if (CPythonPlayer::Instance().IsEquipmentSlot(TargetSlotIndex))
 	{
-		return Py_BuildValue("i", REFINE_CANT_REFINE_METIN_TO_EQUIPMENT);
+		return Script_BuildValue("i", REFINE_CANT_REFINE_METIN_TO_EQUIPMENT);
 	}
 
 	// Scroll
 	CItemManager::Instance().SelectItemData(iScrollItemIndex);
 	CItemData* pScrollItemData = CItemManager::Instance().GetSelectedItemDataPointer();
 	if (!pScrollItemData)
-		return Py_BuildValue("i", REFINE_CANT);
+		return Script_BuildValue("i", REFINE_CANT);
 	int iScrollType = pScrollItemData->GetType();
 	int iScrollSubType = pScrollItemData->GetSubType();
 	if (iScrollType != CItemData::ITEM_TYPE_USE)
-		return Py_BuildValue("i", REFINE_CANT);
+		return Script_BuildValue("i", REFINE_CANT);
 	if (iScrollSubType != CItemData::USE_TUNING)
-		return Py_BuildValue("i", REFINE_CANT);
+		return Script_BuildValue("i", REFINE_CANT);
 
 	// Target Item
 	int iTargetItemIndex = CPythonPlayer::Instance().GetItemIndex(TargetSlotIndex);
 	CItemManager::Instance().SelectItemData(iTargetItemIndex);
 	CItemData* pTargetItemData = CItemManager::Instance().GetSelectedItemDataPointer();
 	if (!pTargetItemData)
-		return Py_BuildValue("i", REFINE_CANT);
+		return Script_BuildValue("i", REFINE_CANT);
 	int iTargetType = pTargetItemData->GetType();
 	// int iTargetSubType = pTargetItemData->GetSubType();
 	if (CItemData::ITEM_TYPE_ROD == iTargetType)
-		return Py_BuildValue("i", REFINE_CANT_REFINE_ROD);
+		return Script_BuildValue("i", REFINE_CANT_REFINE_ROD);
 
 	if (pTargetItemData->HasNextGrade())
 	{
-		return Py_BuildValue("i", REFINE_OK);
+		return Script_BuildValue("i", REFINE_OK);
 	}
 	else
 	{
-		return Py_BuildValue("i", REFINE_NOT_NEXT_GRADE_ITEM);
+		return Script_BuildValue("i", REFINE_NOT_NEXT_GRADE_ITEM);
 	}
 
-	return Py_BuildValue("i", REFINE_CANT);
+	return Script_BuildValue("i", REFINE_CANT);
 }
 
 enum
@@ -1497,50 +1497,50 @@ enum
 	ATTACH_METIN_CANT_ATTACH_TO_EQUIPMENT,
 };
 
-PyObject* playerCanAttachMetin(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerCanAttachMetin(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iMetinItemID;
 	TItemPos TargetSlotIndex;
 
-	switch (PyTuple_Size(poArgs))
+	switch (ScriptTuple_Size(poArgs))
 	{
 		case 2:
-			if (!PyTuple_GetInteger(poArgs, 0, &iMetinItemID))
-				return Py_BuildException();
-			if (!PyTuple_GetInteger(poArgs, 1, &TargetSlotIndex.cell))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 0, &iMetinItemID))
+				return Script_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 1, &TargetSlotIndex.cell))
+				return Script_BuildException();
 			break;
 		case 3:
-			if (!PyTuple_GetInteger(poArgs, 0, &iMetinItemID))
-				return Py_BuildException();
-			if (!PyTuple_GetInteger(poArgs, 1, &TargetSlotIndex.window_type))
-				return Py_BuildException();
-			if (!PyTuple_GetInteger(poArgs, 2, &TargetSlotIndex.cell))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 0, &iMetinItemID))
+				return Script_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 1, &TargetSlotIndex.window_type))
+				return Script_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 2, &TargetSlotIndex.cell))
+				return Script_BuildException();
 			break;
 		default:
-			return Py_BuildException();
+			return Script_BuildException();
 	}
 	if (CPythonPlayer::Instance().IsEquipmentSlot(TargetSlotIndex))
 	{
-		return Py_BuildValue("i", ATTACH_METIN_CANT_ATTACH_TO_EQUIPMENT);
+		return Script_BuildValue("i", ATTACH_METIN_CANT_ATTACH_TO_EQUIPMENT);
 	}
 
 	CItemData* pMetinItemData;
 	if (!CItemManager::Instance().GetItemDataPointer(iMetinItemID, &pMetinItemData))
-		return Py_BuildException("can't find item data");
+		return Script_BuildException("can't find item data");
 
 	DWORD dwTargetItemIndex = CPythonPlayer::Instance().GetItemIndex(TargetSlotIndex);
 	CItemData* pTargetItemData;
 	if (!CItemManager::Instance().GetItemDataPointer(dwTargetItemIndex, &pTargetItemData))
-		return Py_BuildException("can't find item data");
+		return Script_BuildException("can't find item data");
 
 	DWORD dwMetinWearFlags = pMetinItemData->GetWearFlags();
 	DWORD dwTargetWearFlags = pTargetItemData->GetWearFlags();
 	if (0 == (dwMetinWearFlags & dwTargetWearFlags))
-		return Py_BuildValue("i", ATTACH_METIN_NOT_MATCHABLE_ITEM);
+		return Script_BuildValue("i", ATTACH_METIN_NOT_MATCHABLE_ITEM);
 	if (CItemData::ITEM_TYPE_ROD == pTargetItemData->GetType())
-		return Py_BuildValue("i", ATTACH_METIN_CANT);
+		return Script_BuildValue("i", ATTACH_METIN_CANT);
 
 	BOOL bNotExistGoldSocket = FALSE;
 
@@ -1553,14 +1553,14 @@ PyObject* playerCanAttachMetin(PyObject* poSelf, PyObject* poArgs)
 			if (CPythonPlayer::METIN_SOCKET_TYPE_SILVER == dwSocketType ||
 				CPythonPlayer::METIN_SOCKET_TYPE_GOLD == dwSocketType)
 			{
-				return Py_BuildValue("i", ATTACH_METIN_OK);
+				return Script_BuildValue("i", ATTACH_METIN_OK);
 			}
 		}
 		else if (CItemData::METIN_GOLD == iSubType)
 		{
 			if (CPythonPlayer::METIN_SOCKET_TYPE_GOLD == dwSocketType)
 			{
-				return Py_BuildValue("i", ATTACH_METIN_OK);
+				return Script_BuildValue("i", ATTACH_METIN_OK);
 			}
 			else if (CPythonPlayer::METIN_SOCKET_TYPE_SILVER == dwSocketType)
 			{
@@ -1571,10 +1571,10 @@ PyObject* playerCanAttachMetin(PyObject* poSelf, PyObject* poArgs)
 
 	if (bNotExistGoldSocket)
 	{
-		return Py_BuildValue("i", ATTACH_METIN_NOT_EXIST_GOLD_SOCKET);
+		return Script_BuildValue("i", ATTACH_METIN_NOT_EXIST_GOLD_SOCKET);
 	}
 
-	return Py_BuildValue("i", ATTACH_METIN_NO_MATCHABLE_SOCKET);
+	return Script_BuildValue("i", ATTACH_METIN_NO_MATCHABLE_SOCKET);
 }
 
 enum
@@ -1583,48 +1583,48 @@ enum
 	DETACH_METIN_OK,
 };
 
-PyObject* playerCanDetach(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerCanDetach(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iScrollItemIndex;
 	TItemPos TargetSlotIndex;
-	switch (PyTuple_Size(poArgs))
+	switch (ScriptTuple_Size(poArgs))
 	{
 		case 2:
-			if (!PyTuple_GetInteger(poArgs, 0, &iScrollItemIndex))
-				return Py_BadArgument();
-			if (!PyTuple_GetInteger(poArgs, 1, &TargetSlotIndex.cell))
-				return Py_BadArgument();
+			if (!ScriptTuple_GetInteger(poArgs, 0, &iScrollItemIndex))
+				return Script_BadArgument();
+			if (!ScriptTuple_GetInteger(poArgs, 1, &TargetSlotIndex.cell))
+				return Script_BadArgument();
 			break;
 		case 3:
-			if (!PyTuple_GetInteger(poArgs, 0, &iScrollItemIndex))
-				return Py_BadArgument();
-			if (!PyTuple_GetInteger(poArgs, 1, &TargetSlotIndex.window_type))
-				return Py_BadArgument();
-			if (!PyTuple_GetInteger(poArgs, 2, &TargetSlotIndex.cell))
-				return Py_BadArgument();
+			if (!ScriptTuple_GetInteger(poArgs, 0, &iScrollItemIndex))
+				return Script_BadArgument();
+			if (!ScriptTuple_GetInteger(poArgs, 1, &TargetSlotIndex.window_type))
+				return Script_BadArgument();
+			if (!ScriptTuple_GetInteger(poArgs, 2, &TargetSlotIndex.cell))
+				return Script_BadArgument();
 			break;
 		default:
-			return Py_BadArgument();
+			return Script_BadArgument();
 	}
 
 	// Scroll
 	CItemManager::Instance().SelectItemData(iScrollItemIndex);
 	CItemData* pScrollItemData = CItemManager::Instance().GetSelectedItemDataPointer();
 	if (!pScrollItemData)
-		return Py_BuildException("Can't find item data");
+		return Script_BuildException("Can't find item data");
 	int iScrollType = pScrollItemData->GetType();
 	int iScrollSubType = pScrollItemData->GetSubType();
 	if (iScrollType != CItemData::ITEM_TYPE_USE)
-		return Py_BuildValue("i", DETACH_METIN_CANT);
+		return Script_BuildValue("i", DETACH_METIN_CANT);
 	if (iScrollSubType != CItemData::USE_DETACHMENT)
-		return Py_BuildValue("i", DETACH_METIN_CANT);
+		return Script_BuildValue("i", DETACH_METIN_CANT);
 
 	// Target Item
 	int iTargetItemIndex = CPythonPlayer::Instance().GetItemIndex(TargetSlotIndex);
 	CItemManager::Instance().SelectItemData(iTargetItemIndex);
 	CItemData* pTargetItemData = CItemManager::Instance().GetSelectedItemDataPointer();
 	if (!pTargetItemData)
-		return Py_BuildException("Can't find item data");
+		return Script_BuildException("Can't find item data");
 	// int iTargetType = pTargetItemData->GetType();
 	// int iTargetSubType = pTargetItemData->GetSubType();
 
@@ -1633,439 +1633,439 @@ PyObject* playerCanDetach(PyObject* poSelf, PyObject* poArgs)
 		for (int iSlotCount = 0; iSlotCount < METIN_SOCKET_COUNT; ++iSlotCount)
 			if (CPythonPlayer::Instance().GetItemMetinSocket(TargetSlotIndex, iSlotCount) > 2)
 			{
-				return Py_BuildValue("i", DETACH_METIN_OK);
+				return Script_BuildValue("i", DETACH_METIN_OK);
 			}
 	}
 
-	return Py_BuildValue("i", DETACH_METIN_CANT);
+	return Script_BuildValue("i", DETACH_METIN_CANT);
 }
 
-PyObject* playerCanUnlock(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerCanUnlock(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iKeyItemIndex;
 	TItemPos TargetSlotIndex;
-	switch (PyTuple_Size(poArgs))
+	switch (ScriptTuple_Size(poArgs))
 	{
 		case 2:
-			if (!PyTuple_GetInteger(poArgs, 0, &iKeyItemIndex))
-				return Py_BadArgument();
-			if (!PyTuple_GetInteger(poArgs, 1, &TargetSlotIndex.cell))
-				return Py_BadArgument();
+			if (!ScriptTuple_GetInteger(poArgs, 0, &iKeyItemIndex))
+				return Script_BadArgument();
+			if (!ScriptTuple_GetInteger(poArgs, 1, &TargetSlotIndex.cell))
+				return Script_BadArgument();
 			break;
 		case 3:
-			if (!PyTuple_GetInteger(poArgs, 0, &iKeyItemIndex))
-				return Py_BadArgument();
-			if (!PyTuple_GetInteger(poArgs, 1, &TargetSlotIndex.window_type))
-				return Py_BadArgument();
-			if (!PyTuple_GetInteger(poArgs, 2, &TargetSlotIndex.cell))
-				return Py_BadArgument();
+			if (!ScriptTuple_GetInteger(poArgs, 0, &iKeyItemIndex))
+				return Script_BadArgument();
+			if (!ScriptTuple_GetInteger(poArgs, 1, &TargetSlotIndex.window_type))
+				return Script_BadArgument();
+			if (!ScriptTuple_GetInteger(poArgs, 2, &TargetSlotIndex.cell))
+				return Script_BadArgument();
 			break;
 		default:
-			return Py_BadArgument();
+			return Script_BadArgument();
 	}
 
 	// Key
 	CItemManager::Instance().SelectItemData(iKeyItemIndex);
 	CItemData* pKeyItemData = CItemManager::Instance().GetSelectedItemDataPointer();
 	if (!pKeyItemData)
-		return Py_BuildException("Can't find item data");
+		return Script_BuildException("Can't find item data");
 	int iKeyType = pKeyItemData->GetType();
 	if (iKeyType != CItemData::ITEM_TYPE_TREASURE_KEY)
-		return Py_BuildValue("i", FALSE);
+		return Script_BuildValue("i", FALSE);
 
 	// Target Item
 	int iTargetItemIndex = CPythonPlayer::Instance().GetItemIndex(TargetSlotIndex);
 	CItemManager::Instance().SelectItemData(iTargetItemIndex);
 	CItemData* pTargetItemData = CItemManager::Instance().GetSelectedItemDataPointer();
 	if (!pTargetItemData)
-		return Py_BuildException("Can't find item data");
+		return Script_BuildException("Can't find item data");
 	int iTargetType = pTargetItemData->GetType();
 	if (iTargetType != CItemData::ITEM_TYPE_TREASURE_BOX)
-		return Py_BuildValue("i", FALSE);
+		return Script_BuildValue("i", FALSE);
 
-	return Py_BuildValue("i", TRUE);
+	return Script_BuildValue("i", TRUE);
 }
 
-PyObject* playerIsRefineGradeScroll(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerIsRefineGradeScroll(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	TItemPos ScrollSlotIndex;
-	switch (PyTuple_Size(poArgs))
+	switch (ScriptTuple_Size(poArgs))
 	{
 		case 1:
-			if (!PyTuple_GetInteger(poArgs, 0, &ScrollSlotIndex.cell))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 0, &ScrollSlotIndex.cell))
+				return Script_BuildException();
 			break;
 		case 2:
-			if (!PyTuple_GetInteger(poArgs, 0, &ScrollSlotIndex.window_type))
-				return Py_BuildException();
-			if (!PyTuple_GetInteger(poArgs, 1, &ScrollSlotIndex.cell))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 0, &ScrollSlotIndex.window_type))
+				return Script_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 1, &ScrollSlotIndex.cell))
+				return Script_BuildException();
 			break;
 		default:
-			return Py_BuildException();
+			return Script_BuildException();
 	}
 
 	int iScrollItemIndex = CPythonPlayer::Instance().GetItemIndex(ScrollSlotIndex);
 	CItemManager::Instance().SelectItemData(iScrollItemIndex);
 	CItemData* pScrollItemData = CItemManager::Instance().GetSelectedItemDataPointer();
 	if (!pScrollItemData)
-		return Py_BuildException("Can't find item data");
+		return Script_BuildException("Can't find item data");
 
-	return Py_BuildValue("i", REFINE_SCROLL_TYPE_UP_GRADE == pScrollItemData->GetValue(0));
+	return Script_BuildValue("i", REFINE_SCROLL_TYPE_UP_GRADE == pScrollItemData->GetValue(0));
 }
 
-PyObject* playerUpdate(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerUpdate(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonPlayer::Instance().Update();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* playerRender(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerRender(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* playerClear(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerClear(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonPlayer::Instance().Clear();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* playerClearTarget(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerClearTarget(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonPlayer::Instance().SetTarget(0);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* playerSetTarget(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerSetTarget(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iVID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iVID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iVID))
+		return Script_BuildException();
 
 	CPythonPlayer::Instance().SetTarget(iVID);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* playerOpenCharacterMenu(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerOpenCharacterMenu(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iVID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iVID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iVID))
+		return Script_BuildException();
 
 	CPythonPlayer::Instance().OpenCharacterMenu(iVID);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* playerIsPartyMember(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerIsPartyMember(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iVID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iVID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iVID))
+		return Script_BuildException();
 
-	return Py_BuildValue("i", CPythonPlayer::Instance().IsPartyMemberByVID(iVID));
+	return Script_BuildValue("i", CPythonPlayer::Instance().IsPartyMemberByVID(iVID));
 }
 
-PyObject* playerIsPartyLeader(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerIsPartyLeader(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iVID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iVID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iVID))
+		return Script_BuildException();
 
 	DWORD dwPID;
 	if (!CPythonPlayer::Instance().PartyMemberVIDToPID(iVID, &dwPID))
-		return Py_BuildValue("i", FALSE);
+		return Script_BuildValue("i", FALSE);
 
 	CPythonPlayer::TPartyMemberInfo* pPartyMemberInfo;
 	if (!CPythonPlayer::Instance().GetPartyMemberPtr(dwPID, &pPartyMemberInfo))
-		return Py_BuildValue("i", FALSE);
+		return Script_BuildValue("i", FALSE);
 
-	return Py_BuildValue("i", CPythonPlayer::PARTY_ROLE_LEADER == pPartyMemberInfo->byState);
+	return Script_BuildValue("i", CPythonPlayer::PARTY_ROLE_LEADER == pPartyMemberInfo->byState);
 }
 
-PyObject* playerIsPartyLeaderByPID(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerIsPartyLeaderByPID(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iPID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iPID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iPID))
+		return Script_BuildException();
 
 	CPythonPlayer::TPartyMemberInfo* pPartyMemberInfo;
 	if (!CPythonPlayer::Instance().GetPartyMemberPtr(iPID, &pPartyMemberInfo))
-		return Py_BuildValue("i", FALSE);
+		return Script_BuildValue("i", FALSE);
 
-	return Py_BuildValue("i", CPythonPlayer::PARTY_ROLE_LEADER == pPartyMemberInfo->byState);
+	return Script_BuildValue("i", CPythonPlayer::PARTY_ROLE_LEADER == pPartyMemberInfo->byState);
 }
 
-PyObject* playerGetPartyMemberHPPercentage(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerGetPartyMemberHPPercentage(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iPID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iPID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iPID))
+		return Script_BuildException();
 
 	CPythonPlayer::TPartyMemberInfo* pPartyMemberInfo;
 	if (!CPythonPlayer::Instance().GetPartyMemberPtr(iPID, &pPartyMemberInfo))
-		return Py_BuildValue("i", FALSE);
+		return Script_BuildValue("i", FALSE);
 
-	return Py_BuildValue("i", pPartyMemberInfo->byHPPercentage);
+	return Script_BuildValue("i", pPartyMemberInfo->byHPPercentage);
 }
 
-PyObject* playerGetPartyMemberState(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerGetPartyMemberState(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iPID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iPID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iPID))
+		return Script_BuildException();
 
 	CPythonPlayer::TPartyMemberInfo* pPartyMemberInfo;
 	if (!CPythonPlayer::Instance().GetPartyMemberPtr(iPID, &pPartyMemberInfo))
-		return Py_BuildValue("i", FALSE);
+		return Script_BuildValue("i", FALSE);
 
-	return Py_BuildValue("i", pPartyMemberInfo->byState);
+	return Script_BuildValue("i", pPartyMemberInfo->byState);
 }
 
-PyObject* playerGetPartyMemberAffects(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerGetPartyMemberAffects(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iPID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iPID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iPID))
+		return Script_BuildException();
 
 	CPythonPlayer::TPartyMemberInfo* pPartyMemberInfo;
 	if (!CPythonPlayer::Instance().GetPartyMemberPtr(iPID, &pPartyMemberInfo))
-		return Py_BuildValue("i", FALSE);
+		return Script_BuildValue("i", FALSE);
 
-	return Py_BuildValue("iiiiiii", pPartyMemberInfo->sAffects[0],
-						 pPartyMemberInfo->sAffects[1],
-						 pPartyMemberInfo->sAffects[2],
-						 pPartyMemberInfo->sAffects[3],
-						 pPartyMemberInfo->sAffects[4],
-						 pPartyMemberInfo->sAffects[5],
-						 pPartyMemberInfo->sAffects[6]);
+	return Script_BuildValue("iiiiiii", pPartyMemberInfo->sAffects[0],
+							 pPartyMemberInfo->sAffects[1],
+							 pPartyMemberInfo->sAffects[2],
+							 pPartyMemberInfo->sAffects[3],
+							 pPartyMemberInfo->sAffects[4],
+							 pPartyMemberInfo->sAffects[5],
+							 pPartyMemberInfo->sAffects[6]);
 }
 
-PyObject* playerRemovePartyMember(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerRemovePartyMember(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iPID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iPID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iPID))
+		return Script_BuildException();
 
 	CPythonPlayer::Instance().RemovePartyMember(iPID);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* playerExitParty(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerExitParty(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonPlayer::Instance().ExitParty();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* playerGetPKMode(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerGetPKMode(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", CPythonPlayer::Instance().GetPKMode());
+	return Script_BuildValue("i", CPythonPlayer::Instance().GetPKMode());
 }
 
-PyObject* playerSetWeaponAttackBonusFlag(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerSetWeaponAttackBonusFlag(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iFlag;
-	if (!PyTuple_GetInteger(poArgs, 0, &iFlag))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iFlag))
+		return Script_BuildException();
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* playerToggleCoolTime(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerToggleCoolTime(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", CPythonPlayer::Instance().__ToggleCoolTime());
+	return Script_BuildValue("i", CPythonPlayer::Instance().__ToggleCoolTime());
 }
 
-PyObject* playerToggleLevelLimit(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerToggleLevelLimit(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", CPythonPlayer::Instance().__ToggleLevelLimit());
+	return Script_BuildValue("i", CPythonPlayer::Instance().__ToggleLevelLimit());
 }
 
-PyObject* playerGetTargetVID(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerGetTargetVID(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", CPythonPlayer::Instance().GetTargetVID());
+	return Script_BuildValue("i", CPythonPlayer::Instance().GetTargetVID());
 }
 
-PyObject* playerRegisterEmotionIcon(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerRegisterEmotionIcon(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iIndex))
+		return Script_BuildException();
 	char* szFileName;
-	if (!PyTuple_GetString(poArgs, 1, &szFileName))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 1, &szFileName))
+		return Script_BuildException();
 
 	CGraphicImage* pImage = (CGraphicImage*)CResourceManager::Instance().GetResourcePointer(szFileName);
 	m_kMap_iEmotionIndex_pkIconImage.insert(std::make_pair(iIndex, pImage));
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* playerGetEmotionIconImage(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerGetEmotionIconImage(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iIndex))
+		return Script_BuildException();
 
 	if (m_kMap_iEmotionIndex_pkIconImage.end() == m_kMap_iEmotionIndex_pkIconImage.find(iIndex))
-		return Py_BuildHandle(NULL);
+		return Script_BuildHandle(NULL);
 
-	return Py_BuildHandle(m_kMap_iEmotionIndex_pkIconImage[iIndex]);
+	return Script_BuildHandle(m_kMap_iEmotionIndex_pkIconImage[iIndex]);
 }
 
-PyObject* playerSetItemData(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerSetItemData(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSlotIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSlotIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSlotIndex))
+		return Script_BuildException();
 
 	int iVirtualID;
-	if (!PyTuple_GetInteger(poArgs, 1, &iVirtualID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iVirtualID))
+		return Script_BuildException();
 
 	int iNum;
-	if (!PyTuple_GetInteger(poArgs, 2, &iNum))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 2, &iNum))
+		return Script_BuildException();
 
 	TItemData kItemInst;
 	ZeroMemory(&kItemInst, sizeof(kItemInst));
 	kItemInst.vnum = iVirtualID;
 	kItemInst.count = iNum;
 	CPythonPlayer::Instance().SetItemData(TItemPos(INVENTORY, iSlotIndex), kItemInst);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* playerSetItemMetinSocket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerSetItemMetinSocket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	TItemPos ItemPos;
 	int iMetinSocketNumber;
 	int iNum;
 
-	switch (PyTuple_Size(poArgs))
+	switch (ScriptTuple_Size(poArgs))
 	{
 		case 3:
-			if (!PyTuple_GetInteger(poArgs, 0, &ItemPos.cell))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 0, &ItemPos.cell))
+				return Script_BuildException();
 
-			if (!PyTuple_GetInteger(poArgs, 1, &iMetinSocketNumber))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 1, &iMetinSocketNumber))
+				return Script_BuildException();
 
-			if (!PyTuple_GetInteger(poArgs, 2, &iNum))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 2, &iNum))
+				return Script_BuildException();
 
 			break;
 		case 4:
-			if (!PyTuple_GetInteger(poArgs, 0, &ItemPos.window_type))
-				return Py_BuildException();
-			if (!PyTuple_GetInteger(poArgs, 1, &ItemPos.cell))
-				return Py_BuildException();
-			if (!PyTuple_GetInteger(poArgs, 2, &iMetinSocketNumber))
-				return Py_BuildException();
-			if (!PyTuple_GetInteger(poArgs, 3, &iNum))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 0, &ItemPos.window_type))
+				return Script_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 1, &ItemPos.cell))
+				return Script_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 2, &iMetinSocketNumber))
+				return Script_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 3, &iNum))
+				return Script_BuildException();
 
 			break;
 		default:
-			return Py_BuildException();
+			return Script_BuildException();
 	}
 
 	CPythonPlayer::Instance().SetItemMetinSocket(ItemPos, iMetinSocketNumber, iNum);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* playerSetItemAttribute(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerSetItemAttribute(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	TItemPos ItemPos;
 	int iAttributeSlotIndex;
 	int iAttributeType;
 	int iAttributeValue;
 
-	switch (PyTuple_Size(poArgs))
+	switch (ScriptTuple_Size(poArgs))
 	{
 		case 4:
-			if (!PyTuple_GetInteger(poArgs, 0, &ItemPos.cell))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 0, &ItemPos.cell))
+				return Script_BuildException();
 
-			if (!PyTuple_GetInteger(poArgs, 1, &iAttributeSlotIndex))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 1, &iAttributeSlotIndex))
+				return Script_BuildException();
 
-			if (!PyTuple_GetInteger(poArgs, 2, &iAttributeType))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 2, &iAttributeType))
+				return Script_BuildException();
 
-			if (!PyTuple_GetInteger(poArgs, 3, &iAttributeValue))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 3, &iAttributeValue))
+				return Script_BuildException();
 			break;
 		case 5:
-			if (!PyTuple_GetInteger(poArgs, 0, &ItemPos.window_type))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 0, &ItemPos.window_type))
+				return Script_BuildException();
 
-			if (!PyTuple_GetInteger(poArgs, 1, &ItemPos.cell))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 1, &ItemPos.cell))
+				return Script_BuildException();
 
-			if (!PyTuple_GetInteger(poArgs, 2, &iAttributeSlotIndex))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 2, &iAttributeSlotIndex))
+				return Script_BuildException();
 
-			if (!PyTuple_GetInteger(poArgs, 3, &iAttributeType))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 3, &iAttributeType))
+				return Script_BuildException();
 
-			if (!PyTuple_GetInteger(poArgs, 4, &iAttributeValue))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 4, &iAttributeValue))
+				return Script_BuildException();
 			break;
 	}
 	CPythonPlayer::Instance().SetItemAttribute(ItemPos, iAttributeSlotIndex, iAttributeType, iAttributeValue);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* playerSetAutoPotionInfo(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerSetAutoPotionInfo(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int potionType = 0;
-	if (!PyTuple_GetInteger(poArgs, 0, &potionType))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &potionType))
+		return Script_BadArgument();
 
 	CPythonPlayer* player = CPythonPlayer::InstancePtr();
 
 	CPythonPlayer::SAutoPotionInfo& potionInfo = player->GetAutoPotionInfo(potionType);
 
-	if (!PyTuple_GetBoolean(poArgs, 1, &potionInfo.bActivated))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetBoolean(poArgs, 1, &potionInfo.bActivated))
+		return Script_BadArgument();
 
-	if (!PyTuple_GetLong(poArgs, 2, &potionInfo.currentAmount))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetLong(poArgs, 2, &potionInfo.currentAmount))
+		return Script_BadArgument();
 
-	if (!PyTuple_GetLong(poArgs, 3, &potionInfo.totalAmount))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetLong(poArgs, 3, &potionInfo.totalAmount))
+		return Script_BadArgument();
 
-	if (!PyTuple_GetLong(poArgs, 4, &potionInfo.inventorySlotIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetLong(poArgs, 4, &potionInfo.inventorySlotIndex))
+		return Script_BadArgument();
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* playerGetAutoPotionInfo(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerGetAutoPotionInfo(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonPlayer* player = CPythonPlayer::InstancePtr();
 
 	int potionType = 0;
-	if (!PyTuple_GetInteger(poArgs, 0, &potionType))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &potionType))
+		return Script_BadArgument();
 
 	CPythonPlayer::SAutoPotionInfo& potionInfo = player->GetAutoPotionInfo(potionType);
 
-	return Py_BuildValue("biii", potionInfo.bActivated, int(potionInfo.currentAmount), int(potionInfo.totalAmount), int(potionInfo.inventorySlotIndex));
+	return Script_BuildValue("biii", potionInfo.bActivated, int(potionInfo.currentAmount), int(potionInfo.totalAmount), int(potionInfo.inventorySlotIndex));
 }
 
-PyObject* playerSlotTypeToInvenType(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerSlotTypeToInvenType(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int slotType = 0;
-	if (!PyTuple_GetInteger(poArgs, 0, &slotType))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &slotType))
+		return Script_BadArgument();
 
-	return Py_BuildValue("i", SlotTypeToInvenType((BYTE)slotType));
+	return Script_BuildValue("i", SlotTypeToInvenType((BYTE)slotType));
 }
 
 #ifdef ENABLE_NEW_EQUIPMENT_SYSTEM
 // 플레이어가 벨트를 착용 중인지?
-PyObject* playerIsEquippingBelt(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerIsEquippingBelt(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	const CPythonPlayer* player = CPythonPlayer::InstancePtr();
 	bool bEquipping = false;
@@ -2075,17 +2075,17 @@ PyObject* playerIsEquippingBelt(PyObject* poSelf, PyObject* poArgs)
 	if (NULL != data)
 		bEquipping = 0 < data->count;
 
-	return Py_BuildValue("b", bEquipping);
+	return Script_BuildValue("b", bEquipping);
 }
 
 // 검사하려는 벨트 인벤토리 Cell이 사용 가능한 칸인지? (사용가능 여부는 착용 중인 벨트의 강화 정도에 따라 달라짐)
-PyObject* playerIsAvailableBeltInventoryCell(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerIsAvailableBeltInventoryCell(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	const CPythonPlayer* player = CPythonPlayer::InstancePtr();
 	const TItemData* pData = player->GetItemData(TItemPos(EQUIPMENT, c_Equipment_Belt));
 
 	if (NULL == pData || 0 == pData->count)
-		return Py_BuildValue("b", false);
+		return Script_BuildValue("b", false);
 
 	CItemManager::Instance().SelectItemData(pData->vnum);
 	CItemData* pItem = CItemManager::Instance().GetSelectedItemDataPointer();
@@ -2093,22 +2093,22 @@ PyObject* playerIsAvailableBeltInventoryCell(PyObject* poSelf, PyObject* poArgs)
 	long beltGrade = pItem->GetValue(0);
 
 	int pos = 0;
-	if (!PyTuple_GetInteger(poArgs, 0, &pos))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &pos))
+		return Script_BadArgument();
 
-	// return Py_BuildValue("b", CBeltInventoryHelper::IsAvailableCell(pos - c_Belt_Inventory_Slot_Start, GetItemGrade(pItem->GetName())));
-	return Py_BuildValue("b", CBeltInventoryHelper::IsAvailableCell(pos - c_Belt_Inventory_Slot_Start, beltGrade));
+	// return Script_BuildValue("b", CBeltInventoryHelper::IsAvailableCell(pos - c_Belt_Inventory_Slot_Start, GetItemGrade(pItem->GetName())));
+	return Script_BuildValue("b", CBeltInventoryHelper::IsAvailableCell(pos - c_Belt_Inventory_Slot_Start, beltGrade));
 }
 #endif
 
 // 용혼석 강화
-PyObject* playerSendDragonSoulRefine(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* playerSendDragonSoulRefine(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	BYTE bSubHeader;
-	PyObject* pDic;
+	ScriptObject* pDic;
 	TItemPos RefineItemPoses[DS_REFINE_WINDOW_MAX_NUM];
-	if (!PyTuple_GetByte(poArgs, 0, &bSubHeader))
-		return Py_BuildException();
+	if (!ScriptTuple_GetByte(poArgs, 0, &bSubHeader))
+		return Script_BuildException();
 	switch (bSubHeader)
 	{
 		case DS_SUB_HEADER_CLOSE:
@@ -2117,20 +2117,20 @@ PyObject* playerSendDragonSoulRefine(PyObject* poSelf, PyObject* poArgs)
 		case DS_SUB_HEADER_DO_IMPROVEMENT:
 		case DS_SUB_HEADER_DO_REFINE:
 		{
-			if (!PyTuple_GetObject(poArgs, 1, &pDic))
-				return Py_BuildException();
-			Py_ssize_t pos = 0;
-			PyObject *key, *value;
+			if (!ScriptTuple_GetObject(poArgs, 1, &pDic))
+				return Script_BuildException();
+			long pos = 0;
+			ScriptObject *key, *value;
 
-			while (PyDict_Next(pDic, &pos, &key, &value))
+			while (ScriptDict_Next(pDic, &pos, &key, &value))
 			{
-				int i = PyInt_AsLong(key);
+				int i = Script_AsLongLong(key);
 				if (i > DS_REFINE_WINDOW_MAX_NUM)
-					return Py_BuildException();
+					return Script_BuildException();
 
-				if (!PyTuple_GetByte(value, 0, &RefineItemPoses[i].window_type) || !PyTuple_GetInteger(value, 1, &RefineItemPoses[i].cell))
+				if (!ScriptTuple_GetByte(value, 0, &RefineItemPoses[i].window_type) || !ScriptTuple_GetInteger(value, 1, &RefineItemPoses[i].cell))
 				{
-					return Py_BuildException();
+					return Script_BuildException();
 				}
 			}
 		}
@@ -2140,407 +2140,407 @@ PyObject* playerSendDragonSoulRefine(PyObject* poSelf, PyObject* poArgs)
 	CPythonNetworkStream& rns = CPythonNetworkStream::Instance();
 	rns.SendDragonSoulRefinePacket(bSubHeader, RefineItemPoses);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 void initPlayer()
 {
-	static PyMethodDef s_methods[] =
+	static ScriptMethodDef s_methods[] =
 		{
-			{"GetAutoPotionInfo", playerGetAutoPotionInfo, METH_VARARGS, NULL},
-			{"SetAutoPotionInfo", playerSetAutoPotionInfo, METH_VARARGS, NULL},
+			{"GetAutoPotionInfo", playerGetAutoPotionInfo, SCRIPT_VARARGS, NULL},
+			{"SetAutoPotionInfo", playerSetAutoPotionInfo, SCRIPT_VARARGS, NULL},
 
-			{"PickCloseItem", playerPickCloseItem, METH_VARARGS, NULL},
-			{"SetGameWindow", playerSetGameWindow, METH_VARARGS, NULL},
-			{"RegisterEffect", playerRegisterEffect, METH_VARARGS, NULL},
-			{"RegisterCacheEffect", playerRegisterCacheEffect, METH_VARARGS, NULL},
-			{"SetMouseState", playerSetMouseState, METH_VARARGS, NULL},
-			{"SetMouseFunc", playerSetMouseFunc, METH_VARARGS, NULL},
-			{"GetMouseFunc", playerGetMouseFunc, METH_VARARGS, NULL},
-			{"SetMouseMiddleButtonState", playerSetMouseMiddleButtonState, METH_VARARGS, NULL},
-			{"SetMainCharacterIndex", playerSetMainCharacterIndex, METH_VARARGS, NULL},
-			{"GetMainCharacterIndex", playerGetMainCharacterIndex, METH_VARARGS, NULL},
-			{"GetMainCharacterName", playerGetMainCharacterName, METH_VARARGS, NULL},
-			{"GetMainCharacterPosition", playerGetMainCharacterPosition, METH_VARARGS, NULL},
-			{"IsMainCharacterIndex", playerIsMainCharacterIndex, METH_VARARGS, NULL},
-			{"CanAttackInstance", playerCanAttackInstance, METH_VARARGS, NULL},
-			{"IsActingEmotion", playerIsActingEmotion, METH_VARARGS, NULL},
-			{"IsPVPInstance", playerIsPVPInstance, METH_VARARGS, NULL},
-			{"IsSameEmpire", playerIsSameEmpire, METH_VARARGS, NULL},
-			{"IsChallengeInstance", playerIsChallengeInstance, METH_VARARGS, NULL},
-			{"IsRevengeInstance", playerIsRevengeInstance, METH_VARARGS, NULL},
-			{"IsCantFightInstance", playerIsCantFightInstance, METH_VARARGS, NULL},
-			{"GetCharacterDistance", playerGetCharacterDistance, METH_VARARGS, NULL},
-			{"IsInSafeArea", playerIsInSafeArea, METH_VARARGS, NULL},
-			{"IsMountingHorse", playerIsMountingHorse, METH_VARARGS, NULL},
-			{"IsObserverMode", playerIsObserverMode, METH_VARARGS, NULL},
-			{"ActEmotion", playerActEmotion, METH_VARARGS, NULL},
+			{"PickCloseItem", playerPickCloseItem, SCRIPT_VARARGS, NULL},
+			{"SetGameWindow", playerSetGameWindow, SCRIPT_VARARGS, NULL},
+			{"RegisterEffect", playerRegisterEffect, SCRIPT_VARARGS, NULL},
+			{"RegisterCacheEffect", playerRegisterCacheEffect, SCRIPT_VARARGS, NULL},
+			{"SetMouseState", playerSetMouseState, SCRIPT_VARARGS, NULL},
+			{"SetMouseFunc", playerSetMouseFunc, SCRIPT_VARARGS, NULL},
+			{"GetMouseFunc", playerGetMouseFunc, SCRIPT_VARARGS, NULL},
+			{"SetMouseMiddleButtonState", playerSetMouseMiddleButtonState, SCRIPT_VARARGS, NULL},
+			{"SetMainCharacterIndex", playerSetMainCharacterIndex, SCRIPT_VARARGS, NULL},
+			{"GetMainCharacterIndex", playerGetMainCharacterIndex, SCRIPT_VARARGS, NULL},
+			{"GetMainCharacterName", playerGetMainCharacterName, SCRIPT_VARARGS, NULL},
+			{"GetMainCharacterPosition", playerGetMainCharacterPosition, SCRIPT_VARARGS, NULL},
+			{"IsMainCharacterIndex", playerIsMainCharacterIndex, SCRIPT_VARARGS, NULL},
+			{"CanAttackInstance", playerCanAttackInstance, SCRIPT_VARARGS, NULL},
+			{"IsActingEmotion", playerIsActingEmotion, SCRIPT_VARARGS, NULL},
+			{"IsPVPInstance", playerIsPVPInstance, SCRIPT_VARARGS, NULL},
+			{"IsSameEmpire", playerIsSameEmpire, SCRIPT_VARARGS, NULL},
+			{"IsChallengeInstance", playerIsChallengeInstance, SCRIPT_VARARGS, NULL},
+			{"IsRevengeInstance", playerIsRevengeInstance, SCRIPT_VARARGS, NULL},
+			{"IsCantFightInstance", playerIsCantFightInstance, SCRIPT_VARARGS, NULL},
+			{"GetCharacterDistance", playerGetCharacterDistance, SCRIPT_VARARGS, NULL},
+			{"IsInSafeArea", playerIsInSafeArea, SCRIPT_VARARGS, NULL},
+			{"IsMountingHorse", playerIsMountingHorse, SCRIPT_VARARGS, NULL},
+			{"IsObserverMode", playerIsObserverMode, SCRIPT_VARARGS, NULL},
+			{"ActEmotion", playerActEmotion, SCRIPT_VARARGS, NULL},
 
-			{"ShowPlayer", playerShowPlayer, METH_VARARGS, NULL},
-			{"HidePlayer", playerHidePlayer, METH_VARARGS, NULL},
+			{"ShowPlayer", playerShowPlayer, SCRIPT_VARARGS, NULL},
+			{"HidePlayer", playerHidePlayer, SCRIPT_VARARGS, NULL},
 
-			{"ComboAttack", playerComboAttack, METH_VARARGS, NULL},
+			{"ComboAttack", playerComboAttack, SCRIPT_VARARGS, NULL},
 
-			{"SetAutoCameraRotationSpeed", playerSetAutoCameraRotationSpeed, METH_VARARGS, NULL},
-			{"SetAttackKeyState", playerSetAttackKeyState, METH_VARARGS, NULL},
-			{"SetSingleDIKKeyState", playerSetSingleDIKKeyState, METH_VARARGS, NULL},
-			{"EndKeyWalkingImmediately", playerEndKeyWalkingImmediately, METH_VARARGS, NULL},
-			{"StartMouseWalking", playerStartMouseWalking, METH_VARARGS, NULL},
-			{"EndMouseWalking", playerEndMouseWalking, METH_VARARGS, NULL},
-			{"ResetCameraRotation", playerResetCameraRotation, METH_VARARGS, NULL},
-			{"SetQuickCameraMode", playerSetQuickCameraMode, METH_VARARGS, NULL},
+			{"SetAutoCameraRotationSpeed", playerSetAutoCameraRotationSpeed, SCRIPT_VARARGS, NULL},
+			{"SetAttackKeyState", playerSetAttackKeyState, SCRIPT_VARARGS, NULL},
+			{"SetSingleDIKKeyState", playerSetSingleDIKKeyState, SCRIPT_VARARGS, NULL},
+			{"EndKeyWalkingImmediately", playerEndKeyWalkingImmediately, SCRIPT_VARARGS, NULL},
+			{"StartMouseWalking", playerStartMouseWalking, SCRIPT_VARARGS, NULL},
+			{"EndMouseWalking", playerEndMouseWalking, SCRIPT_VARARGS, NULL},
+			{"ResetCameraRotation", playerResetCameraRotation, SCRIPT_VARARGS, NULL},
+			{"SetQuickCameraMode", playerSetQuickCameraMode, SCRIPT_VARARGS, NULL},
 
 			///////////////////////////////////////////////////////////////////////////////////////////
 
-			{"SetSkill", playerSetSkill, METH_VARARGS, NULL},
-			{"GetSkillIndex", playerGetSkillIndex, METH_VARARGS, NULL},
-			{"GetSkillSlotIndex", playerGetSkillSlotIndex, METH_VARARGS, NULL},
-			{"GetSkillGrade", playerGetSkillGrade, METH_VARARGS, NULL},
-			{"GetSkillLevel", playerGetSkillLevel, METH_VARARGS, NULL},
-			{"GetSkillCurrentEfficientPercentage", playerGetSkillCurrentEfficientPercentage, METH_VARARGS, NULL},
-			{"GetSkillNextEfficientPercentage", playerGetSkillNextEfficientPercentage, METH_VARARGS, NULL},
-			{"ClickSkillSlot", playerClickSkillSlot, METH_VARARGS, NULL},
-			{"ChangeCurrentSkillNumberOnly", playerChangeCurrentSkillNumberOnly, METH_VARARGS, NULL},
-			{"ClearSkillDict", playerClearSkillDict, METH_VARARGS, NULL},
+			{"SetSkill", playerSetSkill, SCRIPT_VARARGS, NULL},
+			{"GetSkillIndex", playerGetSkillIndex, SCRIPT_VARARGS, NULL},
+			{"GetSkillSlotIndex", playerGetSkillSlotIndex, SCRIPT_VARARGS, NULL},
+			{"GetSkillGrade", playerGetSkillGrade, SCRIPT_VARARGS, NULL},
+			{"GetSkillLevel", playerGetSkillLevel, SCRIPT_VARARGS, NULL},
+			{"GetSkillCurrentEfficientPercentage", playerGetSkillCurrentEfficientPercentage, SCRIPT_VARARGS, NULL},
+			{"GetSkillNextEfficientPercentage", playerGetSkillNextEfficientPercentage, SCRIPT_VARARGS, NULL},
+			{"ClickSkillSlot", playerClickSkillSlot, SCRIPT_VARARGS, NULL},
+			{"ChangeCurrentSkillNumberOnly", playerChangeCurrentSkillNumberOnly, SCRIPT_VARARGS, NULL},
+			{"ClearSkillDict", playerClearSkillDict, SCRIPT_VARARGS, NULL},
 
-			{"GetItemIndex", playerGetItemIndex, METH_VARARGS, NULL},
-			{"GetItemFlags", playerGetItemFlags, METH_VARARGS, NULL},
-			{"GetItemCount", playerGetItemCount, METH_VARARGS, NULL},
-			{"GetItemCountByVnum", playerGetItemCountByVnum, METH_VARARGS, NULL},
-			{"GetItemMetinSocket", playerGetItemMetinSocket, METH_VARARGS, NULL},
-			{"GetItemAttribute", playerGetItemAttribute, METH_VARARGS, NULL},
+			{"GetItemIndex", playerGetItemIndex, SCRIPT_VARARGS, NULL},
+			{"GetItemFlags", playerGetItemFlags, SCRIPT_VARARGS, NULL},
+			{"GetItemCount", playerGetItemCount, SCRIPT_VARARGS, NULL},
+			{"GetItemCountByVnum", playerGetItemCountByVnum, SCRIPT_VARARGS, NULL},
+			{"GetItemMetinSocket", playerGetItemMetinSocket, SCRIPT_VARARGS, NULL},
+			{"GetItemAttribute", playerGetItemAttribute, SCRIPT_VARARGS, NULL},
 #if defined(GAIDEN)
-			{"GetItemUnbindTime", playerGetItemUnbindTime, METH_VARARGS, NULL},
+			{"GetItemUnbindTime", playerGetItemUnbindTime, SCRIPT_VARARGS, NULL},
 #endif
-			{"GetISellItemPrice", playerGetISellItemPrice, METH_VARARGS, NULL},
-			{"MoveItem", playerMoveItem, METH_VARARGS, NULL},
-			{"SendClickItemPacket", playerSendClickItemPacket, METH_VARARGS, NULL},
+			{"GetISellItemPrice", playerGetISellItemPrice, SCRIPT_VARARGS, NULL},
+			{"MoveItem", playerMoveItem, SCRIPT_VARARGS, NULL},
+			{"SendClickItemPacket", playerSendClickItemPacket, SCRIPT_VARARGS, NULL},
 
 			///////////////////////////////////////////////////////////////////////////////////////////
 
-			{"GetName", playerGetName, METH_VARARGS, NULL},
-			{"GetJob", playerGetJob, METH_VARARGS, NULL},
-			{"GetRace", playerGetRace, METH_VARARGS, NULL},
-			{"GetPlayTime", playerGetPlayTime, METH_VARARGS, NULL},
-			{"SetPlayTime", playerSetPlayTime, METH_VARARGS, NULL},
+			{"GetName", playerGetName, SCRIPT_VARARGS, NULL},
+			{"GetJob", playerGetJob, SCRIPT_VARARGS, NULL},
+			{"GetRace", playerGetRace, SCRIPT_VARARGS, NULL},
+			{"GetPlayTime", playerGetPlayTime, SCRIPT_VARARGS, NULL},
+			{"SetPlayTime", playerSetPlayTime, SCRIPT_VARARGS, NULL},
 
-			{"IsSkillCoolTime", playerIsSkillCoolTime, METH_VARARGS, NULL},
-			{"GetSkillCoolTime", playerGetSkillCoolTime, METH_VARARGS, NULL},
-			{"IsSkillActive", playerIsSkillActive, METH_VARARGS, NULL},
-			{"UseGuildSkill", playerUseGuildSkill, METH_VARARGS, NULL},
-			{"AffectIndexToSkillIndex", playerAffectIndexToSkillIndex, METH_VARARGS, NULL},
-			{"GetEXP", playerGetEXP, METH_VARARGS, NULL},
-			{"GetStatus", playerGetStatus, METH_VARARGS, NULL},
-			{"SetStatus", playerSetStatus, METH_VARARGS, NULL},
-			{"GetElk", playerGetElk, METH_VARARGS, NULL},
-			{"GetMoney", playerGetElk, METH_VARARGS, NULL},
-			{"GetGuildID", playerGetGuildID, METH_VARARGS, NULL},
-			{"GetGuildName", playerGetGuildName, METH_VARARGS, NULL},
-			{"GetAlignmentData", playerGetAlignmentData, METH_VARARGS, NULL},
-			{"RequestAddLocalQuickSlot", playerRequestAddLocalQuickSlot, METH_VARARGS, NULL},
-			{"RequestAddToEmptyLocalQuickSlot", playerRequestAddToEmptyLocalQuickSlot, METH_VARARGS, NULL},
-			{"RequestDeleteGlobalQuickSlot", playerRequestDeleteGlobalQuickSlot, METH_VARARGS, NULL},
-			{"RequestMoveGlobalQuickSlotToLocalQuickSlot", playerRequestMoveGlobalQuickSlotToLocalQuickSlot, METH_VARARGS, NULL},
-			{"RequestUseLocalQuickSlot", playerRequestUseLocalQuickSlot, METH_VARARGS, NULL},
-			{"LocalQuickSlotIndexToGlobalQuickSlotIndex", playerLocalQuickSlotIndexToGlobalQuickSlotIndex, METH_VARARGS, NULL},
+			{"IsSkillCoolTime", playerIsSkillCoolTime, SCRIPT_VARARGS, NULL},
+			{"GetSkillCoolTime", playerGetSkillCoolTime, SCRIPT_VARARGS, NULL},
+			{"IsSkillActive", playerIsSkillActive, SCRIPT_VARARGS, NULL},
+			{"UseGuildSkill", playerUseGuildSkill, SCRIPT_VARARGS, NULL},
+			{"AffectIndexToSkillIndex", playerAffectIndexToSkillIndex, SCRIPT_VARARGS, NULL},
+			{"GetEXP", playerGetEXP, SCRIPT_VARARGS, NULL},
+			{"GetStatus", playerGetStatus, SCRIPT_VARARGS, NULL},
+			{"SetStatus", playerSetStatus, SCRIPT_VARARGS, NULL},
+			{"GetElk", playerGetElk, SCRIPT_VARARGS, NULL},
+			{"GetMoney", playerGetElk, SCRIPT_VARARGS, NULL},
+			{"GetGuildID", playerGetGuildID, SCRIPT_VARARGS, NULL},
+			{"GetGuildName", playerGetGuildName, SCRIPT_VARARGS, NULL},
+			{"GetAlignmentData", playerGetAlignmentData, SCRIPT_VARARGS, NULL},
+			{"RequestAddLocalQuickSlot", playerRequestAddLocalQuickSlot, SCRIPT_VARARGS, NULL},
+			{"RequestAddToEmptyLocalQuickSlot", playerRequestAddToEmptyLocalQuickSlot, SCRIPT_VARARGS, NULL},
+			{"RequestDeleteGlobalQuickSlot", playerRequestDeleteGlobalQuickSlot, SCRIPT_VARARGS, NULL},
+			{"RequestMoveGlobalQuickSlotToLocalQuickSlot", playerRequestMoveGlobalQuickSlotToLocalQuickSlot, SCRIPT_VARARGS, NULL},
+			{"RequestUseLocalQuickSlot", playerRequestUseLocalQuickSlot, SCRIPT_VARARGS, NULL},
+			{"LocalQuickSlotIndexToGlobalQuickSlotIndex", playerLocalQuickSlotIndexToGlobalQuickSlotIndex, SCRIPT_VARARGS, NULL},
 
-			{"GetQuickPage", playerGetQuickPage, METH_VARARGS, NULL},
-			{"SetQuickPage", playerSetQuickPage, METH_VARARGS, NULL},
-			{"GetLocalQuickSlot", playerGetLocalQuickSlot, METH_VARARGS, NULL},
-			{"GetGlobalQuickSlot", playerGetGlobalQuickSlot, METH_VARARGS, NULL},
-			{"RemoveQuickSlotByValue", playerRemoveQuickSlotByValue, METH_VARARGS, NULL},
+			{"GetQuickPage", playerGetQuickPage, SCRIPT_VARARGS, NULL},
+			{"SetQuickPage", playerSetQuickPage, SCRIPT_VARARGS, NULL},
+			{"GetLocalQuickSlot", playerGetLocalQuickSlot, SCRIPT_VARARGS, NULL},
+			{"GetGlobalQuickSlot", playerGetGlobalQuickSlot, SCRIPT_VARARGS, NULL},
+			{"RemoveQuickSlotByValue", playerRemoveQuickSlotByValue, SCRIPT_VARARGS, NULL},
 
-			{"isItem", playerisItem, METH_VARARGS, NULL},
-			{"IsEquipmentSlot", playerIsEquipmentSlot, METH_VARARGS, NULL},
-			{"IsDSEquipmentSlot", playerIsDSEquipmentSlot, METH_VARARGS, NULL},
-			{"IsCostumeSlot", playerIsCostumeSlot, METH_VARARGS, NULL},
-			{"IsValuableItem", playerIsValuableItem, METH_VARARGS, NULL},
-			{"IsOpenPrivateShop", playerIsOpenPrivateShop, METH_VARARGS, NULL},
+			{"isItem", playerisItem, SCRIPT_VARARGS, NULL},
+			{"IsEquipmentSlot", playerIsEquipmentSlot, SCRIPT_VARARGS, NULL},
+			{"IsDSEquipmentSlot", playerIsDSEquipmentSlot, SCRIPT_VARARGS, NULL},
+			{"IsCostumeSlot", playerIsCostumeSlot, SCRIPT_VARARGS, NULL},
+			{"IsValuableItem", playerIsValuableItem, SCRIPT_VARARGS, NULL},
+			{"IsOpenPrivateShop", playerIsOpenPrivateShop, SCRIPT_VARARGS, NULL},
 
 #ifdef ENABLE_NEW_EQUIPMENT_SYSTEM
-			{"IsBeltInventorySlot", playerIsBeltInventorySlot, METH_VARARGS, NULL},
-			{"IsEquippingBelt", playerIsEquippingBelt, METH_VARARGS, NULL},
-			{"IsAvailableBeltInventoryCell", playerIsAvailableBeltInventoryCell, METH_VARARGS, NULL},
+			{"IsBeltInventorySlot", playerIsBeltInventorySlot, SCRIPT_VARARGS, NULL},
+			{"IsEquippingBelt", playerIsEquippingBelt, SCRIPT_VARARGS, NULL},
+			{"IsAvailableBeltInventoryCell", playerIsAvailableBeltInventoryCell, SCRIPT_VARARGS, NULL},
 #endif
 
 			// Refine
-			{"GetItemGrade", playerGetItemGrade, METH_VARARGS, NULL},
-			{"CanRefine", playerCanRefine, METH_VARARGS, NULL},
-			{"CanDetach", playerCanDetach, METH_VARARGS, NULL},
-			{"CanUnlock", playerCanUnlock, METH_VARARGS, NULL},
-			{"CanAttachMetin", playerCanAttachMetin, METH_VARARGS, NULL},
-			{"IsRefineGradeScroll", playerIsRefineGradeScroll, METH_VARARGS, NULL},
+			{"GetItemGrade", playerGetItemGrade, SCRIPT_VARARGS, NULL},
+			{"CanRefine", playerCanRefine, SCRIPT_VARARGS, NULL},
+			{"CanDetach", playerCanDetach, SCRIPT_VARARGS, NULL},
+			{"CanUnlock", playerCanUnlock, SCRIPT_VARARGS, NULL},
+			{"CanAttachMetin", playerCanAttachMetin, SCRIPT_VARARGS, NULL},
+			{"IsRefineGradeScroll", playerIsRefineGradeScroll, SCRIPT_VARARGS, NULL},
 
-			{"ClearTarget", playerClearTarget, METH_VARARGS, NULL},
-			{"SetTarget", playerSetTarget, METH_VARARGS, NULL},
-			{"OpenCharacterMenu", playerOpenCharacterMenu, METH_VARARGS, NULL},
+			{"ClearTarget", playerClearTarget, SCRIPT_VARARGS, NULL},
+			{"SetTarget", playerSetTarget, SCRIPT_VARARGS, NULL},
+			{"OpenCharacterMenu", playerOpenCharacterMenu, SCRIPT_VARARGS, NULL},
 
-			{"Update", playerUpdate, METH_VARARGS, NULL},
-			{"Render", playerRender, METH_VARARGS, NULL},
-			{"Clear", playerClear, METH_VARARGS, NULL},
+			{"Update", playerUpdate, SCRIPT_VARARGS, NULL},
+			{"Render", playerRender, SCRIPT_VARARGS, NULL},
+			{"Clear", playerClear, SCRIPT_VARARGS, NULL},
 
 			// Party
-			{"IsPartyMember", playerIsPartyMember, METH_VARARGS, NULL},
-			{"IsPartyLeader", playerIsPartyLeader, METH_VARARGS, NULL},
-			{"IsPartyLeaderByPID", playerIsPartyLeaderByPID, METH_VARARGS, NULL},
-			{"GetPartyMemberHPPercentage", playerGetPartyMemberHPPercentage, METH_VARARGS, NULL},
-			{"GetPartyMemberState", playerGetPartyMemberState, METH_VARARGS, NULL},
-			{"GetPartyMemberAffects", playerGetPartyMemberAffects, METH_VARARGS, NULL},
-			{"RemovePartyMember", playerRemovePartyMember, METH_VARARGS, NULL},
-			{"ExitParty", playerExitParty, METH_VARARGS, NULL},
+			{"IsPartyMember", playerIsPartyMember, SCRIPT_VARARGS, NULL},
+			{"IsPartyLeader", playerIsPartyLeader, SCRIPT_VARARGS, NULL},
+			{"IsPartyLeaderByPID", playerIsPartyLeaderByPID, SCRIPT_VARARGS, NULL},
+			{"GetPartyMemberHPPercentage", playerGetPartyMemberHPPercentage, SCRIPT_VARARGS, NULL},
+			{"GetPartyMemberState", playerGetPartyMemberState, SCRIPT_VARARGS, NULL},
+			{"GetPartyMemberAffects", playerGetPartyMemberAffects, SCRIPT_VARARGS, NULL},
+			{"RemovePartyMember", playerRemovePartyMember, SCRIPT_VARARGS, NULL},
+			{"ExitParty", playerExitParty, SCRIPT_VARARGS, NULL},
 
 			// PK Mode
-			{"GetPKMode", playerGetPKMode, METH_VARARGS, NULL},
+			{"GetPKMode", playerGetPKMode, SCRIPT_VARARGS, NULL},
 
 			// Emotion
-			{"RegisterEmotionIcon", playerRegisterEmotionIcon, METH_VARARGS, NULL},
-			{"GetEmotionIconImage", playerGetEmotionIconImage, METH_VARARGS, NULL},
+			{"RegisterEmotionIcon", playerRegisterEmotionIcon, SCRIPT_VARARGS, NULL},
+			{"GetEmotionIconImage", playerGetEmotionIconImage, SCRIPT_VARARGS, NULL},
 
 			// For System
-			{"SetWeaponAttackBonusFlag", playerSetWeaponAttackBonusFlag, METH_VARARGS, NULL},
-			{"ToggleCoolTime", playerToggleCoolTime, METH_VARARGS, NULL},
-			{"ToggleLevelLimit", playerToggleLevelLimit, METH_VARARGS, NULL},
-			{"GetTargetVID", playerGetTargetVID, METH_VARARGS, NULL},
+			{"SetWeaponAttackBonusFlag", playerSetWeaponAttackBonusFlag, SCRIPT_VARARGS, NULL},
+			{"ToggleCoolTime", playerToggleCoolTime, SCRIPT_VARARGS, NULL},
+			{"ToggleLevelLimit", playerToggleLevelLimit, SCRIPT_VARARGS, NULL},
+			{"GetTargetVID", playerGetTargetVID, SCRIPT_VARARGS, NULL},
 
-			{"SetItemData", playerSetItemData, METH_VARARGS, NULL},
-			{"SetItemMetinSocket", playerSetItemMetinSocket, METH_VARARGS, NULL},
-			{"SetItemAttribute", playerSetItemAttribute, METH_VARARGS, NULL},
-			{"SetItemCount", playerSetItemCount, METH_VARARGS, NULL},
+			{"SetItemData", playerSetItemData, SCRIPT_VARARGS, NULL},
+			{"SetItemMetinSocket", playerSetItemMetinSocket, SCRIPT_VARARGS, NULL},
+			{"SetItemAttribute", playerSetItemAttribute, SCRIPT_VARARGS, NULL},
+			{"SetItemCount", playerSetItemCount, SCRIPT_VARARGS, NULL},
 
-			{"GetItemLink", playerGetItemLink, METH_VARARGS, NULL},
-			{"SlotTypeToInvenType", playerSlotTypeToInvenType, METH_VARARGS, NULL},
-			{"SendDragonSoulRefine", playerSendDragonSoulRefine, METH_VARARGS, NULL},
+			{"GetItemLink", playerGetItemLink, SCRIPT_VARARGS, NULL},
+			{"SlotTypeToInvenType", playerSlotTypeToInvenType, SCRIPT_VARARGS, NULL},
+			{"SendDragonSoulRefine", playerSendDragonSoulRefine, SCRIPT_VARARGS, NULL},
 
 			{NULL, NULL, 0, NULL},
 		};
 
-	PyObject* poModule = Py_InitModule("player", s_methods);
-	PyModule_AddIntConstant(poModule, "LEVEL", POINT_LEVEL);
-	PyModule_AddIntConstant(poModule, "VOICE", POINT_VOICE);
-	PyModule_AddIntConstant(poModule, "EXP", POINT_EXP);
-	PyModule_AddIntConstant(poModule, "NEXT_EXP", POINT_NEXT_EXP);
-	PyModule_AddIntConstant(poModule, "HP", POINT_HP);
-	PyModule_AddIntConstant(poModule, "MAX_HP", POINT_MAX_HP);
-	PyModule_AddIntConstant(poModule, "SP", POINT_SP);
-	PyModule_AddIntConstant(poModule, "MAX_SP", POINT_MAX_SP);
-	PyModule_AddIntConstant(poModule, "STAMINA", POINT_STAMINA);
-	PyModule_AddIntConstant(poModule, "MAX_STAMINA", POINT_MAX_STAMINA);
-	PyModule_AddIntConstant(poModule, "ELK", POINT_GOLD);
-	PyModule_AddIntConstant(poModule, "ST", POINT_ST);
-	PyModule_AddIntConstant(poModule, "HT", POINT_HT);
-	PyModule_AddIntConstant(poModule, "DX", POINT_DX);
-	PyModule_AddIntConstant(poModule, "IQ", POINT_IQ);
-	PyModule_AddIntConstant(poModule, "ATT_POWER", POINT_ATT_POWER);
-	PyModule_AddIntConstant(poModule, "ATT_MIN", POINT_MIN_ATK);
-	PyModule_AddIntConstant(poModule, "ATT_MAX", POINT_MAX_ATK);
-	PyModule_AddIntConstant(poModule, "MIN_MAGIC_WEP", POINT_MIN_MAGIC_WEP);
-	PyModule_AddIntConstant(poModule, "MAX_MAGIC_WEP", POINT_MAX_MAGIC_WEP);
-	PyModule_AddIntConstant(poModule, "ATT_SPEED", POINT_ATT_SPEED);
-	PyModule_AddIntConstant(poModule, "ATT_BONUS", POINT_ATT_GRADE_BONUS);
-	PyModule_AddIntConstant(poModule, "EVADE_RATE", POINT_EVADE_RATE);
-	PyModule_AddIntConstant(poModule, "MOVING_SPEED", POINT_MOV_SPEED);
-	PyModule_AddIntConstant(poModule, "DEF_GRADE", POINT_DEF_GRADE);
-	PyModule_AddIntConstant(poModule, "DEF_BONUS", POINT_DEF_GRADE_BONUS);
-	PyModule_AddIntConstant(poModule, "CASTING_SPEED", POINT_CASTING_SPEED);
-	PyModule_AddIntConstant(poModule, "MAG_ATT", POINT_MAGIC_ATT_GRADE);
-	PyModule_AddIntConstant(poModule, "MAG_DEF", POINT_MAGIC_DEF_GRADE);
-	PyModule_AddIntConstant(poModule, "EMPIRE_POINT", POINT_EMPIRE_POINT);
-	PyModule_AddIntConstant(poModule, "STAT", POINT_STAT);
-	PyModule_AddIntConstant(poModule, "SKILL_PASSIVE", POINT_SUB_SKILL);
-	PyModule_AddIntConstant(poModule, "SKILL_SUPPORT", POINT_SUB_SKILL);
-	PyModule_AddIntConstant(poModule, "SKILL_ACTIVE", POINT_SKILL);
-	PyModule_AddIntConstant(poModule, "SKILL_HORSE", POINT_HORSE_SKILL);
-	PyModule_AddIntConstant(poModule, "PLAYTIME", POINT_PLAYTIME);
-	PyModule_AddIntConstant(poModule, "BOW_DISTANCE", POINT_BOW_DISTANCE);
-	PyModule_AddIntConstant(poModule, "HP_RECOVERY", POINT_HP_RECOVERY);
-	PyModule_AddIntConstant(poModule, "SP_RECOVERY", POINT_SP_RECOVERY);
-	PyModule_AddIntConstant(poModule, "ATTACKER_BONUS", POINT_PARTY_ATT_GRADE);
-	PyModule_AddIntConstant(poModule, "MAX_NUM", POINT_MAX_NUM);
+	ScriptObject* poModule = ScriptModule_Create("player", s_methods);
+	ScriptModule_AddIntConstant(poModule, "LEVEL", POINT_LEVEL);
+	ScriptModule_AddIntConstant(poModule, "VOICE", POINT_VOICE);
+	ScriptModule_AddIntConstant(poModule, "EXP", POINT_EXP);
+	ScriptModule_AddIntConstant(poModule, "NEXT_EXP", POINT_NEXT_EXP);
+	ScriptModule_AddIntConstant(poModule, "HP", POINT_HP);
+	ScriptModule_AddIntConstant(poModule, "MAX_HP", POINT_MAX_HP);
+	ScriptModule_AddIntConstant(poModule, "SP", POINT_SP);
+	ScriptModule_AddIntConstant(poModule, "MAX_SP", POINT_MAX_SP);
+	ScriptModule_AddIntConstant(poModule, "STAMINA", POINT_STAMINA);
+	ScriptModule_AddIntConstant(poModule, "MAX_STAMINA", POINT_MAX_STAMINA);
+	ScriptModule_AddIntConstant(poModule, "ELK", POINT_GOLD);
+	ScriptModule_AddIntConstant(poModule, "ST", POINT_ST);
+	ScriptModule_AddIntConstant(poModule, "HT", POINT_HT);
+	ScriptModule_AddIntConstant(poModule, "DX", POINT_DX);
+	ScriptModule_AddIntConstant(poModule, "IQ", POINT_IQ);
+	ScriptModule_AddIntConstant(poModule, "ATT_POWER", POINT_ATT_POWER);
+	ScriptModule_AddIntConstant(poModule, "ATT_MIN", POINT_MIN_ATK);
+	ScriptModule_AddIntConstant(poModule, "ATT_MAX", POINT_MAX_ATK);
+	ScriptModule_AddIntConstant(poModule, "MIN_MAGIC_WEP", POINT_MIN_MAGIC_WEP);
+	ScriptModule_AddIntConstant(poModule, "MAX_MAGIC_WEP", POINT_MAX_MAGIC_WEP);
+	ScriptModule_AddIntConstant(poModule, "ATT_SPEED", POINT_ATT_SPEED);
+	ScriptModule_AddIntConstant(poModule, "ATT_BONUS", POINT_ATT_GRADE_BONUS);
+	ScriptModule_AddIntConstant(poModule, "EVADE_RATE", POINT_EVADE_RATE);
+	ScriptModule_AddIntConstant(poModule, "MOVING_SPEED", POINT_MOV_SPEED);
+	ScriptModule_AddIntConstant(poModule, "DEF_GRADE", POINT_DEF_GRADE);
+	ScriptModule_AddIntConstant(poModule, "DEF_BONUS", POINT_DEF_GRADE_BONUS);
+	ScriptModule_AddIntConstant(poModule, "CASTING_SPEED", POINT_CASTING_SPEED);
+	ScriptModule_AddIntConstant(poModule, "MAG_ATT", POINT_MAGIC_ATT_GRADE);
+	ScriptModule_AddIntConstant(poModule, "MAG_DEF", POINT_MAGIC_DEF_GRADE);
+	ScriptModule_AddIntConstant(poModule, "EMPIRE_POINT", POINT_EMPIRE_POINT);
+	ScriptModule_AddIntConstant(poModule, "STAT", POINT_STAT);
+	ScriptModule_AddIntConstant(poModule, "SKILL_PASSIVE", POINT_SUB_SKILL);
+	ScriptModule_AddIntConstant(poModule, "SKILL_SUPPORT", POINT_SUB_SKILL);
+	ScriptModule_AddIntConstant(poModule, "SKILL_ACTIVE", POINT_SKILL);
+	ScriptModule_AddIntConstant(poModule, "SKILL_HORSE", POINT_HORSE_SKILL);
+	ScriptModule_AddIntConstant(poModule, "PLAYTIME", POINT_PLAYTIME);
+	ScriptModule_AddIntConstant(poModule, "BOW_DISTANCE", POINT_BOW_DISTANCE);
+	ScriptModule_AddIntConstant(poModule, "HP_RECOVERY", POINT_HP_RECOVERY);
+	ScriptModule_AddIntConstant(poModule, "SP_RECOVERY", POINT_SP_RECOVERY);
+	ScriptModule_AddIntConstant(poModule, "ATTACKER_BONUS", POINT_PARTY_ATT_GRADE);
+	ScriptModule_AddIntConstant(poModule, "MAX_NUM", POINT_MAX_NUM);
 	////
-	PyModule_AddIntConstant(poModule, "POINT_CRITICAL_PCT", POINT_CRITICAL_PCT);
-	PyModule_AddIntConstant(poModule, "POINT_PENETRATE_PCT", POINT_PENETRATE_PCT);
-	PyModule_AddIntConstant(poModule, "POINT_MALL_ATTBONUS", POINT_MALL_ATTBONUS);
-	PyModule_AddIntConstant(poModule, "POINT_MALL_DEFBONUS", POINT_MALL_DEFBONUS);
-	PyModule_AddIntConstant(poModule, "POINT_MALL_EXPBONUS", POINT_MALL_EXPBONUS);
-	PyModule_AddIntConstant(poModule, "POINT_MALL_ITEMBONUS", POINT_MALL_ITEMBONUS);
-	PyModule_AddIntConstant(poModule, "POINT_MALL_GOLDBONUS", POINT_MALL_GOLDBONUS);
-	PyModule_AddIntConstant(poModule, "POINT_MAX_HP_PCT", POINT_MAX_HP_PCT);
-	PyModule_AddIntConstant(poModule, "POINT_MAX_SP_PCT", POINT_MAX_SP_PCT);
+	ScriptModule_AddIntConstant(poModule, "POINT_CRITICAL_PCT", POINT_CRITICAL_PCT);
+	ScriptModule_AddIntConstant(poModule, "POINT_PENETRATE_PCT", POINT_PENETRATE_PCT);
+	ScriptModule_AddIntConstant(poModule, "POINT_MALL_ATTBONUS", POINT_MALL_ATTBONUS);
+	ScriptModule_AddIntConstant(poModule, "POINT_MALL_DEFBONUS", POINT_MALL_DEFBONUS);
+	ScriptModule_AddIntConstant(poModule, "POINT_MALL_EXPBONUS", POINT_MALL_EXPBONUS);
+	ScriptModule_AddIntConstant(poModule, "POINT_MALL_ITEMBONUS", POINT_MALL_ITEMBONUS);
+	ScriptModule_AddIntConstant(poModule, "POINT_MALL_GOLDBONUS", POINT_MALL_GOLDBONUS);
+	ScriptModule_AddIntConstant(poModule, "POINT_MAX_HP_PCT", POINT_MAX_HP_PCT);
+	ScriptModule_AddIntConstant(poModule, "POINT_MAX_SP_PCT", POINT_MAX_SP_PCT);
 
-	PyModule_AddIntConstant(poModule, "POINT_SKILL_DAMAGE_BONUS", POINT_SKILL_DAMAGE_BONUS);
-	PyModule_AddIntConstant(poModule, "POINT_NORMAL_HIT_DAMAGE_BONUS", POINT_NORMAL_HIT_DAMAGE_BONUS);
-	PyModule_AddIntConstant(poModule, "POINT_SKILL_DEFEND_BONUS", POINT_SKILL_DEFEND_BONUS);
-	PyModule_AddIntConstant(poModule, "POINT_NORMAL_HIT_DEFEND_BONUS", POINT_NORMAL_HIT_DEFEND_BONUS);
-	PyModule_AddIntConstant(poModule, "POINT_PC_BANG_EXP_BONUS", POINT_PC_BANG_EXP_BONUS);
-	PyModule_AddIntConstant(poModule, "POINT_PC_BANG_DROP_BONUS", POINT_PC_BANG_DROP_BONUS);
+	ScriptModule_AddIntConstant(poModule, "POINT_SKILL_DAMAGE_BONUS", POINT_SKILL_DAMAGE_BONUS);
+	ScriptModule_AddIntConstant(poModule, "POINT_NORMAL_HIT_DAMAGE_BONUS", POINT_NORMAL_HIT_DAMAGE_BONUS);
+	ScriptModule_AddIntConstant(poModule, "POINT_SKILL_DEFEND_BONUS", POINT_SKILL_DEFEND_BONUS);
+	ScriptModule_AddIntConstant(poModule, "POINT_NORMAL_HIT_DEFEND_BONUS", POINT_NORMAL_HIT_DEFEND_BONUS);
+	ScriptModule_AddIntConstant(poModule, "POINT_PC_BANG_EXP_BONUS", POINT_PC_BANG_EXP_BONUS);
+	ScriptModule_AddIntConstant(poModule, "POINT_PC_BANG_DROP_BONUS", POINT_PC_BANG_DROP_BONUS);
 
-	PyModule_AddIntConstant(poModule, "ENERGY", POINT_ENERGY);
-	PyModule_AddIntConstant(poModule, "ENERGY_END_TIME", POINT_ENERGY_END_TIME);
+	ScriptModule_AddIntConstant(poModule, "ENERGY", POINT_ENERGY);
+	ScriptModule_AddIntConstant(poModule, "ENERGY_END_TIME", POINT_ENERGY_END_TIME);
 
-	PyModule_AddIntConstant(poModule, "SKILL_GRADE_NORMAL", CPythonPlayer::SKILL_NORMAL);
-	PyModule_AddIntConstant(poModule, "SKILL_GRADE_MASTER", CPythonPlayer::SKILL_MASTER);
-	PyModule_AddIntConstant(poModule, "SKILL_GRADE_GRAND_MASTER", CPythonPlayer::SKILL_GRAND_MASTER);
-	PyModule_AddIntConstant(poModule, "SKILL_GRADE_PERFECT_MASTER", CPythonPlayer::SKILL_PERFECT_MASTER);
+	ScriptModule_AddIntConstant(poModule, "SKILL_GRADE_NORMAL", CPythonPlayer::SKILL_NORMAL);
+	ScriptModule_AddIntConstant(poModule, "SKILL_GRADE_MASTER", CPythonPlayer::SKILL_MASTER);
+	ScriptModule_AddIntConstant(poModule, "SKILL_GRADE_GRAND_MASTER", CPythonPlayer::SKILL_GRAND_MASTER);
+	ScriptModule_AddIntConstant(poModule, "SKILL_GRADE_PERFECT_MASTER", CPythonPlayer::SKILL_PERFECT_MASTER);
 
-	PyModule_AddIntConstant(poModule, "CATEGORY_ACTIVE", CPythonPlayer::CATEGORY_ACTIVE);
-	PyModule_AddIntConstant(poModule, "CATEGORY_PASSIVE", CPythonPlayer::CATEGORY_PASSIVE);
+	ScriptModule_AddIntConstant(poModule, "CATEGORY_ACTIVE", CPythonPlayer::CATEGORY_ACTIVE);
+	ScriptModule_AddIntConstant(poModule, "CATEGORY_PASSIVE", CPythonPlayer::CATEGORY_PASSIVE);
 
-	PyModule_AddIntConstant(poModule, "INVENTORY_PAGE_SIZE", c_Inventory_Page_Size);
-	PyModule_AddIntConstant(poModule, "INVENTORY_PAGE_COUNT", c_Inventory_Page_Count);
-	PyModule_AddIntConstant(poModule, "INVENTORY_SLOT_COUNT", c_Inventory_Count);
-	PyModule_AddIntConstant(poModule, "EQUIPMENT_SLOT_START", c_Equipment_Start);
-	PyModule_AddIntConstant(poModule, "EQUIPMENT_PAGE_COUNT", c_Equipment_Count);
+	ScriptModule_AddIntConstant(poModule, "INVENTORY_PAGE_SIZE", c_Inventory_Page_Size);
+	ScriptModule_AddIntConstant(poModule, "INVENTORY_PAGE_COUNT", c_Inventory_Page_Count);
+	ScriptModule_AddIntConstant(poModule, "INVENTORY_SLOT_COUNT", c_Inventory_Count);
+	ScriptModule_AddIntConstant(poModule, "EQUIPMENT_SLOT_START", c_Equipment_Start);
+	ScriptModule_AddIntConstant(poModule, "EQUIPMENT_PAGE_COUNT", c_Equipment_Count);
 
 #ifdef ENABLE_NEW_EQUIPMENT_SYSTEM
-	PyModule_AddIntConstant(poModule, "NEW_EQUIPMENT_SLOT_START", c_New_Equipment_Start);
-	PyModule_AddIntConstant(poModule, "NEW_EQUIPMENT_SLOT_COUNT", c_New_Equipment_Count);
+	ScriptModule_AddIntConstant(poModule, "NEW_EQUIPMENT_SLOT_START", c_New_Equipment_Start);
+	ScriptModule_AddIntConstant(poModule, "NEW_EQUIPMENT_SLOT_COUNT", c_New_Equipment_Count);
 #endif
 
-	PyModule_AddIntConstant(poModule, "MBF_SKILL", CPythonPlayer::MBF_SKILL);
-	PyModule_AddIntConstant(poModule, "MBF_ATTACK", CPythonPlayer::MBF_ATTACK);
-	PyModule_AddIntConstant(poModule, "MBF_CAMERA", CPythonPlayer::MBF_CAMERA);
-	PyModule_AddIntConstant(poModule, "MBF_SMART", CPythonPlayer::MBF_SMART);
-	PyModule_AddIntConstant(poModule, "MBF_MOVE", CPythonPlayer::MBF_MOVE);
-	PyModule_AddIntConstant(poModule, "MBF_AUTO", CPythonPlayer::MBF_AUTO);
-	PyModule_AddIntConstant(poModule, "MBS_PRESS", CPythonPlayer::MBS_PRESS);
-	PyModule_AddIntConstant(poModule, "MBS_CLICK", CPythonPlayer::MBS_CLICK);
-	PyModule_AddIntConstant(poModule, "MBT_RIGHT", CPythonPlayer::MBT_RIGHT);
-	PyModule_AddIntConstant(poModule, "MBT_LEFT", CPythonPlayer::MBT_LEFT);
+	ScriptModule_AddIntConstant(poModule, "MBF_SKILL", CPythonPlayer::MBF_SKILL);
+	ScriptModule_AddIntConstant(poModule, "MBF_ATTACK", CPythonPlayer::MBF_ATTACK);
+	ScriptModule_AddIntConstant(poModule, "MBF_CAMERA", CPythonPlayer::MBF_CAMERA);
+	ScriptModule_AddIntConstant(poModule, "MBF_SMART", CPythonPlayer::MBF_SMART);
+	ScriptModule_AddIntConstant(poModule, "MBF_MOVE", CPythonPlayer::MBF_MOVE);
+	ScriptModule_AddIntConstant(poModule, "MBF_AUTO", CPythonPlayer::MBF_AUTO);
+	ScriptModule_AddIntConstant(poModule, "MBS_PRESS", CPythonPlayer::MBS_PRESS);
+	ScriptModule_AddIntConstant(poModule, "MBS_CLICK", CPythonPlayer::MBS_CLICK);
+	ScriptModule_AddIntConstant(poModule, "MBT_RIGHT", CPythonPlayer::MBT_RIGHT);
+	ScriptModule_AddIntConstant(poModule, "MBT_LEFT", CPythonPlayer::MBT_LEFT);
 
 	// Public code with server
-	PyModule_AddIntConstant(poModule, "SLOT_TYPE_NONE", SLOT_TYPE_NONE);
-	PyModule_AddIntConstant(poModule, "SLOT_TYPE_INVENTORY", SLOT_TYPE_INVENTORY);
-	PyModule_AddIntConstant(poModule, "SLOT_TYPE_SKILL", SLOT_TYPE_SKILL);
+	ScriptModule_AddIntConstant(poModule, "SLOT_TYPE_NONE", SLOT_TYPE_NONE);
+	ScriptModule_AddIntConstant(poModule, "SLOT_TYPE_INVENTORY", SLOT_TYPE_INVENTORY);
+	ScriptModule_AddIntConstant(poModule, "SLOT_TYPE_SKILL", SLOT_TYPE_SKILL);
 	// Special indecies for client
-	PyModule_AddIntConstant(poModule, "SLOT_TYPE_SHOP", SLOT_TYPE_SHOP);
-	PyModule_AddIntConstant(poModule, "SLOT_TYPE_EXCHANGE_OWNER", SLOT_TYPE_EXCHANGE_OWNER);
-	PyModule_AddIntConstant(poModule, "SLOT_TYPE_EXCHANGE_TARGET", SLOT_TYPE_EXCHANGE_TARGET);
-	PyModule_AddIntConstant(poModule, "SLOT_TYPE_QUICK_SLOT", SLOT_TYPE_QUICK_SLOT);
-	PyModule_AddIntConstant(poModule, "SLOT_TYPE_SAFEBOX", SLOT_TYPE_SAFEBOX);
-	PyModule_AddIntConstant(poModule, "SLOT_TYPE_PRIVATE_SHOP", SLOT_TYPE_PRIVATE_SHOP);
-	PyModule_AddIntConstant(poModule, "SLOT_TYPE_MALL", SLOT_TYPE_MALL);
-	PyModule_AddIntConstant(poModule, "SLOT_TYPE_EMOTION", SLOT_TYPE_EMOTION);
-	PyModule_AddIntConstant(poModule, "SLOT_TYPE_DRAGON_SOUL_INVENTORY", SLOT_TYPE_DRAGON_SOUL_INVENTORY);
+	ScriptModule_AddIntConstant(poModule, "SLOT_TYPE_SHOP", SLOT_TYPE_SHOP);
+	ScriptModule_AddIntConstant(poModule, "SLOT_TYPE_EXCHANGE_OWNER", SLOT_TYPE_EXCHANGE_OWNER);
+	ScriptModule_AddIntConstant(poModule, "SLOT_TYPE_EXCHANGE_TARGET", SLOT_TYPE_EXCHANGE_TARGET);
+	ScriptModule_AddIntConstant(poModule, "SLOT_TYPE_QUICK_SLOT", SLOT_TYPE_QUICK_SLOT);
+	ScriptModule_AddIntConstant(poModule, "SLOT_TYPE_SAFEBOX", SLOT_TYPE_SAFEBOX);
+	ScriptModule_AddIntConstant(poModule, "SLOT_TYPE_PRIVATE_SHOP", SLOT_TYPE_PRIVATE_SHOP);
+	ScriptModule_AddIntConstant(poModule, "SLOT_TYPE_MALL", SLOT_TYPE_MALL);
+	ScriptModule_AddIntConstant(poModule, "SLOT_TYPE_EMOTION", SLOT_TYPE_EMOTION);
+	ScriptModule_AddIntConstant(poModule, "SLOT_TYPE_DRAGON_SOUL_INVENTORY", SLOT_TYPE_DRAGON_SOUL_INVENTORY);
 
-	PyModule_AddIntConstant(poModule, "RESERVED_WINDOW", RESERVED_WINDOW);
-	PyModule_AddIntConstant(poModule, "INVENTORY", INVENTORY);
-	PyModule_AddIntConstant(poModule, "EQUIPMENT", EQUIPMENT);
-	PyModule_AddIntConstant(poModule, "SAFEBOX", SAFEBOX);
-	PyModule_AddIntConstant(poModule, "MALL", MALL);
-	PyModule_AddIntConstant(poModule, "DRAGON_SOUL_INVENTORY", DRAGON_SOUL_INVENTORY);
-	PyModule_AddIntConstant(poModule, "GROUND", GROUND);
+	ScriptModule_AddIntConstant(poModule, "RESERVED_WINDOW", RESERVED_WINDOW);
+	ScriptModule_AddIntConstant(poModule, "INVENTORY", INVENTORY);
+	ScriptModule_AddIntConstant(poModule, "EQUIPMENT", EQUIPMENT);
+	ScriptModule_AddIntConstant(poModule, "SAFEBOX", SAFEBOX);
+	ScriptModule_AddIntConstant(poModule, "MALL", MALL);
+	ScriptModule_AddIntConstant(poModule, "DRAGON_SOUL_INVENTORY", DRAGON_SOUL_INVENTORY);
+	ScriptModule_AddIntConstant(poModule, "GROUND", GROUND);
 
-	PyModule_AddIntConstant(poModule, "ITEM_MONEY", -1);
+	ScriptModule_AddIntConstant(poModule, "ITEM_MONEY", -1);
 
-	PyModule_AddIntConstant(poModule, "SKILL_SLOT_COUNT", SKILL_MAX_NUM);
+	ScriptModule_AddIntConstant(poModule, "SKILL_SLOT_COUNT", SKILL_MAX_NUM);
 
-	PyModule_AddIntConstant(poModule, "EFFECT_PICK", CPythonPlayer::EFFECT_PICK);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_PICK", CPythonPlayer::EFFECT_PICK);
 
-	PyModule_AddIntConstant(poModule, "METIN_SOCKET_TYPE_NONE", CPythonPlayer::METIN_SOCKET_TYPE_NONE);
-	PyModule_AddIntConstant(poModule, "METIN_SOCKET_TYPE_SILVER", CPythonPlayer::METIN_SOCKET_TYPE_SILVER);
-	PyModule_AddIntConstant(poModule, "METIN_SOCKET_TYPE_GOLD", CPythonPlayer::METIN_SOCKET_TYPE_GOLD);
-	PyModule_AddIntConstant(poModule, "METIN_SOCKET_MAX_NUM", ITEM_SOCKET_SLOT_MAX_NUM);
-	PyModule_AddIntConstant(poModule, "ATTRIBUTE_SLOT_MAX_NUM", ITEM_ATTRIBUTE_SLOT_MAX_NUM);
+	ScriptModule_AddIntConstant(poModule, "METIN_SOCKET_TYPE_NONE", CPythonPlayer::METIN_SOCKET_TYPE_NONE);
+	ScriptModule_AddIntConstant(poModule, "METIN_SOCKET_TYPE_SILVER", CPythonPlayer::METIN_SOCKET_TYPE_SILVER);
+	ScriptModule_AddIntConstant(poModule, "METIN_SOCKET_TYPE_GOLD", CPythonPlayer::METIN_SOCKET_TYPE_GOLD);
+	ScriptModule_AddIntConstant(poModule, "METIN_SOCKET_MAX_NUM", ITEM_SOCKET_SLOT_MAX_NUM);
+	ScriptModule_AddIntConstant(poModule, "ATTRIBUTE_SLOT_MAX_NUM", ITEM_ATTRIBUTE_SLOT_MAX_NUM);
 
-	PyModule_AddIntConstant(poModule, "REFINE_CANT", REFINE_CANT);
-	PyModule_AddIntConstant(poModule, "REFINE_OK", REFINE_OK);
-	PyModule_AddIntConstant(poModule, "REFINE_ALREADY_MAX_SOCKET_COUNT", REFINE_ALREADY_MAX_SOCKET_COUNT);
-	PyModule_AddIntConstant(poModule, "REFINE_NEED_MORE_GOOD_SCROLL", REFINE_NEED_MORE_GOOD_SCROLL);
-	PyModule_AddIntConstant(poModule, "REFINE_CANT_MAKE_SOCKET_ITEM", REFINE_CANT_MAKE_SOCKET_ITEM);
-	PyModule_AddIntConstant(poModule, "REFINE_NOT_NEXT_GRADE_ITEM", REFINE_NOT_NEXT_GRADE_ITEM);
-	PyModule_AddIntConstant(poModule, "REFINE_CANT_REFINE_METIN_TO_EQUIPMENT", REFINE_CANT_REFINE_METIN_TO_EQUIPMENT);
-	PyModule_AddIntConstant(poModule, "REFINE_CANT_REFINE_ROD", REFINE_CANT_REFINE_ROD);
-	PyModule_AddIntConstant(poModule, "ATTACH_METIN_CANT", ATTACH_METIN_CANT);
-	PyModule_AddIntConstant(poModule, "ATTACH_METIN_OK", ATTACH_METIN_OK);
-	PyModule_AddIntConstant(poModule, "ATTACH_METIN_NOT_MATCHABLE_ITEM", ATTACH_METIN_NOT_MATCHABLE_ITEM);
-	PyModule_AddIntConstant(poModule, "ATTACH_METIN_NO_MATCHABLE_SOCKET", ATTACH_METIN_NO_MATCHABLE_SOCKET);
-	PyModule_AddIntConstant(poModule, "ATTACH_METIN_NOT_EXIST_GOLD_SOCKET", ATTACH_METIN_NOT_EXIST_GOLD_SOCKET);
-	PyModule_AddIntConstant(poModule, "ATTACH_METIN_CANT_ATTACH_TO_EQUIPMENT", ATTACH_METIN_CANT_ATTACH_TO_EQUIPMENT);
-	PyModule_AddIntConstant(poModule, "DETACH_METIN_CANT", DETACH_METIN_CANT);
-	PyModule_AddIntConstant(poModule, "DETACH_METIN_OK", DETACH_METIN_OK);
+	ScriptModule_AddIntConstant(poModule, "REFINE_CANT", REFINE_CANT);
+	ScriptModule_AddIntConstant(poModule, "REFINE_OK", REFINE_OK);
+	ScriptModule_AddIntConstant(poModule, "REFINE_ALREADY_MAX_SOCKET_COUNT", REFINE_ALREADY_MAX_SOCKET_COUNT);
+	ScriptModule_AddIntConstant(poModule, "REFINE_NEED_MORE_GOOD_SCROLL", REFINE_NEED_MORE_GOOD_SCROLL);
+	ScriptModule_AddIntConstant(poModule, "REFINE_CANT_MAKE_SOCKET_ITEM", REFINE_CANT_MAKE_SOCKET_ITEM);
+	ScriptModule_AddIntConstant(poModule, "REFINE_NOT_NEXT_GRADE_ITEM", REFINE_NOT_NEXT_GRADE_ITEM);
+	ScriptModule_AddIntConstant(poModule, "REFINE_CANT_REFINE_METIN_TO_EQUIPMENT", REFINE_CANT_REFINE_METIN_TO_EQUIPMENT);
+	ScriptModule_AddIntConstant(poModule, "REFINE_CANT_REFINE_ROD", REFINE_CANT_REFINE_ROD);
+	ScriptModule_AddIntConstant(poModule, "ATTACH_METIN_CANT", ATTACH_METIN_CANT);
+	ScriptModule_AddIntConstant(poModule, "ATTACH_METIN_OK", ATTACH_METIN_OK);
+	ScriptModule_AddIntConstant(poModule, "ATTACH_METIN_NOT_MATCHABLE_ITEM", ATTACH_METIN_NOT_MATCHABLE_ITEM);
+	ScriptModule_AddIntConstant(poModule, "ATTACH_METIN_NO_MATCHABLE_SOCKET", ATTACH_METIN_NO_MATCHABLE_SOCKET);
+	ScriptModule_AddIntConstant(poModule, "ATTACH_METIN_NOT_EXIST_GOLD_SOCKET", ATTACH_METIN_NOT_EXIST_GOLD_SOCKET);
+	ScriptModule_AddIntConstant(poModule, "ATTACH_METIN_CANT_ATTACH_TO_EQUIPMENT", ATTACH_METIN_CANT_ATTACH_TO_EQUIPMENT);
+	ScriptModule_AddIntConstant(poModule, "DETACH_METIN_CANT", DETACH_METIN_CANT);
+	ScriptModule_AddIntConstant(poModule, "DETACH_METIN_OK", DETACH_METIN_OK);
 
 	// Party
-	PyModule_AddIntConstant(poModule, "PARTY_STATE_NORMAL", CPythonPlayer::PARTY_ROLE_NORMAL);
-	PyModule_AddIntConstant(poModule, "PARTY_STATE_LEADER", CPythonPlayer::PARTY_ROLE_LEADER);
-	PyModule_AddIntConstant(poModule, "PARTY_STATE_ATTACKER", CPythonPlayer::PARTY_ROLE_ATTACKER);
-	PyModule_AddIntConstant(poModule, "PARTY_STATE_TANKER", CPythonPlayer::PARTY_ROLE_TANKER);
-	PyModule_AddIntConstant(poModule, "PARTY_STATE_BUFFER", CPythonPlayer::PARTY_ROLE_BUFFER);
-	PyModule_AddIntConstant(poModule, "PARTY_STATE_SKILL_MASTER", CPythonPlayer::PARTY_ROLE_SKILL_MASTER);
-	PyModule_AddIntConstant(poModule, "PARTY_STATE_BERSERKER", CPythonPlayer::PARTY_ROLE_BERSERKER);
-	PyModule_AddIntConstant(poModule, "PARTY_STATE_DEFENDER", CPythonPlayer::PARTY_ROLE_DEFENDER);
-	PyModule_AddIntConstant(poModule, "PARTY_STATE_MAX_NUM", CPythonPlayer::PARTY_ROLE_MAX_NUM);
+	ScriptModule_AddIntConstant(poModule, "PARTY_STATE_NORMAL", CPythonPlayer::PARTY_ROLE_NORMAL);
+	ScriptModule_AddIntConstant(poModule, "PARTY_STATE_LEADER", CPythonPlayer::PARTY_ROLE_LEADER);
+	ScriptModule_AddIntConstant(poModule, "PARTY_STATE_ATTACKER", CPythonPlayer::PARTY_ROLE_ATTACKER);
+	ScriptModule_AddIntConstant(poModule, "PARTY_STATE_TANKER", CPythonPlayer::PARTY_ROLE_TANKER);
+	ScriptModule_AddIntConstant(poModule, "PARTY_STATE_BUFFER", CPythonPlayer::PARTY_ROLE_BUFFER);
+	ScriptModule_AddIntConstant(poModule, "PARTY_STATE_SKILL_MASTER", CPythonPlayer::PARTY_ROLE_SKILL_MASTER);
+	ScriptModule_AddIntConstant(poModule, "PARTY_STATE_BERSERKER", CPythonPlayer::PARTY_ROLE_BERSERKER);
+	ScriptModule_AddIntConstant(poModule, "PARTY_STATE_DEFENDER", CPythonPlayer::PARTY_ROLE_DEFENDER);
+	ScriptModule_AddIntConstant(poModule, "PARTY_STATE_MAX_NUM", CPythonPlayer::PARTY_ROLE_MAX_NUM);
 
 	// Skill Index
-	PyModule_AddIntConstant(poModule, "SKILL_INDEX_TONGSOL", c_iSkillIndex_Tongsol);
-	PyModule_AddIntConstant(poModule, "SKILL_INDEX_FISHING", c_iSkillIndex_Fishing);
-	PyModule_AddIntConstant(poModule, "SKILL_INDEX_MINING", c_iSkillIndex_Mining);
-	PyModule_AddIntConstant(poModule, "SKILL_INDEX_MAKING", c_iSkillIndex_Making);
-	PyModule_AddIntConstant(poModule, "SKILL_INDEX_COMBO", c_iSkillIndex_Combo);
-	PyModule_AddIntConstant(poModule, "SKILL_INDEX_LANGUAGE1", c_iSkillIndex_Language1);
-	PyModule_AddIntConstant(poModule, "SKILL_INDEX_LANGUAGE2", c_iSkillIndex_Language2);
-	PyModule_AddIntConstant(poModule, "SKILL_INDEX_LANGUAGE3", c_iSkillIndex_Language3);
-	PyModule_AddIntConstant(poModule, "SKILL_INDEX_POLYMORPH", c_iSkillIndex_Polymorph);
-	PyModule_AddIntConstant(poModule, "SKILL_INDEX_RIDING", c_iSkillIndex_Riding);
-	PyModule_AddIntConstant(poModule, "SKILL_INDEX_SUMMON", c_iSkillIndex_Summon);
+	ScriptModule_AddIntConstant(poModule, "SKILL_INDEX_TONGSOL", c_iSkillIndex_Tongsol);
+	ScriptModule_AddIntConstant(poModule, "SKILL_INDEX_FISHING", c_iSkillIndex_Fishing);
+	ScriptModule_AddIntConstant(poModule, "SKILL_INDEX_MINING", c_iSkillIndex_Mining);
+	ScriptModule_AddIntConstant(poModule, "SKILL_INDEX_MAKING", c_iSkillIndex_Making);
+	ScriptModule_AddIntConstant(poModule, "SKILL_INDEX_COMBO", c_iSkillIndex_Combo);
+	ScriptModule_AddIntConstant(poModule, "SKILL_INDEX_LANGUAGE1", c_iSkillIndex_Language1);
+	ScriptModule_AddIntConstant(poModule, "SKILL_INDEX_LANGUAGE2", c_iSkillIndex_Language2);
+	ScriptModule_AddIntConstant(poModule, "SKILL_INDEX_LANGUAGE3", c_iSkillIndex_Language3);
+	ScriptModule_AddIntConstant(poModule, "SKILL_INDEX_POLYMORPH", c_iSkillIndex_Polymorph);
+	ScriptModule_AddIntConstant(poModule, "SKILL_INDEX_RIDING", c_iSkillIndex_Riding);
+	ScriptModule_AddIntConstant(poModule, "SKILL_INDEX_SUMMON", c_iSkillIndex_Summon);
 
 	// PK Mode
-	PyModule_AddIntConstant(poModule, "PK_MODE_PEACE", PK_MODE_PEACE);
-	PyModule_AddIntConstant(poModule, "PK_MODE_REVENGE", PK_MODE_REVENGE);
-	PyModule_AddIntConstant(poModule, "PK_MODE_FREE", PK_MODE_FREE);
-	PyModule_AddIntConstant(poModule, "PK_MODE_PROTECT", PK_MODE_PROTECT);
-	PyModule_AddIntConstant(poModule, "PK_MODE_GUILD", PK_MODE_GUILD);
-	PyModule_AddIntConstant(poModule, "PK_MODE_MAX_NUM", PK_MODE_MAX_NUM);
+	ScriptModule_AddIntConstant(poModule, "PK_MODE_PEACE", PK_MODE_PEACE);
+	ScriptModule_AddIntConstant(poModule, "PK_MODE_REVENGE", PK_MODE_REVENGE);
+	ScriptModule_AddIntConstant(poModule, "PK_MODE_FREE", PK_MODE_FREE);
+	ScriptModule_AddIntConstant(poModule, "PK_MODE_PROTECT", PK_MODE_PROTECT);
+	ScriptModule_AddIntConstant(poModule, "PK_MODE_GUILD", PK_MODE_GUILD);
+	ScriptModule_AddIntConstant(poModule, "PK_MODE_MAX_NUM", PK_MODE_MAX_NUM);
 
 	// Block Mode
-	PyModule_AddIntConstant(poModule, "BLOCK_EXCHANGE", BLOCK_EXCHANGE);
-	PyModule_AddIntConstant(poModule, "BLOCK_PARTY", BLOCK_PARTY_INVITE);
-	PyModule_AddIntConstant(poModule, "BLOCK_GUILD", BLOCK_GUILD_INVITE);
-	PyModule_AddIntConstant(poModule, "BLOCK_WHISPER", BLOCK_WHISPER);
-	PyModule_AddIntConstant(poModule, "BLOCK_FRIEND", BLOCK_MESSENGER_INVITE);
-	PyModule_AddIntConstant(poModule, "BLOCK_PARTY_REQUEST", BLOCK_PARTY_REQUEST);
+	ScriptModule_AddIntConstant(poModule, "BLOCK_EXCHANGE", BLOCK_EXCHANGE);
+	ScriptModule_AddIntConstant(poModule, "BLOCK_PARTY", BLOCK_PARTY_INVITE);
+	ScriptModule_AddIntConstant(poModule, "BLOCK_GUILD", BLOCK_GUILD_INVITE);
+	ScriptModule_AddIntConstant(poModule, "BLOCK_WHISPER", BLOCK_WHISPER);
+	ScriptModule_AddIntConstant(poModule, "BLOCK_FRIEND", BLOCK_MESSENGER_INVITE);
+	ScriptModule_AddIntConstant(poModule, "BLOCK_PARTY_REQUEST", BLOCK_PARTY_REQUEST);
 
 	// Party
-	PyModule_AddIntConstant(poModule, "PARTY_EXP_NON_DISTRIBUTION", PARTY_EXP_DISTRIBUTION_NON_PARITY);
-	PyModule_AddIntConstant(poModule, "PARTY_EXP_DISTRIBUTION_PARITY", PARTY_EXP_DISTRIBUTION_PARITY);
+	ScriptModule_AddIntConstant(poModule, "PARTY_EXP_NON_DISTRIBUTION", PARTY_EXP_DISTRIBUTION_NON_PARITY);
+	ScriptModule_AddIntConstant(poModule, "PARTY_EXP_DISTRIBUTION_PARITY", PARTY_EXP_DISTRIBUTION_PARITY);
 
 	// Emotion
-	PyModule_AddIntConstant(poModule, "EMOTION_CLAP", EMOTION_CLAP);
-	PyModule_AddIntConstant(poModule, "EMOTION_CHEERS_1", EMOTION_CHEERS_1);
-	PyModule_AddIntConstant(poModule, "EMOTION_CHEERS_2", EMOTION_CHEERS_2);
-	PyModule_AddIntConstant(poModule, "EMOTION_DANCE_1", EMOTION_DANCE_1);
-	PyModule_AddIntConstant(poModule, "EMOTION_DANCE_2", EMOTION_DANCE_2);
-	PyModule_AddIntConstant(poModule, "EMOTION_DANCE_3", EMOTION_DANCE_3);
-	PyModule_AddIntConstant(poModule, "EMOTION_DANCE_4", EMOTION_DANCE_4);
-	PyModule_AddIntConstant(poModule, "EMOTION_DANCE_5", EMOTION_DANCE_5);
-	PyModule_AddIntConstant(poModule, "EMOTION_DANCE_6", EMOTION_DANCE_6); // PSY 강남스타일
-	PyModule_AddIntConstant(poModule, "EMOTION_CONGRATULATION", EMOTION_CONGRATULATION);
-	PyModule_AddIntConstant(poModule, "EMOTION_FORGIVE", EMOTION_FORGIVE);
-	PyModule_AddIntConstant(poModule, "EMOTION_ANGRY", EMOTION_ANGRY);
-	PyModule_AddIntConstant(poModule, "EMOTION_ATTRACTIVE", EMOTION_ATTRACTIVE);
-	PyModule_AddIntConstant(poModule, "EMOTION_SAD", EMOTION_SAD);
-	PyModule_AddIntConstant(poModule, "EMOTION_SHY", EMOTION_SHY);
-	PyModule_AddIntConstant(poModule, "EMOTION_CHEERUP", EMOTION_CHEERUP);
-	PyModule_AddIntConstant(poModule, "EMOTION_BANTER", EMOTION_BANTER);
-	PyModule_AddIntConstant(poModule, "EMOTION_JOY", EMOTION_JOY);
+	ScriptModule_AddIntConstant(poModule, "EMOTION_CLAP", EMOTION_CLAP);
+	ScriptModule_AddIntConstant(poModule, "EMOTION_CHEERS_1", EMOTION_CHEERS_1);
+	ScriptModule_AddIntConstant(poModule, "EMOTION_CHEERS_2", EMOTION_CHEERS_2);
+	ScriptModule_AddIntConstant(poModule, "EMOTION_DANCE_1", EMOTION_DANCE_1);
+	ScriptModule_AddIntConstant(poModule, "EMOTION_DANCE_2", EMOTION_DANCE_2);
+	ScriptModule_AddIntConstant(poModule, "EMOTION_DANCE_3", EMOTION_DANCE_3);
+	ScriptModule_AddIntConstant(poModule, "EMOTION_DANCE_4", EMOTION_DANCE_4);
+	ScriptModule_AddIntConstant(poModule, "EMOTION_DANCE_5", EMOTION_DANCE_5);
+	ScriptModule_AddIntConstant(poModule, "EMOTION_DANCE_6", EMOTION_DANCE_6); // PSY 강남스타일
+	ScriptModule_AddIntConstant(poModule, "EMOTION_CONGRATULATION", EMOTION_CONGRATULATION);
+	ScriptModule_AddIntConstant(poModule, "EMOTION_FORGIVE", EMOTION_FORGIVE);
+	ScriptModule_AddIntConstant(poModule, "EMOTION_ANGRY", EMOTION_ANGRY);
+	ScriptModule_AddIntConstant(poModule, "EMOTION_ATTRACTIVE", EMOTION_ATTRACTIVE);
+	ScriptModule_AddIntConstant(poModule, "EMOTION_SAD", EMOTION_SAD);
+	ScriptModule_AddIntConstant(poModule, "EMOTION_SHY", EMOTION_SHY);
+	ScriptModule_AddIntConstant(poModule, "EMOTION_CHEERUP", EMOTION_CHEERUP);
+	ScriptModule_AddIntConstant(poModule, "EMOTION_BANTER", EMOTION_BANTER);
+	ScriptModule_AddIntConstant(poModule, "EMOTION_JOY", EMOTION_JOY);
 
-	PyModule_AddIntConstant(poModule, "EMOTION_KISS", EMOTION_KISS);
-	PyModule_AddIntConstant(poModule, "EMOTION_FRENCH_KISS", EMOTION_FRENCH_KISS);
-	PyModule_AddIntConstant(poModule, "EMOTION_SLAP", EMOTION_SLAP);
+	ScriptModule_AddIntConstant(poModule, "EMOTION_KISS", EMOTION_KISS);
+	ScriptModule_AddIntConstant(poModule, "EMOTION_FRENCH_KISS", EMOTION_FRENCH_KISS);
+	ScriptModule_AddIntConstant(poModule, "EMOTION_SLAP", EMOTION_SLAP);
 
 	//// 자동물약 타입
-	PyModule_AddIntConstant(poModule, "AUTO_POTION_TYPE_HP", CPythonPlayer::AUTO_POTION_TYPE_HP);
-	PyModule_AddIntConstant(poModule, "AUTO_POTION_TYPE_SP", CPythonPlayer::AUTO_POTION_TYPE_SP);
+	ScriptModule_AddIntConstant(poModule, "AUTO_POTION_TYPE_HP", CPythonPlayer::AUTO_POTION_TYPE_HP);
+	ScriptModule_AddIntConstant(poModule, "AUTO_POTION_TYPE_SP", CPythonPlayer::AUTO_POTION_TYPE_SP);
 
 	// 용혼석
-	PyModule_AddIntConstant(poModule, "DRAGON_SOUL_PAGE_SIZE", c_DragonSoul_Inventory_Box_Size);
-	PyModule_AddIntConstant(poModule, "DRAGON_SOUL_PAGE_COUNT", DRAGON_SOUL_GRADE_MAX);
-	PyModule_AddIntConstant(poModule, "DRAGON_SOUL_SLOT_COUNT", c_DragonSoul_Inventory_Count);
-	PyModule_AddIntConstant(poModule, "DRAGON_SOUL_EQUIPMENT_SLOT_START", c_DragonSoul_Equip_Start);
-	PyModule_AddIntConstant(poModule, "DRAGON_SOUL_EQUIPMENT_PAGE_COUNT", DS_DECK_MAX_NUM);
-	PyModule_AddIntConstant(poModule, "DRAGON_SOUL_EQUIPMENT_FIRST_SIZE", c_DragonSoul_Equip_Slot_Max);
+	ScriptModule_AddIntConstant(poModule, "DRAGON_SOUL_PAGE_SIZE", c_DragonSoul_Inventory_Box_Size);
+	ScriptModule_AddIntConstant(poModule, "DRAGON_SOUL_PAGE_COUNT", DRAGON_SOUL_GRADE_MAX);
+	ScriptModule_AddIntConstant(poModule, "DRAGON_SOUL_SLOT_COUNT", c_DragonSoul_Inventory_Count);
+	ScriptModule_AddIntConstant(poModule, "DRAGON_SOUL_EQUIPMENT_SLOT_START", c_DragonSoul_Equip_Start);
+	ScriptModule_AddIntConstant(poModule, "DRAGON_SOUL_EQUIPMENT_PAGE_COUNT", DS_DECK_MAX_NUM);
+	ScriptModule_AddIntConstant(poModule, "DRAGON_SOUL_EQUIPMENT_FIRST_SIZE", c_DragonSoul_Equip_Slot_Max);
 
 	// 용혼석 개량창
-	PyModule_AddIntConstant(poModule, "DRAGON_SOUL_REFINE_CLOSE", DS_SUB_HEADER_CLOSE);
-	PyModule_AddIntConstant(poModule, "DS_SUB_HEADER_DO_UPGRADE", DS_SUB_HEADER_DO_UPGRADE);
-	PyModule_AddIntConstant(poModule, "DS_SUB_HEADER_DO_IMPROVEMENT", DS_SUB_HEADER_DO_IMPROVEMENT);
-	PyModule_AddIntConstant(poModule, "DS_SUB_HEADER_DO_REFINE", DS_SUB_HEADER_DO_REFINE);
+	ScriptModule_AddIntConstant(poModule, "DRAGON_SOUL_REFINE_CLOSE", DS_SUB_HEADER_CLOSE);
+	ScriptModule_AddIntConstant(poModule, "DS_SUB_HEADER_DO_UPGRADE", DS_SUB_HEADER_DO_UPGRADE);
+	ScriptModule_AddIntConstant(poModule, "DS_SUB_HEADER_DO_IMPROVEMENT", DS_SUB_HEADER_DO_IMPROVEMENT);
+	ScriptModule_AddIntConstant(poModule, "DS_SUB_HEADER_DO_REFINE", DS_SUB_HEADER_DO_REFINE);
 }

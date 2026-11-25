@@ -33,12 +33,12 @@ class CPythonMessenger : public CSingleton<CPythonMessenger>
 		void LogoutGuildMember(const char* c_szName);
 		void RefreshGuildMember();
 
-		void SetMessengerHandler(PyObject* poHandler);
+		void SetMessengerHandler(ScriptObject* poHandler);
 
 	protected:
 		TFriendNameMap m_FriendNameMap;
 		TGuildMemberStateMap m_GuildMemberStateMap;
 
 	private:
-		PyObject* m_poMessengerHandler;
+		ScriptObject* m_poMessengerHandler;
 };

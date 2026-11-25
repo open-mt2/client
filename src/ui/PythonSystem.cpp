@@ -8,17 +8,17 @@
 
 #define DEFAULT_VALUE_ALWAYS_SHOW_NAME true
 
-void CPythonSystem::SetInterfaceHandler(PyObject* poHandler)
+void CPythonSystem::SetInterfaceHandler(ScriptObject* poHandler)
 {
 	// NOTE : 레퍼런스 카운트는 바꾸지 않는다. 레퍼런스가 남아 있어 Python에서 완전히 지워지지 않기 때문.
 	//        대신에 __del__때 Destroy를 호출해 Handler를 NULL로 셋팅한다. - [levites]
 	//	if (m_poInterfaceHandler)
-	//		Py_DECREF(m_poInterfaceHandler);
+	//		Script_DECREF(m_poInterfaceHandler);
 
 	m_poInterfaceHandler = poHandler;
 
 	//	if (m_poInterfaceHandler)
-	//		Py_INCREF(m_poInterfaceHandler);
+	//		Script_INCREF(m_poInterfaceHandler);
 }
 
 void CPythonSystem::DestroyInterfaceHandler()
@@ -570,7 +570,7 @@ void CPythonSystem::SaveInterfaceStatus()
 	if (!m_poInterfaceHandler)
 		return;
 
-	PyCallClassMemberFunc(m_poInterfaceHandler, "OnSaveInterfaceStatus", Py_BuildValue("()"));
+	Script_CallMethod(m_poInterfaceHandler, "OnSaveInterfaceStatus", Script_BuildValue("()"));
 
 	FILE* File;
 
@@ -642,44 +642,44 @@ void CPythonSystem::ReloadInterface()
 	if (!m_poInterfaceHandler)
 		return;
 
-	if (!PyObject_HasAttrString(m_poInterfaceHandler, "Close") ||
-		!PyObject_HasAttrString(m_poInterfaceHandler, "MakeInterface"))
+	if (!Script_HasAttr(m_poInterfaceHandler, "Close") ||
+		!Script_HasAttr(m_poInterfaceHandler, "MakeInterface"))
 		return;
 
-	PyObject* pResult = PyObject_CallMethod(m_poInterfaceHandler, const_cast<char*>("Close"), NULL);
+	ScriptObject* pResult = Script_CallMethodObject(m_poInterfaceHandler, "Close", nullptr);
 	if (pResult)
-		Py_DECREF(pResult);
+		Script_DECREF(pResult);
 	else
 	{
 		TraceError("CPythonSystem::ReloadInterface: Close failed");
-		PyErr_Clear();
+		ScriptErr_Clear();
 	}
 
-	pResult = PyObject_CallMethod(m_poInterfaceHandler, const_cast<char*>("__init__"), NULL);
+	pResult = Script_CallMethodObject(m_poInterfaceHandler, "__init__", nullptr);
 	if (pResult)
-		Py_DECREF(pResult);
+		Script_DECREF(pResult);
 	else
 	{
 		TraceError("CPythonSystem::ReloadInterface: __init__ failed");
-		PyErr_Clear();
+		ScriptErr_Clear();
 	}
 
-	pResult = PyObject_CallMethod(m_poInterfaceHandler, const_cast<char*>("MakeInterface"), NULL);
+	pResult = Script_CallMethodObject(m_poInterfaceHandler, "MakeInterface", nullptr);
 	if (pResult)
-		Py_DECREF(pResult);
+		Script_DECREF(pResult);
 	else
 	{
 		TraceError("CPythonSystem::ReloadInterface: MakeInterface failed");
-		PyErr_Clear();
+		ScriptErr_Clear();
 	}
 
-	if (PyObject_HasAttrString(m_poInterfaceHandler, "ShowDefaultWindows"))
+	if (Script_HasAttr(m_poInterfaceHandler, "ShowDefaultWindows"))
 	{
-		pResult = PyObject_CallMethod(m_poInterfaceHandler, const_cast<char*>("ShowDefaultWindows"), NULL);
+		pResult = Script_CallMethodObject(m_poInterfaceHandler, "ShowDefaultWindows", nullptr);
 		if (pResult)
-			Py_DECREF(pResult);
+			Script_DECREF(pResult);
 		else
-			PyErr_Clear();
+			ScriptErr_Clear();
 	}
 }
 

@@ -308,7 +308,7 @@ BOOL CPythonApplication::SetCursorNum(int iCursorNum)
 
 	m_iCursorNum = iCursorNum;
 
-	PyCallClassMemberFunc(m_poMouseHandler, "ChangeCursor", Py_BuildValue("(i)", m_iCursorNum));
+	Script_CallMethod(m_poMouseHandler, "ChangeCursor", Script_BuildValue("(i)", m_iCursorNum));
 
 	return TRUE;
 }

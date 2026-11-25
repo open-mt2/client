@@ -23,14 +23,14 @@ void CPythonNetworkStream::SetSelectPhase()
 
 	if (__DirectEnterMode_IsSet())
 	{
-		PyCallClassMemberFunc(m_poHandler, "SetLoadingPhase", Py_BuildValue("()"));
+		Script_CallMethod(m_poHandler, "SetLoadingPhase", Script_BuildValue("()"));
 	}
 	else
 	{
 		if (IsSelectedEmpire())
-			PyCallClassMemberFunc(m_poHandler, "SetSelectCharacterPhase", Py_BuildValue("()"));
+			Script_CallMethod(m_poHandler, "SetSelectCharacterPhase", Script_BuildValue("()"));
 		else
-			PyCallClassMemberFunc(m_poHandler, "SetSelectEmpirePhase", Py_BuildValue("()"));
+			Script_CallMethod(m_poHandler, "SetSelectEmpirePhase", Script_BuildValue("()"));
 	}
 }
 
@@ -217,7 +217,7 @@ bool CPythonNetworkStream::__RecvPlayerCreateSuccessPacket()
 	}
 
 	m_akSimplePlayerInfo[kCreateSuccessPacket.bAccountCharacterSlot] = kCreateSuccessPacket.kSimplePlayerInfomation;
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_CREATE], "OnCreateSuccess", Py_BuildValue("()"));
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_CREATE], "OnCreateSuccess", Script_BuildValue("()"));
 	return true;
 }
 
@@ -228,8 +228,8 @@ bool CPythonNetworkStream::__RecvPlayerCreateFailurePacket()
 	if (!Recv(sizeof(TPacketGCCreateFailure), &packet))
 		return false;
 
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_CREATE], "OnCreateFailure", Py_BuildValue("(i)", packet.bType));
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_SELECT], "OnCreateFailure", Py_BuildValue("(i)", packet.bType));
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_CREATE], "OnCreateFailure", Script_BuildValue("(i)", packet.bType));
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_SELECT], "OnCreateFailure", Script_BuildValue("(i)", packet.bType));
 	return true;
 }
 
@@ -243,7 +243,7 @@ bool CPythonNetworkStream::__RecvPlayerDestroySuccessPacket()
 	m_adwGuildID[packet.account_index] = 0;
 	m_astrGuildName[packet.account_index] = "";
 
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_SELECT], "OnDeleteSuccess", Py_BuildValue("(i)", packet.account_index));
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_SELECT], "OnDeleteSuccess", Script_BuildValue("(i)", packet.account_index));
 	return true;
 }
 
@@ -253,7 +253,7 @@ bool CPythonNetworkStream::__RecvPlayerDestroyFailurePacket()
 	if (!Recv(sizeof(TPacketGCBlank), &packet_blank))
 		return false;
 
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_SELECT], "OnDeleteFailure", Py_BuildValue("()"));
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_SELECT], "OnDeleteFailure", Script_BuildValue("()"));
 	return true;
 }
 
@@ -270,11 +270,11 @@ bool CPythonNetworkStream::__RecvChangeName()
 			m_akSimplePlayerInfo[i].bChangeName = FALSE;
 			snprintf(m_akSimplePlayerInfo[i].szName, sizeof(m_akSimplePlayerInfo[i].szName), "%s", ChangeNamePacket.name);
 
-			PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_SELECT], "OnChangeName", Py_BuildValue("(is)", i, ChangeNamePacket.name));
+			Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_SELECT], "OnChangeName", Script_BuildValue("(is)", i, ChangeNamePacket.name));
 			return true;
 		}
 	}
 
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_SELECT], "OnCreateFailure", Py_BuildValue("(i)", 100));
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_SELECT], "OnCreateFailure", Script_BuildValue("(i)", 100));
 	return true;
 }

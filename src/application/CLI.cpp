@@ -8,14 +8,17 @@
 #include <Neoeter/Render/Util.h>
 
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <vector>
 
 namespace Neoeter
 {
 	CommandLine::CommandLine(const std::string& commandLine)
-		: m_commandLine(commandLine), m_pythonCommandLine(NormalizePythonCommandLine()), m_argv(nullptr), m_count(0), m_pauseBeforeScript(false)
+		: m_commandLine(commandLine), m_pythonCommandLine(), m_argv(nullptr), m_count(0), m_pauseBeforeScript(false), m_scriptRuntime(ScriptRuntime::Kind::Auto)
 	{
+		ExtractScriptRuntime();
+		m_pythonCommandLine = NormalizePythonCommandLine();
 		m_argv = CommandLineToArgv(m_commandLine.empty() ? const_cast<PCHAR>("") : &m_commandLine[0], &m_count);
 
 		std::vector<std::string> tokens;
@@ -28,8 +31,53 @@ namespace Neoeter
 		SAFE_FREE_GLOBAL(m_argv);
 	}
 
+	void CommandLine::ExtractScriptRuntime()
+	{
+		static const std::string option = "--script-runtime";
+
+		std::string value;
+		if (const char* env = getenv("OPENMT2_SCRIPT_RUNTIME"))
+			value = env;
+
+		std::vector<std::string> tokens;
+		SplitLine(m_commandLine.c_str(), " ", &tokens);
+
+		std::vector<std::string> kept;
+		for (std::size_t i = 0; i < tokens.size(); ++i)
+		{
+			if (tokens[i].compare(0, option.size() + 1, option + "=") == 0)
+				value = tokens[i].substr(option.size() + 1);
+			else if (tokens[i] == option && i + 1 < tokens.size())
+				value = tokens[++i];
+			else
+				kept.push_back(tokens[i]);
+		}
+
+		if (kept.size() != tokens.size())
+		{
+			// The scripts parse the command line; they never see this option.
+			m_commandLine.clear();
+			if (!kept.empty())
+				string_join(" ", kept, &m_commandLine);
+		}
+
+		if (!value.empty() && !ScriptRuntime::ParseKind(value, &m_scriptRuntime))
+			m_invalidScriptRuntime = value;
+	}
+
+	ScriptRuntime::Kind CommandLine::ScriptRuntimeKind() const
+	{
+		return m_scriptRuntime;
+	}
+
 	CommandLine::Result CommandLine::Process()
 	{
+		if (!m_invalidScriptRuntime.empty())
+		{
+			TraceError("Unknown script runtime '%s' (expected auto, python or dotnet)", m_invalidScriptRuntime.c_str());
+			return Result::InvalidArguments;
+		}
+
 		bool quit = false;
 
 		for (int i = 0; i < m_count; ++i)

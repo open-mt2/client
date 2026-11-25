@@ -139,10 +139,10 @@ void CPythonNetworkStream::ServerCommand(char* c_szCommand)
 	if (m_apoPhaseWnd[PHASE_WINDOW_GAME])
 	{
 		bool isTrue;
-		if (PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME],
-								  "BINARY_ServerCommand_Run",
-								  Py_BuildValue("(s)", c_szCommand),
-								  &isTrue))
+		if (Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME],
+							  "BINARY_ServerCommand_Run",
+							  Script_BuildValue("(s)", c_szCommand),
+							  &isTrue))
 		{
 			if (isTrue)
 				return;
@@ -151,10 +151,10 @@ void CPythonNetworkStream::ServerCommand(char* c_szCommand)
 	else if (m_poSerCommandParserWnd)
 	{
 		bool isTrue;
-		if (PyCallClassMemberFunc(m_poSerCommandParserWnd,
-								  "BINARY_ServerCommand_Run",
-								  Py_BuildValue("(s)", c_szCommand),
-								  &isTrue))
+		if (Script_CallMethod(m_poSerCommandParserWnd,
+							  "BINARY_ServerCommand_Run",
+							  Script_BuildValue("(s)", c_szCommand),
+							  &isTrue))
 		{
 			if (isTrue)
 				return;
@@ -186,7 +186,7 @@ void CPythonNetworkStream::ServerCommand(char* c_szCommand)
 	// GIFT NOTIFY
 	else if (!strcmpi(szCmd, "gift"))
 	{
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "Gift_Show", Py_BuildValue("()"));
+		Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "Gift_Show", Script_BuildValue("()"));
 	}
 	// CUBE
 	else if (!strcmpi(szCmd, "cube"))
@@ -206,11 +206,11 @@ void CPythonNetworkStream::ServerCommand(char* c_szCommand)
 			}
 
 			DWORD npcVNUM = (DWORD)atoi(TokenVector[2].c_str());
-			PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_Cube_Open", Py_BuildValue("(i)", npcVNUM));
+			Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_Cube_Open", Script_BuildValue("(i)", npcVNUM));
 		}
 		else if ("close" == TokenVector[1])
 		{
-			PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_Cube_Close", Py_BuildValue("()"));
+			Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_Cube_Close", Script_BuildValue("()"));
 		}
 		else if ("info" == TokenVector[1])
 		{
@@ -223,7 +223,7 @@ void CPythonNetworkStream::ServerCommand(char* c_szCommand)
 			UINT gold = atoi(TokenVector[2].c_str());
 			UINT itemVnum = atoi(TokenVector[3].c_str());
 			UINT count = atoi(TokenVector[4].c_str());
-			PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_Cube_UpdateInfo", Py_BuildValue("(iii)", gold, itemVnum, count));
+			Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_Cube_UpdateInfo", Script_BuildValue("(iii)", gold, itemVnum, count));
 		}
 		else if ("success" == TokenVector[1])
 		{
@@ -235,11 +235,11 @@ void CPythonNetworkStream::ServerCommand(char* c_szCommand)
 
 			UINT itemVnum = atoi(TokenVector[2].c_str());
 			UINT count = atoi(TokenVector[3].c_str());
-			PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_Cube_Succeed", Py_BuildValue("(ii)", itemVnum, count));
+			Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_Cube_Succeed", Script_BuildValue("(ii)", itemVnum, count));
 		}
 		else if ("fail" == TokenVector[1])
 		{
-			PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_Cube_Failed", Py_BuildValue("()"));
+			Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_Cube_Failed", Script_BuildValue("()"));
 		}
 		else if ("r_list" == TokenVector[1])
 		{
@@ -253,7 +253,7 @@ void CPythonNetworkStream::ServerCommand(char* c_szCommand)
 
 			DWORD npcVNUM = (DWORD)atoi(TokenVector[2].c_str());
 
-			PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_Cube_ResultList", Py_BuildValue("(is)", npcVNUM, TokenVector[4].c_str()));
+			Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_Cube_ResultList", Script_BuildValue("(is)", npcVNUM, TokenVector[4].c_str()));
 		}
 		else if ("m_info" == TokenVector[1])
 		{
@@ -271,7 +271,7 @@ void CPythonNetworkStream::ServerCommand(char* c_szCommand)
 			UINT requestStartIndex = (UINT)atoi(TokenVector[2].c_str());
 			UINT resultCount = (UINT)atoi(TokenVector[3].c_str());
 
-			PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_Cube_MaterialInfo", Py_BuildValue("(iis)", requestStartIndex, resultCount, TokenVector[4].c_str()));
+			Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_Cube_MaterialInfo", Script_BuildValue("(iis)", requestStartIndex, resultCount, TokenVector[4].c_str()));
 		}
 	}
 	// CUEBE_END
@@ -285,9 +285,9 @@ void CPythonNetworkStream::ServerCommand(char* c_szCommand)
 
 		UINT uObserverCount = atoi(TokenVector[1].c_str());
 
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME],
-							  "BINARY_BettingGuildWar_UpdateObserverCount",
-							  Py_BuildValue("(i)", uObserverCount));
+		Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME],
+						  "BINARY_BettingGuildWar_UpdateObserverCount",
+						  Script_BuildValue("(i)", uObserverCount));
 	}
 	else if (!strcmpi(szCmd, "ObserverMode"))
 	{
@@ -302,9 +302,9 @@ void CPythonNetworkStream::ServerCommand(char* c_szCommand)
 		IAbstractPlayer& rkPlayer = IAbstractPlayer::GetSingleton();
 		rkPlayer.SetObserverMode(uMode ? true : false);
 
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME],
-							  "BINARY_BettingGuildWar_SetObserverMode",
-							  Py_BuildValue("(i)", uMode));
+		Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME],
+						  "BINARY_BettingGuildWar_SetObserverMode",
+						  Script_BuildValue("(i)", uMode));
 	}
 	else if (!strcmpi(szCmd, "ObserverTeamInfo"))
 	{
@@ -398,7 +398,7 @@ void CPythonNetworkStream::ServerCommand(char* c_szCommand)
 	else if (!strcmpi(szCmd, "messenger_auth"))
 	{
 		const std::string& c_rstrName = TokenVector[1].c_str();
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OnMessengerAddFriendQuestion", Py_BuildValue("(s)", c_rstrName.c_str()));
+		Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OnMessengerAddFriendQuestion", Script_BuildValue("(s)", c_rstrName.c_str()));
 	}
 	else if (!strcmpi(szCmd, "combo"))
 	{
@@ -410,7 +410,7 @@ void CPythonNetworkStream::ServerCommand(char* c_szCommand)
 	else if (!strcmpi(szCmd, "setblockmode"))
 	{
 		int iFlag = atoi(TokenVector[1].c_str());
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OnBlockMode", Py_BuildValue("(i)", iFlag));
+		Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OnBlockMode", Script_BuildValue("(i)", iFlag));
 	}
 	// Emotion Start
 	else if (!strcmpi(szCmd, "french_kiss"))

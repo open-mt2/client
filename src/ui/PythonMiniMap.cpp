@@ -1353,7 +1353,7 @@ void CPythonMiniMap::ClearAllSignalPoint()
 	m_SignalPointVector.clear();
 }
 
-void CPythonMiniMap::RegisterAtlasWindow(PyObject* poHandler)
+void CPythonMiniMap::RegisterAtlasWindow(ScriptObject* poHandler)
 {
 	m_poHandler = poHandler;
 }
@@ -1367,7 +1367,7 @@ void CPythonMiniMap::OpenAtlasWindow()
 {
 	if (m_poHandler)
 	{
-		PyCallClassMemberFunc(m_poHandler, "Show", Py_BuildValue("()"));
+		Script_CallMethod(m_poHandler, "Show", Script_BuildValue("()"));
 	}
 }
 
@@ -1377,8 +1377,8 @@ void CPythonMiniMap::SetAtlasCenterPosition(int x, int y)
 	{
 		// int sw = UI::CWindowManager::Instance().GetScreenWidth();
 		// int sh = UI::CWindowManager::Instance().GetScreenHeight();
-		// PyCallClassMemberFunc(m_poHandler,"SetPosition", Py_BuildValue("(ii)",sw/2+x,sh/2+y));
-		PyCallClassMemberFunc(m_poHandler, "SetCenterPositionAdjust", Py_BuildValue("(ii)", x, y));
+		// Script_CallMethod(m_poHandler,"SetPosition", Script_BuildValue("(ii)",sw/2+x,sh/2+y));
+		Script_CallMethod(m_poHandler, "SetCenterPositionAdjust", Script_BuildValue("(ii)", x, y));
 	}
 }
 

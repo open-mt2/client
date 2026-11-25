@@ -331,7 +331,7 @@ void CPythonNetworkStream::__DownloadSymbol(const std::vector<DWORD>& c_rkVec_dw
 	rkGuildMarkDownloader.ConnectToRecvSymbol(m_kMarkAuth.m_kNetAddr, m_kMarkAuth.m_dwHandle, m_kMarkAuth.m_dwRandomKey, c_rkVec_dwGuildID);
 }
 
-void CPythonNetworkStream::SetPhaseWindow(UINT ePhaseWnd, PyObject* poPhaseWnd)
+void CPythonNetworkStream::SetPhaseWindow(UINT ePhaseWnd, ScriptObject* poPhaseWnd)
 {
 	if (ePhaseWnd >= PHASE_WINDOW_NUM)
 		return;
@@ -339,7 +339,7 @@ void CPythonNetworkStream::SetPhaseWindow(UINT ePhaseWnd, PyObject* poPhaseWnd)
 	m_apoPhaseWnd[ePhaseWnd] = poPhaseWnd;
 }
 
-void CPythonNetworkStream::ClearPhaseWindow(UINT ePhaseWnd, PyObject* poPhaseWnd)
+void CPythonNetworkStream::ClearPhaseWindow(UINT ePhaseWnd, ScriptObject* poPhaseWnd)
 {
 	if (ePhaseWnd >= PHASE_WINDOW_NUM)
 		return;
@@ -350,7 +350,7 @@ void CPythonNetworkStream::ClearPhaseWindow(UINT ePhaseWnd, PyObject* poPhaseWnd
 	m_apoPhaseWnd[ePhaseWnd] = 0;
 }
 
-void CPythonNetworkStream::SetServerCommandParserWindow(PyObject* poWnd)
+void CPythonNetworkStream::SetServerCommandParserWindow(ScriptObject* poWnd)
 {
 	m_poSerCommandParserWnd = poWnd;
 }
@@ -657,8 +657,8 @@ bool CPythonNetworkStream::OnProcess()
 	{
 		m_isStartGame = FALSE;
 
-		PyCallClassMemberFunc(m_poHandler, "SetGamePhase", Py_BuildValue("()"));
-		//		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "StartGame", Py_BuildValue("()"));
+		Script_CallMethod(m_poHandler, "SetGamePhase", Script_BuildValue("()"));
+		//		Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "StartGame", Script_BuildValue("()"));
 	}
 
 	m_rokNetActorMgr->Update();
@@ -701,7 +701,7 @@ void CPythonNetworkStream::SetOffLinePhase()
 
 void CPythonNetworkStream::ClosePhase()
 {
-	PyCallClassMemberFunc(m_poHandler, "SetLoginPhase", Py_BuildValue("()"));
+	Script_CallMethod(m_poHandler, "SetLoginPhase", Script_BuildValue("()"));
 }
 
 // Game Online
@@ -721,7 +721,7 @@ BOOL CPythonNetworkStream::IsGameOnline()
 }
 
 // Handler
-void CPythonNetworkStream::SetHandler(PyObject* poHandler)
+void CPythonNetworkStream::SetHandler(ScriptObject* poHandler)
 {
 	m_poHandler = poHandler;
 }
@@ -869,7 +869,7 @@ CPythonNetworkStream::CPythonNetworkStream()
 	__DirectEnterMode_Initialize();
 	__BettingGuildWar_Initialize();
 
-	std::fill(m_apoPhaseWnd, m_apoPhaseWnd + PHASE_WINDOW_NUM, (PyObject*)NULL);
+	std::fill(m_apoPhaseWnd, m_apoPhaseWnd + PHASE_WINDOW_NUM, (ScriptObject*)NULL);
 	m_poSerCommandParserWnd = NULL;
 
 	SetOffLinePhase();

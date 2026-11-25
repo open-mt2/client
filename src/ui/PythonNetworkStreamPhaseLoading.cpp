@@ -195,7 +195,7 @@ bool CPythonNetworkStream::RecvMainCharacter()
 	rkPlayer.SetName(MainChrPacket.szName);
 	rkPlayer.SetMainCharacterIndex(GetMainActorVID());
 
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_LOAD], "LoadData", Py_BuildValue("(ii)", MainChrPacket.lX, MainChrPacket.lY));
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_LOAD], "LoadData", Script_BuildValue("(ii)", MainChrPacket.lX, MainChrPacket.lY));
 
 	// Tracef(" >> RecvMainCharacter\n");
 
@@ -221,7 +221,7 @@ bool CPythonNetworkStream::RecvMainCharacter2_EMPIRE()
 	rkPlayer.SetName(mainChrPacket.szName);
 	rkPlayer.SetMainCharacterIndex(GetMainActorVID());
 
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_LOAD], "LoadData", Py_BuildValue("(ii)", mainChrPacket.lX, mainChrPacket.lY));
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_LOAD], "LoadData", Script_BuildValue("(ii)", mainChrPacket.lX, mainChrPacket.lY));
 
 	// Tracef(" >> RecvMainCharacterNew : %d\n", m_dwMainActorEmpire);
 
@@ -248,7 +248,7 @@ bool CPythonNetworkStream::RecvMainCharacter3_BGM()
 
 	__SetFieldMusicFileName(mainChrPacket.szBGMName);
 
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_LOAD], "LoadData", Py_BuildValue("(ii)", mainChrPacket.lX, mainChrPacket.lY));
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_LOAD], "LoadData", Script_BuildValue("(ii)", mainChrPacket.lX, mainChrPacket.lY));
 
 	// Tracef(" >> RecvMainCharacterNew : %d\n", m_dwMainActorEmpire);
 
@@ -275,7 +275,7 @@ bool CPythonNetworkStream::RecvMainCharacter4_BGM_VOL()
 
 	__SetFieldMusicFileInfo(mainChrPacket.szBGMName, mainChrPacket.fBGMVol);
 
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_LOAD], "LoadData", Py_BuildValue("(ii)", mainChrPacket.lX, mainChrPacket.lY));
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_LOAD], "LoadData", Script_BuildValue("(ii)", mainChrPacket.lX, mainChrPacket.lY));
 
 	// Tracef(" >> RecvMainCharacterNew : %d\n", m_dwMainActorEmpire);
 
@@ -318,7 +318,7 @@ bool CPythonNetworkStream::__RecvPlayerPoints()
 	for (DWORD i = 0; i < POINT_MAX_NUM; ++i)
 		CPythonPlayer::Instance().SetStatus(i, PointsPacket.points[i]);
 
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshStatus", Py_BuildValue("()"));
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshStatus", Script_BuildValue("()"));
 	return true;
 }
 

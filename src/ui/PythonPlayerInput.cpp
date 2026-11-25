@@ -246,7 +246,7 @@ void CPythonPlayer::OpenCharacterMenu(DWORD dwVictimActorID)
 	//	if (pkInstMain == pkInstTarget)
 	//		return;
 
-	PyCallClassMemberFunc(m_ppyGameWindow, "SetPCTargetBoard", Py_BuildValue("(is)", pkInstTarget->GetVirtualID(), pkInstTarget->GetNameString()));
+	Script_CallMethod(m_ppyGameWindow, "SetPCTargetBoard", Script_BuildValue("(is)", pkInstTarget->GetVirtualID(), pkInstTarget->GetNameString()));
 }
 
 void CPythonPlayer::__OnClickItem(CInstanceBase& rkInstMain, DWORD dwItemID)
@@ -537,7 +537,7 @@ void CPythonPlayer::NEW_Fishing()
 				CPythonNetworkStream::Instance().SendFishingPacket(irot);
 			else
 			{
-				PyCallClassMemberFunc(m_ppyGameWindow, "OnFishingWrongPlace", Py_BuildValue("()"));
+				Script_CallMethod(m_ppyGameWindow, "OnFishingWrongPlace", Script_BuildValue("()"));
 			}
 		}
 	}
@@ -586,7 +586,7 @@ void CPythonPlayer::NEW_Attack()
 		}
 		else
 		{
-			PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "NEED_TARGET"));
+			Script_CallMethod(m_ppyGameWindow, "OnCannotUseSkill", Script_BuildValue("(is)", GetMainCharacterIndex(), "NEED_TARGET"));
 			return;
 		}
 	}
@@ -652,19 +652,19 @@ bool CPythonPlayer::__CanShot(CInstanceBase& rkInstMain, CInstanceBase& rkInstTa
 {
 	if (!__HasEnoughArrow())
 	{
-		PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotShot", Py_BuildValue("(is)", GetMainCharacterIndex(), "EMPTY_ARROW"));
+		Script_CallMethod(m_ppyGameWindow, "OnCannotShot", Script_BuildValue("(is)", GetMainCharacterIndex(), "EMPTY_ARROW"));
 		return false;
 	}
 
 	if (rkInstMain.IsInSafe())
 	{
-		PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotShot", Py_BuildValue("(is)", GetMainCharacterIndex(), "IN_SAFE"));
+		Script_CallMethod(m_ppyGameWindow, "OnCannotShot", Script_BuildValue("(is)", GetMainCharacterIndex(), "IN_SAFE"));
 		return false;
 	}
 
 	if (rkInstTarget.IsInSafe())
 	{
-		PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotShot", Py_BuildValue("(is)", GetMainCharacterIndex(), "DEST_IN_SAFE"));
+		Script_CallMethod(m_ppyGameWindow, "OnCannotShot", Script_BuildValue("(is)", GetMainCharacterIndex(), "DEST_IN_SAFE"));
 		return false;
 	}
 
@@ -897,7 +897,7 @@ void CPythonPlayer::__ReserveProcess_ClickActor()
 
 	if (pkInstMain->IsInSafe())
 	{
-		PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotAttack", Py_BuildValue("(is)", GetMainCharacterIndex(), "IN_SAFE"));
+		Script_CallMethod(m_ppyGameWindow, "OnCannotAttack", Script_BuildValue("(is)", GetMainCharacterIndex(), "IN_SAFE"));
 		pkInstMain->NEW_Stop();
 		__ClearReservedAction();
 		return;
@@ -905,7 +905,7 @@ void CPythonPlayer::__ReserveProcess_ClickActor()
 
 	if (pkInstReserved->IsInSafe())
 	{
-		PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotAttack", Py_BuildValue("(is)", GetMainCharacterIndex(), "DEST_IN_SAFE"));
+		Script_CallMethod(m_ppyGameWindow, "OnCannotAttack", Script_BuildValue("(is)", GetMainCharacterIndex(), "DEST_IN_SAFE"));
 		pkInstMain->NEW_Stop();
 		__ClearReservedAction();
 		return;
@@ -923,7 +923,7 @@ void CPythonPlayer::__ReserveProcess_ClickActor()
 	{
 		if (!__HasEnoughArrow())
 		{
-			PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotShot", Py_BuildValue("(is)", GetMainCharacterIndex(), "EMPTY_ARROW"));
+			Script_CallMethod(m_ppyGameWindow, "OnCannotShot", Script_BuildValue("(is)", GetMainCharacterIndex(), "EMPTY_ARROW"));
 			pkInstMain->NEW_Stop();
 			__ClearReservedAction();
 			return;
@@ -950,12 +950,12 @@ if (pkInstReserved)
 			{
 				if (pkInstMain->IsInSafe())
 				{
-					PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotAttack", Py_BuildValue("(is)", GetMainCharacterIndex(), "IN_SAFE"));
+					Script_CallMethod(m_ppyGameWindow, "OnCannotAttack", Script_BuildValue("(is)", GetMainCharacterIndex(), "IN_SAFE"));
 					pkInstMain->NEW_Stop();
 				}
 				else if (pkInstReserved->IsInSafe())
 				{
-					PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotAttack", Py_BuildValue("(is)", GetMainCharacterIndex(), "DEST_IN_SAFE"));
+					Script_CallMethod(m_ppyGameWindow, "OnCannotAttack", Script_BuildValue("(is)", GetMainCharacterIndex(), "DEST_IN_SAFE"));
 					pkInstMain->NEW_Stop();
 				}
 				else
@@ -964,7 +964,7 @@ if (pkInstReserved)
 					{
 						if (!__HasEnoughArrow())
 						{
-							PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotShot", Py_BuildValue("(is)", GetMainCharacterIndex(), "EMPTY_ARROW"));
+							Script_CallMethod(m_ppyGameWindow, "OnCannotShot", Script_BuildValue("(is)", GetMainCharacterIndex(), "EMPTY_ARROW"));
 							pkInstMain->NEW_Stop();
 							__ClearReservedAction();
 							break;

@@ -4,17 +4,17 @@
 #include <Neoeter/Render/StateManager.h>
 #include <Client/Game/MapOutdoor.h>
 
-PyObject* backgroundIsSoftwareTiling(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundIsSoftwareTiling(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonBackground& rkBG = CPythonBackground::Instance();
-	return Py_BuildValue("i", rkBG.IsSoftwareTilingEnable());
+	return Script_BuildValue("i", rkBG.IsSoftwareTilingEnable());
 }
 
-PyObject* backgroundEnableSoftwareTiling(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundEnableSoftwareTiling(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int nIsEnable;
-	if (!PyTuple_GetInteger(poArgs, 0, &nIsEnable))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &nIsEnable))
+		return Script_BadArgument();
 
 	bool isEnable = nIsEnable ? true : false;
 
@@ -23,14 +23,14 @@ PyObject* backgroundEnableSoftwareTiling(PyObject* poSelf, PyObject* poArgs)
 
 	CPythonSystem& rkSystem = CPythonSystem::Instance();
 	rkSystem.SetSoftwareTiling(isEnable);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* backgroundEnableSnow(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundEnableSnow(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int nIsEnable;
-	if (!PyTuple_GetInteger(poArgs, 0, &nIsEnable))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &nIsEnable))
+		return Script_BadArgument();
 
 	CPythonBackground& rkBG = CPythonBackground::Instance();
 	if (nIsEnable)
@@ -38,26 +38,26 @@ PyObject* backgroundEnableSnow(PyObject* poSelf, PyObject* poArgs)
 	else
 		rkBG.DisableSnowEnvironment();
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* backgroundLoadMap(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundLoadMap(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* pszMapPathName;
 
-	if (!PyTuple_GetString(poArgs, 0, &pszMapPathName))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetString(poArgs, 0, &pszMapPathName))
+		return Script_BadArgument();
 
 	float x, y, z;
 
-	if (!PyTuple_GetFloat(poArgs, 1, &x))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetFloat(poArgs, 1, &x))
+		return Script_BadArgument();
 
-	if (!PyTuple_GetFloat(poArgs, 2, &y))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetFloat(poArgs, 2, &y))
+		return Script_BadArgument();
 
-	if (!PyTuple_GetFloat(poArgs, 3, &z))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetFloat(poArgs, 3, &z))
+		return Script_BadArgument();
 
 	CPythonBackground& rkBG = CPythonBackground::Instance();
 	rkBG.LoadMap(pszMapPathName, x, y, z);
@@ -68,26 +68,26 @@ PyObject* backgroundLoadMap(PyObject* poSelf, PyObject* poArgs)
 	//	rkBG.EnableTerrainOnlyForHeight();
 	// #endif
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* backgroundDestroy(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundDestroy(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonBackground& rkBG = CPythonBackground::Instance();
 	rkBG.SetShadowLevel(CPythonBackground::SHADOW_NONE);
 	rkBG.Destroy();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* backgroundRegisterEnvironmentData(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundRegisterEnvironmentData(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iIndex))
+		return Script_BadArgument();
 
 	char* pszEnvironmentFileName;
-	if (!PyTuple_GetString(poArgs, 1, &pszEnvironmentFileName))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetString(poArgs, 1, &pszEnvironmentFileName))
+		return Script_BadArgument();
 
 	CPythonBackground& rkBG = CPythonBackground::Instance();
 	if (!rkBG.RegisterEnvironmentData(iIndex, pszEnvironmentFileName))
@@ -98,14 +98,14 @@ PyObject* backgroundRegisterEnvironmentData(PyObject* poSelf, PyObject* poArgs)
 		// 디폴트 환경 설정 작업을 해주자
 	}
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* backgroundSetEnvironmentData(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundSetEnvironmentData(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iIndex))
+		return Script_BadArgument();
 
 	const TEnvironmentData* c_pEnvironmenData;
 
@@ -113,16 +113,16 @@ PyObject* backgroundSetEnvironmentData(PyObject* poSelf, PyObject* poArgs)
 	if (rkBG.GetEnvironmentData(iIndex, &c_pEnvironmenData))
 		rkBG.ResetEnvironmentDataPtr(c_pEnvironmenData);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* backgroundGetCurrentMapName(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundGetCurrentMapName(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonBackground& rkBG = CPythonBackground::Instance();
-	return Py_BuildValue("s", rkBG.GetWarpMapName());
+	return Script_BuildValue("s", rkBG.GetWarpMapName());
 }
 
-PyObject* backgroundGetPickingPoint(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundGetPickingPoint(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonBackground& rkBG = CPythonBackground::Instance();
 	TPixelPosition kPPosPicked(0.0f, 0.0f, 0.0f);
@@ -130,207 +130,207 @@ PyObject* backgroundGetPickingPoint(PyObject* poSelf, PyObject* poArgs)
 	{
 		kPPosPicked.y = -kPPosPicked.y;
 	}
-	return Py_BuildValue("fff", kPPosPicked.x, kPPosPicked.y, kPPosPicked.z);
+	return Script_BuildValue("fff", kPPosPicked.x, kPPosPicked.y, kPPosPicked.z);
 }
 
-PyObject* backgroundBeginEnvironment(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundBeginEnvironment(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonBackground& rkBG = CPythonBackground::Instance();
 	rkBG.BeginEnvironment();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* backgroundEndEnvironemt(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundEndEnvironemt(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonBackground& rkBG = CPythonBackground::Instance();
 	rkBG.EndEnvironment();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* backgroundSetCharacterDirLight(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundSetCharacterDirLight(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonBackground& rkBG = CPythonBackground::Instance();
 	rkBG.SetCharacterDirLight();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* backgroundSetBackgroundDirLight(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundSetBackgroundDirLight(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonBackground& rkBG = CPythonBackground::Instance();
 	rkBG.SetBackgroundDirLight();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* backgroundSetLightingMode(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundSetLightingMode(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* pszMode;
-	if (!PyTuple_GetString(poArgs, 0, &pszMode))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetString(poArgs, 0, &pszMode))
+		return Script_BadArgument();
 
 	CPythonBackground& rkBG = CPythonBackground::Instance();
-	return Py_BuildValue("i", rkBG.SetLightingMode(pszMode) ? 1 : 0);
+	return Script_BuildValue("i", rkBG.SetLightingMode(pszMode) ? 1 : 0);
 }
 
-PyObject* backgroundGetLightingMode(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundGetLightingMode(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonBackground& rkBG = CPythonBackground::Instance();
-	return Py_BuildValue("s", rkBG.GetLightingMode());
+	return Script_BuildValue("s", rkBG.GetLightingMode());
 }
 
-PyObject* backgroundSetDayNightEnabled(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundSetDayNightEnabled(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int bEnabled;
-	if (!PyTuple_GetInteger(poArgs, 0, &bEnabled))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &bEnabled))
+		return Script_BadArgument();
 
 	CPythonBackground& rkBG = CPythonBackground::Instance();
 	rkBG.SetDayNightEnabled(bEnabled != 0);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* backgroundIsDayNightEnabled(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundIsDayNightEnabled(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonBackground& rkBG = CPythonBackground::Instance();
-	return Py_BuildValue("i", rkBG.IsDayNightEnabled() ? 1 : 0);
+	return Script_BuildValue("i", rkBG.IsDayNightEnabled() ? 1 : 0);
 }
 
-PyObject* backgroundSetTimeOfDay(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundSetTimeOfDay(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	float fHour;
-	if (!PyTuple_GetFloat(poArgs, 0, &fHour))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetFloat(poArgs, 0, &fHour))
+		return Script_BadArgument();
 
 	CPythonBackground& rkBG = CPythonBackground::Instance();
 	rkBG.SetTimeOfDay(fHour);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* backgroundGetTimeOfDay(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundGetTimeOfDay(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonBackground& rkBG = CPythonBackground::Instance();
-	return Py_BuildValue("f", rkBG.GetTimeOfDay());
+	return Script_BuildValue("f", rkBG.GetTimeOfDay());
 }
 
-PyObject* backgroundChangeToDay(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundChangeToDay(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonBackground& rkBG = CPythonBackground::Instance();
 	rkBG.ChangeToDay();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* backgroundChangeToNight(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundChangeToNight(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonBackground& rkBG = CPythonBackground::Instance();
 	rkBG.ChangeToNight();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* backgroundInitialize(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundInitialize(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonBackground& rkBG = CPythonBackground::Instance();
 	rkBG.Create();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* backgroundUpdate(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundUpdate(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	float fCameraX;
-	if (!PyTuple_GetFloat(poArgs, 0, &fCameraX))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetFloat(poArgs, 0, &fCameraX))
+		return Script_BadArgument();
 
 	float fCameraY;
-	if (!PyTuple_GetFloat(poArgs, 1, &fCameraY))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetFloat(poArgs, 1, &fCameraY))
+		return Script_BadArgument();
 
 	float fCameraZ;
-	if (!PyTuple_GetFloat(poArgs, 2, &fCameraZ))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetFloat(poArgs, 2, &fCameraZ))
+		return Script_BadArgument();
 
 	CPythonBackground::Instance().Update(fCameraX, fCameraY, fCameraZ);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* backgroundRender(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundRender(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonBackground::Instance().Render();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* backgroundRenderPCBlocker(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundRenderPCBlocker(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonBackground::Instance().RenderPCBlocker();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* backgroundRenderCollision(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundRenderCollision(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonBackground::Instance().RenderCollision();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* backgroundRenderSky(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundRenderSky(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonBackground::Instance().RenderSky();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* backgroundRenderCloud(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundRenderCloud(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonBackground::Instance().RenderCloud();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* backgroundRenderWater(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundRenderWater(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonBackground::Instance().RenderWater();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* backgroundRenderEffect(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundRenderEffect(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonBackground::Instance().RenderEffect();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* backgroundRenderBeforeLensFlare(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundRenderBeforeLensFlare(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonBackground::Instance().RenderBeforeLensFlare();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* backgroundRenderAfterLensFlare(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundRenderAfterLensFlare(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonBackground::Instance().RenderAfterLensFlare();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* backgroundRenderCharacterShadowToTexture(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundRenderCharacterShadowToTexture(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonBackground::Instance().RenderCharacterShadowToTexture();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* backgroundRenderDungeon(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundRenderDungeon(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	assert(!"background.RenderDungeon() - \xBB\xE7\xBF\xEB\xC7\xCF\xC1\xF6 \xBE\xCA\xB4\xC2 \xC7\xD4\xBC\xF6\xC0\xD4\xB4\xCF\xB4\xD9 - [levites]");
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* backgroundGetHeight(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundGetHeight(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	float fx;
-	if (!PyTuple_GetFloat(poArgs, 0, &fx))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetFloat(poArgs, 0, &fx))
+		return Script_BadArgument();
 
 	float fy;
-	if (!PyTuple_GetFloat(poArgs, 1, &fy))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetFloat(poArgs, 1, &fy))
+		return Script_BadArgument();
 
 	float fz = CPythonBackground::Instance().GetHeight(fx, fy);
-	return Py_BuildValue("f", fz);
+	return Script_BuildValue("f", fz);
 }
 
-PyObject* backgroundGetRenderedSplatNum(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundGetRenderedSplatNum(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iPatch;
 	int iSplat;
@@ -346,10 +346,10 @@ PyObject* backgroundGetRenderedSplatNum(PyObject* poSelf, PyObject* poArgs)
 	}
 	// std::copy(aTextureNumVector.begin(),aTextureNumVector.end(),std::ostream_iterator<int>(ostr," "));
 
-	return Py_BuildValue("iifs", iPatch, iSplat, fSplatRatio, szOutput);
+	return Script_BuildValue("iifs", iPatch, iSplat, fSplatRatio, szOutput);
 }
 
-PyObject* backgroundGetRenderedGTINum(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundGetRenderedGTINum(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	DWORD dwGraphicThingInstanceNum;
 	DWORD dwCRCNum;
@@ -363,329 +363,329 @@ PyObject* backgroundGetRenderedGTINum(PyObject* poSelf, PyObject* poArgs)
 		std::for_each(rCRCWithNumberVector.begin(),rCRCWithNumberVector.end(),std::ostream_iterator<CArea::TCRCWithNumberVector>(ostr," "));
 	*/
 
-	return Py_BuildValue("ii", dwGraphicThingInstanceNum, dwCRCNum);
+	return Script_BuildValue("ii", dwGraphicThingInstanceNum, dwCRCNum);
 }
 
-PyObject* backgroundGetRenderShadowTime(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundGetRenderShadowTime(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonBackground& rkBG = CPythonBackground::Instance();
-	return Py_BuildValue("i", rkBG.GetRenderShadowTime());
+	return Script_BuildValue("i", rkBG.GetRenderShadowTime());
 }
 
-PyObject* backgroundGetShadowMapcolor(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundGetShadowMapcolor(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	float fx;
-	if (!PyTuple_GetFloat(poArgs, 0, &fx))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetFloat(poArgs, 0, &fx))
+		return Script_BadArgument();
 
 	float fy;
-	if (!PyTuple_GetFloat(poArgs, 1, &fy))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetFloat(poArgs, 1, &fy))
+		return Script_BadArgument();
 
 	DWORD dwColor = CPythonBackground::Instance().GetShadowMapColor(fx, fy);
-	return Py_BuildValue("i", dwColor);
+	return Script_BuildValue("i", dwColor);
 }
 
-PyObject* backgroundSetShadowLevel(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundSetShadowLevel(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iLevel;
 
-	if (!PyTuple_GetInteger(poArgs, 0, &iLevel))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iLevel))
+		return Script_BadArgument();
 
 	CPythonBackground& rkBG = CPythonBackground::Instance();
 	rkBG.SetShadowLevel(iLevel);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* backgroundSetVisiblePart(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundSetVisiblePart(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int ePart;
-	if (!PyTuple_GetInteger(poArgs, 0, &ePart))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &ePart))
+		return Script_BadArgument();
 
 	int isVisible;
-	if (!PyTuple_GetInteger(poArgs, 1, &isVisible))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &isVisible))
+		return Script_BadArgument();
 
 	if (ePart >= CMapOutdoor::PART_NUM)
-		return Py_BuildException("ePart(%d)<background.PART_NUM(%d)", ePart, CMapOutdoor::PART_NUM);
+		return Script_BuildException("ePart(%d)<background.PART_NUM(%d)", ePart, CMapOutdoor::PART_NUM);
 
 	CPythonBackground& rkBG = CPythonBackground::Instance();
 	rkBG.SetVisiblePart(ePart, isVisible ? true : false);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* backgroundSetSpaltLimit(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundSetSpaltLimit(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSplatNum;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSplatNum))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSplatNum))
+		return Script_BadArgument();
 
 	if (iSplatNum < 0)
-		return Py_BuildException("background.SetSplatLimit(iSplatNum(%d)>=0)", iSplatNum);
+		return Script_BuildException("background.SetSplatLimit(iSplatNum(%d)>=0)", iSplatNum);
 
 	CPythonBackground& rkBG = CPythonBackground::Instance();
 	rkBG.SetSplatLimit(iSplatNum);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* backgroundSelectViewDistanceNum(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundSelectViewDistanceNum(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iNum;
 
-	if (!PyTuple_GetInteger(poArgs, 0, &iNum))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iNum))
+		return Script_BadArgument();
 
 	CPythonBackground& rkBG = CPythonBackground::Instance();
 	rkBG.SelectViewDistanceNum(iNum);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* backgroundSetViewDistanceSet(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundSetViewDistanceSet(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iNum;
-	if (!PyTuple_GetInteger(poArgs, 0, &iNum))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iNum))
+		return Script_BadArgument();
 
 	float fFarClip;
-	if (!PyTuple_GetFloat(poArgs, 1, &fFarClip))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetFloat(poArgs, 1, &fFarClip))
+		return Script_BadArgument();
 
 	CPythonBackground& rkBG = CPythonBackground::Instance();
 	rkBG.SetViewDistanceSet(iNum, fFarClip);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* backgroundGetFarClip(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundGetFarClip(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	float fFarClip = CPythonBackground::Instance().GetFarClip();
-	return Py_BuildValue("f", fFarClip);
+	return Script_BuildValue("f", fFarClip);
 }
 
-PyObject* backgroundGetDistanceSetInfo(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundGetDistanceSetInfo(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iNum;
 	float fStart, fEnd, fFarClip;
 	CPythonBackground::Instance().GetDistanceSetInfo(&iNum, &fStart, &fEnd, &fFarClip);
-	return Py_BuildValue("ifff", iNum, fStart, fEnd, fFarClip);
+	return Script_BuildValue("ifff", iNum, fStart, fEnd, fFarClip);
 }
 
-PyObject* backgroundSetBGLoading(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundSetBGLoading(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	bool bBGLoading;
-	if (!PyTuple_GetBoolean(poArgs, 0, &bBGLoading))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetBoolean(poArgs, 0, &bBGLoading))
+		return Script_BadArgument();
 
 	// CPythonBackground::Instance().BGLoadingEnable(bBGLoading);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* backgroundSetRenderSort(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundSetRenderSort(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int eSort;
-	if (!PyTuple_GetInteger(poArgs, 0, &eSort))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &eSort))
+		return Script_BadArgument();
 
 	CPythonBackground::Instance().SetTerrainRenderSort((CMapOutdoor::ETerrainRenderSort)eSort);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* backgroundSetTransparentTree(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundSetTransparentTree(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int bTransparent;
-	if (!PyTuple_GetInteger(poArgs, 0, &bTransparent))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &bTransparent))
+		return Script_BadArgument();
 
 	CPythonBackground::Instance().SetTransparentTree(bTransparent ? true : false);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* backgroundGlobalPositionToLocalPosition(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundGlobalPositionToLocalPosition(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iX;
-	if (!PyTuple_GetInteger(poArgs, 0, &iX))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iX))
+		return Script_BadArgument();
 
 	int iY;
-	if (!PyTuple_GetInteger(poArgs, 1, &iY))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iY))
+		return Script_BadArgument();
 
 	LONG lX = iX;
 	LONG lY = iY;
 	CPythonBackground& rkBG = CPythonBackground::Instance();
 	rkBG.GlobalPositionToLocalPosition(lX, lY);
 
-	return Py_BuildValue("ii", lX, lY);
+	return Script_BuildValue("ii", lX, lY);
 }
 
-PyObject* backgroundGlobalPositionToMapInfo(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundGlobalPositionToMapInfo(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iX;
-	if (!PyTuple_GetInteger(poArgs, 0, &iX))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iX))
+		return Script_BadArgument();
 
 	int iY;
-	if (!PyTuple_GetInteger(poArgs, 1, &iY))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iY))
+		return Script_BadArgument();
 
 	CPythonBackground& rkBG = CPythonBackground::Instance();
 	CPythonBackground::TMapInfo* pkMapInfo = rkBG.GlobalPositionToMapInfo(iX, iY);
 
 	if (pkMapInfo)
-		return Py_BuildValue("sii", pkMapInfo->m_strName.c_str(), pkMapInfo->m_dwBaseX, pkMapInfo->m_dwBaseY);
+		return Script_BuildValue("sii", pkMapInfo->m_strName.c_str(), pkMapInfo->m_dwBaseX, pkMapInfo->m_dwBaseY);
 	else
-		return Py_BuildValue("sii", "", 0, 0);
+		return Script_BuildValue("sii", "", 0, 0);
 }
 
-PyObject* backgroundWarpTest(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundWarpTest(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iX;
-	if (!PyTuple_GetInteger(poArgs, 0, &iX))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iX))
+		return Script_BadArgument();
 
 	int iY;
-	if (!PyTuple_GetInteger(poArgs, 1, &iY))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iY))
+		return Script_BadArgument();
 
 	CPythonBackground::Instance().Warp((DWORD)iX * 100, (DWORD)iY * 100);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* backgroundSetXMasTree(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundSetXMasTree(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iGrade;
-	if (!PyTuple_GetInteger(poArgs, 0, &iGrade))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iGrade))
+		return Script_BadArgument();
 
 	CPythonBackground::Instance().SetXMaxTree(iGrade);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* backgroundRegisterDungeonMapName(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundRegisterDungeonMapName(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szName;
-	if (!PyTuple_GetString(poArgs, 0, &szName))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetString(poArgs, 0, &szName))
+		return Script_BadArgument();
 
 	CPythonBackground::Instance().RegisterDungeonMapName(szName);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* backgroundVisibleGuildArea(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundVisibleGuildArea(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonBackground::Instance().VisibleGuildArea();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* backgroundDisableGuildArea(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* backgroundDisableGuildArea(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonBackground::Instance().DisableGuildArea();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
 void initBackground()
 {
-	static PyMethodDef s_methods[] =
+	static ScriptMethodDef s_methods[] =
 		{
-			{"IsSoftwareTiling", backgroundIsSoftwareTiling, METH_VARARGS, NULL},
-			{"EnableSoftwareTiling", backgroundEnableSoftwareTiling, METH_VARARGS, NULL},
-			{"EnableSnow", backgroundEnableSnow, METH_VARARGS, NULL},
-			{"GlobalPositionToLocalPosition", backgroundGlobalPositionToLocalPosition, METH_VARARGS, NULL},
-			{"GlobalPositionToMapInfo", backgroundGlobalPositionToMapInfo, METH_VARARGS, NULL},
-			{"GetRenderShadowTime", backgroundGetRenderShadowTime, METH_VARARGS, NULL},
-			{"LoadMap", backgroundLoadMap, METH_VARARGS, NULL},
-			{"Destroy", backgroundDestroy, METH_VARARGS, NULL},
-			{"RegisterEnvironmentData", backgroundRegisterEnvironmentData, METH_VARARGS, NULL},
-			{"SetEnvironmentData", backgroundSetEnvironmentData, METH_VARARGS, NULL},
-			{"GetCurrentMapName", backgroundGetCurrentMapName, METH_VARARGS, NULL},
-			{"GetPickingPoint", backgroundGetPickingPoint, METH_VARARGS, NULL},
+			{"IsSoftwareTiling", backgroundIsSoftwareTiling, SCRIPT_VARARGS, NULL},
+			{"EnableSoftwareTiling", backgroundEnableSoftwareTiling, SCRIPT_VARARGS, NULL},
+			{"EnableSnow", backgroundEnableSnow, SCRIPT_VARARGS, NULL},
+			{"GlobalPositionToLocalPosition", backgroundGlobalPositionToLocalPosition, SCRIPT_VARARGS, NULL},
+			{"GlobalPositionToMapInfo", backgroundGlobalPositionToMapInfo, SCRIPT_VARARGS, NULL},
+			{"GetRenderShadowTime", backgroundGetRenderShadowTime, SCRIPT_VARARGS, NULL},
+			{"LoadMap", backgroundLoadMap, SCRIPT_VARARGS, NULL},
+			{"Destroy", backgroundDestroy, SCRIPT_VARARGS, NULL},
+			{"RegisterEnvironmentData", backgroundRegisterEnvironmentData, SCRIPT_VARARGS, NULL},
+			{"SetEnvironmentData", backgroundSetEnvironmentData, SCRIPT_VARARGS, NULL},
+			{"GetCurrentMapName", backgroundGetCurrentMapName, SCRIPT_VARARGS, NULL},
+			{"GetPickingPoint", backgroundGetPickingPoint, SCRIPT_VARARGS, NULL},
 
-			{"BeginEnvironment", backgroundBeginEnvironment, METH_VARARGS, NULL},
-			{"EndEnvironment", backgroundEndEnvironemt, METH_VARARGS, NULL},
-			{"SetCharacterDirLight", backgroundSetCharacterDirLight, METH_VARARGS, NULL},
-			{"SetBackgroundDirLight", backgroundSetBackgroundDirLight, METH_VARARGS, NULL},
-			{"SetLightingMode", backgroundSetLightingMode, METH_VARARGS, NULL},
-			{"GetLightingMode", backgroundGetLightingMode, METH_VARARGS, NULL},
-			{"SetDayNightEnabled", backgroundSetDayNightEnabled, METH_VARARGS, NULL},
-			{"IsDayNightEnabled", backgroundIsDayNightEnabled, METH_VARARGS, NULL},
-			{"SetTimeOfDay", backgroundSetTimeOfDay, METH_VARARGS, NULL},
-			{"GetTimeOfDay", backgroundGetTimeOfDay, METH_VARARGS, NULL},
-			{"ChangeToDay", backgroundChangeToDay, METH_VARARGS, NULL},
-			{"ChangeToNight", backgroundChangeToNight, METH_VARARGS, NULL},
+			{"BeginEnvironment", backgroundBeginEnvironment, SCRIPT_VARARGS, NULL},
+			{"EndEnvironment", backgroundEndEnvironemt, SCRIPT_VARARGS, NULL},
+			{"SetCharacterDirLight", backgroundSetCharacterDirLight, SCRIPT_VARARGS, NULL},
+			{"SetBackgroundDirLight", backgroundSetBackgroundDirLight, SCRIPT_VARARGS, NULL},
+			{"SetLightingMode", backgroundSetLightingMode, SCRIPT_VARARGS, NULL},
+			{"GetLightingMode", backgroundGetLightingMode, SCRIPT_VARARGS, NULL},
+			{"SetDayNightEnabled", backgroundSetDayNightEnabled, SCRIPT_VARARGS, NULL},
+			{"IsDayNightEnabled", backgroundIsDayNightEnabled, SCRIPT_VARARGS, NULL},
+			{"SetTimeOfDay", backgroundSetTimeOfDay, SCRIPT_VARARGS, NULL},
+			{"GetTimeOfDay", backgroundGetTimeOfDay, SCRIPT_VARARGS, NULL},
+			{"ChangeToDay", backgroundChangeToDay, SCRIPT_VARARGS, NULL},
+			{"ChangeToNight", backgroundChangeToNight, SCRIPT_VARARGS, NULL},
 
-			{"Initialize", backgroundInitialize, METH_VARARGS, NULL},
-			{"Update", backgroundUpdate, METH_VARARGS, NULL},
-			{"Render", backgroundRender, METH_VARARGS, NULL},
-			{"RenderPCBlocker", backgroundRenderPCBlocker, METH_VARARGS, NULL},
-			{"RenderCollision", backgroundRenderCollision, METH_VARARGS, NULL},
-			{"RenderSky", backgroundRenderSky, METH_VARARGS, NULL},
-			{"RenderCloud", backgroundRenderCloud, METH_VARARGS, NULL},
-			{"RenderWater", backgroundRenderWater, METH_VARARGS, NULL},
-			{"RenderEffect", backgroundRenderEffect, METH_VARARGS, NULL},
-			{"RenderBeforeLensFlare", backgroundRenderBeforeLensFlare, METH_VARARGS, NULL},
-			{"RenderAfterLensFlare", backgroundRenderAfterLensFlare, METH_VARARGS, NULL},
-			{"RenderCharacterShadowToTexture", backgroundRenderCharacterShadowToTexture, METH_VARARGS, NULL},
-			{"RenderDungeon", backgroundRenderDungeon, METH_VARARGS, NULL},
-			{"GetHeight", backgroundGetHeight, METH_VARARGS, NULL},
+			{"Initialize", backgroundInitialize, SCRIPT_VARARGS, NULL},
+			{"Update", backgroundUpdate, SCRIPT_VARARGS, NULL},
+			{"Render", backgroundRender, SCRIPT_VARARGS, NULL},
+			{"RenderPCBlocker", backgroundRenderPCBlocker, SCRIPT_VARARGS, NULL},
+			{"RenderCollision", backgroundRenderCollision, SCRIPT_VARARGS, NULL},
+			{"RenderSky", backgroundRenderSky, SCRIPT_VARARGS, NULL},
+			{"RenderCloud", backgroundRenderCloud, SCRIPT_VARARGS, NULL},
+			{"RenderWater", backgroundRenderWater, SCRIPT_VARARGS, NULL},
+			{"RenderEffect", backgroundRenderEffect, SCRIPT_VARARGS, NULL},
+			{"RenderBeforeLensFlare", backgroundRenderBeforeLensFlare, SCRIPT_VARARGS, NULL},
+			{"RenderAfterLensFlare", backgroundRenderAfterLensFlare, SCRIPT_VARARGS, NULL},
+			{"RenderCharacterShadowToTexture", backgroundRenderCharacterShadowToTexture, SCRIPT_VARARGS, NULL},
+			{"RenderDungeon", backgroundRenderDungeon, SCRIPT_VARARGS, NULL},
+			{"GetHeight", backgroundGetHeight, SCRIPT_VARARGS, NULL},
 
-			{"SetShadowLevel", backgroundSetShadowLevel, METH_VARARGS, NULL},
+			{"SetShadowLevel", backgroundSetShadowLevel, SCRIPT_VARARGS, NULL},
 
-			{"SetVisiblePart", backgroundSetVisiblePart, METH_VARARGS, NULL},
-			{"GetShadowMapColor", backgroundGetShadowMapcolor, METH_VARARGS, NULL},
-			{"SetSplatLimit", backgroundSetSpaltLimit, METH_VARARGS, NULL},
-			{"GetRenderedSplatNum", backgroundGetRenderedSplatNum, METH_VARARGS, NULL},
-			{"GetRenderedGraphicThingInstanceNum", backgroundGetRenderedGTINum, METH_VARARGS, NULL},
-			{"SelectViewDistanceNum", backgroundSelectViewDistanceNum, METH_VARARGS, NULL},
-			{"SetViewDistanceSet", backgroundSetViewDistanceSet, METH_VARARGS, NULL},
-			{"GetFarClip", backgroundGetFarClip, METH_VARARGS, NULL},
-			{"GetDistanceSetInfo", backgroundGetDistanceSetInfo, METH_VARARGS, NULL},
-			{"SetBGLoading", backgroundSetBGLoading, METH_VARARGS, NULL},
-			{"SetRenderSort", backgroundSetRenderSort, METH_VARARGS, NULL},
-			{"SetTransparentTree", backgroundSetTransparentTree, METH_VARARGS, NULL},
-			{"SetXMasTree", backgroundSetXMasTree, METH_VARARGS, NULL},
-			{"RegisterDungeonMapName", backgroundRegisterDungeonMapName, METH_VARARGS, NULL},
+			{"SetVisiblePart", backgroundSetVisiblePart, SCRIPT_VARARGS, NULL},
+			{"GetShadowMapColor", backgroundGetShadowMapcolor, SCRIPT_VARARGS, NULL},
+			{"SetSplatLimit", backgroundSetSpaltLimit, SCRIPT_VARARGS, NULL},
+			{"GetRenderedSplatNum", backgroundGetRenderedSplatNum, SCRIPT_VARARGS, NULL},
+			{"GetRenderedGraphicThingInstanceNum", backgroundGetRenderedGTINum, SCRIPT_VARARGS, NULL},
+			{"SelectViewDistanceNum", backgroundSelectViewDistanceNum, SCRIPT_VARARGS, NULL},
+			{"SetViewDistanceSet", backgroundSetViewDistanceSet, SCRIPT_VARARGS, NULL},
+			{"GetFarClip", backgroundGetFarClip, SCRIPT_VARARGS, NULL},
+			{"GetDistanceSetInfo", backgroundGetDistanceSetInfo, SCRIPT_VARARGS, NULL},
+			{"SetBGLoading", backgroundSetBGLoading, SCRIPT_VARARGS, NULL},
+			{"SetRenderSort", backgroundSetRenderSort, SCRIPT_VARARGS, NULL},
+			{"SetTransparentTree", backgroundSetTransparentTree, SCRIPT_VARARGS, NULL},
+			{"SetXMasTree", backgroundSetXMasTree, SCRIPT_VARARGS, NULL},
+			{"RegisterDungeonMapName", backgroundRegisterDungeonMapName, SCRIPT_VARARGS, NULL},
 
-			{"VisibleGuildArea", backgroundVisibleGuildArea, METH_VARARGS, NULL},
-			{"DisableGuildArea", backgroundDisableGuildArea, METH_VARARGS, NULL},
+			{"VisibleGuildArea", backgroundVisibleGuildArea, SCRIPT_VARARGS, NULL},
+			{"DisableGuildArea", backgroundDisableGuildArea, SCRIPT_VARARGS, NULL},
 
-			{"WarpTest", backgroundWarpTest, METH_VARARGS, NULL},
+			{"WarpTest", backgroundWarpTest, SCRIPT_VARARGS, NULL},
 
 			{NULL, NULL, 0, NULL},
 		};
 
-	PyObject* poModule = Py_InitModule("background", s_methods);
+	ScriptObject* poModule = ScriptModule_Create("background", s_methods);
 
-	PyModule_AddIntConstant(poModule, "PART_SKY", CMapOutdoor::PART_SKY);
-	PyModule_AddIntConstant(poModule, "PART_TREE", CMapOutdoor::PART_TREE);
-	PyModule_AddIntConstant(poModule, "PART_CLOUD", CMapOutdoor::PART_CLOUD);
-	PyModule_AddIntConstant(poModule, "PART_WATER", CMapOutdoor::PART_WATER);
-	PyModule_AddIntConstant(poModule, "PART_OBJECT", CMapOutdoor::PART_OBJECT);
-	PyModule_AddIntConstant(poModule, "PART_TERRAIN", CMapOutdoor::PART_TERRAIN);
+	ScriptModule_AddIntConstant(poModule, "PART_SKY", CMapOutdoor::PART_SKY);
+	ScriptModule_AddIntConstant(poModule, "PART_TREE", CMapOutdoor::PART_TREE);
+	ScriptModule_AddIntConstant(poModule, "PART_CLOUD", CMapOutdoor::PART_CLOUD);
+	ScriptModule_AddIntConstant(poModule, "PART_WATER", CMapOutdoor::PART_WATER);
+	ScriptModule_AddIntConstant(poModule, "PART_OBJECT", CMapOutdoor::PART_OBJECT);
+	ScriptModule_AddIntConstant(poModule, "PART_TERRAIN", CMapOutdoor::PART_TERRAIN);
 
-	PyModule_AddIntConstant(poModule, "SKY_RENDER_MODE_DEFAULT", CSkyObject::SKY_RENDER_MODE_DEFAULT);
-	PyModule_AddIntConstant(poModule, "SKY_RENDER_MODE_DIFFUSE", CSkyObject::SKY_RENDER_MODE_DIFFUSE);
-	PyModule_AddIntConstant(poModule, "SKY_RENDER_MODE_TEXTURE", CSkyObject::SKY_RENDER_MODE_TEXTURE);
-	PyModule_AddIntConstant(poModule, "SKY_RENDER_MODE_MODULATE", CSkyObject::SKY_RENDER_MODE_MODULATE);
-	PyModule_AddIntConstant(poModule, "SKY_RENDER_MODE_MODULATE2X", CSkyObject::SKY_RENDER_MODE_MODULATE2X);
-	PyModule_AddIntConstant(poModule, "SKY_RENDER_MODE_MODULATE4X", CSkyObject::SKY_RENDER_MODE_MODULATE4X);
+	ScriptModule_AddIntConstant(poModule, "SKY_RENDER_MODE_DEFAULT", CSkyObject::SKY_RENDER_MODE_DEFAULT);
+	ScriptModule_AddIntConstant(poModule, "SKY_RENDER_MODE_DIFFUSE", CSkyObject::SKY_RENDER_MODE_DIFFUSE);
+	ScriptModule_AddIntConstant(poModule, "SKY_RENDER_MODE_TEXTURE", CSkyObject::SKY_RENDER_MODE_TEXTURE);
+	ScriptModule_AddIntConstant(poModule, "SKY_RENDER_MODE_MODULATE", CSkyObject::SKY_RENDER_MODE_MODULATE);
+	ScriptModule_AddIntConstant(poModule, "SKY_RENDER_MODE_MODULATE2X", CSkyObject::SKY_RENDER_MODE_MODULATE2X);
+	ScriptModule_AddIntConstant(poModule, "SKY_RENDER_MODE_MODULATE4X", CSkyObject::SKY_RENDER_MODE_MODULATE4X);
 
-	PyModule_AddIntConstant(poModule, "SHADOW_NONE", CPythonBackground::SHADOW_NONE);
-	PyModule_AddIntConstant(poModule, "SHADOW_GROUND", CPythonBackground::SHADOW_GROUND);
-	PyModule_AddIntConstant(poModule, "SHADOW_GROUND_AND_SOLO", CPythonBackground::SHADOW_GROUND_AND_SOLO);
-	PyModule_AddIntConstant(poModule, "SHADOW_ALL", CPythonBackground::SHADOW_ALL);
-	PyModule_AddIntConstant(poModule, "SHADOW_ALL_HIGH", CPythonBackground::SHADOW_ALL_HIGH);
-	PyModule_AddIntConstant(poModule, "SHADOW_ALL_MAX", CPythonBackground::SHADOW_ALL_MAX);
+	ScriptModule_AddIntConstant(poModule, "SHADOW_NONE", CPythonBackground::SHADOW_NONE);
+	ScriptModule_AddIntConstant(poModule, "SHADOW_GROUND", CPythonBackground::SHADOW_GROUND);
+	ScriptModule_AddIntConstant(poModule, "SHADOW_GROUND_AND_SOLO", CPythonBackground::SHADOW_GROUND_AND_SOLO);
+	ScriptModule_AddIntConstant(poModule, "SHADOW_ALL", CPythonBackground::SHADOW_ALL);
+	ScriptModule_AddIntConstant(poModule, "SHADOW_ALL_HIGH", CPythonBackground::SHADOW_ALL_HIGH);
+	ScriptModule_AddIntConstant(poModule, "SHADOW_ALL_MAX", CPythonBackground::SHADOW_ALL_MAX);
 
-	PyModule_AddIntConstant(poModule, "DISTANCE0", CPythonBackground::DISTANCE0);
-	PyModule_AddIntConstant(poModule, "DISTANCE1", CPythonBackground::DISTANCE1);
-	PyModule_AddIntConstant(poModule, "DISTANCE2", CPythonBackground::DISTANCE2);
-	PyModule_AddIntConstant(poModule, "DISTANCE3", CPythonBackground::DISTANCE3);
-	PyModule_AddIntConstant(poModule, "DISTANCE4", CPythonBackground::DISTANCE4);
+	ScriptModule_AddIntConstant(poModule, "DISTANCE0", CPythonBackground::DISTANCE0);
+	ScriptModule_AddIntConstant(poModule, "DISTANCE1", CPythonBackground::DISTANCE1);
+	ScriptModule_AddIntConstant(poModule, "DISTANCE2", CPythonBackground::DISTANCE2);
+	ScriptModule_AddIntConstant(poModule, "DISTANCE3", CPythonBackground::DISTANCE3);
+	ScriptModule_AddIntConstant(poModule, "DISTANCE4", CPythonBackground::DISTANCE4);
 
-	PyModule_AddIntConstant(poModule, "DISTANCE_SORT", CMapOutdoor::DISTANCE_SORT);
-	PyModule_AddIntConstant(poModule, "TEXTURE_SORT", CMapOutdoor::TEXTURE_SORT);
+	ScriptModule_AddIntConstant(poModule, "DISTANCE_SORT", CMapOutdoor::DISTANCE_SORT);
+	ScriptModule_AddIntConstant(poModule, "TEXTURE_SORT", CMapOutdoor::TEXTURE_SORT);
 }

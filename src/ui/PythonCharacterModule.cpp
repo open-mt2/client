@@ -2,66 +2,66 @@
 #include <Client/UI/PythonCharacterManager.h>
 #include <Client/UI/PythonNonPlayer.h>
 
-PyObject* chrRaceToJob(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrRaceToJob(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int race;
-	if (!PyTuple_GetInteger(poArgs, 0, &race))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &race))
+		return Script_BuildException();
 
-	return Py_BuildValue("i", RaceToJob(race));
+	return Script_BuildValue("i", RaceToJob(race));
 }
 
-PyObject* chrRaceToSex(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrRaceToSex(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int race;
-	if (!PyTuple_GetInteger(poArgs, 0, &race))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &race))
+		return Script_BuildException();
 
-	return Py_BuildValue("i", RaceToSex(race));
+	return Script_BuildValue("i", RaceToSex(race));
 }
 
-PyObject* chrDestroy(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrDestroy(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonCharacterManager::Instance().Destroy();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrUpdate(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrUpdate(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonCharacterManager::Instance().Update();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrDeform(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrDeform(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonCharacterManager::Instance().Deform();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrRender(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrRender(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonCharacterManager::Instance().Render();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrRenderCollision(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrRenderCollision(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonCharacterManager::Instance().RenderCollision();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
 // Functions For Python Test Code
-PyObject* chrCreateInstance(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrCreateInstance(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iVirtualID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iVirtualID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iVirtualID))
+		return Script_BuildException();
 
-	if (PyTuple_Size(poArgs) == 2)
+	if (ScriptTuple_Size(poArgs) == 2)
 	{
-		PyObject* poDict = PyTuple_GetItem(poArgs, 1);
-		if (!PyDict_Check(poDict))
-			return Py_BuildException();
+		ScriptObject* poDict = ScriptTuple_GetItem(poArgs, 1);
+		if (!ScriptDict_Check(poDict))
+			return Script_BuildException();
 
 		CInstanceBase::SCreateData kCreateData;
 		kCreateData.m_bType = CActorInstance::TYPE_PC;
@@ -86,17 +86,17 @@ PyObject* chrCreateInstance(PyObject* poSelf, PyObject* poArgs)
 		kCreateData.m_dwHair = 0;
 		kCreateData.m_isMain = false;
 
-		PyObject* poHorse = PyDict_GetItemString(poDict, "horse");
+		ScriptObject* poHorse = ScriptDict_GetItemString(poDict, "horse");
 		if (poHorse)
-			kCreateData.m_dwMountVnum = PyLong_AsLong(poHorse);
+			kCreateData.m_dwMountVnum = Script_AsLongLong(poHorse);
 
-		PyObject* poX = PyDict_GetItemString(poDict, "x");
+		ScriptObject* poX = ScriptDict_GetItemString(poDict, "x");
 		if (poX)
-			kCreateData.m_lPosX = PyLong_AsLong(poX);
+			kCreateData.m_lPosX = Script_AsLongLong(poX);
 
-		PyObject* poY = PyDict_GetItemString(poDict, "y");
+		ScriptObject* poY = ScriptDict_GetItemString(poDict, "y");
 		if (poY)
-			kCreateData.m_lPosX = PyLong_AsLong(poY);
+			kCreateData.m_lPosX = Script_AsLongLong(poY);
 
 		CPythonCharacterManager::Instance().CreateInstance(kCreateData);
 	}
@@ -105,111 +105,111 @@ PyObject* chrCreateInstance(PyObject* poSelf, PyObject* poArgs)
 		CPythonCharacterManager::Instance().RegisterInstance(iVirtualID);
 	}
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrDeleteInstance(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrDeleteInstance(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iVirtualID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iVirtualID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iVirtualID))
+		return Script_BuildException();
 
 	CPythonCharacterManager::Instance().DeleteInstance(iVirtualID);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrDeleteInstanceByFade(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrDeleteInstanceByFade(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iVirtualID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iVirtualID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iVirtualID))
+		return Script_BuildException();
 
 	CPythonCharacterManager::Instance().DeleteInstanceByFade(iVirtualID);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrSelectInstance(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrSelectInstance(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iVirtualID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iVirtualID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iVirtualID))
+		return Script_BuildException();
 
 	CPythonCharacterManager::Instance().SelectInstance(iVirtualID);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrHasInstance(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrHasInstance(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iVirtualID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iVirtualID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iVirtualID))
+		return Script_BuildException();
 
 	bool bFlag = CPythonCharacterManager::Instance().GetInstancePtr(iVirtualID) ? TRUE : FALSE;
-	return Py_BuildValue("i", bFlag);
+	return Script_BuildValue("i", bFlag);
 }
 
-PyObject* chrIsEnemy(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrIsEnemy(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iVirtualID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iVirtualID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iVirtualID))
+		return Script_BuildException();
 
 	CInstanceBase* pInstance = CPythonCharacterManager::Instance().GetInstancePtr(iVirtualID);
 	if (!pInstance)
-		return Py_BuildValue("i", 0);
+		return Script_BuildValue("i", 0);
 
-	return Py_BuildValue("i", pInstance->IsEnemy());
+	return Script_BuildValue("i", pInstance->IsEnemy());
 }
 
-PyObject* chrIsNPC(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrIsNPC(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iVirtualID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iVirtualID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iVirtualID))
+		return Script_BuildException();
 
 	CInstanceBase* pInstance = CPythonCharacterManager::Instance().GetInstancePtr(iVirtualID);
 	if (!pInstance)
-		return Py_BuildValue("i", 0);
+		return Script_BuildValue("i", 0);
 
-	return Py_BuildValue("i", pInstance->IsNPC());
+	return Script_BuildValue("i", pInstance->IsNPC());
 }
 
-PyObject* chrIsGameMaster(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrIsGameMaster(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iVirtualID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iVirtualID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iVirtualID))
+		return Script_BuildException();
 
 	CInstanceBase* pInstance = CPythonCharacterManager::Instance().GetInstancePtr(iVirtualID);
 	if (!pInstance)
-		return Py_BuildValue("i", 0);
+		return Script_BuildValue("i", 0);
 
-	return Py_BuildValue("i", pInstance->IsGameMaster());
+	return Script_BuildValue("i", pInstance->IsGameMaster());
 }
 
-PyObject* chrIsPartyMember(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrIsPartyMember(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iVirtualID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iVirtualID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iVirtualID))
+		return Script_BuildException();
 
 	CInstanceBase* pInstance = CPythonCharacterManager::Instance().GetInstancePtr(iVirtualID);
 	if (!pInstance)
-		return Py_BuildValue("i", 0);
+		return Script_BuildValue("i", 0);
 
-	return Py_BuildValue("i", pInstance->IsPartyMember());
+	return Script_BuildValue("i", pInstance->IsPartyMember());
 }
 
-PyObject* chrSelect(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrSelect(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iVirtualID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iVirtualID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iVirtualID))
+		return Script_BuildException();
 
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetInstancePtr(iVirtualID);
 
 	if (!pkInst)
-		return Py_BuildNone();
+		return Script_BuildNone();
 
 	switch (CPythonNonPlayer::Instance().GetEventType(pkInst->GetVirtualNumber()))
 	{
@@ -224,468 +224,468 @@ PyObject* chrSelect(PyObject* poSelf, PyObject* poArgs)
 			break;
 	}
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrSetAddRenderMode(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrSetAddRenderMode(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iVirtualID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iVirtualID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iVirtualID))
+		return Script_BuildException();
 
 	float fr;
-	if (!PyTuple_GetFloat(poArgs, 1, &fr))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 1, &fr))
+		return Script_BuildException();
 	float fg;
-	if (!PyTuple_GetFloat(poArgs, 2, &fg))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 2, &fg))
+		return Script_BuildException();
 	float fb;
-	if (!PyTuple_GetFloat(poArgs, 3, &fb))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 3, &fb))
+		return Script_BuildException();
 
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetInstancePtr(iVirtualID);
 
 	if (!pkInst)
-		return Py_BuildNone();
+		return Script_BuildNone();
 
 	pkInst->SetAddRenderMode();
 	pkInst->SetAddColor(D3DXCOLOR(fr, fg, fb, 1.0f));
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrSetBlendRenderMode(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrSetBlendRenderMode(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iVirtualID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iVirtualID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iVirtualID))
+		return Script_BuildException();
 
 	float fAlpha;
-	if (!PyTuple_GetFloat(poArgs, 1, &fAlpha))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 1, &fAlpha))
+		return Script_BuildException();
 
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetInstancePtr(iVirtualID);
 
 	if (!pkInst)
-		return Py_BuildNone();
+		return Script_BuildNone();
 
 	pkInst->SetAlpha(fAlpha);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrUnselect(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrUnselect(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iVirtualID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iVirtualID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iVirtualID))
+		return Script_BuildException();
 
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetInstancePtr(iVirtualID);
 	if (!pkInst)
-		return Py_BuildNone();
+		return Script_BuildNone();
 
 	pkInst->RestoreRenderMode();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrPick(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrPick(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	DWORD VirtualID = 0;
 	if (CPythonCharacterManager::Instance().OLD_GetPickedInstanceVID(&VirtualID))
-		return Py_BuildValue("i", VirtualID);
+		return Script_BuildValue("i", VirtualID);
 	else
-		return Py_BuildValue("i", -1);
+		return Script_BuildValue("i", -1);
 }
 
-PyObject* chrHide(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrHide(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 	if (!pkInst)
-		return Py_BuildNone();
+		return Script_BuildNone();
 
 	pkInst->Hide();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrShow(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrShow(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 	if (!pkInst)
-		return Py_BuildNone();
+		return Script_BuildNone();
 
 	pkInst->Show();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrPickAll(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrPickAll(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	DWORD VirtualID = CPythonCharacterManager::Instance().PickAll();
-	return Py_BuildValue("i", VirtualID);
+	return Script_BuildValue("i", VirtualID);
 }
 
-PyObject* chrSetRace(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrSetRace(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iRace;
-	if (!PyTuple_GetInteger(poArgs, 0, &iRace))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iRace))
+		return Script_BuildException();
 
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 	if (!pkInst)
-		return Py_BuildNone();
+		return Script_BuildNone();
 
 	pkInst->SetRace(iRace);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrSetHair(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrSetHair(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iRace;
-	if (!PyTuple_GetInteger(poArgs, 0, &iRace))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iRace))
+		return Script_BuildException();
 
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 	if (!pkInst)
-		return Py_BuildNone();
+		return Script_BuildNone();
 
 	pkInst->SetHair(iRace);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrChangeHair(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrChangeHair(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iHair;
 
-	if (!PyTuple_GetInteger(poArgs, 0, &iHair))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iHair))
+		return Script_BuildException();
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 	if (!pkInst)
-		return Py_BuildNone();
+		return Script_BuildNone();
 	pkInst->ChangeHair(iHair);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrSetArmor(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrSetArmor(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iForm;
-	if (!PyTuple_GetInteger(poArgs, 0, &iForm))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iForm))
+		return Script_BuildException();
 
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 	if (!pkInst)
-		return Py_BuildNone();
+		return Script_BuildNone();
 
 	pkInst->SetArmor(iForm);
 
 	pkInst->RegisterBoundingSphere();
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrChangeShape(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrChangeShape(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iForm;
-	if (!PyTuple_GetInteger(poArgs, 0, &iForm))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iForm))
+		return Script_BuildException();
 
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 	if (!pkInst)
-		return Py_BuildNone();
+		return Script_BuildNone();
 
 	pkInst->ChangeArmor(iForm);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrSetWeapon(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrSetWeapon(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iForm;
-	if (!PyTuple_GetInteger(poArgs, 0, &iForm))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iForm))
+		return Script_BuildException();
 
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 	if (!pkInst)
-		return Py_BuildNone();
+		return Script_BuildNone();
 
 	pkInst->SetWeapon(iForm);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrSetVirtualID(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrSetVirtualID(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iVID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iVID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iVID))
+		return Script_BuildException();
 
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 	if (!pkInst)
-		return Py_BuildNone();
+		return Script_BuildNone();
 	pkInst->SetVirtualID(iVID);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrSetNameString(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrSetNameString(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* c_szName;
-	if (!PyTuple_GetString(poArgs, 0, &c_szName))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &c_szName))
+		return Script_BuildException();
 
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 	if (!pkInst)
-		return Py_BuildNone();
+		return Script_BuildNone();
 	pkInst->SetNameString(c_szName, strlen(c_szName));
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrSetInstanceType(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrSetInstanceType(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iInstanceType;
-	if (!PyTuple_GetInteger(poArgs, 0, &iInstanceType))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iInstanceType))
+		return Script_BuildException();
 
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 	if (!pkInst)
-		return Py_BuildNone();
+		return Script_BuildNone();
 	pkInst->SetInstanceType(iInstanceType);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrAttachEffectByName(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrAttachEffectByName(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iParentPartIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iParentPartIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iParentPartIndex))
+		return Script_BuildException();
 
 	char* pszBoneName;
-	if (!PyTuple_GetString(poArgs, 1, &pszBoneName))
+	if (!ScriptTuple_GetString(poArgs, 1, &pszBoneName))
 	{
 		pszBoneName = NULL;
-		// return Py_BuildException();
+		// return Script_BuildException();
 	}
 
 	char* pszEffectName;
-	if (!PyTuple_GetString(poArgs, 2, &pszEffectName))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 2, &pszEffectName))
+		return Script_BuildException();
 
 	int iLife = CActorInstance::EFFECT_LIFE_INFINITE;
 
-	if (PyTuple_Size(poArgs) == 4)
+	if (ScriptTuple_Size(poArgs) == 4)
 	{
-		if (!PyTuple_GetInteger(poArgs, 3, &iLife))
-			return Py_BuildException();
+		if (!ScriptTuple_GetInteger(poArgs, 3, &iLife))
+			return Script_BuildException();
 	}
 
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 
 	if (!pkInst)
-		return Py_BuildNone();
+		return Script_BuildNone();
 
 	// pkInst->AttachEffectByName(iParentPartIndex, pszBoneName, pszEffectName, iLife);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrAttachEffectByID(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrAttachEffectByID(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iParentPartIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iParentPartIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iParentPartIndex))
+		return Script_BuildException();
 
 	char* pszBoneName;
-	if (!PyTuple_GetString(poArgs, 1, &pszBoneName))
+	if (!ScriptTuple_GetString(poArgs, 1, &pszBoneName))
 	{
 		pszBoneName = NULL;
 	}
-	//	return Py_BuildException();
+	//	return Script_BuildException();
 
 	// FIXME : bug or error on getting unsigned value
 	int iEffectID;
-	if (!PyTuple_GetInteger(poArgs, 2, &iEffectID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 2, &iEffectID))
+		return Script_BuildException();
 
 	int iLife = CActorInstance::EFFECT_LIFE_INFINITE;
 
-	if (PyTuple_Size(poArgs) == 4)
+	if (ScriptTuple_Size(poArgs) == 4)
 	{
-		if (!PyTuple_GetInteger(poArgs, 3, &iLife))
-			return Py_BuildException();
+		if (!ScriptTuple_GetInteger(poArgs, 3, &iLife))
+			return Script_BuildException();
 	}
 
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 
 	if (!pkInst)
-		return Py_BuildNone();
+		return Script_BuildNone();
 
 	// pkInst->AttachEffectByID(iParentPartIndex, pszBoneName, iEffectID, iLife);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrRefresh(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrRefresh(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 
 	if (!pkInst)
-		return Py_BuildNone();
+		return Script_BuildNone();
 
 	// Select 화면에서는 WAIT 모션이 준비 되지 않은 상태이기 때문에 문제가 생긴다.
 	// pkInst->Refresh(CRaceMotionData::NAME_WAIT, true);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrMountHorse(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrMountHorse(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 	if (!pkInst)
-		return Py_BuildNone();
+		return Script_BuildNone();
 	pkInst->MountHorse(20030);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrDismountHorse(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrDismountHorse(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 	if (!pkInst)
-		return Py_BuildNone();
+		return Script_BuildNone();
 	pkInst->DismountHorse();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrRevive(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrRevive(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 	if (!pkInst)
-		return Py_BuildNone();
+		return Script_BuildNone();
 	pkInst->Revive();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrDie(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrDie(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 	if (!pkInst)
-		return Py_BuildNone();
+		return Script_BuildNone();
 	pkInst->Die();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrLookAt(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrLookAt(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iCellX;
-	if (!PyTuple_GetInteger(poArgs, 0, &iCellX))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iCellX))
+		return Script_BuildException();
 
 	int iCellY;
-	if (!PyTuple_GetInteger(poArgs, 1, &iCellY))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iCellY))
+		return Script_BuildException();
 
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 	if (!pkInst)
-		return Py_BuildNone();
+		return Script_BuildNone();
 	// 	pkInst->LookAt(TPixelPosition(iCellX * c_Section_xAttributeCellSize, iCellY * c_Section_xAttributeCellSize));
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrSetMotionMode(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrSetMotionMode(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iMotionMode;
-	if (!PyTuple_GetInteger(poArgs, 0, &iMotionMode))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iMotionMode))
+		return Script_BuildException();
 
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 	if (!pkInst)
-		return Py_BuildNone();
+		return Script_BuildNone();
 
 	pkInst->SetMotionMode(iMotionMode);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrSetLoopMotion(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrSetLoopMotion(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iMotionIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iMotionIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iMotionIndex))
+		return Script_BuildException();
 
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 	if (!pkInst)
-		return Py_BuildNone();
+		return Script_BuildNone();
 	pkInst->SetLoopMotion(WORD(iMotionIndex));
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrBlendLoopMotion(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrBlendLoopMotion(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iMotionIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iMotionIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iMotionIndex))
+		return Script_BuildException();
 	float fBlendTime;
-	if (!PyTuple_GetFloat(poArgs, 1, &fBlendTime))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 1, &fBlendTime))
+		return Script_BuildException();
 
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 	if (!pkInst)
-		return Py_BuildNone();
+		return Script_BuildNone();
 	pkInst->SetLoopMotion(WORD(iMotionIndex), fBlendTime);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrPushOnceMotion(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrPushOnceMotion(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iMotionIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iMotionIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iMotionIndex))
+		return Script_BuildException();
 
 	float fBlendTime;
-	if (!PyTuple_GetFloat(poArgs, 1, &fBlendTime))
+	if (!ScriptTuple_GetFloat(poArgs, 1, &fBlendTime))
 	{
 		fBlendTime = 0.1f;
 	}
 
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 	if (!pkInst)
-		return Py_BuildNone();
+		return Script_BuildNone();
 	pkInst->PushOnceMotion(WORD(iMotionIndex), fBlendTime);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrPushLoopMotion(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrPushLoopMotion(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iMotionIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iMotionIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iMotionIndex))
+		return Script_BuildException();
 
 	float fBlendTime;
-	if (!PyTuple_GetFloat(poArgs, 1, &fBlendTime))
+	if (!ScriptTuple_GetFloat(poArgs, 1, &fBlendTime))
 	{
 		fBlendTime = 0.1f;
 	}
 
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 	if (!pkInst)
-		return Py_BuildNone();
+		return Script_BuildNone();
 	pkInst->PushLoopMotion(WORD(iMotionIndex), fBlendTime);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrSetPixelPosition(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrSetPixelPosition(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iX;
-	if (!PyTuple_GetInteger(poArgs, 0, &iX))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iX))
+		return Script_BuildException();
 	int iY;
-	if (!PyTuple_GetInteger(poArgs, 1, &iY))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iY))
+		return Script_BuildException();
 
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 	if (!pkInst)
-		return Py_BuildNone();
+		return Script_BuildNone();
 
 	int iZ;
-	if (PyTuple_GetInteger(poArgs, 2, &iZ))
+	if (ScriptTuple_GetInteger(poArgs, 2, &iZ))
 	{
 		pkInst->NEW_SetPixelPosition(TPixelPosition(iX, iY, iZ));
 	}
@@ -693,168 +693,168 @@ PyObject* chrSetPixelPosition(PyObject* poSelf, PyObject* poArgs)
 	{
 		pkInst->SCRIPT_SetPixelPosition(iX, iY);
 	}
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrSetDirection(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrSetDirection(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iDirection;
-	if (!PyTuple_GetInteger(poArgs, 0, &iDirection))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iDirection))
+		return Script_BuildException();
 
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 	pkInst->SetDirection(iDirection);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrGetPixelPosition(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrGetPixelPosition(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iVirtualID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iVirtualID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iVirtualID))
+		return Script_BuildException();
 
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetInstancePtr(iVirtualID);
 
 	if (!pkInst)
-		return Py_BuildException();
+		return Script_BuildException();
 
 	TPixelPosition PixelPosition;
 	pkInst->NEW_GetPixelPosition(&PixelPosition);
 
-	return Py_BuildValue("fff", PixelPosition.x, PixelPosition.y, PixelPosition.z);
+	return Script_BuildValue("fff", PixelPosition.x, PixelPosition.y, PixelPosition.z);
 }
 
-PyObject* chrSetRotation(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrSetRotation(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	float fRotation;
-	if (!PyTuple_GetFloat(poArgs, 0, &fRotation))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 0, &fRotation))
+		return Script_BuildException();
 
 	CInstanceBase* pCharacterInstance = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 
 	if (!pCharacterInstance)
-		return Py_BuildNone();
+		return Script_BuildNone();
 
 	fRotation = fmod(fRotation + 180.0f, 360.0f);
 
 	pCharacterInstance->SetRotation(fRotation);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrSetRotationAll(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrSetRotationAll(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	float fRotX;
-	if (!PyTuple_GetFloat(poArgs, 0, &fRotX))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 0, &fRotX))
+		return Script_BuildException();
 	float fRotY;
-	if (!PyTuple_GetFloat(poArgs, 1, &fRotY))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 1, &fRotY))
+		return Script_BuildException();
 	float fRotZ;
-	if (!PyTuple_GetFloat(poArgs, 2, &fRotZ))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 2, &fRotZ))
+		return Script_BuildException();
 
 	CInstanceBase* pCharacterInstance = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 	if (!pCharacterInstance)
-		return Py_BuildNone();
+		return Script_BuildNone();
 
 	pCharacterInstance->GetGraphicThingInstanceRef().SetXYRotation(fRotX, fRotY);
 	pCharacterInstance->GetGraphicThingInstanceRef().SetRotation(fRotZ);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrBlendRotation(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrBlendRotation(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	float fRotation;
-	if (!PyTuple_GetFloat(poArgs, 0, &fRotation))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 0, &fRotation))
+		return Script_BuildException();
 	float fBlendTime;
-	if (!PyTuple_GetFloat(poArgs, 1, &fBlendTime))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 1, &fBlendTime))
+		return Script_BuildException();
 
 	fRotation = fmod(720.0f - fRotation, 360.0f);
 
 	CInstanceBase* pCharacterInstance = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 	if (!pCharacterInstance)
-		return Py_BuildNone();
+		return Script_BuildNone();
 	pCharacterInstance->BlendRotation(fRotation, fBlendTime);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrGetRotation(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrGetRotation(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CInstanceBase* pCharacterInstance = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 
 	if (!pCharacterInstance)
-		return Py_BuildValue("f", 0.0f);
+		return Script_BuildValue("f", 0.0f);
 
 	float fRotation = pCharacterInstance->GetRotation();
 
-	return Py_BuildValue("f", 360.0f - fRotation);
+	return Script_BuildValue("f", 360.0f - fRotation);
 }
 
-PyObject* chrGetRace(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrGetRace(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CInstanceBase* pCharacterInstance = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 
 	if (!pCharacterInstance)
-		return Py_BuildValue("i", 0);
+		return Script_BuildValue("i", 0);
 
-	return Py_BuildValue("i", pCharacterInstance->GetRace());
+	return Script_BuildValue("i", pCharacterInstance->GetRace());
 }
 
-PyObject* chrGetName(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrGetName(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CInstanceBase* pCharacterInstance = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 
 	if (!pCharacterInstance)
-		return Py_BuildValue("i", 0);
+		return Script_BuildValue("i", 0);
 
-	return Py_BuildValue("s", pCharacterInstance->GetNameString());
+	return Script_BuildValue("s", pCharacterInstance->GetNameString());
 }
 
-PyObject* chrGetNameByVID(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrGetNameByVID(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iVirtualID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iVirtualID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iVirtualID))
+		return Script_BuildException();
 
 	CInstanceBase* pInstance = CPythonCharacterManager::Instance().GetInstancePtr(iVirtualID);
 
 	if (!pInstance)
-		return Py_BuildValue("s", "None");
+		return Script_BuildValue("s", "None");
 
-	return Py_BuildValue("s", pInstance->GetNameString());
+	return Script_BuildValue("s", pInstance->GetNameString());
 }
 
-PyObject* chrGetGuildID(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrGetGuildID(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iVirtualID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iVirtualID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iVirtualID))
+		return Script_BuildException();
 
 	CInstanceBase* pInstance = CPythonCharacterManager::Instance().GetInstancePtr(iVirtualID);
 
 	if (!pInstance)
-		return Py_BuildValue("i", 0);
+		return Script_BuildValue("i", 0);
 
-	return Py_BuildValue("i", pInstance->GetGuildID());
+	return Script_BuildValue("i", pInstance->GetGuildID());
 }
 
-PyObject* chrGetProjectPosition(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrGetProjectPosition(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iVirtualID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iVirtualID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iVirtualID))
+		return Script_BuildException();
 	int iHeight;
-	if (!PyTuple_GetInteger(poArgs, 1, &iHeight))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iHeight))
+		return Script_BuildException();
 
 	CInstanceBase* pInstance = CPythonCharacterManager::Instance().GetInstancePtr(iVirtualID);
 
 	if (!pInstance)
-		return Py_BuildValue("ii", -100, -100);
+		return Script_BuildValue("ii", -100, -100);
 
 	TPixelPosition PixelPosition;
 	pInstance->NEW_GetPixelPosition(&PixelPosition);
@@ -876,85 +876,85 @@ PyObject* chrGetProjectPosition(PyObject* poSelf, PyObject* poArgs)
 	}
 
 	if (1 == int(fz))
-		return Py_BuildValue("ii", -100, -100);
+		return Script_BuildValue("ii", -100, -100);
 
-	return Py_BuildValue("ii", int(fx), int(fy));
+	return Script_BuildValue("ii", int(fx), int(fy));
 }
 
-PyObject* chrGetVirtualNumber(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrGetVirtualNumber(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iVirtualID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iVirtualID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iVirtualID))
+		return Script_BuildException();
 
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetInstancePtr(iVirtualID);
 
 	if (NULL != pkInst)
-		return Py_BuildValue("i", pkInst->GetVirtualNumber());
+		return Script_BuildValue("i", pkInst->GetVirtualNumber());
 
-	return Py_BuildValue("i", CActorInstance::TYPE_PC);
+	return Script_BuildValue("i", CActorInstance::TYPE_PC);
 }
 
-PyObject* chrGetInstanceType(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrGetInstanceType(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iVirtualID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iVirtualID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iVirtualID))
+		return Script_BuildException();
 
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetInstancePtr(iVirtualID);
 
 	if (NULL != pkInst)
-		return Py_BuildValue("i", pkInst->GetInstanceType());
+		return Script_BuildValue("i", pkInst->GetInstanceType());
 
-	return Py_BuildValue("i", CActorInstance::TYPE_PC);
+	return Script_BuildValue("i", CActorInstance::TYPE_PC);
 }
 
-PyObject* chrGetBoundBoxOnlyXY(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrGetBoundBoxOnlyXY(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 
 	if (!pkInst)
-		return Py_BuildValue("ffff", 0.0f, 0.0f, 0.0f, 0.0f);
+		return Script_BuildValue("ffff", 0.0f, 0.0f, 0.0f, 0.0f);
 
 	D3DXVECTOR3 v3Min, v3Max;
 	pkInst->GetBoundBox(&v3Min, &v3Max);
 
-	return Py_BuildValue("ffff", v3Min.x, v3Min.y, v3Max.x, v3Max.y);
+	return Script_BuildValue("ffff", v3Min.x, v3Min.y, v3Max.x, v3Max.y);
 }
 
-PyObject* chrtestGetPKData(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrtestGetPKData(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 
 	if (!pkInst)
-		return Py_BuildValue("ii", 0, 4);
+		return Script_BuildValue("ii", 0, 4);
 
-	return Py_BuildValue("ii", pkInst->GetAlignment(), pkInst->GetAlignmentGrade());
+	return Script_BuildValue("ii", pkInst->GetAlignment(), pkInst->GetAlignmentGrade());
 }
 
-PyObject* chrtestSetComboType(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrtestSetComboType(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iComboType;
-	if (!PyTuple_GetInteger(poArgs, 0, &iComboType))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iComboType))
+		return Script_BuildException();
 
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 	if (!pkInst)
-		return Py_BuildNone();
+		return Script_BuildNone();
 
 	pkInst->GetGraphicThingInstanceRef().SetComboType(iComboType);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrtestSetAddRenderMode(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrtestSetAddRenderMode(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iVirtualID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iVirtualID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iVirtualID))
+		return Script_BuildException();
 	int iColor;
-	if (!PyTuple_GetInteger(poArgs, 1, &iColor))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iColor))
+		return Script_BuildException();
 
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetInstancePtr(iVirtualID);
 	if (pkInst)
@@ -963,17 +963,17 @@ PyObject* chrtestSetAddRenderMode(PyObject* poSelf, PyObject* poArgs)
 		pkInst->SetAddColor(0xff000000 | iColor);
 	}
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrtestSetModulateRenderMode(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrtestSetModulateRenderMode(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iVirtualID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iVirtualID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iVirtualID))
+		return Script_BuildException();
 	int iColor;
-	if (!PyTuple_GetInteger(poArgs, 1, &iColor))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iColor))
+		return Script_BuildException();
 
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetInstancePtr(iVirtualID);
 	if (pkInst)
@@ -982,23 +982,23 @@ PyObject* chrtestSetModulateRenderMode(PyObject* poSelf, PyObject* poArgs)
 		pkInst->SetAddColor(0xff000000 | iColor);
 	}
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrtestSetAddRenderModeRGB(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrtestSetAddRenderModeRGB(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iVirtualID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iVirtualID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iVirtualID))
+		return Script_BuildException();
 	float fr;
-	if (!PyTuple_GetFloat(poArgs, 1, &fr))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 1, &fr))
+		return Script_BuildException();
 	float fg;
-	if (!PyTuple_GetFloat(poArgs, 2, &fg))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 2, &fg))
+		return Script_BuildException();
 	float fb;
-	if (!PyTuple_GetFloat(poArgs, 3, &fb))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 3, &fb))
+		return Script_BuildException();
 
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetInstancePtr(iVirtualID);
 	if (pkInst)
@@ -1007,23 +1007,23 @@ PyObject* chrtestSetAddRenderModeRGB(PyObject* poSelf, PyObject* poArgs)
 		pkInst->SetAddColor(D3DXCOLOR(fr, fg, fb, 1.0f));
 	}
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrtestSetModulateRenderModeRGB(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrtestSetModulateRenderModeRGB(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iVirtualID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iVirtualID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iVirtualID))
+		return Script_BuildException();
 	float fr;
-	if (!PyTuple_GetFloat(poArgs, 1, &fr))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 1, &fr))
+		return Script_BuildException();
 	float fg;
-	if (!PyTuple_GetFloat(poArgs, 2, &fg))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 2, &fg))
+		return Script_BuildException();
 	float fb;
-	if (!PyTuple_GetFloat(poArgs, 3, &fb))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 3, &fb))
+		return Script_BuildException();
 
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetInstancePtr(iVirtualID);
 	if (pkInst)
@@ -1032,20 +1032,20 @@ PyObject* chrtestSetModulateRenderModeRGB(PyObject* poSelf, PyObject* poArgs)
 		pkInst->SetAddColor(D3DXCOLOR(fr, fg, fb, 1.0f));
 	}
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrtestSetSpecularRenderMode(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrtestSetSpecularRenderMode(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iVirtualID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iVirtualID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iVirtualID))
+		return Script_BuildException();
 	int iPart;
-	if (!PyTuple_GetInteger(poArgs, 1, &iPart))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iPart))
+		return Script_BuildException();
 	float fAlpha;
-	if (!PyTuple_GetFloat(poArgs, 2, &fAlpha))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 2, &fAlpha))
+		return Script_BuildException();
 
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetInstancePtr(iVirtualID);
 	if (pkInst)
@@ -1053,20 +1053,20 @@ PyObject* chrtestSetSpecularRenderMode(PyObject* poSelf, PyObject* poArgs)
 		pkInst->GetGraphicThingInstanceRef().SetSpecularInfo(TRUE, iPart, fAlpha);
 	}
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrtestSetSpecularRenderMode2(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrtestSetSpecularRenderMode2(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iVirtualID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iVirtualID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iVirtualID))
+		return Script_BuildException();
 	int iPart;
-	if (!PyTuple_GetInteger(poArgs, 1, &iPart))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iPart))
+		return Script_BuildException();
 	float fAlpha;
-	if (!PyTuple_GetFloat(poArgs, 2, &fAlpha))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 2, &fAlpha))
+		return Script_BuildException();
 
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetInstancePtr(iVirtualID);
 	if (pkInst)
@@ -1074,14 +1074,14 @@ PyObject* chrtestSetSpecularRenderMode2(PyObject* poSelf, PyObject* poArgs)
 		pkInst->GetGraphicThingInstanceRef().SetSpecularInfoForce(TRUE, iPart, fAlpha);
 	}
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrtestRestoreRenderMode(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrtestRestoreRenderMode(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iVirtualID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iVirtualID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iVirtualID))
+		return Script_BuildException();
 
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetInstancePtr(iVirtualID);
 	if (pkInst)
@@ -1089,10 +1089,10 @@ PyObject* chrtestRestoreRenderMode(PyObject* poSelf, PyObject* poArgs)
 		pkInst->RestoreRenderMode();
 	}
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrFaintTest(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrFaintTest(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CInstanceBase* pCharacterInstance = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 	if (pCharacterInstance)
@@ -1110,107 +1110,107 @@ PyObject* chrFaintTest(PyObject* poSelf, PyObject* poArgs)
 		}
 	}
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrSetMoveSpeed(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrSetMoveSpeed(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	// int iSpeed;
-	// if (!PyTuple_GetInteger(poArgs, 0, &iSpeed))
-	//	return Py_BadArgument();
+	// if (!ScriptTuple_GetInteger(poArgs, 0, &iSpeed))
+	//	return Script_BadArgument();
 
 	// CInstanceBase * pCharacterInstance = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 
 	// if (!pCharacterInstance)
-	//	return Py_BuildValue("i", 0);
+	//	return Script_BuildValue("i", 0);
 
 	// pCharacterInstance->SetMoveSpeed(iSpeed);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrSetAttackSpeed(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrSetAttackSpeed(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	// int iSpeed;
-	// if (!PyTuple_GetInteger(poArgs, 0, &iSpeed))
-	//	return Py_BadArgument();
+	// if (!ScriptTuple_GetInteger(poArgs, 0, &iSpeed))
+	//	return Script_BadArgument();
 
 	// CInstanceBase * pCharacterInstance = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 
 	// if (!pCharacterInstance)
-	//	return Py_BuildValue("i", 0);
+	//	return Script_BuildValue("i", 0);
 
 	// pCharacterInstance->SetAttackSpeed(iSpeed);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrWeaponTraceSetTexture(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrWeaponTraceSetTexture(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szPathName;
-	if (!PyTuple_GetString(poArgs, 0, &szPathName))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetString(poArgs, 0, &szPathName))
+		return Script_BadArgument();
 
 	CInstanceBase* pInstance = CPythonCharacterManager::Instance().GetMainInstancePtr();
 	if (pInstance)
 	{
 		pInstance->GetGraphicThingInstanceRef().SetWeaponTraceTexture(szPathName);
 	}
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrWeaponTraceUseTexture(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrWeaponTraceUseTexture(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CInstanceBase* pInstance = CPythonCharacterManager::Instance().GetMainInstancePtr();
 	if (pInstance)
 	{
 		pInstance->GetGraphicThingInstanceRef().UseTextureWeaponTrace();
 	}
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrWeaponTraceUseAlpha(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrWeaponTraceUseAlpha(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CInstanceBase* pInstance = CPythonCharacterManager::Instance().GetMainInstancePtr();
 	if (pInstance)
 	{
 		pInstance->GetGraphicThingInstanceRef().UseAlphaWeaponTrace();
 	}
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrMoveToDestPosition(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrMoveToDestPosition(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iVID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iVID))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iVID))
+		return Script_BadArgument();
 
 	int ix;
-	if (!PyTuple_GetInteger(poArgs, 1, &ix))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &ix))
+		return Script_BadArgument();
 	int iy;
-	if (!PyTuple_GetInteger(poArgs, 2, &iy))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 2, &iy))
+		return Script_BadArgument();
 
 	CInstanceBase* pCharacterInstance = CPythonCharacterManager::Instance().GetInstancePtr(iVID);
 	if (!pCharacterInstance)
-		return Py_BuildNone();
+		return Script_BuildNone();
 
 	pCharacterInstance->NEW_MoveToDestPixelPositionDirection(TPixelPosition(ix, iy, 0.0f));
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrtestSetRideMan(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrtestSetRideMan(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int ix;
-	if (!PyTuple_GetInteger(poArgs, 0, &ix))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &ix))
+		return Script_BadArgument();
 	int iy;
-	if (!PyTuple_GetInteger(poArgs, 1, &iy))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iy))
+		return Script_BadArgument();
 	int imount = 20030;
-	PyTuple_GetInteger(poArgs, 2, &imount);
+	ScriptTuple_GetInteger(poArgs, 2, &imount);
 
 	CInstanceBase* pCharacterInstance = CPythonCharacterManager::Instance().RegisterInstance(1);
 	CInstanceBase::SCreateData kCreateData = {};
@@ -1225,272 +1225,272 @@ PyObject* chrtestSetRideMan(PyObject* poSelf, PyObject* poArgs)
 	kCreateData.m_lPosY = iy;
 	pCharacterInstance->Create(kCreateData);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
 void initchr()
 {
-	static PyMethodDef s_methods[] =
+	static ScriptMethodDef s_methods[] =
 		{
-			{"DismountHorse", chrDismountHorse, METH_VARARGS, NULL},
-			{"MountHorse", chrMountHorse, METH_VARARGS, NULL},
+			{"DismountHorse", chrDismountHorse, SCRIPT_VARARGS, NULL},
+			{"MountHorse", chrMountHorse, SCRIPT_VARARGS, NULL},
 
-			{"Destroy", chrDestroy, METH_VARARGS, NULL},
-			{"Update", chrUpdate, METH_VARARGS, NULL},
-			{"Deform", chrDeform, METH_VARARGS, NULL},
-			{"Render", chrRender, METH_VARARGS, NULL},
-			{"RenderCollision", chrRenderCollision, METH_VARARGS, NULL},
+			{"Destroy", chrDestroy, SCRIPT_VARARGS, NULL},
+			{"Update", chrUpdate, SCRIPT_VARARGS, NULL},
+			{"Deform", chrDeform, SCRIPT_VARARGS, NULL},
+			{"Render", chrRender, SCRIPT_VARARGS, NULL},
+			{"RenderCollision", chrRenderCollision, SCRIPT_VARARGS, NULL},
 
 			// Functions For Python Code
-			{"CreateInstance", chrCreateInstance, METH_VARARGS, NULL},
-			{"DeleteInstance", chrDeleteInstance, METH_VARARGS, NULL},
-			{"DeleteInstanceByFade", chrDeleteInstanceByFade, METH_VARARGS, NULL},
-			{"SelectInstance", chrSelectInstance, METH_VARARGS, NULL},
+			{"CreateInstance", chrCreateInstance, SCRIPT_VARARGS, NULL},
+			{"DeleteInstance", chrDeleteInstance, SCRIPT_VARARGS, NULL},
+			{"DeleteInstanceByFade", chrDeleteInstanceByFade, SCRIPT_VARARGS, NULL},
+			{"SelectInstance", chrSelectInstance, SCRIPT_VARARGS, NULL},
 
-			{"HasInstance", chrHasInstance, METH_VARARGS, NULL},
-			{"IsEnemy", chrIsEnemy, METH_VARARGS, NULL},
-			{"IsNPC", chrIsNPC, METH_VARARGS, NULL},
-			{"IsGameMaster", chrIsGameMaster, METH_VARARGS, NULL},
-			{"IsPartyMember", chrIsPartyMember, METH_VARARGS, NULL},
+			{"HasInstance", chrHasInstance, SCRIPT_VARARGS, NULL},
+			{"IsEnemy", chrIsEnemy, SCRIPT_VARARGS, NULL},
+			{"IsNPC", chrIsNPC, SCRIPT_VARARGS, NULL},
+			{"IsGameMaster", chrIsGameMaster, SCRIPT_VARARGS, NULL},
+			{"IsPartyMember", chrIsPartyMember, SCRIPT_VARARGS, NULL},
 
-			{"Select", chrSelect, METH_VARARGS, NULL},
-			{"SetAddRenderMode", chrSetAddRenderMode, METH_VARARGS, NULL},
-			{"SetBlendRenderMode", chrSetBlendRenderMode, METH_VARARGS, NULL},
-			{"Unselect", chrUnselect, METH_VARARGS, NULL},
+			{"Select", chrSelect, SCRIPT_VARARGS, NULL},
+			{"SetAddRenderMode", chrSetAddRenderMode, SCRIPT_VARARGS, NULL},
+			{"SetBlendRenderMode", chrSetBlendRenderMode, SCRIPT_VARARGS, NULL},
+			{"Unselect", chrUnselect, SCRIPT_VARARGS, NULL},
 
-			{"Hide", chrHide, METH_VARARGS, NULL},
-			{"Show", chrShow, METH_VARARGS, NULL},
-			{"Pick", chrPick, METH_VARARGS, NULL},
-			{"PickAll", chrPickAll, METH_VARARGS, NULL},
+			{"Hide", chrHide, SCRIPT_VARARGS, NULL},
+			{"Show", chrShow, SCRIPT_VARARGS, NULL},
+			{"Pick", chrPick, SCRIPT_VARARGS, NULL},
+			{"PickAll", chrPickAll, SCRIPT_VARARGS, NULL},
 
-			{"SetArmor", chrSetArmor, METH_VARARGS, NULL},
-			{"SetWeapon", chrSetWeapon, METH_VARARGS, NULL},
-			{"ChangeShape", chrChangeShape, METH_VARARGS, NULL},
-			{"SetRace", chrSetRace, METH_VARARGS, NULL},
-			{"SetHair", chrSetHair, METH_VARARGS, NULL},
-			{"ChangeHair", chrChangeHair, METH_VARARGS, NULL},
-			{"SetVirtualID", chrSetVirtualID, METH_VARARGS, NULL},
-			{"SetNameString", chrSetNameString, METH_VARARGS, NULL},
-			{"SetInstanceType", chrSetInstanceType, METH_VARARGS, NULL},
+			{"SetArmor", chrSetArmor, SCRIPT_VARARGS, NULL},
+			{"SetWeapon", chrSetWeapon, SCRIPT_VARARGS, NULL},
+			{"ChangeShape", chrChangeShape, SCRIPT_VARARGS, NULL},
+			{"SetRace", chrSetRace, SCRIPT_VARARGS, NULL},
+			{"SetHair", chrSetHair, SCRIPT_VARARGS, NULL},
+			{"ChangeHair", chrChangeHair, SCRIPT_VARARGS, NULL},
+			{"SetVirtualID", chrSetVirtualID, SCRIPT_VARARGS, NULL},
+			{"SetNameString", chrSetNameString, SCRIPT_VARARGS, NULL},
+			{"SetInstanceType", chrSetInstanceType, SCRIPT_VARARGS, NULL},
 
-			{"SetPixelPosition", chrSetPixelPosition, METH_VARARGS, NULL},
-			{"SetDirection", chrSetDirection, METH_VARARGS, NULL},
-			{"Refresh", chrRefresh, METH_VARARGS, NULL},
-			{"Revive", chrRevive, METH_VARARGS, NULL},
-			{"Die", chrDie, METH_VARARGS, NULL},
+			{"SetPixelPosition", chrSetPixelPosition, SCRIPT_VARARGS, NULL},
+			{"SetDirection", chrSetDirection, SCRIPT_VARARGS, NULL},
+			{"Refresh", chrRefresh, SCRIPT_VARARGS, NULL},
+			{"Revive", chrRevive, SCRIPT_VARARGS, NULL},
+			{"Die", chrDie, SCRIPT_VARARGS, NULL},
 
-			{"AttachEffectByID", chrAttachEffectByID, METH_VARARGS, NULL},
-			{"AttachEffectByName", chrAttachEffectByName, METH_VARARGS, NULL},
+			{"AttachEffectByID", chrAttachEffectByID, SCRIPT_VARARGS, NULL},
+			{"AttachEffectByName", chrAttachEffectByName, SCRIPT_VARARGS, NULL},
 
-			{"LookAt", chrLookAt, METH_VARARGS, NULL},
-			{"SetMotionMode", chrSetMotionMode, METH_VARARGS, NULL},
-			{"SetLoopMotion", chrSetLoopMotion, METH_VARARGS, NULL},
-			{"BlendLoopMotion", chrBlendLoopMotion, METH_VARARGS, NULL},
-			{"PushOnceMotion", chrPushOnceMotion, METH_VARARGS, NULL},
-			{"PushLoopMotion", chrPushLoopMotion, METH_VARARGS, NULL},
-			{"GetPixelPosition", chrGetPixelPosition, METH_VARARGS, NULL},
-			{"SetRotation", chrSetRotation, METH_VARARGS, NULL},
-			{"SetRotationAll", chrSetRotationAll, METH_VARARGS, NULL},
-			{"BlendRotation", chrBlendRotation, METH_VARARGS, NULL},
-			{"GetRotation", chrGetRotation, METH_VARARGS, NULL},
-			{"GetRace", chrGetRace, METH_VARARGS, NULL},
-			{"GetName", chrGetName, METH_VARARGS, NULL},
-			{"GetNameByVID", chrGetNameByVID, METH_VARARGS, NULL},
-			{"GetGuildID", chrGetGuildID, METH_VARARGS, NULL},
-			{"GetProjectPosition", chrGetProjectPosition, METH_VARARGS, NULL},
+			{"LookAt", chrLookAt, SCRIPT_VARARGS, NULL},
+			{"SetMotionMode", chrSetMotionMode, SCRIPT_VARARGS, NULL},
+			{"SetLoopMotion", chrSetLoopMotion, SCRIPT_VARARGS, NULL},
+			{"BlendLoopMotion", chrBlendLoopMotion, SCRIPT_VARARGS, NULL},
+			{"PushOnceMotion", chrPushOnceMotion, SCRIPT_VARARGS, NULL},
+			{"PushLoopMotion", chrPushLoopMotion, SCRIPT_VARARGS, NULL},
+			{"GetPixelPosition", chrGetPixelPosition, SCRIPT_VARARGS, NULL},
+			{"SetRotation", chrSetRotation, SCRIPT_VARARGS, NULL},
+			{"SetRotationAll", chrSetRotationAll, SCRIPT_VARARGS, NULL},
+			{"BlendRotation", chrBlendRotation, SCRIPT_VARARGS, NULL},
+			{"GetRotation", chrGetRotation, SCRIPT_VARARGS, NULL},
+			{"GetRace", chrGetRace, SCRIPT_VARARGS, NULL},
+			{"GetName", chrGetName, SCRIPT_VARARGS, NULL},
+			{"GetNameByVID", chrGetNameByVID, SCRIPT_VARARGS, NULL},
+			{"GetGuildID", chrGetGuildID, SCRIPT_VARARGS, NULL},
+			{"GetProjectPosition", chrGetProjectPosition, SCRIPT_VARARGS, NULL},
 
-			{"GetVirtualNumber", chrGetVirtualNumber, METH_VARARGS, NULL},
-			{"GetInstanceType", chrGetInstanceType, METH_VARARGS, NULL},
+			{"GetVirtualNumber", chrGetVirtualNumber, SCRIPT_VARARGS, NULL},
+			{"GetInstanceType", chrGetInstanceType, SCRIPT_VARARGS, NULL},
 
-			{"GetBoundBoxOnlyXY", chrGetBoundBoxOnlyXY, METH_VARARGS, NULL},
+			{"GetBoundBoxOnlyXY", chrGetBoundBoxOnlyXY, SCRIPT_VARARGS, NULL},
 
-			{"RaceToJob", chrRaceToJob, METH_VARARGS, NULL},
-			{"RaceToSex", chrRaceToSex, METH_VARARGS, NULL},
+			{"RaceToJob", chrRaceToJob, SCRIPT_VARARGS, NULL},
+			{"RaceToSex", chrRaceToSex, SCRIPT_VARARGS, NULL},
 
 			// For Test
-			{"testGetPKData", chrtestGetPKData, METH_VARARGS, NULL},
-			{"FaintTest", chrFaintTest, METH_VARARGS, NULL},
-			{"SetMoveSpeed", chrSetMoveSpeed, METH_VARARGS, NULL},
-			{"SetAttackSpeed", chrSetAttackSpeed, METH_VARARGS, NULL},
-			{"WeaponTraceSetTexture", chrWeaponTraceSetTexture, METH_VARARGS, NULL},
-			{"WeaponTraceUseAlpha", chrWeaponTraceUseAlpha, METH_VARARGS, NULL},
-			{"WeaponTraceUseTexture", chrWeaponTraceUseTexture, METH_VARARGS, NULL},
-			{"MoveToDestPosition", chrMoveToDestPosition, METH_VARARGS, NULL},
-			{"testSetComboType", chrtestSetComboType, METH_VARARGS, NULL},
-			{"testSetAddRenderMode", chrtestSetAddRenderMode, METH_VARARGS, NULL},
-			{"testSetModulateRenderMode", chrtestSetModulateRenderMode, METH_VARARGS, NULL},
-			{"testSetAddRenderModeRGB", chrtestSetAddRenderModeRGB, METH_VARARGS, NULL},
-			{"testSetModulateRenderModeRGB", chrtestSetModulateRenderModeRGB, METH_VARARGS, NULL},
-			{"testSetSpecularRenderMode", chrtestSetSpecularRenderMode, METH_VARARGS, NULL},
-			{"testSetSpecularRenderMode2", chrtestSetSpecularRenderMode2, METH_VARARGS, NULL},
-			{"testRestoreRenderMode", chrtestRestoreRenderMode, METH_VARARGS, NULL},
-			{"testSetRideMan", chrtestSetRideMan, METH_VARARGS, NULL},
+			{"testGetPKData", chrtestGetPKData, SCRIPT_VARARGS, NULL},
+			{"FaintTest", chrFaintTest, SCRIPT_VARARGS, NULL},
+			{"SetMoveSpeed", chrSetMoveSpeed, SCRIPT_VARARGS, NULL},
+			{"SetAttackSpeed", chrSetAttackSpeed, SCRIPT_VARARGS, NULL},
+			{"WeaponTraceSetTexture", chrWeaponTraceSetTexture, SCRIPT_VARARGS, NULL},
+			{"WeaponTraceUseAlpha", chrWeaponTraceUseAlpha, SCRIPT_VARARGS, NULL},
+			{"WeaponTraceUseTexture", chrWeaponTraceUseTexture, SCRIPT_VARARGS, NULL},
+			{"MoveToDestPosition", chrMoveToDestPosition, SCRIPT_VARARGS, NULL},
+			{"testSetComboType", chrtestSetComboType, SCRIPT_VARARGS, NULL},
+			{"testSetAddRenderMode", chrtestSetAddRenderMode, SCRIPT_VARARGS, NULL},
+			{"testSetModulateRenderMode", chrtestSetModulateRenderMode, SCRIPT_VARARGS, NULL},
+			{"testSetAddRenderModeRGB", chrtestSetAddRenderModeRGB, SCRIPT_VARARGS, NULL},
+			{"testSetModulateRenderModeRGB", chrtestSetModulateRenderModeRGB, SCRIPT_VARARGS, NULL},
+			{"testSetSpecularRenderMode", chrtestSetSpecularRenderMode, SCRIPT_VARARGS, NULL},
+			{"testSetSpecularRenderMode2", chrtestSetSpecularRenderMode2, SCRIPT_VARARGS, NULL},
+			{"testRestoreRenderMode", chrtestRestoreRenderMode, SCRIPT_VARARGS, NULL},
+			{"testSetRideMan", chrtestSetRideMan, SCRIPT_VARARGS, NULL},
 
 			{NULL, NULL, 0, NULL},
 		};
 
-	PyObject* poModule = Py_InitModule("chr", s_methods);
+	ScriptObject* poModule = ScriptModule_Create("chr", s_methods);
 
 	// Length
-	PyModule_AddIntConstant(poModule, "PLAYER_NAME_MAX_LEN", PLAYER_NAME_MAX_LEN);
+	ScriptModule_AddIntConstant(poModule, "PLAYER_NAME_MAX_LEN", PLAYER_NAME_MAX_LEN);
 
 	// General
-	PyModule_AddIntConstant(poModule, "MOTION_NONE", CRaceMotionData::NAME_NONE);
+	ScriptModule_AddIntConstant(poModule, "MOTION_NONE", CRaceMotionData::NAME_NONE);
 
-	PyModule_AddIntConstant(poModule, "MOTION_SPAWN", CRaceMotionData::NAME_SPAWN);
-	PyModule_AddIntConstant(poModule, "MOTION_WAIT", CRaceMotionData::NAME_WAIT);
-	PyModule_AddIntConstant(poModule, "MOTION_WALK", CRaceMotionData::NAME_WALK);
-	PyModule_AddIntConstant(poModule, "MOTION_RUN", CRaceMotionData::NAME_RUN);
-	PyModule_AddIntConstant(poModule, "MOTION_CHANGE_WEAPON", CRaceMotionData::NAME_CHANGE_WEAPON);
-	PyModule_AddIntConstant(poModule, "MOTION_DAMAGE", CRaceMotionData::NAME_DAMAGE);
-	PyModule_AddIntConstant(poModule, "MOTION_DAMAGE_FLYING", CRaceMotionData::NAME_DAMAGE_FLYING);
-	PyModule_AddIntConstant(poModule, "MOTION_STAND_UP", CRaceMotionData::NAME_STAND_UP);
-	PyModule_AddIntConstant(poModule, "MOTION_DAMAGE_BACK", CRaceMotionData::NAME_DAMAGE_BACK);
-	PyModule_AddIntConstant(poModule, "MOTION_DAMAGE_FLYING_BACK", CRaceMotionData::NAME_DAMAGE_FLYING_BACK);
-	PyModule_AddIntConstant(poModule, "MOTION_STAND_UP_BACK", CRaceMotionData::NAME_STAND_UP_BACK);
-	PyModule_AddIntConstant(poModule, "MOTION_DEAD", CRaceMotionData::NAME_DEAD);
-	PyModule_AddIntConstant(poModule, "MOTION_DEAD_BACK", CRaceMotionData::NAME_DEAD_BACK);
-	PyModule_AddIntConstant(poModule, "MOTION_NORMAL_ATTACK", CRaceMotionData::NAME_NORMAL_ATTACK);
-	PyModule_AddIntConstant(poModule, "MOTION_COMBO_ATTACK_1", CRaceMotionData::NAME_COMBO_ATTACK_1);
-	PyModule_AddIntConstant(poModule, "MOTION_COMBO_ATTACK_2", CRaceMotionData::NAME_COMBO_ATTACK_2);
-	PyModule_AddIntConstant(poModule, "MOTION_COMBO_ATTACK_3", CRaceMotionData::NAME_COMBO_ATTACK_3);
-	PyModule_AddIntConstant(poModule, "MOTION_COMBO_ATTACK_4", CRaceMotionData::NAME_COMBO_ATTACK_4);
-	PyModule_AddIntConstant(poModule, "MOTION_COMBO_ATTACK_5", CRaceMotionData::NAME_COMBO_ATTACK_5);
-	PyModule_AddIntConstant(poModule, "MOTION_COMBO_ATTACK_6", CRaceMotionData::NAME_COMBO_ATTACK_6);
-	PyModule_AddIntConstant(poModule, "MOTION_COMBO_ATTACK_7", CRaceMotionData::NAME_COMBO_ATTACK_7);
-	PyModule_AddIntConstant(poModule, "MOTION_COMBO_ATTACK_8", CRaceMotionData::NAME_COMBO_ATTACK_8);
-	PyModule_AddIntConstant(poModule, "MOTION_INTRO_WAIT", CRaceMotionData::NAME_INTRO_WAIT);
-	PyModule_AddIntConstant(poModule, "MOTION_INTRO_SELECTED", CRaceMotionData::NAME_INTRO_SELECTED);
-	PyModule_AddIntConstant(poModule, "MOTION_INTRO_NOT_SELECTED", CRaceMotionData::NAME_INTRO_NOT_SELECTED);
-	PyModule_AddIntConstant(poModule, "MOTION_FISHING_THROW", CRaceMotionData::NAME_FISHING_THROW);
-	PyModule_AddIntConstant(poModule, "MOTION_FISHING_WAIT", CRaceMotionData::NAME_FISHING_WAIT);
-	PyModule_AddIntConstant(poModule, "MOTION_FISHING_STOP", CRaceMotionData::NAME_FISHING_STOP);
-	PyModule_AddIntConstant(poModule, "MOTION_FISHING_REACT", CRaceMotionData::NAME_FISHING_REACT);
-	PyModule_AddIntConstant(poModule, "MOTION_FISHING_CATCH", CRaceMotionData::NAME_FISHING_CATCH);
-	PyModule_AddIntConstant(poModule, "MOTION_FISHING_FAIL", CRaceMotionData::NAME_FISHING_FAIL);
-	PyModule_AddIntConstant(poModule, "MOTION_STOP", CRaceMotionData::NAME_STOP);
-	PyModule_AddIntConstant(poModule, "MOTION_SKILL", CRaceMotionData::NAME_SKILL);
-	PyModule_AddIntConstant(poModule, "MOTION_CLAP", CRaceMotionData::NAME_CLAP);
-	PyModule_AddIntConstant(poModule, "MOTION_DANCE_1", CRaceMotionData::NAME_DANCE_1);
-	PyModule_AddIntConstant(poModule, "MOTION_DANCE_2", CRaceMotionData::NAME_DANCE_2);
+	ScriptModule_AddIntConstant(poModule, "MOTION_SPAWN", CRaceMotionData::NAME_SPAWN);
+	ScriptModule_AddIntConstant(poModule, "MOTION_WAIT", CRaceMotionData::NAME_WAIT);
+	ScriptModule_AddIntConstant(poModule, "MOTION_WALK", CRaceMotionData::NAME_WALK);
+	ScriptModule_AddIntConstant(poModule, "MOTION_RUN", CRaceMotionData::NAME_RUN);
+	ScriptModule_AddIntConstant(poModule, "MOTION_CHANGE_WEAPON", CRaceMotionData::NAME_CHANGE_WEAPON);
+	ScriptModule_AddIntConstant(poModule, "MOTION_DAMAGE", CRaceMotionData::NAME_DAMAGE);
+	ScriptModule_AddIntConstant(poModule, "MOTION_DAMAGE_FLYING", CRaceMotionData::NAME_DAMAGE_FLYING);
+	ScriptModule_AddIntConstant(poModule, "MOTION_STAND_UP", CRaceMotionData::NAME_STAND_UP);
+	ScriptModule_AddIntConstant(poModule, "MOTION_DAMAGE_BACK", CRaceMotionData::NAME_DAMAGE_BACK);
+	ScriptModule_AddIntConstant(poModule, "MOTION_DAMAGE_FLYING_BACK", CRaceMotionData::NAME_DAMAGE_FLYING_BACK);
+	ScriptModule_AddIntConstant(poModule, "MOTION_STAND_UP_BACK", CRaceMotionData::NAME_STAND_UP_BACK);
+	ScriptModule_AddIntConstant(poModule, "MOTION_DEAD", CRaceMotionData::NAME_DEAD);
+	ScriptModule_AddIntConstant(poModule, "MOTION_DEAD_BACK", CRaceMotionData::NAME_DEAD_BACK);
+	ScriptModule_AddIntConstant(poModule, "MOTION_NORMAL_ATTACK", CRaceMotionData::NAME_NORMAL_ATTACK);
+	ScriptModule_AddIntConstant(poModule, "MOTION_COMBO_ATTACK_1", CRaceMotionData::NAME_COMBO_ATTACK_1);
+	ScriptModule_AddIntConstant(poModule, "MOTION_COMBO_ATTACK_2", CRaceMotionData::NAME_COMBO_ATTACK_2);
+	ScriptModule_AddIntConstant(poModule, "MOTION_COMBO_ATTACK_3", CRaceMotionData::NAME_COMBO_ATTACK_3);
+	ScriptModule_AddIntConstant(poModule, "MOTION_COMBO_ATTACK_4", CRaceMotionData::NAME_COMBO_ATTACK_4);
+	ScriptModule_AddIntConstant(poModule, "MOTION_COMBO_ATTACK_5", CRaceMotionData::NAME_COMBO_ATTACK_5);
+	ScriptModule_AddIntConstant(poModule, "MOTION_COMBO_ATTACK_6", CRaceMotionData::NAME_COMBO_ATTACK_6);
+	ScriptModule_AddIntConstant(poModule, "MOTION_COMBO_ATTACK_7", CRaceMotionData::NAME_COMBO_ATTACK_7);
+	ScriptModule_AddIntConstant(poModule, "MOTION_COMBO_ATTACK_8", CRaceMotionData::NAME_COMBO_ATTACK_8);
+	ScriptModule_AddIntConstant(poModule, "MOTION_INTRO_WAIT", CRaceMotionData::NAME_INTRO_WAIT);
+	ScriptModule_AddIntConstant(poModule, "MOTION_INTRO_SELECTED", CRaceMotionData::NAME_INTRO_SELECTED);
+	ScriptModule_AddIntConstant(poModule, "MOTION_INTRO_NOT_SELECTED", CRaceMotionData::NAME_INTRO_NOT_SELECTED);
+	ScriptModule_AddIntConstant(poModule, "MOTION_FISHING_THROW", CRaceMotionData::NAME_FISHING_THROW);
+	ScriptModule_AddIntConstant(poModule, "MOTION_FISHING_WAIT", CRaceMotionData::NAME_FISHING_WAIT);
+	ScriptModule_AddIntConstant(poModule, "MOTION_FISHING_STOP", CRaceMotionData::NAME_FISHING_STOP);
+	ScriptModule_AddIntConstant(poModule, "MOTION_FISHING_REACT", CRaceMotionData::NAME_FISHING_REACT);
+	ScriptModule_AddIntConstant(poModule, "MOTION_FISHING_CATCH", CRaceMotionData::NAME_FISHING_CATCH);
+	ScriptModule_AddIntConstant(poModule, "MOTION_FISHING_FAIL", CRaceMotionData::NAME_FISHING_FAIL);
+	ScriptModule_AddIntConstant(poModule, "MOTION_STOP", CRaceMotionData::NAME_STOP);
+	ScriptModule_AddIntConstant(poModule, "MOTION_SKILL", CRaceMotionData::NAME_SKILL);
+	ScriptModule_AddIntConstant(poModule, "MOTION_CLAP", CRaceMotionData::NAME_CLAP);
+	ScriptModule_AddIntConstant(poModule, "MOTION_DANCE_1", CRaceMotionData::NAME_DANCE_1);
+	ScriptModule_AddIntConstant(poModule, "MOTION_DANCE_2", CRaceMotionData::NAME_DANCE_2);
 
-	PyModule_AddIntConstant(poModule, "MOTION_DANCE_3", CRaceMotionData::NAME_DANCE_3);
-	PyModule_AddIntConstant(poModule, "MOTION_DANCE_4", CRaceMotionData::NAME_DANCE_4);
-	PyModule_AddIntConstant(poModule, "MOTION_DANCE_5", CRaceMotionData::NAME_DANCE_5);
-	PyModule_AddIntConstant(poModule, "MOTION_DANCE_6", CRaceMotionData::NAME_DANCE_6);
-	PyModule_AddIntConstant(poModule, "MOTION_CONGRATULATION", CRaceMotionData::NAME_CONGRATULATION);
-	PyModule_AddIntConstant(poModule, "MOTION_FORGIVE", CRaceMotionData::NAME_FORGIVE);
-	PyModule_AddIntConstant(poModule, "MOTION_ANGRY", CRaceMotionData::NAME_ANGRY);
-	PyModule_AddIntConstant(poModule, "MOTION_ATTRACTIVE", CRaceMotionData::NAME_ATTRACTIVE);
-	PyModule_AddIntConstant(poModule, "MOTION_SAD", CRaceMotionData::NAME_SAD);
-	PyModule_AddIntConstant(poModule, "MOTION_SHY", CRaceMotionData::NAME_SHY);
-	PyModule_AddIntConstant(poModule, "MOTION_CHEERUP", CRaceMotionData::NAME_CHEERUP);
-	PyModule_AddIntConstant(poModule, "MOTION_BANTER", CRaceMotionData::NAME_BANTER);
-	PyModule_AddIntConstant(poModule, "MOTION_JOY", CRaceMotionData::NAME_JOY);
+	ScriptModule_AddIntConstant(poModule, "MOTION_DANCE_3", CRaceMotionData::NAME_DANCE_3);
+	ScriptModule_AddIntConstant(poModule, "MOTION_DANCE_4", CRaceMotionData::NAME_DANCE_4);
+	ScriptModule_AddIntConstant(poModule, "MOTION_DANCE_5", CRaceMotionData::NAME_DANCE_5);
+	ScriptModule_AddIntConstant(poModule, "MOTION_DANCE_6", CRaceMotionData::NAME_DANCE_6);
+	ScriptModule_AddIntConstant(poModule, "MOTION_CONGRATULATION", CRaceMotionData::NAME_CONGRATULATION);
+	ScriptModule_AddIntConstant(poModule, "MOTION_FORGIVE", CRaceMotionData::NAME_FORGIVE);
+	ScriptModule_AddIntConstant(poModule, "MOTION_ANGRY", CRaceMotionData::NAME_ANGRY);
+	ScriptModule_AddIntConstant(poModule, "MOTION_ATTRACTIVE", CRaceMotionData::NAME_ATTRACTIVE);
+	ScriptModule_AddIntConstant(poModule, "MOTION_SAD", CRaceMotionData::NAME_SAD);
+	ScriptModule_AddIntConstant(poModule, "MOTION_SHY", CRaceMotionData::NAME_SHY);
+	ScriptModule_AddIntConstant(poModule, "MOTION_CHEERUP", CRaceMotionData::NAME_CHEERUP);
+	ScriptModule_AddIntConstant(poModule, "MOTION_BANTER", CRaceMotionData::NAME_BANTER);
+	ScriptModule_AddIntConstant(poModule, "MOTION_JOY", CRaceMotionData::NAME_JOY);
 
-	PyModule_AddIntConstant(poModule, "MOTION_CHEERS_1", CRaceMotionData::NAME_CHEERS_1);
-	PyModule_AddIntConstant(poModule, "MOTION_CHEERS_2", CRaceMotionData::NAME_CHEERS_2);
-	PyModule_AddIntConstant(poModule, "MOTION_KISS_WITH_WARRIOR", CRaceMotionData::NAME_KISS_WITH_WARRIOR);
-	PyModule_AddIntConstant(poModule, "MOTION_KISS_WITH_ASSASSIN", CRaceMotionData::NAME_KISS_WITH_ASSASSIN);
-	PyModule_AddIntConstant(poModule, "MOTION_KISS_WITH_SURA", CRaceMotionData::NAME_KISS_WITH_SURA);
-	PyModule_AddIntConstant(poModule, "MOTION_KISS_WITH_SHAMAN", CRaceMotionData::NAME_KISS_WITH_SHAMAN);
-	PyModule_AddIntConstant(poModule, "MOTION_FRENCH_KISS_WITH_WARRIOR", CRaceMotionData::NAME_FRENCH_KISS_WITH_WARRIOR);
-	PyModule_AddIntConstant(poModule, "MOTION_FRENCH_KISS_WITH_ASSASSIN", CRaceMotionData::NAME_FRENCH_KISS_WITH_ASSASSIN);
-	PyModule_AddIntConstant(poModule, "MOTION_FRENCH_KISS_WITH_SURA", CRaceMotionData::NAME_FRENCH_KISS_WITH_SURA);
-	PyModule_AddIntConstant(poModule, "MOTION_FRENCH_KISS_WITH_SHAMAN", CRaceMotionData::NAME_FRENCH_KISS_WITH_SHAMAN);
-	PyModule_AddIntConstant(poModule, "MOTION_SLAP_HIT_WITH_WARRIOR", CRaceMotionData::NAME_SLAP_HIT_WITH_WARRIOR);
-	PyModule_AddIntConstant(poModule, "MOTION_SLAP_HIT_WITH_ASSASSIN", CRaceMotionData::NAME_SLAP_HIT_WITH_ASSASSIN);
-	PyModule_AddIntConstant(poModule, "MOTION_SLAP_HIT_WITH_SURA", CRaceMotionData::NAME_SLAP_HIT_WITH_SURA);
-	PyModule_AddIntConstant(poModule, "MOTION_SLAP_HIT_WITH_SHAMAN", CRaceMotionData::NAME_SLAP_HIT_WITH_SHAMAN);
-	PyModule_AddIntConstant(poModule, "MOTION_SLAP_HURT_WITH_WARRIOR", CRaceMotionData::NAME_SLAP_HURT_WITH_WARRIOR);
-	PyModule_AddIntConstant(poModule, "MOTION_SLAP_HURT_WITH_ASSASSIN", CRaceMotionData::NAME_SLAP_HURT_WITH_ASSASSIN);
-	PyModule_AddIntConstant(poModule, "MOTION_SLAP_HURT_WITH_SURA", CRaceMotionData::NAME_SLAP_HURT_WITH_SURA);
-	PyModule_AddIntConstant(poModule, "MOTION_SLAP_HURT_WITH_SHAMAN", CRaceMotionData::NAME_SLAP_HURT_WITH_SHAMAN);
-	PyModule_AddIntConstant(poModule, "MOTION_DIG", CRaceMotionData::NAME_DIG);
+	ScriptModule_AddIntConstant(poModule, "MOTION_CHEERS_1", CRaceMotionData::NAME_CHEERS_1);
+	ScriptModule_AddIntConstant(poModule, "MOTION_CHEERS_2", CRaceMotionData::NAME_CHEERS_2);
+	ScriptModule_AddIntConstant(poModule, "MOTION_KISS_WITH_WARRIOR", CRaceMotionData::NAME_KISS_WITH_WARRIOR);
+	ScriptModule_AddIntConstant(poModule, "MOTION_KISS_WITH_ASSASSIN", CRaceMotionData::NAME_KISS_WITH_ASSASSIN);
+	ScriptModule_AddIntConstant(poModule, "MOTION_KISS_WITH_SURA", CRaceMotionData::NAME_KISS_WITH_SURA);
+	ScriptModule_AddIntConstant(poModule, "MOTION_KISS_WITH_SHAMAN", CRaceMotionData::NAME_KISS_WITH_SHAMAN);
+	ScriptModule_AddIntConstant(poModule, "MOTION_FRENCH_KISS_WITH_WARRIOR", CRaceMotionData::NAME_FRENCH_KISS_WITH_WARRIOR);
+	ScriptModule_AddIntConstant(poModule, "MOTION_FRENCH_KISS_WITH_ASSASSIN", CRaceMotionData::NAME_FRENCH_KISS_WITH_ASSASSIN);
+	ScriptModule_AddIntConstant(poModule, "MOTION_FRENCH_KISS_WITH_SURA", CRaceMotionData::NAME_FRENCH_KISS_WITH_SURA);
+	ScriptModule_AddIntConstant(poModule, "MOTION_FRENCH_KISS_WITH_SHAMAN", CRaceMotionData::NAME_FRENCH_KISS_WITH_SHAMAN);
+	ScriptModule_AddIntConstant(poModule, "MOTION_SLAP_HIT_WITH_WARRIOR", CRaceMotionData::NAME_SLAP_HIT_WITH_WARRIOR);
+	ScriptModule_AddIntConstant(poModule, "MOTION_SLAP_HIT_WITH_ASSASSIN", CRaceMotionData::NAME_SLAP_HIT_WITH_ASSASSIN);
+	ScriptModule_AddIntConstant(poModule, "MOTION_SLAP_HIT_WITH_SURA", CRaceMotionData::NAME_SLAP_HIT_WITH_SURA);
+	ScriptModule_AddIntConstant(poModule, "MOTION_SLAP_HIT_WITH_SHAMAN", CRaceMotionData::NAME_SLAP_HIT_WITH_SHAMAN);
+	ScriptModule_AddIntConstant(poModule, "MOTION_SLAP_HURT_WITH_WARRIOR", CRaceMotionData::NAME_SLAP_HURT_WITH_WARRIOR);
+	ScriptModule_AddIntConstant(poModule, "MOTION_SLAP_HURT_WITH_ASSASSIN", CRaceMotionData::NAME_SLAP_HURT_WITH_ASSASSIN);
+	ScriptModule_AddIntConstant(poModule, "MOTION_SLAP_HURT_WITH_SURA", CRaceMotionData::NAME_SLAP_HURT_WITH_SURA);
+	ScriptModule_AddIntConstant(poModule, "MOTION_SLAP_HURT_WITH_SHAMAN", CRaceMotionData::NAME_SLAP_HURT_WITH_SHAMAN);
+	ScriptModule_AddIntConstant(poModule, "MOTION_DIG", CRaceMotionData::NAME_DIG);
 
-	PyModule_AddIntConstant(poModule, "MOTION_MODE_RESERVED", CRaceMotionData::MODE_RESERVED);
-	PyModule_AddIntConstant(poModule, "MOTION_MODE_GENERAL", CRaceMotionData::MODE_GENERAL);
-	PyModule_AddIntConstant(poModule, "MOTION_MODE_ONEHAND_SWORD", CRaceMotionData::MODE_ONEHAND_SWORD);
-	PyModule_AddIntConstant(poModule, "MOTION_MODE_TWOHAND_SWORD", CRaceMotionData::MODE_TWOHAND_SWORD);
-	PyModule_AddIntConstant(poModule, "MOTION_MODE_DUALHAND_SWORD", CRaceMotionData::MODE_DUALHAND_SWORD);
-	PyModule_AddIntConstant(poModule, "MOTION_MODE_BOW", CRaceMotionData::MODE_BOW);
-	PyModule_AddIntConstant(poModule, "MOTION_MODE_FAN", CRaceMotionData::MODE_FAN);
-	PyModule_AddIntConstant(poModule, "MOTION_MODE_BELL", CRaceMotionData::MODE_BELL);
-	PyModule_AddIntConstant(poModule, "MOTION_MODE_FISHING", CRaceMotionData::MODE_FISHING);
-	PyModule_AddIntConstant(poModule, "MOTION_MODE_HORSE", CRaceMotionData::MODE_HORSE);
-	PyModule_AddIntConstant(poModule, "MOTION_MODE_HORSE_ONEHAND_SWORD", CRaceMotionData::MODE_HORSE_ONEHAND_SWORD);
-	PyModule_AddIntConstant(poModule, "MOTION_MODE_HORSE_TWOHAND_SWORD", CRaceMotionData::MODE_HORSE_TWOHAND_SWORD);
-	PyModule_AddIntConstant(poModule, "MOTION_MODE_HORSE_DUALHAND_SWORD", CRaceMotionData::MODE_HORSE_DUALHAND_SWORD);
-	PyModule_AddIntConstant(poModule, "MOTION_MODE_HORSE_BOW", CRaceMotionData::MODE_HORSE_BOW);
-	PyModule_AddIntConstant(poModule, "MOTION_MODE_HORSE_FAN", CRaceMotionData::MODE_HORSE_FAN);
-	PyModule_AddIntConstant(poModule, "MOTION_MODE_HORSE_BELL", CRaceMotionData::MODE_HORSE_BELL);
-	PyModule_AddIntConstant(poModule, "MOTION_MODE_WEDDING_DRESS", CRaceMotionData::MODE_WEDDING_DRESS);
+	ScriptModule_AddIntConstant(poModule, "MOTION_MODE_RESERVED", CRaceMotionData::MODE_RESERVED);
+	ScriptModule_AddIntConstant(poModule, "MOTION_MODE_GENERAL", CRaceMotionData::MODE_GENERAL);
+	ScriptModule_AddIntConstant(poModule, "MOTION_MODE_ONEHAND_SWORD", CRaceMotionData::MODE_ONEHAND_SWORD);
+	ScriptModule_AddIntConstant(poModule, "MOTION_MODE_TWOHAND_SWORD", CRaceMotionData::MODE_TWOHAND_SWORD);
+	ScriptModule_AddIntConstant(poModule, "MOTION_MODE_DUALHAND_SWORD", CRaceMotionData::MODE_DUALHAND_SWORD);
+	ScriptModule_AddIntConstant(poModule, "MOTION_MODE_BOW", CRaceMotionData::MODE_BOW);
+	ScriptModule_AddIntConstant(poModule, "MOTION_MODE_FAN", CRaceMotionData::MODE_FAN);
+	ScriptModule_AddIntConstant(poModule, "MOTION_MODE_BELL", CRaceMotionData::MODE_BELL);
+	ScriptModule_AddIntConstant(poModule, "MOTION_MODE_FISHING", CRaceMotionData::MODE_FISHING);
+	ScriptModule_AddIntConstant(poModule, "MOTION_MODE_HORSE", CRaceMotionData::MODE_HORSE);
+	ScriptModule_AddIntConstant(poModule, "MOTION_MODE_HORSE_ONEHAND_SWORD", CRaceMotionData::MODE_HORSE_ONEHAND_SWORD);
+	ScriptModule_AddIntConstant(poModule, "MOTION_MODE_HORSE_TWOHAND_SWORD", CRaceMotionData::MODE_HORSE_TWOHAND_SWORD);
+	ScriptModule_AddIntConstant(poModule, "MOTION_MODE_HORSE_DUALHAND_SWORD", CRaceMotionData::MODE_HORSE_DUALHAND_SWORD);
+	ScriptModule_AddIntConstant(poModule, "MOTION_MODE_HORSE_BOW", CRaceMotionData::MODE_HORSE_BOW);
+	ScriptModule_AddIntConstant(poModule, "MOTION_MODE_HORSE_FAN", CRaceMotionData::MODE_HORSE_FAN);
+	ScriptModule_AddIntConstant(poModule, "MOTION_MODE_HORSE_BELL", CRaceMotionData::MODE_HORSE_BELL);
+	ScriptModule_AddIntConstant(poModule, "MOTION_MODE_WEDDING_DRESS", CRaceMotionData::MODE_WEDDING_DRESS);
 
-	PyModule_AddIntConstant(poModule, "DIR_NORTH", CInstanceBase::DIR_NORTH);
-	PyModule_AddIntConstant(poModule, "DIR_NORTHEAST", CInstanceBase::DIR_NORTHEAST);
-	PyModule_AddIntConstant(poModule, "DIR_EAST", CInstanceBase::DIR_EAST);
-	PyModule_AddIntConstant(poModule, "DIR_SOUTHEAST", CInstanceBase::DIR_SOUTHEAST);
-	PyModule_AddIntConstant(poModule, "DIR_SOUTH", CInstanceBase::DIR_SOUTH);
-	PyModule_AddIntConstant(poModule, "DIR_SOUTHWEST", CInstanceBase::DIR_SOUTHWEST);
-	PyModule_AddIntConstant(poModule, "DIR_WEST", CInstanceBase::DIR_WEST);
-	PyModule_AddIntConstant(poModule, "DIR_NORTHWEST", CInstanceBase::DIR_NORTHWEST);
+	ScriptModule_AddIntConstant(poModule, "DIR_NORTH", CInstanceBase::DIR_NORTH);
+	ScriptModule_AddIntConstant(poModule, "DIR_NORTHEAST", CInstanceBase::DIR_NORTHEAST);
+	ScriptModule_AddIntConstant(poModule, "DIR_EAST", CInstanceBase::DIR_EAST);
+	ScriptModule_AddIntConstant(poModule, "DIR_SOUTHEAST", CInstanceBase::DIR_SOUTHEAST);
+	ScriptModule_AddIntConstant(poModule, "DIR_SOUTH", CInstanceBase::DIR_SOUTH);
+	ScriptModule_AddIntConstant(poModule, "DIR_SOUTHWEST", CInstanceBase::DIR_SOUTHWEST);
+	ScriptModule_AddIntConstant(poModule, "DIR_WEST", CInstanceBase::DIR_WEST);
+	ScriptModule_AddIntConstant(poModule, "DIR_NORTHWEST", CInstanceBase::DIR_NORTHWEST);
 
-	PyModule_AddIntConstant(poModule, "INSTANCE_TYPE_PLAYER", CActorInstance::TYPE_PC);
-	PyModule_AddIntConstant(poModule, "INSTANCE_TYPE_NPC", CActorInstance::TYPE_NPC);
-	PyModule_AddIntConstant(poModule, "INSTANCE_TYPE_ENEMY", CActorInstance::TYPE_ENEMY);
-	PyModule_AddIntConstant(poModule, "INSTANCE_TYPE_BUILDING", CActorInstance::TYPE_BUILDING);
-	PyModule_AddIntConstant(poModule, "INSTANCE_TYPE_OBJECT", CActorInstance::TYPE_OBJECT);
+	ScriptModule_AddIntConstant(poModule, "INSTANCE_TYPE_PLAYER", CActorInstance::TYPE_PC);
+	ScriptModule_AddIntConstant(poModule, "INSTANCE_TYPE_NPC", CActorInstance::TYPE_NPC);
+	ScriptModule_AddIntConstant(poModule, "INSTANCE_TYPE_ENEMY", CActorInstance::TYPE_ENEMY);
+	ScriptModule_AddIntConstant(poModule, "INSTANCE_TYPE_BUILDING", CActorInstance::TYPE_BUILDING);
+	ScriptModule_AddIntConstant(poModule, "INSTANCE_TYPE_OBJECT", CActorInstance::TYPE_OBJECT);
 
-	PyModule_AddIntConstant(poModule, "PART_WEAPON", CRaceData::PART_WEAPON);
-	PyModule_AddIntConstant(poModule, "PART_HEAD", CRaceData::PART_HEAD);
-	PyModule_AddIntConstant(poModule, "PART_WEAPON_LEFT", CRaceData::PART_WEAPON_LEFT);
+	ScriptModule_AddIntConstant(poModule, "PART_WEAPON", CRaceData::PART_WEAPON);
+	ScriptModule_AddIntConstant(poModule, "PART_HEAD", CRaceData::PART_HEAD);
+	ScriptModule_AddIntConstant(poModule, "PART_WEAPON_LEFT", CRaceData::PART_WEAPON_LEFT);
 
 	/////
 
-	PyModule_AddIntConstant(poModule, "AFFECT_POISON", CInstanceBase::AFFECT_POISON);
-	PyModule_AddIntConstant(poModule, "AFFECT_SLOW", CInstanceBase::AFFECT_SLOW);
-	PyModule_AddIntConstant(poModule, "AFFECT_STUN", CInstanceBase::AFFECT_STUN);
-	PyModule_AddIntConstant(poModule, "AFFECT_MOV_SPEED_POTION", CInstanceBase::AFFECT_MOV_SPEED_POTION);
-	PyModule_AddIntConstant(poModule, "AFFECT_ATT_SPEED_POTION", CInstanceBase::AFFECT_ATT_SPEED_POTION);
-	PyModule_AddIntConstant(poModule, "AFFECT_FISH_MIND", CInstanceBase::AFFECT_FISH_MIND);
+	ScriptModule_AddIntConstant(poModule, "AFFECT_POISON", CInstanceBase::AFFECT_POISON);
+	ScriptModule_AddIntConstant(poModule, "AFFECT_SLOW", CInstanceBase::AFFECT_SLOW);
+	ScriptModule_AddIntConstant(poModule, "AFFECT_STUN", CInstanceBase::AFFECT_STUN);
+	ScriptModule_AddIntConstant(poModule, "AFFECT_MOV_SPEED_POTION", CInstanceBase::AFFECT_MOV_SPEED_POTION);
+	ScriptModule_AddIntConstant(poModule, "AFFECT_ATT_SPEED_POTION", CInstanceBase::AFFECT_ATT_SPEED_POTION);
+	ScriptModule_AddIntConstant(poModule, "AFFECT_FISH_MIND", CInstanceBase::AFFECT_FISH_MIND);
 
-	PyModule_AddIntConstant(poModule, "AFFECT_JEONGWI", CInstanceBase::AFFECT_JEONGWI);
-	PyModule_AddIntConstant(poModule, "AFFECT_GEOMGYEONG", CInstanceBase::AFFECT_GEOMGYEONG);
-	PyModule_AddIntConstant(poModule, "AFFECT_CHEONGEUN", CInstanceBase::AFFECT_CHEONGEUN);
-	PyModule_AddIntConstant(poModule, "AFFECT_GYEONGGONG", CInstanceBase::AFFECT_GYEONGGONG);
-	PyModule_AddIntConstant(poModule, "AFFECT_EUNHYEONG", CInstanceBase::AFFECT_EUNHYEONG);
-	PyModule_AddIntConstant(poModule, "AFFECT_GWIGEOM", CInstanceBase::AFFECT_GWIGEOM);
-	PyModule_AddIntConstant(poModule, "AFFECT_GONGPO", CInstanceBase::AFFECT_GONGPO);
-	PyModule_AddIntConstant(poModule, "AFFECT_JUMAGAP", CInstanceBase::AFFECT_JUMAGAP);
-	PyModule_AddIntConstant(poModule, "AFFECT_HOSIN", CInstanceBase::AFFECT_HOSIN);
-	PyModule_AddIntConstant(poModule, "AFFECT_BOHO", CInstanceBase::AFFECT_BOHO);
-	PyModule_AddIntConstant(poModule, "AFFECT_KWAESOK", CInstanceBase::AFFECT_KWAESOK);
-	PyModule_AddIntConstant(poModule, "AFFECT_HEUKSIN", CInstanceBase::AFFECT_HEUKSIN);
-	PyModule_AddIntConstant(poModule, "AFFECT_MUYEONG", CInstanceBase::AFFECT_MUYEONG);
-	PyModule_AddIntConstant(poModule, "AFFECT_GICHEON", CInstanceBase::AFFECT_GICHEON);
-	PyModule_AddIntConstant(poModule, "AFFECT_JEUNGRYEOK", CInstanceBase::AFFECT_JEUNGRYEOK);
-	PyModule_AddIntConstant(poModule, "AFFECT_PABEOP", CInstanceBase::AFFECT_PABEOP);
-	PyModule_AddIntConstant(poModule, "AFFECT_FALLEN_CHEONGEUN", CInstanceBase::AFFECT_FALLEN_CHEONGEUN);
-	PyModule_AddIntConstant(poModule, "AFFECT_CHINA_FIREWORK", CInstanceBase::AFFECT_CHINA_FIREWORK);
-	PyModule_AddIntConstant(poModule, "NEW_AFFECT_MALL", CInstanceBase::NEW_AFFECT_MALL);
-	PyModule_AddIntConstant(poModule, "NEW_AFFECT_NO_DEATH_PENALTY", CInstanceBase::NEW_AFFECT_NO_DEATH_PENALTY);
-	PyModule_AddIntConstant(poModule, "NEW_AFFECT_SKILL_BOOK_BONUS", CInstanceBase::NEW_AFFECT_SKILL_BOOK_BONUS);
-	PyModule_AddIntConstant(poModule, "NEW_AFFECT_SKILL_BOOK_NO_DELAY", CInstanceBase::NEW_AFFECT_SKILL_BOOK_NO_DELAY);
-	PyModule_AddIntConstant(poModule, "NEW_AFFECT_EXP_BONUS", CInstanceBase::NEW_AFFECT_EXP_BONUS);
-	PyModule_AddIntConstant(poModule, "NEW_AFFECT_EXP_BONUS_EURO_FREE", CInstanceBase::NEW_AFFECT_EXP_BONUS_EURO_FREE);
-	PyModule_AddIntConstant(poModule, "NEW_AFFECT_EXP_BONUS_EURO_FREE_UNDER_15", CInstanceBase::NEW_AFFECT_EXP_BONUS_EURO_FREE_UNDER_15);
+	ScriptModule_AddIntConstant(poModule, "AFFECT_JEONGWI", CInstanceBase::AFFECT_JEONGWI);
+	ScriptModule_AddIntConstant(poModule, "AFFECT_GEOMGYEONG", CInstanceBase::AFFECT_GEOMGYEONG);
+	ScriptModule_AddIntConstant(poModule, "AFFECT_CHEONGEUN", CInstanceBase::AFFECT_CHEONGEUN);
+	ScriptModule_AddIntConstant(poModule, "AFFECT_GYEONGGONG", CInstanceBase::AFFECT_GYEONGGONG);
+	ScriptModule_AddIntConstant(poModule, "AFFECT_EUNHYEONG", CInstanceBase::AFFECT_EUNHYEONG);
+	ScriptModule_AddIntConstant(poModule, "AFFECT_GWIGEOM", CInstanceBase::AFFECT_GWIGEOM);
+	ScriptModule_AddIntConstant(poModule, "AFFECT_GONGPO", CInstanceBase::AFFECT_GONGPO);
+	ScriptModule_AddIntConstant(poModule, "AFFECT_JUMAGAP", CInstanceBase::AFFECT_JUMAGAP);
+	ScriptModule_AddIntConstant(poModule, "AFFECT_HOSIN", CInstanceBase::AFFECT_HOSIN);
+	ScriptModule_AddIntConstant(poModule, "AFFECT_BOHO", CInstanceBase::AFFECT_BOHO);
+	ScriptModule_AddIntConstant(poModule, "AFFECT_KWAESOK", CInstanceBase::AFFECT_KWAESOK);
+	ScriptModule_AddIntConstant(poModule, "AFFECT_HEUKSIN", CInstanceBase::AFFECT_HEUKSIN);
+	ScriptModule_AddIntConstant(poModule, "AFFECT_MUYEONG", CInstanceBase::AFFECT_MUYEONG);
+	ScriptModule_AddIntConstant(poModule, "AFFECT_GICHEON", CInstanceBase::AFFECT_GICHEON);
+	ScriptModule_AddIntConstant(poModule, "AFFECT_JEUNGRYEOK", CInstanceBase::AFFECT_JEUNGRYEOK);
+	ScriptModule_AddIntConstant(poModule, "AFFECT_PABEOP", CInstanceBase::AFFECT_PABEOP);
+	ScriptModule_AddIntConstant(poModule, "AFFECT_FALLEN_CHEONGEUN", CInstanceBase::AFFECT_FALLEN_CHEONGEUN);
+	ScriptModule_AddIntConstant(poModule, "AFFECT_CHINA_FIREWORK", CInstanceBase::AFFECT_CHINA_FIREWORK);
+	ScriptModule_AddIntConstant(poModule, "NEW_AFFECT_MALL", CInstanceBase::NEW_AFFECT_MALL);
+	ScriptModule_AddIntConstant(poModule, "NEW_AFFECT_NO_DEATH_PENALTY", CInstanceBase::NEW_AFFECT_NO_DEATH_PENALTY);
+	ScriptModule_AddIntConstant(poModule, "NEW_AFFECT_SKILL_BOOK_BONUS", CInstanceBase::NEW_AFFECT_SKILL_BOOK_BONUS);
+	ScriptModule_AddIntConstant(poModule, "NEW_AFFECT_SKILL_BOOK_NO_DELAY", CInstanceBase::NEW_AFFECT_SKILL_BOOK_NO_DELAY);
+	ScriptModule_AddIntConstant(poModule, "NEW_AFFECT_EXP_BONUS", CInstanceBase::NEW_AFFECT_EXP_BONUS);
+	ScriptModule_AddIntConstant(poModule, "NEW_AFFECT_EXP_BONUS_EURO_FREE", CInstanceBase::NEW_AFFECT_EXP_BONUS_EURO_FREE);
+	ScriptModule_AddIntConstant(poModule, "NEW_AFFECT_EXP_BONUS_EURO_FREE_UNDER_15", CInstanceBase::NEW_AFFECT_EXP_BONUS_EURO_FREE_UNDER_15);
 
-	PyModule_AddIntConstant(poModule, "NEW_AFFECT_ITEM_BONUS", CInstanceBase::NEW_AFFECT_ITEM_BONUS);
-	PyModule_AddIntConstant(poModule, "NEW_AFFECT_SAFEBOX", CInstanceBase::NEW_AFFECT_SAFEBOX);
-	PyModule_AddIntConstant(poModule, "NEW_AFFECT_AUTOLOOT", CInstanceBase::NEW_AFFECT_AUTOLOOT);
-	PyModule_AddIntConstant(poModule, "NEW_AFFECT_FISH_MIND", CInstanceBase::NEW_AFFECT_FISH_MIND);
-	PyModule_AddIntConstant(poModule, "NEW_AFFECT_MARRIAGE_FAST", CInstanceBase::NEW_AFFECT_MARRIAGE_FAST);
-	PyModule_AddIntConstant(poModule, "NEW_AFFECT_GOLD_BONUS", CInstanceBase::NEW_AFFECT_GOLD_BONUS);
-	PyModule_AddIntConstant(poModule, "NEW_AFFECT_AUTO_HP_RECOVERY", CInstanceBase::NEW_AFFECT_AUTO_HP_RECOVERY);
-	PyModule_AddIntConstant(poModule, "NEW_AFFECT_AUTO_SP_RECOVERY", CInstanceBase::NEW_AFFECT_AUTO_SP_RECOVERY);
+	ScriptModule_AddIntConstant(poModule, "NEW_AFFECT_ITEM_BONUS", CInstanceBase::NEW_AFFECT_ITEM_BONUS);
+	ScriptModule_AddIntConstant(poModule, "NEW_AFFECT_SAFEBOX", CInstanceBase::NEW_AFFECT_SAFEBOX);
+	ScriptModule_AddIntConstant(poModule, "NEW_AFFECT_AUTOLOOT", CInstanceBase::NEW_AFFECT_AUTOLOOT);
+	ScriptModule_AddIntConstant(poModule, "NEW_AFFECT_FISH_MIND", CInstanceBase::NEW_AFFECT_FISH_MIND);
+	ScriptModule_AddIntConstant(poModule, "NEW_AFFECT_MARRIAGE_FAST", CInstanceBase::NEW_AFFECT_MARRIAGE_FAST);
+	ScriptModule_AddIntConstant(poModule, "NEW_AFFECT_GOLD_BONUS", CInstanceBase::NEW_AFFECT_GOLD_BONUS);
+	ScriptModule_AddIntConstant(poModule, "NEW_AFFECT_AUTO_HP_RECOVERY", CInstanceBase::NEW_AFFECT_AUTO_HP_RECOVERY);
+	ScriptModule_AddIntConstant(poModule, "NEW_AFFECT_AUTO_SP_RECOVERY", CInstanceBase::NEW_AFFECT_AUTO_SP_RECOVERY);
 
-	PyModule_AddIntConstant(poModule, "NEW_AFFECT_DRAGON_SOUL_QUALIFIED", CInstanceBase::NEW_AFFECT_DRAGON_SOUL_QUALIFIED);
+	ScriptModule_AddIntConstant(poModule, "NEW_AFFECT_DRAGON_SOUL_QUALIFIED", CInstanceBase::NEW_AFFECT_DRAGON_SOUL_QUALIFIED);
 
-	PyModule_AddIntConstant(poModule, "NEW_AFFECT_DRAGON_SOUL_DECK1", CInstanceBase::NEW_AFFECT_DRAGON_SOUL_DECK1);
-	PyModule_AddIntConstant(poModule, "NEW_AFFECT_DRAGON_SOUL_DECK2", CInstanceBase::NEW_AFFECT_DRAGON_SOUL_DECK2);
+	ScriptModule_AddIntConstant(poModule, "NEW_AFFECT_DRAGON_SOUL_DECK1", CInstanceBase::NEW_AFFECT_DRAGON_SOUL_DECK1);
+	ScriptModule_AddIntConstant(poModule, "NEW_AFFECT_DRAGON_SOUL_DECK2", CInstanceBase::NEW_AFFECT_DRAGON_SOUL_DECK2);
 }

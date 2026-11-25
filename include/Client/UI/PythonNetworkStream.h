@@ -124,10 +124,10 @@ class CPythonNetworkStream : public CNetworkStream, public CSingleton<CPythonNet
 		void SetLoginKey(DWORD dwLoginKey);
 		void ClearLoginInfo(void);
 
-		void SetHandler(PyObject* poHandler);
-		void SetPhaseWindow(UINT ePhaseWnd, PyObject* poPhaseWnd);
-		void ClearPhaseWindow(UINT ePhaseWnd, PyObject* poPhaseWnd);
-		void SetServerCommandParserWindow(PyObject* poPhaseWnd);
+		void SetHandler(ScriptObject* poHandler);
+		void SetPhaseWindow(UINT ePhaseWnd, ScriptObject* poPhaseWnd);
+		void ClearPhaseWindow(UINT ePhaseWnd, ScriptObject* poPhaseWnd);
+		void SetServerCommandParserWindow(ScriptObject* poPhaseWnd);
 
 		bool SendSyncPositionElementPacket(DWORD dwVictimVID, DWORD dwVictimX, DWORD dwVictimY);
 
@@ -635,9 +635,9 @@ class CPythonNetworkStream : public CNetworkStream, public CSingleton<CPythonNet
 		CFuncObject<CPythonNetworkStream> m_phaseProcessFunc;
 		CFuncObject<CPythonNetworkStream> m_phaseLeaveFunc;
 
-		PyObject* m_poHandler;
-		PyObject* m_apoPhaseWnd[PHASE_WINDOW_NUM];
-		PyObject* m_poSerCommandParserWnd;
+		ScriptObject* m_poHandler;
+		ScriptObject* m_apoPhaseWnd[PHASE_WINDOW_NUM];
+		ScriptObject* m_poSerCommandParserWnd;
 
 		TSimplePlayerInformation m_akSimplePlayerInfo[PLAYER_PER_ACCOUNT4];
 		DWORD m_adwGuildID[PLAYER_PER_ACCOUNT4];

@@ -15,7 +15,7 @@ class CAccountConnector : public CNetworkStream, public CSingleton<CAccountConne
 		CAccountConnector();
 		virtual ~CAccountConnector();
 
-		void SetHandler(PyObject* poHandler);
+		void SetHandler(ScriptObject* poHandler);
 		void SetLoginInfo(const char* c_szName, const char* c_szPwd);
 		void ClearLoginInfo(void);
 
@@ -69,7 +69,7 @@ class CAccountConnector : public CNetworkStream, public CSingleton<CAccountConne
 		int m_iPort;
 		BOOL m_isWaitKey;
 
-		PyObject* m_poHandler;
+		ScriptObject* m_poHandler;
 
 		// CHINA_CRYPT_KEY
 		void __BuildClientKey_20050304Myevan();

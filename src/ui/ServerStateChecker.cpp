@@ -25,7 +25,7 @@ CServerStateChecker::~CServerStateChecker()
 	m_poWnd = NULL;
 }
 
-void CServerStateChecker::Create(PyObject* poWnd)
+void CServerStateChecker::Create(ScriptObject* poWnd)
 {
 	m_poWnd = poWnd;
 }
@@ -51,7 +51,7 @@ void CServerStateChecker::Request()
 	{
 		for (std::list<TChannel>::const_iterator it = m_lstChannel.begin(); it != m_lstChannel.end(); ++it)
 		{
-			PyCallClassMemberFunc(m_poWnd, "NotifyChannelState", Py_BuildValue("(ii)", it->uServerIndex, 0));
+			Script_CallMethod(m_poWnd, "NotifyChannelState", Script_BuildValue("(ii)", it->uServerIndex, 0));
 		}
 		return;
 	}
@@ -64,7 +64,7 @@ void CServerStateChecker::Request()
 	{
 		for (std::list<TChannel>::const_iterator it = m_lstChannel.begin(); it != m_lstChannel.end(); ++it)
 		{
-			PyCallClassMemberFunc(m_poWnd, "NotifyChannelState", Py_BuildValue("(ii)", it->uServerIndex, 0));
+			Script_CallMethod(m_poWnd, "NotifyChannelState", Script_BuildValue("(ii)", it->uServerIndex, 0));
 		}
 		Initialize();
 		return;
@@ -100,7 +100,7 @@ void CServerStateChecker::Update()
 		{
 			if (channelStatus.nPort == it->uPort)
 			{
-				PyCallClassMemberFunc(m_poWnd, "NotifyChannelState", Py_BuildValue("(ii)", it->uServerIndex, channelStatus.bStatus));
+				Script_CallMethod(m_poWnd, "NotifyChannelState", Script_BuildValue("(ii)", it->uServerIndex, channelStatus.bStatus));
 				break;
 			}
 		}

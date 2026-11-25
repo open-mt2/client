@@ -82,7 +82,7 @@ class CPythonSystem : public CSingleton<CPythonSystem>
 		virtual ~CPythonSystem();
 
 		void Clear();
-		void SetInterfaceHandler(PyObject* poHandler);
+		void SetInterfaceHandler(ScriptObject* poHandler);
 		void DestroyInterfaceHandler();
 
 		// Config
@@ -158,6 +158,6 @@ class CPythonSystem : public CSingleton<CPythonSystem>
 		TConfig m_OldConfig;
 
 		bool m_isInterfaceConfig;
-		PyObject* m_poInterfaceHandler;
+		ScriptObject* m_poInterfaceHandler;
 		TWindowStatus m_WindowStatus[WINDOW_MAX_NUM];
 };

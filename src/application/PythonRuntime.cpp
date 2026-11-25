@@ -1,14 +1,18 @@
+// Python.h must precede the system headers.
+#include <Neoeter/Python/Host/StdAfx.h>
+
 #include <Client/Application/PythonRuntime.h>
 
 #include <Client/Application/Context.h>
+#include <Client/Application/ScriptRuntime.h>
 
 #include <Client/UI/StdAfx.h>
 #include <Client/UI/PythonExceptionSender.h>
 
 #include <Neoeter/Python/Host/PythonLauncher.h>
-#include <Neoeter/Python/Host/StdAfx.h>
 #include <Neoeter/IO/EterPackManager.h>
 #include <Neoeter/Platform/Base/Debug.h>
+#include <Neoeter/Script/ScriptBackend.h>
 
 namespace Neoeter
 {
@@ -33,7 +37,8 @@ namespace Neoeter
 			return Result::RuntimeFailure;
 		}
 
-		RegisterModules();
+		RegisterNativeModules("python", commandLine);
+		Script_SetActiveBackend(&CPythonScriptBackend::Instance());
 
 		if (!RegisterDebugFlag())
 		{
@@ -55,50 +60,15 @@ namespace Neoeter
 
 	void PythonRuntime::Stop()
 	{
+		if (Script_GetActiveBackend() == &CPythonScriptBackend::Instance())
+			Script_SetActiveBackend(nullptr);
+
 		if (m_launcher)
 			m_launcher->Clear();
 
 		SetExceptionSender(nullptr);
 		m_launcher.reset();
 		m_exceptionSender.reset();
-	}
-
-	void PythonRuntime::RegisterModules()
-	{
-		initpack();
-		initdbg();
-		initime();
-		initgrp();
-		initgrpImage();
-		initgrpText();
-		initwndMgr();
-
-		initapp();
-		initsystem();
-		initchr();
-		initchrmgr();
-		initPlayer();
-		initItem();
-		initNonPlayer();
-		initTrade();
-		initChat();
-		initTextTail();
-		initnet();
-		initMiniMap();
-		initProfiler();
-		initEvent();
-		initeffect();
-		initfly();
-		initsnd();
-		initeventmgr();
-		initshop();
-		initskill();
-		initquest();
-		initBackground();
-		initMessenger();
-		initsafebox();
-		initguild();
-		initServerStateChecker();
 	}
 
 	bool PythonRuntime::RegisterDebugFlag()

@@ -39,22 +39,22 @@ void CAccountConnector::__BuildClientKey_20050304Myevan()
 }
 // END_OF_CHINA_CRYPT_KEY
 
-PyObject* packExist(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* packExist(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* strFileName;
 
-	if (!PyTuple_GetString(poArgs, 0, &strFileName))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &strFileName))
+		return Script_BuildException();
 
-	return Py_BuildValue("i", CEterPackManager::Instance().isExist(strFileName) ? 1 : 0);
+	return Script_BuildValue("i", CEterPackManager::Instance().isExist(strFileName) ? 1 : 0);
 }
 
-PyObject* packGet(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* packGet(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* strFileName;
 
-	if (!PyTuple_GetString(poArgs, 0, &strFileName))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &strFileName))
+		return Script_BuildException();
 
 	// 파이썬에서 읽어드리는 패킹 파일은 python 파일과 txt 파일에 한정한다
 	const char* pcExt = strrchr(strFileName, '.');
@@ -66,21 +66,21 @@ PyObject* packGet(PyObject* poSelf, PyObject* poArgs)
 		{
 			CEterPackManager::TPackDataPtr data;
 			if (CEterPackManager::Instance().Get(strFileName, data))
-				return Py_BuildValue("s#", data->data(), data->size());
+				return Script_BuildValue("s#", data->data(), data->size());
 		}
 	}
 
-	return Py_BuildException();
+	return Script_BuildException();
 }
 
 void initpack()
 {
-	static PyMethodDef s_methods[] =
+	static ScriptMethodDef s_methods[] =
 		{
-			{"Exist", packExist, METH_VARARGS, NULL},
-			{"Get", packGet, METH_VARARGS, NULL},
+			{"Exist", packExist, SCRIPT_VARARGS, NULL},
+			{"Get", packGet, SCRIPT_VARARGS, NULL},
 			{NULL, NULL, 0, NULL},
 		};
 
-	Py_InitModule("pack", s_methods);
+	ScriptModule_Create("pack", s_methods);
 }

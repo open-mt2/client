@@ -138,7 +138,7 @@ class CPythonEventManager : public CSingleton<CPythonEventManager>
 				bool isTextCenterMode;
 				bool isWaitFlag;
 
-				PyObject* poEventHandler;
+				ScriptObject* poEventHandler;
 
 				SEventSet() {}
 				virtual ~SEventSet() {}
@@ -157,7 +157,7 @@ class CPythonEventManager : public CSingleton<CPythonEventManager>
 		void ClearEventSeti(int iIndex);
 		void __ClearEventSetp(TEventSet* pEventSet);
 
-		void SetEventHandler(int iIndex, PyObject* poEventHandler);
+		void SetEventHandler(int iIndex, ScriptObject* poEventHandler);
 		void SetRestrictedCount(int iIndex, int iCount);
 
 		int GetEventSetLocalYPosition(int iIndex);
@@ -178,7 +178,7 @@ class CPythonEventManager : public CSingleton<CPythonEventManager>
 		int GetLineCount(int iIndex);
 		void SetVisibleLineCount(int iIndex, int iLineCount);
 
-		void SetInterfaceWindow(PyObject* poInterface);
+		void SetInterfaceWindow(ScriptObject* poInterface);
 		void SetLeftTimeString(const char* c_szString);
 
 	protected:
@@ -206,6 +206,6 @@ class CPythonEventManager : public CSingleton<CPythonEventManager>
 	private:
 		CDynamicPool<TEventSet> m_EventSetPool;
 		CDynamicPool<CGraphicTextInstance> m_ScriptTextLinePool;
-		PyObject* m_poInterface;
+		ScriptObject* m_poInterface;
 		std::string m_strLeftTimeString;
 };

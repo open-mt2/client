@@ -77,7 +77,7 @@ class CPythonMiniMap : public CScreen, public CSingleton<CPythonMiniMap>
 		void AddSignalPoint(float fX, float fY);
 		void ClearAllSignalPoint();
 
-		void RegisterAtlasWindow(PyObject* poHandler);
+		void RegisterAtlasWindow(ScriptObject* poHandler);
 		void UnregisterAtlasWindow();
 		void OpenAtlasWindow();
 		void SetAtlasCenterPosition(int x, int y);
@@ -249,5 +249,5 @@ class CPythonMiniMap : public CScreen, public CSingleton<CPythonMiniMap>
 		};
 		std::vector<TSignalPoint> m_SignalPointVector;
 
-		PyObject* m_poHandler;
+		ScriptObject* m_poHandler;
 };

@@ -1,26 +1,26 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/Game/FlyingObjectManager.h>
-PyObject* flyUpdate(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* flyUpdate(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CFlyingManager::Instance().Update();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* flyRender(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* flyRender(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CFlyingManager::Instance().Render();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
 void initfly()
 {
-	static PyMethodDef s_methods[] =
+	static ScriptMethodDef s_methods[] =
 		{
-			{"Update", flyUpdate, METH_VARARGS, NULL},
-			{"Render", flyRender, METH_VARARGS, NULL},
+			{"Update", flyUpdate, SCRIPT_VARARGS, NULL},
+			{"Render", flyRender, SCRIPT_VARARGS, NULL},
 
 			{NULL, NULL, 0, NULL},
 		};
 
-	Py_InitModule("fly", s_methods);
+	ScriptModule_Create("fly", s_methods);
 }

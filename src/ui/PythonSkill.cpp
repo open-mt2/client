@@ -1488,273 +1488,273 @@ CPythonSkill::SSkillData::SSkillData()
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-PyObject* skillSetPathName(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* skillSetPathName(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szPathName;
-	if (!PyTuple_GetString(poArgs, 0, &szPathName))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetString(poArgs, 0, &szPathName))
+		return Script_BadArgument();
 
 	CPythonSkill::Instance().SetPathName(szPathName);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* skillRegisterSkill(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* skillRegisterSkill(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSkillIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSkillIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSkillIndex))
+		return Script_BadArgument();
 	char* szFileName;
-	if (!PyTuple_GetString(poArgs, 1, &szFileName))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetString(poArgs, 1, &szFileName))
+		return Script_BadArgument();
 
 	std::string strFullFileName;
 	strFullFileName = CPythonSkill::Instance().GetPathName();
 	strFullFileName += szFileName;
 
 	if (!CPythonSkill::Instance().RegisterSkill(iSkillIndex, strFullFileName.c_str()))
-		return Py_BuildException("skill.RegisterSkill - Failed to find skill data file : %d, %s", iSkillIndex, strFullFileName.c_str());
+		return Script_BuildException("skill.RegisterSkill - Failed to find skill data file : %d, %s", iSkillIndex, strFullFileName.c_str());
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* skillLoadSkillData(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* skillLoadSkillData(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* skillRegisterSkillDesc(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* skillRegisterSkillDesc(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szFileName;
-	if (!PyTuple_GetString(poArgs, 0, &szFileName))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetString(poArgs, 0, &szFileName))
+		return Script_BadArgument();
 
 	if (!CPythonSkill::Instance().RegisterSkillDesc(szFileName))
-		return Py_BuildException("Failed to load Skill Desc");
+		return Script_BuildException("Failed to load Skill Desc");
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* skillClearSkillData(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* skillClearSkillData(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonSkill::SSkillData::ms_dwTimeIncreaseSkillNumber = 0;
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* skillGetSkillName(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* skillGetSkillName(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSkillIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSkillIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSkillIndex))
+		return Script_BadArgument();
 
 	int iSkillGrade = -1;
-	PyTuple_GetInteger(poArgs, 1, &iSkillGrade);
+	ScriptTuple_GetInteger(poArgs, 1, &iSkillGrade);
 
 	CPythonSkill::SSkillData* c_pSkillData;
 	if (!CPythonSkill::Instance().GetSkillData(iSkillIndex, &c_pSkillData))
-		return Py_BuildException("skill.GetSkillName - Failed to find skill by %d", iSkillIndex);
+		return Script_BuildException("skill.GetSkillName - Failed to find skill by %d", iSkillIndex);
 
 	if (-1 != iSkillGrade)
 		if (iSkillGrade >= 0 && iSkillGrade < CPythonSkill::SKILL_GRADE_COUNT)
 		{
-			return Py_BuildValue("s", c_pSkillData->GradeData[iSkillGrade].strName.c_str());
+			return Script_BuildValue("s", c_pSkillData->GradeData[iSkillGrade].strName.c_str());
 		}
 
-	return Py_BuildValue("s", c_pSkillData->strName.c_str());
+	return Script_BuildValue("s", c_pSkillData->strName.c_str());
 }
 
-PyObject* skillGetSkillDescription(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* skillGetSkillDescription(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSkillIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSkillIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSkillIndex))
+		return Script_BadArgument();
 
 	CPythonSkill::SSkillData* c_pSkillData;
 	if (!CPythonSkill::Instance().GetSkillData(iSkillIndex, &c_pSkillData))
-		return Py_BuildException("skill.GetSkillDescription - Failed to find skill by %d", iSkillIndex);
+		return Script_BuildException("skill.GetSkillDescription - Failed to find skill by %d", iSkillIndex);
 
-	return Py_BuildValue("s", c_pSkillData->strDescription.c_str());
+	return Script_BuildValue("s", c_pSkillData->strDescription.c_str());
 }
 
-PyObject* skillGetSkillType(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* skillGetSkillType(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSkillIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSkillIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSkillIndex))
+		return Script_BadArgument();
 
 	CPythonSkill::SSkillData* c_pSkillData;
 	if (!CPythonSkill::Instance().GetSkillData(iSkillIndex, &c_pSkillData))
-		return Py_BuildException("skill.GetSkillType - Failed to find skill by %d", iSkillIndex);
+		return Script_BuildException("skill.GetSkillType - Failed to find skill by %d", iSkillIndex);
 
-	return Py_BuildValue("i", c_pSkillData->byType);
+	return Script_BuildValue("i", c_pSkillData->byType);
 }
 
-PyObject* skillGetSkillConditionDescriptionCount(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* skillGetSkillConditionDescriptionCount(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSkillIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSkillIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSkillIndex))
+		return Script_BadArgument();
 
 	CPythonSkill::SSkillData* c_pSkillData;
 	if (!CPythonSkill::Instance().GetSkillData(iSkillIndex, &c_pSkillData))
-		return Py_BuildException("skill.GetSkillConditionDescriptionCount - Failed to find skill by %d", iSkillIndex);
+		return Script_BuildException("skill.GetSkillConditionDescriptionCount - Failed to find skill by %d", iSkillIndex);
 
-	return Py_BuildValue("i", c_pSkillData->ConditionDataVector.size());
+	return Script_BuildValue("i", c_pSkillData->ConditionDataVector.size());
 }
 
-PyObject* skillGetSkillConditionDescription(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* skillGetSkillConditionDescription(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSkillIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSkillIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSkillIndex))
+		return Script_BadArgument();
 
 	int iConditionIndex;
-	if (!PyTuple_GetInteger(poArgs, 1, &iConditionIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iConditionIndex))
+		return Script_BadArgument();
 
 	CPythonSkill::SSkillData* c_pSkillData;
 	if (!CPythonSkill::Instance().GetSkillData(iSkillIndex, &c_pSkillData))
-		return Py_BuildException("skill.GetSkillConditionDescription() - Failed to find skill by %d", iSkillIndex);
+		return Script_BuildException("skill.GetSkillConditionDescription() - Failed to find skill by %d", iSkillIndex);
 
 	if (iConditionIndex >= c_pSkillData->ConditionDataVector.size())
-		return Py_BuildValue("None");
+		return Script_BuildNone();
 
-	return Py_BuildValue("s", c_pSkillData->ConditionDataVector[iConditionIndex].c_str());
+	return Script_BuildValue("s", c_pSkillData->ConditionDataVector[iConditionIndex].c_str());
 }
 
-PyObject* skillGetSkillAffectDescriptionCount(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* skillGetSkillAffectDescriptionCount(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSkillIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSkillIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSkillIndex))
+		return Script_BadArgument();
 
 	CPythonSkill::SSkillData* c_pSkillData;
 	if (!CPythonSkill::Instance().GetSkillData(iSkillIndex, &c_pSkillData))
-		return Py_BuildException("skill.GetSkillAffectDescriptionCount - Failed to find skill by %d", iSkillIndex);
+		return Script_BuildException("skill.GetSkillAffectDescriptionCount - Failed to find skill by %d", iSkillIndex);
 
-	return Py_BuildValue("i", c_pSkillData->AffectDataVector.size());
+	return Script_BuildValue("i", c_pSkillData->AffectDataVector.size());
 }
 
-PyObject* skillGetSkillAffectDescription(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* skillGetSkillAffectDescription(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSkillIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSkillIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSkillIndex))
+		return Script_BadArgument();
 
 	int iAffectIndex;
-	if (!PyTuple_GetInteger(poArgs, 1, &iAffectIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iAffectIndex))
+		return Script_BadArgument();
 
 	float fSkillPoint;
-	if (!PyTuple_GetFloat(poArgs, 2, &fSkillPoint))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetFloat(poArgs, 2, &fSkillPoint))
+		return Script_BadArgument();
 
 	CPythonSkill::SSkillData* c_pSkillData;
 	if (!CPythonSkill::Instance().GetSkillData(iSkillIndex, &c_pSkillData))
-		return Py_BuildException("skill.GetSkillAffectDescription - Failed to find skill by %d", iSkillIndex);
+		return Script_BuildException("skill.GetSkillAffectDescription - Failed to find skill by %d", iSkillIndex);
 
-	return Py_BuildValue("s", c_pSkillData->GetAffectDescription(iAffectIndex, fSkillPoint));
+	return Script_BuildValue("s", c_pSkillData->GetAffectDescription(iAffectIndex, fSkillPoint));
 }
 
-PyObject* skillGetSkillCoolTime(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* skillGetSkillCoolTime(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSkillIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSkillIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSkillIndex))
+		return Script_BadArgument();
 
 	float fSkillPoint;
-	if (!PyTuple_GetFloat(poArgs, 1, &fSkillPoint))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetFloat(poArgs, 1, &fSkillPoint))
+		return Script_BadArgument();
 
 	CPythonSkill::SSkillData* c_pSkillData;
 	if (!CPythonSkill::Instance().GetSkillData(iSkillIndex, &c_pSkillData))
-		return Py_BuildException("skill.GetSkillCoolTime - Failed to find skill by %d", iSkillIndex);
+		return Script_BuildException("skill.GetSkillCoolTime - Failed to find skill by %d", iSkillIndex);
 
-	return Py_BuildValue("i", c_pSkillData->GetSkillCoolTime(fSkillPoint));
+	return Script_BuildValue("i", c_pSkillData->GetSkillCoolTime(fSkillPoint));
 }
 
-PyObject* skillGetSkillNeedSP(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* skillGetSkillNeedSP(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSkillIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSkillIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSkillIndex))
+		return Script_BadArgument();
 
 	float fSkillPoint;
-	if (!PyTuple_GetFloat(poArgs, 1, &fSkillPoint))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetFloat(poArgs, 1, &fSkillPoint))
+		return Script_BadArgument();
 
 	CPythonSkill::SSkillData* c_pSkillData;
 	if (!CPythonSkill::Instance().GetSkillData(iSkillIndex, &c_pSkillData))
-		return Py_BuildException("skill.GetSkillNeedSP Failed to find skill by %d", iSkillIndex);
+		return Script_BuildException("skill.GetSkillNeedSP Failed to find skill by %d", iSkillIndex);
 
-	return Py_BuildValue("i", c_pSkillData->GetNeedSP(fSkillPoint));
+	return Script_BuildValue("i", c_pSkillData->GetNeedSP(fSkillPoint));
 }
 
-PyObject* skillGetSkillContinuationSP(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* skillGetSkillContinuationSP(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSkillIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSkillIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSkillIndex))
+		return Script_BadArgument();
 
 	float fSkillPoint;
-	if (!PyTuple_GetFloat(poArgs, 1, &fSkillPoint))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetFloat(poArgs, 1, &fSkillPoint))
+		return Script_BadArgument();
 
 	CPythonSkill::SSkillData* c_pSkillData;
 	if (!CPythonSkill::Instance().GetSkillData(iSkillIndex, &c_pSkillData))
-		return Py_BuildException("skill.GetSkillContinuationSP - Failed to find skill by %d", iSkillIndex);
+		return Script_BuildException("skill.GetSkillContinuationSP - Failed to find skill by %d", iSkillIndex);
 
-	return Py_BuildValue("i", c_pSkillData->GetContinuationSP(fSkillPoint));
+	return Script_BuildValue("i", c_pSkillData->GetContinuationSP(fSkillPoint));
 }
 
-PyObject* skillGetSkillMaxLevel(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* skillGetSkillMaxLevel(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSkillIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSkillIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSkillIndex))
+		return Script_BadArgument();
 
 	CPythonSkill::SSkillData* c_pSkillData;
 	if (!CPythonSkill::Instance().GetSkillData(iSkillIndex, &c_pSkillData))
-		return Py_BuildException("skill.GetSkillMaxLevel - Failed to find skill by %d", iSkillIndex);
+		return Script_BuildException("skill.GetSkillMaxLevel - Failed to find skill by %d", iSkillIndex);
 
-	return Py_BuildValue("i", c_pSkillData->GetMaxLevel());
+	return Script_BuildValue("i", c_pSkillData->GetMaxLevel());
 }
 
-PyObject* skillGetSkillLevelUpPoint(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* skillGetSkillLevelUpPoint(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSkillIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSkillIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSkillIndex))
+		return Script_BadArgument();
 
 	CPythonSkill::SSkillData* c_pSkillData;
 	if (!CPythonSkill::Instance().GetSkillData(iSkillIndex, &c_pSkillData))
-		return Py_BuildException("skill.GetSkillLevelUpPoint - Failed to find skill by %d", iSkillIndex);
+		return Script_BuildException("skill.GetSkillLevelUpPoint - Failed to find skill by %d", iSkillIndex);
 
-	return Py_BuildValue("i", c_pSkillData->GetLevelUpPoint());
+	return Script_BuildValue("i", c_pSkillData->GetLevelUpPoint());
 }
 
-PyObject* skillGetSkillLevelLimit(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* skillGetSkillLevelLimit(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSkillIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSkillIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSkillIndex))
+		return Script_BadArgument();
 
 	CPythonSkill::SSkillData* c_pSkillData;
 	if (!CPythonSkill::Instance().GetSkillData(iSkillIndex, &c_pSkillData))
-		return Py_BuildException("skill.GetSkillLevelLimit - Failed to find skill by %d", iSkillIndex);
+		return Script_BuildException("skill.GetSkillLevelLimit - Failed to find skill by %d", iSkillIndex);
 
-	return Py_BuildValue("i", c_pSkillData->byLevelLimit);
+	return Script_BuildValue("i", c_pSkillData->byLevelLimit);
 }
 
-PyObject* skillIsSkillRequirement(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* skillIsSkillRequirement(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSkillIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSkillIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSkillIndex))
+		return Script_BadArgument();
 
 	CPythonSkill::SSkillData* c_pSkillData;
 	if (!CPythonSkill::Instance().GetSkillData(iSkillIndex, &c_pSkillData))
-		return Py_BuildException("skill.IsSkillRequirement - Failed to find skill by %d", iSkillIndex);
+		return Script_BuildException("skill.IsSkillRequirement - Failed to find skill by %d", iSkillIndex);
 
 	if (c_pSkillData->isRequirement)
 	{
@@ -1762,84 +1762,84 @@ PyObject* skillIsSkillRequirement(PyObject* poSelf, PyObject* poArgs)
 		if (!CPythonSkill::Instance().GetSkillDataByName(c_pSkillData->strRequireSkillName.c_str(), &pRequireSkillData))
 		{
 			TraceError("skill.IsSkillRequirement - Failed to find skill : [%d/%s] can't find [%s]\n", c_pSkillData->dwSkillIndex, c_pSkillData->strName.c_str(), c_pSkillData->strRequireSkillName.c_str());
-			return Py_BuildValue("i", FALSE);
+			return Script_BuildValue("i", FALSE);
 		}
 
 		DWORD dwRequireSkillSlotIndex;
 		if (!CPythonPlayer::Instance().FindSkillSlotIndexBySkillIndex(pRequireSkillData->dwSkillIndex, &dwRequireSkillSlotIndex))
-			return Py_BuildValue("i", FALSE);
+			return Script_BuildValue("i", FALSE);
 	}
 
-	return Py_BuildValue("i", c_pSkillData->isRequirement);
+	return Script_BuildValue("i", c_pSkillData->isRequirement);
 }
 
-PyObject* skillGetSkillRequirementData(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* skillGetSkillRequirementData(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSkillIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSkillIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSkillIndex))
+		return Script_BadArgument();
 
 	CPythonSkill::SSkillData* c_pSkillData;
 	if (!CPythonSkill::Instance().GetSkillData(iSkillIndex, &c_pSkillData))
-		return Py_BuildException("skill.GetSkillRequirementData - Failed to find skill by %d", iSkillIndex);
+		return Script_BuildException("skill.GetSkillRequirementData - Failed to find skill by %d", iSkillIndex);
 
 	CPythonSkill::SSkillData* pRequireSkillData;
 	if (!CPythonSkill::Instance().GetSkillDataByName(c_pSkillData->strRequireSkillName.c_str(), &pRequireSkillData))
-		return Py_BuildValue("si", 0, "None", 0);
+		return Script_BuildValue("si", 0, "None", 0);
 
 	int ireqLevel = (int)ceil(float(c_pSkillData->byRequireSkillLevel) / float(max(1, pRequireSkillData->byLevelUpPoint)));
-	return Py_BuildValue("si", c_pSkillData->strRequireSkillName.c_str(), ireqLevel);
+	return Script_BuildValue("si", c_pSkillData->strRequireSkillName.c_str(), ireqLevel);
 }
 
-PyObject* skillGetSkillRequireStatCount(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* skillGetSkillRequireStatCount(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSkillIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSkillIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSkillIndex))
+		return Script_BadArgument();
 
 	CPythonSkill::SSkillData* c_pSkillData;
 	if (!CPythonSkill::Instance().GetSkillData(iSkillIndex, &c_pSkillData))
-		return Py_BuildException("skill.GetSkillRequireStatCount - Failed to find skill by %d", iSkillIndex);
+		return Script_BuildException("skill.GetSkillRequireStatCount - Failed to find skill by %d", iSkillIndex);
 
-	return Py_BuildValue("i", c_pSkillData->RequireStatDataVector.size());
+	return Script_BuildValue("i", c_pSkillData->RequireStatDataVector.size());
 }
 
-PyObject* skillGetSkillRequireStatData(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* skillGetSkillRequireStatData(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSkillIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSkillIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSkillIndex))
+		return Script_BadArgument();
 	int iStatIndex;
-	if (!PyTuple_GetInteger(poArgs, 1, &iStatIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iStatIndex))
+		return Script_BadArgument();
 
 	CPythonSkill::SSkillData* c_pSkillData;
 	if (!CPythonSkill::Instance().GetSkillData(iSkillIndex, &c_pSkillData))
-		return Py_BuildException("skill.GetSkillRequireStatData - Failed to find skill by %d", iSkillIndex);
+		return Script_BuildException("skill.GetSkillRequireStatData - Failed to find skill by %d", iSkillIndex);
 
 	if (iStatIndex >= c_pSkillData->RequireStatDataVector.size())
-		return Py_BuildValue("ii", 0, 0);
+		return Script_BuildValue("ii", 0, 0);
 
 	const CPythonSkill::TRequireStatData& c_rRequireStatData = c_pSkillData->RequireStatDataVector[iStatIndex];
 
-	return Py_BuildValue("ii", c_rRequireStatData.byPoint, c_rRequireStatData.byLevel);
+	return Script_BuildValue("ii", c_rRequireStatData.byPoint, c_rRequireStatData.byLevel);
 }
 
-PyObject* skillCanLevelUpSkill(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* skillCanLevelUpSkill(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSkillIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSkillIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSkillIndex))
+		return Script_BadArgument();
 	int iSkillLevel;
-	if (!PyTuple_GetInteger(poArgs, 1, &iSkillLevel))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iSkillLevel))
+		return Script_BadArgument();
 
 	CPythonSkill::SSkillData* c_pSkillData;
 	if (!CPythonSkill::Instance().GetSkillData(iSkillIndex, &c_pSkillData))
-		return Py_BuildException("skill.CanLevelUpSkill - Failed to find skill by %d", iSkillIndex);
+		return Script_BuildException("skill.CanLevelUpSkill - Failed to find skill by %d", iSkillIndex);
 
 	if (iSkillLevel >= c_pSkillData->GetMaxLevel())
-		return Py_BuildValue("i", FALSE);
+		return Script_BuildValue("i", FALSE);
 
 	if (c_pSkillData->isRequirement)
 	{
@@ -1853,7 +1853,7 @@ PyObject* skillCanLevelUpSkill(PyObject* poSelf, PyObject* poArgs)
 				int iSkillLevel = CPythonPlayer::Instance().GetSkillLevel(dwRequireSkillSlotIndex);
 				if (iSkillGrade <= 0)
 					if (iSkillLevel < c_pSkillData->byRequireSkillLevel)
-						return Py_BuildValue("i", FALSE);
+						return Script_BuildValue("i", FALSE);
 			}
 		}
 	}
@@ -1862,24 +1862,24 @@ PyObject* skillCanLevelUpSkill(PyObject* poSelf, PyObject* poArgs)
 	{
 		const CPythonSkill::TRequireStatData& c_rRequireStatData = c_pSkillData->RequireStatDataVector[i];
 		if (CPythonPlayer::Instance().GetStatus(c_rRequireStatData.byPoint) < c_rRequireStatData.byLevel)
-			return Py_BuildValue("i", FALSE);
+			return Script_BuildValue("i", FALSE);
 	}
 
 	if (0 != (c_pSkillData->dwSkillAttribute & CPythonSkill::SKILL_ATTRIBUTE_CANNOT_LEVEL_UP))
-		return Py_BuildValue("i", FALSE);
+		return Script_BuildValue("i", FALSE);
 
-	return Py_BuildValue("i", TRUE);
+	return Script_BuildValue("i", TRUE);
 }
 
-PyObject* skillCheckRequirementSueccess(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* skillCheckRequirementSueccess(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSkillIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSkillIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSkillIndex))
+		return Script_BadArgument();
 
 	CPythonSkill::SSkillData* c_pSkillData;
 	if (!CPythonSkill::Instance().GetSkillData(iSkillIndex, &c_pSkillData))
-		return Py_BuildException("skill.CheckRequirementSueccess - Failed to find skill by %d", iSkillIndex);
+		return Script_BuildException("skill.CheckRequirementSueccess - Failed to find skill by %d", iSkillIndex);
 
 	if (c_pSkillData->isRequirement)
 	{
@@ -1893,23 +1893,23 @@ PyObject* skillCheckRequirementSueccess(PyObject* poSelf, PyObject* poArgs)
 				int iSkillLevel = CPythonPlayer::Instance().GetSkillLevel(dwRequireSkillSlotIndex);
 				if (iSkillGrade <= 0)
 					if (iSkillLevel < c_pSkillData->byRequireSkillLevel)
-						return Py_BuildValue("i", FALSE);
+						return Script_BuildValue("i", FALSE);
 			}
 		}
 	}
 
-	return Py_BuildValue("i", TRUE);
+	return Script_BuildValue("i", TRUE);
 }
 
-PyObject* skillGetNeedCharacterLevel(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* skillGetNeedCharacterLevel(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSkillIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSkillIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSkillIndex))
+		return Script_BadArgument();
 
 	CPythonSkill::SSkillData* c_pSkillData;
 	if (!CPythonSkill::Instance().GetSkillData(iSkillIndex, &c_pSkillData))
-		return Py_BuildException("skill.GetNeedCharacterLevel - Failed to find skill by %d", iSkillIndex);
+		return Script_BuildException("skill.GetNeedCharacterLevel - Failed to find skill by %d", iSkillIndex);
 
 	std::vector<CPythonSkill::TRequireStatData>::iterator itor = c_pSkillData->RequireStatDataVector.begin();
 	for (; itor != c_pSkillData->RequireStatDataVector.end(); ++itor)
@@ -1917,134 +1917,134 @@ PyObject* skillGetNeedCharacterLevel(PyObject* poSelf, PyObject* poArgs)
 		const CPythonSkill::TRequireStatData& c_rRequireStatData = *itor;
 
 		if (POINT_LEVEL == c_rRequireStatData.byPoint)
-			return Py_BuildValue("i", c_rRequireStatData.byLevel);
+			return Script_BuildValue("i", c_rRequireStatData.byLevel);
 	}
 
-	return Py_BuildValue("i", 0);
+	return Script_BuildValue("i", 0);
 }
 
-PyObject* skillIsToggleSkill(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* skillIsToggleSkill(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSkillIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSkillIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSkillIndex))
+		return Script_BadArgument();
 
 	CPythonSkill::SSkillData* c_pSkillData;
 	if (!CPythonSkill::Instance().GetSkillData(iSkillIndex, &c_pSkillData))
-		return Py_BuildException("skill.IsToggleSkill - Failed to find skill by %d", iSkillIndex);
+		return Script_BuildException("skill.IsToggleSkill - Failed to find skill by %d", iSkillIndex);
 
-	return Py_BuildValue("i", c_pSkillData->IsToggleSkill());
+	return Script_BuildValue("i", c_pSkillData->IsToggleSkill());
 }
 
-PyObject* skillIsUseHPSkill(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* skillIsUseHPSkill(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSkillIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSkillIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSkillIndex))
+		return Script_BadArgument();
 
 	CPythonSkill::SSkillData* c_pSkillData;
 	if (!CPythonSkill::Instance().GetSkillData(iSkillIndex, &c_pSkillData))
-		return Py_BuildException("skill.IsUseHPSkill - Failed to find skill by %d", iSkillIndex);
+		return Script_BuildException("skill.IsUseHPSkill - Failed to find skill by %d", iSkillIndex);
 
-	return Py_BuildValue("i", c_pSkillData->IsUseHPSkill());
+	return Script_BuildValue("i", c_pSkillData->IsUseHPSkill());
 }
 
-PyObject* skillIsStandingSkill(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* skillIsStandingSkill(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSkillIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSkillIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSkillIndex))
+		return Script_BadArgument();
 
 	CPythonSkill::SSkillData* c_pSkillData;
 	if (!CPythonSkill::Instance().GetSkillData(iSkillIndex, &c_pSkillData))
-		return Py_BuildException("skill.IsStandingSkill - Failed to find skill by %d", iSkillIndex);
+		return Script_BuildException("skill.IsStandingSkill - Failed to find skill by %d", iSkillIndex);
 
-	return Py_BuildValue("i", c_pSkillData->IsStandingSkill());
+	return Script_BuildValue("i", c_pSkillData->IsStandingSkill());
 }
 
-PyObject* skillCanUseSkill(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* skillCanUseSkill(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSkillIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSkillIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSkillIndex))
+		return Script_BadArgument();
 
 	CPythonSkill::SSkillData* c_pSkillData;
 	if (!CPythonSkill::Instance().GetSkillData(iSkillIndex, &c_pSkillData))
-		return Py_BuildException("skill.CanUseSkill - Failed to find skill by %d", iSkillIndex);
+		return Script_BuildException("skill.CanUseSkill - Failed to find skill by %d", iSkillIndex);
 
-	return Py_BuildValue("i", c_pSkillData->IsCanUseSkill());
+	return Script_BuildValue("i", c_pSkillData->IsCanUseSkill());
 }
 
-PyObject* skillIsLevelUpSkill(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* skillIsLevelUpSkill(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSkillIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSkillIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSkillIndex))
+		return Script_BadArgument();
 
 	CPythonSkill::SSkillData* c_pSkillData;
 	if (!CPythonSkill::Instance().GetSkillData(iSkillIndex, &c_pSkillData))
-		return Py_BuildException("skill.IsLevelUpSkill - Failed to find skill by %d", iSkillIndex);
+		return Script_BuildException("skill.IsLevelUpSkill - Failed to find skill by %d", iSkillIndex);
 
 	// 모두 레벨업 가능
 
-	return Py_BuildValue("i", TRUE);
+	return Script_BuildValue("i", TRUE);
 }
 
-PyObject* skillGetIconName(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* skillGetIconName(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSkillIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSkillIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSkillIndex))
+		return Script_BadArgument();
 
 	CPythonSkill::SSkillData* c_pSkillData;
 	if (!CPythonSkill::Instance().GetSkillData(iSkillIndex, &c_pSkillData))
-		return Py_BuildValue("s", "");
+		return Script_BuildValue("s", "");
 
-	return Py_BuildValue("s", c_pSkillData->strIconFileName.c_str());
+	return Script_BuildValue("s", c_pSkillData->strIconFileName.c_str());
 }
 
-PyObject* skillGetIconImage(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* skillGetIconImage(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSkillIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSkillIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSkillIndex))
+		return Script_BadArgument();
 
 	CPythonSkill::SSkillData* c_pSkillData;
 	if (!CPythonSkill::Instance().GetSkillData(iSkillIndex, &c_pSkillData))
-		return Py_BuildHandle(NULL); // 익셉션을 내는 대신 0을 리턴한다.
+		return Script_BuildHandle(NULL); // 익셉션을 내는 대신 0을 리턴한다.
 
-	return Py_BuildHandle(c_pSkillData->pImage);
+	return Script_BuildHandle(c_pSkillData->pImage);
 }
 
-PyObject* skillGetIconInstance(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* skillGetIconInstance(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSkillIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSkillIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSkillIndex))
+		return Script_BadArgument();
 
 	CPythonSkill::SSkillData* c_pSkillData;
 	if (!CPythonSkill::Instance().GetSkillData(iSkillIndex, &c_pSkillData))
-		return Py_BuildException("skill.GetIconInstance - Failed to find skill by %d", iSkillIndex);
+		return Script_BuildException("skill.GetIconInstance - Failed to find skill by %d", iSkillIndex);
 
 	CGraphicImageInstance* pImageInstance = CGraphicImageInstance::New();
 	pImageInstance->SetImagePointer(c_pSkillData->pImage);
 
-	return Py_BuildHandle(pImageInstance);
+	return Script_BuildHandle(pImageInstance);
 }
 
-PyObject* skillGetIconImageNew(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* skillGetIconImageNew(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSkillIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSkillIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSkillIndex))
+		return Script_BadArgument();
 
 	int iGradeIndex;
-	if (!PyTuple_GetInteger(poArgs, 1, &iGradeIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iGradeIndex))
+		return Script_BadArgument();
 
 	CPythonSkill::SSkillData* c_pSkillData;
 	if (!CPythonSkill::Instance().GetSkillData(iSkillIndex, &c_pSkillData))
-		return Py_BuildHandle(NULL); // 익셉션을 내는 대신 0을 리턴한다.
+		return Script_BuildHandle(NULL); // 익셉션을 내는 대신 0을 리턴한다.
 
 	if (iGradeIndex < 0)
 		iGradeIndex = 0;
@@ -2052,22 +2052,22 @@ PyObject* skillGetIconImageNew(PyObject* poSelf, PyObject* poArgs)
 	if (iGradeIndex >= CPythonSkill::SKILL_GRADE_COUNT)
 		iGradeIndex = CPythonSkill::SKILL_GRADE_COUNT - 1;
 
-	return Py_BuildHandle(c_pSkillData->GradeData[iGradeIndex].pImage);
+	return Script_BuildHandle(c_pSkillData->GradeData[iGradeIndex].pImage);
 }
 
-PyObject* skillGetIconInstanceNew(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* skillGetIconInstanceNew(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSkillIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSkillIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSkillIndex))
+		return Script_BadArgument();
 
 	int iGradeIndex;
-	if (!PyTuple_GetInteger(poArgs, 1, &iGradeIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iGradeIndex))
+		return Script_BadArgument();
 
 	CPythonSkill::SSkillData* c_pSkillData;
 	if (!CPythonSkill::Instance().GetSkillData(iSkillIndex, &c_pSkillData))
-		return Py_BuildException("skill.GetIconInstanceNew - Failed to find skill by %d", iSkillIndex);
+		return Script_BuildException("skill.GetIconInstanceNew - Failed to find skill by %d", iSkillIndex);
 
 	// CGraphicImage * pImage = c_pSkillData->pImage;
 
@@ -2080,70 +2080,70 @@ PyObject* skillGetIconInstanceNew(PyObject* poSelf, PyObject* poArgs)
 	CGraphicImageInstance* pImageInstance = CGraphicImageInstance::New();
 	pImageInstance->SetImagePointer(c_pSkillData->GradeData[iGradeIndex].pImage);
 
-	return Py_BuildHandle(pImageInstance);
+	return Script_BuildHandle(pImageInstance);
 }
 
-PyObject* skillDeleteIconInstance(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* skillDeleteIconInstance(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CGraphicImageInstance* pImageInstance;
-	if (!PyTuple_GetHandle(poArgs, 0, &pImageInstance))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetHandle(poArgs, 0, &pImageInstance))
+		return Script_BadArgument();
 
 	CGraphicImageInstance::Delete(pImageInstance);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* skillGetGradeData(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* skillGetGradeData(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSkillIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSkillIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSkillIndex))
+		return Script_BadArgument();
 
 	int iGradeIndex;
-	if (!PyTuple_GetInteger(poArgs, 1, &iGradeIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iGradeIndex))
+		return Script_BadArgument();
 
 	CPythonSkill::SSkillData* c_pSkillData;
 	if (!CPythonSkill::Instance().GetSkillData(iSkillIndex, &c_pSkillData))
-		return Py_BuildException("skill.GetGradeData - Failed to find skill by %d", iSkillIndex);
+		return Script_BuildException("skill.GetGradeData - Failed to find skill by %d", iSkillIndex);
 
 	if (iGradeIndex < 0 || iGradeIndex >= CPythonSkill::SKILL_GRADE_COUNT)
-		return Py_BuildException("Strange grade index [%d]", iSkillIndex, iGradeIndex);
+		return Script_BuildException("Strange grade index [%d]", iSkillIndex, iGradeIndex);
 
-	return Py_BuildValue("i", c_pSkillData->GradeData[iGradeIndex].wMotionIndex);
+	return Script_BuildValue("i", c_pSkillData->GradeData[iGradeIndex].wMotionIndex);
 }
 
-PyObject* skillGetNewAffectDataCount(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* skillGetNewAffectDataCount(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSkillIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSkillIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSkillIndex))
+		return Script_BadArgument();
 
 	CPythonSkill::SSkillData* c_pSkillData;
 	if (!CPythonSkill::Instance().GetSkillData(iSkillIndex, &c_pSkillData))
-		return Py_BuildException("skill.GetNewAffectDataCount - Failed to find skill by %d", iSkillIndex);
+		return Script_BuildException("skill.GetNewAffectDataCount - Failed to find skill by %d", iSkillIndex);
 
-	return Py_BuildValue("i", c_pSkillData->AffectDataNewVector.size());
+	return Script_BuildValue("i", c_pSkillData->AffectDataNewVector.size());
 }
 
-PyObject* skillGetNewAffectData(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* skillGetNewAffectData(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSkillIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSkillIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSkillIndex))
+		return Script_BadArgument();
 	int iAffectIndex;
-	if (!PyTuple_GetInteger(poArgs, 1, &iAffectIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iAffectIndex))
+		return Script_BadArgument();
 	float fSkillLevel;
-	if (!PyTuple_GetFloat(poArgs, 2, &fSkillLevel))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetFloat(poArgs, 2, &fSkillLevel))
+		return Script_BadArgument();
 
 	CPythonSkill::SSkillData* pSkillData;
 	if (!CPythonSkill::Instance().GetSkillData(iSkillIndex, &pSkillData))
-		return Py_BuildException("skill.GetNewAffectData - Failed to find skill by %d", iSkillIndex);
+		return Script_BuildException("skill.GetNewAffectData - Failed to find skill by %d", iSkillIndex);
 
 	if (iAffectIndex < 0 || iAffectIndex >= pSkillData->AffectDataNewVector.size())
-		return Py_BuildException(" skill.GetNewAffectData - Strange AffectIndex %d", iAffectIndex);
+		return Script_BuildException(" skill.GetNewAffectData - Strange AffectIndex %d", iAffectIndex);
 
 	CPythonSkill::TAffectDataNew& rAffectData = pSkillData->AffectDataNewVector[iAffectIndex];
 
@@ -2156,94 +2156,94 @@ PyObject* skillGetNewAffectData(PyObject* poSelf, PyObject* poArgs)
 	float fMinValue = pSkillData->ProcessFormula(&minPoly, fSkillLevel, CPythonSkill::VALUE_TYPE_MIN);
 	float fMaxValue = pSkillData->ProcessFormula(&maxPoly, fSkillLevel, CPythonSkill::VALUE_TYPE_MAX);
 
-	return Py_BuildValue("sff", rAffectData.strPointType.c_str(), fMinValue, fMaxValue);
+	return Script_BuildValue("sff", rAffectData.strPointType.c_str(), fMinValue, fMaxValue);
 }
 
-PyObject* skillGetDuration(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* skillGetDuration(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSkillIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSkillIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSkillIndex))
+		return Script_BadArgument();
 	float fSkillLevel;
-	if (!PyTuple_GetFloat(poArgs, 1, &fSkillLevel))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetFloat(poArgs, 1, &fSkillLevel))
+		return Script_BadArgument();
 
 	CPythonSkill::SSkillData* c_pSkillData;
 	if (!CPythonSkill::Instance().GetSkillData(iSkillIndex, &c_pSkillData))
-		return Py_BuildException("skill.GetDuration - Failed to find skill by %d", iSkillIndex);
+		return Script_BuildException("skill.GetDuration - Failed to find skill by %d", iSkillIndex);
 
-	return Py_BuildValue("i", c_pSkillData->GetDuration(fSkillLevel));
+	return Script_BuildValue("i", c_pSkillData->GetDuration(fSkillLevel));
 }
 
-PyObject* skillTEST(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* skillTEST(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonSkill::Instance().TEST();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
 void initskill()
 {
-	static PyMethodDef s_methods[] =
+	static ScriptMethodDef s_methods[] =
 		{
-			{"SetPathName", skillSetPathName, METH_VARARGS, NULL},
-			{"RegisterSkill", skillRegisterSkill, METH_VARARGS, NULL},
-			{"LoadSkillData", skillLoadSkillData, METH_VARARGS, NULL},
-			{"ClearSkillData", skillClearSkillData, METH_VARARGS, NULL},
+			{"SetPathName", skillSetPathName, SCRIPT_VARARGS, NULL},
+			{"RegisterSkill", skillRegisterSkill, SCRIPT_VARARGS, NULL},
+			{"LoadSkillData", skillLoadSkillData, SCRIPT_VARARGS, NULL},
+			{"ClearSkillData", skillClearSkillData, SCRIPT_VARARGS, NULL},
 
 			/////
 
-			{"GetSkillName", skillGetSkillName, METH_VARARGS, NULL},
-			{"GetSkillDescription", skillGetSkillDescription, METH_VARARGS, NULL},
-			{"GetSkillType", skillGetSkillType, METH_VARARGS, NULL},
-			{"GetSkillConditionDescriptionCount", skillGetSkillConditionDescriptionCount, METH_VARARGS, NULL},
-			{"GetSkillConditionDescription", skillGetSkillConditionDescription, METH_VARARGS, NULL},
-			{"GetSkillAffectDescriptionCount", skillGetSkillAffectDescriptionCount, METH_VARARGS, NULL},
-			{"GetSkillAffectDescription", skillGetSkillAffectDescription, METH_VARARGS, NULL},
-			{"GetSkillCoolTime", skillGetSkillCoolTime, METH_VARARGS, NULL},
-			{"GetSkillNeedSP", skillGetSkillNeedSP, METH_VARARGS, NULL},
-			{"GetSkillContinuationSP", skillGetSkillContinuationSP, METH_VARARGS, NULL},
-			{"GetSkillMaxLevel", skillGetSkillMaxLevel, METH_VARARGS, NULL},
-			{"GetSkillLevelUpPoint", skillGetSkillLevelUpPoint, METH_VARARGS, NULL},
-			{"GetSkillLevelLimit", skillGetSkillLevelLimit, METH_VARARGS, NULL},
-			{"IsSkillRequirement", skillIsSkillRequirement, METH_VARARGS, NULL},
-			{"GetSkillRequirementData", skillGetSkillRequirementData, METH_VARARGS, NULL},
-			{"GetSkillRequireStatCount", skillGetSkillRequireStatCount, METH_VARARGS, NULL},
-			{"GetSkillRequireStatData", skillGetSkillRequireStatData, METH_VARARGS, NULL},
-			{"CanLevelUpSkill", skillCanLevelUpSkill, METH_VARARGS, NULL},
-			{"IsLevelUpSkill", skillIsLevelUpSkill, METH_VARARGS, NULL},
-			{"CheckRequirementSueccess", skillCheckRequirementSueccess, METH_VARARGS, NULL},
-			{"GetNeedCharacterLevel", skillGetNeedCharacterLevel, METH_VARARGS, NULL},
-			{"IsToggleSkill", skillIsToggleSkill, METH_VARARGS, NULL},
-			{"IsUseHPSkill", skillIsUseHPSkill, METH_VARARGS, NULL},
-			{"IsStandingSkill", skillIsStandingSkill, METH_VARARGS, NULL},
-			{"CanUseSkill", skillCanUseSkill, METH_VARARGS, NULL},
-			{"GetIconName", skillGetIconName, METH_VARARGS, NULL},
-			{"GetIconImage", skillGetIconImage, METH_VARARGS, NULL},
-			{"GetIconImageNew", skillGetIconImageNew, METH_VARARGS, NULL},
-			{"GetIconInstance", skillGetIconInstance, METH_VARARGS, NULL},
-			{"GetIconInstanceNew", skillGetIconInstanceNew, METH_VARARGS, NULL},
-			{"DeleteIconInstance", skillDeleteIconInstance, METH_VARARGS, NULL},
-			{"GetGradeData", skillGetGradeData, METH_VARARGS, NULL},
+			{"GetSkillName", skillGetSkillName, SCRIPT_VARARGS, NULL},
+			{"GetSkillDescription", skillGetSkillDescription, SCRIPT_VARARGS, NULL},
+			{"GetSkillType", skillGetSkillType, SCRIPT_VARARGS, NULL},
+			{"GetSkillConditionDescriptionCount", skillGetSkillConditionDescriptionCount, SCRIPT_VARARGS, NULL},
+			{"GetSkillConditionDescription", skillGetSkillConditionDescription, SCRIPT_VARARGS, NULL},
+			{"GetSkillAffectDescriptionCount", skillGetSkillAffectDescriptionCount, SCRIPT_VARARGS, NULL},
+			{"GetSkillAffectDescription", skillGetSkillAffectDescription, SCRIPT_VARARGS, NULL},
+			{"GetSkillCoolTime", skillGetSkillCoolTime, SCRIPT_VARARGS, NULL},
+			{"GetSkillNeedSP", skillGetSkillNeedSP, SCRIPT_VARARGS, NULL},
+			{"GetSkillContinuationSP", skillGetSkillContinuationSP, SCRIPT_VARARGS, NULL},
+			{"GetSkillMaxLevel", skillGetSkillMaxLevel, SCRIPT_VARARGS, NULL},
+			{"GetSkillLevelUpPoint", skillGetSkillLevelUpPoint, SCRIPT_VARARGS, NULL},
+			{"GetSkillLevelLimit", skillGetSkillLevelLimit, SCRIPT_VARARGS, NULL},
+			{"IsSkillRequirement", skillIsSkillRequirement, SCRIPT_VARARGS, NULL},
+			{"GetSkillRequirementData", skillGetSkillRequirementData, SCRIPT_VARARGS, NULL},
+			{"GetSkillRequireStatCount", skillGetSkillRequireStatCount, SCRIPT_VARARGS, NULL},
+			{"GetSkillRequireStatData", skillGetSkillRequireStatData, SCRIPT_VARARGS, NULL},
+			{"CanLevelUpSkill", skillCanLevelUpSkill, SCRIPT_VARARGS, NULL},
+			{"IsLevelUpSkill", skillIsLevelUpSkill, SCRIPT_VARARGS, NULL},
+			{"CheckRequirementSueccess", skillCheckRequirementSueccess, SCRIPT_VARARGS, NULL},
+			{"GetNeedCharacterLevel", skillGetNeedCharacterLevel, SCRIPT_VARARGS, NULL},
+			{"IsToggleSkill", skillIsToggleSkill, SCRIPT_VARARGS, NULL},
+			{"IsUseHPSkill", skillIsUseHPSkill, SCRIPT_VARARGS, NULL},
+			{"IsStandingSkill", skillIsStandingSkill, SCRIPT_VARARGS, NULL},
+			{"CanUseSkill", skillCanUseSkill, SCRIPT_VARARGS, NULL},
+			{"GetIconName", skillGetIconName, SCRIPT_VARARGS, NULL},
+			{"GetIconImage", skillGetIconImage, SCRIPT_VARARGS, NULL},
+			{"GetIconImageNew", skillGetIconImageNew, SCRIPT_VARARGS, NULL},
+			{"GetIconInstance", skillGetIconInstance, SCRIPT_VARARGS, NULL},
+			{"GetIconInstanceNew", skillGetIconInstanceNew, SCRIPT_VARARGS, NULL},
+			{"DeleteIconInstance", skillDeleteIconInstance, SCRIPT_VARARGS, NULL},
+			{"GetGradeData", skillGetGradeData, SCRIPT_VARARGS, NULL},
 
-			{"GetNewAffectDataCount", skillGetNewAffectDataCount, METH_VARARGS, NULL},
-			{"GetNewAffectData", skillGetNewAffectData, METH_VARARGS, NULL},
-			{"GetDuration", skillGetDuration, METH_VARARGS, NULL},
+			{"GetNewAffectDataCount", skillGetNewAffectDataCount, SCRIPT_VARARGS, NULL},
+			{"GetNewAffectData", skillGetNewAffectData, SCRIPT_VARARGS, NULL},
+			{"GetDuration", skillGetDuration, SCRIPT_VARARGS, NULL},
 
-			{"TEST", skillTEST, METH_VARARGS, NULL},
+			{"TEST", skillTEST, SCRIPT_VARARGS, NULL},
 
 			{NULL, NULL, 0, NULL},
 		};
 
-	PyObject* poModule = Py_InitModule("skill", s_methods);
-	PyModule_AddIntConstant(poModule, "SKILL_TYPE_NONE", CPythonSkill::SKILL_TYPE_NONE);
-	PyModule_AddIntConstant(poModule, "SKILL_TYPE_ACTIVE", CPythonSkill::SKILL_TYPE_ACTIVE);
-	PyModule_AddIntConstant(poModule, "SKILL_TYPE_SUPPORT", CPythonSkill::SKILL_TYPE_SUPPORT);
-	PyModule_AddIntConstant(poModule, "SKILL_TYPE_GUILD", CPythonSkill::SKILL_TYPE_GUILD);
-	PyModule_AddIntConstant(poModule, "SKILL_TYPE_HORSE", CPythonSkill::SKILL_TYPE_HORSE);
-	PyModule_AddIntConstant(poModule, "SKILL_TYPE_MAX_NUM", CPythonSkill::SKILL_TYPE_MAX_NUM);
+	ScriptObject* poModule = ScriptModule_Create("skill", s_methods);
+	ScriptModule_AddIntConstant(poModule, "SKILL_TYPE_NONE", CPythonSkill::SKILL_TYPE_NONE);
+	ScriptModule_AddIntConstant(poModule, "SKILL_TYPE_ACTIVE", CPythonSkill::SKILL_TYPE_ACTIVE);
+	ScriptModule_AddIntConstant(poModule, "SKILL_TYPE_SUPPORT", CPythonSkill::SKILL_TYPE_SUPPORT);
+	ScriptModule_AddIntConstant(poModule, "SKILL_TYPE_GUILD", CPythonSkill::SKILL_TYPE_GUILD);
+	ScriptModule_AddIntConstant(poModule, "SKILL_TYPE_HORSE", CPythonSkill::SKILL_TYPE_HORSE);
+	ScriptModule_AddIntConstant(poModule, "SKILL_TYPE_MAX_NUM", CPythonSkill::SKILL_TYPE_MAX_NUM);
 
-	PyModule_AddIntConstant(poModule, "SKILL_GRADE_COUNT", CPythonSkill::SKILL_GRADE_COUNT);
-	PyModule_AddIntConstant(poModule, "SKILL_GRADE_STEP_COUNT", CPythonSkill::SKILL_GRADE_STEP_COUNT);
-	PyModule_AddIntConstant(poModule, "SKILL_GRADEGAP", CPythonSkill::SKILL_GRADEGAP);
-	PyModule_AddIntConstant(poModule, "SKILL_EFFECT_COUNT", CPythonSkill::SKILL_EFFECT_COUNT);
+	ScriptModule_AddIntConstant(poModule, "SKILL_GRADE_COUNT", CPythonSkill::SKILL_GRADE_COUNT);
+	ScriptModule_AddIntConstant(poModule, "SKILL_GRADE_STEP_COUNT", CPythonSkill::SKILL_GRADE_STEP_COUNT);
+	ScriptModule_AddIntConstant(poModule, "SKILL_GRADEGAP", CPythonSkill::SKILL_GRADEGAP);
+	ScriptModule_AddIntConstant(poModule, "SKILL_EFFECT_COUNT", CPythonSkill::SKILL_EFFECT_COUNT);
 }

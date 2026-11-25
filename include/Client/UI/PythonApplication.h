@@ -161,7 +161,7 @@ class CPythonApplication : public CMSApplication, public CInputKeyboard, public 
 		void SetFrameSkip(bool isEnable);
 		void SkipRenderBuffering(DWORD dwSleepMSec);
 
-		bool Create(PyObject* poSelf, const char* c_szName, int width, int height, int Windowed);
+		bool Create(ScriptObject* poSelf, const char* c_szName, int width, int height, int Windowed);
 		bool CreateStartupWindow();
 		bool CreateDevice(int width, int height, int Windowed, int bit = 32, int frequency = 0);
 
@@ -188,7 +188,7 @@ class CPythonApplication : public CMSApplication, public CInputKeyboard, public 
 		int GetCursorMode();
 		int GetCursorNum() { return m_iCursorNum; }
 
-		void SetMouseHandler(PyObject* poMouseHandler);
+		void SetMouseHandler(ScriptObject* poMouseHandler);
 
 		int GetWidth();
 		int GetHeight();
@@ -362,7 +362,7 @@ class CPythonApplication : public CMSApplication, public CInputKeyboard, public 
 
 		CPythonSystem m_pySystem;
 
-		PyObject* m_poMouseHandler;
+		ScriptObject* m_poMouseHandler;
 		D3DXVECTOR3 m_v3CenterPosition;
 
 		unsigned int m_iFPS;

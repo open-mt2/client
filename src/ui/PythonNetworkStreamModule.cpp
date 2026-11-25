@@ -11,826 +11,826 @@ static std::string gs_stServerInfo;
 extern BOOL gs_bEmpireLanuageEnable;
 std::list<std::string> g_kList_strCommand;
 
-PyObject* netGetBettingGuildWarValue(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netGetBettingGuildWarValue(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szName;
-	if (!PyTuple_GetString(poArgs, 0, &szName))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szName))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
-	return Py_BuildValue("i", rkNetStream.EXPORT_GetBettingGuildWarValue(szName));
+	return Script_BuildValue("i", rkNetStream.EXPORT_GetBettingGuildWarValue(szName));
 }
 
-PyObject* netSetServerInfo(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSetServerInfo(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szFileName;
-	if (!PyTuple_GetString(poArgs, 0, &szFileName))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szFileName))
+		return Script_BuildException();
 
 	gs_stServerInfo = szFileName;
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netGetServerInfo(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netGetServerInfo(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("s", gs_stServerInfo.c_str());
+	return Script_BuildValue("s", gs_stServerInfo.c_str());
 }
 
-PyObject* netPreserveServerCommand(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netPreserveServerCommand(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szLine;
-	if (!PyTuple_GetString(poArgs, 0, &szLine))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szLine))
+		return Script_BuildException();
 
 	g_kList_strCommand.push_back(szLine);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netGetPreservedServerCommand(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netGetPreservedServerCommand(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	if (g_kList_strCommand.empty())
-		return Py_BuildValue("s", "");
+		return Script_BuildValue("s", "");
 
 	std::string strCommand = g_kList_strCommand.front();
 	g_kList_strCommand.pop_front();
 
-	return Py_BuildValue("s", strCommand.c_str());
+	return Script_BuildValue("s", strCommand.c_str());
 }
 
-PyObject* netStartGame(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netStartGame(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.StartGame();
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netIsTest(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netIsTest(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", __IS_TEST_SERVER_MODE__);
+	return Script_BuildValue("i", __IS_TEST_SERVER_MODE__);
 }
 
-PyObject* netWarp(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netWarp(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int nX;
-	if (!PyTuple_GetInteger(poArgs, 0, &nX))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &nX))
+		return Script_BuildException();
 
 	int nY;
-	if (!PyTuple_GetInteger(poArgs, 1, &nY))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &nY))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.Warp(nX, nY);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netLoadInsultList(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netLoadInsultList(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szFileName;
-	if (!PyTuple_GetString(poArgs, 0, &szFileName))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szFileName))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
-	return Py_BuildValue("i", rkNetStream.LoadInsultList(szFileName));
+	return Script_BuildValue("i", rkNetStream.LoadInsultList(szFileName));
 }
 
-PyObject* netUploadMark(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netUploadMark(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szFileName;
-	if (!PyTuple_GetString(poArgs, 0, &szFileName))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szFileName))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
-	return Py_BuildValue("i", rkNetStream.UploadMark(szFileName));
+	return Script_BuildValue("i", rkNetStream.UploadMark(szFileName));
 }
 
-PyObject* netUploadSymbol(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netUploadSymbol(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szFileName;
-	if (!PyTuple_GetString(poArgs, 0, &szFileName))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szFileName))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
-	return Py_BuildValue("i", rkNetStream.UploadSymbol(szFileName));
+	return Script_BuildValue("i", rkNetStream.UploadSymbol(szFileName));
 }
 
-PyObject* netGetGuildID(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netGetGuildID(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
-	return Py_BuildValue("i", rkNetStream.GetGuildID());
+	return Script_BuildValue("i", rkNetStream.GetGuildID());
 }
 
-PyObject* netGetEmpireID(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netGetEmpireID(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
-	return Py_BuildValue("i", rkNetStream.GetEmpireID());
+	return Script_BuildValue("i", rkNetStream.GetEmpireID());
 }
 
-PyObject* netGetMainActorVID(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netGetMainActorVID(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
-	return Py_BuildValue("i", rkNetStream.GetMainActorVID());
+	return Script_BuildValue("i", rkNetStream.GetMainActorVID());
 }
 
-PyObject* netGetMainActorRace(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netGetMainActorRace(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
-	return Py_BuildValue("i", rkNetStream.GetMainActorRace());
+	return Script_BuildValue("i", rkNetStream.GetMainActorRace());
 }
 
-PyObject* netGetMainActorEmpire(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netGetMainActorEmpire(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
-	return Py_BuildValue("i", rkNetStream.GetMainActorEmpire());
+	return Script_BuildValue("i", rkNetStream.GetMainActorEmpire());
 }
 
-PyObject* netGetMainActorSkillGroup(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netGetMainActorSkillGroup(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
-	return Py_BuildValue("i", rkNetStream.GetMainActorSkillGroup());
+	return Script_BuildValue("i", rkNetStream.GetMainActorSkillGroup());
 }
 
-PyObject* netIsSelectedEmpire(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netIsSelectedEmpire(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
-	return Py_BuildValue("i", rkNetStream.IsSelectedEmpire());
+	return Script_BuildValue("i", rkNetStream.IsSelectedEmpire());
 }
 
-PyObject* netGetAccountCharacterSlotDataInteger(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netGetAccountCharacterSlotDataInteger(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int nIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &nIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &nIndex))
+		return Script_BuildException();
 
 	int nType;
-	if (!PyTuple_GetInteger(poArgs, 1, &nType))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &nType))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	UINT uResult = rkNetStream.GetAccountCharacterSlotDatau(nIndex, nType);
-	return Py_BuildValue("i", uResult);
+	return Script_BuildValue("i", uResult);
 }
 
-PyObject* netGetAccountCharacterSlotDataString(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netGetAccountCharacterSlotDataString(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int nIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &nIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &nIndex))
+		return Script_BuildException();
 
 	int nType;
-	if (!PyTuple_GetInteger(poArgs, 1, &nType))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &nType))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
-	return Py_BuildValue("s", rkNetStream.GetAccountCharacterSlotDataz(nIndex, nType));
+	return Script_BuildValue("s", rkNetStream.GetAccountCharacterSlotDataz(nIndex, nType));
 }
 
 // SUPPORT_BGM
-PyObject* netGetFieldMusicFileName(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netGetFieldMusicFileName(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
-	return Py_BuildValue("s", rkNetStream.GetFieldMusicFileName());
+	return Script_BuildValue("s", rkNetStream.GetFieldMusicFileName());
 }
 
-PyObject* netGetFieldMusicVolume(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netGetFieldMusicVolume(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
-	return Py_BuildValue("f", rkNetStream.GetFieldMusicVolume());
+	return Script_BuildValue("f", rkNetStream.GetFieldMusicVolume());
 }
 // END_OF_SUPPORT_BGM
 
-PyObject* netSetPhaseWindow(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSetPhaseWindow(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int ePhaseWnd;
-	if (!PyTuple_GetInteger(poArgs, 0, &ePhaseWnd))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &ePhaseWnd))
+		return Script_BuildException();
 
-	PyObject* poPhaseWnd;
-	if (!PyTuple_GetObject(poArgs, 1, &poPhaseWnd))
-		return Py_BuildException();
+	ScriptObject* poPhaseWnd;
+	if (!ScriptTuple_GetObject(poArgs, 1, &poPhaseWnd))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.SetPhaseWindow(ePhaseWnd, poPhaseWnd);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netClearPhaseWindow(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netClearPhaseWindow(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int ePhaseWnd;
-	if (!PyTuple_GetInteger(poArgs, 0, &ePhaseWnd))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &ePhaseWnd))
+		return Script_BuildException();
 
-	PyObject* poPhaseWnd;
-	if (!PyTuple_GetObject(poArgs, 1, &poPhaseWnd))
-		return Py_BuildException();
+	ScriptObject* poPhaseWnd;
+	if (!ScriptTuple_GetObject(poArgs, 1, &poPhaseWnd))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.ClearPhaseWindow(ePhaseWnd, poPhaseWnd);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSetServerCommandParserWindow(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSetServerCommandParserWindow(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	PyObject* poPhaseWnd;
-	if (!PyTuple_GetObject(poArgs, 0, &poPhaseWnd))
-		return Py_BuildException();
+	ScriptObject* poPhaseWnd;
+	if (!ScriptTuple_GetObject(poArgs, 0, &poPhaseWnd))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.SetServerCommandParserWindow(poPhaseWnd);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSetAccountConnectorHandler(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSetAccountConnectorHandler(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	PyObject* poPhaseWnd;
-	if (!PyTuple_GetObject(poArgs, 0, &poPhaseWnd))
-		return Py_BuildException();
+	ScriptObject* poPhaseWnd;
+	if (!ScriptTuple_GetObject(poArgs, 0, &poPhaseWnd))
+		return Script_BuildException();
 
 	CAccountConnector& rkAccountConnector = CAccountConnector::Instance();
 	rkAccountConnector.SetHandler(poPhaseWnd);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSetHandler(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSetHandler(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	PyObject* poHandler;
+	ScriptObject* poHandler;
 
-	if (!PyTuple_GetObject(poArgs, 0, &poHandler))
-		return Py_BuildException();
+	if (!ScriptTuple_GetObject(poArgs, 0, &poHandler))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.SetHandler(poHandler);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSetTCPRecvBufferSize(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSetTCPRecvBufferSize(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int bufSize;
-	if (!PyTuple_GetInteger(poArgs, 0, &bufSize))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &bufSize))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.SetRecvBufferSize(bufSize);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSetTCPSendBufferSize(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSetTCPSendBufferSize(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int bufSize;
-	if (!PyTuple_GetInteger(poArgs, 0, &bufSize))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &bufSize))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.SetSendBufferSize(bufSize);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSetMarkServer(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSetMarkServer(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szAddr;
-	if (!PyTuple_GetString(poArgs, 0, &szAddr))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szAddr))
+		return Script_BuildException();
 
 	int port;
-	if (!PyTuple_GetInteger(poArgs, 1, &port))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &port))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.SetMarkServer(szAddr, port);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netConnectTCP(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netConnectTCP(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szAddr;
-	if (!PyTuple_GetString(poArgs, 0, &szAddr))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szAddr))
+		return Script_BuildException();
 
 	int port;
-	if (!PyTuple_GetInteger(poArgs, 1, &port))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &port))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.ConnectLoginServer(szAddr, port);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netConnectToAccountServer(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netConnectToAccountServer(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* addr;
-	if (!PyTuple_GetString(poArgs, 0, &addr))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &addr))
+		return Script_BuildException();
 
 	int port;
-	if (!PyTuple_GetInteger(poArgs, 1, &port))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &port))
+		return Script_BuildException();
 
 	char* account_addr;
-	if (!PyTuple_GetString(poArgs, 2, &account_addr))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 2, &account_addr))
+		return Script_BuildException();
 
 	int account_port;
-	if (!PyTuple_GetInteger(poArgs, 3, &account_port))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 3, &account_port))
+		return Script_BuildException();
 
 	CAccountConnector& rkAccountConnector = CAccountConnector::Instance();
 	rkAccountConnector.Connect(addr, port, account_addr, account_port);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-PyObject* netSetLoginInfo(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSetLoginInfo(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szName;
-	if (!PyTuple_GetString(poArgs, 0, &szName))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szName))
+		return Script_BuildException();
 
 	char* szPwd;
-	if (!PyTuple_GetString(poArgs, 1, &szPwd))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 1, &szPwd))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	CAccountConnector& rkAccountConnector = CAccountConnector::Instance();
 	rkNetStream.SetLoginInfo(szName, szPwd);
 	rkAccountConnector.SetLoginInfo(szName, szPwd);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSetOfflinePhase(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSetOfflinePhase(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.SetOffLinePhase();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendSelectEmpirePacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendSelectEmpirePacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iEmpireIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iEmpireIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iEmpireIndex))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.SendSelectEmpirePacket(iEmpireIndex);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendLoginPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendLoginPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szName;
-	if (!PyTuple_GetString(poArgs, 0, &szName))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szName))
+		return Script_BuildException();
 
 	char* szPwd;
-	if (!PyTuple_GetString(poArgs, 1, &szPwd))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 1, &szPwd))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.SendLoginPacket(szName, szPwd);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendChinaMatrixCardPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendChinaMatrixCardPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szMatrixCardString;
-	if (!PyTuple_GetString(poArgs, 0, &szMatrixCardString))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szMatrixCardString))
+		return Script_BuildException();
 
 	CAccountConnector& rkAccountConnector = CAccountConnector::Instance();
 	rkAccountConnector.SendChinaMatrixCardPacket(szMatrixCardString);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendRunupMatrixCardPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendRunupMatrixCardPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szMatrixCardString;
-	if (!PyTuple_GetString(poArgs, 0, &szMatrixCardString))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szMatrixCardString))
+		return Script_BuildException();
 
 	CAccountConnector& rkAccountConnector = CAccountConnector::Instance();
 	rkAccountConnector.SendRunupMatrixCardPacket(szMatrixCardString);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendNEWCIBNPasspodAnswerPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendNEWCIBNPasspodAnswerPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szMatrixCardString;
-	if (!PyTuple_GetString(poArgs, 0, &szMatrixCardString))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szMatrixCardString))
+		return Script_BuildException();
 
 	CAccountConnector& rkAccountConnector = CAccountConnector::Instance();
 	rkAccountConnector.SendNEWCIBNPasspodAnswerPacket(szMatrixCardString);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netDirectEnter(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netDirectEnter(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int nChrSlot;
-	if (!PyTuple_GetInteger(poArgs, 0, &nChrSlot))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &nChrSlot))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.ConnectGameServer(nChrSlot);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendSelectCharacterPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendSelectCharacterPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int Index;
-	if (!PyTuple_GetInteger(poArgs, 0, &Index))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &Index))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.SendSelectCharacterPacket((BYTE)Index);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendChangeNamePacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendChangeNamePacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iIndex))
+		return Script_BuildException();
 	char* szName;
-	if (!PyTuple_GetString(poArgs, 1, &szName))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 1, &szName))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.SendChangeNamePacket((BYTE)iIndex, szName);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netEnableChatInsultFilter(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netEnableChatInsultFilter(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int nEnable;
-	if (!PyTuple_GetInteger(poArgs, 0, &nEnable))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &nEnable))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.EnableChatInsultFilter(nEnable ? true : false);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netIsChatInsultIn(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netIsChatInsultIn(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szMsg;
-	if (!PyTuple_GetString(poArgs, 0, &szMsg))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szMsg))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
-	return Py_BuildValue("i", rkNetStream.IsChatInsultIn(szMsg));
+	return Script_BuildValue("i", rkNetStream.IsChatInsultIn(szMsg));
 }
 
-PyObject* netIsInsultIn(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netIsInsultIn(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szMsg;
-	if (!PyTuple_GetString(poArgs, 0, &szMsg))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szMsg))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
-	return Py_BuildValue("i", rkNetStream.IsInsultIn(szMsg));
+	return Script_BuildValue("i", rkNetStream.IsInsultIn(szMsg));
 }
 
-PyObject* netSendWhisperPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendWhisperPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szName;
 	char* szLine;
 
-	if (!PyTuple_GetString(poArgs, 0, &szName))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szName))
+		return Script_BuildException();
 
-	if (!PyTuple_GetString(poArgs, 1, &szLine))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 1, &szLine))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.SendWhisperPacket(szName, szLine);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendCharacterPositionPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendCharacterPositionPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iPosition;
-	if (!PyTuple_GetInteger(poArgs, 0, &iPosition))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iPosition))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.SendCharacterPositionPacket((BYTE)iPosition);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendChatPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendChatPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szLine;
-	if (!PyTuple_GetString(poArgs, 0, &szLine))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szLine))
+		return Script_BuildException();
 	int iType;
-	if (!PyTuple_GetInteger(poArgs, 1, &iType))
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iType))
 	{
 		iType = CHAT_TYPE_TALKING;
 	}
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.SendChatPacket(szLine, iType);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendEmoticon(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendEmoticon(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int eEmoticon;
-	if (!PyTuple_GetInteger(poArgs, 0, &eEmoticon))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &eEmoticon))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.SendEmoticon(eEmoticon);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendCreateCharacterPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendCreateCharacterPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int index;
-	if (!PyTuple_GetInteger(poArgs, 0, &index))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &index))
+		return Script_BuildException();
 
 	char* name;
-	if (!PyTuple_GetString(poArgs, 1, &name))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 1, &name))
+		return Script_BuildException();
 
 	int job;
-	if (!PyTuple_GetInteger(poArgs, 2, &job))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 2, &job))
+		return Script_BuildException();
 
 	int shape;
-	if (!PyTuple_GetInteger(poArgs, 3, &shape))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 3, &shape))
+		return Script_BuildException();
 
 	int stat1;
-	if (!PyTuple_GetInteger(poArgs, 4, &stat1))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 4, &stat1))
+		return Script_BuildException();
 	int stat2;
-	if (!PyTuple_GetInteger(poArgs, 5, &stat2))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 5, &stat2))
+		return Script_BuildException();
 	int stat3;
-	if (!PyTuple_GetInteger(poArgs, 6, &stat3))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 6, &stat3))
+		return Script_BuildException();
 	int stat4;
-	if (!PyTuple_GetInteger(poArgs, 7, &stat4))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 7, &stat4))
+		return Script_BuildException();
 
 	if (index < 0 && index > 3)
-		return Py_BuildException();
+		return Script_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.SendCreateCharacterPacket((BYTE)index, name, (BYTE)job, (BYTE)shape, stat1, stat2, stat3, stat4);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendDestroyCharacterPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendDestroyCharacterPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int index;
-	if (!PyTuple_GetInteger(poArgs, 0, &index))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &index))
+		return Script_BuildException();
 
 	char* szPrivateCode;
-	if (!PyTuple_GetString(poArgs, 1, &szPrivateCode))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 1, &szPrivateCode))
+		return Script_BuildException();
 
 	if (index < 0 && index > 3)
-		return Py_BuildException();
+		return Script_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.SendDestroyCharacterPacket((BYTE)index, szPrivateCode);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendEnterGamePacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendEnterGamePacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.SendEnterGame();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netOnClickPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netOnClickPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int index;
-	if (!PyTuple_GetInteger(poArgs, 0, &index))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &index))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.SendOnClickPacket(index);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendItemUsePacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendItemUsePacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	TItemPos Cell;
-	switch (PyTuple_Size(poArgs))
+	switch (ScriptTuple_Size(poArgs))
 	{
 		case 1:
-			if (!PyTuple_GetInteger(poArgs, 0, &Cell.cell))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 0, &Cell.cell))
+				return Script_BuildException();
 			break;
 		case 2:
-			if (!PyTuple_GetByte(poArgs, 0, &Cell.window_type))
-				return Py_BuildException();
-			if (!PyTuple_GetInteger(poArgs, 1, &Cell.cell))
-				return Py_BuildException();
+			if (!ScriptTuple_GetByte(poArgs, 0, &Cell.window_type))
+				return Script_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 1, &Cell.cell))
+				return Script_BuildException();
 			break;
 		default:
-			return Py_BuildException();
+			return Script_BuildException();
 	}
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.SendItemUsePacket(Cell);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendItemUseToItemPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendItemUseToItemPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	TItemPos SourceCell;
 	TItemPos TargetCell;
-	switch (PyTuple_Size(poArgs))
+	switch (ScriptTuple_Size(poArgs))
 	{
 		case 2:
-			if (!PyTuple_GetInteger(poArgs, 0, &SourceCell.cell))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 0, &SourceCell.cell))
+				return Script_BuildException();
 
-			if (!PyTuple_GetInteger(poArgs, 1, &TargetCell.cell))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 1, &TargetCell.cell))
+				return Script_BuildException();
 			break;
 		case 4:
-			if (!PyTuple_GetByte(poArgs, 0, &SourceCell.window_type))
-				return Py_BuildException();
+			if (!ScriptTuple_GetByte(poArgs, 0, &SourceCell.window_type))
+				return Script_BuildException();
 
-			if (!PyTuple_GetInteger(poArgs, 1, &SourceCell.cell))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 1, &SourceCell.cell))
+				return Script_BuildException();
 
-			if (!PyTuple_GetByte(poArgs, 2, &TargetCell.window_type))
-				return Py_BuildException();
+			if (!ScriptTuple_GetByte(poArgs, 2, &TargetCell.window_type))
+				return Script_BuildException();
 
-			if (!PyTuple_GetInteger(poArgs, 3, &TargetCell.cell))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 3, &TargetCell.cell))
+				return Script_BuildException();
 			break;
 		default:
-			return Py_BuildException();
+			return Script_BuildException();
 	}
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.SendItemUseToItemPacket(SourceCell, TargetCell);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendItemDropPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendItemDropPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	TItemPos Cell;
-	switch (PyTuple_Size(poArgs))
+	switch (ScriptTuple_Size(poArgs))
 	{
 		case 1:
-			if (!PyTuple_GetInteger(poArgs, 0, &Cell.cell))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 0, &Cell.cell))
+				return Script_BuildException();
 			break;
 		case 2:
-			if (!PyTuple_GetByte(poArgs, 0, &Cell.window_type))
-				return Py_BuildException();
-			if (!PyTuple_GetInteger(poArgs, 1, &Cell.cell))
-				return Py_BuildException();
+			if (!ScriptTuple_GetByte(poArgs, 0, &Cell.window_type))
+				return Script_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 1, &Cell.cell))
+				return Script_BuildException();
 			break;
 		default:
-			return Py_BuildException();
+			return Script_BuildException();
 	}
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.SendItemDropPacket(Cell, 0);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendItemDropPacketNew(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendItemDropPacketNew(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	TItemPos Cell;
 	int count;
-	switch (PyTuple_Size(poArgs))
+	switch (ScriptTuple_Size(poArgs))
 	{
 		case 2:
-			if (!PyTuple_GetInteger(poArgs, 0, &Cell.cell))
-				return Py_BuildException();
-			if (!PyTuple_GetInteger(poArgs, 1, &count))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 0, &Cell.cell))
+				return Script_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 1, &count))
+				return Script_BuildException();
 
 			break;
 		case 3:
-			if (!PyTuple_GetByte(poArgs, 0, &Cell.window_type))
-				return Py_BuildException();
-			if (!PyTuple_GetInteger(poArgs, 1, &Cell.cell))
-				return Py_BuildException();
-			if (!PyTuple_GetInteger(poArgs, 2, &count))
-				return Py_BuildException();
+			if (!ScriptTuple_GetByte(poArgs, 0, &Cell.window_type))
+				return Script_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 1, &Cell.cell))
+				return Script_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 2, &count))
+				return Script_BuildException();
 
 			break;
 		default:
-			return Py_BuildException();
+			return Script_BuildException();
 	}
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.SendItemDropPacketNew(Cell, 0, count);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendElkDropPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendElkDropPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iElk;
-	if (!PyTuple_GetInteger(poArgs, 0, &iElk))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iElk))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.SendItemDropPacket(TItemPos(RESERVED_WINDOW, 0), (DWORD)iElk);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendGoldDropPacketNew(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendGoldDropPacketNew(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iElk;
-	if (!PyTuple_GetInteger(poArgs, 0, &iElk))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iElk))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.SendItemDropPacketNew(TItemPos(RESERVED_WINDOW, 0), (DWORD)iElk, 0);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendItemMovePacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendItemMovePacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	TItemPos Cell;
 	TItemPos ChangeCell;
 	int num;
 
-	switch (PyTuple_Size(poArgs))
+	switch (ScriptTuple_Size(poArgs))
 	{
 		case 3:
-			if (!PyTuple_GetInteger(poArgs, 0, &Cell.cell))
-				return Py_BuildException();
-			if (!PyTuple_GetInteger(poArgs, 1, &ChangeCell.cell))
-				return Py_BuildException();
-			if (!PyTuple_GetInteger(poArgs, 2, &num))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 0, &Cell.cell))
+				return Script_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 1, &ChangeCell.cell))
+				return Script_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 2, &num))
+				return Script_BuildException();
 			break;
 		case 5:
 		{
-			if (!PyTuple_GetByte(poArgs, 0, &Cell.window_type))
-				return Py_BuildException();
-			if (!PyTuple_GetInteger(poArgs, 1, &Cell.cell))
-				return Py_BuildException();
-			if (!PyTuple_GetByte(poArgs, 2, &ChangeCell.window_type))
-				return Py_BuildException();
-			if (!PyTuple_GetInteger(poArgs, 3, &ChangeCell.cell))
-				return Py_BuildException();
-			if (!PyTuple_GetInteger(poArgs, 4, &num))
-				return Py_BuildException();
+			if (!ScriptTuple_GetByte(poArgs, 0, &Cell.window_type))
+				return Script_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 1, &Cell.cell))
+				return Script_BuildException();
+			if (!ScriptTuple_GetByte(poArgs, 2, &ChangeCell.window_type))
+				return Script_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 3, &ChangeCell.cell))
+				return Script_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 4, &num))
+				return Script_BuildException();
 		}
 		break;
 		default:
-			return Py_BuildException();
+			return Script_BuildException();
 	}
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.SendItemMovePacket(Cell, ChangeCell, (BYTE)num);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendItemPickUpPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendItemPickUpPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int vid;
-	if (!PyTuple_GetInteger(poArgs, 0, &vid))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &vid))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.SendItemPickUpPacket(vid);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendGiveItemPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendGiveItemPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iTargetVID;
 	TItemPos Cell;
 	int iItemCount;
-	switch (PyTuple_Size(poArgs))
+	switch (ScriptTuple_Size(poArgs))
 	{
 		case 3:
-			if (!PyTuple_GetInteger(poArgs, 0, &iTargetVID))
-				return Py_BuildException();
-			if (!PyTuple_GetInteger(poArgs, 1, &Cell.cell))
-				return Py_BuildException();
-			if (!PyTuple_GetInteger(poArgs, 2, &iItemCount))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 0, &iTargetVID))
+				return Script_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 1, &Cell.cell))
+				return Script_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 2, &iItemCount))
+				return Script_BuildException();
 			break;
 		case 4:
-			if (!PyTuple_GetInteger(poArgs, 0, &iTargetVID))
-				return Py_BuildException();
-			if (!PyTuple_GetByte(poArgs, 1, &Cell.window_type))
-				return Py_BuildException();
-			if (!PyTuple_GetInteger(poArgs, 2, &Cell.cell))
-				return Py_BuildException();
-			if (!PyTuple_GetInteger(poArgs, 3, &iItemCount))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 0, &iTargetVID))
+				return Script_BuildException();
+			if (!ScriptTuple_GetByte(poArgs, 1, &Cell.window_type))
+				return Script_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 2, &Cell.cell))
+				return Script_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 3, &iItemCount))
+				return Script_BuildException();
 			break;
 		default:
 			break;
@@ -838,235 +838,235 @@ PyObject* netSendGiveItemPacket(PyObject* poSelf, PyObject* poArgs)
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.SendGiveItemPacket(iTargetVID, Cell, iItemCount);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendShopEndPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendShopEndPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.SendShopEndPacket();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendShopBuyPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendShopBuyPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iCount;
-	if (!PyTuple_GetInteger(poArgs, 0, &iCount))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iCount))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.SendShopBuyPacket(iCount);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendShopSellPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendShopSellPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSlotNumber;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSlotNumber))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSlotNumber))
+		return Script_BuildException();
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.SendShopSellPacket(iSlotNumber);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendShopSellPacketNew(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendShopSellPacketNew(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSlotNumber;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSlotNumber))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSlotNumber))
+		return Script_BuildException();
 	int iCount;
-	if (!PyTuple_GetInteger(poArgs, 1, &iCount))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iCount))
+		return Script_BuildException();
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.SendShopSellPacketNew(iSlotNumber, iCount);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendExchangeStartPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendExchangeStartPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int vid;
-	if (!PyTuple_GetInteger(poArgs, 0, &vid))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &vid))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.SendExchangeStartPacket(vid);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendExchangeElkAddPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendExchangeElkAddPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iElk;
-	if (!PyTuple_GetInteger(poArgs, 0, &iElk))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iElk))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.SendExchangeElkAddPacket(iElk);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendExchangeItemAddPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendExchangeItemAddPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	BYTE bWindowType;
-	if (!PyTuple_GetInteger(poArgs, 0, &bWindowType))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &bWindowType))
+		return Script_BuildException();
 	WORD wSlotIndex;
-	if (!PyTuple_GetInteger(poArgs, 1, &wSlotIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &wSlotIndex))
+		return Script_BuildException();
 	int iDisplaySlotIndex;
-	if (!PyTuple_GetInteger(poArgs, 2, &iDisplaySlotIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 2, &iDisplaySlotIndex))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.SendExchangeItemAddPacket(TItemPos(bWindowType, wSlotIndex), iDisplaySlotIndex);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendExchangeItemDelPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendExchangeItemDelPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int pos;
-	if (!PyTuple_GetInteger(poArgs, 0, &pos))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &pos))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.SendExchangeItemDelPacket((BYTE)pos);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendExchangeAcceptPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendExchangeAcceptPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.SendExchangeAcceptPacket();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendExchangeExitPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendExchangeExitPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.SendExchangeExitPacket();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netExitApplication(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netExitApplication(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.ExitApplication();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netExitGame(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netExitGame(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.ExitGame();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netLogOutGame(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netLogOutGame(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.LogOutGame();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netDisconnect(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netDisconnect(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.SetOffLinePhase();
 	rkNetStream.Disconnect();
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netIsConnect(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netIsConnect(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
-	return Py_BuildValue("i", rkNetStream.IsOnline());
+	return Script_BuildValue("i", rkNetStream.IsOnline());
 }
 
-PyObject* netToggleGameDebugInfo(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netToggleGameDebugInfo(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.ToggleGameDebugInfo();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netRegisterEmoticonString(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netRegisterEmoticonString(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* pcEmoticonString;
-	if (!PyTuple_GetString(poArgs, 0, &pcEmoticonString))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &pcEmoticonString))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 	rkNetStream.RegisterEmoticonString(pcEmoticonString);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendMessengerAddByVIDPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendMessengerAddByVIDPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int vid;
-	if (!PyTuple_GetInteger(poArgs, 0, &vid))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &vid))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rns = CPythonNetworkStream::Instance();
 	rns.SendMessengerAddByVIDPacket(vid);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendMessengerAddByNamePacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendMessengerAddByNamePacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szName;
-	if (!PyTuple_GetString(poArgs, 0, &szName))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szName))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rns = CPythonNetworkStream::Instance();
 	rns.SendMessengerAddByNamePacket(szName);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendMessengerRemovePacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendMessengerRemovePacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szKey;
-	if (!PyTuple_GetString(poArgs, 0, &szKey))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szKey))
+		return Script_BuildException();
 	char* szName;
-	if (!PyTuple_GetString(poArgs, 1, &szName))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 1, &szName))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rns = CPythonNetworkStream::Instance();
 	rns.SendMessengerRemovePacket(szKey, szName);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendPartyInvitePacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendPartyInvitePacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int vid;
-	if (!PyTuple_GetInteger(poArgs, 0, &vid))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &vid))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rns = CPythonNetworkStream::Instance();
 	rns.SendPartyInvitePacket(vid);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendPartyInviteAnswerPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendPartyInviteAnswerPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int vid;
-	if (!PyTuple_GetInteger(poArgs, 0, &vid))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &vid))
+		return Script_BuildException();
 	int answer;
-	if (!PyTuple_GetInteger(poArgs, 1, &answer))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &answer))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rns = CPythonNetworkStream::Instance();
 	rns.SendPartyInviteAnswerPacket(vid, answer);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendPartyExitPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendPartyExitPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	IAbstractPlayer& rPlayer = IAbstractPlayer::GetSingleton();
 
@@ -1077,140 +1077,140 @@ PyObject* netSendPartyExitPacket(PyObject* poSelf, PyObject* poArgs)
 	if (rPlayer.PartyMemberVIDToPID(dwVID, &dwPID))
 		rns.SendPartyRemovePacket(dwPID);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendPartyRemovePacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendPartyRemovePacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int vid;
-	if (!PyTuple_GetInteger(poArgs, 0, &vid))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &vid))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rns = CPythonNetworkStream::Instance();
 	rns.SendPartyRemovePacket(vid);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendPartySetStatePacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendPartySetStatePacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iVID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iVID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iVID))
+		return Script_BuildException();
 	int iState;
-	if (!PyTuple_GetInteger(poArgs, 1, &iState))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iState))
+		return Script_BuildException();
 	int iFlag;
-	if (!PyTuple_GetInteger(poArgs, 2, &iFlag))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 2, &iFlag))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rns = CPythonNetworkStream::Instance();
 	rns.SendPartySetStatePacket(iVID, iState, iFlag);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendPartyUseSkillPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendPartyUseSkillPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSkillIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSkillIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSkillIndex))
+		return Script_BuildException();
 	int iVID;
-	if (!PyTuple_GetInteger(poArgs, 1, &iVID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iVID))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rns = CPythonNetworkStream::Instance();
 	rns.SendPartyUseSkillPacket(iSkillIndex, iVID);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendPartyParameterPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendPartyParameterPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iMode;
-	if (!PyTuple_GetInteger(poArgs, 0, &iMode))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iMode))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rns = CPythonNetworkStream::Instance();
 	rns.SendPartyParameterPacket(iMode);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendSafeboxSaveMoneyPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendSafeboxSaveMoneyPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iMoney;
-	if (!PyTuple_GetInteger(poArgs, 0, &iMoney))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iMoney))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rns = CPythonNetworkStream::Instance();
 	rns.SendSafeBoxMoneyPacket(SAFEBOX_MONEY_STATE_SAVE, iMoney);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendSafeboxWithdrawMoneyPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendSafeboxWithdrawMoneyPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iMoney;
-	if (!PyTuple_GetInteger(poArgs, 0, &iMoney))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iMoney))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rns = CPythonNetworkStream::Instance();
 	rns.SendSafeBoxMoneyPacket(SAFEBOX_MONEY_STATE_WITHDRAW, iMoney);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendSafeboxCheckinPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendSafeboxCheckinPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	TItemPos InventoryPos;
 	int iSafeBoxPos;
 
-	switch (PyTuple_Size(poArgs))
+	switch (ScriptTuple_Size(poArgs))
 	{
 		case 2:
 			InventoryPos.window_type = INVENTORY;
-			if (!PyTuple_GetInteger(poArgs, 0, &InventoryPos.cell))
-				return Py_BuildException();
-			if (!PyTuple_GetInteger(poArgs, 1, &iSafeBoxPos))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 0, &InventoryPos.cell))
+				return Script_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 1, &iSafeBoxPos))
+				return Script_BuildException();
 			break;
 		case 3:
-			if (!PyTuple_GetInteger(poArgs, 0, &InventoryPos.window_type))
-				return Py_BuildException();
-			if (!PyTuple_GetInteger(poArgs, 1, &InventoryPos.cell))
-				return Py_BuildException();
-			if (!PyTuple_GetInteger(poArgs, 2, &iSafeBoxPos))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 0, &InventoryPos.window_type))
+				return Script_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 1, &InventoryPos.cell))
+				return Script_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 2, &iSafeBoxPos))
+				return Script_BuildException();
 			break;
 	}
 
 	CPythonNetworkStream& rns = CPythonNetworkStream::Instance();
 	rns.SendSafeBoxCheckinPacket(InventoryPos, iSafeBoxPos);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendSafeboxCheckoutPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendSafeboxCheckoutPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSafeBoxPos;
 	TItemPos InventoryPos;
 
-	switch (PyTuple_Size(poArgs))
+	switch (ScriptTuple_Size(poArgs))
 	{
 		case 2:
-			if (!PyTuple_GetInteger(poArgs, 0, &iSafeBoxPos))
-				return Py_BuildException();
-			if (!PyTuple_GetInteger(poArgs, 1, &InventoryPos.cell))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 0, &iSafeBoxPos))
+				return Script_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 1, &InventoryPos.cell))
+				return Script_BuildException();
 			break;
 		case 3:
-			if (!PyTuple_GetInteger(poArgs, 0, &iSafeBoxPos))
-				return Py_BuildException();
-			if (!PyTuple_GetInteger(poArgs, 1, &InventoryPos.window_type))
-				return Py_BuildException();
-			if (!PyTuple_GetInteger(poArgs, 2, &InventoryPos.cell))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 0, &iSafeBoxPos))
+				return Script_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 1, &InventoryPos.window_type))
+				return Script_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 2, &InventoryPos.cell))
+				return Script_BuildException();
 			break;
 		default:
 			break;
@@ -1219,392 +1219,392 @@ PyObject* netSendSafeboxCheckoutPacket(PyObject* poSelf, PyObject* poArgs)
 	CPythonNetworkStream& rns = CPythonNetworkStream::Instance();
 	rns.SendSafeBoxCheckoutPacket(iSafeBoxPos, InventoryPos);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendSafeboxItemMovePacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendSafeboxItemMovePacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSourcePos;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSourcePos))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSourcePos))
+		return Script_BuildException();
 	int iTargetPos;
-	if (!PyTuple_GetInteger(poArgs, 1, &iTargetPos))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iTargetPos))
+		return Script_BuildException();
 	int iCount;
-	if (!PyTuple_GetInteger(poArgs, 2, &iCount))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 2, &iCount))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rns = CPythonNetworkStream::Instance();
 	rns.SendSafeBoxItemMovePacket(iSourcePos, iTargetPos, iCount);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendMallCheckoutPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendMallCheckoutPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iMallPos;
 	TItemPos InventoryPos;
 
-	switch (PyTuple_Size(poArgs))
+	switch (ScriptTuple_Size(poArgs))
 	{
 		case 2:
-			if (!PyTuple_GetInteger(poArgs, 0, &iMallPos))
-				return Py_BuildException();
-			if (!PyTuple_GetInteger(poArgs, 1, &InventoryPos.cell))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 0, &iMallPos))
+				return Script_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 1, &InventoryPos.cell))
+				return Script_BuildException();
 			break;
 		case 3:
-			if (!PyTuple_GetInteger(poArgs, 0, &iMallPos))
-				return Py_BuildException();
-			if (!PyTuple_GetInteger(poArgs, 1, &InventoryPos.window_type))
-				return Py_BuildException();
-			if (!PyTuple_GetInteger(poArgs, 2, &InventoryPos.cell))
-				return Py_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 0, &iMallPos))
+				return Script_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 1, &InventoryPos.window_type))
+				return Script_BuildException();
+			if (!ScriptTuple_GetInteger(poArgs, 2, &InventoryPos.cell))
+				return Script_BuildException();
 			break;
 		default:
-			return Py_BuildException();
+			return Script_BuildException();
 	}
 	CPythonNetworkStream& rns = CPythonNetworkStream::Instance();
 	rns.SendMallCheckoutPacket(iMallPos, InventoryPos);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendAnswerMakeGuildPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendAnswerMakeGuildPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szName;
-	if (!PyTuple_GetString(poArgs, 0, &szName))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szName))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rns = CPythonNetworkStream::Instance();
 	rns.SendAnswerMakeGuildPacket(szName);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendQuestInputStringPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendQuestInputStringPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szString;
-	if (!PyTuple_GetString(poArgs, 0, &szString))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szString))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rns = CPythonNetworkStream::Instance();
 	rns.SendQuestInputStringPacket(szString);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendQuestConfirmPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendQuestConfirmPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iAnswer;
-	if (!PyTuple_GetInteger(poArgs, 0, &iAnswer))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iAnswer))
+		return Script_BuildException();
 	int iPID;
-	if (!PyTuple_GetInteger(poArgs, 1, &iPID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iPID))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rns = CPythonNetworkStream::Instance();
 	rns.SendQuestConfirmPacket(iAnswer, iPID);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendGuildAddMemberPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendGuildAddMemberPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iVID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iVID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iVID))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rns = CPythonNetworkStream::Instance();
 	rns.SendGuildAddMemberPacket(iVID);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendGuildRemoveMemberPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendGuildRemoveMemberPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szKey;
-	if (!PyTuple_GetString(poArgs, 0, &szKey))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szKey))
+		return Script_BuildException();
 
 	CPythonGuild::TGuildMemberData* pGuildMemberData;
 	if (!CPythonGuild::Instance().GetMemberDataPtrByName(szKey, &pGuildMemberData))
 	{
 		TraceError("netSendGuildRemoveMemberPacket(szKey=%s) - Can't Find Guild Member\n", szKey);
-		return Py_BuildNone();
+		return Script_BuildNone();
 	}
 
 	CPythonNetworkStream& rns = CPythonNetworkStream::Instance();
 	rns.SendGuildRemoveMemberPacket(pGuildMemberData->dwPID);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendGuildChangeGradeNamePacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendGuildChangeGradeNamePacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iGradeNumber;
-	if (!PyTuple_GetInteger(poArgs, 0, &iGradeNumber))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iGradeNumber))
+		return Script_BuildException();
 	char* szGradeName;
-	if (!PyTuple_GetString(poArgs, 1, &szGradeName))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 1, &szGradeName))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rns = CPythonNetworkStream::Instance();
 	rns.SendGuildChangeGradeNamePacket(iGradeNumber, szGradeName);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendGuildChangeGradeAuthorityPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendGuildChangeGradeAuthorityPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iGradeNumber;
-	if (!PyTuple_GetInteger(poArgs, 0, &iGradeNumber))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iGradeNumber))
+		return Script_BuildException();
 	int iAuthority;
-	if (!PyTuple_GetInteger(poArgs, 1, &iAuthority))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iAuthority))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rns = CPythonNetworkStream::Instance();
 	rns.SendGuildChangeGradeAuthorityPacket(iGradeNumber, iAuthority);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendGuildOfferPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendGuildOfferPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iExperience;
-	if (!PyTuple_GetInteger(poArgs, 0, &iExperience))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iExperience))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rns = CPythonNetworkStream::Instance();
 	rns.SendGuildOfferPacket(iExperience);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSnedGuildPostCommentPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSnedGuildPostCommentPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szComment;
-	if (!PyTuple_GetString(poArgs, 0, &szComment))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szComment))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rns = CPythonNetworkStream::Instance();
 	rns.SendGuildPostCommentPacket(szComment);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSnedGuildDeleteCommentPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSnedGuildDeleteCommentPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iIndex))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rns = CPythonNetworkStream::Instance();
 	rns.SendGuildDeleteCommentPacket(iIndex);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendGuildRefreshCommentsPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendGuildRefreshCommentsPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iHightestIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iHightestIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iHightestIndex))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rns = CPythonNetworkStream::Instance();
 	rns.SendGuildRefreshCommentsPacket(iHightestIndex);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendGuildChangeMemberGradePacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendGuildChangeMemberGradePacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iPID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iPID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iPID))
+		return Script_BuildException();
 	int iGradeNumber;
-	if (!PyTuple_GetInteger(poArgs, 1, &iGradeNumber))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iGradeNumber))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rns = CPythonNetworkStream::Instance();
 	rns.SendGuildChangeMemberGradePacket(iPID, iGradeNumber);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendGuildUseSkillPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendGuildUseSkillPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSkillID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSkillID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSkillID))
+		return Script_BuildException();
 	int iTargetVID;
-	if (!PyTuple_GetInteger(poArgs, 1, &iTargetVID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iTargetVID))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rns = CPythonNetworkStream::Instance();
 	rns.SendGuildUseSkillPacket(iSkillID, iTargetVID);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendGuildChangeMemberGeneralPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendGuildChangeMemberGeneralPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iPID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iPID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iPID))
+		return Script_BuildException();
 	int iFlag;
-	if (!PyTuple_GetInteger(poArgs, 1, &iFlag))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iFlag))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rns = CPythonNetworkStream::Instance();
 	rns.SendGuildChangeMemberGeneralPacket(iPID, iFlag);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendGuildInviteAnswerPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendGuildInviteAnswerPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iGuildID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iGuildID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iGuildID))
+		return Script_BuildException();
 	int iAnswer;
-	if (!PyTuple_GetInteger(poArgs, 1, &iAnswer))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iAnswer))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rns = CPythonNetworkStream::Instance();
 	rns.SendGuildInviteAnswerPacket(iGuildID, iAnswer);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendGuildChargeGSPPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendGuildChargeGSPPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iGSP;
-	if (!PyTuple_GetInteger(poArgs, 0, &iGSP))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iGSP))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rns = CPythonNetworkStream::Instance();
 	rns.SendGuildChargeGSPPacket(iGSP);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendGuildDepositMoneyPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendGuildDepositMoneyPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iGSP;
-	if (!PyTuple_GetInteger(poArgs, 0, &iGSP))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iGSP))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rns = CPythonNetworkStream::Instance();
 	rns.SendGuildDepositMoneyPacket(iGSP);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendGuildWithdrawMoneyPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendGuildWithdrawMoneyPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iGSP;
-	if (!PyTuple_GetInteger(poArgs, 0, &iGSP))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iGSP))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rns = CPythonNetworkStream::Instance();
 	rns.SendGuildWithdrawMoneyPacket(iGSP);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendRequestRefineInfoPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendRequestRefineInfoPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSlotIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSlotIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSlotIndex))
+		return Script_BuildException();
 
 	//	CPythonNetworkStream& rns=CPythonNetworkStream::Instance();
 	//	rns.SendRequestRefineInfoPacket(iSlotIndex);
 	assert(!"netSendRequestRefineInfoPacket - \xB4\xF5\xC0\xCC\xBB\xF3 \xBB\xE7\xBF\xEB\xC7\xCF\xC1\xF6 \xBE\xCA\xB4\xC2 \xC7\xD4\xBC\xF6 \xC0\xD4\xB4\xCF\xB4\xD9");
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendRefinePacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendRefinePacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSlotIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSlotIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSlotIndex))
+		return Script_BuildException();
 	int iType;
-	if (!PyTuple_GetInteger(poArgs, 1, &iType))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iType))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rns = CPythonNetworkStream::Instance();
 	rns.SendRefinePacket(iSlotIndex, iType);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSendSelectItemPacket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendSelectItemPacket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iItemPos;
-	if (!PyTuple_GetInteger(poArgs, 0, &iItemPos))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iItemPos))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rns = CPythonNetworkStream::Instance();
 	rns.SendSelectItemPacket(iItemPos);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSetPacketSequenceMode(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSetPacketSequenceMode(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonNetworkStream& rns = CPythonNetworkStream::Instance();
 	CAccountConnector& rkAccountConnector = CAccountConnector::Instance();
 	rns.SetPacketSequenceMode(true);
 	rkAccountConnector.SetPacketSequenceMode(true);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSetEmpireLanguageMode(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSetEmpireLanguageMode(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iMode;
-	if (!PyTuple_GetInteger(poArgs, 0, &iMode))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iMode))
+		return Script_BuildException();
 
 	// CPythonNetworkStream& rns=CPythonNetworkStream::Instance();
 	gs_bEmpireLanuageEnable = iMode;
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netSetSkillGroupFake(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSetSkillGroupFake(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iIndex))
+		return Script_BuildException();
 
 	CPythonNetworkStream& rns = CPythonNetworkStream::Instance();
 	rns.__TEST_SetSkillGroupFake(iIndex);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
 #include <Client/UI/GuildMarkUploader.h>
 #include <Client/UI/GuildMarkDownloader.h>
 
-PyObject* netSendGuildSymbol(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netSendGuildSymbol(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szIP;
-	if (!PyTuple_GetString(poArgs, 0, &szIP))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szIP))
+		return Script_BuildException();
 	int iPort;
-	if (!PyTuple_GetInteger(poArgs, 1, &iPort))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iPort))
+		return Script_BuildException();
 	char* szFileName;
-	if (!PyTuple_GetString(poArgs, 2, &szFileName))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 2, &szFileName))
+		return Script_BuildException();
 	int iGuildID;
-	if (!PyTuple_GetInteger(poArgs, 3, &iGuildID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 3, &iGuildID))
+		return Script_BuildException();
 
 	CNetworkAddress kAddress;
 	kAddress.Set(szIP, iPort);
@@ -1617,27 +1617,27 @@ PyObject* netSendGuildSymbol(PyObject* poSelf, PyObject* poArgs)
 		assert(!"Failed connecting to send symbol");
 	}
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netDisconnectUploader(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netDisconnectUploader(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CGuildMarkUploader& rkGuildMarkUploader = CGuildMarkUploader::Instance();
 	rkGuildMarkUploader.Disconnect();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netRecvGuildSymbol(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netRecvGuildSymbol(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szIP;
-	if (!PyTuple_GetString(poArgs, 0, &szIP))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szIP))
+		return Script_BuildException();
 	int iPort;
-	if (!PyTuple_GetInteger(poArgs, 1, &iPort))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iPort))
+		return Script_BuildException();
 	int iGuildID;
-	if (!PyTuple_GetInteger(poArgs, 2, &iGuildID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 2, &iGuildID))
+		return Script_BuildException();
 
 	CNetworkAddress kAddress;
 	kAddress.Set(szIP, iPort);
@@ -1652,234 +1652,234 @@ PyObject* netRecvGuildSymbol(PyObject* poSelf, PyObject* poArgs)
 		assert(!"Failed connecting to recv symbol");
 	}
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* netRegisterErrorLog(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* netRegisterErrorLog(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szLog;
-	if (!PyTuple_GetString(poArgs, 0, &szLog))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szLog))
+		return Script_BuildException();
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
 void initnet()
 {
-	static PyMethodDef s_methods[] =
+	static ScriptMethodDef s_methods[] =
 		{
-			{"GetBettingGuildWarValue", netGetBettingGuildWarValue, METH_VARARGS, NULL},
-			{"EnableChatInsultFilter", netEnableChatInsultFilter, METH_VARARGS, NULL},
-			{"SetServerInfo", netSetServerInfo, METH_VARARGS, NULL},
-			{"GetServerInfo", netGetServerInfo, METH_VARARGS, NULL},
-			{"PreserveServerCommand", netPreserveServerCommand, METH_VARARGS, NULL},
-			{"GetPreservedServerCommand", netGetPreservedServerCommand, METH_VARARGS, NULL},
+			{"GetBettingGuildWarValue", netGetBettingGuildWarValue, SCRIPT_VARARGS, NULL},
+			{"EnableChatInsultFilter", netEnableChatInsultFilter, SCRIPT_VARARGS, NULL},
+			{"SetServerInfo", netSetServerInfo, SCRIPT_VARARGS, NULL},
+			{"GetServerInfo", netGetServerInfo, SCRIPT_VARARGS, NULL},
+			{"PreserveServerCommand", netPreserveServerCommand, SCRIPT_VARARGS, NULL},
+			{"GetPreservedServerCommand", netGetPreservedServerCommand, SCRIPT_VARARGS, NULL},
 
-			{"StartGame", netStartGame, METH_VARARGS, NULL},
-			{"Warp", netWarp, METH_VARARGS, NULL},
-			{"IsTest", netIsTest, METH_VARARGS, NULL},
-			{"SetMarkServer", netSetMarkServer, METH_VARARGS, NULL},
-			{"IsChatInsultIn", netIsChatInsultIn, METH_VARARGS, NULL},
-			{"IsInsultIn", netIsInsultIn, METH_VARARGS, NULL},
-			{"LoadInsultList", netLoadInsultList, METH_VARARGS, NULL},
-			{"UploadMark", netUploadMark, METH_VARARGS, NULL},
-			{"UploadSymbol", netUploadSymbol, METH_VARARGS, NULL},
-			{"GetGuildID", netGetGuildID, METH_VARARGS, NULL},
-			{"GetEmpireID", netGetEmpireID, METH_VARARGS, NULL},
-			{"GetMainActorVID", netGetMainActorVID, METH_VARARGS, NULL},
-			{"GetMainActorRace", netGetMainActorRace, METH_VARARGS, NULL},
-			{"GetMainActorEmpire", netGetMainActorEmpire, METH_VARARGS, NULL},
-			{"GetMainActorSkillGroup", netGetMainActorSkillGroup, METH_VARARGS, NULL},
-			{"GetAccountCharacterSlotDataInteger", netGetAccountCharacterSlotDataInteger, METH_VARARGS, NULL},
-			{"GetAccountCharacterSlotDataString", netGetAccountCharacterSlotDataString, METH_VARARGS, NULL},
+			{"StartGame", netStartGame, SCRIPT_VARARGS, NULL},
+			{"Warp", netWarp, SCRIPT_VARARGS, NULL},
+			{"IsTest", netIsTest, SCRIPT_VARARGS, NULL},
+			{"SetMarkServer", netSetMarkServer, SCRIPT_VARARGS, NULL},
+			{"IsChatInsultIn", netIsChatInsultIn, SCRIPT_VARARGS, NULL},
+			{"IsInsultIn", netIsInsultIn, SCRIPT_VARARGS, NULL},
+			{"LoadInsultList", netLoadInsultList, SCRIPT_VARARGS, NULL},
+			{"UploadMark", netUploadMark, SCRIPT_VARARGS, NULL},
+			{"UploadSymbol", netUploadSymbol, SCRIPT_VARARGS, NULL},
+			{"GetGuildID", netGetGuildID, SCRIPT_VARARGS, NULL},
+			{"GetEmpireID", netGetEmpireID, SCRIPT_VARARGS, NULL},
+			{"GetMainActorVID", netGetMainActorVID, SCRIPT_VARARGS, NULL},
+			{"GetMainActorRace", netGetMainActorRace, SCRIPT_VARARGS, NULL},
+			{"GetMainActorEmpire", netGetMainActorEmpire, SCRIPT_VARARGS, NULL},
+			{"GetMainActorSkillGroup", netGetMainActorSkillGroup, SCRIPT_VARARGS, NULL},
+			{"GetAccountCharacterSlotDataInteger", netGetAccountCharacterSlotDataInteger, SCRIPT_VARARGS, NULL},
+			{"GetAccountCharacterSlotDataString", netGetAccountCharacterSlotDataString, SCRIPT_VARARGS, NULL},
 
 			// FIELD_MUSIC
-			{"GetFieldMusicFileName", netGetFieldMusicFileName, METH_VARARGS, NULL},
-			{"GetFieldMusicVolume", netGetFieldMusicVolume, METH_VARARGS, NULL},
+			{"GetFieldMusicFileName", netGetFieldMusicFileName, SCRIPT_VARARGS, NULL},
+			{"GetFieldMusicVolume", netGetFieldMusicVolume, SCRIPT_VARARGS, NULL},
 			// END_OF_FIELD_MUSIC
 
-			{"ToggleGameDebugInfo", netToggleGameDebugInfo, METH_VARARGS, NULL},
-			{"SetLoginInfo", netSetLoginInfo, METH_VARARGS, NULL},
-			{"SetPhaseWindow", netSetPhaseWindow, METH_VARARGS, NULL},
-			{"ClearPhaseWindow", netClearPhaseWindow, METH_VARARGS, NULL},
-			{"SetServerCommandParserWindow", netSetServerCommandParserWindow, METH_VARARGS, NULL},
-			{"SetAccountConnectorHandler", netSetAccountConnectorHandler, METH_VARARGS, NULL},
-			{"SetHandler", netSetHandler, METH_VARARGS, NULL},
-			{"SetTCPRecvBufferSize", netSetTCPRecvBufferSize, METH_VARARGS, NULL},
-			{"SetTCPSendBufferSize", netSetTCPSendBufferSize, METH_VARARGS, NULL},
-			{"DirectEnter", netDirectEnter, METH_VARARGS, NULL},
+			{"ToggleGameDebugInfo", netToggleGameDebugInfo, SCRIPT_VARARGS, NULL},
+			{"SetLoginInfo", netSetLoginInfo, SCRIPT_VARARGS, NULL},
+			{"SetPhaseWindow", netSetPhaseWindow, SCRIPT_VARARGS, NULL},
+			{"ClearPhaseWindow", netClearPhaseWindow, SCRIPT_VARARGS, NULL},
+			{"SetServerCommandParserWindow", netSetServerCommandParserWindow, SCRIPT_VARARGS, NULL},
+			{"SetAccountConnectorHandler", netSetAccountConnectorHandler, SCRIPT_VARARGS, NULL},
+			{"SetHandler", netSetHandler, SCRIPT_VARARGS, NULL},
+			{"SetTCPRecvBufferSize", netSetTCPRecvBufferSize, SCRIPT_VARARGS, NULL},
+			{"SetTCPSendBufferSize", netSetTCPSendBufferSize, SCRIPT_VARARGS, NULL},
+			{"DirectEnter", netDirectEnter, SCRIPT_VARARGS, NULL},
 
-			{"LogOutGame", netLogOutGame, METH_VARARGS, NULL},
-			{"ExitGame", netExitGame, METH_VARARGS, NULL},
-			{"ExitApplication", netExitApplication, METH_VARARGS, NULL},
-			{"ConnectTCP", netConnectTCP, METH_VARARGS, NULL},
-			{"ConnectToAccountServer", netConnectToAccountServer, METH_VARARGS, NULL},
+			{"LogOutGame", netLogOutGame, SCRIPT_VARARGS, NULL},
+			{"ExitGame", netExitGame, SCRIPT_VARARGS, NULL},
+			{"ExitApplication", netExitApplication, SCRIPT_VARARGS, NULL},
+			{"ConnectTCP", netConnectTCP, SCRIPT_VARARGS, NULL},
+			{"ConnectToAccountServer", netConnectToAccountServer, SCRIPT_VARARGS, NULL},
 
-			{"SendLoginPacket", netSendLoginPacket, METH_VARARGS, NULL},
-			{"SendChinaMatrixCardPacket", netSendChinaMatrixCardPacket, METH_VARARGS, NULL},
-			{"SendRunupMatrixCardPacket", netSendRunupMatrixCardPacket, METH_VARARGS, NULL},
-			{"SendNEWCIBNPasspodAnswerPacket", netSendNEWCIBNPasspodAnswerPacket, METH_VARARGS, NULL},
-			{"SendSelectEmpirePacket", netSendSelectEmpirePacket, METH_VARARGS, NULL},
-			{"SendSelectCharacterPacket", netSendSelectCharacterPacket, METH_VARARGS, NULL},
-			{"SendChangeNamePacket", netSendChangeNamePacket, METH_VARARGS, NULL},
-			{"SendCreateCharacterPacket", netSendCreateCharacterPacket, METH_VARARGS, NULL},
-			{"SendDestroyCharacterPacket", netSendDestroyCharacterPacket, METH_VARARGS, NULL},
-			{"SendEnterGamePacket", netSendEnterGamePacket, METH_VARARGS, NULL},
+			{"SendLoginPacket", netSendLoginPacket, SCRIPT_VARARGS, NULL},
+			{"SendChinaMatrixCardPacket", netSendChinaMatrixCardPacket, SCRIPT_VARARGS, NULL},
+			{"SendRunupMatrixCardPacket", netSendRunupMatrixCardPacket, SCRIPT_VARARGS, NULL},
+			{"SendNEWCIBNPasspodAnswerPacket", netSendNEWCIBNPasspodAnswerPacket, SCRIPT_VARARGS, NULL},
+			{"SendSelectEmpirePacket", netSendSelectEmpirePacket, SCRIPT_VARARGS, NULL},
+			{"SendSelectCharacterPacket", netSendSelectCharacterPacket, SCRIPT_VARARGS, NULL},
+			{"SendChangeNamePacket", netSendChangeNamePacket, SCRIPT_VARARGS, NULL},
+			{"SendCreateCharacterPacket", netSendCreateCharacterPacket, SCRIPT_VARARGS, NULL},
+			{"SendDestroyCharacterPacket", netSendDestroyCharacterPacket, SCRIPT_VARARGS, NULL},
+			{"SendEnterGamePacket", netSendEnterGamePacket, SCRIPT_VARARGS, NULL},
 
-			{"SendItemUsePacket", netSendItemUsePacket, METH_VARARGS, NULL},
-			{"SendItemUseToItemPacket", netSendItemUseToItemPacket, METH_VARARGS, NULL},
-			{"SendItemDropPacket", netSendItemDropPacket, METH_VARARGS, NULL},
-			{"SendItemDropPacketNew", netSendItemDropPacketNew, METH_VARARGS, NULL},
-			{"SendElkDropPacket", netSendElkDropPacket, METH_VARARGS, NULL},
-			{"SendGoldDropPacketNew", netSendGoldDropPacketNew, METH_VARARGS, NULL},
-			{"SendItemMovePacket", netSendItemMovePacket, METH_VARARGS, NULL},
-			{"SendItemPickUpPacket", netSendItemPickUpPacket, METH_VARARGS, NULL},
-			{"SendGiveItemPacket", netSendGiveItemPacket, METH_VARARGS, NULL},
+			{"SendItemUsePacket", netSendItemUsePacket, SCRIPT_VARARGS, NULL},
+			{"SendItemUseToItemPacket", netSendItemUseToItemPacket, SCRIPT_VARARGS, NULL},
+			{"SendItemDropPacket", netSendItemDropPacket, SCRIPT_VARARGS, NULL},
+			{"SendItemDropPacketNew", netSendItemDropPacketNew, SCRIPT_VARARGS, NULL},
+			{"SendElkDropPacket", netSendElkDropPacket, SCRIPT_VARARGS, NULL},
+			{"SendGoldDropPacketNew", netSendGoldDropPacketNew, SCRIPT_VARARGS, NULL},
+			{"SendItemMovePacket", netSendItemMovePacket, SCRIPT_VARARGS, NULL},
+			{"SendItemPickUpPacket", netSendItemPickUpPacket, SCRIPT_VARARGS, NULL},
+			{"SendGiveItemPacket", netSendGiveItemPacket, SCRIPT_VARARGS, NULL},
 
-			{"SetOfflinePhase", netSetOfflinePhase, METH_VARARGS, NULL},
-			{"Disconnect", netDisconnect, METH_VARARGS, NULL},
-			{"IsConnect", netIsConnect, METH_VARARGS, NULL},
+			{"SetOfflinePhase", netSetOfflinePhase, SCRIPT_VARARGS, NULL},
+			{"Disconnect", netDisconnect, SCRIPT_VARARGS, NULL},
+			{"IsConnect", netIsConnect, SCRIPT_VARARGS, NULL},
 
-			{"SendChatPacket", netSendChatPacket, METH_VARARGS, NULL},
-			{"SendEmoticon", netSendEmoticon, METH_VARARGS, NULL},
-			{"SendWhisperPacket", netSendWhisperPacket, METH_VARARGS, NULL},
+			{"SendChatPacket", netSendChatPacket, SCRIPT_VARARGS, NULL},
+			{"SendEmoticon", netSendEmoticon, SCRIPT_VARARGS, NULL},
+			{"SendWhisperPacket", netSendWhisperPacket, SCRIPT_VARARGS, NULL},
 
-			{"SendCharacterPositionPacket", netSendCharacterPositionPacket, METH_VARARGS, NULL},
+			{"SendCharacterPositionPacket", netSendCharacterPositionPacket, SCRIPT_VARARGS, NULL},
 
-			{"SendShopEndPacket", netSendShopEndPacket, METH_VARARGS, NULL},
-			{"SendShopBuyPacket", netSendShopBuyPacket, METH_VARARGS, NULL},
-			{"SendShopSellPacket", netSendShopSellPacket, METH_VARARGS, NULL},
-			{"SendShopSellPacketNew", netSendShopSellPacketNew, METH_VARARGS, NULL},
+			{"SendShopEndPacket", netSendShopEndPacket, SCRIPT_VARARGS, NULL},
+			{"SendShopBuyPacket", netSendShopBuyPacket, SCRIPT_VARARGS, NULL},
+			{"SendShopSellPacket", netSendShopSellPacket, SCRIPT_VARARGS, NULL},
+			{"SendShopSellPacketNew", netSendShopSellPacketNew, SCRIPT_VARARGS, NULL},
 
-			{"SendExchangeStartPacket", netSendExchangeStartPacket, METH_VARARGS, NULL},
-			{"SendExchangeItemAddPacket", netSendExchangeItemAddPacket, METH_VARARGS, NULL},
-			{"SendExchangeItemDelPacket", netSendExchangeItemDelPacket, METH_VARARGS, NULL},
-			{"SendExchangeElkAddPacket", netSendExchangeElkAddPacket, METH_VARARGS, NULL},
-			{"SendExchangeAcceptPacket", netSendExchangeAcceptPacket, METH_VARARGS, NULL},
-			{"SendExchangeExitPacket", netSendExchangeExitPacket, METH_VARARGS, NULL},
+			{"SendExchangeStartPacket", netSendExchangeStartPacket, SCRIPT_VARARGS, NULL},
+			{"SendExchangeItemAddPacket", netSendExchangeItemAddPacket, SCRIPT_VARARGS, NULL},
+			{"SendExchangeItemDelPacket", netSendExchangeItemDelPacket, SCRIPT_VARARGS, NULL},
+			{"SendExchangeElkAddPacket", netSendExchangeElkAddPacket, SCRIPT_VARARGS, NULL},
+			{"SendExchangeAcceptPacket", netSendExchangeAcceptPacket, SCRIPT_VARARGS, NULL},
+			{"SendExchangeExitPacket", netSendExchangeExitPacket, SCRIPT_VARARGS, NULL},
 
-			{"SendOnClickPacket", netOnClickPacket, METH_VARARGS, NULL},
+			{"SendOnClickPacket", netOnClickPacket, SCRIPT_VARARGS, NULL},
 
 			// Emoticon String
-			{"RegisterEmoticonString", netRegisterEmoticonString, METH_VARARGS, NULL},
+			{"RegisterEmoticonString", netRegisterEmoticonString, SCRIPT_VARARGS, NULL},
 
 			// Messenger
-			{"SendMessengerAddByVIDPacket", netSendMessengerAddByVIDPacket, METH_VARARGS, NULL},
-			{"SendMessengerAddByNamePacket", netSendMessengerAddByNamePacket, METH_VARARGS, NULL},
-			{"SendMessengerRemovePacket", netSendMessengerRemovePacket, METH_VARARGS, NULL},
+			{"SendMessengerAddByVIDPacket", netSendMessengerAddByVIDPacket, SCRIPT_VARARGS, NULL},
+			{"SendMessengerAddByNamePacket", netSendMessengerAddByNamePacket, SCRIPT_VARARGS, NULL},
+			{"SendMessengerRemovePacket", netSendMessengerRemovePacket, SCRIPT_VARARGS, NULL},
 
 			// Party
-			{"SendPartyInvitePacket", netSendPartyInvitePacket, METH_VARARGS, NULL},
-			{"SendPartyInviteAnswerPacket", netSendPartyInviteAnswerPacket, METH_VARARGS, NULL},
-			{"SendPartyExitPacket", netSendPartyExitPacket, METH_VARARGS, NULL},
-			{"SendPartyRemovePacket", netSendPartyRemovePacket, METH_VARARGS, NULL},
-			{"SendPartySetStatePacket", netSendPartySetStatePacket, METH_VARARGS, NULL},
-			{"SendPartyUseSkillPacket", netSendPartyUseSkillPacket, METH_VARARGS, NULL},
-			{"SendPartyParameterPacket", netSendPartyParameterPacket, METH_VARARGS, NULL},
+			{"SendPartyInvitePacket", netSendPartyInvitePacket, SCRIPT_VARARGS, NULL},
+			{"SendPartyInviteAnswerPacket", netSendPartyInviteAnswerPacket, SCRIPT_VARARGS, NULL},
+			{"SendPartyExitPacket", netSendPartyExitPacket, SCRIPT_VARARGS, NULL},
+			{"SendPartyRemovePacket", netSendPartyRemovePacket, SCRIPT_VARARGS, NULL},
+			{"SendPartySetStatePacket", netSendPartySetStatePacket, SCRIPT_VARARGS, NULL},
+			{"SendPartyUseSkillPacket", netSendPartyUseSkillPacket, SCRIPT_VARARGS, NULL},
+			{"SendPartyParameterPacket", netSendPartyParameterPacket, SCRIPT_VARARGS, NULL},
 
 			// Safebox
-			{"SendSafeboxSaveMoneyPacket", netSendSafeboxSaveMoneyPacket, METH_VARARGS, NULL},
-			{"SendSafeboxWithdrawMoneyPacket", netSendSafeboxWithdrawMoneyPacket, METH_VARARGS, NULL},
-			{"SendSafeboxCheckinPacket", netSendSafeboxCheckinPacket, METH_VARARGS, NULL},
-			{"SendSafeboxCheckoutPacket", netSendSafeboxCheckoutPacket, METH_VARARGS, NULL},
-			{"SendSafeboxItemMovePacket", netSendSafeboxItemMovePacket, METH_VARARGS, NULL},
+			{"SendSafeboxSaveMoneyPacket", netSendSafeboxSaveMoneyPacket, SCRIPT_VARARGS, NULL},
+			{"SendSafeboxWithdrawMoneyPacket", netSendSafeboxWithdrawMoneyPacket, SCRIPT_VARARGS, NULL},
+			{"SendSafeboxCheckinPacket", netSendSafeboxCheckinPacket, SCRIPT_VARARGS, NULL},
+			{"SendSafeboxCheckoutPacket", netSendSafeboxCheckoutPacket, SCRIPT_VARARGS, NULL},
+			{"SendSafeboxItemMovePacket", netSendSafeboxItemMovePacket, SCRIPT_VARARGS, NULL},
 
 			// Mall
-			{"SendMallCheckoutPacket", netSendMallCheckoutPacket, METH_VARARGS, NULL},
+			{"SendMallCheckoutPacket", netSendMallCheckoutPacket, SCRIPT_VARARGS, NULL},
 
 			// Guild
-			{"SendAnswerMakeGuildPacket", netSendAnswerMakeGuildPacket, METH_VARARGS, NULL},
-			{"SendQuestInputStringPacket", netSendQuestInputStringPacket, METH_VARARGS, NULL},
-			{"SendQuestConfirmPacket", netSendQuestConfirmPacket, METH_VARARGS, NULL},
-			{"SendGuildAddMemberPacket", netSendGuildAddMemberPacket, METH_VARARGS, NULL},
-			{"SendGuildRemoveMemberPacket", netSendGuildRemoveMemberPacket, METH_VARARGS, NULL},
-			{"SendGuildChangeGradeNamePacket", netSendGuildChangeGradeNamePacket, METH_VARARGS, NULL},
-			{"SendGuildChangeGradeAuthorityPacket", netSendGuildChangeGradeAuthorityPacket, METH_VARARGS, NULL},
-			{"SendGuildOfferPacket", netSendGuildOfferPacket, METH_VARARGS, NULL},
-			{"SendGuildPostCommentPacket", netSnedGuildPostCommentPacket, METH_VARARGS, NULL},
-			{"SendGuildDeleteCommentPacket", netSnedGuildDeleteCommentPacket, METH_VARARGS, NULL},
-			{"SendGuildRefreshCommentsPacket", netSendGuildRefreshCommentsPacket, METH_VARARGS, NULL},
-			{"SendGuildChangeMemberGradePacket", netSendGuildChangeMemberGradePacket, METH_VARARGS, NULL},
-			{"SendGuildUseSkillPacket", netSendGuildUseSkillPacket, METH_VARARGS, NULL},
-			{"SendGuildChangeMemberGeneralPacket", netSendGuildChangeMemberGeneralPacket, METH_VARARGS, NULL},
-			{"SendGuildInviteAnswerPacket", netSendGuildInviteAnswerPacket, METH_VARARGS, NULL},
-			{"SendGuildChargeGSPPacket", netSendGuildChargeGSPPacket, METH_VARARGS, NULL},
-			{"SendGuildDepositMoneyPacket", netSendGuildDepositMoneyPacket, METH_VARARGS, NULL},
-			{"SendGuildWithdrawMoneyPacket", netSendGuildWithdrawMoneyPacket, METH_VARARGS, NULL},
+			{"SendAnswerMakeGuildPacket", netSendAnswerMakeGuildPacket, SCRIPT_VARARGS, NULL},
+			{"SendQuestInputStringPacket", netSendQuestInputStringPacket, SCRIPT_VARARGS, NULL},
+			{"SendQuestConfirmPacket", netSendQuestConfirmPacket, SCRIPT_VARARGS, NULL},
+			{"SendGuildAddMemberPacket", netSendGuildAddMemberPacket, SCRIPT_VARARGS, NULL},
+			{"SendGuildRemoveMemberPacket", netSendGuildRemoveMemberPacket, SCRIPT_VARARGS, NULL},
+			{"SendGuildChangeGradeNamePacket", netSendGuildChangeGradeNamePacket, SCRIPT_VARARGS, NULL},
+			{"SendGuildChangeGradeAuthorityPacket", netSendGuildChangeGradeAuthorityPacket, SCRIPT_VARARGS, NULL},
+			{"SendGuildOfferPacket", netSendGuildOfferPacket, SCRIPT_VARARGS, NULL},
+			{"SendGuildPostCommentPacket", netSnedGuildPostCommentPacket, SCRIPT_VARARGS, NULL},
+			{"SendGuildDeleteCommentPacket", netSnedGuildDeleteCommentPacket, SCRIPT_VARARGS, NULL},
+			{"SendGuildRefreshCommentsPacket", netSendGuildRefreshCommentsPacket, SCRIPT_VARARGS, NULL},
+			{"SendGuildChangeMemberGradePacket", netSendGuildChangeMemberGradePacket, SCRIPT_VARARGS, NULL},
+			{"SendGuildUseSkillPacket", netSendGuildUseSkillPacket, SCRIPT_VARARGS, NULL},
+			{"SendGuildChangeMemberGeneralPacket", netSendGuildChangeMemberGeneralPacket, SCRIPT_VARARGS, NULL},
+			{"SendGuildInviteAnswerPacket", netSendGuildInviteAnswerPacket, SCRIPT_VARARGS, NULL},
+			{"SendGuildChargeGSPPacket", netSendGuildChargeGSPPacket, SCRIPT_VARARGS, NULL},
+			{"SendGuildDepositMoneyPacket", netSendGuildDepositMoneyPacket, SCRIPT_VARARGS, NULL},
+			{"SendGuildWithdrawMoneyPacket", netSendGuildWithdrawMoneyPacket, SCRIPT_VARARGS, NULL},
 
 			// Refine
-			{"SendRequestRefineInfoPacket", netSendRequestRefineInfoPacket, METH_VARARGS, NULL},
-			{"SendRefinePacket", netSendRefinePacket, METH_VARARGS, NULL},
-			{"SendSelectItemPacket", netSendSelectItemPacket, METH_VARARGS, NULL},
+			{"SendRequestRefineInfoPacket", netSendRequestRefineInfoPacket, SCRIPT_VARARGS, NULL},
+			{"SendRefinePacket", netSendRefinePacket, SCRIPT_VARARGS, NULL},
+			{"SendSelectItemPacket", netSendSelectItemPacket, SCRIPT_VARARGS, NULL},
 
 			// SYSTEM
-			{"SetPacketSequenceMode", netSetPacketSequenceMode, METH_VARARGS, NULL},
-			{"SetEmpireLanguageMode", netSetEmpireLanguageMode, METH_VARARGS, NULL},
+			{"SetPacketSequenceMode", netSetPacketSequenceMode, SCRIPT_VARARGS, NULL},
+			{"SetEmpireLanguageMode", netSetEmpireLanguageMode, SCRIPT_VARARGS, NULL},
 
 			// For Test
-			{"SetSkillGroupFake", netSetSkillGroupFake, METH_VARARGS, NULL},
+			{"SetSkillGroupFake", netSetSkillGroupFake, SCRIPT_VARARGS, NULL},
 
 			// Guild Symbol
-			{"SendGuildSymbol", netSendGuildSymbol, METH_VARARGS, NULL},
-			{"DisconnectUploader", netDisconnectUploader, METH_VARARGS, NULL},
-			{"RecvGuildSymbol", netRecvGuildSymbol, METH_VARARGS, NULL},
+			{"SendGuildSymbol", netSendGuildSymbol, SCRIPT_VARARGS, NULL},
+			{"DisconnectUploader", netDisconnectUploader, SCRIPT_VARARGS, NULL},
+			{"RecvGuildSymbol", netRecvGuildSymbol, SCRIPT_VARARGS, NULL},
 
 			// Log
-			{"RegisterErrorLog", netRegisterErrorLog, METH_VARARGS, NULL},
+			{"RegisterErrorLog", netRegisterErrorLog, SCRIPT_VARARGS, NULL},
 
 			{NULL, NULL, 0, NULL},
 		};
 
-	PyObject* poModule = Py_InitModule("net", s_methods);
+	ScriptObject* poModule = ScriptModule_Create("net", s_methods);
 
-	PyModule_AddIntConstant(poModule, "ERROR_NONE", CPythonNetworkStream::ERROR_NONE);
-	PyModule_AddIntConstant(poModule, "ERROR_CONNECT_MARK_SERVER", CPythonNetworkStream::ERROR_CONNECT_MARK_SERVER);
-	PyModule_AddIntConstant(poModule, "ERROR_LOAD_MARK", CPythonNetworkStream::ERROR_LOAD_MARK);
-	PyModule_AddIntConstant(poModule, "ERROR_MARK_WIDTH", CPythonNetworkStream::ERROR_MARK_WIDTH);
-	PyModule_AddIntConstant(poModule, "ERROR_MARK_HEIGHT", CPythonNetworkStream::ERROR_MARK_HEIGHT);
+	ScriptModule_AddIntConstant(poModule, "ERROR_NONE", CPythonNetworkStream::ERROR_NONE);
+	ScriptModule_AddIntConstant(poModule, "ERROR_CONNECT_MARK_SERVER", CPythonNetworkStream::ERROR_CONNECT_MARK_SERVER);
+	ScriptModule_AddIntConstant(poModule, "ERROR_LOAD_MARK", CPythonNetworkStream::ERROR_LOAD_MARK);
+	ScriptModule_AddIntConstant(poModule, "ERROR_MARK_WIDTH", CPythonNetworkStream::ERROR_MARK_WIDTH);
+	ScriptModule_AddIntConstant(poModule, "ERROR_MARK_HEIGHT", CPythonNetworkStream::ERROR_MARK_HEIGHT);
 
 	// MARK_BUG_FIX
-	PyModule_AddIntConstant(poModule, "ERROR_MARK_UPLOAD_NEED_RECONNECT", CPythonNetworkStream::ERROR_MARK_UPLOAD_NEED_RECONNECT);
-	PyModule_AddIntConstant(poModule, "ERROR_MARK_CHECK_NEED_RECONNECT", CPythonNetworkStream::ERROR_MARK_CHECK_NEED_RECONNECT);
+	ScriptModule_AddIntConstant(poModule, "ERROR_MARK_UPLOAD_NEED_RECONNECT", CPythonNetworkStream::ERROR_MARK_UPLOAD_NEED_RECONNECT);
+	ScriptModule_AddIntConstant(poModule, "ERROR_MARK_CHECK_NEED_RECONNECT", CPythonNetworkStream::ERROR_MARK_CHECK_NEED_RECONNECT);
 	// END_OF_MARK_BUG_FIX
 
-	PyModule_AddIntConstant(poModule, "PHASE_WINDOW_LOGIN", CPythonNetworkStream::PHASE_WINDOW_LOGIN);
-	PyModule_AddIntConstant(poModule, "PHASE_WINDOW_SELECT", CPythonNetworkStream::PHASE_WINDOW_SELECT);
-	PyModule_AddIntConstant(poModule, "PHASE_WINDOW_CREATE", CPythonNetworkStream::PHASE_WINDOW_CREATE);
-	PyModule_AddIntConstant(poModule, "PHASE_WINDOW_LOAD", CPythonNetworkStream::PHASE_WINDOW_LOAD);
-	PyModule_AddIntConstant(poModule, "PHASE_WINDOW_GAME", CPythonNetworkStream::PHASE_WINDOW_GAME);
-	PyModule_AddIntConstant(poModule, "PHASE_WINDOW_EMPIRE", CPythonNetworkStream::PHASE_WINDOW_EMPIRE);
-	PyModule_AddIntConstant(poModule, "PHASE_WINDOW_LOGO", CPythonNetworkStream::PHASE_WINDOW_LOGO);
+	ScriptModule_AddIntConstant(poModule, "PHASE_WINDOW_LOGIN", CPythonNetworkStream::PHASE_WINDOW_LOGIN);
+	ScriptModule_AddIntConstant(poModule, "PHASE_WINDOW_SELECT", CPythonNetworkStream::PHASE_WINDOW_SELECT);
+	ScriptModule_AddIntConstant(poModule, "PHASE_WINDOW_CREATE", CPythonNetworkStream::PHASE_WINDOW_CREATE);
+	ScriptModule_AddIntConstant(poModule, "PHASE_WINDOW_LOAD", CPythonNetworkStream::PHASE_WINDOW_LOAD);
+	ScriptModule_AddIntConstant(poModule, "PHASE_WINDOW_GAME", CPythonNetworkStream::PHASE_WINDOW_GAME);
+	ScriptModule_AddIntConstant(poModule, "PHASE_WINDOW_EMPIRE", CPythonNetworkStream::PHASE_WINDOW_EMPIRE);
+	ScriptModule_AddIntConstant(poModule, "PHASE_WINDOW_LOGO", CPythonNetworkStream::PHASE_WINDOW_LOGO);
 
-	PyModule_AddIntConstant(poModule, "ACCOUNT_CHARACTER_SLOT_ID", CPythonNetworkStream::ACCOUNT_CHARACTER_SLOT_ID);
-	PyModule_AddIntConstant(poModule, "ACCOUNT_CHARACTER_SLOT_NAME", CPythonNetworkStream::ACCOUNT_CHARACTER_SLOT_NAME);
-	PyModule_AddIntConstant(poModule, "ACCOUNT_CHARACTER_SLOT_RACE", CPythonNetworkStream::ACCOUNT_CHARACTER_SLOT_RACE);
-	PyModule_AddIntConstant(poModule, "ACCOUNT_CHARACTER_SLOT_LEVEL", CPythonNetworkStream::ACCOUNT_CHARACTER_SLOT_LEVEL);
-	PyModule_AddIntConstant(poModule, "ACCOUNT_CHARACTER_SLOT_STR", CPythonNetworkStream::ACCOUNT_CHARACTER_SLOT_STR);
-	PyModule_AddIntConstant(poModule, "ACCOUNT_CHARACTER_SLOT_DEX", CPythonNetworkStream::ACCOUNT_CHARACTER_SLOT_DEX);
-	PyModule_AddIntConstant(poModule, "ACCOUNT_CHARACTER_SLOT_INT", CPythonNetworkStream::ACCOUNT_CHARACTER_SLOT_INT);
-	PyModule_AddIntConstant(poModule, "ACCOUNT_CHARACTER_SLOT_HTH", CPythonNetworkStream::ACCOUNT_CHARACTER_SLOT_HTH);
-	PyModule_AddIntConstant(poModule, "ACCOUNT_CHARACTER_SLOT_PLAYTIME", CPythonNetworkStream::ACCOUNT_CHARACTER_SLOT_PLAYTIME);
-	PyModule_AddIntConstant(poModule, "ACCOUNT_CHARACTER_SLOT_FORM", CPythonNetworkStream::ACCOUNT_CHARACTER_SLOT_FORM);
-	PyModule_AddIntConstant(poModule, "ACCOUNT_CHARACTER_SLOT_ADDR", CPythonNetworkStream::ACCOUNT_CHARACTER_SLOT_ADDR);
-	PyModule_AddIntConstant(poModule, "ACCOUNT_CHARACTER_SLOT_PORT", CPythonNetworkStream::ACCOUNT_CHARACTER_SLOT_PORT);
-	PyModule_AddIntConstant(poModule, "ACCOUNT_CHARACTER_SLOT_GUILD_ID", CPythonNetworkStream::ACCOUNT_CHARACTER_SLOT_GUILD_ID);
-	PyModule_AddIntConstant(poModule, "ACCOUNT_CHARACTER_SLOT_GUILD_NAME", CPythonNetworkStream::ACCOUNT_CHARACTER_SLOT_GUILD_NAME);
-	PyModule_AddIntConstant(poModule, "ACCOUNT_CHARACTER_SLOT_CHANGE_NAME_FLAG", CPythonNetworkStream::ACCOUNT_CHARACTER_SLOT_CHANGE_NAME_FLAG);
-	PyModule_AddIntConstant(poModule, "ACCOUNT_CHARACTER_SLOT_HAIR", CPythonNetworkStream::ACCOUNT_CHARACTER_SLOT_HAIR);
+	ScriptModule_AddIntConstant(poModule, "ACCOUNT_CHARACTER_SLOT_ID", CPythonNetworkStream::ACCOUNT_CHARACTER_SLOT_ID);
+	ScriptModule_AddIntConstant(poModule, "ACCOUNT_CHARACTER_SLOT_NAME", CPythonNetworkStream::ACCOUNT_CHARACTER_SLOT_NAME);
+	ScriptModule_AddIntConstant(poModule, "ACCOUNT_CHARACTER_SLOT_RACE", CPythonNetworkStream::ACCOUNT_CHARACTER_SLOT_RACE);
+	ScriptModule_AddIntConstant(poModule, "ACCOUNT_CHARACTER_SLOT_LEVEL", CPythonNetworkStream::ACCOUNT_CHARACTER_SLOT_LEVEL);
+	ScriptModule_AddIntConstant(poModule, "ACCOUNT_CHARACTER_SLOT_STR", CPythonNetworkStream::ACCOUNT_CHARACTER_SLOT_STR);
+	ScriptModule_AddIntConstant(poModule, "ACCOUNT_CHARACTER_SLOT_DEX", CPythonNetworkStream::ACCOUNT_CHARACTER_SLOT_DEX);
+	ScriptModule_AddIntConstant(poModule, "ACCOUNT_CHARACTER_SLOT_INT", CPythonNetworkStream::ACCOUNT_CHARACTER_SLOT_INT);
+	ScriptModule_AddIntConstant(poModule, "ACCOUNT_CHARACTER_SLOT_HTH", CPythonNetworkStream::ACCOUNT_CHARACTER_SLOT_HTH);
+	ScriptModule_AddIntConstant(poModule, "ACCOUNT_CHARACTER_SLOT_PLAYTIME", CPythonNetworkStream::ACCOUNT_CHARACTER_SLOT_PLAYTIME);
+	ScriptModule_AddIntConstant(poModule, "ACCOUNT_CHARACTER_SLOT_FORM", CPythonNetworkStream::ACCOUNT_CHARACTER_SLOT_FORM);
+	ScriptModule_AddIntConstant(poModule, "ACCOUNT_CHARACTER_SLOT_ADDR", CPythonNetworkStream::ACCOUNT_CHARACTER_SLOT_ADDR);
+	ScriptModule_AddIntConstant(poModule, "ACCOUNT_CHARACTER_SLOT_PORT", CPythonNetworkStream::ACCOUNT_CHARACTER_SLOT_PORT);
+	ScriptModule_AddIntConstant(poModule, "ACCOUNT_CHARACTER_SLOT_GUILD_ID", CPythonNetworkStream::ACCOUNT_CHARACTER_SLOT_GUILD_ID);
+	ScriptModule_AddIntConstant(poModule, "ACCOUNT_CHARACTER_SLOT_GUILD_NAME", CPythonNetworkStream::ACCOUNT_CHARACTER_SLOT_GUILD_NAME);
+	ScriptModule_AddIntConstant(poModule, "ACCOUNT_CHARACTER_SLOT_CHANGE_NAME_FLAG", CPythonNetworkStream::ACCOUNT_CHARACTER_SLOT_CHANGE_NAME_FLAG);
+	ScriptModule_AddIntConstant(poModule, "ACCOUNT_CHARACTER_SLOT_HAIR", CPythonNetworkStream::ACCOUNT_CHARACTER_SLOT_HAIR);
 
-	PyModule_AddIntConstant(poModule, "SERVER_COMMAND_LOG_OUT", CPythonNetworkStream::SERVER_COMMAND_LOG_OUT);
-	PyModule_AddIntConstant(poModule, "SERVER_COMMAND_RETURN_TO_SELECT_CHARACTER", CPythonNetworkStream::SERVER_COMMAND_RETURN_TO_SELECT_CHARACTER);
-	PyModule_AddIntConstant(poModule, "SERVER_COMMAND_QUIT", CPythonNetworkStream::SERVER_COMMAND_QUIT);
+	ScriptModule_AddIntConstant(poModule, "SERVER_COMMAND_LOG_OUT", CPythonNetworkStream::SERVER_COMMAND_LOG_OUT);
+	ScriptModule_AddIntConstant(poModule, "SERVER_COMMAND_RETURN_TO_SELECT_CHARACTER", CPythonNetworkStream::SERVER_COMMAND_RETURN_TO_SELECT_CHARACTER);
+	ScriptModule_AddIntConstant(poModule, "SERVER_COMMAND_QUIT", CPythonNetworkStream::SERVER_COMMAND_QUIT);
 
-	PyModule_AddIntConstant(poModule, "EMPIRE_A", 1);
-	PyModule_AddIntConstant(poModule, "EMPIRE_B", 2);
-	PyModule_AddIntConstant(poModule, "EMPIRE_C", 3);
-	PyModule_AddIntConstant(poModule, "DS_SUB_HEADER_REFINE_FAIL", DS_SUB_HEADER_REFINE_FAIL);
-	PyModule_AddIntConstant(poModule, "DS_SUB_HEADER_REFINE_FAIL_MAX_REFINE", DS_SUB_HEADER_REFINE_FAIL_MAX_REFINE);
-	PyModule_AddIntConstant(poModule, "DS_SUB_HEADER_REFINE_FAIL_INVALID_MATERIAL", DS_SUB_HEADER_REFINE_FAIL_INVALID_MATERIAL);
-	PyModule_AddIntConstant(poModule, "DS_SUB_HEADER_REFINE_FAIL_NOT_ENOUGH_MONEY", DS_SUB_HEADER_REFINE_FAIL_NOT_ENOUGH_MONEY);
-	PyModule_AddIntConstant(poModule, "DS_SUB_HEADER_REFINE_FAIL_NOT_ENOUGH_MATERIAL", DS_SUB_HEADER_REFINE_FAIL_NOT_ENOUGH_MATERIAL);
-	PyModule_AddIntConstant(poModule, "DS_SUB_HEADER_REFINE_FAIL_TOO_MUCH_MATERIAL", DS_SUB_HEADER_REFINE_FAIL_TOO_MUCH_MATERIAL);
-	PyModule_AddIntConstant(poModule, "DS_SUB_HEADER_REFINE_SUCCEED", DS_SUB_HEADER_REFINE_SUCCEED);
+	ScriptModule_AddIntConstant(poModule, "EMPIRE_A", 1);
+	ScriptModule_AddIntConstant(poModule, "EMPIRE_B", 2);
+	ScriptModule_AddIntConstant(poModule, "EMPIRE_C", 3);
+	ScriptModule_AddIntConstant(poModule, "DS_SUB_HEADER_REFINE_FAIL", DS_SUB_HEADER_REFINE_FAIL);
+	ScriptModule_AddIntConstant(poModule, "DS_SUB_HEADER_REFINE_FAIL_MAX_REFINE", DS_SUB_HEADER_REFINE_FAIL_MAX_REFINE);
+	ScriptModule_AddIntConstant(poModule, "DS_SUB_HEADER_REFINE_FAIL_INVALID_MATERIAL", DS_SUB_HEADER_REFINE_FAIL_INVALID_MATERIAL);
+	ScriptModule_AddIntConstant(poModule, "DS_SUB_HEADER_REFINE_FAIL_NOT_ENOUGH_MONEY", DS_SUB_HEADER_REFINE_FAIL_NOT_ENOUGH_MONEY);
+	ScriptModule_AddIntConstant(poModule, "DS_SUB_HEADER_REFINE_FAIL_NOT_ENOUGH_MATERIAL", DS_SUB_HEADER_REFINE_FAIL_NOT_ENOUGH_MATERIAL);
+	ScriptModule_AddIntConstant(poModule, "DS_SUB_HEADER_REFINE_FAIL_TOO_MUCH_MATERIAL", DS_SUB_HEADER_REFINE_FAIL_TOO_MUCH_MATERIAL);
+	ScriptModule_AddIntConstant(poModule, "DS_SUB_HEADER_REFINE_SUCCEED", DS_SUB_HEADER_REFINE_SUCCEED);
 }

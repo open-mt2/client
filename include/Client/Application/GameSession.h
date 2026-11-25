@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Client/Application/PlatformRuntime.h>
-#include <Client/Application/PythonRuntime.h>
+#include <Client/Application/ScriptRuntime.h>
 
 namespace Neoeter
 {
@@ -38,6 +38,6 @@ namespace Neoeter
 			Context& m_context;
 			CPythonApplication& m_application;
 			PlatformRuntime m_platform;
-			PythonRuntime m_python;
+			ScriptRuntime m_scripts;
 	};
 }

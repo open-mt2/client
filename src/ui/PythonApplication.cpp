@@ -18,6 +18,7 @@
 
 #include <Client/UI/resource.h>
 #include <Client/UI/PythonApplication.h>
+#include <Neoeter/Script/ScriptBackend.h>
 #include <Client/UI/PythonCharacterManager.h>
 #include <Client/UI/LoadingScreen.h>
 
@@ -512,6 +513,7 @@ bool CPythonApplication::Process()
 #endif
 
 	ELTimer_SetFrameMSec();
+	Script_UpdateActiveBackend();
 
 	// 	m_Profiler.Clear();
 	DWORD dwStart = ELTimer_GetMSec();
@@ -982,7 +984,7 @@ void CPythonApplication::UpdateClientRect()
 	OnSizeChange(rcApp.right - rcApp.left, rcApp.bottom - rcApp.top);
 }
 
-void CPythonApplication::SetMouseHandler(PyObject* poMouseHandler)
+void CPythonApplication::SetMouseHandler(ScriptObject* poMouseHandler)
 {
 	m_poMouseHandler = poMouseHandler;
 }
@@ -1035,40 +1037,40 @@ bool CPythonApplication::CreateDevice(int width, int height, int Windowed, int b
 
 		case CGraphicDevice::CREATE_ENUM:
 		case CGraphicDevice::CREATE_DETECT:
-			SET_EXCEPTION(CREATE_NO_APPROPRIATE_DEVICE);
+			SCRIPT_SET_EXCEPTION(CREATE_NO_APPROPRIATE_DEVICE);
 			TraceError("CreateDevice: Enum & Detect failed");
 			return false;
 
 		case CGraphicDevice::CREATE_NO_DIRECTX:
-			// PyErr_SetString(PyExc_RuntimeError, "DirectX 9 or greater required to run game");
-			SET_EXCEPTION(CREATE_NO_DIRECTX);
+			// ScriptErr_SetString(ScriptErrorType::RuntimeError, "DirectX 9 or greater required to run game");
+			SCRIPT_SET_EXCEPTION(CREATE_NO_DIRECTX);
 			TraceError("CreateDevice: DirectX 9 or greater required to run game");
 			return false;
 
 		case CGraphicDevice::CREATE_DEVICE:
-			// PyErr_SetString(PyExc_RuntimeError, "GraphicDevice create failed");
-			SET_EXCEPTION(CREATE_DEVICE);
+			// ScriptErr_SetString(ScriptErrorType::RuntimeError, "GraphicDevice create failed");
+			SCRIPT_SET_EXCEPTION(CREATE_DEVICE);
 			TraceError("CreateDevice: GraphicDevice create failed");
 			return false;
 
 		case CGraphicDevice::CREATE_FORMAT:
-			SET_EXCEPTION(CREATE_FORMAT);
+			SCRIPT_SET_EXCEPTION(CREATE_FORMAT);
 			TraceError("CreateDevice: Change the screen format");
 			return false;
 
 			/*case CGraphicDevice::CREATE_GET_ADAPTER_DISPLAY_MODE:
-			//PyErr_SetString(PyExc_RuntimeError, "GetAdapterDisplayMode failed");
-			SET_EXCEPTION(CREATE_GET_ADAPTER_DISPLAY_MODE);
+			//ScriptErr_SetString(ScriptErrorType::RuntimeError, "GetAdapterDisplayMode failed");
+			SCRIPT_SET_EXCEPTION(CREATE_GET_ADAPTER_DISPLAY_MODE);
 			TraceError("CreateDevice: GetAdapterDisplayMode failed");
 			return false;*/
 
 		case CGraphicDevice::CREATE_GET_DEVICE_CAPS:
-			PyErr_SetString(PyExc_RuntimeError, "GetDevCaps failed");
+			ScriptErr_SetString(ScriptErrorType::RuntimeError, "GetDevCaps failed");
 			TraceError("CreateDevice: GetDevCaps failed");
 			return false;
 
 		case CGraphicDevice::CREATE_GET_DEVICE_CAPS2:
-			PyErr_SetString(PyExc_RuntimeError, "GetDevCaps2 failed");
+			ScriptErr_SetString(ScriptErrorType::RuntimeError, "GetDevCaps2 failed");
 			TraceError("CreateDevice: GetDevCaps2 failed");
 			return false;
 
@@ -1082,8 +1084,8 @@ bool CPythonApplication::CreateDevice(int width, int height, int Windowed, int b
 				return true;
 			}
 
-			// PyErr_SetString(PyExc_RuntimeError, "Unknown Error!");
-			SET_EXCEPTION(UNKNOWN_ERROR);
+			// ScriptErr_SetString(ScriptErrorType::RuntimeError, "Unknown Error!");
+			SCRIPT_SET_EXCEPTION(UNKNOWN_ERROR);
 			TraceError("CreateDevice: Unknown Error!");
 			return false;
 	}
@@ -1332,7 +1334,7 @@ bool CPythonApplication::CreateStartupWindow()
 							 IDC_CURSOR_NORMAL, width, height);
 }
 
-bool CPythonApplication::Create(PyObject* poSelf, const char* c_szName, int width, int height, int Windowed)
+bool CPythonApplication::Create(ScriptObject* poSelf, const char* c_szName, int width, int height, int Windowed)
 {
 	m_pySystem.GetConfig()->is_software_cursor = false;
 
@@ -1385,9 +1387,9 @@ bool CPythonApplication::Create(PyObject* poSelf, const char* c_szName, int widt
 	}
 	else if (!CMSWindow::Create(GetWindowTitle().c_str(), 4, 0, WindowMode, ::LoadIcon(GetInstance(), MAKEINTRESOURCE(IDI_OPENMT2)), IDC_CURSOR_NORMAL, width, height))
 	{
-		// PyErr_SetString(PyExc_RuntimeError, "CMSWindow::Create failed");
+		// ScriptErr_SetString(ScriptErrorType::RuntimeError, "CMSWindow::Create failed");
 		TraceError("CMSWindow::Create failed");
-		SET_EXCEPTION(CREATE_WINDOW);
+		SCRIPT_SET_EXCEPTION(CREATE_WINDOW);
 		return false;
 	}
 
@@ -1489,7 +1491,7 @@ bool CPythonApplication::Create(PyObject* poSelf, const char* c_szName, int widt
 	if (!CreateCursors())
 	{
 		TraceError("CMSWindow::Cursors Create Error");
-		SET_EXCEPTION("CREATE_CURSOR");
+		SCRIPT_SET_EXCEPTION("CREATE_CURSOR");
 		return false;
 	}
 
@@ -1527,9 +1529,9 @@ bool CPythonApplication::Create(PyObject* poSelf, const char* c_szName, int widt
 	// Network
 	if (!m_netDevice.Create())
 	{
-		// PyErr_SetString(PyExc_RuntimeError, "NetDevice::Create failed");
+		// ScriptErr_SetString(ScriptErrorType::RuntimeError, "NetDevice::Create failed");
 		TraceError("NetDevice::Create failed");
-		SET_EXCEPTION("CREATE_NETWORK");
+		SCRIPT_SET_EXCEPTION("CREATE_NETWORK");
 		return false;
 	}
 

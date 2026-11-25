@@ -1,232 +1,232 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/UI/PythonSystem.h>
 
-PyObject* systemGetWidth(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* systemGetWidth(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", CPythonSystem::Instance().GetWidth());
+	return Script_BuildValue("i", CPythonSystem::Instance().GetWidth());
 }
 
-PyObject* systemGetHeight(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* systemGetHeight(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", CPythonSystem::Instance().GetHeight());
+	return Script_BuildValue("i", CPythonSystem::Instance().GetHeight());
 }
 
-PyObject* systemSetInterfaceHandler(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* systemSetInterfaceHandler(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	PyObject* poHandler;
-	if (!PyTuple_GetObject(poArgs, 0, &poHandler))
-		return Py_BuildException();
+	ScriptObject* poHandler;
+	if (!ScriptTuple_GetObject(poArgs, 0, &poHandler))
+		return Script_BuildException();
 
 	CPythonSystem::Instance().SetInterfaceHandler(poHandler);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* systemDestroyInterfaceHandler(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* systemDestroyInterfaceHandler(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonSystem::Instance().DestroyInterfaceHandler();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* systemReserveResource(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* systemReserveResource(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	std::set<std::string> ResourceSet;
 	CResourceManager::Instance().PushBackgroundLoadingSet(ResourceSet);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* systemisInterfaceConfig(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* systemisInterfaceConfig(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int isInterfaceConfig = CPythonSystem::Instance().isInterfaceConfig();
-	return Py_BuildValue("i", isInterfaceConfig);
+	return Script_BuildValue("i", isInterfaceConfig);
 }
 
-PyObject* systemSaveWindowStatus(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* systemSaveWindowStatus(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iIndex))
+		return Script_BuildException();
 
 	int iVisible;
-	if (!PyTuple_GetInteger(poArgs, 1, &iVisible))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iVisible))
+		return Script_BuildException();
 
 	int iMinimized;
-	if (!PyTuple_GetInteger(poArgs, 2, &iMinimized))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 2, &iMinimized))
+		return Script_BuildException();
 
 	int ix;
-	if (!PyTuple_GetInteger(poArgs, 3, &ix))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 3, &ix))
+		return Script_BuildException();
 
 	int iy;
-	if (!PyTuple_GetInteger(poArgs, 4, &iy))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 4, &iy))
+		return Script_BuildException();
 
 	int iHeight;
-	if (!PyTuple_GetInteger(poArgs, 5, &iHeight))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 5, &iHeight))
+		return Script_BuildException();
 
 	CPythonSystem::Instance().SaveWindowStatus(iIndex, iVisible, iMinimized, ix, iy, iHeight);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* systemGetWindowStatus(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* systemGetWindowStatus(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iIndex))
+		return Script_BuildException();
 
 	const CPythonSystem::TWindowStatus& c_rWindowStatus = CPythonSystem::Instance().GetWindowStatusReference(iIndex);
-	return Py_BuildValue("iiiii", c_rWindowStatus.isVisible,
-						 c_rWindowStatus.isMinimized,
-						 c_rWindowStatus.ixPosition,
-						 c_rWindowStatus.iyPosition,
-						 c_rWindowStatus.iHeight);
+	return Script_BuildValue("iiiii", c_rWindowStatus.isVisible,
+							 c_rWindowStatus.isMinimized,
+							 c_rWindowStatus.ixPosition,
+							 c_rWindowStatus.iyPosition,
+							 c_rWindowStatus.iHeight);
 }
 
-PyObject* systemGetConfig(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* systemGetConfig(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonSystem::TConfig* tmp = CPythonSystem::Instance().GetConfig();
 
 	int iRes = CPythonSystem::Instance().GetResolutionIndex(tmp->width, tmp->height, tmp->bpp);
 	int iFrequency = CPythonSystem::Instance().GetFrequencyIndex(iRes, tmp->frequency);
 
-	return Py_BuildValue("iiiiiiii", iRes,
-						 iFrequency,
-						 tmp->is_software_cursor,
-						 tmp->is_object_culling,
-						 tmp->music_volume,
-						 tmp->voice_volume,
-						 tmp->gamma,
-						 tmp->iDistance);
+	return Script_BuildValue("iiiiiiii", iRes,
+							 iFrequency,
+							 tmp->is_software_cursor,
+							 tmp->is_object_culling,
+							 tmp->music_volume,
+							 tmp->voice_volume,
+							 tmp->gamma,
+							 tmp->iDistance);
 }
 
-PyObject* systemSetSaveID(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* systemSetSaveID(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iValue;
-	if (!PyTuple_GetInteger(poArgs, 0, &iValue))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iValue))
+		return Script_BuildException();
 
 	char* szSaveID;
-	if (!PyTuple_GetString(poArgs, 1, &szSaveID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 1, &szSaveID))
+		return Script_BuildException();
 
 	CPythonSystem::Instance().SetSaveID(iValue, szSaveID);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* systemisSaveID(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* systemisSaveID(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int value = CPythonSystem::Instance().IsSaveID();
-	return Py_BuildValue("i", value);
+	return Script_BuildValue("i", value);
 }
 
-PyObject* systemGetSaveID(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* systemGetSaveID(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	const char* c_szSaveID = CPythonSystem::Instance().GetSaveID();
-	return Py_BuildValue("s", c_szSaveID);
+	return Script_BuildValue("s", c_szSaveID);
 }
 
-PyObject* systemGetMusicVolume(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* systemGetMusicVolume(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("f", CPythonSystem::Instance().GetMusicVolume());
+	return Script_BuildValue("f", CPythonSystem::Instance().GetMusicVolume());
 }
 
-PyObject* systemGetSoundVolume(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* systemGetSoundVolume(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", CPythonSystem::Instance().GetSoundVolume());
+	return Script_BuildValue("i", CPythonSystem::Instance().GetSoundVolume());
 }
 
-PyObject* systemSetMusicVolume(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* systemSetMusicVolume(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	float fVolume;
-	if (!PyTuple_GetFloat(poArgs, 0, &fVolume))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 0, &fVolume))
+		return Script_BuildException();
 
 	CPythonSystem::Instance().SetMusicVolume(fVolume);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* systemSetSoundVolumef(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* systemSetSoundVolumef(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	float fVolume;
-	if (!PyTuple_GetFloat(poArgs, 0, &fVolume))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 0, &fVolume))
+		return Script_BuildException();
 
 	CPythonSystem::Instance().SetSoundVolumef(fVolume);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* systemIsSoftwareCursor(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* systemIsSoftwareCursor(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", CPythonSystem::Instance().IsSoftwareCursor());
+	return Script_BuildValue("i", CPythonSystem::Instance().IsSoftwareCursor());
 }
 
-PyObject* systemSetViewChatFlag(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* systemSetViewChatFlag(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iFlag;
-	if (!PyTuple_GetInteger(poArgs, 0, &iFlag))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iFlag))
+		return Script_BuildException();
 
 	CPythonSystem::Instance().SetViewChatFlag(iFlag);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* systemIsViewChat(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* systemIsViewChat(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", CPythonSystem::Instance().IsViewChat());
+	return Script_BuildValue("i", CPythonSystem::Instance().IsViewChat());
 }
 
-PyObject* systemSetAlwaysShowNameFlag(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* systemSetAlwaysShowNameFlag(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iFlag;
-	if (!PyTuple_GetInteger(poArgs, 0, &iFlag))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iFlag))
+		return Script_BuildException();
 
 	CPythonSystem::Instance().SetAlwaysShowNameFlag(iFlag);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* systemSetShowDamageFlag(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* systemSetShowDamageFlag(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iFlag;
-	if (!PyTuple_GetInteger(poArgs, 0, &iFlag))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iFlag))
+		return Script_BuildException();
 
 	CPythonSystem::Instance().SetShowDamageFlag(iFlag);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* systemSetShowSalesTextFlag(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* systemSetShowSalesTextFlag(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iFlag;
-	if (!PyTuple_GetInteger(poArgs, 0, &iFlag))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iFlag))
+		return Script_BuildException();
 
 	CPythonSystem::Instance().SetShowSalesTextFlag(iFlag);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* systemIsAlwaysShowName(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* systemIsAlwaysShowName(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", CPythonSystem::Instance().IsAlwaysShowName());
+	return Script_BuildValue("i", CPythonSystem::Instance().IsAlwaysShowName());
 }
 
-PyObject* systemIsShowDamage(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* systemIsShowDamage(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", CPythonSystem::Instance().IsShowDamage());
+	return Script_BuildValue("i", CPythonSystem::Instance().IsShowDamage());
 }
 
-PyObject* systemIsShowSalesText(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* systemIsShowSalesText(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", CPythonSystem::Instance().IsShowSalesText());
+	return Script_BuildValue("i", CPythonSystem::Instance().IsShowSalesText());
 }
 
-PyObject* systemSetConfig(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* systemSetConfig(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int res_index;
 	int width;
@@ -242,38 +242,38 @@ PyObject* systemSetConfig(PyObject* poSelf, PyObject* poArgs)
 	int gamma;
 	int distance;
 
-	if (!PyTuple_GetInteger(poArgs, 0, &res_index))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &res_index))
+		return Script_BuildException();
 
-	if (!PyTuple_GetInteger(poArgs, 1, &frequency_index))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &frequency_index))
+		return Script_BuildException();
 
-	if (!PyTuple_GetInteger(poArgs, 2, &software_cursor))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 2, &software_cursor))
+		return Script_BuildException();
 
-	if (!PyTuple_GetInteger(poArgs, 3, &shadow))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 3, &shadow))
+		return Script_BuildException();
 
-	if (!PyTuple_GetInteger(poArgs, 4, &object_culling))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 4, &object_culling))
+		return Script_BuildException();
 
-	if (!PyTuple_GetInteger(poArgs, 5, &music_volume))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 5, &music_volume))
+		return Script_BuildException();
 
-	if (!PyTuple_GetInteger(poArgs, 6, &voice_volume))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 6, &voice_volume))
+		return Script_BuildException();
 
-	if (!PyTuple_GetInteger(poArgs, 7, &gamma))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 7, &gamma))
+		return Script_BuildException();
 
-	if (!PyTuple_GetInteger(poArgs, 8, &distance))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 8, &distance))
+		return Script_BuildException();
 
 	if (!CPythonSystem::Instance().GetResolution(res_index, (DWORD*)&width, (DWORD*)&height, (DWORD*)&bpp))
-		return Py_BuildNone();
+		return Script_BuildNone();
 
 	if (!CPythonSystem::Instance().GetFrequency(res_index, frequency_index, (DWORD*)&frequency))
-		return Py_BuildNone();
+		return Script_BuildNone();
 
 	CPythonSystem::TConfig tmp;
 
@@ -291,154 +291,154 @@ PyObject* systemSetConfig(PyObject* poSelf, PyObject* poArgs)
 	tmp.iDistance = distance;
 
 	CPythonSystem::Instance().SetConfig(&tmp);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* systemApplyConfig(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* systemApplyConfig(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonSystem::Instance().ApplyConfig();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* systemSaveConfig(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* systemSaveConfig(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int ret = CPythonSystem::Instance().SaveConfig();
-	return Py_BuildValue("i", ret);
+	return Script_BuildValue("i", ret);
 }
 
-PyObject* systemGetResolutionCount(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* systemGetResolutionCount(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", CPythonSystem::Instance().GetResolutionCount());
+	return Script_BuildValue("i", CPythonSystem::Instance().GetResolutionCount());
 }
 
-PyObject* systemGetFrequencyCount(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* systemGetFrequencyCount(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int index;
 
-	if (!PyTuple_GetInteger(poArgs, 0, &index))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &index))
+		return Script_BuildException();
 
-	return Py_BuildValue("i", CPythonSystem::Instance().GetFrequencyCount(index));
+	return Script_BuildValue("i", CPythonSystem::Instance().GetFrequencyCount(index));
 }
 
-PyObject* systemGetResolution(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* systemGetResolution(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int index;
 	DWORD width = 0, height = 0, bpp = 0;
 
-	if (!PyTuple_GetInteger(poArgs, 0, &index))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &index))
+		return Script_BuildException();
 
 	CPythonSystem::Instance().GetResolution(index, &width, &height, &bpp);
-	return Py_BuildValue("iii", width, height, bpp);
+	return Script_BuildValue("iii", width, height, bpp);
 }
 
-PyObject* systemGetCurrentResolution(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* systemGetCurrentResolution(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonSystem::TConfig* tmp = CPythonSystem::Instance().GetConfig();
-	return Py_BuildValue("iii", tmp->width, tmp->height, tmp->bpp);
+	return Script_BuildValue("iii", tmp->width, tmp->height, tmp->bpp);
 }
 
-PyObject* systemGetFrequency(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* systemGetFrequency(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int index, frequency_index;
 	DWORD frequency = 0;
 
-	if (!PyTuple_GetInteger(poArgs, 0, &index))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &index))
+		return Script_BuildException();
 
-	if (!PyTuple_GetInteger(poArgs, 1, &frequency_index))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &frequency_index))
+		return Script_BuildException();
 
 	CPythonSystem::Instance().GetFrequency(index, frequency_index, &frequency);
-	return Py_BuildValue("i", frequency);
+	return Script_BuildValue("i", frequency);
 }
 
-PyObject* systemGetShadowLevel(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* systemGetShadowLevel(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", CPythonSystem::Instance().GetShadowLevel());
+	return Script_BuildValue("i", CPythonSystem::Instance().GetShadowLevel());
 }
 
-PyObject* systemSetShadowLevel(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* systemSetShadowLevel(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int level;
 
-	if (!PyTuple_GetInteger(poArgs, 0, &level))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &level))
+		return Script_BuildException();
 
 	if (level > 0)
 		CPythonSystem::Instance().SetShadowLevel(level);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
 void initsystem()
 {
-	static PyMethodDef s_methods[] =
+	static ScriptMethodDef s_methods[] =
 		{
-			{"GetWidth", systemGetWidth, METH_VARARGS, NULL},
-			{"GetHeight", systemGetHeight, METH_VARARGS, NULL},
+			{"GetWidth", systemGetWidth, SCRIPT_VARARGS, NULL},
+			{"GetHeight", systemGetHeight, SCRIPT_VARARGS, NULL},
 
-			{"SetInterfaceHandler", systemSetInterfaceHandler, METH_VARARGS, NULL},
-			{"DestroyInterfaceHandler", systemDestroyInterfaceHandler, METH_VARARGS, NULL},
-			{"ReserveResource", systemReserveResource, METH_VARARGS, NULL},
+			{"SetInterfaceHandler", systemSetInterfaceHandler, SCRIPT_VARARGS, NULL},
+			{"DestroyInterfaceHandler", systemDestroyInterfaceHandler, SCRIPT_VARARGS, NULL},
+			{"ReserveResource", systemReserveResource, SCRIPT_VARARGS, NULL},
 
-			{"isInterfaceConfig", systemisInterfaceConfig, METH_VARARGS, NULL},
-			{"SaveWindowStatus", systemSaveWindowStatus, METH_VARARGS, NULL},
-			{"GetWindowStatus", systemGetWindowStatus, METH_VARARGS, NULL},
+			{"isInterfaceConfig", systemisInterfaceConfig, SCRIPT_VARARGS, NULL},
+			{"SaveWindowStatus", systemSaveWindowStatus, SCRIPT_VARARGS, NULL},
+			{"GetWindowStatus", systemGetWindowStatus, SCRIPT_VARARGS, NULL},
 
-			{"GetResolutionCount", systemGetResolutionCount, METH_VARARGS, NULL},
-			{"GetFrequencyCount", systemGetFrequencyCount, METH_VARARGS, NULL},
+			{"GetResolutionCount", systemGetResolutionCount, SCRIPT_VARARGS, NULL},
+			{"GetFrequencyCount", systemGetFrequencyCount, SCRIPT_VARARGS, NULL},
 
-			{"GetCurrentResolution", systemGetCurrentResolution, METH_VARARGS, NULL},
+			{"GetCurrentResolution", systemGetCurrentResolution, SCRIPT_VARARGS, NULL},
 
-			{"GetResolution", systemGetResolution, METH_VARARGS, NULL},
-			{"GetFrequency", systemGetFrequency, METH_VARARGS, NULL},
+			{"GetResolution", systemGetResolution, SCRIPT_VARARGS, NULL},
+			{"GetFrequency", systemGetFrequency, SCRIPT_VARARGS, NULL},
 
-			{"ApplyConfig", systemApplyConfig, METH_VARARGS, NULL},
-			{"SetConfig", systemSetConfig, METH_VARARGS, NULL},
-			{"SaveConfig", systemSaveConfig, METH_VARARGS, NULL},
-			{"GetConfig", systemGetConfig, METH_VARARGS, NULL},
+			{"ApplyConfig", systemApplyConfig, SCRIPT_VARARGS, NULL},
+			{"SetConfig", systemSetConfig, SCRIPT_VARARGS, NULL},
+			{"SaveConfig", systemSaveConfig, SCRIPT_VARARGS, NULL},
+			{"GetConfig", systemGetConfig, SCRIPT_VARARGS, NULL},
 
-			{"SetSaveID", systemSetSaveID, METH_VARARGS, NULL},
-			{"isSaveID", systemisSaveID, METH_VARARGS, NULL},
-			{"GetSaveID", systemGetSaveID, METH_VARARGS, NULL},
+			{"SetSaveID", systemSetSaveID, SCRIPT_VARARGS, NULL},
+			{"isSaveID", systemisSaveID, SCRIPT_VARARGS, NULL},
+			{"GetSaveID", systemGetSaveID, SCRIPT_VARARGS, NULL},
 
-			{"GetMusicVolume", systemGetMusicVolume, METH_VARARGS, NULL},
-			{"GetSoundVolume", systemGetSoundVolume, METH_VARARGS, NULL},
+			{"GetMusicVolume", systemGetMusicVolume, SCRIPT_VARARGS, NULL},
+			{"GetSoundVolume", systemGetSoundVolume, SCRIPT_VARARGS, NULL},
 
-			{"SetMusicVolume", systemSetMusicVolume, METH_VARARGS, NULL},
-			{"SetSoundVolumef", systemSetSoundVolumef, METH_VARARGS, NULL},
-			{"IsSoftwareCursor", systemIsSoftwareCursor, METH_VARARGS, NULL},
+			{"SetMusicVolume", systemSetMusicVolume, SCRIPT_VARARGS, NULL},
+			{"SetSoundVolumef", systemSetSoundVolumef, SCRIPT_VARARGS, NULL},
+			{"IsSoftwareCursor", systemIsSoftwareCursor, SCRIPT_VARARGS, NULL},
 
-			{"SetViewChatFlag", systemSetViewChatFlag, METH_VARARGS, NULL},
-			{"IsViewChat", systemIsViewChat, METH_VARARGS, NULL},
+			{"SetViewChatFlag", systemSetViewChatFlag, SCRIPT_VARARGS, NULL},
+			{"IsViewChat", systemIsViewChat, SCRIPT_VARARGS, NULL},
 
-			{"SetAlwaysShowNameFlag", systemSetAlwaysShowNameFlag, METH_VARARGS, NULL},
-			{"IsAlwaysShowName", systemIsAlwaysShowName, METH_VARARGS, NULL},
+			{"SetAlwaysShowNameFlag", systemSetAlwaysShowNameFlag, SCRIPT_VARARGS, NULL},
+			{"IsAlwaysShowName", systemIsAlwaysShowName, SCRIPT_VARARGS, NULL},
 
-			{"SetShowDamageFlag", systemSetShowDamageFlag, METH_VARARGS, NULL},
-			{"IsShowDamage", systemIsShowDamage, METH_VARARGS, NULL},
+			{"SetShowDamageFlag", systemSetShowDamageFlag, SCRIPT_VARARGS, NULL},
+			{"IsShowDamage", systemIsShowDamage, SCRIPT_VARARGS, NULL},
 
-			{"SetShowSalesTextFlag", systemSetShowSalesTextFlag, METH_VARARGS, NULL},
-			{"IsShowSalesText", systemIsShowSalesText, METH_VARARGS, NULL},
+			{"SetShowSalesTextFlag", systemSetShowSalesTextFlag, SCRIPT_VARARGS, NULL},
+			{"IsShowSalesText", systemIsShowSalesText, SCRIPT_VARARGS, NULL},
 
-			{"GetShadowLevel", systemGetShadowLevel, METH_VARARGS, NULL},
-			{"SetShadowLevel", systemSetShadowLevel, METH_VARARGS, NULL},
+			{"GetShadowLevel", systemGetShadowLevel, SCRIPT_VARARGS, NULL},
+			{"SetShadowLevel", systemSetShadowLevel, SCRIPT_VARARGS, NULL},
 
 			{NULL, NULL, 0, NULL}};
 
-	PyObject* poModule = Py_InitModule("systemSetting", s_methods);
+	ScriptObject* poModule = ScriptModule_Create("systemSetting", s_methods);
 
-	PyModule_AddIntConstant(poModule, "WINDOW_STATUS", CPythonSystem::WINDOW_STATUS);
-	PyModule_AddIntConstant(poModule, "WINDOW_INVENTORY", CPythonSystem::WINDOW_INVENTORY);
-	PyModule_AddIntConstant(poModule, "WINDOW_ABILITY", CPythonSystem::WINDOW_ABILITY);
-	PyModule_AddIntConstant(poModule, "WINDOW_SOCIETY", CPythonSystem::WINDOW_SOCIETY);
-	PyModule_AddIntConstant(poModule, "WINDOW_JOURNAL", CPythonSystem::WINDOW_JOURNAL);
-	PyModule_AddIntConstant(poModule, "WINDOW_COMMAND", CPythonSystem::WINDOW_COMMAND);
+	ScriptModule_AddIntConstant(poModule, "WINDOW_STATUS", CPythonSystem::WINDOW_STATUS);
+	ScriptModule_AddIntConstant(poModule, "WINDOW_INVENTORY", CPythonSystem::WINDOW_INVENTORY);
+	ScriptModule_AddIntConstant(poModule, "WINDOW_ABILITY", CPythonSystem::WINDOW_ABILITY);
+	ScriptModule_AddIntConstant(poModule, "WINDOW_SOCIETY", CPythonSystem::WINDOW_SOCIETY);
+	ScriptModule_AddIntConstant(poModule, "WINDOW_JOURNAL", CPythonSystem::WINDOW_JOURNAL);
+	ScriptModule_AddIntConstant(poModule, "WINDOW_COMMAND", CPythonSystem::WINDOW_COMMAND);
 
-	PyModule_AddIntConstant(poModule, "WINDOW_QUICK", CPythonSystem::WINDOW_QUICK);
-	PyModule_AddIntConstant(poModule, "WINDOW_GAUGE", CPythonSystem::WINDOW_GAUGE);
-	PyModule_AddIntConstant(poModule, "WINDOW_MINIMAP", CPythonSystem::WINDOW_MINIMAP);
-	PyModule_AddIntConstant(poModule, "WINDOW_CHAT", CPythonSystem::WINDOW_CHAT);
+	ScriptModule_AddIntConstant(poModule, "WINDOW_QUICK", CPythonSystem::WINDOW_QUICK);
+	ScriptModule_AddIntConstant(poModule, "WINDOW_GAUGE", CPythonSystem::WINDOW_GAUGE);
+	ScriptModule_AddIntConstant(poModule, "WINDOW_MINIMAP", CPythonSystem::WINDOW_MINIMAP);
+	ScriptModule_AddIntConstant(poModule, "WINDOW_CHAT", CPythonSystem::WINDOW_CHAT);
 }

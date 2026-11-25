@@ -8,7 +8,7 @@ class CServerStateChecker : public CSingleton<CServerStateChecker>
 		CServerStateChecker();
 		virtual ~CServerStateChecker();
 
-		void Create(PyObject* poWnd);
+		void Create(ScriptObject* poWnd);
 		void AddChannel(UINT uServerIndex, const char* c_szAddr, UINT uPort);
 		void Request();
 		void Update();
@@ -23,7 +23,7 @@ class CServerStateChecker : public CSingleton<CServerStateChecker>
 				UINT uPort;
 		} TChannel;
 
-		PyObject* m_poWnd;
+		ScriptObject* m_poWnd;
 
 		std::list<TChannel> m_lstChannel;
 

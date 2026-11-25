@@ -3,7 +3,7 @@
 
 void CPythonNetworkStream::OnRemoteDisconnect()
 {
-	PyCallClassMemberFunc(m_poHandler, "SetLoginPhase", Py_BuildValue("()"));
+	Script_CallMethod(m_poHandler, "SetLoginPhase", Script_BuildValue("()"));
 }
 
 void CPythonNetworkStream::OnDisconnect()
@@ -14,5 +14,5 @@ void CPythonNetworkStream::OnDisconnect()
 // Main Game
 void CPythonNetworkStream::OnScriptEventStart(int iSkin, int iIndex)
 {
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OpenQuestWindow", Py_BuildValue("(ii)", iSkin, iIndex));
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OpenQuestWindow", Script_BuildValue("(ii)", iSkin, iIndex));
 }

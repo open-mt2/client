@@ -8,6 +8,8 @@ class CPythonExceptionSender;
 
 namespace Neoeter
 {
+	// Legacy runtime: runs system.py on the embedded Python 2.7 interpreter.
+	// Kept alongside the .NET runtime while scripts migrate (see ScriptRuntime).
 	class PythonRuntime
 	{
 		public:
@@ -28,7 +30,6 @@ namespace Neoeter
 			void Stop();
 
 		private:
-			void RegisterModules();
 			bool RegisterDebugFlag();
 			bool RegisterCommandLine(const std::string& commandLine);
 			bool RunSystemScript();

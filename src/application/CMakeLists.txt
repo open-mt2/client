@@ -25,6 +25,23 @@ target_link_libraries(client_application
         client_utils
 )
 
+# Script runtimes: Python 2.7 (legacy, always built) and .NET 10 (neoeter-dotnet).
+if(OPENMT2_SCRIPT_DOTNET AND TARGET neoeter_dotnet_host)
+    target_link_libraries(client_application PRIVATE neoeter_dotnet_host neoeter_io)
+    target_compile_definitions(client_application PRIVATE OPENMT2_SCRIPT_DOTNET=1)
+    message(STATUS "Client: .NET script runtime enabled")
+else()
+    if(OPENMT2_SCRIPT_DOTNET)
+        message(WARNING "OPENMT2_SCRIPT_DOTNET is ON but neoeter-dotnet is not part of the build; building without it")
+    endif()
+    target_compile_definitions(client_application PRIVATE OPENMT2_SCRIPT_DOTNET=0)
+endif()
+
 if(DEFINED OPENMT2_CLIENT_VERSION)
     target_compile_definitions(client_application PRIVATE OPENMT2_CLIENT_VERSION="${OPENMT2_CLIENT_VERSION}")
+endif()
+
+if(BUILD_TESTS)
+    enable_testing()
+    add_subdirectory(tests)
 endif()

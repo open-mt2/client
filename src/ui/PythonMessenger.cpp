@@ -11,7 +11,7 @@ void CPythonMessenger::OnFriendLogin(const char* c_szKey /*, const char * c_szNa
 	m_FriendNameMap.insert(c_szKey);
 
 	if (m_poMessengerHandler)
-		PyCallClassMemberFunc(m_poMessengerHandler, "OnLogin", Py_BuildValue("(is)", MESSENGER_GRUOP_INDEX_FRIEND, c_szKey));
+		Script_CallMethod(m_poMessengerHandler, "OnLogin", Script_BuildValue("(is)", MESSENGER_GRUOP_INDEX_FRIEND, c_szKey));
 }
 
 void CPythonMessenger::OnFriendLogout(const char* c_szKey)
@@ -19,7 +19,7 @@ void CPythonMessenger::OnFriendLogout(const char* c_szKey)
 	m_FriendNameMap.insert(c_szKey);
 
 	if (m_poMessengerHandler)
-		PyCallClassMemberFunc(m_poMessengerHandler, "OnLogout", Py_BuildValue("(is)", MESSENGER_GRUOP_INDEX_FRIEND, c_szKey));
+		Script_CallMethod(m_poMessengerHandler, "OnLogout", Script_BuildValue("(is)", MESSENGER_GRUOP_INDEX_FRIEND, c_szKey));
 }
 
 BOOL CPythonMessenger::IsFriendByKey(const char* c_szKey)
@@ -45,7 +45,7 @@ void CPythonMessenger::RemoveGuildMember(const char* c_szName)
 	m_GuildMemberStateMap.erase(c_szName);
 
 	if (m_poMessengerHandler)
-		PyCallClassMemberFunc(m_poMessengerHandler, "OnRemoveList", Py_BuildValue("(is)", MESSENGER_GRUOP_INDEX_GUILD, c_szName));
+		Script_CallMethod(m_poMessengerHandler, "OnRemoveList", Script_BuildValue("(is)", MESSENGER_GRUOP_INDEX_GUILD, c_szName));
 }
 
 void CPythonMessenger::RemoveAllGuildMember()
@@ -53,21 +53,21 @@ void CPythonMessenger::RemoveAllGuildMember()
 	m_GuildMemberStateMap.clear();
 
 	if (m_poMessengerHandler)
-		PyCallClassMemberFunc(m_poMessengerHandler, "OnRemoveAllList", Py_BuildValue("(i)", MESSENGER_GRUOP_INDEX_GUILD));
+		Script_CallMethod(m_poMessengerHandler, "OnRemoveAllList", Script_BuildValue("(i)", MESSENGER_GRUOP_INDEX_GUILD));
 }
 
 void CPythonMessenger::LoginGuildMember(const char* c_szName)
 {
 	m_GuildMemberStateMap[c_szName] = 1;
 	if (m_poMessengerHandler)
-		PyCallClassMemberFunc(m_poMessengerHandler, "OnLogin", Py_BuildValue("(is)", MESSENGER_GRUOP_INDEX_GUILD, c_szName));
+		Script_CallMethod(m_poMessengerHandler, "OnLogin", Script_BuildValue("(is)", MESSENGER_GRUOP_INDEX_GUILD, c_szName));
 }
 
 void CPythonMessenger::LogoutGuildMember(const char* c_szName)
 {
 	m_GuildMemberStateMap[c_szName] = 0;
 	if (m_poMessengerHandler)
-		PyCallClassMemberFunc(m_poMessengerHandler, "OnLogout", Py_BuildValue("(is)", MESSENGER_GRUOP_INDEX_GUILD, c_szName));
+		Script_CallMethod(m_poMessengerHandler, "OnLogout", Script_BuildValue("(is)", MESSENGER_GRUOP_INDEX_GUILD, c_szName));
 }
 
 void CPythonMessenger::RefreshGuildMember()
@@ -75,9 +75,9 @@ void CPythonMessenger::RefreshGuildMember()
 	for (TGuildMemberStateMap::iterator itor = m_GuildMemberStateMap.begin(); itor != m_GuildMemberStateMap.end(); ++itor)
 	{
 		if (itor->second)
-			PyCallClassMemberFunc(m_poMessengerHandler, "OnLogin", Py_BuildValue("(is)", MESSENGER_GRUOP_INDEX_GUILD, (itor->first).c_str()));
+			Script_CallMethod(m_poMessengerHandler, "OnLogin", Script_BuildValue("(is)", MESSENGER_GRUOP_INDEX_GUILD, (itor->first).c_str()));
 		else
-			PyCallClassMemberFunc(m_poMessengerHandler, "OnLogout", Py_BuildValue("(is)", MESSENGER_GRUOP_INDEX_GUILD, (itor->first).c_str()));
+			Script_CallMethod(m_poMessengerHandler, "OnLogout", Script_BuildValue("(is)", MESSENGER_GRUOP_INDEX_GUILD, (itor->first).c_str()));
 	}
 }
 
@@ -87,7 +87,7 @@ void CPythonMessenger::Destroy()
 	m_GuildMemberStateMap.clear();
 }
 
-void CPythonMessenger::SetMessengerHandler(PyObject* poHandler)
+void CPythonMessenger::SetMessengerHandler(ScriptObject* poHandler)
 {
 	m_poMessengerHandler = poHandler;
 }
@@ -103,58 +103,58 @@ CPythonMessenger::~CPythonMessenger()
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-PyObject* messengerRemoveFriend(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* messengerRemoveFriend(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szKey;
-	if (!PyTuple_GetString(poArgs, 0, &szKey))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szKey))
+		return Script_BuildException();
 
 	CPythonMessenger::Instance().RemoveFriend(szKey);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* messengerIsFriendByName(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* messengerIsFriendByName(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szName;
-	if (!PyTuple_GetString(poArgs, 0, &szName))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szName))
+		return Script_BuildException();
 
-	return Py_BuildValue("i", CPythonMessenger::Instance().IsFriendByName(szName));
+	return Script_BuildValue("i", CPythonMessenger::Instance().IsFriendByName(szName));
 }
 
-PyObject* messengerDestroy(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* messengerDestroy(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonMessenger::Instance().Destroy();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* messengerRefreshGuildMember(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* messengerRefreshGuildMember(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonMessenger::Instance().RefreshGuildMember();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* messengerSetMessengerHandler(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* messengerSetMessengerHandler(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	PyObject* poEventHandler;
-	if (!PyTuple_GetObject(poArgs, 0, &poEventHandler))
-		return Py_BuildException();
+	ScriptObject* poEventHandler;
+	if (!ScriptTuple_GetObject(poArgs, 0, &poEventHandler))
+		return Script_BuildException();
 
 	CPythonMessenger::Instance().SetMessengerHandler(poEventHandler);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
 void initMessenger()
 {
-	static PyMethodDef s_methods[] =
+	static ScriptMethodDef s_methods[] =
 		{
-			{"RemoveFriend", messengerRemoveFriend, METH_VARARGS, NULL},
-			{"IsFriendByName", messengerIsFriendByName, METH_VARARGS, NULL},
-			{"Destroy", messengerDestroy, METH_VARARGS, NULL},
-			{"RefreshGuildMember", messengerRefreshGuildMember, METH_VARARGS, NULL},
-			{"SetMessengerHandler", messengerSetMessengerHandler, METH_VARARGS, NULL},
+			{"RemoveFriend", messengerRemoveFriend, SCRIPT_VARARGS, NULL},
+			{"IsFriendByName", messengerIsFriendByName, SCRIPT_VARARGS, NULL},
+			{"Destroy", messengerDestroy, SCRIPT_VARARGS, NULL},
+			{"RefreshGuildMember", messengerRefreshGuildMember, SCRIPT_VARARGS, NULL},
+			{"SetMessengerHandler", messengerSetMessengerHandler, SCRIPT_VARARGS, NULL},
 			{NULL, NULL, 0, NULL},
 		};
 
-	Py_InitModule("messenger", s_methods);
+	ScriptModule_Create("messenger", s_methods);
 }

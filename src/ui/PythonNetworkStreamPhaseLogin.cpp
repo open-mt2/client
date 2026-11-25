@@ -115,7 +115,7 @@ void CPythonNetworkStream::SetLoginPhase()
 		CAccountConnector& rkAccountConnector = CAccountConnector::Instance();
 		rkAccountConnector.ClearLoginInfo();
 
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_LOGIN], "OnLoginStart", Py_BuildValue("()"));
+		Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_LOGIN], "OnLoginStart", Script_BuildValue("()"));
 
 		__ClearSelectCharacterData();
 	}
@@ -153,7 +153,7 @@ bool CPythonNetworkStream::__RecvLoginSuccessPacket3()
 	}
 	else
 	{
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_SELECT], "Refresh", Py_BuildValue("()"));
+		Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_SELECT], "Refresh", Script_BuildValue("()"));
 	}
 
 	return true;
@@ -181,7 +181,7 @@ bool CPythonNetworkStream::__RecvLoginSuccessPacket4()
 	}
 	else
 	{
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_SELECT], "Refresh", Py_BuildValue("()"));
+		Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_SELECT], "Refresh", Script_BuildValue("()"));
 	}
 
 	return true;
@@ -195,7 +195,7 @@ void CPythonNetworkStream::OnConnectFailure()
 	}
 	else
 	{
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_LOGIN], "OnConnectFailure", Py_BuildValue("()"));
+		Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_LOGIN], "OnConnectFailure", Script_BuildValue("()"));
 	}
 }
 
@@ -205,7 +205,7 @@ bool CPythonNetworkStream::__RecvLoginFailurePacket()
 	if (!Recv(sizeof(TPacketGCLoginFailure), &packet_failure))
 		return false;
 
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_LOGIN], "OnLoginFailure", Py_BuildValue("(s)", packet_failure.szStatus));
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_LOGIN], "OnLoginFailure", Script_BuildValue("(s)", packet_failure.szStatus));
 #ifdef _DEBUG
 	Tracef(" RecvLoginFailurePacket : [%s]\n", packet_failure.szStatus);
 #endif
@@ -285,7 +285,7 @@ bool CPythonNetworkStream::__RecvRunupMatrixQuizPacket()
 	if (!Recv(sizeof(TPacketGCRunupMatrixQuiz), &kMatrixQuizPacket))
 		return false;
 
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_LOGIN], "BINARY_OnRunupMatrixQuiz", Py_BuildValue("(s)", kMatrixQuizPacket.szQuiz));
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_LOGIN], "BINARY_OnRunupMatrixQuiz", Script_BuildValue("(s)", kMatrixQuizPacket.szQuiz));
 	return true;
 }
 
@@ -309,7 +309,7 @@ bool CPythonNetworkStream::__RecvNEWCIBNPasspodRequestPacket()
 	if (!Recv(sizeof(kRequestPacket), &kRequestPacket))
 		return false;
 
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_LOGIN], "BINARY_OnNEWCIBNPasspodRequest", Py_BuildValue("()"));
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_LOGIN], "BINARY_OnNEWCIBNPasspodRequest", Script_BuildValue("()"));
 	return true;
 }
 
@@ -319,7 +319,7 @@ bool CPythonNetworkStream::__RecvNEWCIBNPasspodFailurePacket()
 	if (!Recv(sizeof(kFailurePacket), &kFailurePacket))
 		return false;
 
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_LOGIN], "BINARY_OnNEWCIBNPasspodFailure", Py_BuildValue("()"));
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_LOGIN], "BINARY_OnNEWCIBNPasspodFailure", Script_BuildValue("()"));
 	return true;
 }
 
@@ -364,15 +364,15 @@ bool CPythonNetworkStream::__RecvChinaMatrixCardPacket()
 	if (!Recv(sizeof(TPacketGCChinaMatrixCard), &kMatrixCardPacket))
 		return false;
 
-	PyObject* pyValue = Py_BuildValue("(iiiiiiii)", ROW(kMatrixCardPacket.dwRows, 0),
-									  ROW(kMatrixCardPacket.dwRows, 1),
-									  ROW(kMatrixCardPacket.dwRows, 2),
-									  ROW(kMatrixCardPacket.dwRows, 3),
-									  COL(kMatrixCardPacket.dwCols, 0),
-									  COL(kMatrixCardPacket.dwCols, 1),
-									  COL(kMatrixCardPacket.dwCols, 2),
-									  COL(kMatrixCardPacket.dwCols, 3));
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_LOGIN], "OnMatrixCard", pyValue);
+	ScriptObject* pyValue = Script_BuildValue("(iiiiiiii)", ROW(kMatrixCardPacket.dwRows, 0),
+											  ROW(kMatrixCardPacket.dwRows, 1),
+											  ROW(kMatrixCardPacket.dwRows, 2),
+											  ROW(kMatrixCardPacket.dwRows, 3),
+											  COL(kMatrixCardPacket.dwCols, 0),
+											  COL(kMatrixCardPacket.dwCols, 1),
+											  COL(kMatrixCardPacket.dwCols, 2),
+											  COL(kMatrixCardPacket.dwCols, 3));
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_LOGIN], "OnMatrixCard", pyValue);
 	return true;
 }
 

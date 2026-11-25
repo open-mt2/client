@@ -13,7 +13,9 @@
 #include <Neoeter/Render/StdAfx.h>
 #include <Neoeter/Python/Bindings/StdAfx.h>
 #include <Client/Game/StdAfx.h>
-#include <Neoeter/Python/Host/StdAfx.h>
+#include <Neoeter/Model/Grn/StdAfx.h>
+#include <Neoeter/Script/Script.h>
+#include <Neoeter/Script/ScriptExceptionSender.h>
 #include <Neoeter/Audio/StdAfx.h>
 #include <Neoeter/Effect/StdAfx.h>
 #include <Neoeter/Terrain/StdAfx.h>
@@ -34,6 +36,10 @@
 extern DWORD __DEFAULT_CODE_PAGE__;
 
 #define APP_NAME "Metin 2"
+
+// Raises a RuntimeError whose message is the stringized argument (the scripts
+// match on these names, e.g. CREATE_DEVICE).
+#define SCRIPT_SET_EXCEPTION(x) ScriptErr_SetString(ScriptErrorType::RuntimeError, #x)
 
 enum
 {

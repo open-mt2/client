@@ -20,7 +20,7 @@
 namespace Neoeter
 {
 	GameSession::GameSession(Context& context, CPythonApplication& application)
-		: m_context(context), m_application(application), m_platform(), m_python()
+		: m_context(context), m_application(application), m_platform(), m_scripts()
 	{
 	}
 
@@ -52,13 +52,13 @@ namespace Neoeter
 		if (arguments.PauseBeforeScript())
 			system("pause");
 
-		const PythonRuntime::Result pythonResult = m_python.Start(arguments.PythonCommandLine());
-		if (pythonResult == PythonRuntime::Result::RuntimeFailure)
-			LoadingScreen_ShowError("Could not initialize the Python runtime.");
+		const ScriptRuntime::Result scriptResult = m_scripts.Start(arguments.ScriptRuntimeKind(), arguments.PythonCommandLine());
+		if (scriptResult == ScriptRuntime::Result::RuntimeFailure)
+			LoadingScreen_ShowError(m_scripts.Active() == ScriptRuntime::Kind::DotNet ? "Could not initialize the .NET runtime." : "Could not initialize the Python runtime.");
 
 		Cleanup();
 
-		return pythonResult == PythonRuntime::Result::Success ? Result::Success : Result::Failure;
+		return scriptResult == ScriptRuntime::Result::Success ? Result::Success : Result::Failure;
 	}
 
 	bool GameSession::Prepare()
@@ -94,6 +94,6 @@ namespace Neoeter
 	{
 		m_application.Clear();
 		m_platform.Shutdown();
-		m_python.Stop();
+		m_scripts.Stop();
 	}
 }

@@ -78,7 +78,7 @@ void CPythonNetworkStream::SetHandShakePhase()
 	}
 	else
 	{
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_LOGIN], "OnHandShake", Py_BuildValue("()"));
+		Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_LOGIN], "OnHandShake", Script_BuildValue("()"));
 	}
 }
 

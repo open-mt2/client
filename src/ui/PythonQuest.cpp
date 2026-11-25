@@ -170,20 +170,20 @@ CPythonQuest::~CPythonQuest()
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-PyObject* questGetQuestCount(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* questGetQuestCount(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", CPythonQuest::Instance().GetQuestCount());
+	return Script_BuildValue("i", CPythonQuest::Instance().GetQuestCount());
 }
 
-PyObject* questGetQuestData(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* questGetQuestData(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iIndex))
+		return Script_BadArgument();
 
 	CPythonQuest::SQuestInstance* pQuestInstance;
 	if (!CPythonQuest::Instance().GetQuestInstancePtr(iIndex, &pQuestInstance))
-		return Py_BuildException("Failed to find quest by index %d", iIndex);
+		return Script_BuildException("Failed to find quest by index %d", iIndex);
 
 	CGraphicImage* pImage = NULL;
 	if (!pQuestInstance->strIconFileName.empty())
@@ -202,34 +202,34 @@ PyObject* questGetQuestData(PyObject* poSelf, PyObject* poArgs)
 		}
 	}
 
-	return Py_BuildValue("sNsi", pQuestInstance->strTitle.c_str(),
-						 Py_BuildHandle(pImage),
-						 pQuestInstance->strCounterName.c_str(),
-						 pQuestInstance->iCounterValue);
+	return Script_BuildValue("sNsi", pQuestInstance->strTitle.c_str(),
+							 Script_BuildHandle(pImage),
+							 pQuestInstance->strCounterName.c_str(),
+							 pQuestInstance->iCounterValue);
 }
 
-PyObject* questGetQuestIndex(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* questGetQuestIndex(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iIndex))
+		return Script_BadArgument();
 
 	CPythonQuest::SQuestInstance* pQuestInstance;
 	if (!CPythonQuest::Instance().GetQuestInstancePtr(iIndex, &pQuestInstance))
-		return Py_BuildException("Failed to find quest by index %d", iIndex);
+		return Script_BuildException("Failed to find quest by index %d", iIndex);
 
-	return Py_BuildValue("i", pQuestInstance->dwIndex);
+	return Script_BuildValue("i", pQuestInstance->dwIndex);
 }
 
-PyObject* questGetQuestLastTime(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* questGetQuestLastTime(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iIndex))
+		return Script_BadArgument();
 
 	CPythonQuest::SQuestInstance* pQuestInstance;
 	if (!CPythonQuest::Instance().GetQuestInstancePtr(iIndex, &pQuestInstance))
-		return Py_BuildException("Failed to find quest by index %d", iIndex);
+		return Script_BuildException("Failed to find quest by index %d", iIndex);
 
 	int iLastTime = 0;
 
@@ -244,27 +244,27 @@ PyObject* questGetQuestLastTime(PyObject* poSelf, PyObject* poArgs)
 	//		iLastTime = int(CTimer::Instance().GetCurrentSecond()) - pQuestInstance->iStartTime;
 	//	}
 
-	return Py_BuildValue("si", pQuestInstance->strClockName.c_str(), iLastTime);
+	return Script_BuildValue("si", pQuestInstance->strClockName.c_str(), iLastTime);
 }
 
-PyObject* questClear(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* questClear(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonQuest::Instance().Clear();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
 void initquest()
 {
-	static PyMethodDef s_methods[] =
+	static ScriptMethodDef s_methods[] =
 		{
-			{"GetQuestCount", questGetQuestCount, METH_VARARGS, NULL},
-			{"GetQuestData", questGetQuestData, METH_VARARGS, NULL},
-			{"GetQuestIndex", questGetQuestIndex, METH_VARARGS, NULL},
-			{"GetQuestLastTime", questGetQuestLastTime, METH_VARARGS, NULL},
-			{"Clear", questClear, METH_VARARGS, NULL},
+			{"GetQuestCount", questGetQuestCount, SCRIPT_VARARGS, NULL},
+			{"GetQuestData", questGetQuestData, SCRIPT_VARARGS, NULL},
+			{"GetQuestIndex", questGetQuestIndex, SCRIPT_VARARGS, NULL},
+			{"GetQuestLastTime", questGetQuestLastTime, SCRIPT_VARARGS, NULL},
+			{"Clear", questClear, SCRIPT_VARARGS, NULL},
 			{NULL, NULL, 0, NULL},
 		};
 
-	PyObject* poModule = Py_InitModule("quest", s_methods);
-	PyModule_AddIntConstant(poModule, "QUEST_MAX_NUM", 5);
+	ScriptObject* poModule = ScriptModule_Create("quest", s_methods);
+	ScriptModule_AddIntConstant(poModule, "QUEST_MAX_NUM", 5);
 }

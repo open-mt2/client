@@ -10,7 +10,7 @@ extern DWORD g_adwEncryptKey[4];
 extern DWORD g_adwDecryptKey[4];
 // END_OF_CHINA_CRYPT_KEY
 
-void CAccountConnector::SetHandler(PyObject* poHandler)
+void CAccountConnector::SetHandler(ScriptObject* poHandler)
 {
 	m_poHandler = poHandler;
 }
@@ -280,7 +280,7 @@ bool CAccountConnector::__AuthState_RecvAuthSuccess()
 	if (!kAuthSuccessPacket.bResult)
 	{
 		if (m_poHandler)
-			PyCallClassMemberFunc(m_poHandler, "OnLoginFailure", Py_BuildValue("(s)", "BESAMEKEY"));
+			Script_CallMethod(m_poHandler, "OnLoginFailure", Script_BuildValue("(s)", "BESAMEKEY"));
 	}
 	else
 	{
@@ -302,7 +302,7 @@ bool CAccountConnector::__AuthState_RecvAuthFailure()
 		return false;
 
 	if (m_poHandler)
-		PyCallClassMemberFunc(m_poHandler, "OnLoginFailure", Py_BuildValue("(s)", packet_failure.szStatus));
+		Script_CallMethod(m_poHandler, "OnLoginFailure", Script_BuildValue("(s)", packet_failure.szStatus));
 
 	//	__OfflineState_Set();
 
@@ -315,7 +315,7 @@ bool CAccountConnector::__AuthState_RecvRunupMatrixQuiz()
 	if (!Recv(sizeof(TPacketGCRunupMatrixQuiz), &kMatrixQuizPacket))
 		return false;
 
-	PyCallClassMemberFunc(m_poHandler, "BINARY_OnRunupMatrixQuiz", Py_BuildValue("(s)", kMatrixQuizPacket.szQuiz));
+	Script_CallMethod(m_poHandler, "BINARY_OnRunupMatrixQuiz", Script_BuildValue("(s)", kMatrixQuizPacket.szQuiz));
 	return true;
 }
 
@@ -325,7 +325,7 @@ bool CAccountConnector::__AuthState_RecvNEWCIBNPasspodRequest()
 	if (!Recv(sizeof(kRequestPacket), &kRequestPacket))
 		return false;
 
-	PyCallClassMemberFunc(m_poHandler, "BINARY_OnNEWCIBNPasspodRequest", Py_BuildValue("()"));
+	Script_CallMethod(m_poHandler, "BINARY_OnNEWCIBNPasspodRequest", Script_BuildValue("()"));
 	return true;
 }
 
@@ -340,15 +340,15 @@ bool CAccountConnector::__AuthState_RecvChinaMatrixCard()
 
 	if (m_poHandler)
 	{
-		PyObject* pyValue = Py_BuildValue("(iiiiiiii)", ROW(kMatrixCardPacket.dwRows, 0),
-										  ROW(kMatrixCardPacket.dwRows, 1),
-										  ROW(kMatrixCardPacket.dwRows, 2),
-										  ROW(kMatrixCardPacket.dwRows, 3),
-										  COL(kMatrixCardPacket.dwCols, 0),
-										  COL(kMatrixCardPacket.dwCols, 1),
-										  COL(kMatrixCardPacket.dwCols, 2),
-										  COL(kMatrixCardPacket.dwCols, 3));
-		PyCallClassMemberFunc(m_poHandler, "OnMatrixCard", pyValue);
+		ScriptObject* pyValue = Script_BuildValue("(iiiiiiii)", ROW(kMatrixCardPacket.dwRows, 0),
+												  ROW(kMatrixCardPacket.dwRows, 1),
+												  ROW(kMatrixCardPacket.dwRows, 2),
+												  ROW(kMatrixCardPacket.dwRows, 3),
+												  COL(kMatrixCardPacket.dwCols, 0),
+												  COL(kMatrixCardPacket.dwCols, 1),
+												  COL(kMatrixCardPacket.dwCols, 2),
+												  COL(kMatrixCardPacket.dwCols, 3));
+		Script_CallMethod(m_poHandler, "OnMatrixCard", pyValue);
 	}
 
 	return true;
@@ -407,7 +407,7 @@ void CAccountConnector::__AuthState_Set()
 void CAccountConnector::OnConnectFailure()
 {
 	if (m_poHandler)
-		PyCallClassMemberFunc(m_poHandler, "OnConnectFailure", Py_BuildValue("()"));
+		Script_CallMethod(m_poHandler, "OnConnectFailure", Script_BuildValue("()"));
 
 	__OfflineState_Set();
 }
@@ -424,7 +424,7 @@ void CAccountConnector::OnRemoteDisconnect()
 	{
 		if (m_poHandler)
 		{
-			PyCallClassMemberFunc(m_poHandler, "OnExit", Py_BuildValue("()"));
+			Script_CallMethod(m_poHandler, "OnExit", Script_BuildValue("()"));
 			return;
 		}
 	}

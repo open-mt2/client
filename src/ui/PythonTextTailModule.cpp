@@ -2,49 +2,49 @@
 #include <Client/UI/PythonTextTail.h>
 #include <Client/UI/PythonCharacterManager.h>
 
-PyObject* textTailClear(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* textTailClear(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonTextTail::Instance().Clear();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* textTailUpdateAllTextTail(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* textTailUpdateAllTextTail(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonTextTail::Instance().UpdateAllTextTail();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* textTailUpdateShowingTextTail(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* textTailUpdateShowingTextTail(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonTextTail::Instance().UpdateShowingTextTail();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* textTailRender(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* textTailRender(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonTextTail::Instance().Render();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* textTailRegisterCharacterTextTail(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* textTailRegisterCharacterTextTail(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iGuildID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iGuildID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iGuildID))
+		return Script_BuildException();
 	int iVirtualID;
-	if (!PyTuple_GetInteger(poArgs, 1, &iVirtualID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iVirtualID))
+		return Script_BuildException();
 
 	CPythonTextTail::Instance().RegisterCharacterTextTail(iGuildID, iVirtualID, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* textTailGetPosition(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* textTailGetPosition(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int VirtualID;
-	if (!PyTuple_GetInteger(poArgs, 0, &VirtualID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &VirtualID))
+		return Script_BuildException();
 
 	float x = 0.0f;
 	float y = 0.0f;
@@ -61,175 +61,175 @@ PyObject* textTailGetPosition(PyObject* poSelf, PyObject* poArgs)
 		}
 	}
 
-	return Py_BuildValue("fff", x, y, z);
+	return Script_BuildValue("fff", x, y, z);
 }
 
-PyObject* textTailIsChat(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* textTailIsChat(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int VirtualID;
-	if (!PyTuple_GetInteger(poArgs, 0, &VirtualID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &VirtualID))
+		return Script_BuildException();
 
-	return Py_BuildValue("i", CPythonTextTail::Instance().IsChatTextTail(VirtualID));
+	return Script_BuildValue("i", CPythonTextTail::Instance().IsChatTextTail(VirtualID));
 }
 
-PyObject* textTailRegisterChatTail(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* textTailRegisterChatTail(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int VirtualID;
-	if (!PyTuple_GetInteger(poArgs, 0, &VirtualID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &VirtualID))
+		return Script_BuildException();
 
 	char* szText;
-	if (!PyTuple_GetString(poArgs, 1, &szText))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 1, &szText))
+		return Script_BuildException();
 
 	CPythonTextTail::Instance().RegisterChatTail(VirtualID, szText);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* textTailRegisterInfoTail(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* textTailRegisterInfoTail(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int VirtualID;
-	if (!PyTuple_GetInteger(poArgs, 0, &VirtualID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &VirtualID))
+		return Script_BuildException();
 
 	char* szText;
-	if (!PyTuple_GetString(poArgs, 1, &szText))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 1, &szText))
+		return Script_BuildException();
 
 	CPythonTextTail::Instance().RegisterInfoTail(VirtualID, szText);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* textTailAttachTitle(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* textTailAttachTitle(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iVirtualID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iVirtualID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iVirtualID))
+		return Script_BuildException();
 	char* szName;
-	if (!PyTuple_GetString(poArgs, 1, &szName))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 1, &szName))
+		return Script_BuildException();
 	float fr;
-	if (!PyTuple_GetFloat(poArgs, 2, &fr))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 2, &fr))
+		return Script_BuildException();
 	float fg;
-	if (!PyTuple_GetFloat(poArgs, 3, &fg))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 3, &fg))
+		return Script_BuildException();
 	float fb;
-	if (!PyTuple_GetFloat(poArgs, 4, &fb))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 4, &fb))
+		return Script_BuildException();
 
 	CPythonTextTail::Instance().AttachTitle(iVirtualID, szName, D3DXCOLOR(fr, fg, fb, 1.0f));
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* textTailShowCharacterTextTail(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* textTailShowCharacterTextTail(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int VirtualID;
-	if (!PyTuple_GetInteger(poArgs, 0, &VirtualID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &VirtualID))
+		return Script_BuildException();
 
 	CPythonTextTail::Instance().ShowCharacterTextTail(VirtualID);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* textTailShowItemTextTail(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* textTailShowItemTextTail(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int VirtualID;
-	if (!PyTuple_GetInteger(poArgs, 0, &VirtualID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &VirtualID))
+		return Script_BuildException();
 
 	CPythonTextTail::Instance().ShowItemTextTail(VirtualID);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* textTailArrangeTextTail(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* textTailArrangeTextTail(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonTextTail::Instance().ArrangeTextTail();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* textTailHideAllTextTail(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* textTailHideAllTextTail(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonTextTail::Instance().HideAllTextTail();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* textTailShowAllTextTail(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* textTailShowAllTextTail(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonTextTail::Instance().ShowAllTextTail();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* textTailPick(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* textTailPick(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int ix;
-	if (!PyTuple_GetInteger(poArgs, 0, &ix))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &ix))
+		return Script_BuildException();
 	int iy;
-	if (!PyTuple_GetInteger(poArgs, 1, &iy))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iy))
+		return Script_BuildException();
 
 	int iValue = CPythonTextTail::Instance().Pick(ix, iy);
-	return Py_BuildValue("i", iValue);
+	return Script_BuildValue("i", iValue);
 }
 
-PyObject* textTailSelectItemName(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* textTailSelectItemName(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iVirtualID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iVirtualID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iVirtualID))
+		return Script_BuildException();
 
 	CPythonTextTail::Instance().SelectItemName(iVirtualID);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* textTailEnablePKTitle(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* textTailEnablePKTitle(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iFlag;
-	if (!PyTuple_GetInteger(poArgs, 0, &iFlag))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iFlag))
+		return Script_BuildException();
 
 	CPythonTextTail::Instance().EnablePKTitle(iFlag);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
 void initTextTail()
 {
-	static PyMethodDef s_methods[] =
+	static ScriptMethodDef s_methods[] =
 		{
-			{"Clear", textTailClear, METH_VARARGS, NULL},
+			{"Clear", textTailClear, SCRIPT_VARARGS, NULL},
 
-			{"UpdateAllTextTail", textTailUpdateAllTextTail, METH_VARARGS, NULL},
-			{"UpdateShowingTextTail", textTailUpdateShowingTextTail, METH_VARARGS, NULL},
-			{"Render", textTailRender, METH_VARARGS, NULL},
+			{"UpdateAllTextTail", textTailUpdateAllTextTail, SCRIPT_VARARGS, NULL},
+			{"UpdateShowingTextTail", textTailUpdateShowingTextTail, SCRIPT_VARARGS, NULL},
+			{"Render", textTailRender, SCRIPT_VARARGS, NULL},
 
-			{"ShowCharacterTextTail", textTailShowCharacterTextTail, METH_VARARGS, NULL},
-			{"ShowItemTextTail", textTailShowItemTextTail, METH_VARARGS, NULL},
+			{"ShowCharacterTextTail", textTailShowCharacterTextTail, SCRIPT_VARARGS, NULL},
+			{"ShowItemTextTail", textTailShowItemTextTail, SCRIPT_VARARGS, NULL},
 
-			{"GetPosition", textTailGetPosition, METH_VARARGS, NULL},
-			{"IsChat", textTailIsChat, METH_VARARGS, NULL},
+			{"GetPosition", textTailGetPosition, SCRIPT_VARARGS, NULL},
+			{"IsChat", textTailIsChat, SCRIPT_VARARGS, NULL},
 
-			{"ArrangeTextTail", textTailArrangeTextTail, METH_VARARGS, NULL},
-			{"HideAllTextTail", textTailHideAllTextTail, METH_VARARGS, NULL},
-			{"ShowAllTextTail", textTailShowAllTextTail, METH_VARARGS, NULL},
+			{"ArrangeTextTail", textTailArrangeTextTail, SCRIPT_VARARGS, NULL},
+			{"HideAllTextTail", textTailHideAllTextTail, SCRIPT_VARARGS, NULL},
+			{"ShowAllTextTail", textTailShowAllTextTail, SCRIPT_VARARGS, NULL},
 
-			{"Pick", textTailPick, METH_VARARGS, NULL},
-			{"SelectItemName", textTailSelectItemName, METH_VARARGS, NULL},
+			{"Pick", textTailPick, SCRIPT_VARARGS, NULL},
+			{"SelectItemName", textTailSelectItemName, SCRIPT_VARARGS, NULL},
 
-			{"EnablePKTitle", textTailEnablePKTitle, METH_VARARGS, NULL},
+			{"EnablePKTitle", textTailEnablePKTitle, SCRIPT_VARARGS, NULL},
 
 			// For Test
-			{"RegisterCharacterTextTail", textTailRegisterCharacterTextTail, METH_VARARGS, NULL},
-			{"RegisterChatTail", textTailRegisterChatTail, METH_VARARGS, NULL},
-			{"RegisterInfoTail", textTailRegisterInfoTail, METH_VARARGS, NULL},
-			{"AttachTitle", textTailAttachTitle, METH_VARARGS, NULL},
+			{"RegisterCharacterTextTail", textTailRegisterCharacterTextTail, SCRIPT_VARARGS, NULL},
+			{"RegisterChatTail", textTailRegisterChatTail, SCRIPT_VARARGS, NULL},
+			{"RegisterInfoTail", textTailRegisterInfoTail, SCRIPT_VARARGS, NULL},
+			{"AttachTitle", textTailAttachTitle, SCRIPT_VARARGS, NULL},
 
 			{NULL, NULL, 0, NULL},
 		};
 
-	Py_InitModule("textTail", s_methods);
+	ScriptModule_Create("textTail", s_methods);
 }

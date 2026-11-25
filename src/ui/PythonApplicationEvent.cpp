@@ -337,7 +337,7 @@ void CPythonApplication::OnMouseUpdate()
 		ly = anchorY;
 	}
 
-	PyCallClassMemberFunc(m_poMouseHandler, "Update", Py_BuildValue("(ii)", lx, ly));
+	Script_CallMethod(m_poMouseHandler, "Update", Script_BuildValue("(ii)", lx, ly));
 }
 
 void CPythonApplication::OnMouseRender()
@@ -350,5 +350,5 @@ void CPythonApplication::OnMouseRender()
 	}
 #endif // _DEBUG
 
-	PyCallClassMemberFunc(m_poMouseHandler, "Render", Py_BuildValue("()"));
+	Script_CallMethod(m_poMouseHandler, "Render", Script_BuildValue("()"));
 }

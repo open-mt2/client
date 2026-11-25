@@ -1,175 +1,175 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/UI/PythonApplication.h>
 
-PyObject* sndPlaySound(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* sndPlaySound(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szFileName;
-	if (!PyTuple_GetString(poArgs, 0, &szFileName))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szFileName))
+		return Script_BuildException();
 
 	CSoundManager& rkSndMgr = CSoundManager::Instance();
 	rkSndMgr.PlaySound2D(szFileName);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* sndPlaySound3D(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* sndPlaySound3D(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	float fx;
-	if (!PyTuple_GetFloat(poArgs, 0, &fx))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 0, &fx))
+		return Script_BuildException();
 	float fy;
-	if (!PyTuple_GetFloat(poArgs, 1, &fy))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 1, &fy))
+		return Script_BuildException();
 	float fz;
-	if (!PyTuple_GetFloat(poArgs, 2, &fz))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 2, &fz))
+		return Script_BuildException();
 	char* szFileName;
-	if (!PyTuple_GetString(poArgs, 3, &szFileName))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 3, &szFileName))
+		return Script_BuildException();
 
 	CSoundManager& rkSndMgr = CSoundManager::Instance();
 	rkSndMgr.PlaySound3D(fx, fy, fz, szFileName);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* sndPlayMusic(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* sndPlayMusic(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szFileName;
-	if (!PyTuple_GetString(poArgs, 0, &szFileName))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szFileName))
+		return Script_BuildException();
 
 	CSoundManager& rkSndMgr = CSoundManager::Instance();
 	rkSndMgr.PlayMusic(szFileName);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* sndFadeInMusic(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* sndFadeInMusic(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szFileName;
-	if (!PyTuple_GetString(poArgs, 0, &szFileName))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szFileName))
+		return Script_BuildException();
 
 	CSoundManager& rkSndMgr = CSoundManager::Instance();
 	rkSndMgr.FadeInMusic(szFileName);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* sndFadeOutMusic(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* sndFadeOutMusic(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szFileName;
-	if (!PyTuple_GetString(poArgs, 0, &szFileName))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szFileName))
+		return Script_BuildException();
 
 	CSoundManager& rkSndMgr = CSoundManager::Instance();
 	rkSndMgr.FadeOutMusic(szFileName);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* sndFadeOutAllMusic(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* sndFadeOutAllMusic(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CSoundManager& rkSndMgr = CSoundManager::Instance();
 	rkSndMgr.FadeOutAllMusic();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* sndFadeLimitOutMusic(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* sndFadeLimitOutMusic(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szFileName;
-	if (!PyTuple_GetString(poArgs, 0, &szFileName))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szFileName))
+		return Script_BuildException();
 
 	float fLimitVolume;
-	if (!PyTuple_GetFloat(poArgs, 1, &fLimitVolume))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 1, &fLimitVolume))
+		return Script_BuildException();
 
 	CSoundManager& rkSndMgr = CSoundManager::Instance();
 	rkSndMgr.FadeLimitOutMusic(szFileName, fLimitVolume);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* sndStopAllSound(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* sndStopAllSound(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CSoundManager& rkSndMgr = CSoundManager::Instance();
 	rkSndMgr.StopAllSound3D();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* sndSetMusicVolume(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* sndSetMusicVolume(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	float fVolume;
-	if (!PyTuple_GetFloat(poArgs, 0, &fVolume))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 0, &fVolume))
+		return Script_BuildException();
 
 	CSoundManager& rkSndMgr = CSoundManager::Instance();
 	rkSndMgr.SetMusicVolume(fVolume);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* sndSetSoundVolumef(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* sndSetSoundVolumef(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	float fVolume;
-	if (!PyTuple_GetFloat(poArgs, 0, &fVolume))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 0, &fVolume))
+		return Script_BuildException();
 
 	CSoundManager& rkSndMgr = CSoundManager::Instance();
 	rkSndMgr.SetSoundVolumeRatio(fVolume);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* sndSetSoundVolume(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* sndSetSoundVolume(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iVolume;
-	if (!PyTuple_GetInteger(poArgs, 0, &iVolume))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iVolume))
+		return Script_BuildException();
 
 	CSoundManager& rkSndMgr = CSoundManager::Instance();
 	rkSndMgr.SetSoundVolumeGrade(iVolume);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* sndSetSoundScale(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* sndSetSoundScale(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	float fScale;
-	if (!PyTuple_GetFloat(poArgs, 0, &fScale))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 0, &fScale))
+		return Script_BuildException();
 
 	CSoundManager& rkSndMgr = CSoundManager::Instance();
 	rkSndMgr.SetSoundScale(fScale);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* sndSetAmbienceSoundScale(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* sndSetAmbienceSoundScale(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	float fScale;
-	if (!PyTuple_GetFloat(poArgs, 0, &fScale))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 0, &fScale))
+		return Script_BuildException();
 
 	CSoundManager& rkSndMgr = CSoundManager::Instance();
 	rkSndMgr.SetAmbienceSoundScale(fScale);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
 void initsnd()
 {
-	static PyMethodDef s_methods[] =
+	static ScriptMethodDef s_methods[] =
 		{
-			{"PlaySound", sndPlaySound, METH_VARARGS, NULL},
-			{"PlaySound3D", sndPlaySound3D, METH_VARARGS, NULL},
-			{"PlayMusic", sndPlayMusic, METH_VARARGS, NULL},
-			{"FadeInMusic", sndFadeInMusic, METH_VARARGS, NULL},
-			{"FadeOutMusic", sndFadeOutMusic, METH_VARARGS, NULL},
-			{"FadeOutAllMusic", sndFadeOutAllMusic, METH_VARARGS, NULL},
-			{"FadeLimitOutMusic", sndFadeLimitOutMusic, METH_VARARGS, NULL},
-			{"StopAllSound", sndStopAllSound, METH_VARARGS, NULL},
+			{"PlaySound", sndPlaySound, SCRIPT_VARARGS, NULL},
+			{"PlaySound3D", sndPlaySound3D, SCRIPT_VARARGS, NULL},
+			{"PlayMusic", sndPlayMusic, SCRIPT_VARARGS, NULL},
+			{"FadeInMusic", sndFadeInMusic, SCRIPT_VARARGS, NULL},
+			{"FadeOutMusic", sndFadeOutMusic, SCRIPT_VARARGS, NULL},
+			{"FadeOutAllMusic", sndFadeOutAllMusic, SCRIPT_VARARGS, NULL},
+			{"FadeLimitOutMusic", sndFadeLimitOutMusic, SCRIPT_VARARGS, NULL},
+			{"StopAllSound", sndStopAllSound, SCRIPT_VARARGS, NULL},
 
-			{"SetMusicVolumef", sndSetMusicVolume, METH_VARARGS, NULL},
-			{"SetMusicVolume", sndSetMusicVolume, METH_VARARGS, NULL},
-			{"SetSoundVolumef", sndSetSoundVolumef, METH_VARARGS, NULL},
-			{"SetSoundVolume", sndSetSoundVolume, METH_VARARGS, NULL},
-			{"SetSoundScale", sndSetSoundScale, METH_VARARGS, NULL},
-			{"SetAmbienceSoundScale", sndSetAmbienceSoundScale, METH_VARARGS, NULL},
+			{"SetMusicVolumef", sndSetMusicVolume, SCRIPT_VARARGS, NULL},
+			{"SetMusicVolume", sndSetMusicVolume, SCRIPT_VARARGS, NULL},
+			{"SetSoundVolumef", sndSetSoundVolumef, SCRIPT_VARARGS, NULL},
+			{"SetSoundVolume", sndSetSoundVolume, SCRIPT_VARARGS, NULL},
+			{"SetSoundScale", sndSetSoundScale, SCRIPT_VARARGS, NULL},
+			{"SetAmbienceSoundScale", sndSetAmbienceSoundScale, SCRIPT_VARARGS, NULL},
 			{NULL, NULL, 0, NULL},
 		};
 
-	Py_InitModule("snd", s_methods);
+	ScriptModule_Create("snd", s_methods);
 }

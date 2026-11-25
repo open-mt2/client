@@ -9,12 +9,12 @@
 
 void CPythonPlayer::ClearAffects()
 {
-	PyCallClassMemberFunc(m_ppyGameWindow, "ClearAffects", Py_BuildValue("()"));
+	Script_CallMethod(m_ppyGameWindow, "ClearAffects", Script_BuildValue("()"));
 }
 
 void CPythonPlayer::SetAffect(UINT uAffect)
 {
-	PyCallClassMemberFunc(m_ppyGameWindow, "SetAffect", Py_BuildValue("(i)", uAffect));
+	Script_CallMethod(m_ppyGameWindow, "SetAffect", Script_BuildValue("(i)", uAffect));
 
 	/////
 
@@ -39,7 +39,7 @@ void CPythonPlayer::SetAffect(UINT uAffect)
 void CPythonPlayer::ResetAffect(UINT uAffect)
 {
 	// 2004.07.17.myevan.스킬 아닌 이펙트가 안 사라지는 문제
-	PyCallClassMemberFunc(m_ppyGameWindow, "ResetAffect", Py_BuildValue("(i)", uAffect));
+	Script_CallMethod(m_ppyGameWindow, "ResetAffect", Script_BuildValue("(i)", uAffect));
 
 	DWORD dwSkillIndex;
 	if (!AffectIndexToSkillIndex(uAffect, &dwSkillIndex))
@@ -92,7 +92,7 @@ void CPythonPlayer::ChangeCurrentSkillNumberOnly(DWORD dwSlotIndex)
 	{
 		if (!__IsTarget())
 		{
-			PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "NEED_TARGET"));
+			Script_CallMethod(m_ppyGameWindow, "OnCannotUseSkill", Script_BuildValue("(is)", GetMainCharacterIndex(), "NEED_TARGET"));
 			return;
 		}
 
@@ -101,7 +101,7 @@ void CPythonPlayer::ChangeCurrentSkillNumberOnly(DWORD dwSlotIndex)
 	else
 	{
 		m_dwcurSkillSlotIndex = dwSlotIndex;
-		PyCallClassMemberFunc(m_ppyGameWindow, "ChangeCurrentSkill", Py_BuildValue("(i)", dwSlotIndex));
+		Script_CallMethod(m_ppyGameWindow, "ChangeCurrentSkill", Script_BuildValue("(i)", dwSlotIndex));
 	}
 }
 
@@ -159,7 +159,7 @@ void CPythonPlayer::ClickSkillSlot(DWORD dwSlotIndex)
 	else
 	{
 		m_dwcurSkillSlotIndex = dwSlotIndex;
-		PyCallClassMemberFunc(m_ppyGameWindow, "ChangeCurrentSkill", Py_BuildValue("(i)", dwSlotIndex));
+		Script_CallMethod(m_ppyGameWindow, "ChangeCurrentSkill", Script_BuildValue("(i)", dwSlotIndex));
 	}
 }
 
@@ -182,7 +182,7 @@ bool CPythonPlayer::__CheckSkillUsable(DWORD dwSlotIndex)
 	{
 		if (!pSkillData->IsHorseSkill())
 		{
-			PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "NOT_HORSE_SKILL"));
+			Script_CallMethod(m_ppyGameWindow, "OnCannotUseSkill", Script_BuildValue("(is)", GetMainCharacterIndex(), "NOT_HORSE_SKILL"));
 			return false;
 		}
 	}
@@ -191,7 +191,7 @@ bool CPythonPlayer::__CheckSkillUsable(DWORD dwSlotIndex)
 	{
 		if (!pkInstMain->IsMountingHorse())
 		{
-			PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "HAVE_TO_RIDE"));
+			Script_CallMethod(m_ppyGameWindow, "OnCannotUseSkill", Script_BuildValue("(is)", GetMainCharacterIndex(), "HAVE_TO_RIDE"));
 			return false;
 		}
 	}
@@ -202,7 +202,7 @@ bool CPythonPlayer::__CheckSkillUsable(DWORD dwSlotIndex)
 	{
 		if (pkInstMain->IsInSafe())
 		{
-			PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "IN_SAFE"));
+			Script_CallMethod(m_ppyGameWindow, "OnCannotUseSkill", Script_BuildValue("(is)", GetMainCharacterIndex(), "IN_SAFE"));
 
 			return false;
 		}
@@ -219,7 +219,7 @@ bool CPythonPlayer::__CheckSkillUsable(DWORD dwSlotIndex)
 	{
 		if (!__HasItem(27995))
 		{
-			PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "NEED_EMPTY_BOTTLE"));
+			Script_CallMethod(m_ppyGameWindow, "OnCannotUseSkill", Script_BuildValue("(is)", GetMainCharacterIndex(), "NEED_EMPTY_BOTTLE"));
 			return false;
 		}
 	}
@@ -229,7 +229,7 @@ bool CPythonPlayer::__CheckSkillUsable(DWORD dwSlotIndex)
 	{
 		if (!__HasItem(27996))
 		{
-			PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "NEED_POISON_BOTTLE"));
+			Script_CallMethod(m_ppyGameWindow, "OnCannotUseSkill", Script_BuildValue("(is)", GetMainCharacterIndex(), "NEED_POISON_BOTTLE"));
 			return false;
 		}
 	}
@@ -237,7 +237,7 @@ bool CPythonPlayer::__CheckSkillUsable(DWORD dwSlotIndex)
 	// NOTE : 낚시 중일때는 스킬을 사용하지 못합니다.
 	if (pkInstMain->IsFishingMode())
 	{
-		PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "REMOVE_FISHING_ROD"));
+		Script_CallMethod(m_ppyGameWindow, "OnCannotUseSkill", Script_BuildValue("(is)", GetMainCharacterIndex(), "REMOVE_FISHING_ROD"));
 		return false;
 	}
 
@@ -246,7 +246,7 @@ bool CPythonPlayer::__CheckSkillUsable(DWORD dwSlotIndex)
 	{
 		if (rkSkillInst.iLevel <= 0)
 		{
-			PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "NOT_YET_LEARN"));
+			Script_CallMethod(m_ppyGameWindow, "OnCannotUseSkill", Script_BuildValue("(is)", GetMainCharacterIndex(), "NOT_YET_LEARN"));
 			return false;
 		}
 	}
@@ -254,7 +254,7 @@ bool CPythonPlayer::__CheckSkillUsable(DWORD dwSlotIndex)
 	// NOTE : 들고 있는 무기 체크
 	if (!pSkillData->CanUseWeaponType(pkInstMain->GetWeaponType()))
 	{
-		PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "NOT_MATCHABLE_WEAPON"));
+		Script_CallMethod(m_ppyGameWindow, "OnCannotUseSkill", Script_BuildValue("(is)", GetMainCharacterIndex(), "NOT_MATCHABLE_WEAPON"));
 		return false;
 	}
 
@@ -277,7 +277,7 @@ bool CPythonPlayer::__CheckSkillUsable(DWORD dwSlotIndex)
 		{
 			if (__CheckRestSkillCoolTime(dwSlotIndex))
 			{
-				PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "WAIT_COOLTIME"));
+				Script_CallMethod(m_ppyGameWindow, "OnCannotUseSkill", Script_BuildValue("(is)", GetMainCharacterIndex(), "WAIT_COOLTIME"));
 				return false;
 			}
 		}
@@ -286,19 +286,19 @@ bool CPythonPlayer::__CheckSkillUsable(DWORD dwSlotIndex)
 	{
 		if (__CheckRestSkillCoolTime(dwSlotIndex))
 		{
-			PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "WAIT_COOLTIME"));
+			Script_CallMethod(m_ppyGameWindow, "OnCannotUseSkill", Script_BuildValue("(is)", GetMainCharacterIndex(), "WAIT_COOLTIME"));
 			return false;
 		}
 
 		if (__CheckShortLife(rkSkillInst, *pSkillData))
 		{
-			PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "NOT_ENOUGH_HP"));
+			Script_CallMethod(m_ppyGameWindow, "OnCannotUseSkill", Script_BuildValue("(is)", GetMainCharacterIndex(), "NOT_ENOUGH_HP"));
 			return false;
 		}
 
 		if (__CheckShortMana(rkSkillInst, *pSkillData))
 		{
-			PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "NOT_ENOUGH_SP"));
+			Script_CallMethod(m_ppyGameWindow, "OnCannotUseSkill", Script_BuildValue("(is)", GetMainCharacterIndex(), "NOT_ENOUGH_SP"));
 			return false;
 		}
 	}
@@ -429,7 +429,7 @@ bool CPythonPlayer::__ProcessEnemySkillTargetRange(CInstanceBase& rkInstMain, CI
 	IBackground& rkBG = IBackground::Instance();
 	if (rkBG.IsBlock(kPPosTarget.x, kPPosTarget.y))
 	{
-		PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "CANNOT_APPROACH"));
+		Script_CallMethod(m_ppyGameWindow, "OnCannotUseSkill", Script_BuildValue("(is)", GetMainCharacterIndex(), "CANNOT_APPROACH"));
 		return false;
 	}
 
@@ -548,7 +548,7 @@ bool CPythonPlayer::__UseSkill(DWORD dwSlotIndex)
 				{
 					if (!pSkillData->CanUseForMe())
 					{
-						PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "CANNOT_USE_SELF"));
+						Script_CallMethod(m_ppyGameWindow, "OnCannotUseSkill", Script_BuildValue("(is)", GetMainCharacterIndex(), "CANNOT_USE_SELF"));
 						return false;
 					}
 				}
@@ -575,7 +575,7 @@ bool CPythonPlayer::__UseSkill(DWORD dwSlotIndex)
 					}
 					else
 					{
-						PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "ONLY_FOR_ALLIANCE"));
+						Script_CallMethod(m_ppyGameWindow, "OnCannotUseSkill", Script_BuildValue("(is)", GetMainCharacterIndex(), "ONLY_FOR_ALLIANCE"));
 						return false;
 					}
 				}
@@ -584,7 +584,7 @@ bool CPythonPlayer::__UseSkill(DWORD dwSlotIndex)
 			{
 				if (pkInstTarget->IsInSafe())
 				{
-					PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "CANNOT_ATTACK_ENEMY_IN_SAFE_AREA"));
+					Script_CallMethod(m_ppyGameWindow, "OnCannotUseSkill", Script_BuildValue("(is)", GetMainCharacterIndex(), "CANNOT_ATTACK_ENEMY_IN_SAFE_AREA"));
 					return false;
 				}
 
@@ -595,7 +595,7 @@ bool CPythonPlayer::__UseSkill(DWORD dwSlotIndex)
 				}
 				else
 				{
-					PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "CANNOT_ATTACK"));
+					Script_CallMethod(m_ppyGameWindow, "OnCannotUseSkill", Script_BuildValue("(is)", GetMainCharacterIndex(), "CANNOT_ATTACK"));
 					return false;
 				}
 			}
@@ -626,7 +626,7 @@ bool CPythonPlayer::__UseSkill(DWORD dwSlotIndex)
 				}
 				else
 				{
-					PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "NEED_TARGET"));
+					Script_CallMethod(m_ppyGameWindow, "OnCannotUseSkill", Script_BuildValue("(is)", GetMainCharacterIndex(), "NEED_TARGET"));
 					return false;
 				}
 			}
@@ -639,12 +639,12 @@ bool CPythonPlayer::__UseSkill(DWORD dwSlotIndex)
 			}
 			else if (pSkillData->IsNeedCorpse())
 			{
-				PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "ONLY_FOR_CORPSE"));
+				Script_CallMethod(m_ppyGameWindow, "OnCannotUseSkill", Script_BuildValue("(is)", GetMainCharacterIndex(), "ONLY_FOR_CORPSE"));
 				return false;
 			}
 			else
 			{
-				PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "NEED_TARGET"));
+				Script_CallMethod(m_ppyGameWindow, "OnCannotUseSkill", Script_BuildValue("(is)", GetMainCharacterIndex(), "NEED_TARGET"));
 				return false;
 			}
 		}
@@ -818,7 +818,7 @@ void CPythonPlayer::__RunCoolTime(DWORD dwSkillSlotIndex)
 
 	rkSkillInst.fCoolTime = rkSkillInst.fCoolTime * iSpd / 100;
 
-	PyCallClassMemberFunc(m_ppyGameWindow, "RunUseSkillEvent", Py_BuildValue("(if)", dwSkillSlotIndex, rkSkillInst.fCoolTime));
+	Script_CallMethod(m_ppyGameWindow, "RunUseSkillEvent", Script_BuildValue("(if)", dwSkillSlotIndex, rkSkillInst.fCoolTime));
 }
 
 bool CPythonPlayer::__HasEnoughArrow()
@@ -831,7 +831,7 @@ bool CPythonPlayer::__HasEnoughArrow()
 				return true;
 			}
 
-	PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotShotError", Py_BuildValue("(is)", GetMainCharacterIndex(), "EMPTY_ARROW"));
+	Script_CallMethod(m_ppyGameWindow, "OnCannotShotError", Script_BuildValue("(is)", GetMainCharacterIndex(), "EMPTY_ARROW"));
 	return false;
 }
 
@@ -887,7 +887,7 @@ void CPythonPlayer::UseGuildSkill(DWORD dwSkillSlotIndex)
 
 	if (__CheckRestSkillCoolTime(dwSkillSlotIndex))
 	{
-		PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "WAIT_COOLTIME"));
+		Script_CallMethod(m_ppyGameWindow, "OnCannotUseSkill", Script_BuildValue("(is)", GetMainCharacterIndex(), "WAIT_COOLTIME"));
 		return;
 	}
 
@@ -895,7 +895,7 @@ void CPythonPlayer::UseGuildSkill(DWORD dwSkillSlotIndex)
 	{
 		if (!CPythonGuild::Instance().IsDoingGuildWar())
 		{
-			PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "ONLY_FOR_GUILD_WAR"));
+			Script_CallMethod(m_ppyGameWindow, "OnCannotUseSkill", Script_BuildValue("(is)", GetMainCharacterIndex(), "ONLY_FOR_GUILD_WAR"));
 			return;
 		}
 	}
@@ -961,7 +961,7 @@ bool CPythonPlayer::__CheckSpecialSkill(DWORD dwSkillIndex)
 		}
 		else
 		{
-			PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "EQUIP_FISHING_ROD"));
+			Script_CallMethod(m_ppyGameWindow, "OnCannotUseSkill", Script_BuildValue("(is)", GetMainCharacterIndex(), "EQUIP_FISHING_ROD"));
 		}
 		return true;
 	}
@@ -980,7 +980,7 @@ bool CPythonPlayer::__CheckSpecialSkill(DWORD dwSkillIndex)
 		}
 		else
 		{
-			PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotUseSkill", Py_BuildValue("(is)", GetMainCharacterIndex(), "NOT_YET_LEARN"));
+			Script_CallMethod(m_ppyGameWindow, "OnCannotUseSkill", Script_BuildValue("(is)", GetMainCharacterIndex(), "NOT_YET_LEARN"));
 		}
 
 		return true;

@@ -1,6 +1,7 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/UI/ImageFile.h>
 #include <Client/UI/PythonApplication.h>
+#include <Neoeter/Script/ScriptBackend.h>
 #include <Neoeter/Render/Camera.h>
 
 extern bool PERF_CHECKER_RENDER_GAME;
@@ -9,71 +10,71 @@ BOOL bVisibleNotice = true;
 BOOL bTestServerFlag = FALSE;
 int TWOHANDED_WEWAPON_ATT_SPEED_DECREASE_VALUE = 0;
 
-PyObject* appShowWebPage(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appShowWebPage(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szWebPage;
-	if (!PyTuple_GetString(poArgs, 0, &szWebPage))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szWebPage))
+		return Script_BuildException();
 
-	PyObject* poRect = PyTuple_GetItem(poArgs, 1);
-	if (!PyTuple_Check(poRect))
-		return Py_BuildException();
+	ScriptObject* poRect = ScriptTuple_GetItem(poArgs, 1);
+	if (!ScriptTuple_Check(poRect))
+		return Script_BuildException();
 
 	RECT rcWebPage;
-	rcWebPage.left = PyInt_AsLong(PyTuple_GetItem(poRect, 0));
-	rcWebPage.top = PyInt_AsLong(PyTuple_GetItem(poRect, 1));
-	rcWebPage.right = PyInt_AsLong(PyTuple_GetItem(poRect, 2));
-	rcWebPage.bottom = PyInt_AsLong(PyTuple_GetItem(poRect, 3));
+	rcWebPage.left = Script_AsLongLong(ScriptTuple_GetItem(poRect, 0));
+	rcWebPage.top = Script_AsLongLong(ScriptTuple_GetItem(poRect, 1));
+	rcWebPage.right = Script_AsLongLong(ScriptTuple_GetItem(poRect, 2));
+	rcWebPage.bottom = Script_AsLongLong(ScriptTuple_GetItem(poRect, 3));
 
 	CPythonApplication::Instance().ShowWebPage(
 		szWebPage,
 		rcWebPage);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appMoveWebPage(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appMoveWebPage(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	PyObject* poRect = PyTuple_GetItem(poArgs, 0);
-	if (!PyTuple_Check(poRect))
-		return Py_BuildException();
+	ScriptObject* poRect = ScriptTuple_GetItem(poArgs, 0);
+	if (!ScriptTuple_Check(poRect))
+		return Script_BuildException();
 
 	RECT rcWebPage;
-	rcWebPage.left = PyInt_AsLong(PyTuple_GetItem(poRect, 0));
-	rcWebPage.top = PyInt_AsLong(PyTuple_GetItem(poRect, 1));
-	rcWebPage.right = PyInt_AsLong(PyTuple_GetItem(poRect, 2));
-	rcWebPage.bottom = PyInt_AsLong(PyTuple_GetItem(poRect, 3));
+	rcWebPage.left = Script_AsLongLong(ScriptTuple_GetItem(poRect, 0));
+	rcWebPage.top = Script_AsLongLong(ScriptTuple_GetItem(poRect, 1));
+	rcWebPage.right = Script_AsLongLong(ScriptTuple_GetItem(poRect, 2));
+	rcWebPage.bottom = Script_AsLongLong(ScriptTuple_GetItem(poRect, 3));
 
 	CPythonApplication::Instance().MoveWebPage(rcWebPage);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appHideWebPage(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appHideWebPage(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonApplication::Instance().HideWebPage();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appIsWebPageMode(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appIsWebPageMode(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", CPythonApplication::Instance().IsWebPageMode());
+	return Script_BuildValue("i", CPythonApplication::Instance().IsWebPageMode());
 }
 
-PyObject* appEnablePerformanceTime(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appEnablePerformanceTime(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szMode;
-	if (!PyTuple_GetString(poArgs, 0, &szMode))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szMode))
+		return Script_BuildException();
 
 	int nEnable;
-	if (!PyTuple_GetInteger(poArgs, 1, &nEnable))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &nEnable))
+		return Script_BuildException();
 
 	bool isEnable = nEnable ? true : false;
 
 	if (strcmp(szMode, "RENDER_GAME") == 0)
 		PERF_CHECKER_RENDER_GAME = isEnable;
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
 /////////////////////////////////////////////////////
@@ -88,184 +89,184 @@ extern double g_specularSpd;
 // TEXTTAIL_LIVINGTIME_CONTROL
 extern void TextTail_SetLivingTime(long livingTime);
 
-PyObject* appSetTextTailLivingTime(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appSetTextTailLivingTime(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	float livingTime;
-	if (!PyTuple_GetFloat(poArgs, 0, &livingTime))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 0, &livingTime))
+		return Script_BuildException();
 
 	TextTail_SetLivingTime(livingTime * 1000);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 // END_OF_TEXTTAIL_LIVINGTIME_CONTROL
 
-PyObject* appSetHairColorEnable(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appSetHairColorEnable(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int nEnable;
-	if (!PyTuple_GetInteger(poArgs, 0, &nEnable))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &nEnable))
+		return Script_BuildException();
 
 	HAIR_COLOR_ENABLE = nEnable;
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appSetArmorSpecularEnable(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appSetArmorSpecularEnable(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int nEnable;
-	if (!PyTuple_GetInteger(poArgs, 0, &nEnable))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &nEnable))
+		return Script_BuildException();
 
 	USE_ARMOR_SPECULAR = nEnable;
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appSetWeaponSpecularEnable(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appSetWeaponSpecularEnable(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int nEnable;
-	if (!PyTuple_GetInteger(poArgs, 0, &nEnable))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &nEnable))
+		return Script_BuildException();
 
 	USE_WEAPON_SPECULAR = nEnable;
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appSetSkillEffectUpgradeEnable(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appSetSkillEffectUpgradeEnable(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int nEnable;
-	if (!PyTuple_GetInteger(poArgs, 0, &nEnable))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &nEnable))
+		return Script_BuildException();
 
 	SKILL_EFFECT_UPGRADE_ENABLE = nEnable;
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* SetTwoHandedWeaponAttSpeedDecreaseValue(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* SetTwoHandedWeaponAttSpeedDecreaseValue(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iValue;
-	if (!PyTuple_GetInteger(poArgs, 0, &iValue))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iValue))
+		return Script_BuildException();
 
 	TWOHANDED_WEWAPON_ATT_SPEED_DECREASE_VALUE = iValue;
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appSetRideHorseEnable(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appSetRideHorseEnable(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int nEnable;
-	if (!PyTuple_GetInteger(poArgs, 0, &nEnable))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &nEnable))
+		return Script_BuildException();
 
 	RIDE_HORSE_ENABLE = nEnable;
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appSetCameraMaxDistance(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appSetCameraMaxDistance(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	float fMax;
-	if (!PyTuple_GetFloat(poArgs, 0, &fMax))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 0, &fMax))
+		return Script_BuildException();
 
 	CCamera::SetCameraMaxDistance(fMax);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appSetControlFP(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appSetControlFP(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 #ifndef OPENMT2_PLATFORM_LINUX
 	_controlfp(_PC_24, _MCW_PC);
 #endif
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appSetSpecularSpeed(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appSetSpecularSpeed(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	float fSpeed;
-	if (!PyTuple_GetFloat(poArgs, 0, &fSpeed))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 0, &fSpeed))
+		return Script_BuildException();
 
 	g_specularSpd = fSpeed;
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appSetMinFog(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appSetMinFog(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	float fMinFog;
-	if (!PyTuple_GetFloat(poArgs, 0, &fMinFog))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 0, &fMinFog))
+		return Script_BuildException();
 
 	CPythonApplication::Instance().SetMinFog(fMinFog);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appSetFrameSkip(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appSetFrameSkip(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int nFrameSkip;
-	if (!PyTuple_GetInteger(poArgs, 0, &nFrameSkip))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &nFrameSkip))
+		return Script_BuildException();
 
 	CPythonApplication::Instance().SetFrameSkip(nFrameSkip ? true : false);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
 // LOCALE
 
-PyObject* appForceSetLocale(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appForceSetLocale(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szName;
-	if (!PyTuple_GetString(poArgs, 0, &szName))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szName))
+		return Script_BuildException();
 
 	char* szLocalePath;
-	if (!PyTuple_GetString(poArgs, 1, &szLocalePath))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 1, &szLocalePath))
+		return Script_BuildException();
 
 	Tracenf("ForceSetLocale(%s, %s) ignored: the client locale is fixed to English", szName, szLocalePath);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appGetLocaleServiceName(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appGetLocaleServiceName(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("s", LocaleService_GetName());
+	return Script_BuildValue("s", LocaleService_GetName());
 }
 
 //
 bool LoadLocaleData(const char* localePath);
 
-PyObject* appSetCHEONMA(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appSetCHEONMA(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int enable;
-	if (!PyTuple_GetInteger(poArgs, 0, &enable))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &enable))
+		return Script_BuildException();
 
 	LocaleService_SetCHEONMA(enable ? true : false);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appIsCHEONMA(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appIsCHEONMA(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", LocaleService_IsCHEONMA());
+	return Script_BuildValue("i", LocaleService_IsCHEONMA());
 }
 
 #include <Neoeter/Platform/Base/tea.h>
 
-PyObject* appLoadLocaleAddr(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appLoadLocaleAddr(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* addrPath;
-	if (!PyTuple_GetString(poArgs, 0, &addrPath))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &addrPath))
+		return Script_BuildException();
 
 	FILE* fp = fopen(addrPath, "rb");
 	if (!fp)
-		return Py_BuildException();
+		return Script_BuildException();
 
 	fseek(fp, 0, SEEK_END);
 
@@ -286,39 +287,39 @@ PyObject* appLoadLocaleAddr(PyObject* poSelf, PyObject* poArgs)
 	tea_decrypt((uint32_t*)buf, (const uint32_t*)enc, (const uint32_t*)key, size);
 	unsigned int retSize = *(unsigned int*)buf;
 	char* ret = buf + sizeof(unsigned int);
-	return Py_BuildValue("s#", ret, retSize);
+	return Script_BuildValue("s#", ret, retSize);
 }
 
-PyObject* appLoadLocaleData(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appLoadLocaleData(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* localePath;
-	if (!PyTuple_GetString(poArgs, 0, &localePath))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &localePath))
+		return Script_BuildException();
 
-	return Py_BuildValue("i", LoadLocaleData(localePath));
+	return Script_BuildValue("i", LoadLocaleData(localePath));
 }
 
-PyObject* appGetLocaleName(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appGetLocaleName(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("s", LocaleService_GetLocaleName());
+	return Script_BuildValue("s", LocaleService_GetLocaleName());
 }
 
-PyObject* appGetLocalePath(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appGetLocalePath(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("s", LocaleService_GetLocalePath());
+	return Script_BuildValue("s", LocaleService_GetLocalePath());
 }
 // END_OF_LOCALE
 
-PyObject* appGetDefaultCodePage(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appGetDefaultCodePage(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", LocaleService_GetCodePage());
+	return Script_BuildValue("i", LocaleService_GetCodePage());
 }
 
-PyObject* appGetImageInfo(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appGetImageInfo(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szFileName;
-	if (!PyTuple_GetString(poArgs, 0, &szFileName))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szFileName))
+		return Script_BuildException();
 
 	uint32_t uWidth = 0;
 	uint32_t uHeight = 0;
@@ -326,29 +327,29 @@ PyObject* appGetImageInfo(PyObject* poSelf, PyObject* poArgs)
 
 	BOOL canLoad = GetImageFileInfo(szFileName, &uWidth, &uHeight, &uFormat) ? TRUE : FALSE;
 
-	return Py_BuildValue("iii", canLoad, uWidth, uHeight);
+	return Script_BuildValue("iii", canLoad, uWidth, uHeight);
 }
 
 #include <Neoeter/IO/EterPackManager.h>
 
-PyObject* appIsExistFile(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appIsExistFile(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szFileName;
-	if (!PyTuple_GetString(poArgs, 0, &szFileName))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szFileName))
+		return Script_BuildException();
 
 	bool isExist = CEterPackManager::Instance().isExist(szFileName);
 
-	return Py_BuildValue("i", isExist);
+	return Script_BuildValue("i", isExist);
 }
 
-PyObject* appGetFileList(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appGetFileList(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szFilter;
-	if (!PyTuple_GetString(poArgs, 0, &szFilter))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szFilter))
+		return Script_BuildException();
 
-	PyObject* poList = PyList_New(0);
+	ScriptObject* poList = ScriptList_New(0);
 
 	WIN32_FIND_DATA wfd;
 	memset(&wfd, 0, sizeof(wfd));
@@ -358,8 +359,8 @@ PyObject* appGetFileList(PyObject* poSelf, PyObject* poArgs)
 	{
 		do
 		{
-			PyObject* poFileName = PyString_FromString(wfd.cFileName);
-			PyList_Append(poList, poFileName);
+			ScriptObject* poFileName = ScriptString_New(wfd.cFileName);
+			ScriptList_Append(poList, poFileName);
 		} while (FindNextFile(hFind, &wfd));
 
 		FindClose(hFind);
@@ -368,416 +369,416 @@ PyObject* appGetFileList(PyObject* poSelf, PyObject* poArgs)
 	return poList;
 }
 
-PyObject* appUpdateGame(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appUpdateGame(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonApplication::Instance().UpdateGame();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appRenderGame(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appRenderGame(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonApplication::Instance().RenderGame();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appSetMouseHandler(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appSetMouseHandler(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	PyObject* poHandler;
-	if (!PyTuple_GetObject(poArgs, 0, &poHandler))
-		return Py_BuildException();
+	ScriptObject* poHandler;
+	if (!ScriptTuple_GetObject(poArgs, 0, &poHandler))
+		return Script_BuildException();
 
 	CPythonApplication::Instance().SetMouseHandler(poHandler);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appCreate(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appCreate(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szName;
-	if (!PyTuple_GetString(poArgs, 0, &szName))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szName))
+		return Script_BuildException();
 
 	int width;
-	if (!PyTuple_GetInteger(poArgs, 1, &width))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &width))
+		return Script_BuildException();
 
 	int height;
-	if (!PyTuple_GetInteger(poArgs, 2, &height))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 2, &height))
+		return Script_BuildException();
 
 	int Windowed;
-	if (!PyTuple_GetInteger(poArgs, 3, &Windowed))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 3, &Windowed))
+		return Script_BuildException();
 
 	CPythonApplication& rkApp = CPythonApplication::Instance();
 	if (!rkApp.Create(poSelf, szName, width, height, Windowed))
 	{
-		// return Py_BuildNone();
+		// return Script_BuildNone();
 		return NULL;
 	}
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appLoop(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appLoop(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonApplication::Instance().Loop();
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appGetInfo(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appGetInfo(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int nInfo;
-	if (!PyTuple_GetInteger(poArgs, 0, &nInfo))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &nInfo))
+		return Script_BuildException();
 
 	std::string stInfo;
 	CPythonApplication::Instance().GetInfo(nInfo, &stInfo);
-	return Py_BuildValue("s", stInfo.c_str());
+	return Script_BuildValue("s", stInfo.c_str());
 }
 
-PyObject* appProcess(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appProcess(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	if (CPythonApplication::Instance().Process())
-		return Py_BuildValue("i", 1);
+		return Script_BuildValue("i", 1);
 
-	return Py_BuildValue("i", 0);
+	return Script_BuildValue("i", 0);
 }
 
-PyObject* appAbort(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appAbort(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonApplication::Instance().Abort();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appExit(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appExit(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonApplication::Instance().Exit();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appSetCamera(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appSetCamera(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	float Distance;
-	if (!PyTuple_GetFloat(poArgs, 0, &Distance))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 0, &Distance))
+		return Script_BuildException();
 
 	float Pitch;
-	if (!PyTuple_GetFloat(poArgs, 1, &Pitch))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 1, &Pitch))
+		return Script_BuildException();
 
 	float Rotation;
-	if (!PyTuple_GetFloat(poArgs, 2, &Rotation))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 2, &Rotation))
+		return Script_BuildException();
 
 	float fDestinationHeight;
-	if (!PyTuple_GetFloat(poArgs, 3, &fDestinationHeight))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 3, &fDestinationHeight))
+		return Script_BuildException();
 
 	CPythonApplication::Instance().SetCamera(Distance, Pitch, Rotation, fDestinationHeight);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appGetCamera(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appGetCamera(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	float Distance, Pitch, Rotation, DestinationHeight;
 	CPythonApplication::Instance().GetCamera(&Distance, &Pitch, &Rotation, &DestinationHeight);
 
-	return Py_BuildValue("ffff", Distance, Pitch, Rotation, DestinationHeight);
+	return Script_BuildValue("ffff", Distance, Pitch, Rotation, DestinationHeight);
 }
 
-PyObject* appGetCameraPitch(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appGetCameraPitch(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("f", CPythonApplication::Instance().GetPitch());
+	return Script_BuildValue("f", CPythonApplication::Instance().GetPitch());
 }
 
-PyObject* appGetCameraRotation(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appGetCameraRotation(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("f", CPythonApplication::Instance().GetRotation());
+	return Script_BuildValue("f", CPythonApplication::Instance().GetRotation());
 }
 
-PyObject* appGetTime(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appGetTime(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("f", CPythonApplication::Instance().GetGlobalTime());
+	return Script_BuildValue("f", CPythonApplication::Instance().GetGlobalTime());
 }
 
-PyObject* appGetGlobalTime(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appGetGlobalTime(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", CPythonApplication::Instance().GetServerTime());
+	return Script_BuildValue("i", CPythonApplication::Instance().GetServerTime());
 }
 
-PyObject* appGetGlobalTimeStamp(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appGetGlobalTimeStamp(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", CPythonApplication::Instance().GetServerTimeStamp());
+	return Script_BuildValue("i", CPythonApplication::Instance().GetServerTimeStamp());
 }
 
-PyObject* appGetUpdateFPS(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appGetUpdateFPS(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", CPythonApplication::Instance().GetUpdateFPS());
+	return Script_BuildValue("i", CPythonApplication::Instance().GetUpdateFPS());
 }
 
-PyObject* appGetRenderFPS(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appGetRenderFPS(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", CPythonApplication::Instance().GetRenderFPS());
+	return Script_BuildValue("i", CPythonApplication::Instance().GetRenderFPS());
 }
 
-PyObject* appRotateCamera(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appRotateCamera(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iDirection;
-	if (!PyTuple_GetInteger(poArgs, 0, &iDirection))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iDirection))
+		return Script_BuildException();
 	CPythonApplication::Instance().RotateCamera(iDirection);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appPitchCamera(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appPitchCamera(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iDirection;
-	if (!PyTuple_GetInteger(poArgs, 0, &iDirection))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iDirection))
+		return Script_BuildException();
 	CPythonApplication::Instance().PitchCamera(iDirection);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appZoomCamera(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appZoomCamera(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iDirection;
-	if (!PyTuple_GetInteger(poArgs, 0, &iDirection))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iDirection))
+		return Script_BuildException();
 	CPythonApplication::Instance().ZoomCamera(iDirection);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appMovieRotateCamera(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appMovieRotateCamera(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iDirection;
-	if (!PyTuple_GetInteger(poArgs, 0, &iDirection))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iDirection))
+		return Script_BuildException();
 	CPythonApplication::Instance().MovieRotateCamera(iDirection);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appMoviePitchCamera(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appMoviePitchCamera(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iDirection;
-	if (!PyTuple_GetInteger(poArgs, 0, &iDirection))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iDirection))
+		return Script_BuildException();
 	CPythonApplication::Instance().MoviePitchCamera(iDirection);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appMovieZoomCamera(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appMovieZoomCamera(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iDirection;
-	if (!PyTuple_GetInteger(poArgs, 0, &iDirection))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iDirection))
+		return Script_BuildException();
 	CPythonApplication::Instance().MovieZoomCamera(iDirection);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appMovieResetCamera(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appMovieResetCamera(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonApplication::Instance().MovieResetCamera();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appGetFaceSpeed(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appGetFaceSpeed(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("f", CPythonApplication::Instance().GetFaceSpeed());
+	return Script_BuildValue("f", CPythonApplication::Instance().GetFaceSpeed());
 }
 
-PyObject* appGetRenderTime(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appGetRenderTime(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("fi",
-						 CPythonApplication::Instance().GetAveRenderTime(),
-						 CPythonApplication::Instance().GetCurRenderTime());
+	return Script_BuildValue("fi",
+							 CPythonApplication::Instance().GetAveRenderTime(),
+							 CPythonApplication::Instance().GetCurRenderTime());
 }
 
-PyObject* appGetUpdateTime(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appGetUpdateTime(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", CPythonApplication::Instance().GetCurUpdateTime());
+	return Script_BuildValue("i", CPythonApplication::Instance().GetCurUpdateTime());
 }
 
-PyObject* appGetLoad(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appGetLoad(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", CPythonApplication::Instance().GetLoad());
+	return Script_BuildValue("i", CPythonApplication::Instance().GetLoad());
 }
-PyObject* appGetFaceCount(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appGetFaceCount(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", CPythonApplication::Instance().GetFaceCount());
-}
-
-PyObject* appGetAvaiableTextureMememory(PyObject* poSelf, PyObject* poArgs)
-{
-	return Py_BuildValue("i", CGraphicBase::GetAvailableTextureMemory());
+	return Script_BuildValue("i", CPythonApplication::Instance().GetFaceCount());
 }
 
-PyObject* appSetFPS(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appGetAvaiableTextureMememory(ScriptObject* poSelf, ScriptObject* poArgs)
+{
+	return Script_BuildValue("i", CGraphicBase::GetAvailableTextureMemory());
+}
+
+ScriptObject* appSetFPS(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iFPS;
-	if (!PyTuple_GetInteger(poArgs, 0, &iFPS))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iFPS))
+		return Script_BuildException();
 
 	CPythonApplication::Instance().SetFPS(iFPS);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appSetGlobalCenterPosition(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appSetGlobalCenterPosition(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int x;
-	if (!PyTuple_GetInteger(poArgs, 0, &x))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &x))
+		return Script_BuildException();
 
 	int y;
-	if (!PyTuple_GetInteger(poArgs, 1, &y))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &y))
+		return Script_BuildException();
 
 	CPythonApplication::Instance().SetGlobalCenterPosition(x, y);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appSetCenterPosition(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appSetCenterPosition(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	float fx;
-	if (!PyTuple_GetFloat(poArgs, 0, &fx))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 0, &fx))
+		return Script_BuildException();
 
 	float fy;
-	if (!PyTuple_GetFloat(poArgs, 1, &fy))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 1, &fy))
+		return Script_BuildException();
 
 	float fz;
-	if (!PyTuple_GetFloat(poArgs, 2, &fz))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 2, &fz))
+		return Script_BuildException();
 
 	CPythonApplication::Instance().SetCenterPosition(fx, -fy, fz);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appGetCursorPosition(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appGetCursorPosition(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	long lx, ly;
 	UI::CWindowManager& rkWndMgr = UI::CWindowManager::Instance();
 	rkWndMgr.GetMousePosition(lx, ly);
 
-	return Py_BuildValue("ii", lx, ly);
+	return Script_BuildValue("ii", lx, ly);
 }
 
-PyObject* appRunPythonFile(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appRunPythonFile(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szFileName;
-	if (!PyTuple_GetString(poArgs, 0, &szFileName))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szFileName))
+		return Script_BuildException();
 
-	bool ret = CPythonLauncher::Instance().RunFile(szFileName);
-	return Py_BuildValue("i", ret);
+	bool ret = Script_RunFile(szFileName);
+	return Script_BuildValue("i", ret);
 }
 
-PyObject* appIsPressed(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appIsPressed(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iKey;
-	if (!PyTuple_GetInteger(poArgs, 0, &iKey))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iKey))
+		return Script_BuildException();
 
-	return Py_BuildValue("i", CPythonApplication::Instance().IsPressed(iKey));
+	return Script_BuildValue("i", CPythonApplication::Instance().IsPressed(iKey));
 }
 
-PyObject* appSetCursor(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appSetCursor(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	/*
 		char * szName;
-		if (!PyTuple_GetString(poArgs, 0, &szName))
-			return Py_BuildException();
+		if (!ScriptTuple_GetString(poArgs, 0, &szName))
+			return Script_BuildException();
 
 		if (!CPythonApplication::Instance().SetHardwareCursor(szName))
-			return Py_BuildException("Wrong Cursor Name [%s]", szName);
+			return Script_BuildException("Wrong Cursor Name [%s]", szName);
 	*/
 	int iCursorNum;
-	if (!PyTuple_GetInteger(poArgs, 0, &iCursorNum))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iCursorNum))
+		return Script_BuildException();
 
 	if (!CPythonApplication::Instance().SetCursorNum(iCursorNum))
-		return Py_BuildException("Wrong Cursor Name [%d]", iCursorNum);
+		return Script_BuildException("Wrong Cursor Name [%d]", iCursorNum);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appGetCursor(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appGetCursor(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", CPythonApplication::Instance().GetCursorNum());
+	return Script_BuildValue("i", CPythonApplication::Instance().GetCursorNum());
 }
 
-PyObject* appShowCursor(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appShowCursor(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonApplication::Instance().SetCursorVisible(TRUE);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appHideCursor(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appHideCursor(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonApplication::Instance().SetCursorVisible(FALSE);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appIsShowCursor(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appIsShowCursor(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", TRUE == CPythonApplication::Instance().GetCursorVisible());
+	return Script_BuildValue("i", TRUE == CPythonApplication::Instance().GetCursorVisible());
 }
 
-PyObject* appIsLiarCursorOn(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appIsLiarCursorOn(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", TRUE == CPythonApplication::Instance().GetLiarCursorOn());
+	return Script_BuildValue("i", TRUE == CPythonApplication::Instance().GetLiarCursorOn());
 }
 
-PyObject* appSetSoftwareCursor(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appSetSoftwareCursor(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonApplication::Instance().SetCursorMode(CPythonApplication::CURSOR_MODE_SOFTWARE);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appSetHardwareCursor(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appSetHardwareCursor(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonApplication::Instance().SetCursorMode(CPythonApplication::CURSOR_MODE_HARDWARE);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appSetConnectData(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appSetConnectData(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szIP;
-	if (!PyTuple_GetString(poArgs, 0, &szIP))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szIP))
+		return Script_BuildException();
 
 	int iPort;
-	if (!PyTuple_GetInteger(poArgs, 1, &iPort))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iPort))
+		return Script_BuildException();
 
 	CPythonApplication::Instance().SetConnectData(szIP, iPort);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appGetConnectData(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appGetConnectData(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	std::string strIP;
 	int iPort;
 
 	CPythonApplication::Instance().GetConnectData(strIP, iPort);
 
-	return Py_BuildValue("si", strIP.c_str(), iPort);
+	return Script_BuildValue("si", strIP.c_str(), iPort);
 }
 
-PyObject* appGetRandom(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appGetRandom(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int from;
-	if (!PyTuple_GetInteger(poArgs, 0, &from))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &from))
+		return Script_BuildException();
 
 	int to;
-	if (!PyTuple_GetInteger(poArgs, 1, &to))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &to))
+		return Script_BuildException();
 
 	if (from > to)
 	{
@@ -786,118 +787,118 @@ PyObject* appGetRandom(PyObject* poSelf, PyObject* poArgs)
 		to = tmp;
 	}
 
-	return Py_BuildValue("i", random_range(from, to));
+	return Script_BuildValue("i", random_range(from, to));
 }
 
-PyObject* appGetRotatingDirection(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appGetRotatingDirection(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	float fSource;
-	if (!PyTuple_GetFloat(poArgs, 0, &fSource))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 0, &fSource))
+		return Script_BuildException();
 	float fTarget;
-	if (!PyTuple_GetFloat(poArgs, 1, &fTarget))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 1, &fTarget))
+		return Script_BuildException();
 
-	return Py_BuildValue("i", GetRotatingDirection(fSource, fTarget));
+	return Script_BuildValue("i", GetRotatingDirection(fSource, fTarget));
 }
 
-PyObject* appGetDegreeDifference(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appGetDegreeDifference(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	float fSource;
-	if (!PyTuple_GetFloat(poArgs, 0, &fSource))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 0, &fSource))
+		return Script_BuildException();
 	float fTarget;
-	if (!PyTuple_GetFloat(poArgs, 1, &fTarget))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 1, &fTarget))
+		return Script_BuildException();
 
-	return Py_BuildValue("f", GetDegreeDifference(fSource, fTarget));
+	return Script_BuildValue("f", GetDegreeDifference(fSource, fTarget));
 }
 
-PyObject* appSleep(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appSleep(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iTime;
-	if (!PyTuple_GetInteger(poArgs, 0, &iTime))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iTime))
+		return Script_BuildException();
 
 	Sleep(iTime);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appSetDefaultFontName(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appSetDefaultFontName(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szFontName;
-	if (!PyTuple_GetString(poArgs, 0, &szFontName))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szFontName))
+		return Script_BuildException();
 
 	// DEFAULT_FONT
 	DefaultFont_SetName(szFontName);
 	// END_OF_DEFAULT_FONT
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appSetGuildSymbolPath(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appSetGuildSymbolPath(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szPathName;
-	if (!PyTuple_GetString(poArgs, 0, &szPathName))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szPathName))
+		return Script_BuildException();
 
 	SetGuildSymbolPath(szPathName);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appEnableSpecialCameraMode(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appEnableSpecialCameraMode(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonApplication::Instance().EnableSpecialCameraMode();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appSetCameraSpeed(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appSetCameraSpeed(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iPercentage;
-	if (!PyTuple_GetInteger(poArgs, 0, &iPercentage))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iPercentage))
+		return Script_BuildException();
 
 	CPythonApplication::Instance().SetCameraSpeed(iPercentage);
 
 	CCamera* pCamera = CCameraManager::Instance().GetCurrentCamera();
 	if (pCamera)
 		pCamera->SetResistance(float(iPercentage) / 100.0f);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appIsFileExist(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appIsFileExist(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szFileName;
-	if (!PyTuple_GetString(poArgs, 0, &szFileName))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szFileName))
+		return Script_BuildException();
 
-	return Py_BuildValue("i", -1 != _access(szFileName, 0));
+	return Script_BuildValue("i", -1 != _access(szFileName, 0));
 }
 
-PyObject* appSetCameraSetting(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appSetCameraSetting(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int ix;
-	if (!PyTuple_GetInteger(poArgs, 0, &ix))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &ix))
+		return Script_BuildException();
 	int iy;
-	if (!PyTuple_GetInteger(poArgs, 1, &iy))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iy))
+		return Script_BuildException();
 	int iz;
-	if (!PyTuple_GetInteger(poArgs, 2, &iz))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 2, &iz))
+		return Script_BuildException();
 
 	int iZoom;
-	if (!PyTuple_GetInteger(poArgs, 3, &iZoom))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 3, &iZoom))
+		return Script_BuildException();
 	int iRotation;
-	if (!PyTuple_GetInteger(poArgs, 4, &iRotation))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 4, &iRotation))
+		return Script_BuildException();
 	int iPitch;
-	if (!PyTuple_GetInteger(poArgs, 5, &iPitch))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 5, &iPitch))
+		return Script_BuildException();
 
 	CPythonApplication::SCameraSetting CameraSetting = {};
 	CameraSetting.v3CenterPosition.x = float(ix);
@@ -907,96 +908,96 @@ PyObject* appSetCameraSetting(PyObject* poSelf, PyObject* poArgs)
 	CameraSetting.fRotation = float(iRotation);
 	CameraSetting.fPitch = float(iPitch);
 	CPythonApplication::Instance().SetEventCamera(CameraSetting);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appSaveCameraSetting(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appSaveCameraSetting(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szFileName;
-	if (!PyTuple_GetString(poArgs, 0, &szFileName))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szFileName))
+		return Script_BuildException();
 
 	CPythonApplication::Instance().SaveCameraSetting(szFileName);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appLoadCameraSetting(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appLoadCameraSetting(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szFileName;
-	if (!PyTuple_GetString(poArgs, 0, &szFileName))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szFileName))
+		return Script_BuildException();
 
 	bool bResult = CPythonApplication::Instance().LoadCameraSetting(szFileName);
-	return Py_BuildValue("i", bResult);
+	return Script_BuildValue("i", bResult);
 }
 
-PyObject* appSetDefaultCamera(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appSetDefaultCamera(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonApplication::Instance().SetDefaultCamera();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appSetSightRange(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appSetSightRange(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iRange;
-	if (!PyTuple_GetInteger(poArgs, 0, &iRange))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iRange))
+		return Script_BuildException();
 
 	CPythonApplication::Instance().SetForceSightRange(iRange);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
 extern int g_iAccumulationTime;
 
-PyObject* apptestGetAccumulationTime(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* apptestGetAccumulationTime(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", g_iAccumulationTime);
+	return Script_BuildValue("i", g_iAccumulationTime);
 }
 
-PyObject* apptestResetAccumulationTime(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* apptestResetAccumulationTime(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	g_iAccumulationTime = 0;
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* apptestSetSpecularColor(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* apptestSetSpecularColor(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	float fr;
-	if (!PyTuple_GetFloat(poArgs, 0, &fr))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 0, &fr))
+		return Script_BuildException();
 	float fg;
-	if (!PyTuple_GetFloat(poArgs, 1, &fg))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 1, &fg))
+		return Script_BuildException();
 	float fb;
-	if (!PyTuple_GetFloat(poArgs, 2, &fb))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 2, &fb))
+		return Script_BuildException();
 	g_fSpecularColor = D3DXCOLOR(fr, fg, fb, 1.0f);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appSetVisibleNotice(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appSetVisibleNotice(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iFlag;
-	if (!PyTuple_GetInteger(poArgs, 0, &iFlag))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iFlag))
+		return Script_BuildException();
 	bVisibleNotice = iFlag;
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appIsVisibleNotice(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appIsVisibleNotice(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", bVisibleNotice);
+	return Script_BuildValue("i", bVisibleNotice);
 }
 
-PyObject* appEnableTestServerFlag(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appEnableTestServerFlag(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	bTestServerFlag = TRUE;
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appIsEnableTestServerFlag(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appIsEnableTestServerFlag(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", bTestServerFlag);
+	return Script_BuildValue("i", bTestServerFlag);
 }
 
 class CTextLineLoader
@@ -1028,54 +1029,54 @@ class CTextLineLoader
 		CMemoryTextFileLoader m_kTextFileLoader;
 };
 
-PyObject* appOpenTextFile(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appOpenTextFile(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szFileName;
-	if (!PyTuple_GetString(poArgs, 0, &szFileName))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szFileName))
+		return Script_BuildException();
 
 	CTextLineLoader* pTextLineLoader = new CTextLineLoader(szFileName);
 
-	return Py_BuildHandle(pTextLineLoader);
+	return Script_BuildHandle(pTextLineLoader);
 }
 
-PyObject* appCloseTextFile(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appCloseTextFile(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CTextLineLoader* pTextFileLoader;
-	if (!PyTuple_GetHandle(poArgs, 0, &pTextFileLoader))
-		return Py_BuildException();
+	if (!ScriptTuple_GetHandle(poArgs, 0, &pTextFileLoader))
+		return Script_BuildException();
 
 	delete pTextFileLoader;
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appGetTextFileLineCount(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appGetTextFileLineCount(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CTextLineLoader* pTextFileLoader;
-	if (!PyTuple_GetHandle(poArgs, 0, &pTextFileLoader))
-		return Py_BuildException();
+	if (!ScriptTuple_GetHandle(poArgs, 0, &pTextFileLoader))
+		return Script_BuildException();
 
-	return Py_BuildValue("i", pTextFileLoader->GetLineCount());
+	return Script_BuildValue("i", pTextFileLoader->GetLineCount());
 }
 
-PyObject* appGetTextFileLine(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appGetTextFileLine(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CTextLineLoader* pTextFileLoader;
-	if (!PyTuple_GetHandle(poArgs, 0, &pTextFileLoader))
-		return Py_BuildException();
+	if (!ScriptTuple_GetHandle(poArgs, 0, &pTextFileLoader))
+		return Script_BuildException();
 	int iLineIndex;
-	if (!PyTuple_GetInteger(poArgs, 1, &iLineIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iLineIndex))
+		return Script_BuildException();
 
-	return Py_BuildValue("s", pTextFileLoader->GetLine(iLineIndex));
+	return Script_BuildValue("s", pTextFileLoader->GetLine(iLineIndex));
 }
 
-PyObject* appSetGuildMarkPath(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appSetGuildMarkPath(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* path;
-	if (!PyTuple_GetString(poArgs, 0, &path))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &path))
+		return Script_BuildException();
 
 	char newPath[256];
 	char* ext = strstr(path, ".tga");
@@ -1090,390 +1091,390 @@ PyObject* appSetGuildMarkPath(PyObject* poSelf, PyObject* poArgs)
 		strncpy(newPath, path, sizeof(newPath) - 1);
 
 	CGuildMarkManager::Instance().SetMarkPathPrefix(newPath);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appIsDevStage(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appIsDevStage(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int nIsDevelopmentStage = 0;
 #if defined(LOCALE_SERVICE_STAGE_DEVELOPMENT)
 	nIsDevelopmentStage = 1;
 #endif
-	return Py_BuildValue("i", nIsDevelopmentStage);
+	return Script_BuildValue("i", nIsDevelopmentStage);
 }
 
-PyObject* appIsTestStage(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appIsTestStage(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int nIsTestStage = 0;
 #if defined(LOCALE_SERVICE_STAGE_TEST)
 	nIsTestStage = 1;
 #endif
-	return Py_BuildValue("i", nIsTestStage);
+	return Script_BuildValue("i", nIsTestStage);
 }
 
-PyObject* appIsLiveStage(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appIsLiveStage(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int nIsLiveStage = 0;
 #if !defined(LOCALE_SERVICE_STAGE_TEST) && !defined(LOCALE_SERVICE_STAGE_DEVELOPMENT)
 	nIsLiveStage = 1;
 #endif
-	return Py_BuildValue("i", nIsLiveStage);
+	return Script_BuildValue("i", nIsLiveStage);
 }
 
-PyObject* appLogoOpen(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appLogoOpen(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szName;
-	if (!PyTuple_GetString(poArgs, 0, &szName))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szName))
+		return Script_BuildException();
 
 	int nIsSuccess = 1; // CPythonApplication::Instance().OnLogoOpen(szName);
 	CMovieMan::Instance().PlayLogo(szName);
 
-	return Py_BuildValue("i", nIsSuccess);
+	return Script_BuildValue("i", nIsSuccess);
 }
 
-PyObject* appLogoUpdate(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appLogoUpdate(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int nIsRun = 0; // CPythonApplication::Instance().OnLogoUpdate();
-	return Py_BuildValue("i", nIsRun);
+	return Script_BuildValue("i", nIsRun);
 }
 
-PyObject* appLogoRender(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appLogoRender(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	// CPythonApplication::Instance().OnLogoRender();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* appLogoClose(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* appLogoClose(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	// CPythonApplication::Instance().OnLogoClose();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
 void initapp()
 {
-	static PyMethodDef s_methods[] =
+	static ScriptMethodDef s_methods[] =
 		{
-			{"IsDevStage", appIsDevStage, METH_VARARGS, NULL},
-			{"IsTestStage", appIsTestStage, METH_VARARGS, NULL},
-			{"IsLiveStage", appIsLiveStage, METH_VARARGS, NULL},
+			{"IsDevStage", appIsDevStage, SCRIPT_VARARGS, NULL},
+			{"IsTestStage", appIsTestStage, SCRIPT_VARARGS, NULL},
+			{"IsLiveStage", appIsLiveStage, SCRIPT_VARARGS, NULL},
 
 			// TEXTTAIL_LIVINGTIME_CONTROL
-			{"SetTextTailLivingTime", appSetTextTailLivingTime, METH_VARARGS, NULL},
+			{"SetTextTailLivingTime", appSetTextTailLivingTime, SCRIPT_VARARGS, NULL},
 			// END_OF_TEXTTAIL_LIVINGTIME_CONTROL
 
-			{"EnablePerformanceTime", appEnablePerformanceTime, METH_VARARGS, NULL},
-			{"SetHairColorEnable", appSetHairColorEnable, METH_VARARGS, NULL},
+			{"EnablePerformanceTime", appEnablePerformanceTime, SCRIPT_VARARGS, NULL},
+			{"SetHairColorEnable", appSetHairColorEnable, SCRIPT_VARARGS, NULL},
 
-			{"SetArmorSpecularEnable", appSetArmorSpecularEnable, METH_VARARGS, NULL},
-			{"SetWeaponSpecularEnable", appSetWeaponSpecularEnable, METH_VARARGS, NULL},
-			{"SetSkillEffectUpgradeEnable", appSetSkillEffectUpgradeEnable, METH_VARARGS, NULL},
-			{"SetTwoHandedWeaponAttSpeedDecreaseValue", SetTwoHandedWeaponAttSpeedDecreaseValue, METH_VARARGS, NULL},
-			{"SetRideHorseEnable", appSetRideHorseEnable, METH_VARARGS, NULL},
+			{"SetArmorSpecularEnable", appSetArmorSpecularEnable, SCRIPT_VARARGS, NULL},
+			{"SetWeaponSpecularEnable", appSetWeaponSpecularEnable, SCRIPT_VARARGS, NULL},
+			{"SetSkillEffectUpgradeEnable", appSetSkillEffectUpgradeEnable, SCRIPT_VARARGS, NULL},
+			{"SetTwoHandedWeaponAttSpeedDecreaseValue", SetTwoHandedWeaponAttSpeedDecreaseValue, SCRIPT_VARARGS, NULL},
+			{"SetRideHorseEnable", appSetRideHorseEnable, SCRIPT_VARARGS, NULL},
 
-			{"SetCameraMaxDistance", appSetCameraMaxDistance, METH_VARARGS, NULL},
-			{"SetMinFog", appSetMinFog, METH_VARARGS, NULL},
-			{"SetFrameSkip", appSetFrameSkip, METH_VARARGS, NULL},
-			{"GetImageInfo", appGetImageInfo, METH_VARARGS, NULL},
-			{"GetInfo", appGetInfo, METH_VARARGS, NULL},
-			{"UpdateGame", appUpdateGame, METH_VARARGS, NULL},
-			{"RenderGame", appRenderGame, METH_VARARGS, NULL},
-			{"Loop", appLoop, METH_VARARGS, NULL},
-			{"Create", appCreate, METH_VARARGS, NULL},
-			{"Process", appProcess, METH_VARARGS, NULL},
-			{"Exit", appExit, METH_VARARGS, NULL},
-			{"Abort", appAbort, METH_VARARGS, NULL},
-			{"SetMouseHandler", appSetMouseHandler, METH_VARARGS, NULL},
-			{"IsExistFile", appIsExistFile, METH_VARARGS, NULL},
-			{"GetFileList", appGetFileList, METH_VARARGS, NULL},
+			{"SetCameraMaxDistance", appSetCameraMaxDistance, SCRIPT_VARARGS, NULL},
+			{"SetMinFog", appSetMinFog, SCRIPT_VARARGS, NULL},
+			{"SetFrameSkip", appSetFrameSkip, SCRIPT_VARARGS, NULL},
+			{"GetImageInfo", appGetImageInfo, SCRIPT_VARARGS, NULL},
+			{"GetInfo", appGetInfo, SCRIPT_VARARGS, NULL},
+			{"UpdateGame", appUpdateGame, SCRIPT_VARARGS, NULL},
+			{"RenderGame", appRenderGame, SCRIPT_VARARGS, NULL},
+			{"Loop", appLoop, SCRIPT_VARARGS, NULL},
+			{"Create", appCreate, SCRIPT_VARARGS, NULL},
+			{"Process", appProcess, SCRIPT_VARARGS, NULL},
+			{"Exit", appExit, SCRIPT_VARARGS, NULL},
+			{"Abort", appAbort, SCRIPT_VARARGS, NULL},
+			{"SetMouseHandler", appSetMouseHandler, SCRIPT_VARARGS, NULL},
+			{"IsExistFile", appIsExistFile, SCRIPT_VARARGS, NULL},
+			{"GetFileList", appGetFileList, SCRIPT_VARARGS, NULL},
 
-			{"SetCamera", appSetCamera, METH_VARARGS, NULL},
-			{"GetCamera", appGetCamera, METH_VARARGS, NULL},
-			{"GetCameraPitch", appGetCameraPitch, METH_VARARGS, NULL},
-			{"GetCameraRotation", appGetCameraRotation, METH_VARARGS, NULL},
-			{"GetTime", appGetTime, METH_VARARGS, NULL},
-			{"GetGlobalTime", appGetGlobalTime, METH_VARARGS, NULL},
-			{"GetGlobalTimeStamp", appGetGlobalTimeStamp, METH_VARARGS, NULL},
-			{"GetUpdateFPS", appGetUpdateFPS, METH_VARARGS, NULL},
-			{"GetRenderFPS", appGetRenderFPS, METH_VARARGS, NULL},
-			{"RotateCamera", appRotateCamera, METH_VARARGS, NULL},
-			{"PitchCamera", appPitchCamera, METH_VARARGS, NULL},
-			{"ZoomCamera", appZoomCamera, METH_VARARGS, NULL},
-			{"MovieRotateCamera", appMovieRotateCamera, METH_VARARGS, NULL},
-			{"MoviePitchCamera", appMoviePitchCamera, METH_VARARGS, NULL},
-			{"MovieZoomCamera", appMovieZoomCamera, METH_VARARGS, NULL},
-			{"MovieResetCamera", appMovieResetCamera, METH_VARARGS, NULL},
+			{"SetCamera", appSetCamera, SCRIPT_VARARGS, NULL},
+			{"GetCamera", appGetCamera, SCRIPT_VARARGS, NULL},
+			{"GetCameraPitch", appGetCameraPitch, SCRIPT_VARARGS, NULL},
+			{"GetCameraRotation", appGetCameraRotation, SCRIPT_VARARGS, NULL},
+			{"GetTime", appGetTime, SCRIPT_VARARGS, NULL},
+			{"GetGlobalTime", appGetGlobalTime, SCRIPT_VARARGS, NULL},
+			{"GetGlobalTimeStamp", appGetGlobalTimeStamp, SCRIPT_VARARGS, NULL},
+			{"GetUpdateFPS", appGetUpdateFPS, SCRIPT_VARARGS, NULL},
+			{"GetRenderFPS", appGetRenderFPS, SCRIPT_VARARGS, NULL},
+			{"RotateCamera", appRotateCamera, SCRIPT_VARARGS, NULL},
+			{"PitchCamera", appPitchCamera, SCRIPT_VARARGS, NULL},
+			{"ZoomCamera", appZoomCamera, SCRIPT_VARARGS, NULL},
+			{"MovieRotateCamera", appMovieRotateCamera, SCRIPT_VARARGS, NULL},
+			{"MoviePitchCamera", appMoviePitchCamera, SCRIPT_VARARGS, NULL},
+			{"MovieZoomCamera", appMovieZoomCamera, SCRIPT_VARARGS, NULL},
+			{"MovieResetCamera", appMovieResetCamera, SCRIPT_VARARGS, NULL},
 
-			{"GetAvailableTextureMemory", appGetAvaiableTextureMememory, METH_VARARGS, NULL},
-			{"GetRenderTime", appGetRenderTime, METH_VARARGS, NULL},
-			{"GetUpdateTime", appGetUpdateTime, METH_VARARGS, NULL},
-			{"GetLoad", appGetLoad, METH_VARARGS, NULL},
-			{"GetFaceSpeed", appGetFaceSpeed, METH_VARARGS, NULL},
-			{"GetFaceCount", appGetFaceCount, METH_VARARGS, NULL},
-			{"SetFPS", appSetFPS, METH_VARARGS, NULL},
-			{"SetGlobalCenterPosition", appSetGlobalCenterPosition, METH_VARARGS, NULL},
-			{"SetCenterPosition", appSetCenterPosition, METH_VARARGS, NULL},
-			{"GetCursorPosition", appGetCursorPosition, METH_VARARGS, NULL},
+			{"GetAvailableTextureMemory", appGetAvaiableTextureMememory, SCRIPT_VARARGS, NULL},
+			{"GetRenderTime", appGetRenderTime, SCRIPT_VARARGS, NULL},
+			{"GetUpdateTime", appGetUpdateTime, SCRIPT_VARARGS, NULL},
+			{"GetLoad", appGetLoad, SCRIPT_VARARGS, NULL},
+			{"GetFaceSpeed", appGetFaceSpeed, SCRIPT_VARARGS, NULL},
+			{"GetFaceCount", appGetFaceCount, SCRIPT_VARARGS, NULL},
+			{"SetFPS", appSetFPS, SCRIPT_VARARGS, NULL},
+			{"SetGlobalCenterPosition", appSetGlobalCenterPosition, SCRIPT_VARARGS, NULL},
+			{"SetCenterPosition", appSetCenterPosition, SCRIPT_VARARGS, NULL},
+			{"GetCursorPosition", appGetCursorPosition, SCRIPT_VARARGS, NULL},
 
-			{"GetRandom", appGetRandom, METH_VARARGS, NULL},
-			{"RunPythonFile", appRunPythonFile, METH_VARARGS, NULL},
-			{"IsWebPageMode", appIsWebPageMode, METH_VARARGS, NULL},
-			{"ShowWebPage", appShowWebPage, METH_VARARGS, NULL},
-			{"MoveWebPage", appMoveWebPage, METH_VARARGS, NULL},
-			{"HideWebPage", appHideWebPage, METH_VARARGS, NULL},
-			{"IsPressed", appIsPressed, METH_VARARGS, NULL},
-			{"SetCursor", appSetCursor, METH_VARARGS, NULL},
-			{"GetCursor", appGetCursor, METH_VARARGS, NULL},
-			{"ShowCursor", appShowCursor, METH_VARARGS, NULL},
-			{"HideCursor", appHideCursor, METH_VARARGS, NULL},
-			{"IsShowCursor", appIsShowCursor, METH_VARARGS, NULL},
-			{"IsLiarCursorOn", appIsLiarCursorOn, METH_VARARGS, NULL},
-			{"SetSoftwareCursor", appSetSoftwareCursor, METH_VARARGS, NULL},
-			{"SetHardwareCursor", appSetHardwareCursor, METH_VARARGS, NULL},
+			{"GetRandom", appGetRandom, SCRIPT_VARARGS, NULL},
+			{"RunPythonFile", appRunPythonFile, SCRIPT_VARARGS, NULL},
+			{"IsWebPageMode", appIsWebPageMode, SCRIPT_VARARGS, NULL},
+			{"ShowWebPage", appShowWebPage, SCRIPT_VARARGS, NULL},
+			{"MoveWebPage", appMoveWebPage, SCRIPT_VARARGS, NULL},
+			{"HideWebPage", appHideWebPage, SCRIPT_VARARGS, NULL},
+			{"IsPressed", appIsPressed, SCRIPT_VARARGS, NULL},
+			{"SetCursor", appSetCursor, SCRIPT_VARARGS, NULL},
+			{"GetCursor", appGetCursor, SCRIPT_VARARGS, NULL},
+			{"ShowCursor", appShowCursor, SCRIPT_VARARGS, NULL},
+			{"HideCursor", appHideCursor, SCRIPT_VARARGS, NULL},
+			{"IsShowCursor", appIsShowCursor, SCRIPT_VARARGS, NULL},
+			{"IsLiarCursorOn", appIsLiarCursorOn, SCRIPT_VARARGS, NULL},
+			{"SetSoftwareCursor", appSetSoftwareCursor, SCRIPT_VARARGS, NULL},
+			{"SetHardwareCursor", appSetHardwareCursor, SCRIPT_VARARGS, NULL},
 
-			{"SetConnectData", appSetConnectData, METH_VARARGS, NULL},
-			{"GetConnectData", appGetConnectData, METH_VARARGS, NULL},
+			{"SetConnectData", appSetConnectData, SCRIPT_VARARGS, NULL},
+			{"GetConnectData", appGetConnectData, SCRIPT_VARARGS, NULL},
 
-			{"GetRotatingDirection", appGetRotatingDirection, METH_VARARGS, NULL},
-			{"GetDegreeDifference", appGetDegreeDifference, METH_VARARGS, NULL},
-			{"Sleep", appSleep, METH_VARARGS, NULL},
-			{"SetDefaultFontName", appSetDefaultFontName, METH_VARARGS, NULL},
-			{"SetGuildSymbolPath", appSetGuildSymbolPath, METH_VARARGS, NULL},
+			{"GetRotatingDirection", appGetRotatingDirection, SCRIPT_VARARGS, NULL},
+			{"GetDegreeDifference", appGetDegreeDifference, SCRIPT_VARARGS, NULL},
+			{"Sleep", appSleep, SCRIPT_VARARGS, NULL},
+			{"SetDefaultFontName", appSetDefaultFontName, SCRIPT_VARARGS, NULL},
+			{"SetGuildSymbolPath", appSetGuildSymbolPath, SCRIPT_VARARGS, NULL},
 
-			{"EnableSpecialCameraMode", appEnableSpecialCameraMode, METH_VARARGS, NULL},
-			{"SetCameraSpeed", appSetCameraSpeed, METH_VARARGS, NULL},
+			{"EnableSpecialCameraMode", appEnableSpecialCameraMode, SCRIPT_VARARGS, NULL},
+			{"SetCameraSpeed", appSetCameraSpeed, SCRIPT_VARARGS, NULL},
 
-			{"SaveCameraSetting", appSaveCameraSetting, METH_VARARGS, NULL},
-			{"LoadCameraSetting", appLoadCameraSetting, METH_VARARGS, NULL},
-			{"SetDefaultCamera", appSetDefaultCamera, METH_VARARGS, NULL},
-			{"SetCameraSetting", appSetCameraSetting, METH_VARARGS, NULL},
+			{"SaveCameraSetting", appSaveCameraSetting, SCRIPT_VARARGS, NULL},
+			{"LoadCameraSetting", appLoadCameraSetting, SCRIPT_VARARGS, NULL},
+			{"SetDefaultCamera", appSetDefaultCamera, SCRIPT_VARARGS, NULL},
+			{"SetCameraSetting", appSetCameraSetting, SCRIPT_VARARGS, NULL},
 
-			{"SetSightRange", appSetSightRange, METH_VARARGS, NULL},
+			{"SetSightRange", appSetSightRange, SCRIPT_VARARGS, NULL},
 
-			{"IsFileExist", appIsFileExist, METH_VARARGS, NULL},
-			{"OpenTextFile", appOpenTextFile, METH_VARARGS, NULL},
-			{"CloseTextFile", appCloseTextFile, METH_VARARGS, NULL},
-			{"GetTextFileLineCount", appGetTextFileLineCount, METH_VARARGS, NULL},
-			{"GetTextFileLine", appGetTextFileLine, METH_VARARGS, NULL},
+			{"IsFileExist", appIsFileExist, SCRIPT_VARARGS, NULL},
+			{"OpenTextFile", appOpenTextFile, SCRIPT_VARARGS, NULL},
+			{"CloseTextFile", appCloseTextFile, SCRIPT_VARARGS, NULL},
+			{"GetTextFileLineCount", appGetTextFileLineCount, SCRIPT_VARARGS, NULL},
+			{"GetTextFileLine", appGetTextFileLine, SCRIPT_VARARGS, NULL},
 
 			// LOCALE
-			{"GetLocaleServiceName", appGetLocaleServiceName, METH_VARARGS, NULL},
-			{"GetLocaleName", appGetLocaleName, METH_VARARGS, NULL},
-			{"GetLocalePath", appGetLocalePath, METH_VARARGS, NULL},
-			{"ForceSetLocale", appForceSetLocale, METH_VARARGS, NULL},
+			{"GetLocaleServiceName", appGetLocaleServiceName, SCRIPT_VARARGS, NULL},
+			{"GetLocaleName", appGetLocaleName, SCRIPT_VARARGS, NULL},
+			{"GetLocalePath", appGetLocalePath, SCRIPT_VARARGS, NULL},
+			{"ForceSetLocale", appForceSetLocale, SCRIPT_VARARGS, NULL},
 			// END_OF_LOCALE
 
 			// CHEONMA
-			{"LoadLocaleAddr", appLoadLocaleAddr, METH_VARARGS, NULL},
-			{"LoadLocaleData", appLoadLocaleData, METH_VARARGS, NULL},
-			{"SetCHEONMA", appSetCHEONMA, METH_VARARGS, NULL},
-			{"IsCHEONMA", appIsCHEONMA, METH_VARARGS, NULL},
+			{"LoadLocaleAddr", appLoadLocaleAddr, SCRIPT_VARARGS, NULL},
+			{"LoadLocaleData", appLoadLocaleData, SCRIPT_VARARGS, NULL},
+			{"SetCHEONMA", appSetCHEONMA, SCRIPT_VARARGS, NULL},
+			{"IsCHEONMA", appIsCHEONMA, SCRIPT_VARARGS, NULL},
 			// END_OF_CHEONMA
 
-			{"GetDefaultCodePage", appGetDefaultCodePage, METH_VARARGS, NULL},
-			{"SetControlFP", appSetControlFP, METH_VARARGS, NULL},
-			{"SetSpecularSpeed", appSetSpecularSpeed, METH_VARARGS, NULL},
+			{"GetDefaultCodePage", appGetDefaultCodePage, SCRIPT_VARARGS, NULL},
+			{"SetControlFP", appSetControlFP, SCRIPT_VARARGS, NULL},
+			{"SetSpecularSpeed", appSetSpecularSpeed, SCRIPT_VARARGS, NULL},
 
-			{"testGetAccumulationTime", apptestGetAccumulationTime, METH_VARARGS, NULL},
-			{"testResetAccumulationTime", apptestResetAccumulationTime, METH_VARARGS, NULL},
-			{"testSetSpecularColor", apptestSetSpecularColor, METH_VARARGS, NULL},
+			{"testGetAccumulationTime", apptestGetAccumulationTime, SCRIPT_VARARGS, NULL},
+			{"testResetAccumulationTime", apptestResetAccumulationTime, SCRIPT_VARARGS, NULL},
+			{"testSetSpecularColor", apptestSetSpecularColor, SCRIPT_VARARGS, NULL},
 
-			{"SetVisibleNotice", appSetVisibleNotice, METH_VARARGS, NULL},
-			{"IsVisibleNotice", appIsVisibleNotice, METH_VARARGS, NULL},
-			{"EnableTestServerFlag", appEnableTestServerFlag, METH_VARARGS, NULL},
-			{"IsEnableTestServerFlag", appIsEnableTestServerFlag, METH_VARARGS, NULL},
+			{"SetVisibleNotice", appSetVisibleNotice, SCRIPT_VARARGS, NULL},
+			{"IsVisibleNotice", appIsVisibleNotice, SCRIPT_VARARGS, NULL},
+			{"EnableTestServerFlag", appEnableTestServerFlag, SCRIPT_VARARGS, NULL},
+			{"IsEnableTestServerFlag", appIsEnableTestServerFlag, SCRIPT_VARARGS, NULL},
 
-			{"SetGuildMarkPath", appSetGuildMarkPath, METH_VARARGS, NULL},
+			{"SetGuildMarkPath", appSetGuildMarkPath, SCRIPT_VARARGS, NULL},
 
-			{"OnLogoUpdate", appLogoUpdate, METH_VARARGS, NULL},
-			{"OnLogoRender", appLogoRender, METH_VARARGS, NULL},
-			{"OnLogoOpen", appLogoOpen, METH_VARARGS, NULL},
-			{"OnLogoClose", appLogoClose, METH_VARARGS, NULL},
+			{"OnLogoUpdate", appLogoUpdate, SCRIPT_VARARGS, NULL},
+			{"OnLogoRender", appLogoRender, SCRIPT_VARARGS, NULL},
+			{"OnLogoOpen", appLogoOpen, SCRIPT_VARARGS, NULL},
+			{"OnLogoClose", appLogoClose, SCRIPT_VARARGS, NULL},
 
 			{NULL, NULL, 0, NULL},
 		};
 
-	PyObject* poModule = Py_InitModule("app", s_methods);
+	ScriptObject* poModule = ScriptModule_Create("app", s_methods);
 
-	PyModule_AddIntConstant(poModule, "INFO_ITEM", CPythonApplication::INFO_ITEM);
-	PyModule_AddIntConstant(poModule, "INFO_ACTOR", CPythonApplication::INFO_ACTOR);
-	PyModule_AddIntConstant(poModule, "INFO_EFFECT", CPythonApplication::INFO_EFFECT);
-	PyModule_AddIntConstant(poModule, "INFO_TEXTTAIL", CPythonApplication::INFO_TEXTTAIL);
+	ScriptModule_AddIntConstant(poModule, "INFO_ITEM", CPythonApplication::INFO_ITEM);
+	ScriptModule_AddIntConstant(poModule, "INFO_ACTOR", CPythonApplication::INFO_ACTOR);
+	ScriptModule_AddIntConstant(poModule, "INFO_EFFECT", CPythonApplication::INFO_EFFECT);
+	ScriptModule_AddIntConstant(poModule, "INFO_TEXTTAIL", CPythonApplication::INFO_TEXTTAIL);
 
-	PyModule_AddIntConstant(poModule, "DEGREE_DIRECTION_SAME", DEGREE_DIRECTION_SAME);
-	PyModule_AddIntConstant(poModule, "DEGREE_DIRECTION_RIGHT", DEGREE_DIRECTION_RIGHT);
-	PyModule_AddIntConstant(poModule, "DEGREE_DIRECTION_LEFT", DEGREE_DIRECTION_LEFT);
+	ScriptModule_AddIntConstant(poModule, "DEGREE_DIRECTION_SAME", DEGREE_DIRECTION_SAME);
+	ScriptModule_AddIntConstant(poModule, "DEGREE_DIRECTION_RIGHT", DEGREE_DIRECTION_RIGHT);
+	ScriptModule_AddIntConstant(poModule, "DEGREE_DIRECTION_LEFT", DEGREE_DIRECTION_LEFT);
 
-	PyModule_AddIntConstant(poModule, "VK_LEFT", VK_LEFT);
-	PyModule_AddIntConstant(poModule, "VK_RIGHT", VK_RIGHT);
-	PyModule_AddIntConstant(poModule, "VK_UP", VK_UP);
-	PyModule_AddIntConstant(poModule, "VK_DOWN", VK_DOWN);
-	PyModule_AddIntConstant(poModule, "VK_HOME", VK_HOME);
-	PyModule_AddIntConstant(poModule, "VK_END", VK_END);
-	PyModule_AddIntConstant(poModule, "VK_DELETE", VK_DELETE);
+	ScriptModule_AddIntConstant(poModule, "VK_LEFT", VK_LEFT);
+	ScriptModule_AddIntConstant(poModule, "VK_RIGHT", VK_RIGHT);
+	ScriptModule_AddIntConstant(poModule, "VK_UP", VK_UP);
+	ScriptModule_AddIntConstant(poModule, "VK_DOWN", VK_DOWN);
+	ScriptModule_AddIntConstant(poModule, "VK_HOME", VK_HOME);
+	ScriptModule_AddIntConstant(poModule, "VK_END", VK_END);
+	ScriptModule_AddIntConstant(poModule, "VK_DELETE", VK_DELETE);
 
-	PyModule_AddIntConstant(poModule, "DIK_ESCAPE", DIK_ESCAPE);
-	PyModule_AddIntConstant(poModule, "DIK_ESC", DIK_ESCAPE); // 편의를 위해
-	PyModule_AddIntConstant(poModule, "DIK_1", DIK_1);
-	PyModule_AddIntConstant(poModule, "DIK_2", DIK_2);
-	PyModule_AddIntConstant(poModule, "DIK_3", DIK_3);
-	PyModule_AddIntConstant(poModule, "DIK_4", DIK_4);
-	PyModule_AddIntConstant(poModule, "DIK_5", DIK_5);
-	PyModule_AddIntConstant(poModule, "DIK_6", DIK_6);
-	PyModule_AddIntConstant(poModule, "DIK_7", DIK_7);
-	PyModule_AddIntConstant(poModule, "DIK_8", DIK_8);
-	PyModule_AddIntConstant(poModule, "DIK_9", DIK_9);
-	PyModule_AddIntConstant(poModule, "DIK_0", DIK_0);
-	PyModule_AddIntConstant(poModule, "DIK_MINUS", DIK_MINUS); /* - on main keyboard */
-	PyModule_AddIntConstant(poModule, "DIK_EQUALS", DIK_EQUALS);
-	PyModule_AddIntConstant(poModule, "DIK_BACK", DIK_BACK); /* backspace */
-	PyModule_AddIntConstant(poModule, "DIK_TAB", DIK_TAB);
-	PyModule_AddIntConstant(poModule, "DIK_Q", DIK_Q);
-	PyModule_AddIntConstant(poModule, "DIK_W", DIK_W);
-	PyModule_AddIntConstant(poModule, "DIK_E", DIK_E);
-	PyModule_AddIntConstant(poModule, "DIK_R", DIK_R);
-	PyModule_AddIntConstant(poModule, "DIK_T", DIK_T);
-	PyModule_AddIntConstant(poModule, "DIK_Y", DIK_Y);
-	PyModule_AddIntConstant(poModule, "DIK_U", DIK_U);
-	PyModule_AddIntConstant(poModule, "DIK_I", DIK_I);
-	PyModule_AddIntConstant(poModule, "DIK_O", DIK_O);
-	PyModule_AddIntConstant(poModule, "DIK_P", DIK_P);
-	PyModule_AddIntConstant(poModule, "DIK_LBRACKET", DIK_LBRACKET);
-	PyModule_AddIntConstant(poModule, "DIK_RBRACKET", DIK_RBRACKET);
-	PyModule_AddIntConstant(poModule, "DIK_RETURN", DIK_RETURN); /* Enter on main keyboard */
-	PyModule_AddIntConstant(poModule, "DIK_LCONTROL", DIK_LCONTROL);
-	PyModule_AddIntConstant(poModule, "DIK_A", DIK_A);
-	PyModule_AddIntConstant(poModule, "DIK_S", DIK_S);
-	PyModule_AddIntConstant(poModule, "DIK_D", DIK_D);
-	PyModule_AddIntConstant(poModule, "DIK_F", DIK_F);
-	PyModule_AddIntConstant(poModule, "DIK_G", DIK_G);
-	PyModule_AddIntConstant(poModule, "DIK_H", DIK_H);
-	PyModule_AddIntConstant(poModule, "DIK_J", DIK_J);
-	PyModule_AddIntConstant(poModule, "DIK_K", DIK_K);
-	PyModule_AddIntConstant(poModule, "DIK_L", DIK_L);
-	PyModule_AddIntConstant(poModule, "DIK_SEMICOLON", DIK_SEMICOLON);
-	PyModule_AddIntConstant(poModule, "DIK_APOSTROPHE", DIK_APOSTROPHE);
-	PyModule_AddIntConstant(poModule, "DIK_GRAVE", DIK_GRAVE); /* accent grave */
-	PyModule_AddIntConstant(poModule, "DIK_LSHIFT", DIK_LSHIFT);
-	PyModule_AddIntConstant(poModule, "DIK_BACKSLASH", DIK_BACKSLASH);
-	PyModule_AddIntConstant(poModule, "DIK_Z", DIK_Z);
-	PyModule_AddIntConstant(poModule, "DIK_X", DIK_X);
-	PyModule_AddIntConstant(poModule, "DIK_C", DIK_C);
-	PyModule_AddIntConstant(poModule, "DIK_V", DIK_V);
-	PyModule_AddIntConstant(poModule, "DIK_B", DIK_B);
-	PyModule_AddIntConstant(poModule, "DIK_N", DIK_N);
-	PyModule_AddIntConstant(poModule, "DIK_M", DIK_M);
-	PyModule_AddIntConstant(poModule, "DIK_COMMA", DIK_COMMA);
-	PyModule_AddIntConstant(poModule, "DIK_PERIOD", DIK_PERIOD); /* . on main keyboard */
-	PyModule_AddIntConstant(poModule, "DIK_SLASH", DIK_SLASH);	 /* / on main keyboard */
-	PyModule_AddIntConstant(poModule, "DIK_RSHIFT", DIK_RSHIFT);
-	PyModule_AddIntConstant(poModule, "DIK_MULTIPLY", DIK_MULTIPLY); /* * on numeric keypad */
-	PyModule_AddIntConstant(poModule, "DIK_LALT", DIK_LMENU);		 /* left Alt */
-	PyModule_AddIntConstant(poModule, "DIK_SPACE", DIK_SPACE);
-	PyModule_AddIntConstant(poModule, "DIK_CAPITAL", DIK_CAPITAL);
-	PyModule_AddIntConstant(poModule, "DIK_F1", DIK_F1);
-	PyModule_AddIntConstant(poModule, "DIK_F2", DIK_F2);
-	PyModule_AddIntConstant(poModule, "DIK_F3", DIK_F3);
-	PyModule_AddIntConstant(poModule, "DIK_F4", DIK_F4);
-	PyModule_AddIntConstant(poModule, "DIK_F5", DIK_F5);
-	PyModule_AddIntConstant(poModule, "DIK_F6", DIK_F6);
-	PyModule_AddIntConstant(poModule, "DIK_F7", DIK_F7);
-	PyModule_AddIntConstant(poModule, "DIK_F8", DIK_F8);
-	PyModule_AddIntConstant(poModule, "DIK_F9", DIK_F9);
-	PyModule_AddIntConstant(poModule, "DIK_F10", DIK_F10);
-	PyModule_AddIntConstant(poModule, "DIK_NUMLOCK", DIK_NUMLOCK);
-	PyModule_AddIntConstant(poModule, "DIK_SCROLL", DIK_SCROLL); /* Scroll Lock */
-	PyModule_AddIntConstant(poModule, "DIK_NUMPAD7", DIK_NUMPAD7);
-	PyModule_AddIntConstant(poModule, "DIK_NUMPAD8", DIK_NUMPAD8);
-	PyModule_AddIntConstant(poModule, "DIK_NUMPAD9", DIK_NUMPAD9);
-	PyModule_AddIntConstant(poModule, "DIK_SUBTRACT", DIK_SUBTRACT); /* - on numeric keypad */
-	PyModule_AddIntConstant(poModule, "DIK_NUMPAD4", DIK_NUMPAD4);
-	PyModule_AddIntConstant(poModule, "DIK_NUMPAD5", DIK_NUMPAD5);
-	PyModule_AddIntConstant(poModule, "DIK_NUMPAD6", DIK_NUMPAD6);
-	PyModule_AddIntConstant(poModule, "DIK_ADD", DIK_ADD); /* + on numeric keypad */
-	PyModule_AddIntConstant(poModule, "DIK_NUMPAD1", DIK_NUMPAD1);
-	PyModule_AddIntConstant(poModule, "DIK_NUMPAD2", DIK_NUMPAD2);
-	PyModule_AddIntConstant(poModule, "DIK_NUMPAD3", DIK_NUMPAD3);
-	PyModule_AddIntConstant(poModule, "DIK_NUMPAD0", DIK_NUMPAD0);
-	PyModule_AddIntConstant(poModule, "DIK_DECIMAL", DIK_DECIMAL); /* . on numeric keypad */
-	PyModule_AddIntConstant(poModule, "DIK_F11", DIK_F11);
-	PyModule_AddIntConstant(poModule, "DIK_F12", DIK_F12);
-	PyModule_AddIntConstant(poModule, "DIK_NEXTTRACK", DIK_NEXTTRACK);	   /* Next Track */
-	PyModule_AddIntConstant(poModule, "DIK_NUMPADENTER", DIK_NUMPADENTER); /* Enter on numeric keypad */
-	PyModule_AddIntConstant(poModule, "DIK_RCONTROL", DIK_RCONTROL);
-	PyModule_AddIntConstant(poModule, "DIK_MUTE", DIK_MUTE);			   /* Mute */
-	PyModule_AddIntConstant(poModule, "DIK_CALCULATOR", DIK_CALCULATOR);   /* Calculator */
-	PyModule_AddIntConstant(poModule, "DIK_PLAYPAUSE", DIK_PLAYPAUSE);	   /* Play / Pause */
-	PyModule_AddIntConstant(poModule, "DIK_MEDIASTOP", DIK_MEDIASTOP);	   /* Media Stop */
-	PyModule_AddIntConstant(poModule, "DIK_VOLUMEDOWN", DIK_VOLUMEDOWN);   /* Volume - */
-	PyModule_AddIntConstant(poModule, "DIK_VOLUMEUP", DIK_VOLUMEUP);	   /* Volume + */
-	PyModule_AddIntConstant(poModule, "DIK_WEBHOME", DIK_WEBHOME);		   /* Web home */
-	PyModule_AddIntConstant(poModule, "DIK_NUMPADCOMMA", DIK_NUMPADCOMMA); /* , on numeric keypad (NEC PC98) */
-	PyModule_AddIntConstant(poModule, "DIK_DIVIDE", DIK_DIVIDE);		   /* / on numeric keypad */
-	PyModule_AddIntConstant(poModule, "DIK_SYSRQ", DIK_SYSRQ);
-	PyModule_AddIntConstant(poModule, "DIK_RALT", DIK_RMENU);	 /* right Alt */
-	PyModule_AddIntConstant(poModule, "DIK_PAUSE", DIK_PAUSE);	 /* Pause */
-	PyModule_AddIntConstant(poModule, "DIK_HOME", DIK_HOME);	 /* Home on arrow keypad */
-	PyModule_AddIntConstant(poModule, "DIK_UP", DIK_UP);		 /* UpArrow on arrow keypad */
-	PyModule_AddIntConstant(poModule, "DIK_PGUP", DIK_PRIOR);	 /* PgUp on arrow keypad */
-	PyModule_AddIntConstant(poModule, "DIK_LEFT", DIK_LEFT);	 /* LeftArrow on arrow keypad */
-	PyModule_AddIntConstant(poModule, "DIK_RIGHT", DIK_RIGHT);	 /* RightArrow on arrow keypad */
-	PyModule_AddIntConstant(poModule, "DIK_END", DIK_END);		 /* End on arrow keypad */
-	PyModule_AddIntConstant(poModule, "DIK_DOWN", DIK_DOWN);	 /* DownArrow on arrow keypad */
-	PyModule_AddIntConstant(poModule, "DIK_PGDN", DIK_NEXT);	 /* PgDn on arrow keypad */
-	PyModule_AddIntConstant(poModule, "DIK_INSERT", DIK_INSERT); /* Insert on arrow keypad */
-	PyModule_AddIntConstant(poModule, "DIK_DELETE", DIK_DELETE); /* Delete on arrow keypad */
-	PyModule_AddIntConstant(poModule, "DIK_LWIN", DIK_LWIN);	 /* Left Windows key */
-	PyModule_AddIntConstant(poModule, "DIK_RWIN", DIK_RWIN);	 /* Right Windows key */
-	PyModule_AddIntConstant(poModule, "DIK_APPS", DIK_APPS);	 /* AppMenu key */
+	ScriptModule_AddIntConstant(poModule, "DIK_ESCAPE", DIK_ESCAPE);
+	ScriptModule_AddIntConstant(poModule, "DIK_ESC", DIK_ESCAPE); // 편의를 위해
+	ScriptModule_AddIntConstant(poModule, "DIK_1", DIK_1);
+	ScriptModule_AddIntConstant(poModule, "DIK_2", DIK_2);
+	ScriptModule_AddIntConstant(poModule, "DIK_3", DIK_3);
+	ScriptModule_AddIntConstant(poModule, "DIK_4", DIK_4);
+	ScriptModule_AddIntConstant(poModule, "DIK_5", DIK_5);
+	ScriptModule_AddIntConstant(poModule, "DIK_6", DIK_6);
+	ScriptModule_AddIntConstant(poModule, "DIK_7", DIK_7);
+	ScriptModule_AddIntConstant(poModule, "DIK_8", DIK_8);
+	ScriptModule_AddIntConstant(poModule, "DIK_9", DIK_9);
+	ScriptModule_AddIntConstant(poModule, "DIK_0", DIK_0);
+	ScriptModule_AddIntConstant(poModule, "DIK_MINUS", DIK_MINUS); /* - on main keyboard */
+	ScriptModule_AddIntConstant(poModule, "DIK_EQUALS", DIK_EQUALS);
+	ScriptModule_AddIntConstant(poModule, "DIK_BACK", DIK_BACK); /* backspace */
+	ScriptModule_AddIntConstant(poModule, "DIK_TAB", DIK_TAB);
+	ScriptModule_AddIntConstant(poModule, "DIK_Q", DIK_Q);
+	ScriptModule_AddIntConstant(poModule, "DIK_W", DIK_W);
+	ScriptModule_AddIntConstant(poModule, "DIK_E", DIK_E);
+	ScriptModule_AddIntConstant(poModule, "DIK_R", DIK_R);
+	ScriptModule_AddIntConstant(poModule, "DIK_T", DIK_T);
+	ScriptModule_AddIntConstant(poModule, "DIK_Y", DIK_Y);
+	ScriptModule_AddIntConstant(poModule, "DIK_U", DIK_U);
+	ScriptModule_AddIntConstant(poModule, "DIK_I", DIK_I);
+	ScriptModule_AddIntConstant(poModule, "DIK_O", DIK_O);
+	ScriptModule_AddIntConstant(poModule, "DIK_P", DIK_P);
+	ScriptModule_AddIntConstant(poModule, "DIK_LBRACKET", DIK_LBRACKET);
+	ScriptModule_AddIntConstant(poModule, "DIK_RBRACKET", DIK_RBRACKET);
+	ScriptModule_AddIntConstant(poModule, "DIK_RETURN", DIK_RETURN); /* Enter on main keyboard */
+	ScriptModule_AddIntConstant(poModule, "DIK_LCONTROL", DIK_LCONTROL);
+	ScriptModule_AddIntConstant(poModule, "DIK_A", DIK_A);
+	ScriptModule_AddIntConstant(poModule, "DIK_S", DIK_S);
+	ScriptModule_AddIntConstant(poModule, "DIK_D", DIK_D);
+	ScriptModule_AddIntConstant(poModule, "DIK_F", DIK_F);
+	ScriptModule_AddIntConstant(poModule, "DIK_G", DIK_G);
+	ScriptModule_AddIntConstant(poModule, "DIK_H", DIK_H);
+	ScriptModule_AddIntConstant(poModule, "DIK_J", DIK_J);
+	ScriptModule_AddIntConstant(poModule, "DIK_K", DIK_K);
+	ScriptModule_AddIntConstant(poModule, "DIK_L", DIK_L);
+	ScriptModule_AddIntConstant(poModule, "DIK_SEMICOLON", DIK_SEMICOLON);
+	ScriptModule_AddIntConstant(poModule, "DIK_APOSTROPHE", DIK_APOSTROPHE);
+	ScriptModule_AddIntConstant(poModule, "DIK_GRAVE", DIK_GRAVE); /* accent grave */
+	ScriptModule_AddIntConstant(poModule, "DIK_LSHIFT", DIK_LSHIFT);
+	ScriptModule_AddIntConstant(poModule, "DIK_BACKSLASH", DIK_BACKSLASH);
+	ScriptModule_AddIntConstant(poModule, "DIK_Z", DIK_Z);
+	ScriptModule_AddIntConstant(poModule, "DIK_X", DIK_X);
+	ScriptModule_AddIntConstant(poModule, "DIK_C", DIK_C);
+	ScriptModule_AddIntConstant(poModule, "DIK_V", DIK_V);
+	ScriptModule_AddIntConstant(poModule, "DIK_B", DIK_B);
+	ScriptModule_AddIntConstant(poModule, "DIK_N", DIK_N);
+	ScriptModule_AddIntConstant(poModule, "DIK_M", DIK_M);
+	ScriptModule_AddIntConstant(poModule, "DIK_COMMA", DIK_COMMA);
+	ScriptModule_AddIntConstant(poModule, "DIK_PERIOD", DIK_PERIOD); /* . on main keyboard */
+	ScriptModule_AddIntConstant(poModule, "DIK_SLASH", DIK_SLASH);	 /* / on main keyboard */
+	ScriptModule_AddIntConstant(poModule, "DIK_RSHIFT", DIK_RSHIFT);
+	ScriptModule_AddIntConstant(poModule, "DIK_MULTIPLY", DIK_MULTIPLY); /* * on numeric keypad */
+	ScriptModule_AddIntConstant(poModule, "DIK_LALT", DIK_LMENU);		 /* left Alt */
+	ScriptModule_AddIntConstant(poModule, "DIK_SPACE", DIK_SPACE);
+	ScriptModule_AddIntConstant(poModule, "DIK_CAPITAL", DIK_CAPITAL);
+	ScriptModule_AddIntConstant(poModule, "DIK_F1", DIK_F1);
+	ScriptModule_AddIntConstant(poModule, "DIK_F2", DIK_F2);
+	ScriptModule_AddIntConstant(poModule, "DIK_F3", DIK_F3);
+	ScriptModule_AddIntConstant(poModule, "DIK_F4", DIK_F4);
+	ScriptModule_AddIntConstant(poModule, "DIK_F5", DIK_F5);
+	ScriptModule_AddIntConstant(poModule, "DIK_F6", DIK_F6);
+	ScriptModule_AddIntConstant(poModule, "DIK_F7", DIK_F7);
+	ScriptModule_AddIntConstant(poModule, "DIK_F8", DIK_F8);
+	ScriptModule_AddIntConstant(poModule, "DIK_F9", DIK_F9);
+	ScriptModule_AddIntConstant(poModule, "DIK_F10", DIK_F10);
+	ScriptModule_AddIntConstant(poModule, "DIK_NUMLOCK", DIK_NUMLOCK);
+	ScriptModule_AddIntConstant(poModule, "DIK_SCROLL", DIK_SCROLL); /* Scroll Lock */
+	ScriptModule_AddIntConstant(poModule, "DIK_NUMPAD7", DIK_NUMPAD7);
+	ScriptModule_AddIntConstant(poModule, "DIK_NUMPAD8", DIK_NUMPAD8);
+	ScriptModule_AddIntConstant(poModule, "DIK_NUMPAD9", DIK_NUMPAD9);
+	ScriptModule_AddIntConstant(poModule, "DIK_SUBTRACT", DIK_SUBTRACT); /* - on numeric keypad */
+	ScriptModule_AddIntConstant(poModule, "DIK_NUMPAD4", DIK_NUMPAD4);
+	ScriptModule_AddIntConstant(poModule, "DIK_NUMPAD5", DIK_NUMPAD5);
+	ScriptModule_AddIntConstant(poModule, "DIK_NUMPAD6", DIK_NUMPAD6);
+	ScriptModule_AddIntConstant(poModule, "DIK_ADD", DIK_ADD); /* + on numeric keypad */
+	ScriptModule_AddIntConstant(poModule, "DIK_NUMPAD1", DIK_NUMPAD1);
+	ScriptModule_AddIntConstant(poModule, "DIK_NUMPAD2", DIK_NUMPAD2);
+	ScriptModule_AddIntConstant(poModule, "DIK_NUMPAD3", DIK_NUMPAD3);
+	ScriptModule_AddIntConstant(poModule, "DIK_NUMPAD0", DIK_NUMPAD0);
+	ScriptModule_AddIntConstant(poModule, "DIK_DECIMAL", DIK_DECIMAL); /* . on numeric keypad */
+	ScriptModule_AddIntConstant(poModule, "DIK_F11", DIK_F11);
+	ScriptModule_AddIntConstant(poModule, "DIK_F12", DIK_F12);
+	ScriptModule_AddIntConstant(poModule, "DIK_NEXTTRACK", DIK_NEXTTRACK);	   /* Next Track */
+	ScriptModule_AddIntConstant(poModule, "DIK_NUMPADENTER", DIK_NUMPADENTER); /* Enter on numeric keypad */
+	ScriptModule_AddIntConstant(poModule, "DIK_RCONTROL", DIK_RCONTROL);
+	ScriptModule_AddIntConstant(poModule, "DIK_MUTE", DIK_MUTE);			   /* Mute */
+	ScriptModule_AddIntConstant(poModule, "DIK_CALCULATOR", DIK_CALCULATOR);   /* Calculator */
+	ScriptModule_AddIntConstant(poModule, "DIK_PLAYPAUSE", DIK_PLAYPAUSE);	   /* Play / Pause */
+	ScriptModule_AddIntConstant(poModule, "DIK_MEDIASTOP", DIK_MEDIASTOP);	   /* Media Stop */
+	ScriptModule_AddIntConstant(poModule, "DIK_VOLUMEDOWN", DIK_VOLUMEDOWN);   /* Volume - */
+	ScriptModule_AddIntConstant(poModule, "DIK_VOLUMEUP", DIK_VOLUMEUP);	   /* Volume + */
+	ScriptModule_AddIntConstant(poModule, "DIK_WEBHOME", DIK_WEBHOME);		   /* Web home */
+	ScriptModule_AddIntConstant(poModule, "DIK_NUMPADCOMMA", DIK_NUMPADCOMMA); /* , on numeric keypad (NEC PC98) */
+	ScriptModule_AddIntConstant(poModule, "DIK_DIVIDE", DIK_DIVIDE);		   /* / on numeric keypad */
+	ScriptModule_AddIntConstant(poModule, "DIK_SYSRQ", DIK_SYSRQ);
+	ScriptModule_AddIntConstant(poModule, "DIK_RALT", DIK_RMENU);	 /* right Alt */
+	ScriptModule_AddIntConstant(poModule, "DIK_PAUSE", DIK_PAUSE);	 /* Pause */
+	ScriptModule_AddIntConstant(poModule, "DIK_HOME", DIK_HOME);	 /* Home on arrow keypad */
+	ScriptModule_AddIntConstant(poModule, "DIK_UP", DIK_UP);		 /* UpArrow on arrow keypad */
+	ScriptModule_AddIntConstant(poModule, "DIK_PGUP", DIK_PRIOR);	 /* PgUp on arrow keypad */
+	ScriptModule_AddIntConstant(poModule, "DIK_LEFT", DIK_LEFT);	 /* LeftArrow on arrow keypad */
+	ScriptModule_AddIntConstant(poModule, "DIK_RIGHT", DIK_RIGHT);	 /* RightArrow on arrow keypad */
+	ScriptModule_AddIntConstant(poModule, "DIK_END", DIK_END);		 /* End on arrow keypad */
+	ScriptModule_AddIntConstant(poModule, "DIK_DOWN", DIK_DOWN);	 /* DownArrow on arrow keypad */
+	ScriptModule_AddIntConstant(poModule, "DIK_PGDN", DIK_NEXT);	 /* PgDn on arrow keypad */
+	ScriptModule_AddIntConstant(poModule, "DIK_INSERT", DIK_INSERT); /* Insert on arrow keypad */
+	ScriptModule_AddIntConstant(poModule, "DIK_DELETE", DIK_DELETE); /* Delete on arrow keypad */
+	ScriptModule_AddIntConstant(poModule, "DIK_LWIN", DIK_LWIN);	 /* Left Windows key */
+	ScriptModule_AddIntConstant(poModule, "DIK_RWIN", DIK_RWIN);	 /* Right Windows key */
+	ScriptModule_AddIntConstant(poModule, "DIK_APPS", DIK_APPS);	 /* AppMenu key */
 
 	// Cursor
-	PyModule_AddIntConstant(poModule, "NORMAL", CPythonApplication::CURSOR_SHAPE_NORMAL);
-	PyModule_AddIntConstant(poModule, "ATTACK", CPythonApplication::CURSOR_SHAPE_ATTACK);
-	PyModule_AddIntConstant(poModule, "TARGET", CPythonApplication::CURSOR_SHAPE_TARGET);
-	PyModule_AddIntConstant(poModule, "TALK", CPythonApplication::CURSOR_SHAPE_TALK);
-	PyModule_AddIntConstant(poModule, "CANT_GO", CPythonApplication::CURSOR_SHAPE_CANT_GO);
-	PyModule_AddIntConstant(poModule, "PICK", CPythonApplication::CURSOR_SHAPE_PICK);
+	ScriptModule_AddIntConstant(poModule, "NORMAL", CPythonApplication::CURSOR_SHAPE_NORMAL);
+	ScriptModule_AddIntConstant(poModule, "ATTACK", CPythonApplication::CURSOR_SHAPE_ATTACK);
+	ScriptModule_AddIntConstant(poModule, "TARGET", CPythonApplication::CURSOR_SHAPE_TARGET);
+	ScriptModule_AddIntConstant(poModule, "TALK", CPythonApplication::CURSOR_SHAPE_TALK);
+	ScriptModule_AddIntConstant(poModule, "CANT_GO", CPythonApplication::CURSOR_SHAPE_CANT_GO);
+	ScriptModule_AddIntConstant(poModule, "PICK", CPythonApplication::CURSOR_SHAPE_PICK);
 
-	PyModule_AddIntConstant(poModule, "DOOR", CPythonApplication::CURSOR_SHAPE_DOOR);
-	PyModule_AddIntConstant(poModule, "CHAIR", CPythonApplication::CURSOR_SHAPE_CHAIR);
-	PyModule_AddIntConstant(poModule, "MAGIC", CPythonApplication::CURSOR_SHAPE_MAGIC);
-	PyModule_AddIntConstant(poModule, "BUY", CPythonApplication::CURSOR_SHAPE_BUY);
-	PyModule_AddIntConstant(poModule, "SELL", CPythonApplication::CURSOR_SHAPE_SELL);
+	ScriptModule_AddIntConstant(poModule, "DOOR", CPythonApplication::CURSOR_SHAPE_DOOR);
+	ScriptModule_AddIntConstant(poModule, "CHAIR", CPythonApplication::CURSOR_SHAPE_CHAIR);
+	ScriptModule_AddIntConstant(poModule, "MAGIC", CPythonApplication::CURSOR_SHAPE_MAGIC);
+	ScriptModule_AddIntConstant(poModule, "BUY", CPythonApplication::CURSOR_SHAPE_BUY);
+	ScriptModule_AddIntConstant(poModule, "SELL", CPythonApplication::CURSOR_SHAPE_SELL);
 
-	PyModule_AddIntConstant(poModule, "CAMERA_ROTATE", CPythonApplication::CURSOR_SHAPE_CAMERA_ROTATE);
-	PyModule_AddIntConstant(poModule, "HSIZE", CPythonApplication::CURSOR_SHAPE_HSIZE);
-	PyModule_AddIntConstant(poModule, "VSIZE", CPythonApplication::CURSOR_SHAPE_VSIZE);
-	PyModule_AddIntConstant(poModule, "HVSIZE", CPythonApplication::CURSOR_SHAPE_HVSIZE);
+	ScriptModule_AddIntConstant(poModule, "CAMERA_ROTATE", CPythonApplication::CURSOR_SHAPE_CAMERA_ROTATE);
+	ScriptModule_AddIntConstant(poModule, "HSIZE", CPythonApplication::CURSOR_SHAPE_HSIZE);
+	ScriptModule_AddIntConstant(poModule, "VSIZE", CPythonApplication::CURSOR_SHAPE_VSIZE);
+	ScriptModule_AddIntConstant(poModule, "HVSIZE", CPythonApplication::CURSOR_SHAPE_HVSIZE);
 
-	PyModule_AddIntConstant(poModule, "CAMERA_TO_POSITIVE", CPythonApplication::CAMERA_TO_POSITIVE);
-	PyModule_AddIntConstant(poModule, "CAMERA_TO_NEGATIVE", CPythonApplication::CAMERA_TO_NEGITIVE);
-	PyModule_AddIntConstant(poModule, "CAMERA_STOP", CPythonApplication::CAMERA_STOP);
+	ScriptModule_AddIntConstant(poModule, "CAMERA_TO_POSITIVE", CPythonApplication::CAMERA_TO_POSITIVE);
+	ScriptModule_AddIntConstant(poModule, "CAMERA_TO_NEGATIVE", CPythonApplication::CAMERA_TO_NEGITIVE);
+	ScriptModule_AddIntConstant(poModule, "CAMERA_STOP", CPythonApplication::CAMERA_STOP);
 
 #ifdef ENABLE_COSTUME_SYSTEM
-	PyModule_AddIntConstant(poModule, "ENABLE_COSTUME_SYSTEM", 1);
+	ScriptModule_AddIntConstant(poModule, "ENABLE_COSTUME_SYSTEM", 1);
 #else
-	PyModule_AddIntConstant(poModule, "ENABLE_COSTUME_SYSTEM", 0);
+	ScriptModule_AddIntConstant(poModule, "ENABLE_COSTUME_SYSTEM", 0);
 #endif
 
 #ifdef ENABLE_ENERGY_SYSTEM
-	PyModule_AddIntConstant(poModule, "ENABLE_ENERGY_SYSTEM", 1);
+	ScriptModule_AddIntConstant(poModule, "ENABLE_ENERGY_SYSTEM", 1);
 #else
-	PyModule_AddIntConstant(poModule, "ENABLE_ENERGY_SYSTEM", 0);
+	ScriptModule_AddIntConstant(poModule, "ENABLE_ENERGY_SYSTEM", 0);
 #endif
 
 #ifdef ENABLE_DRAGON_SOUL_SYSTEM
-	PyModule_AddIntConstant(poModule, "ENABLE_DRAGON_SOUL_SYSTEM", 1);
+	ScriptModule_AddIntConstant(poModule, "ENABLE_DRAGON_SOUL_SYSTEM", 1);
 #else
-	PyModule_AddIntConstant(poModule, "ENABLE_DRAGON_SOUL_SYSTEM", 0);
+	ScriptModule_AddIntConstant(poModule, "ENABLE_DRAGON_SOUL_SYSTEM", 0);
 #endif
 
 #ifdef ENABLE_NEW_EQUIPMENT_SYSTEM
-	PyModule_AddIntConstant(poModule, "ENABLE_NEW_EQUIPMENT_SYSTEM", 1);
+	ScriptModule_AddIntConstant(poModule, "ENABLE_NEW_EQUIPMENT_SYSTEM", 1);
 #else
-	PyModule_AddIntConstant(poModule, "ENABLE_NEW_EQUIPMENT_SYSTEM", 0);
+	ScriptModule_AddIntConstant(poModule, "ENABLE_NEW_EQUIPMENT_SYSTEM", 0);
 #endif
 
-	PyModule_AddIntConstant(poModule, "USE_OPENID", 0);
-	PyModule_AddIntConstant(poModule, "OPENID_TEST", 0);
+	ScriptModule_AddIntConstant(poModule, "USE_OPENID", 0);
+	ScriptModule_AddIntConstant(poModule, "OPENID_TEST", 0);
 }

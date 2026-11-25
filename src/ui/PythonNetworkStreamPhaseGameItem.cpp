@@ -112,7 +112,7 @@ bool CPythonNetworkStream::RecvSafeBoxWrongPasswordPacket()
 	if (!Recv(sizeof(kSafeboxWrongPassword), &kSafeboxWrongPassword))
 		return false;
 
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OnSafeBoxError", Py_BuildValue("()"));
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OnSafeBoxError", Script_BuildValue("()"));
 
 	return true;
 }
@@ -124,7 +124,7 @@ bool CPythonNetworkStream::RecvSafeBoxSizePacket()
 		return false;
 
 	CPythonSafeBox::Instance().OpenSafeBox(kSafeBoxSize.bSize);
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OpenSafeboxWindow", Py_BuildValue("(i)", kSafeBoxSize.bSize));
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OpenSafeboxWindow", Script_BuildValue("(i)", kSafeBoxSize.bSize));
 
 	return true;
 }
@@ -136,7 +136,7 @@ bool CPythonNetworkStream::RecvSafeBoxMoneyChangePacket()
 		return false;
 
 	CPythonSafeBox::Instance().SetMoney(kMoneyChange.dwMoney);
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshSafeboxMoney", Py_BuildValue("()"));
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshSafeboxMoney", Script_BuildValue("()"));
 
 	return true;
 }
@@ -167,7 +167,7 @@ bool CPythonNetworkStream::RecvMallOpenPacket()
 		return false;
 
 	CPythonSafeBox::Instance().OpenMall(kMallOpen.bSize);
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OpenMallWindow", Py_BuildValue("(i)", kMallOpen.bSize));
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OpenMallWindow", Script_BuildValue("(i)", kMallOpen.bSize));
 
 	return true;
 }
@@ -257,7 +257,7 @@ bool CPythonNetworkStream::RecvItemSetPacket2()
 	rkPlayer.SetItemData(packet_item_set.Cell, kItemData);
 
 	if (packet_item_set.highlight)
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_Highlight_Item", Py_BuildValue("(ii)", packet_item_set.Cell.window_type, packet_item_set.Cell.cell));
+		Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_Highlight_Item", Script_BuildValue("(ii)", packet_item_set.Cell.window_type, packet_item_set.Cell.cell));
 
 	__RefreshInventoryWindow();
 	return true;
@@ -488,13 +488,13 @@ bool CPythonNetworkStream::SendItemUsePacket(TItemPos pos)
 	{
 		if (CPythonExchange::Instance().isTrading())
 		{
-			PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_AppendNotifyMessage", Py_BuildValue("(s)", "CANNOT_EQUIP_EXCHANGE"));
+			Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_AppendNotifyMessage", Script_BuildValue("(s)", "CANNOT_EQUIP_EXCHANGE"));
 			return true;
 		}
 
 		if (CPythonShop::Instance().IsOpen())
 		{
-			PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_AppendNotifyMessage", Py_BuildValue("(s)", "CANNOT_EQUIP_SHOP"));
+			Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_AppendNotifyMessage", Script_BuildValue("(s)", "CANNOT_EQUIP_SHOP"));
 			return true;
 		}
 
@@ -647,7 +647,7 @@ bool CPythonNetworkStream::SendItemMovePacket(TItemPos pos, TItemPos change_pos,
 		{
 			if (pos.IsEquipCell() || change_pos.IsEquipCell())
 			{
-				PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_AppendNotifyMessage", Py_BuildValue("(s)", "CANNOT_EQUIP_EXCHANGE"));
+				Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_AppendNotifyMessage", Script_BuildValue("(s)", "CANNOT_EQUIP_EXCHANGE"));
 				return true;
 			}
 		}
@@ -656,7 +656,7 @@ bool CPythonNetworkStream::SendItemMovePacket(TItemPos pos, TItemPos change_pos,
 		{
 			if (pos.IsEquipCell() || change_pos.IsEquipCell())
 			{
-				PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_AppendNotifyMessage", Py_BuildValue("(s)", "CANNOT_EQUIP_SHOP"));
+				Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_AppendNotifyMessage", Script_BuildValue("(s)", "CANNOT_EQUIP_SHOP"));
 				return true;
 			}
 		}
@@ -911,7 +911,7 @@ bool CPythonNetworkStream::RecvDragonSoulRefine()
 	switch (kDragonSoul.bSubType)
 	{
 		case DS_SUB_HEADER_OPEN:
-			PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_DragonSoulRefineWindow_Open", Py_BuildValue("()"));
+			Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_DragonSoulRefineWindow_Open", Script_BuildValue("()"));
 			break;
 		case DS_SUB_HEADER_REFINE_FAIL:
 		case DS_SUB_HEADER_REFINE_FAIL_MAX_REFINE:
@@ -919,11 +919,11 @@ bool CPythonNetworkStream::RecvDragonSoulRefine()
 		case DS_SUB_HEADER_REFINE_FAIL_NOT_ENOUGH_MONEY:
 		case DS_SUB_HEADER_REFINE_FAIL_NOT_ENOUGH_MATERIAL:
 		case DS_SUB_HEADER_REFINE_FAIL_TOO_MUCH_MATERIAL:
-			PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_DragonSoulRefineWindow_RefineFail", Py_BuildValue("(iii)", kDragonSoul.bSubType, kDragonSoul.Pos.window_type, kDragonSoul.Pos.cell));
+			Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_DragonSoulRefineWindow_RefineFail", Script_BuildValue("(iii)", kDragonSoul.bSubType, kDragonSoul.Pos.window_type, kDragonSoul.Pos.cell));
 			break;
 		case DS_SUB_HEADER_REFINE_SUCCEED:
-			PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_DragonSoulRefineWindow_RefineSucceed",
-								  Py_BuildValue("(ii)", kDragonSoul.Pos.window_type, kDragonSoul.Pos.cell));
+			Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_DragonSoulRefineWindow_RefineSucceed",
+							  Script_BuildValue("(ii)", kDragonSoul.Pos.window_type, kDragonSoul.Pos.cell));
 			break;
 	}
 

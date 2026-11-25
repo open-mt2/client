@@ -4,7 +4,8 @@ project(Client VERSION 0.1.7 LANGUAGES C CXX)
 set(OPENMT2_CLIENT_VERSION "${PROJECT_VERSION}")
 
 # Game layer: GameLib + UserInterface + CWebBrowser. One header root, one
-# directory per package. Depends on neoeter and neoeter-python.
+# directory per package. Depends on neoeter, neoeter-python and (optionally)
+# neoeter-dotnet for the .NET 10 script runtime.
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -27,6 +28,8 @@ set(NEOETER_SHA256 "" CACHE STRING "SHA256 of the Neoeter release archive")
 set(NEOETER_ASSET_PLATFORM "" CACHE STRING "Override the Neoeter release platform suffix")
 set(NEOETER_GIT_TAG "main" CACHE STRING "neoeter git tag when building from source")
 set(NEOETER_PYTHON_GIT_TAG "main" CACHE STRING "neoeter-python git tag")
+set(NEOETER_DOTNET_GIT_TAG "main" CACHE STRING "neoeter-dotnet git tag")
+option(OPENMT2_SCRIPT_DOTNET "Build the .NET script runtime (needs the .NET 10 SDK)" ON)
 
 if(CLIENT_STANDALONE)
     include(FetchContent)
@@ -124,12 +127,21 @@ if(CLIENT_STANDALONE)
         GIT_REPOSITORY https://github.com/open-mt2/neoeter-python.git
         GIT_TAG ${NEOETER_PYTHON_GIT_TAG})
 
+    if(OPENMT2_SCRIPT_DOTNET)
+        FetchContent_Declare(neoeter-dotnet
+            GIT_REPOSITORY https://github.com/open-mt2/neoeter-dotnet.git
+            GIT_TAG ${NEOETER_DOTNET_GIT_TAG})
+    endif()
+
     set(BUILD_TESTING_SAVED ${BUILD_TESTING})
     set(BUILD_TESTING OFF CACHE BOOL "" FORCE)
     if(CLIENT_DOWNLOAD_NEOETER)
         FetchContent_MakeAvailable(neoeter-python)
     else()
         FetchContent_MakeAvailable(neoeter neoeter-python)
+    endif()
+    if(OPENMT2_SCRIPT_DOTNET)
+        FetchContent_MakeAvailable(neoeter-dotnet)
     endif()
     set(BUILD_TESTING ${BUILD_TESTING_SAVED} CACHE BOOL "" FORCE)
 endif()

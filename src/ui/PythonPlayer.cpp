@@ -172,7 +172,7 @@ void CPythonPlayer::Update()
 
 		SetStatus(POINT_STAMINA, DWORD(m_fCurrentStamina));
 
-		PyCallClassMemberFunc(m_ppyGameWindow, "RefreshStamina", Py_BuildValue("()"));
+		Script_CallMethod(m_ppyGameWindow, "RefreshStamina", Script_BuildValue("()"));
 	}
 
 	__Update_AutoAttack();
@@ -260,11 +260,11 @@ void CPythonPlayer::__Update_NotifyGuildAreaEvent()
 		{
 			if (0xffffffff != dwAreaID)
 			{
-				PyCallClassMemberFunc(m_ppyGameWindow, "BINARY_Guild_EnterGuildArea", Py_BuildValue("(i)", dwAreaID));
+				Script_CallMethod(m_ppyGameWindow, "BINARY_Guild_EnterGuildArea", Script_BuildValue("(i)", dwAreaID));
 			}
 			else
 			{
-				PyCallClassMemberFunc(m_ppyGameWindow, "BINARY_Guild_ExitGuildArea", Py_BuildValue("(i)", dwAreaID));
+				Script_CallMethod(m_ppyGameWindow, "BINARY_Guild_ExitGuildArea", Script_BuildValue("(i)", dwAreaID));
 			}
 
 			m_inGuildAreaID = dwAreaID;
@@ -490,11 +490,11 @@ void CPythonPlayer::NotifyCharacterUpdate(DWORD dwVID)
 			if (!pMainInstance->IsTargetableInstance(*pTargetInstance))
 			{
 				SetTarget(0);
-				PyCallClassMemberFunc(m_ppyGameWindow, "CloseTargetBoard", Py_BuildValue("()"));
+				Script_CallMethod(m_ppyGameWindow, "CloseTargetBoard", Script_BuildValue("()"));
 			}
 			else
 			{
-				PyCallClassMemberFunc(m_ppyGameWindow, "RefreshTargetBoardByVID", Py_BuildValue("(i)", dwVID));
+				Script_CallMethod(m_ppyGameWindow, "RefreshTargetBoardByVID", Script_BuildValue("(i)", dwVID));
 			}
 		}
 	}
@@ -507,7 +507,7 @@ void CPythonPlayer::NotifyDeadMainCharacter()
 
 void CPythonPlayer::NotifyChangePKMode()
 {
-	PyCallClassMemberFunc(m_ppyGameWindow, "OnChangePKMode", Py_BuildValue("()"));
+	Script_CallMethod(m_ppyGameWindow, "OnChangePKMode", Script_BuildValue("()"));
 }
 
 void CPythonPlayer::MoveItemData(TItemPos SrcCell, TItemPos DstCell)
@@ -641,7 +641,7 @@ void CPythonPlayer::SetItemCount(TItemPos Cell, BYTE byCount)
 		return;
 
 	(const_cast<TItemData*>(GetItemData(Cell)))->count = byCount;
-	PyCallClassMemberFunc(m_ppyGameWindow, "RefreshInventory", Py_BuildValue("()"));
+	Script_CallMethod(m_ppyGameWindow, "RefreshInventory", Script_BuildValue("()"));
 }
 
 void CPythonPlayer::SetItemMetinSocket(TItemPos Cell, DWORD dwMetinSocketIndex, DWORD dwMetinNumber)
@@ -679,7 +679,7 @@ void CPythonPlayer::SetQuickPage(int nQuickPageIndex)
 	else
 		m_playerStatus.lQuickPageIndex = nQuickPageIndex;
 
-	PyCallClassMemberFunc(m_ppyGameWindow, "RefreshInventory", Py_BuildValue("()"));
+	Script_CallMethod(m_ppyGameWindow, "RefreshInventory", Script_BuildValue("()"));
 }
 
 DWORD CPythonPlayer::LocalQuickSlotIndexToGlobalQuickSlotIndex(DWORD dwLocalSlotIndex)
@@ -811,7 +811,7 @@ void CPythonPlayer::RequestUseLocalQuickSlot(DWORD dwLocalSlotIndex)
 		}
 		case SLOT_TYPE_EMOTION:
 		{
-			PyCallClassMemberFunc(m_ppyGameWindow, "BINARY_ActEmotion", Py_BuildValue("(i)", dwRegisteredItemPos));
+			Script_CallMethod(m_ppyGameWindow, "BINARY_ActEmotion", Script_BuildValue("(i)", dwRegisteredItemPos));
 			break;
 		}
 	}
@@ -1070,7 +1070,7 @@ void CPythonPlayer::__ActivateSkillSlot(DWORD dwSlotIndex)
 	}
 
 	m_playerStatus.aSkill[dwSlotIndex].bActive = TRUE;
-	PyCallClassMemberFunc(m_ppyGameWindow, "ActivateSkillSlot", Py_BuildValue("(i)", dwSlotIndex));
+	Script_CallMethod(m_ppyGameWindow, "ActivateSkillSlot", Script_BuildValue("(i)", dwSlotIndex));
 }
 
 void CPythonPlayer::__DeactivateSkillSlot(DWORD dwSlotIndex)
@@ -1082,7 +1082,7 @@ void CPythonPlayer::__DeactivateSkillSlot(DWORD dwSlotIndex)
 	}
 
 	m_playerStatus.aSkill[dwSlotIndex].bActive = FALSE;
-	PyCallClassMemberFunc(m_ppyGameWindow, "DeactivateSkillSlot", Py_BuildValue("(i)", dwSlotIndex));
+	Script_CallMethod(m_ppyGameWindow, "DeactivateSkillSlot", Script_BuildValue("(i)", dwSlotIndex));
 }
 
 BOOL CPythonPlayer::IsSkillCoolTime(DWORD dwSlotIndex)
@@ -1153,7 +1153,7 @@ void CPythonPlayer::SendClickItemPacket(DWORD dwIID)
 				}
 				if (!IsPartyMemberByName(c_szOwnerName) || pItemData->IsAntiFlag(CItemData::ITEM_ANTIFLAG_DROP | CItemData::ITEM_ANTIFLAG_GIVE))
 				{
-					PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotPickItem", Py_BuildValue("()"));
+					Script_CallMethod(m_ppyGameWindow, "OnCannotPickItem", Script_BuildValue("()"));
 					return;
 				}
 			}
@@ -1172,7 +1172,7 @@ void CPythonPlayer::__SendClickActorPacket(CInstanceBase& rkInstVictim)
 			if (pkInstMain->IsMountingHorse())
 				if (rkInstVictim.IsResource())
 				{
-					PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotMining", Py_BuildValue("()"));
+					Script_CallMethod(m_ppyGameWindow, "OnCannotMining", Script_BuildValue("()"));
 					return;
 				}
 
@@ -1196,7 +1196,7 @@ void CPythonPlayer::ActEmotion(DWORD dwEmotionID)
 	CInstanceBase* pkInstTarget = __GetAliveTargetInstancePtr();
 	if (!pkInstTarget)
 	{
-		PyCallClassMemberFunc(m_ppyGameWindow, "OnCannotShotError", Py_BuildValue("(is)", GetMainCharacterIndex(), "NEED_TARGET"));
+		Script_CallMethod(m_ppyGameWindow, "OnCannotShotError", Script_BuildValue("(is)", GetMainCharacterIndex(), "NEED_TARGET"));
 		return;
 	}
 
@@ -1515,7 +1515,7 @@ DWORD CPythonPlayer::GetPKMode()
 	return pInstance->GetPKMode();
 }
 
-void CPythonPlayer::SetGameWindow(PyObject* ppyObject)
+void CPythonPlayer::SetGameWindow(ScriptObject* ppyObject)
 {
 	m_ppyGameWindow = ppyObject;
 }
@@ -1546,7 +1546,7 @@ void CPythonPlayer::NEW_ClearSkillData(bool bAll)
 	}
 
 	if (m_ppyGameWindow)
-		PyCallClassMemberFunc(m_ppyGameWindow, "BINARY_CheckGameButton", Py_BuildNone());
+		Script_CallMethod(m_ppyGameWindow, "BINARY_CheckGameButton", Script_BuildNone());
 }
 
 void CPythonPlayer::ClearSkillDict()

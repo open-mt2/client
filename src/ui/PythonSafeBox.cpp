@@ -153,186 +153,186 @@ CPythonSafeBox::~CPythonSafeBox()
 {
 }
 
-PyObject* safeboxGetCurrentSafeboxSize(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* safeboxGetCurrentSafeboxSize(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", CPythonSafeBox::Instance().GetCurrentSafeBoxSize());
+	return Script_BuildValue("i", CPythonSafeBox::Instance().GetCurrentSafeBoxSize());
 }
 
-PyObject* safeboxGetItemID(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* safeboxGetItemID(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int ipos;
-	if (!PyTuple_GetInteger(poArgs, 0, &ipos))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &ipos))
+		return Script_BadArgument();
 
 	TItemData* pInstance;
 	if (!CPythonSafeBox::Instance().GetItemDataPtr(ipos, &pInstance))
-		return Py_BuildException();
+		return Script_BuildException();
 
-	return Py_BuildValue("i", pInstance->vnum);
+	return Script_BuildValue("i", pInstance->vnum);
 }
 
-PyObject* safeboxGetItemCount(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* safeboxGetItemCount(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int ipos;
-	if (!PyTuple_GetInteger(poArgs, 0, &ipos))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &ipos))
+		return Script_BadArgument();
 
 	TItemData* pInstance;
 	if (!CPythonSafeBox::Instance().GetItemDataPtr(ipos, &pInstance))
-		return Py_BuildException();
+		return Script_BuildException();
 
-	return Py_BuildValue("i", pInstance->count);
+	return Script_BuildValue("i", pInstance->count);
 }
 
-PyObject* safeboxGetItemFlags(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* safeboxGetItemFlags(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int ipos;
-	if (!PyTuple_GetInteger(poArgs, 0, &ipos))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &ipos))
+		return Script_BadArgument();
 
 	TItemData* pInstance;
 	if (!CPythonSafeBox::Instance().GetItemDataPtr(ipos, &pInstance))
-		return Py_BuildException();
+		return Script_BuildException();
 
-	return Py_BuildValue("i", pInstance->flags);
+	return Script_BuildValue("i", pInstance->flags);
 }
 
-PyObject* safeboxGetItemMetinSocket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* safeboxGetItemMetinSocket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSlotIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSlotIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSlotIndex))
+		return Script_BadArgument();
 	int iSocketIndex;
-	if (!PyTuple_GetInteger(poArgs, 1, &iSocketIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iSocketIndex))
+		return Script_BadArgument();
 
 	if (iSocketIndex >= ITEM_SOCKET_SLOT_MAX_NUM)
-		return Py_BuildException();
+		return Script_BuildException();
 
 	TItemData* pItemData;
 	if (!CPythonSafeBox::Instance().GetItemDataPtr(iSlotIndex, &pItemData))
-		return Py_BuildException();
+		return Script_BuildException();
 
-	return Py_BuildValue("i", pItemData->alSockets[iSocketIndex]);
+	return Script_BuildValue("i", pItemData->alSockets[iSocketIndex]);
 }
 
-PyObject* safeboxGetItemAttribute(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* safeboxGetItemAttribute(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSlotIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSlotIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSlotIndex))
+		return Script_BuildException();
 	int iAttrSlotIndex;
-	if (!PyTuple_GetInteger(poArgs, 1, &iAttrSlotIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iAttrSlotIndex))
+		return Script_BuildException();
 
 	if (iAttrSlotIndex >= 0 && iAttrSlotIndex < ITEM_ATTRIBUTE_SLOT_MAX_NUM)
 	{
 		TItemData* pItemData;
 		if (CPythonSafeBox::Instance().GetItemDataPtr(iSlotIndex, &pItemData))
-			return Py_BuildValue("ii", pItemData->aAttr[iAttrSlotIndex].bType, pItemData->aAttr[iAttrSlotIndex].sValue);
+			return Script_BuildValue("ii", pItemData->aAttr[iAttrSlotIndex].bType, pItemData->aAttr[iAttrSlotIndex].sValue);
 	}
 
-	return Py_BuildValue("ii", 0, 0);
+	return Script_BuildValue("ii", 0, 0);
 }
 
-PyObject* safeboxGetMoney(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* safeboxGetMoney(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", CPythonSafeBox::Instance().GetMoney());
+	return Script_BuildValue("i", CPythonSafeBox::Instance().GetMoney());
 }
 
-PyObject* safeboxGetMallItemID(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* safeboxGetMallItemID(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int ipos;
-	if (!PyTuple_GetInteger(poArgs, 0, &ipos))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &ipos))
+		return Script_BadArgument();
 
 	TItemData* pInstance;
 	if (!CPythonSafeBox::Instance().GetMallItemDataPtr(ipos, &pInstance))
-		return Py_BuildException();
+		return Script_BuildException();
 
-	return Py_BuildValue("i", pInstance->vnum);
+	return Script_BuildValue("i", pInstance->vnum);
 }
 
-PyObject* safeboxGetMallItemCount(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* safeboxGetMallItemCount(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int ipos;
-	if (!PyTuple_GetInteger(poArgs, 0, &ipos))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &ipos))
+		return Script_BadArgument();
 
 	TItemData* pInstance;
 	if (!CPythonSafeBox::Instance().GetMallItemDataPtr(ipos, &pInstance))
-		return Py_BuildException();
+		return Script_BuildException();
 
-	return Py_BuildValue("i", pInstance->count);
+	return Script_BuildValue("i", pInstance->count);
 }
 
-PyObject* safeboxGetMallItemMetinSocket(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* safeboxGetMallItemMetinSocket(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSlotIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSlotIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSlotIndex))
+		return Script_BadArgument();
 	int iSocketIndex;
-	if (!PyTuple_GetInteger(poArgs, 1, &iSocketIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iSocketIndex))
+		return Script_BadArgument();
 
 	if (iSocketIndex >= ITEM_SOCKET_SLOT_MAX_NUM)
-		return Py_BuildException();
+		return Script_BuildException();
 
 	TItemData* pItemData;
 	if (!CPythonSafeBox::Instance().GetMallItemDataPtr(iSlotIndex, &pItemData))
-		return Py_BuildException();
+		return Script_BuildException();
 
-	return Py_BuildValue("i", pItemData->alSockets[iSocketIndex]);
+	return Script_BuildValue("i", pItemData->alSockets[iSocketIndex]);
 }
 
-PyObject* safeboxGetMallItemAttribute(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* safeboxGetMallItemAttribute(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSlotIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSlotIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSlotIndex))
+		return Script_BuildException();
 	int iAttrSlotIndex;
-	if (!PyTuple_GetInteger(poArgs, 1, &iAttrSlotIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iAttrSlotIndex))
+		return Script_BuildException();
 
 	if (iAttrSlotIndex >= 0 && iAttrSlotIndex < ITEM_ATTRIBUTE_SLOT_MAX_NUM)
 	{
 		TItemData* pItemData;
 		if (CPythonSafeBox::Instance().GetMallItemDataPtr(iSlotIndex, &pItemData))
-			return Py_BuildValue("ii", pItemData->aAttr[iAttrSlotIndex].bType, pItemData->aAttr[iAttrSlotIndex].sValue);
+			return Script_BuildValue("ii", pItemData->aAttr[iAttrSlotIndex].bType, pItemData->aAttr[iAttrSlotIndex].sValue);
 	}
 
-	return Py_BuildValue("ii", 0, 0);
+	return Script_BuildValue("ii", 0, 0);
 }
 
-PyObject* safeboxGetMallSize(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* safeboxGetMallSize(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", CPythonSafeBox::Instance().GetMallSize());
+	return Script_BuildValue("i", CPythonSafeBox::Instance().GetMallSize());
 }
 
 void initsafebox()
 {
-	static PyMethodDef s_methods[] =
+	static ScriptMethodDef s_methods[] =
 		{
 			// SafeBox
-			{"GetCurrentSafeboxSize", safeboxGetCurrentSafeboxSize, METH_VARARGS, NULL},
-			{"GetItemID", safeboxGetItemID, METH_VARARGS, NULL},
-			{"GetItemCount", safeboxGetItemCount, METH_VARARGS, NULL},
-			{"GetItemFlags", safeboxGetItemFlags, METH_VARARGS, NULL},
-			{"GetItemMetinSocket", safeboxGetItemMetinSocket, METH_VARARGS, NULL},
-			{"GetItemAttribute", safeboxGetItemAttribute, METH_VARARGS, NULL},
-			{"GetMoney", safeboxGetMoney, METH_VARARGS, NULL},
+			{"GetCurrentSafeboxSize", safeboxGetCurrentSafeboxSize, SCRIPT_VARARGS, NULL},
+			{"GetItemID", safeboxGetItemID, SCRIPT_VARARGS, NULL},
+			{"GetItemCount", safeboxGetItemCount, SCRIPT_VARARGS, NULL},
+			{"GetItemFlags", safeboxGetItemFlags, SCRIPT_VARARGS, NULL},
+			{"GetItemMetinSocket", safeboxGetItemMetinSocket, SCRIPT_VARARGS, NULL},
+			{"GetItemAttribute", safeboxGetItemAttribute, SCRIPT_VARARGS, NULL},
+			{"GetMoney", safeboxGetMoney, SCRIPT_VARARGS, NULL},
 
 			// Mall
-			{"GetMallItemID", safeboxGetMallItemID, METH_VARARGS, NULL},
-			{"GetMallItemCount", safeboxGetMallItemCount, METH_VARARGS, NULL},
-			{"GetMallItemMetinSocket", safeboxGetMallItemMetinSocket, METH_VARARGS, NULL},
-			{"GetMallItemAttribute", safeboxGetMallItemAttribute, METH_VARARGS, NULL},
-			{"GetMallSize", safeboxGetMallSize, METH_VARARGS, NULL},
+			{"GetMallItemID", safeboxGetMallItemID, SCRIPT_VARARGS, NULL},
+			{"GetMallItemCount", safeboxGetMallItemCount, SCRIPT_VARARGS, NULL},
+			{"GetMallItemMetinSocket", safeboxGetMallItemMetinSocket, SCRIPT_VARARGS, NULL},
+			{"GetMallItemAttribute", safeboxGetMallItemAttribute, SCRIPT_VARARGS, NULL},
+			{"GetMallSize", safeboxGetMallSize, SCRIPT_VARARGS, NULL},
 			{NULL, NULL, 0, NULL},
 		};
 
-	PyObject* poModule = Py_InitModule("safebox", s_methods);
-	PyModule_AddIntConstant(poModule, "SAFEBOX_SLOT_X_COUNT", CPythonSafeBox::SAFEBOX_SLOT_X_COUNT);
-	PyModule_AddIntConstant(poModule, "SAFEBOX_SLOT_Y_COUNT", CPythonSafeBox::SAFEBOX_SLOT_Y_COUNT);
-	PyModule_AddIntConstant(poModule, "SAFEBOX_PAGE_SIZE", CPythonSafeBox::SAFEBOX_PAGE_SIZE);
+	ScriptObject* poModule = ScriptModule_Create("safebox", s_methods);
+	ScriptModule_AddIntConstant(poModule, "SAFEBOX_SLOT_X_COUNT", CPythonSafeBox::SAFEBOX_SLOT_X_COUNT);
+	ScriptModule_AddIntConstant(poModule, "SAFEBOX_SLOT_Y_COUNT", CPythonSafeBox::SAFEBOX_SLOT_Y_COUNT);
+	ScriptModule_AddIntConstant(poModule, "SAFEBOX_PAGE_SIZE", CPythonSafeBox::SAFEBOX_PAGE_SIZE);
 }

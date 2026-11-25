@@ -376,422 +376,422 @@ CPythonGuild::~CPythonGuild()
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-PyObject* guildIsGuildEnable(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* guildIsGuildEnable(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", CPythonGuild::Instance().IsGuildEnable());
+	return Script_BuildValue("i", CPythonGuild::Instance().IsGuildEnable());
 }
 
-PyObject* guildGetGuildID(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* guildGetGuildID(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", CPythonGuild::Instance().GetGuildID());
+	return Script_BuildValue("i", CPythonGuild::Instance().GetGuildID());
 }
 
-PyObject* guildHasGuildLand(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* guildHasGuildLand(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", CPythonGuild::Instance().HasGuildLand());
+	return Script_BuildValue("i", CPythonGuild::Instance().HasGuildLand());
 }
 
-PyObject* guildGetGuildName(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* guildGetGuildName(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iGuildID;
-	if (!PyTuple_GetInteger(poArgs, 0, &iGuildID))
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iGuildID))
 	{
 		CPythonGuild::TGuildInfo& rGuildInfo = CPythonGuild::Instance().GetGuildInfoRef();
-		return Py_BuildValue("s", rGuildInfo.szGuildName);
+		return Script_BuildValue("s", rGuildInfo.szGuildName);
 	}
 
 	std::string strGuildName;
 	if (!CPythonGuild::Instance().GetGuildName(iGuildID, &strGuildName))
-		return Py_BuildValue("s", "Noname");
+		return Script_BuildValue("s", "Noname");
 
-	return Py_BuildValue("s", strGuildName.c_str());
+	return Script_BuildValue("s", strGuildName.c_str());
 }
 
-PyObject* guildGetGuildMasterName(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* guildGetGuildMasterName(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonGuild::TGuildInfo& rGuildInfo = CPythonGuild::Instance().GetGuildInfoRef();
 
 	CPythonGuild::TGuildMemberData* pData;
 	if (!CPythonGuild::Instance().GetMemberDataPtrByPID(rGuildInfo.dwMasterPID, &pData))
-		return Py_BuildValue("s", "Noname");
+		return Script_BuildValue("s", "Noname");
 
-	return Py_BuildValue("s", pData->strName.c_str());
+	return Script_BuildValue("s", pData->strName.c_str());
 }
 
-PyObject* guildGetEnemyGuildName(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* guildGetEnemyGuildName(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iIndex))
-		return Py_BuildValue("s", "");
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iIndex))
+		return Script_BuildValue("s", "");
 
 	DWORD dwEnemyGuildID = CPythonGuild::Instance().GetEnemyGuildID(iIndex);
 
 	std::string strEnemyGuildName;
 	if (!CPythonGuild::Instance().GetGuildName(dwEnemyGuildID, &strEnemyGuildName))
-		return Py_BuildValue("s", "");
+		return Script_BuildValue("s", "");
 
-	return Py_BuildValue("s", strEnemyGuildName.c_str());
+	return Script_BuildValue("s", strEnemyGuildName.c_str());
 }
 
-PyObject* guildGetGuildMoney(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* guildGetGuildMoney(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonGuild::TGuildInfo& rGuildInfo = CPythonGuild::Instance().GetGuildInfoRef();
-	return Py_BuildValue("i", rGuildInfo.dwGuildMoney);
+	return Script_BuildValue("i", rGuildInfo.dwGuildMoney);
 }
 
-PyObject* guildGetGuildBoardCommentCount(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* guildGetGuildBoardCommentCount(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	const CPythonGuild::TGuildBoardCommentDataVector& rCommentVector = CPythonGuild::Instance().GetGuildBoardCommentVector();
-	return Py_BuildValue("i", rCommentVector.size());
+	return Script_BuildValue("i", rCommentVector.size());
 }
 
-PyObject* guildGetGuildBoardCommentData(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* guildGetGuildBoardCommentData(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iIndex))
+		return Script_BuildException();
 
 	const CPythonGuild::TGuildBoardCommentDataVector& c_rCommentVector = CPythonGuild::Instance().GetGuildBoardCommentVector();
 	if (DWORD(iIndex) >= c_rCommentVector.size())
-		return Py_BuildValue("iss", 0, "Noname", "Noname");
+		return Script_BuildValue("iss", 0, "Noname", "Noname");
 
 	const CPythonGuild::TGuildBoardCommentData& c_rData = c_rCommentVector[iIndex];
 
-	return Py_BuildValue("iss", c_rData.dwCommentID, c_rData.strName.c_str(), c_rData.strComment.c_str());
+	return Script_BuildValue("iss", c_rData.dwCommentID, c_rData.strName.c_str(), c_rData.strComment.c_str());
 }
 
-PyObject* guildGetGuildLevel(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* guildGetGuildLevel(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonGuild::TGuildInfo& rGuildInfo = CPythonGuild::Instance().GetGuildInfoRef();
-	return Py_BuildValue("i", rGuildInfo.dwGuildLevel);
+	return Script_BuildValue("i", rGuildInfo.dwGuildLevel);
 }
 
-PyObject* guildGetGuildExperience(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* guildGetGuildExperience(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonGuild::TGuildInfo& rGuildInfo = CPythonGuild::Instance().GetGuildInfoRef();
 
 	int GULID_MAX_LEVEL = 20;
 	if (rGuildInfo.dwGuildLevel >= GULID_MAX_LEVEL)
-		return Py_BuildValue("ii", 0, 0);
+		return Script_BuildValue("ii", 0, 0);
 
 	unsigned lastExp = GetGuildLevelExp(rGuildInfo.dwGuildLevel);
 
-	return Py_BuildValue("ii", rGuildInfo.dwCurrentExperience, lastExp - rGuildInfo.dwCurrentExperience);
+	return Script_BuildValue("ii", rGuildInfo.dwCurrentExperience, lastExp - rGuildInfo.dwCurrentExperience);
 }
 
-PyObject* guildGetGuildMemberCount(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* guildGetGuildMemberCount(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonGuild::TGuildInfo& rGuildInfo = CPythonGuild::Instance().GetGuildInfoRef();
-	return Py_BuildValue("ii", rGuildInfo.dwCurrentMemberCount, rGuildInfo.dwMaxMemberCount);
+	return Script_BuildValue("ii", rGuildInfo.dwCurrentMemberCount, rGuildInfo.dwMaxMemberCount);
 }
 
-PyObject* guildGetGuildMemberLevelSummary(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* guildGetGuildMemberLevelSummary(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", CPythonGuild::Instance().GetGuildMemberLevelSummary());
+	return Script_BuildValue("i", CPythonGuild::Instance().GetGuildMemberLevelSummary());
 }
 
-PyObject* guildGetGuildMemberLevelAverage(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* guildGetGuildMemberLevelAverage(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", CPythonGuild::Instance().GetGuildMemberLevelAverage());
+	return Script_BuildValue("i", CPythonGuild::Instance().GetGuildMemberLevelAverage());
 }
 
-PyObject* guildGetGuildExperienceSummary(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* guildGetGuildExperienceSummary(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", CPythonGuild::Instance().GetGuildExperienceSummary());
+	return Script_BuildValue("i", CPythonGuild::Instance().GetGuildExperienceSummary());
 }
 
-PyObject* guildGetGuildSkillPoint(PyObject* poSelf, PyObject* poArgs)
-{
-	const CPythonGuild::TGuildSkillData& c_rSkillData = CPythonGuild::Instance().GetGuildSkillDataRef();
-	return Py_BuildValue("i", c_rSkillData.bySkillPoint);
-}
-
-PyObject* guildGetDragonPowerPoint(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* guildGetGuildSkillPoint(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	const CPythonGuild::TGuildSkillData& c_rSkillData = CPythonGuild::Instance().GetGuildSkillDataRef();
-	return Py_BuildValue("ii", c_rSkillData.wGuildPoint, c_rSkillData.wMaxGuildPoint);
+	return Script_BuildValue("i", c_rSkillData.bySkillPoint);
 }
 
-PyObject* guildGetGuildSkillLevel(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* guildGetDragonPowerPoint(ScriptObject* poSelf, ScriptObject* poArgs)
+{
+	const CPythonGuild::TGuildSkillData& c_rSkillData = CPythonGuild::Instance().GetGuildSkillDataRef();
+	return Script_BuildValue("ii", c_rSkillData.wGuildPoint, c_rSkillData.wMaxGuildPoint);
+}
+
+ScriptObject* guildGetGuildSkillLevel(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	assert(FALSE && !"guildGetGuildSkillLevel - \xBB\xE7\xBF\xEB\xC7\xCF\xC1\xF6 \xBE\xCA\xB4\xC2 \xC7\xD4\xBC\xF6\xC0\xD4\xB4\xCF\xB4\xD9.");
 
 	int iSkillIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSkillIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSkillIndex))
+		return Script_BuildException();
 
 	const CPythonGuild::TGuildSkillData& c_rSkillData = CPythonGuild::Instance().GetGuildSkillDataRef();
-	return Py_BuildValue("i", c_rSkillData.bySkillLevel[iSkillIndex]);
+	return Script_BuildValue("i", c_rSkillData.bySkillLevel[iSkillIndex]);
 }
 
-PyObject* guildGetSkillLevel(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* guildGetSkillLevel(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSlotIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSlotIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSlotIndex))
+		return Script_BuildException();
 
 	std::map<DWORD, DWORD>::iterator itor = g_GuildSkillSlotToIndexMap.find(iSlotIndex);
 
 	if (g_GuildSkillSlotToIndexMap.end() == itor)
-		return Py_BuildValue("i", 0);
+		return Script_BuildValue("i", 0);
 
 	DWORD dwSkillIndex = itor->second;
 	assert(dwSkillIndex < CPythonGuild::GUILD_SKILL_MAX_NUM);
 
 	const CPythonGuild::TGuildSkillData& c_rSkillData = CPythonGuild::Instance().GetGuildSkillDataRef();
-	return Py_BuildValue("i", c_rSkillData.bySkillLevel[dwSkillIndex]);
+	return Script_BuildValue("i", c_rSkillData.bySkillLevel[dwSkillIndex]);
 }
 
-PyObject* guildGetSkillMaxLevelNew(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* guildGetSkillMaxLevelNew(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSlotIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSlotIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSlotIndex))
+		return Script_BuildException();
 
 	std::map<DWORD, DWORD>::iterator itor = g_GuildSkillSlotToIndexMap.find(iSlotIndex);
 
 	if (g_GuildSkillSlotToIndexMap.end() == itor)
-		return Py_BuildValue("i", 0);
+		return Script_BuildValue("i", 0);
 
 	DWORD dwSkillIndex = itor->second;
 	assert(dwSkillIndex < CPythonGuild::GUILD_SKILL_MAX_NUM);
 
 	const CPythonGuild::TGuildSkillData& c_rSkillData = CPythonGuild::Instance().GetGuildSkillDataRef();
-	return Py_BuildValue("i", c_rSkillData.bySkillLevel[dwSkillIndex]);
+	return Script_BuildValue("i", c_rSkillData.bySkillLevel[dwSkillIndex]);
 }
 
-PyObject* guildSetSkillIndex(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* guildSetSkillIndex(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSlotIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSlotIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSlotIndex))
+		return Script_BuildException();
 	int iSkillIndex;
-	if (!PyTuple_GetInteger(poArgs, 1, &iSkillIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iSkillIndex))
+		return Script_BuildException();
 
 	g_GuildSkillSlotToIndexMap.insert(std::make_pair(iSlotIndex, iSkillIndex));
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* guildGetSkillIndex(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* guildGetSkillIndex(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iSlotIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iSlotIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iSlotIndex))
+		return Script_BuildException();
 
 	std::map<DWORD, DWORD>::iterator itor = g_GuildSkillSlotToIndexMap.find(iSlotIndex);
 
 	if (g_GuildSkillSlotToIndexMap.end() == itor)
-		return Py_BuildValue("i", 0);
+		return Script_BuildValue("i", 0);
 
 	DWORD dwSkillIndex = itor->second;
-	return Py_BuildValue("i", dwSkillIndex);
+	return Script_BuildValue("i", dwSkillIndex);
 }
 
-PyObject* guildGetGradeData(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* guildGetGradeData(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iGradeNumber;
-	if (!PyTuple_GetInteger(poArgs, 0, &iGradeNumber))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iGradeNumber))
+		return Script_BuildException();
 
 	CPythonGuild::TGuildGradeData* pData;
 	if (!CPythonGuild::Instance().GetGradeDataPtr(iGradeNumber, &pData))
-		return Py_BuildValue("si", "?", 0);
+		return Script_BuildValue("si", "?", 0);
 
-	return Py_BuildValue("si", pData->strName.c_str(), pData->byAuthorityFlag);
+	return Script_BuildValue("si", pData->strName.c_str(), pData->byAuthorityFlag);
 }
 
-PyObject* guildGetGradeName(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* guildGetGradeName(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iGradeNumber;
-	if (!PyTuple_GetInteger(poArgs, 0, &iGradeNumber))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iGradeNumber))
+		return Script_BuildException();
 
 	CPythonGuild::TGuildGradeData* pData;
 	if (!CPythonGuild::Instance().GetGradeDataPtr(iGradeNumber, &pData))
-		return Py_BuildValue("s", "?");
+		return Script_BuildValue("s", "?");
 
-	return Py_BuildValue("s", pData->strName.c_str());
+	return Script_BuildValue("s", pData->strName.c_str());
 }
 
-PyObject* guildGetMemberCount(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* guildGetMemberCount(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", CPythonGuild::Instance().GetMemberCount());
+	return Script_BuildValue("i", CPythonGuild::Instance().GetMemberCount());
 }
 
-PyObject* guildGetMemberData(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* guildGetMemberData(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iIndex))
+		return Script_BuildException();
 
 	CPythonGuild::TGuildMemberData* pData;
 	if (!CPythonGuild::Instance().GetMemberDataPtr(iIndex, &pData))
-		return Py_BuildValue("isiiiii", -1, "", 0, 0, 0, 0, 0);
+		return Script_BuildValue("isiiiii", -1, "", 0, 0, 0, 0, 0);
 
-	return Py_BuildValue("isiiiii", pData->dwPID, pData->strName.c_str(), pData->byGrade, pData->byJob, pData->byLevel, pData->dwOffer, pData->byGeneralFlag);
+	return Script_BuildValue("isiiiii", pData->dwPID, pData->strName.c_str(), pData->byGrade, pData->byJob, pData->byLevel, pData->dwOffer, pData->byGeneralFlag);
 }
 
-PyObject* guildMemberIndexToPID(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* guildMemberIndexToPID(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iIndex))
+		return Script_BuildException();
 
 	CPythonGuild::TGuildMemberData* pData;
 	if (!CPythonGuild::Instance().GetMemberDataPtr(iIndex, &pData))
-		return Py_BuildValue("i", -1);
+		return Script_BuildValue("i", -1);
 
-	return Py_BuildValue("i", pData->dwPID);
+	return Script_BuildValue("i", pData->dwPID);
 }
 
-PyObject* guildIsMember(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* guildIsMember(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iIndex))
+		return Script_BuildException();
 
 	CPythonGuild::TGuildMemberData* pData;
 	if (CPythonGuild::Instance().GetMemberDataPtr(iIndex, &pData))
-		return Py_BuildValue("i", TRUE);
+		return Script_BuildValue("i", TRUE);
 
-	return Py_BuildValue("i", FALSE);
+	return Script_BuildValue("i", FALSE);
 }
 
-PyObject* guildIsMemberByName(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* guildIsMemberByName(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szName;
-	if (!PyTuple_GetString(poArgs, 0, &szName))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szName))
+		return Script_BuildException();
 
 	CPythonGuild::TGuildMemberData* pData;
 	if (CPythonGuild::Instance().GetMemberDataPtrByName(szName, &pData))
-		return Py_BuildValue("i", TRUE);
+		return Script_BuildValue("i", TRUE);
 
-	return Py_BuildValue("i", FALSE);
+	return Script_BuildValue("i", FALSE);
 }
 
-PyObject* guildMainPlayerHasAuthority(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* guildMainPlayerHasAuthority(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iAuthority;
-	if (!PyTuple_GetInteger(poArgs, 0, &iAuthority))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iAuthority))
+		return Script_BuildException();
 
 	IAbstractPlayer& rPlayer = IAbstractPlayer::GetSingleton();
 	const char* c_szMainPlayerName = rPlayer.GetName();
 
 	CPythonGuild::TGuildMemberData* pMemberData;
 	if (!CPythonGuild::Instance().GetMemberDataPtrByName(c_szMainPlayerName, &pMemberData))
-		return Py_BuildValue("i", FALSE);
+		return Script_BuildValue("i", FALSE);
 
 	CPythonGuild::TGuildGradeData* pGradeData;
 	if (!CPythonGuild::Instance().GetGradeDataPtr(pMemberData->byGrade, &pGradeData))
-		return Py_BuildValue("i", FALSE);
+		return Script_BuildValue("i", FALSE);
 
-	return Py_BuildValue("i", iAuthority == (pGradeData->byAuthorityFlag & iAuthority));
+	return Script_BuildValue("i", iAuthority == (pGradeData->byAuthorityFlag & iAuthority));
 }
 
-PyObject* guildDestroy(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* guildDestroy(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonGuild::Instance().Destroy();
 	g_GuildSkillSlotToIndexMap.clear();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* guildGuildIDToMarkID(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* guildGuildIDToMarkID(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int guild_id;
-	if (!PyTuple_GetInteger(poArgs, 0, &guild_id))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &guild_id))
+		return Script_BuildException();
 
-	return Py_BuildValue("i", CGuildMarkManager::Instance().GetMarkID(guild_id));
+	return Script_BuildValue("i", CGuildMarkManager::Instance().GetMarkID(guild_id));
 }
 
-PyObject* guildGetMarkImageFilenameByMarkID(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* guildGetMarkImageFilenameByMarkID(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int markID;
 
-	if (!PyTuple_GetInteger(poArgs, 0, &markID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &markID))
+		return Script_BuildException();
 
 	std::string imagePath;
 	CGuildMarkManager::Instance().GetMarkImageFilename(markID / CGuildMarkImage::MARK_TOTAL_COUNT, imagePath);
-	return Py_BuildValue("s", imagePath.c_str());
+	return Script_BuildValue("s", imagePath.c_str());
 }
 
-PyObject* guildGetMarkIndexByMarkID(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* guildGetMarkIndexByMarkID(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int markID;
 
-	if (!PyTuple_GetInteger(poArgs, 0, &markID))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &markID))
+		return Script_BuildException();
 
-	return Py_BuildValue("i", markID % CGuildMarkImage::MARK_TOTAL_COUNT);
+	return Script_BuildValue("i", markID % CGuildMarkImage::MARK_TOTAL_COUNT);
 }
 
 void initguild()
 {
-	static PyMethodDef s_methods[] =
+	static ScriptMethodDef s_methods[] =
 		{
 			// Enable
-			{"IsGuildEnable", guildIsGuildEnable, METH_VARARGS, NULL},
-			{"GuildIDToMarkID", guildGuildIDToMarkID, METH_VARARGS, NULL},
-			{"GetMarkImageFilenameByMarkID", guildGetMarkImageFilenameByMarkID, METH_VARARGS, NULL},
-			{"GetMarkIndexByMarkID", guildGetMarkIndexByMarkID, METH_VARARGS, NULL},
+			{"IsGuildEnable", guildIsGuildEnable, SCRIPT_VARARGS, NULL},
+			{"GuildIDToMarkID", guildGuildIDToMarkID, SCRIPT_VARARGS, NULL},
+			{"GetMarkImageFilenameByMarkID", guildGetMarkImageFilenameByMarkID, SCRIPT_VARARGS, NULL},
+			{"GetMarkIndexByMarkID", guildGetMarkIndexByMarkID, SCRIPT_VARARGS, NULL},
 
 			// GuildInfo
-			{"GetGuildID", guildGetGuildID, METH_VARARGS, NULL},
-			{"HasGuildLand", guildHasGuildLand, METH_VARARGS, NULL},
-			{"GetGuildName", guildGetGuildName, METH_VARARGS, NULL},
-			{"GetGuildMasterName", guildGetGuildMasterName, METH_VARARGS, NULL},
-			{"GetEnemyGuildName", guildGetEnemyGuildName, METH_VARARGS, NULL},
-			{"GetGuildMoney", guildGetGuildMoney, METH_VARARGS, NULL},
+			{"GetGuildID", guildGetGuildID, SCRIPT_VARARGS, NULL},
+			{"HasGuildLand", guildHasGuildLand, SCRIPT_VARARGS, NULL},
+			{"GetGuildName", guildGetGuildName, SCRIPT_VARARGS, NULL},
+			{"GetGuildMasterName", guildGetGuildMasterName, SCRIPT_VARARGS, NULL},
+			{"GetEnemyGuildName", guildGetEnemyGuildName, SCRIPT_VARARGS, NULL},
+			{"GetGuildMoney", guildGetGuildMoney, SCRIPT_VARARGS, NULL},
 
 			// BoardPage
-			{"GetGuildBoardCommentCount", guildGetGuildBoardCommentCount, METH_VARARGS, NULL},
-			{"GetGuildBoardCommentData", guildGetGuildBoardCommentData, METH_VARARGS, NULL},
+			{"GetGuildBoardCommentCount", guildGetGuildBoardCommentCount, SCRIPT_VARARGS, NULL},
+			{"GetGuildBoardCommentData", guildGetGuildBoardCommentData, SCRIPT_VARARGS, NULL},
 
 			// MemberPage
-			{"GetGuildLevel", guildGetGuildLevel, METH_VARARGS, NULL},
-			{"GetGuildExperience", guildGetGuildExperience, METH_VARARGS, NULL},
-			{"GetGuildMemberCount", guildGetGuildMemberCount, METH_VARARGS, NULL},
-			{"GetGuildMemberLevelSummary", guildGetGuildMemberLevelSummary, METH_VARARGS, NULL},
-			{"GetGuildMemberLevelAverage", guildGetGuildMemberLevelAverage, METH_VARARGS, NULL},
-			{"GetGuildExperienceSummary", guildGetGuildExperienceSummary, METH_VARARGS, NULL},
+			{"GetGuildLevel", guildGetGuildLevel, SCRIPT_VARARGS, NULL},
+			{"GetGuildExperience", guildGetGuildExperience, SCRIPT_VARARGS, NULL},
+			{"GetGuildMemberCount", guildGetGuildMemberCount, SCRIPT_VARARGS, NULL},
+			{"GetGuildMemberLevelSummary", guildGetGuildMemberLevelSummary, SCRIPT_VARARGS, NULL},
+			{"GetGuildMemberLevelAverage", guildGetGuildMemberLevelAverage, SCRIPT_VARARGS, NULL},
+			{"GetGuildExperienceSummary", guildGetGuildExperienceSummary, SCRIPT_VARARGS, NULL},
 
 			// SkillPage
-			{"GetGuildSkillPoint", guildGetGuildSkillPoint, METH_VARARGS, NULL},
-			{"GetDragonPowerPoint", guildGetDragonPowerPoint, METH_VARARGS, NULL},
-			{"GetGuildSkillLevel", guildGetGuildSkillLevel, METH_VARARGS, NULL},
-			{"GetSkillLevel", guildGetSkillLevel, METH_VARARGS, NULL},
-			{"GetSkillMaxLevelNew", guildGetSkillMaxLevelNew, METH_VARARGS, NULL},
+			{"GetGuildSkillPoint", guildGetGuildSkillPoint, SCRIPT_VARARGS, NULL},
+			{"GetDragonPowerPoint", guildGetDragonPowerPoint, SCRIPT_VARARGS, NULL},
+			{"GetGuildSkillLevel", guildGetGuildSkillLevel, SCRIPT_VARARGS, NULL},
+			{"GetSkillLevel", guildGetSkillLevel, SCRIPT_VARARGS, NULL},
+			{"GetSkillMaxLevelNew", guildGetSkillMaxLevelNew, SCRIPT_VARARGS, NULL},
 
-			{"SetSkillIndex", guildSetSkillIndex, METH_VARARGS, NULL},
-			{"GetSkillIndex", guildGetSkillIndex, METH_VARARGS, NULL},
+			{"SetSkillIndex", guildSetSkillIndex, SCRIPT_VARARGS, NULL},
+			{"GetSkillIndex", guildGetSkillIndex, SCRIPT_VARARGS, NULL},
 
 			// GradePage
-			{"GetGradeData", guildGetGradeData, METH_VARARGS, NULL},
-			{"GetGradeName", guildGetGradeName, METH_VARARGS, NULL},
+			{"GetGradeData", guildGetGradeData, SCRIPT_VARARGS, NULL},
+			{"GetGradeName", guildGetGradeName, SCRIPT_VARARGS, NULL},
 
 			// About Member
-			{"GetMemberCount", guildGetMemberCount, METH_VARARGS, NULL},
-			{"GetMemberData", guildGetMemberData, METH_VARARGS, NULL},
-			{"MemberIndexToPID", guildMemberIndexToPID, METH_VARARGS, NULL},
-			{"IsMember", guildIsMember, METH_VARARGS, NULL},
-			{"IsMemberByName", guildIsMemberByName, METH_VARARGS, NULL},
-			{"MainPlayerHasAuthority", guildMainPlayerHasAuthority, METH_VARARGS, NULL},
+			{"GetMemberCount", guildGetMemberCount, SCRIPT_VARARGS, NULL},
+			{"GetMemberData", guildGetMemberData, SCRIPT_VARARGS, NULL},
+			{"MemberIndexToPID", guildMemberIndexToPID, SCRIPT_VARARGS, NULL},
+			{"IsMember", guildIsMember, SCRIPT_VARARGS, NULL},
+			{"IsMemberByName", guildIsMemberByName, SCRIPT_VARARGS, NULL},
+			{"MainPlayerHasAuthority", guildMainPlayerHasAuthority, SCRIPT_VARARGS, NULL},
 
 			// Guild
-			{"Destroy", guildDestroy, METH_VARARGS, NULL},
+			{"Destroy", guildDestroy, SCRIPT_VARARGS, NULL},
 
 			{NULL, NULL, 0, NULL},
 		};
 
-	PyObject* poModule = Py_InitModule("guild", s_methods);
-	PyModule_AddIntConstant(poModule, "AUTH_ADD_MEMBER", GUILD_AUTH_ADD_MEMBER);
-	PyModule_AddIntConstant(poModule, "AUTH_REMOVE_MEMBER", GUILD_AUTH_REMOVE_MEMBER);
-	PyModule_AddIntConstant(poModule, "AUTH_NOTICE", GUILD_AUTH_NOTICE);
-	PyModule_AddIntConstant(poModule, "AUTH_SKILL", GUILD_AUTH_SKILL);
-	PyModule_AddIntConstant(poModule, "ENEMY_GUILD_SLOT_MAX_COUNT", CPythonGuild::ENEMY_GUILD_SLOT_MAX_COUNT);
+	ScriptObject* poModule = ScriptModule_Create("guild", s_methods);
+	ScriptModule_AddIntConstant(poModule, "AUTH_ADD_MEMBER", GUILD_AUTH_ADD_MEMBER);
+	ScriptModule_AddIntConstant(poModule, "AUTH_REMOVE_MEMBER", GUILD_AUTH_REMOVE_MEMBER);
+	ScriptModule_AddIntConstant(poModule, "AUTH_NOTICE", GUILD_AUTH_NOTICE);
+	ScriptModule_AddIntConstant(poModule, "AUTH_SKILL", GUILD_AUTH_SKILL);
+	ScriptModule_AddIntConstant(poModule, "ENEMY_GUILD_SLOT_MAX_COUNT", CPythonGuild::ENEMY_GUILD_SLOT_MAX_COUNT);
 }

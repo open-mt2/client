@@ -2,112 +2,112 @@
 #include <Neoeter/Effect/EffectManager.h>
 #include <Client/UI/PythonCharacterManager.h>
 
-PyObject* effectRegisterEffect(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* effectRegisterEffect(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szFileName;
-	if (!PyTuple_GetString(poArgs, 0, &szFileName))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szFileName))
+		return Script_BuildException();
 
 	CEffectManager::Instance().RegisterEffect(szFileName);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* effectUpdate(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* effectUpdate(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CEffectManager::Instance().Update();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* effectRender(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* effectRender(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CEffectManager::Instance().Render();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* effectCreateEffect(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* effectCreateEffect(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szEffectName;
-	if (!PyTuple_GetString(poArgs, 0, &szEffectName))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szEffectName))
+		return Script_BuildException();
 
 	CInstanceBase* pInstance = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 	TPixelPosition PixelPosition;
 	pInstance->NEW_GetPixelPosition(&PixelPosition);
 	int iIndex = CEffectManager::Instance().CreateEffect(szEffectName, PixelPosition, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
-	return Py_BuildValue("i", iIndex);
+	return Script_BuildValue("i", iIndex);
 }
 
-PyObject* effectDeleteEffect(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* effectDeleteEffect(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iIndex))
+		return Script_BuildException();
 
 	CEffectManager::Instance().DestroyEffectInstance(iIndex);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* effectSetPosition(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* effectSetPosition(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iIndex))
+		return Script_BuildException();
 	float fx;
-	if (!PyTuple_GetFloat(poArgs, 1, &fx))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 1, &fx))
+		return Script_BuildException();
 	float fy;
-	if (!PyTuple_GetFloat(poArgs, 2, &fy))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 2, &fy))
+		return Script_BuildException();
 	float fz;
-	if (!PyTuple_GetFloat(poArgs, 3, &fz))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 3, &fz))
+		return Script_BuildException();
 
 	CEffectManager::Instance().SelectEffectInstance(iIndex);
 	CEffectManager::Instance().SetEffectInstancePosition(D3DXVECTOR3(fx, fy, fz));
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* effectRegisterIndexedFlyData(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* effectRegisterIndexedFlyData(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iIndex))
+		return Script_BuildException();
 	int iType;
-	if (!PyTuple_GetInteger(poArgs, 1, &iType))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iType))
+		return Script_BuildException();
 	char* szFlyDataName;
-	if (!PyTuple_GetString(poArgs, 2, &szFlyDataName))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 2, &szFlyDataName))
+		return Script_BuildException();
 
 	CFlyingManager::Instance().RegisterIndexedFlyData(iIndex, iType, szFlyDataName);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
 void initeffect()
 {
-	static PyMethodDef s_methods[] =
+	static ScriptMethodDef s_methods[] =
 		{
-			{"RegisterEffect", effectRegisterEffect, METH_VARARGS, NULL},
-			{"CreateEffect", effectCreateEffect, METH_VARARGS, NULL},
-			{"DeleteEffect", effectDeleteEffect, METH_VARARGS, NULL},
-			{"SetPosition", effectSetPosition, METH_VARARGS, NULL},
+			{"RegisterEffect", effectRegisterEffect, SCRIPT_VARARGS, NULL},
+			{"CreateEffect", effectCreateEffect, SCRIPT_VARARGS, NULL},
+			{"DeleteEffect", effectDeleteEffect, SCRIPT_VARARGS, NULL},
+			{"SetPosition", effectSetPosition, SCRIPT_VARARGS, NULL},
 
-			{"RegisterIndexedFlyData", effectRegisterIndexedFlyData, METH_VARARGS, NULL},
+			{"RegisterIndexedFlyData", effectRegisterIndexedFlyData, SCRIPT_VARARGS, NULL},
 
-			{"Update", effectUpdate, METH_VARARGS, NULL},
-			{"Render", effectRender, METH_VARARGS, NULL},
+			{"Update", effectUpdate, SCRIPT_VARARGS, NULL},
+			{"Render", effectRender, SCRIPT_VARARGS, NULL},
 
 			{NULL, NULL, 0, NULL},
 		};
 
-	PyObject* poModule = Py_InitModule("effect", s_methods);
-	PyModule_AddIntConstant(poModule, "INDEX_FLY_TYPE_NORMAL", CFlyingManager::INDEX_FLY_TYPE_NORMAL);
-	PyModule_AddIntConstant(poModule, "INDEX_FLY_TYPE_FIRE_CRACKER", CFlyingManager::INDEX_FLY_TYPE_FIRE_CRACKER);
-	PyModule_AddIntConstant(poModule, "INDEX_FLY_TYPE_AUTO_FIRE", CFlyingManager::INDEX_FLY_TYPE_AUTO_FIRE);
+	ScriptObject* poModule = ScriptModule_Create("effect", s_methods);
+	ScriptModule_AddIntConstant(poModule, "INDEX_FLY_TYPE_NORMAL", CFlyingManager::INDEX_FLY_TYPE_NORMAL);
+	ScriptModule_AddIntConstant(poModule, "INDEX_FLY_TYPE_FIRE_CRACKER", CFlyingManager::INDEX_FLY_TYPE_FIRE_CRACKER);
+	ScriptModule_AddIntConstant(poModule, "INDEX_FLY_TYPE_AUTO_FIRE", CFlyingManager::INDEX_FLY_TYPE_AUTO_FIRE);
 
 	enum
 	{
@@ -130,21 +130,21 @@ void initeffect()
 		FLY_SKILL_MUYEONG,
 	};
 
-	PyModule_AddIntConstant(poModule, "FLY_NONE", FLY_NONE);
-	PyModule_AddIntConstant(poModule, "FLY_EXP", FLY_EXP);
-	PyModule_AddIntConstant(poModule, "FLY_HP_MEDIUM", FLY_HP_MEDIUM);
-	PyModule_AddIntConstant(poModule, "FLY_HP_BIG", FLY_HP_BIG);
-	PyModule_AddIntConstant(poModule, "FLY_SP_SMALL", FLY_SP_SMALL);
-	PyModule_AddIntConstant(poModule, "FLY_SP_MEDIUM", FLY_SP_MEDIUM);
-	PyModule_AddIntConstant(poModule, "FLY_SP_BIG", FLY_SP_BIG);
-	PyModule_AddIntConstant(poModule, "FLY_FIREWORK1", FLY_FIREWORK1);
-	PyModule_AddIntConstant(poModule, "FLY_FIREWORK2", FLY_FIREWORK2);
-	PyModule_AddIntConstant(poModule, "FLY_FIREWORK3", FLY_FIREWORK3);
-	PyModule_AddIntConstant(poModule, "FLY_FIREWORK4", FLY_FIREWORK4);
-	PyModule_AddIntConstant(poModule, "FLY_FIREWORK5", FLY_FIREWORK5);
-	PyModule_AddIntConstant(poModule, "FLY_FIREWORK6", FLY_FIREWORK6);
-	PyModule_AddIntConstant(poModule, "FLY_FIREWORK_XMAS", FLY_FIREWORK_XMAS);
-	PyModule_AddIntConstant(poModule, "FLY_CHAIN_LIGHTNING", FLY_CHAIN_LIGHTNING);
-	PyModule_AddIntConstant(poModule, "FLY_HP_SMALL", FLY_HP_SMALL);
-	PyModule_AddIntConstant(poModule, "FLY_SKILL_MUYEONG", FLY_SKILL_MUYEONG);
+	ScriptModule_AddIntConstant(poModule, "FLY_NONE", FLY_NONE);
+	ScriptModule_AddIntConstant(poModule, "FLY_EXP", FLY_EXP);
+	ScriptModule_AddIntConstant(poModule, "FLY_HP_MEDIUM", FLY_HP_MEDIUM);
+	ScriptModule_AddIntConstant(poModule, "FLY_HP_BIG", FLY_HP_BIG);
+	ScriptModule_AddIntConstant(poModule, "FLY_SP_SMALL", FLY_SP_SMALL);
+	ScriptModule_AddIntConstant(poModule, "FLY_SP_MEDIUM", FLY_SP_MEDIUM);
+	ScriptModule_AddIntConstant(poModule, "FLY_SP_BIG", FLY_SP_BIG);
+	ScriptModule_AddIntConstant(poModule, "FLY_FIREWORK1", FLY_FIREWORK1);
+	ScriptModule_AddIntConstant(poModule, "FLY_FIREWORK2", FLY_FIREWORK2);
+	ScriptModule_AddIntConstant(poModule, "FLY_FIREWORK3", FLY_FIREWORK3);
+	ScriptModule_AddIntConstant(poModule, "FLY_FIREWORK4", FLY_FIREWORK4);
+	ScriptModule_AddIntConstant(poModule, "FLY_FIREWORK5", FLY_FIREWORK5);
+	ScriptModule_AddIntConstant(poModule, "FLY_FIREWORK6", FLY_FIREWORK6);
+	ScriptModule_AddIntConstant(poModule, "FLY_FIREWORK_XMAS", FLY_FIREWORK_XMAS);
+	ScriptModule_AddIntConstant(poModule, "FLY_CHAIN_LIGHTNING", FLY_CHAIN_LIGHTNING);
+	ScriptModule_AddIntConstant(poModule, "FLY_HP_SMALL", FLY_HP_SMALL);
+	ScriptModule_AddIntConstant(poModule, "FLY_SKILL_MUYEONG", FLY_SKILL_MUYEONG);
 }

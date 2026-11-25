@@ -1,30 +1,30 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/Game/GameEventManager.h>
 
-PyObject* eventMgrUpdate(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* eventMgrUpdate(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	float fx;
-	if (!PyTuple_GetFloat(poArgs, 0, &fx))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 0, &fx))
+		return Script_BuildException();
 	float fy;
-	if (!PyTuple_GetFloat(poArgs, 1, &fy))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 1, &fy))
+		return Script_BuildException();
 	float fz;
-	if (!PyTuple_GetFloat(poArgs, 2, &fz))
-		return Py_BuildException();
+	if (!ScriptTuple_GetFloat(poArgs, 2, &fz))
+		return Script_BuildException();
 
 	CGameEventManager::Instance().SetCenterPosition(fx, fy, fz);
 	CGameEventManager::Instance().Update();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
 void initeventmgr()
 {
-	static PyMethodDef s_methods[] =
+	static ScriptMethodDef s_methods[] =
 		{
-			{"Update", eventMgrUpdate, METH_VARARGS, NULL},
+			{"Update", eventMgrUpdate, SCRIPT_VARARGS, NULL},
 			{NULL, NULL, 0, NULL},
 		};
 
-	Py_InitModule("eventMgr", s_methods);
+	ScriptModule_Create("eventMgr", s_methods);
 }

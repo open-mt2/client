@@ -8,86 +8,86 @@
 // RaceData 관련 시작
 //////////////////////////////////////////////////////////////////////////
 
-PyObject* chrmgrSetEmpireNameMode(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrmgrSetEmpireNameMode(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iEnable;
-	if (!PyTuple_GetInteger(poArgs, 0, &iEnable))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iEnable))
+		return Script_BadArgument();
 
 	CInstanceBase::SetEmpireNameMode(iEnable ? true : false);
 	CPythonCharacterManager::Instance().RefreshAllPCTextTail();
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrmgrRegisterTitleName(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrmgrRegisterTitleName(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iIndex))
+		return Script_BadArgument();
 	char* szTitleName;
-	if (!PyTuple_GetString(poArgs, 1, &szTitleName))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetString(poArgs, 1, &szTitleName))
+		return Script_BadArgument();
 
 	CInstanceBase::RegisterTitleName(iIndex, szTitleName);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrmgrRegisterNameColor(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrmgrRegisterNameColor(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int index;
-	if (!PyTuple_GetInteger(poArgs, 0, &index))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &index))
+		return Script_BadArgument();
 
 	int ir;
-	if (!PyTuple_GetInteger(poArgs, 1, &ir))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &ir))
+		return Script_BadArgument();
 	int ig;
-	if (!PyTuple_GetInteger(poArgs, 2, &ig))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 2, &ig))
+		return Script_BadArgument();
 	int ib;
-	if (!PyTuple_GetInteger(poArgs, 3, &ib))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 3, &ib))
+		return Script_BadArgument();
 
 	CInstanceBase::RegisterNameColor(index, ir, ig, ib);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrmgrRegisterTitleColor(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrmgrRegisterTitleColor(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iIndex))
+		return Script_BadArgument();
 	int ir;
-	if (!PyTuple_GetInteger(poArgs, 1, &ir))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &ir))
+		return Script_BadArgument();
 	int ig;
-	if (!PyTuple_GetInteger(poArgs, 2, &ig))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 2, &ig))
+		return Script_BadArgument();
 	int ib;
-	if (!PyTuple_GetInteger(poArgs, 3, &ib))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 3, &ib))
+		return Script_BadArgument();
 
 	CInstanceBase::RegisterTitleColor(iIndex, ir, ig, ib);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrmgrGetPickedVID(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrmgrGetPickedVID(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonCharacterManager& rkChrMgr = CPythonCharacterManager::Instance();
 
 	DWORD dwPickedActorID;
 	if (rkChrMgr.OLD_GetPickedInstanceVID(&dwPickedActorID))
-		return Py_BuildValue("i", dwPickedActorID);
+		return Script_BuildValue("i", dwPickedActorID);
 	else
-		return Py_BuildValue("i", -1);
+		return Script_BuildValue("i", -1);
 }
 
-PyObject* chrmgrGetVIDInfo(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrmgrGetVIDInfo(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int nVID;
-	if (!PyTuple_GetInteger(poArgs, 0, &nVID))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &nVID))
+		return Script_BadArgument();
 
 	CPythonCharacterManager& rkChrMgr = CPythonCharacterManager::Instance();
 
@@ -114,217 +114,217 @@ PyObject* chrmgrGetVIDInfo(PyObject* poSelf, PyObject* poArgs)
 			rkChrMgr.IsDeadVID(nVID),
 			szDetail);
 
-	return Py_BuildValue("s", szInfo);
+	return Script_BuildValue("s", szInfo);
 }
 
-PyObject* chrmgrSetPathName(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrmgrSetPathName(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szPathName;
-	if (!PyTuple_GetString(poArgs, 0, &szPathName))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetString(poArgs, 0, &szPathName))
+		return Script_BadArgument();
 
 	CRaceManager::Instance().SetPathName(szPathName);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrmgrCreateRace(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrmgrCreateRace(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iRace;
-	if (!PyTuple_GetInteger(poArgs, 0, &iRace))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iRace))
+		return Script_BadArgument();
 
 	CRaceManager::Instance().CreateRace(iRace);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrmgrSelectRace(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrmgrSelectRace(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iRace;
-	if (!PyTuple_GetInteger(poArgs, 0, &iRace))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iRace))
+		return Script_BadArgument();
 
 	CRaceManager::Instance().SelectRace(iRace);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrmgrRegisterAttachingBoneName(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrmgrRegisterAttachingBoneName(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iPartIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iPartIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iPartIndex))
+		return Script_BadArgument();
 	char* szBoneName;
-	if (!PyTuple_GetString(poArgs, 1, &szBoneName))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetString(poArgs, 1, &szBoneName))
+		return Script_BadArgument();
 
 	CRaceData* pRaceData = CRaceManager::Instance().GetSelectedRaceDataPointer();
 	if (!pRaceData)
-		return Py_BuildException("RaceData has not selected!");
+		return Script_BuildException("RaceData has not selected!");
 
 	pRaceData->RegisterAttachingBoneName(iPartIndex, szBoneName);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrmgrRegisterMotionMode(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrmgrRegisterMotionMode(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iMotionIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iMotionIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iMotionIndex))
+		return Script_BadArgument();
 
 	CRaceData* pRaceData = CRaceManager::Instance().GetSelectedRaceDataPointer();
 	if (!pRaceData)
-		return Py_BuildException("RaceData has not selected!");
+		return Script_BuildException("RaceData has not selected!");
 
 	pRaceData->RegisterMotionMode(iMotionIndex);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrmgrSetMotionRandomWeight(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrmgrSetMotionRandomWeight(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iMode;
-	if (!PyTuple_GetInteger(poArgs, 0, &iMode))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iMode))
+		return Script_BadArgument();
 
 	int iMotion;
-	if (!PyTuple_GetInteger(poArgs, 1, &iMotion))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iMotion))
+		return Script_BadArgument();
 
 	int iSubMotion;
-	if (!PyTuple_GetInteger(poArgs, 2, &iSubMotion))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 2, &iSubMotion))
+		return Script_BadArgument();
 
 	int iPercentage;
-	if (!PyTuple_GetInteger(poArgs, 3, &iPercentage))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 3, &iPercentage))
+		return Script_BadArgument();
 
 	CRaceData* pRaceData = CRaceManager::Instance().GetSelectedRaceDataPointer();
 	if (!pRaceData)
-		return Py_BuildException("RaceData has not selected!");
+		return Script_BuildException("RaceData has not selected!");
 
 	if (!pRaceData->SetMotionRandomWeight(iMode, iMotion, iSubMotion, iPercentage))
-		Py_BuildException("Failed to SetMotionRandomWeight");
+		Script_BuildException("Failed to SetMotionRandomWeight");
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrmgrRegisterNormalAttack(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrmgrRegisterNormalAttack(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iMode;
-	if (!PyTuple_GetInteger(poArgs, 0, &iMode))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iMode))
+		return Script_BadArgument();
 
 	int iMotion;
-	if (!PyTuple_GetInteger(poArgs, 1, &iMotion))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iMotion))
+		return Script_BadArgument();
 
 	CRaceData* pRaceData = CRaceManager::Instance().GetSelectedRaceDataPointer();
 	if (!pRaceData)
-		return Py_BuildException("RaceData has not selected!");
+		return Script_BuildException("RaceData has not selected!");
 
 	pRaceData->RegisterNormalAttack(iMode, iMotion);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // 없어질 함수들
-PyObject* chrmgrReserveComboAttack(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrmgrReserveComboAttack(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iMode;
-	if (!PyTuple_GetInteger(poArgs, 0, &iMode))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iMode))
+		return Script_BadArgument();
 
 	int iCount;
-	if (!PyTuple_GetInteger(poArgs, 1, &iCount))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iCount))
+		return Script_BadArgument();
 
 	CRaceData* pRaceData = CRaceManager::Instance().GetSelectedRaceDataPointer();
 	if (!pRaceData)
-		return Py_BuildException("RaceData has not selected!");
+		return Script_BuildException("RaceData has not selected!");
 
 	pRaceData->ReserveComboAttack(iMode, 0, iCount);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrmgrRegisterComboAttack(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrmgrRegisterComboAttack(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iMode;
-	if (!PyTuple_GetInteger(poArgs, 0, &iMode))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iMode))
+		return Script_BadArgument();
 
 	int iComboIndex;
-	if (!PyTuple_GetInteger(poArgs, 1, &iComboIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iComboIndex))
+		return Script_BadArgument();
 
 	int iMotionIndex;
-	if (!PyTuple_GetInteger(poArgs, 2, &iMotionIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 2, &iMotionIndex))
+		return Script_BadArgument();
 
 	CRaceData* pRaceData = CRaceManager::Instance().GetSelectedRaceDataPointer();
 	if (!pRaceData)
-		return Py_BuildException("RaceData has not selected!");
+		return Script_BuildException("RaceData has not selected!");
 
 	pRaceData->RegisterComboAttack(iMode, 0, iComboIndex, iMotionIndex);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 // 없어질 함수들
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-PyObject* chrmgrReserveComboAttackNew(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrmgrReserveComboAttackNew(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iMotionMode;
-	if (!PyTuple_GetInteger(poArgs, 0, &iMotionMode))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iMotionMode))
+		return Script_BadArgument();
 
 	int iComboType;
-	if (!PyTuple_GetInteger(poArgs, 1, &iComboType))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iComboType))
+		return Script_BadArgument();
 
 	int iCount;
-	if (!PyTuple_GetInteger(poArgs, 2, &iCount))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 2, &iCount))
+		return Script_BadArgument();
 
 	CRaceData* pRaceData = CRaceManager::Instance().GetSelectedRaceDataPointer();
 	if (!pRaceData)
-		return Py_BuildException("RaceData has not selected!");
+		return Script_BuildException("RaceData has not selected!");
 
 	pRaceData->ReserveComboAttack(iMotionMode, iComboType, iCount);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrmgrRegisterComboAttackNew(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrmgrRegisterComboAttackNew(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iMotionMode;
-	if (!PyTuple_GetInteger(poArgs, 0, &iMotionMode))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iMotionMode))
+		return Script_BadArgument();
 
 	int iComboType;
-	if (!PyTuple_GetInteger(poArgs, 1, &iComboType))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iComboType))
+		return Script_BadArgument();
 
 	int iComboIndex;
-	if (!PyTuple_GetInteger(poArgs, 2, &iComboIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 2, &iComboIndex))
+		return Script_BadArgument();
 
 	int iMotionIndex;
-	if (!PyTuple_GetInteger(poArgs, 3, &iMotionIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 3, &iMotionIndex))
+		return Script_BadArgument();
 
 	CRaceData* pRaceData = CRaceManager::Instance().GetSelectedRaceDataPointer();
 	if (!pRaceData)
-		return Py_BuildException("RaceData has not selected!");
+		return Script_BuildException("RaceData has not selected!");
 
 	pRaceData->RegisterComboAttack(iMotionMode, iComboType, iComboIndex, iMotionIndex);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrmgrLoadRaceData(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrmgrLoadRaceData(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szFileName;
-	if (!PyTuple_GetString(poArgs, 0, &szFileName))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetString(poArgs, 0, &szFileName))
+		return Script_BadArgument();
 
 	CRaceData* pRaceData = CRaceManager::Instance().GetSelectedRaceDataPointer();
 	if (!pRaceData)
-		return Py_BuildException("RaceData has not selected!");
+		return Script_BuildException("RaceData has not selected!");
 
 	const char* c_szFullFileName = CRaceManager::Instance().GetFullPathFileName(szFileName);
 	if (!pRaceData->LoadRaceData(c_szFullFileName))
@@ -332,76 +332,76 @@ PyObject* chrmgrLoadRaceData(PyObject* poSelf, PyObject* poArgs)
 		TraceError("Failed to load race data : %s\n", c_szFullFileName);
 	}
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrmgrLoadLocalRaceData(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrmgrLoadLocalRaceData(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szFileName;
-	if (!PyTuple_GetString(poArgs, 0, &szFileName))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetString(poArgs, 0, &szFileName))
+		return Script_BadArgument();
 
 	CRaceData* pRaceData = CRaceManager::Instance().GetSelectedRaceDataPointer();
 	if (!pRaceData)
-		return Py_BuildException("RaceData has not selected!");
+		return Script_BuildException("RaceData has not selected!");
 
 	if (!pRaceData->LoadRaceData(szFileName))
 	{
 		TraceError("Failed to load race data : %s\n", szFileName);
 	}
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
 /*
-PyObject * chrmgrRegisterMotion(PyObject* poSelf, PyObject* poArgs)
+ScriptObject * chrmgrRegisterMotion(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iMode;
-	if (!PyTuple_GetInteger(poArgs, 0, &iMode))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iMode))
+		return Script_BadArgument();
 
 	int iMotion;
-	if (!PyTuple_GetInteger(poArgs, 1, &iMotion))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iMotion))
+		return Script_BadArgument();
 
 	char* szFileName;
-	if (!PyTuple_GetString(poArgs, 2, &szFileName))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetString(poArgs, 2, &szFileName))
+		return Script_BadArgument();
 
 	int iWeight = 0;
-	PyTuple_GetInteger(poArgs, 3, &iWeight);
+	ScriptTuple_GetInteger(poArgs, 3, &iWeight);
 	iWeight = MIN(100, iWeight);
 
 	CRaceData * pRaceData = CRaceManager::Instance().GetSelectedRaceDataPointer();
 	if (!pRaceData)
-		return Py_BuildException("RaceData has not selected!");
+		return Script_BuildException("RaceData has not selected!");
 
 	pRaceData->NEW_RegisterMotion(iMode, iMotion, CRaceManager::Instance().GetFullPathFileName(szFileName), iWeight);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 */
 
-PyObject* chrmgrRegisterCacheMotionData(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrmgrRegisterCacheMotionData(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iMode;
-	if (!PyTuple_GetInteger(poArgs, 0, &iMode))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iMode))
+		return Script_BadArgument();
 
 	int iMotion;
-	if (!PyTuple_GetInteger(poArgs, 1, &iMotion))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iMotion))
+		return Script_BadArgument();
 
 	char* szFileName;
-	if (!PyTuple_GetString(poArgs, 2, &szFileName))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetString(poArgs, 2, &szFileName))
+		return Script_BadArgument();
 
 	int iWeight = 0;
-	PyTuple_GetInteger(poArgs, 3, &iWeight);
+	ScriptTuple_GetInteger(poArgs, 3, &iWeight);
 	iWeight = MIN(100, iWeight);
 
 	CRaceData* pRaceData = CRaceManager::Instance().GetSelectedRaceDataPointer();
 	if (!pRaceData)
-		return Py_BuildException("RaceData has not selected!");
+		return Script_BuildException("RaceData has not selected!");
 
 	const char* c_szFullFileName = CRaceManager::Instance().GetFullPathFileName(szFileName);
 	CGraphicThing* pkMotionThing = pRaceData->RegisterMotionData(iMode, iMotion, c_szFullFileName, iWeight);
@@ -409,228 +409,228 @@ PyObject* chrmgrRegisterCacheMotionData(PyObject* poSelf, PyObject* poArgs)
 	if (pkMotionThing)
 		CResourceManager::Instance().LoadStaticCache(pkMotionThing->GetFileName());
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrmgrRegisterMotionData(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrmgrRegisterMotionData(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iMode;
-	if (!PyTuple_GetInteger(poArgs, 0, &iMode))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iMode))
+		return Script_BadArgument();
 
 	int iMotion;
-	if (!PyTuple_GetInteger(poArgs, 1, &iMotion))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &iMotion))
+		return Script_BadArgument();
 
 	char* szFileName;
-	if (!PyTuple_GetString(poArgs, 2, &szFileName))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetString(poArgs, 2, &szFileName))
+		return Script_BadArgument();
 
 	int iWeight = 0;
-	PyTuple_GetInteger(poArgs, 3, &iWeight);
+	ScriptTuple_GetInteger(poArgs, 3, &iWeight);
 	iWeight = MIN(100, iWeight);
 
 	CRaceData* pRaceData = CRaceManager::Instance().GetSelectedRaceDataPointer();
 	if (!pRaceData)
-		return Py_BuildException("RaceData has not selected!");
+		return Script_BuildException("RaceData has not selected!");
 
 	const char* c_szFullFileName = CRaceManager::Instance().GetFullPathFileName(szFileName);
 	pRaceData->RegisterMotionData(iMode, iMotion, c_szFullFileName, iWeight);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrmgrRegisterRaceSrcName(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrmgrRegisterRaceSrcName(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szName;
-	if (!PyTuple_GetString(poArgs, 0, &szName))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetString(poArgs, 0, &szName))
+		return Script_BadArgument();
 
 	char* szSrcName;
-	if (!PyTuple_GetString(poArgs, 1, &szSrcName))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetString(poArgs, 1, &szSrcName))
+		return Script_BadArgument();
 
 	CRaceManager::Instance().RegisterRaceSrcName(szName, szSrcName);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrmgrRegisterRaceName(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrmgrRegisterRaceName(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iRaceIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &iRaceIndex))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iRaceIndex))
+		return Script_BadArgument();
 
 	char* szName;
-	if (!PyTuple_GetString(poArgs, 1, &szName))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetString(poArgs, 1, &szName))
+		return Script_BadArgument();
 
 	CRaceManager::Instance().RegisterRaceName(iRaceIndex, szName);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrmgrSetShapeModel(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrmgrSetShapeModel(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int eShape;
-	if (!PyTuple_GetInteger(poArgs, 0, &eShape))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &eShape))
+		return Script_BadArgument();
 
 	char* szFileName;
-	if (!PyTuple_GetString(poArgs, 1, &szFileName))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetString(poArgs, 1, &szFileName))
+		return Script_BadArgument();
 
 	CRaceData* pRaceData = CRaceManager::Instance().GetSelectedRaceDataPointer();
 	if (!pRaceData)
-		return Py_BuildException("RaceData has not selected!");
+		return Script_BuildException("RaceData has not selected!");
 
 	pRaceData->SetShapeModel(eShape, szFileName);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrmgrAppendShapeSkin(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrmgrAppendShapeSkin(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int eShape;
-	if (!PyTuple_GetInteger(poArgs, 0, &eShape))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &eShape))
+		return Script_BadArgument();
 
 	int ePart;
-	if (!PyTuple_GetInteger(poArgs, 1, &ePart))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &ePart))
+		return Script_BadArgument();
 
 	char* szSrcFileName;
-	if (!PyTuple_GetString(poArgs, 2, &szSrcFileName))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetString(poArgs, 2, &szSrcFileName))
+		return Script_BadArgument();
 
 	char* szDstFileName;
-	if (!PyTuple_GetString(poArgs, 3, &szDstFileName))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetString(poArgs, 3, &szDstFileName))
+		return Script_BadArgument();
 
 	CRaceData* pRaceData = CRaceManager::Instance().GetSelectedRaceDataPointer();
 	if (!pRaceData)
-		return Py_BuildException("RaceData has not selected!");
+		return Script_BuildException("RaceData has not selected!");
 
 	pRaceData->AppendShapeSkin(eShape, ePart, szSrcFileName, szDstFileName);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 //////////////////////////////////////////////////////////////////////////
 // RaceData 관련 끝
 //////////////////////////////////////////////////////////////////////////
 
-PyObject* chrmgrSetMovingSpeed(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrmgrSetMovingSpeed(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 #ifndef _DISTRIBUTE
 	int nMovSpd;
-	if (!PyTuple_GetInteger(poArgs, 0, &nMovSpd))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &nMovSpd))
+		return Script_BadArgument();
 
 	if (nMovSpd < 0)
-		return Py_BuildException("MovingSpeed < 0");
+		return Script_BuildException("MovingSpeed < 0");
 
 	CInstanceBase* pkInst = CPythonCharacterManager::Instance().GetSelectedInstancePtr();
 
 	if (!pkInst)
-		return Py_BuildException("MainCharacter has not selected!");
+		return Script_BuildException("MainCharacter has not selected!");
 
 	pkInst->SetMoveSpeed(nMovSpd);
 #endif
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrmgrRegisterEffect(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrmgrRegisterEffect(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int eEftType;
-	if (!PyTuple_GetInteger(poArgs, 0, &eEftType))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &eEftType))
+		return Script_BadArgument();
 
 	char* szBoneName;
-	if (!PyTuple_GetString(poArgs, 1, &szBoneName))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetString(poArgs, 1, &szBoneName))
+		return Script_BadArgument();
 
 	char* szPathName;
-	if (!PyTuple_GetString(poArgs, 2, &szPathName))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetString(poArgs, 2, &szPathName))
+		return Script_BadArgument();
 
 	CInstanceBase::RegisterEffect(eEftType, szBoneName, szPathName, false);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrmgrRegisterCacheEffect(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrmgrRegisterCacheEffect(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int eEftType;
-	if (!PyTuple_GetInteger(poArgs, 0, &eEftType))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &eEftType))
+		return Script_BadArgument();
 
 	char* szBoneName;
-	if (!PyTuple_GetString(poArgs, 1, &szBoneName))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetString(poArgs, 1, &szBoneName))
+		return Script_BadArgument();
 
 	char* szPathName;
-	if (!PyTuple_GetString(poArgs, 2, &szPathName))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetString(poArgs, 2, &szPathName))
+		return Script_BadArgument();
 
 	CInstanceBase::RegisterEffect(eEftType, szBoneName, szPathName, true);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrmgrSetDustGap(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrmgrSetDustGap(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int nGap;
-	if (!PyTuple_GetInteger(poArgs, 0, &nGap))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &nGap))
+		return Script_BadArgument();
 
 	CInstanceBase::SetDustGap(nGap);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrmgrSetHorseDustGap(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrmgrSetHorseDustGap(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int nGap;
-	if (!PyTuple_GetInteger(poArgs, 0, &nGap))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &nGap))
+		return Script_BadArgument();
 
 	CInstanceBase::SetHorseDustGap(nGap);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrmgrToggleDirectionLine(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrmgrToggleDirectionLine(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	static bool s_isVisible = true;
 	CActorInstance::ShowDirectionLine(s_isVisible);
 
 	s_isVisible = !s_isVisible;
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrmgrRegisterPointEffect(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrmgrRegisterPointEffect(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iEft;
-	if (!PyTuple_GetInteger(poArgs, 0, &iEft))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iEft))
+		return Script_BadArgument();
 
 	char* szFileName;
-	if (!PyTuple_GetString(poArgs, 1, &szFileName))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetString(poArgs, 1, &szFileName))
+		return Script_BadArgument();
 
 	CPythonCharacterManager& rkChrMgr = CPythonCharacterManager::Instance();
 	rkChrMgr.RegisterPointEffect(iEft, szFileName);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrmgrShowPointEffect(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrmgrShowPointEffect(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int nVID;
-	if (!PyTuple_GetInteger(poArgs, 0, &nVID))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &nVID))
+		return Script_BadArgument();
 
 	int nEft;
-	if (!PyTuple_GetInteger(poArgs, 1, &nEft))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &nEft))
+		return Script_BadArgument();
 
 	CPythonCharacterManager& rkChrMgr = CPythonCharacterManager::Instance();
 	rkChrMgr.ShowPointEffect(nEft, nVID >= 0 ? nVID : 0xffffffff);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
 void CPythonCharacterManager::SCRIPT_SetAffect(DWORD dwVID, DWORD eState, BOOL isVisible)
@@ -642,23 +642,23 @@ void CPythonCharacterManager::SCRIPT_SetAffect(DWORD dwVID, DWORD eState, BOOL i
 	pkInstSel->SCRIPT_SetAffect(eState, isVisible ? true : false);
 }
 
-PyObject* chrmgrSetAffect(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrmgrSetAffect(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int nVID;
-	if (!PyTuple_GetInteger(poArgs, 0, &nVID))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &nVID))
+		return Script_BadArgument();
 
 	int nEft;
-	if (!PyTuple_GetInteger(poArgs, 1, &nEft))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &nEft))
+		return Script_BadArgument();
 
 	int nVisible;
-	if (!PyTuple_GetInteger(poArgs, 2, &nVisible))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 2, &nVisible))
+		return Script_BadArgument();
 
 	CPythonCharacterManager& rkChrMgr = CPythonCharacterManager::Instance();
 	rkChrMgr.SCRIPT_SetAffect(nVID >= 0 ? nVID : 0xffffffff, nEft, nVisible);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
 void CPythonCharacterManager::SetEmoticon(DWORD dwVID, DWORD eState)
@@ -679,158 +679,158 @@ bool CPythonCharacterManager::IsPossibleEmoticon(DWORD dwVID)
 	return pkInstSel->IsPossibleEmoticon();
 }
 
-PyObject* chrmgrSetEmoticon(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrmgrSetEmoticon(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int nVID;
-	if (!PyTuple_GetInteger(poArgs, 0, &nVID))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &nVID))
+		return Script_BadArgument();
 
 	int nEft;
-	if (!PyTuple_GetInteger(poArgs, 1, &nEft))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 1, &nEft))
+		return Script_BadArgument();
 
 	CPythonCharacterManager& rkChrMgr = CPythonCharacterManager::Instance();
 	rkChrMgr.SetEmoticon(nVID >= 0 ? nVID : 0xffffffff, nEft);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* chrmgrIsPossibleEmoticon(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* chrmgrIsPossibleEmoticon(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int nVID;
-	if (!PyTuple_GetInteger(poArgs, 0, &nVID))
-		return Py_BadArgument();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &nVID))
+		return Script_BadArgument();
 
 	CPythonCharacterManager& rkChrMgr = CPythonCharacterManager::Instance();
 	int result = rkChrMgr.IsPossibleEmoticon(nVID >= 0 ? nVID : 0xffffffff);
 
-	return Py_BuildValue("i", result);
+	return Script_BuildValue("i", result);
 }
 
 void initchrmgr()
 {
-	static PyMethodDef s_methods[] =
+	static ScriptMethodDef s_methods[] =
 		{
 			// RaceData 관련
-			{"SetEmpireNameMode", chrmgrSetEmpireNameMode, METH_VARARGS, NULL},
-			{"GetVIDInfo", chrmgrGetVIDInfo, METH_VARARGS, NULL},
-			{"GetPickedVID", chrmgrGetPickedVID, METH_VARARGS, NULL},
-			{"SetShapeModel", chrmgrSetShapeModel, METH_VARARGS, NULL},
-			{"AppendShapeSkin", chrmgrAppendShapeSkin, METH_VARARGS, NULL},
-			{"SetPathName", chrmgrSetPathName, METH_VARARGS, NULL},
-			{"LoadRaceData", chrmgrLoadRaceData, METH_VARARGS, NULL},
-			{"LoadLocalRaceData", chrmgrLoadLocalRaceData, METH_VARARGS, NULL},
-			{"CreateRace", chrmgrCreateRace, METH_VARARGS, NULL},
-			{"SelectRace", chrmgrSelectRace, METH_VARARGS, NULL},
-			{"RegisterAttachingBoneName", chrmgrRegisterAttachingBoneName, METH_VARARGS, NULL},
-			{"RegisterMotionMode", chrmgrRegisterMotionMode, METH_VARARGS, NULL},
-			//{ "RegisterMotion",				chrmgrRegisterMotion,					METH_VARARGS },
-			{"SetMotionRandomWeight", chrmgrSetMotionRandomWeight, METH_VARARGS, NULL},
-			{"RegisterNormalAttack", chrmgrRegisterNormalAttack, METH_VARARGS, NULL},
-			{"ReserveComboAttack", chrmgrReserveComboAttack, METH_VARARGS, NULL},
-			{"RegisterComboAttack", chrmgrRegisterComboAttack, METH_VARARGS, NULL},
-			{"ReserveComboAttackNew", chrmgrReserveComboAttackNew, METH_VARARGS, NULL},
-			{"RegisterComboAttackNew", chrmgrRegisterComboAttackNew, METH_VARARGS, NULL},
-			{"RegisterMotionData", chrmgrRegisterMotionData, METH_VARARGS, NULL},
-			{"RegisterRaceName", chrmgrRegisterRaceName, METH_VARARGS, NULL},
-			{"RegisterRaceSrcName", chrmgrRegisterRaceSrcName, METH_VARARGS, NULL},
-			{"RegisterCacheMotionData", chrmgrRegisterCacheMotionData, METH_VARARGS, NULL},
+			{"SetEmpireNameMode", chrmgrSetEmpireNameMode, SCRIPT_VARARGS, NULL},
+			{"GetVIDInfo", chrmgrGetVIDInfo, SCRIPT_VARARGS, NULL},
+			{"GetPickedVID", chrmgrGetPickedVID, SCRIPT_VARARGS, NULL},
+			{"SetShapeModel", chrmgrSetShapeModel, SCRIPT_VARARGS, NULL},
+			{"AppendShapeSkin", chrmgrAppendShapeSkin, SCRIPT_VARARGS, NULL},
+			{"SetPathName", chrmgrSetPathName, SCRIPT_VARARGS, NULL},
+			{"LoadRaceData", chrmgrLoadRaceData, SCRIPT_VARARGS, NULL},
+			{"LoadLocalRaceData", chrmgrLoadLocalRaceData, SCRIPT_VARARGS, NULL},
+			{"CreateRace", chrmgrCreateRace, SCRIPT_VARARGS, NULL},
+			{"SelectRace", chrmgrSelectRace, SCRIPT_VARARGS, NULL},
+			{"RegisterAttachingBoneName", chrmgrRegisterAttachingBoneName, SCRIPT_VARARGS, NULL},
+			{"RegisterMotionMode", chrmgrRegisterMotionMode, SCRIPT_VARARGS, NULL},
+			//{ "RegisterMotion",				chrmgrRegisterMotion,					SCRIPT_VARARGS },
+			{"SetMotionRandomWeight", chrmgrSetMotionRandomWeight, SCRIPT_VARARGS, NULL},
+			{"RegisterNormalAttack", chrmgrRegisterNormalAttack, SCRIPT_VARARGS, NULL},
+			{"ReserveComboAttack", chrmgrReserveComboAttack, SCRIPT_VARARGS, NULL},
+			{"RegisterComboAttack", chrmgrRegisterComboAttack, SCRIPT_VARARGS, NULL},
+			{"ReserveComboAttackNew", chrmgrReserveComboAttackNew, SCRIPT_VARARGS, NULL},
+			{"RegisterComboAttackNew", chrmgrRegisterComboAttackNew, SCRIPT_VARARGS, NULL},
+			{"RegisterMotionData", chrmgrRegisterMotionData, SCRIPT_VARARGS, NULL},
+			{"RegisterRaceName", chrmgrRegisterRaceName, SCRIPT_VARARGS, NULL},
+			{"RegisterRaceSrcName", chrmgrRegisterRaceSrcName, SCRIPT_VARARGS, NULL},
+			{"RegisterCacheMotionData", chrmgrRegisterCacheMotionData, SCRIPT_VARARGS, NULL},
 
 			// ETC
-			{"SetAffect", chrmgrSetAffect, METH_VARARGS, NULL},
-			{"SetEmoticon", chrmgrSetEmoticon, METH_VARARGS, NULL},
-			{"IsPossibleEmoticon", chrmgrIsPossibleEmoticon, METH_VARARGS, NULL},
-			{"RegisterEffect", chrmgrRegisterEffect, METH_VARARGS, NULL},
-			{"RegisterCacheEffect", chrmgrRegisterCacheEffect, METH_VARARGS, NULL},
-			{"RegisterPointEffect", chrmgrRegisterPointEffect, METH_VARARGS, NULL},
-			{"ShowPointEffect", chrmgrShowPointEffect, METH_VARARGS, NULL},
-			{"ToggleDirectionLine", chrmgrToggleDirectionLine, METH_VARARGS, NULL},
-			{"SetMovingSpeed", chrmgrSetMovingSpeed, METH_VARARGS, NULL},
-			{"SetDustGap", chrmgrSetDustGap, METH_VARARGS, NULL},
-			{"SetHorseDustGap", chrmgrSetHorseDustGap, METH_VARARGS, NULL},
+			{"SetAffect", chrmgrSetAffect, SCRIPT_VARARGS, NULL},
+			{"SetEmoticon", chrmgrSetEmoticon, SCRIPT_VARARGS, NULL},
+			{"IsPossibleEmoticon", chrmgrIsPossibleEmoticon, SCRIPT_VARARGS, NULL},
+			{"RegisterEffect", chrmgrRegisterEffect, SCRIPT_VARARGS, NULL},
+			{"RegisterCacheEffect", chrmgrRegisterCacheEffect, SCRIPT_VARARGS, NULL},
+			{"RegisterPointEffect", chrmgrRegisterPointEffect, SCRIPT_VARARGS, NULL},
+			{"ShowPointEffect", chrmgrShowPointEffect, SCRIPT_VARARGS, NULL},
+			{"ToggleDirectionLine", chrmgrToggleDirectionLine, SCRIPT_VARARGS, NULL},
+			{"SetMovingSpeed", chrmgrSetMovingSpeed, SCRIPT_VARARGS, NULL},
+			{"SetDustGap", chrmgrSetDustGap, SCRIPT_VARARGS, NULL},
+			{"SetHorseDustGap", chrmgrSetHorseDustGap, SCRIPT_VARARGS, NULL},
 
-			{"RegisterTitleName", chrmgrRegisterTitleName, METH_VARARGS, NULL},
-			{"RegisterNameColor", chrmgrRegisterNameColor, METH_VARARGS, NULL},
-			{"RegisterTitleColor", chrmgrRegisterTitleColor, METH_VARARGS, NULL},
+			{"RegisterTitleName", chrmgrRegisterTitleName, SCRIPT_VARARGS, NULL},
+			{"RegisterNameColor", chrmgrRegisterNameColor, SCRIPT_VARARGS, NULL},
+			{"RegisterTitleColor", chrmgrRegisterTitleColor, SCRIPT_VARARGS, NULL},
 
 			{NULL, NULL, 0, NULL},
 		};
 
-	PyObject* poModule = Py_InitModule("chrmgr", s_methods);
+	ScriptObject* poModule = ScriptModule_Create("chrmgr", s_methods);
 
-	PyModule_AddIntConstant(poModule, "NAMECOLOR_MOB", CInstanceBase::NAMECOLOR_NORMAL_MOB);
-	PyModule_AddIntConstant(poModule, "NAMECOLOR_NPC", CInstanceBase::NAMECOLOR_NORMAL_NPC);
-	PyModule_AddIntConstant(poModule, "NAMECOLOR_PC", CInstanceBase::NAMECOLOR_NORMAL_PC);
-	PyModule_AddIntConstant(poModule, "NAMECOLOR_EMPIRE_MOB", CInstanceBase::NAMECOLOR_EMPIRE_MOB);
-	PyModule_AddIntConstant(poModule, "NAMECOLOR_EMPIRE_NPC", CInstanceBase::NAMECOLOR_EMPIRE_NPC);
-	PyModule_AddIntConstant(poModule, "NAMECOLOR_EMPIRE_PC", CInstanceBase::NAMECOLOR_EMPIRE_PC);
-	PyModule_AddIntConstant(poModule, "NAMECOLOR_FUNC", CInstanceBase::NAMECOLOR_FUNC);
-	PyModule_AddIntConstant(poModule, "NAMECOLOR_PK", CInstanceBase::NAMECOLOR_PK);
-	PyModule_AddIntConstant(poModule, "NAMECOLOR_PVP", CInstanceBase::NAMECOLOR_PVP);
-	PyModule_AddIntConstant(poModule, "NAMECOLOR_PARTY", CInstanceBase::NAMECOLOR_PARTY);
-	PyModule_AddIntConstant(poModule, "NAMECOLOR_WARP", CInstanceBase::NAMECOLOR_WARP);
-	PyModule_AddIntConstant(poModule, "NAMECOLOR_WAYPOINT", CInstanceBase::NAMECOLOR_WAYPOINT);
-	PyModule_AddIntConstant(poModule, "NAMECOLOR_EXTRA", CInstanceBase::NAMECOLOR_EXTRA);
+	ScriptModule_AddIntConstant(poModule, "NAMECOLOR_MOB", CInstanceBase::NAMECOLOR_NORMAL_MOB);
+	ScriptModule_AddIntConstant(poModule, "NAMECOLOR_NPC", CInstanceBase::NAMECOLOR_NORMAL_NPC);
+	ScriptModule_AddIntConstant(poModule, "NAMECOLOR_PC", CInstanceBase::NAMECOLOR_NORMAL_PC);
+	ScriptModule_AddIntConstant(poModule, "NAMECOLOR_EMPIRE_MOB", CInstanceBase::NAMECOLOR_EMPIRE_MOB);
+	ScriptModule_AddIntConstant(poModule, "NAMECOLOR_EMPIRE_NPC", CInstanceBase::NAMECOLOR_EMPIRE_NPC);
+	ScriptModule_AddIntConstant(poModule, "NAMECOLOR_EMPIRE_PC", CInstanceBase::NAMECOLOR_EMPIRE_PC);
+	ScriptModule_AddIntConstant(poModule, "NAMECOLOR_FUNC", CInstanceBase::NAMECOLOR_FUNC);
+	ScriptModule_AddIntConstant(poModule, "NAMECOLOR_PK", CInstanceBase::NAMECOLOR_PK);
+	ScriptModule_AddIntConstant(poModule, "NAMECOLOR_PVP", CInstanceBase::NAMECOLOR_PVP);
+	ScriptModule_AddIntConstant(poModule, "NAMECOLOR_PARTY", CInstanceBase::NAMECOLOR_PARTY);
+	ScriptModule_AddIntConstant(poModule, "NAMECOLOR_WARP", CInstanceBase::NAMECOLOR_WARP);
+	ScriptModule_AddIntConstant(poModule, "NAMECOLOR_WAYPOINT", CInstanceBase::NAMECOLOR_WAYPOINT);
+	ScriptModule_AddIntConstant(poModule, "NAMECOLOR_EXTRA", CInstanceBase::NAMECOLOR_EXTRA);
 
-	PyModule_AddIntConstant(poModule, "EFFECT_SPAWN_DISAPPEAR", CInstanceBase::EFFECT_SPAWN_DISAPPEAR);
-	PyModule_AddIntConstant(poModule, "EFFECT_SPAWN_APPEAR", CInstanceBase::EFFECT_SPAWN_APPEAR);
-	PyModule_AddIntConstant(poModule, "EFFECT_DUST", CInstanceBase::EFFECT_DUST);
-	PyModule_AddIntConstant(poModule, "EFFECT_HORSE_DUST", CInstanceBase::EFFECT_HORSE_DUST);
-	PyModule_AddIntConstant(poModule, "EFFECT_STUN", CInstanceBase::EFFECT_STUN);
-	PyModule_AddIntConstant(poModule, "EFFECT_HIT", CInstanceBase::EFFECT_HIT);
-	PyModule_AddIntConstant(poModule, "EFFECT_FLAME_ATTACK", CInstanceBase::EFFECT_FLAME_ATTACK);
-	PyModule_AddIntConstant(poModule, "EFFECT_FLAME_HIT", CInstanceBase::EFFECT_FLAME_HIT);
-	PyModule_AddIntConstant(poModule, "EFFECT_FLAME_ATTACH", CInstanceBase::EFFECT_FLAME_ATTACH);
-	PyModule_AddIntConstant(poModule, "EFFECT_ELECTRIC_ATTACK", CInstanceBase::EFFECT_ELECTRIC_ATTACK);
-	PyModule_AddIntConstant(poModule, "EFFECT_ELECTRIC_HIT", CInstanceBase::EFFECT_ELECTRIC_HIT);
-	PyModule_AddIntConstant(poModule, "EFFECT_ELECTRIC_ATTACH", CInstanceBase::EFFECT_ELECTRIC_ATTACH);
-	PyModule_AddIntConstant(poModule, "EFFECT_SELECT", CInstanceBase::EFFECT_SELECT);
-	PyModule_AddIntConstant(poModule, "EFFECT_TARGET", CInstanceBase::EFFECT_TARGET);
-	PyModule_AddIntConstant(poModule, "EFFECT_CRITICAL", CInstanceBase::EFFECT_CRITICAL);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_SPAWN_DISAPPEAR", CInstanceBase::EFFECT_SPAWN_DISAPPEAR);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_SPAWN_APPEAR", CInstanceBase::EFFECT_SPAWN_APPEAR);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_DUST", CInstanceBase::EFFECT_DUST);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_HORSE_DUST", CInstanceBase::EFFECT_HORSE_DUST);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_STUN", CInstanceBase::EFFECT_STUN);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_HIT", CInstanceBase::EFFECT_HIT);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_FLAME_ATTACK", CInstanceBase::EFFECT_FLAME_ATTACK);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_FLAME_HIT", CInstanceBase::EFFECT_FLAME_HIT);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_FLAME_ATTACH", CInstanceBase::EFFECT_FLAME_ATTACH);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_ELECTRIC_ATTACK", CInstanceBase::EFFECT_ELECTRIC_ATTACK);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_ELECTRIC_HIT", CInstanceBase::EFFECT_ELECTRIC_HIT);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_ELECTRIC_ATTACH", CInstanceBase::EFFECT_ELECTRIC_ATTACH);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_SELECT", CInstanceBase::EFFECT_SELECT);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_TARGET", CInstanceBase::EFFECT_TARGET);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_CRITICAL", CInstanceBase::EFFECT_CRITICAL);
 
-	PyModule_AddIntConstant(poModule, "EFFECT_DAMAGE_TARGET", CInstanceBase::EFFECT_DAMAGE_TARGET);
-	PyModule_AddIntConstant(poModule, "EFFECT_DAMAGE_NOT_TARGET", CInstanceBase::EFFECT_DAMAGE_NOT_TARGET);
-	PyModule_AddIntConstant(poModule, "EFFECT_DAMAGE_SELFDAMAGE", CInstanceBase::EFFECT_DAMAGE_SELFDAMAGE);
-	PyModule_AddIntConstant(poModule, "EFFECT_DAMAGE_SELFDAMAGE2", CInstanceBase::EFFECT_DAMAGE_SELFDAMAGE2);
-	PyModule_AddIntConstant(poModule, "EFFECT_DAMAGE_POISON", CInstanceBase::EFFECT_DAMAGE_POISON);
-	PyModule_AddIntConstant(poModule, "EFFECT_DAMAGE_MISS", CInstanceBase::EFFECT_DAMAGE_MISS);
-	PyModule_AddIntConstant(poModule, "EFFECT_DAMAGE_TARGETMISS", CInstanceBase::EFFECT_DAMAGE_TARGETMISS);
-	PyModule_AddIntConstant(poModule, "EFFECT_DAMAGE_CRITICAL", CInstanceBase::EFFECT_DAMAGE_CRITICAL);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_DAMAGE_TARGET", CInstanceBase::EFFECT_DAMAGE_TARGET);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_DAMAGE_NOT_TARGET", CInstanceBase::EFFECT_DAMAGE_NOT_TARGET);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_DAMAGE_SELFDAMAGE", CInstanceBase::EFFECT_DAMAGE_SELFDAMAGE);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_DAMAGE_SELFDAMAGE2", CInstanceBase::EFFECT_DAMAGE_SELFDAMAGE2);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_DAMAGE_POISON", CInstanceBase::EFFECT_DAMAGE_POISON);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_DAMAGE_MISS", CInstanceBase::EFFECT_DAMAGE_MISS);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_DAMAGE_TARGETMISS", CInstanceBase::EFFECT_DAMAGE_TARGETMISS);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_DAMAGE_CRITICAL", CInstanceBase::EFFECT_DAMAGE_CRITICAL);
 
-	PyModule_AddIntConstant(poModule, "EFFECT_LEVELUP", CInstanceBase::EFFECT_LEVELUP);
-	PyModule_AddIntConstant(poModule, "EFFECT_SKILLUP", CInstanceBase::EFFECT_SKILLUP);
-	PyModule_AddIntConstant(poModule, "EFFECT_HPUP_RED", CInstanceBase::EFFECT_HPUP_RED);
-	PyModule_AddIntConstant(poModule, "EFFECT_SPUP_BLUE", CInstanceBase::EFFECT_SPUP_BLUE);
-	PyModule_AddIntConstant(poModule, "EFFECT_SPEEDUP_GREEN", CInstanceBase::EFFECT_SPEEDUP_GREEN);
-	PyModule_AddIntConstant(poModule, "EFFECT_DXUP_PURPLE", CInstanceBase::EFFECT_DXUP_PURPLE);
-	PyModule_AddIntConstant(poModule, "EFFECT_PENETRATE", CInstanceBase::EFFECT_PENETRATE);
-	PyModule_AddIntConstant(poModule, "EFFECT_BLOCK", CInstanceBase::EFFECT_BLOCK);
-	PyModule_AddIntConstant(poModule, "EFFECT_DODGE", CInstanceBase::EFFECT_DODGE);
-	PyModule_AddIntConstant(poModule, "EFFECT_FIRECRACKER", CInstanceBase::EFFECT_FIRECRACKER);
-	PyModule_AddIntConstant(poModule, "EFFECT_SPIN_TOP", CInstanceBase::EFFECT_SPIN_TOP);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_LEVELUP", CInstanceBase::EFFECT_LEVELUP);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_SKILLUP", CInstanceBase::EFFECT_SKILLUP);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_HPUP_RED", CInstanceBase::EFFECT_HPUP_RED);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_SPUP_BLUE", CInstanceBase::EFFECT_SPUP_BLUE);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_SPEEDUP_GREEN", CInstanceBase::EFFECT_SPEEDUP_GREEN);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_DXUP_PURPLE", CInstanceBase::EFFECT_DXUP_PURPLE);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_PENETRATE", CInstanceBase::EFFECT_PENETRATE);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_BLOCK", CInstanceBase::EFFECT_BLOCK);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_DODGE", CInstanceBase::EFFECT_DODGE);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_FIRECRACKER", CInstanceBase::EFFECT_FIRECRACKER);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_SPIN_TOP", CInstanceBase::EFFECT_SPIN_TOP);
 
-	PyModule_AddIntConstant(poModule, "EFFECT_WEAPON", CInstanceBase::EFFECT_WEAPON);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_WEAPON", CInstanceBase::EFFECT_WEAPON);
 
-	PyModule_AddIntConstant(poModule, "EFFECT_AFFECT", CInstanceBase::EFFECT_AFFECT);
-	PyModule_AddIntConstant(poModule, "EFFECT_EMOTICON", CInstanceBase::EFFECT_EMOTICON);
-	PyModule_AddIntConstant(poModule, "EFFECT_EMPIRE", CInstanceBase::EFFECT_EMPIRE);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_AFFECT", CInstanceBase::EFFECT_AFFECT);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_EMOTICON", CInstanceBase::EFFECT_EMOTICON);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_EMPIRE", CInstanceBase::EFFECT_EMPIRE);
 
-	PyModule_AddIntConstant(poModule, "EFFECT_REFINED", CInstanceBase::EFFECT_REFINED);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_REFINED", CInstanceBase::EFFECT_REFINED);
 
-	PyModule_AddIntConstant(poModule, "EFFECT_SUCCESS", CInstanceBase::EFFECT_SUCCESS);
-	PyModule_AddIntConstant(poModule, "EFFECT_FAIL", CInstanceBase::EFFECT_FAIL);
-	PyModule_AddIntConstant(poModule, "EFFECT_FR_SUCCESS", CInstanceBase::EFFECT_FR_SUCCESS);
-	PyModule_AddIntConstant(poModule, "EFFECT_LEVELUP_ON_14_FOR_GERMANY", CInstanceBase::EFFECT_LEVELUP_ON_14_FOR_GERMANY);		  // 레벨업 14일때 ( 독일전용 )
-	PyModule_AddIntConstant(poModule, "EFFECT_LEVELUP_UNDER_15_FOR_GERMANY", CInstanceBase::EFFECT_LEVELUP_UNDER_15_FOR_GERMANY); // 레벨업 15일때 ( 독일전용 )
-	PyModule_AddIntConstant(poModule, "EFFECT_PERCENT_DAMAGE1", CInstanceBase::EFFECT_PERCENT_DAMAGE1);
-	PyModule_AddIntConstant(poModule, "EFFECT_PERCENT_DAMAGE2", CInstanceBase::EFFECT_PERCENT_DAMAGE2);
-	PyModule_AddIntConstant(poModule, "EFFECT_PERCENT_DAMAGE3", CInstanceBase::EFFECT_PERCENT_DAMAGE3);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_SUCCESS", CInstanceBase::EFFECT_SUCCESS);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_FAIL", CInstanceBase::EFFECT_FAIL);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_FR_SUCCESS", CInstanceBase::EFFECT_FR_SUCCESS);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_LEVELUP_ON_14_FOR_GERMANY", CInstanceBase::EFFECT_LEVELUP_ON_14_FOR_GERMANY);		  // 레벨업 14일때 ( 독일전용 )
+	ScriptModule_AddIntConstant(poModule, "EFFECT_LEVELUP_UNDER_15_FOR_GERMANY", CInstanceBase::EFFECT_LEVELUP_UNDER_15_FOR_GERMANY); // 레벨업 15일때 ( 독일전용 )
+	ScriptModule_AddIntConstant(poModule, "EFFECT_PERCENT_DAMAGE1", CInstanceBase::EFFECT_PERCENT_DAMAGE1);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_PERCENT_DAMAGE2", CInstanceBase::EFFECT_PERCENT_DAMAGE2);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_PERCENT_DAMAGE3", CInstanceBase::EFFECT_PERCENT_DAMAGE3);
 
 	// 자동물약 HP, SP
-	PyModule_AddIntConstant(poModule, "EFFECT_AUTO_HPUP", CInstanceBase::EFFECT_AUTO_HPUP);
-	PyModule_AddIntConstant(poModule, "EFFECT_AUTO_SPUP", CInstanceBase::EFFECT_AUTO_SPUP);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_AUTO_HPUP", CInstanceBase::EFFECT_AUTO_HPUP);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_AUTO_SPUP", CInstanceBase::EFFECT_AUTO_SPUP);
 
-	PyModule_AddIntConstant(poModule, "EFFECT_RAMADAN_RING_EQUIP", CInstanceBase::EFFECT_RAMADAN_RING_EQUIP);
-	PyModule_AddIntConstant(poModule, "EFFECT_HALLOWEEN_CANDY_EQUIP", CInstanceBase::EFFECT_HALLOWEEN_CANDY_EQUIP);
-	PyModule_AddIntConstant(poModule, "EFFECT_HAPPINESS_RING_EQUIP", CInstanceBase::EFFECT_HAPPINESS_RING_EQUIP);
-	PyModule_AddIntConstant(poModule, "EFFECT_LOVE_PENDANT_EQUIP", CInstanceBase::EFFECT_LOVE_PENDANT_EQUIP);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_RAMADAN_RING_EQUIP", CInstanceBase::EFFECT_RAMADAN_RING_EQUIP);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_HALLOWEEN_CANDY_EQUIP", CInstanceBase::EFFECT_HALLOWEEN_CANDY_EQUIP);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_HAPPINESS_RING_EQUIP", CInstanceBase::EFFECT_HAPPINESS_RING_EQUIP);
+	ScriptModule_AddIntConstant(poModule, "EFFECT_LOVE_PENDANT_EQUIP", CInstanceBase::EFFECT_LOVE_PENDANT_EQUIP);
 }

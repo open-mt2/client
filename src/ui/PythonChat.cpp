@@ -581,13 +581,13 @@ BOOL CPythonChat::GetWhisper(const char* c_szName, CWhisper** ppWhisper)
 	return TRUE;
 }
 
-void CPythonChat::InitWhisper(PyObject* ppyObject)
+void CPythonChat::InitWhisper(ScriptObject* ppyObject)
 {
 	TWhisperMap::iterator itor = m_WhisperMap.begin();
 	for (; itor != m_WhisperMap.end(); ++itor)
 	{
 		std::string strName = itor->first;
-		PyCallClassMemberFunc(ppyObject, "MakeWhisperButton", Py_BuildValue("(s)", strName.c_str()));
+		Script_CallMethod(ppyObject, "MakeWhisperButton", Script_BuildValue("(s)", strName.c_str()));
 	}
 }
 

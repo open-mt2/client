@@ -2,288 +2,288 @@
 #include <Client/UI/PythonIME.h>
 #include <Client/UI/PythonApplication.h>
 
-PyObject* imeEnable(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* imeEnable(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonIME::Instance().Initialize(CPythonApplication::Instance().GetWindowHandle());
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* imeDisable(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* imeDisable(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonIME::Instance().Uninitialize();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* imeEnableCaptureInput(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* imeEnableCaptureInput(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonIME::Instance().EnableCaptureInput();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* imeDisableCaptureInput(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* imeDisableCaptureInput(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonIME::Instance().DisableCaptureInput();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* imeSetMax(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* imeSetMax(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iMax;
-	if (!PyTuple_GetInteger(poArgs, 0, &iMax))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iMax))
+		return Script_BuildException();
 
 	CPythonIME::Instance().SetMax(iMax);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* imeSetUserMax(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* imeSetUserMax(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iMax;
-	if (!PyTuple_GetInteger(poArgs, 0, &iMax))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iMax))
+		return Script_BuildException();
 
 	CPythonIME::Instance().SetUserMax(iMax);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* imeSetText(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* imeSetText(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szText;
-	if (!PyTuple_GetString(poArgs, 0, &szText))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szText))
+		return Script_BuildException();
 
 	CPythonIME::Instance().SetText(szText, strlen(szText));
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* imeGetText(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* imeGetText(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int bCodePage;
-	if (!PyTuple_GetInteger(poArgs, 0, &bCodePage))
+	if (!ScriptTuple_GetInteger(poArgs, 0, &bCodePage))
 		bCodePage = 0;
 
 	std::string strText;
 	CPythonIME::Instance().GetText(strText, bCodePage ? true : false);
-	return Py_BuildValue("s", strText.c_str());
+	return Script_BuildValue("s", strText.c_str());
 }
 
-PyObject* imeGetCodePage(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* imeGetCodePage(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", CPythonIME::Instance().GetCodePage());
+	return Script_BuildValue("i", CPythonIME::Instance().GetCodePage());
 }
 
-PyObject* imeGetCandidateCount(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* imeGetCandidateCount(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", CPythonIME::Instance().GetCandidatePageCount());
+	return Script_BuildValue("i", CPythonIME::Instance().GetCandidatePageCount());
 }
 
-PyObject* imeGetCandidate(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* imeGetCandidate(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int index;
-	if (!PyTuple_GetInteger(poArgs, 0, &index))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &index))
+		return Script_BuildException();
 
 	std::string strText;
 	int iLength = CPythonIME::Instance().GetCandidate(index, strText);
-	return Py_BuildValue("si", strText.c_str(), iLength);
+	return Script_BuildValue("si", strText.c_str(), iLength);
 }
 
-PyObject* imeGetCandidateSelection(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* imeGetCandidateSelection(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", CPythonIME::Instance().GetCandidateSelection());
+	return Script_BuildValue("i", CPythonIME::Instance().GetCandidateSelection());
 }
 
-PyObject* imeGetReading(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* imeGetReading(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	std::string strText;
 	CPythonIME::Instance().GetReading(strText);
-	return Py_BuildValue("s", strText.c_str());
+	return Script_BuildValue("s", strText.c_str());
 }
 
-PyObject* imeGetReadingError(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* imeGetReadingError(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", CPythonIME::Instance().GetReadingError());
+	return Script_BuildValue("i", CPythonIME::Instance().GetReadingError());
 }
 
-PyObject* imeEnableIME(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* imeEnableIME(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonIME::Instance().EnableIME();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* imeDisableIME(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* imeDisableIME(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonIME::Instance().DisableIME();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* imeSetInputMode(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* imeSetInputMode(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int mode;
-	if (!PyTuple_GetInteger(poArgs, 0, &mode))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &mode))
+		return Script_BuildException();
 
 	CPythonIME::Instance().SetInputMode(mode);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* imeSetNumberMode(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* imeSetNumberMode(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonIME::Instance().SetNumberMode();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* imeAddExceptKey(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* imeAddExceptKey(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int key;
-	if (!PyTuple_GetInteger(poArgs, 0, &key))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &key))
+		return Script_BuildException();
 
 	CPythonIME::Instance().AddExceptKey(key);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* imeClearExceptKey(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* imeClearExceptKey(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonIME::Instance().ClearExceptKey();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* imeSetStringMode(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* imeSetStringMode(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonIME::Instance().SetStringMode();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* imeGetInputMode(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* imeGetInputMode(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	return Py_BuildValue("i", CPythonIME::Instance().GetInputMode());
+	return Script_BuildValue("i", CPythonIME::Instance().GetInputMode());
 }
 
-PyObject* imeMoveLeft(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* imeMoveLeft(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonIME::Instance().MoveLeft();
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
-PyObject* imeMoveRight(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* imeMoveRight(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonIME::Instance().MoveRight();
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* imeMoveHome(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* imeMoveHome(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonIME::Instance().MoveHome();
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
-PyObject* imeMoveEnd(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* imeMoveEnd(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonIME::Instance().MoveEnd();
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* imeSetCursorPosition(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* imeSetCursorPosition(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iPosition;
-	if (!PyTuple_GetInteger(poArgs, 0, &iPosition))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iPosition))
+		return Script_BuildException();
 
 	CPythonIME::Instance().SetCursorPosition(iPosition);
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* imeDelete(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* imeDelete(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonIME::Instance().Delete();
 
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* imePasteTextFromClipBoard(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* imePasteTextFromClipBoard(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonIME::Instance().PasteTextFromClipBoard();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* imeEnablePaste(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* imeEnablePaste(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int iFlag;
-	if (!PyTuple_GetInteger(poArgs, 0, &iFlag))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &iFlag))
+		return Script_BuildException();
 
 	CPythonIME::Instance().EnablePaste(iFlag ? true : false);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* imePasteString(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* imePasteString(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	char* szText;
-	if (!PyTuple_GetString(poArgs, 0, &szText))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 0, &szText))
+		return Script_BuildException();
 	CPythonIME::Instance().PasteString(szText);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* imePasteBackspace(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* imePasteBackspace(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonIME::Instance().WMChar(NULL, WM_CHAR, 0x08, 0);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* imePasteReturn(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* imePasteReturn(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CPythonIME::Instance().WMChar(NULL, WM_CHAR, 0x0D, 0);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
 void initime()
 {
-	static PyMethodDef s_methods[] =
+	static ScriptMethodDef s_methods[] =
 		{
-			{"Enable", imeEnable, METH_VARARGS, NULL},
-			{"Disable", imeDisable, METH_VARARGS, NULL},
+			{"Enable", imeEnable, SCRIPT_VARARGS, NULL},
+			{"Disable", imeDisable, SCRIPT_VARARGS, NULL},
 
-			{"EnableCaptureInput", imeEnableCaptureInput, METH_VARARGS, NULL},
-			{"DisableCaptureInput", imeDisableCaptureInput, METH_VARARGS, NULL},
-			{"SetMax", imeSetMax, METH_VARARGS, NULL},
-			{"SetUserMax", imeSetUserMax, METH_VARARGS, NULL},
-			{"SetText", imeSetText, METH_VARARGS, NULL},
-			{"GetText", imeGetText, METH_VARARGS, NULL},
-			{"GetCodePage", imeGetCodePage, METH_VARARGS, NULL},
-			{"GetCandidateCount", imeGetCandidateCount, METH_VARARGS, NULL},
-			{"GetCandidate", imeGetCandidate, METH_VARARGS, NULL},
-			{"GetCandidateSelection", imeGetCandidateSelection, METH_VARARGS, NULL},
-			{"GetReading", imeGetReading, METH_VARARGS, NULL},
-			{"GetReadingError", imeGetReadingError, METH_VARARGS, NULL},
-			{"EnableIME", imeEnableIME, METH_VARARGS, NULL},
-			{"DisableIME", imeDisableIME, METH_VARARGS, NULL},
-			{"GetInputMode", imeGetInputMode, METH_VARARGS, NULL},
-			{"SetInputMode", imeSetInputMode, METH_VARARGS, NULL},
+			{"EnableCaptureInput", imeEnableCaptureInput, SCRIPT_VARARGS, NULL},
+			{"DisableCaptureInput", imeDisableCaptureInput, SCRIPT_VARARGS, NULL},
+			{"SetMax", imeSetMax, SCRIPT_VARARGS, NULL},
+			{"SetUserMax", imeSetUserMax, SCRIPT_VARARGS, NULL},
+			{"SetText", imeSetText, SCRIPT_VARARGS, NULL},
+			{"GetText", imeGetText, SCRIPT_VARARGS, NULL},
+			{"GetCodePage", imeGetCodePage, SCRIPT_VARARGS, NULL},
+			{"GetCandidateCount", imeGetCandidateCount, SCRIPT_VARARGS, NULL},
+			{"GetCandidate", imeGetCandidate, SCRIPT_VARARGS, NULL},
+			{"GetCandidateSelection", imeGetCandidateSelection, SCRIPT_VARARGS, NULL},
+			{"GetReading", imeGetReading, SCRIPT_VARARGS, NULL},
+			{"GetReadingError", imeGetReadingError, SCRIPT_VARARGS, NULL},
+			{"EnableIME", imeEnableIME, SCRIPT_VARARGS, NULL},
+			{"DisableIME", imeDisableIME, SCRIPT_VARARGS, NULL},
+			{"GetInputMode", imeGetInputMode, SCRIPT_VARARGS, NULL},
+			{"SetInputMode", imeSetInputMode, SCRIPT_VARARGS, NULL},
 
-			{"SetNumberMode", imeSetNumberMode, METH_VARARGS, NULL},
-			{"SetStringMode", imeSetStringMode, METH_VARARGS, NULL},
-			{"AddExceptKey", imeAddExceptKey, METH_VARARGS, NULL},
-			{"ClearExceptKey", imeClearExceptKey, METH_VARARGS, NULL},
+			{"SetNumberMode", imeSetNumberMode, SCRIPT_VARARGS, NULL},
+			{"SetStringMode", imeSetStringMode, SCRIPT_VARARGS, NULL},
+			{"AddExceptKey", imeAddExceptKey, SCRIPT_VARARGS, NULL},
+			{"ClearExceptKey", imeClearExceptKey, SCRIPT_VARARGS, NULL},
 
-			{"MoveLeft", imeMoveLeft, METH_VARARGS, NULL},
-			{"MoveRight", imeMoveRight, METH_VARARGS, NULL},
-			{"MoveHome", imeMoveHome, METH_VARARGS, NULL},
-			{"MoveEnd", imeMoveEnd, METH_VARARGS, NULL},
-			{"SetCursorPosition", imeSetCursorPosition, METH_VARARGS, NULL},
-			{"Delete", imeDelete, METH_VARARGS, NULL},
-			{"PasteString", imePasteString, METH_VARARGS, NULL},
-			{"PasteBackspace", imePasteBackspace, METH_VARARGS, NULL},
-			{"PasteReturn", imePasteReturn, METH_VARARGS, NULL},
-			{"PasteTextFromClipBoard", imePasteTextFromClipBoard, METH_VARARGS, NULL},
-			{"EnablePaste", imeEnablePaste, METH_VARARGS, NULL},
+			{"MoveLeft", imeMoveLeft, SCRIPT_VARARGS, NULL},
+			{"MoveRight", imeMoveRight, SCRIPT_VARARGS, NULL},
+			{"MoveHome", imeMoveHome, SCRIPT_VARARGS, NULL},
+			{"MoveEnd", imeMoveEnd, SCRIPT_VARARGS, NULL},
+			{"SetCursorPosition", imeSetCursorPosition, SCRIPT_VARARGS, NULL},
+			{"Delete", imeDelete, SCRIPT_VARARGS, NULL},
+			{"PasteString", imePasteString, SCRIPT_VARARGS, NULL},
+			{"PasteBackspace", imePasteBackspace, SCRIPT_VARARGS, NULL},
+			{"PasteReturn", imePasteReturn, SCRIPT_VARARGS, NULL},
+			{"PasteTextFromClipBoard", imePasteTextFromClipBoard, SCRIPT_VARARGS, NULL},
+			{"EnablePaste", imeEnablePaste, SCRIPT_VARARGS, NULL},
 
 			{NULL, NULL, 0, NULL},
 		};
 
-	Py_InitModule("ime", s_methods);
+	ScriptModule_Create("ime", s_methods);
 }

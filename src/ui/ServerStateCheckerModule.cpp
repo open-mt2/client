@@ -1,64 +1,64 @@
 #include <Client/UI/StdAfx.h>
 #include <Client/UI/ServerStateChecker.h>
 
-PyObject* ServerStateCheckerCreate(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* ServerStateCheckerCreate(ScriptObject* poSelf, ScriptObject* poArgs)
 {
-	PyObject* poWnd;
-	if (!PyTuple_GetObject(poArgs, 0, &poWnd))
-		return Py_BadArgument();
+	ScriptObject* poWnd;
+	if (!ScriptTuple_GetObject(poArgs, 0, &poWnd))
+		return Script_BadArgument();
 
 	CServerStateChecker::Instance().Create(poWnd);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* ServerStateCheckerUpdate(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* ServerStateCheckerUpdate(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CServerStateChecker::Instance().Update();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* ServerStateCheckerRequest(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* ServerStateCheckerRequest(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CServerStateChecker::Instance().Request();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* ServerStateCheckerAddChannel(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* ServerStateCheckerAddChannel(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	int nServerIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &nServerIndex))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 0, &nServerIndex))
+		return Script_BuildException();
 
 	char* szAddr;
-	if (!PyTuple_GetString(poArgs, 1, &szAddr))
-		return Py_BuildException();
+	if (!ScriptTuple_GetString(poArgs, 1, &szAddr))
+		return Script_BuildException();
 
 	int nPort;
-	if (!PyTuple_GetInteger(poArgs, 2, &nPort))
-		return Py_BuildException();
+	if (!ScriptTuple_GetInteger(poArgs, 2, &nPort))
+		return Script_BuildException();
 
 	CServerStateChecker::Instance().AddChannel(nServerIndex, szAddr, nPort);
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
-PyObject* ServerStateCheckerInitialize(PyObject* poSelf, PyObject* poArgs)
+ScriptObject* ServerStateCheckerInitialize(ScriptObject* poSelf, ScriptObject* poArgs)
 {
 	CServerStateChecker::Instance().Initialize();
-	return Py_BuildNone();
+	return Script_BuildNone();
 }
 
 void initServerStateChecker()
 {
-	static PyMethodDef s_methods[] =
+	static ScriptMethodDef s_methods[] =
 		{
-			{"Create", ServerStateCheckerCreate, METH_VARARGS, NULL},
-			{"Update", ServerStateCheckerUpdate, METH_VARARGS, NULL},
-			{"Request", ServerStateCheckerRequest, METH_VARARGS, NULL},
-			{"AddChannel", ServerStateCheckerAddChannel, METH_VARARGS, NULL},
-			{"Initialize", ServerStateCheckerInitialize, METH_VARARGS, NULL},
+			{"Create", ServerStateCheckerCreate, SCRIPT_VARARGS, NULL},
+			{"Update", ServerStateCheckerUpdate, SCRIPT_VARARGS, NULL},
+			{"Request", ServerStateCheckerRequest, SCRIPT_VARARGS, NULL},
+			{"AddChannel", ServerStateCheckerAddChannel, SCRIPT_VARARGS, NULL},
+			{"Initialize", ServerStateCheckerInitialize, SCRIPT_VARARGS, NULL},
 			{NULL, NULL, 0, NULL},
 		};
 
-	// PyObject * poModule = Py_InitModule("ServerStateChecker", s_methods);
-	Py_InitModule("ServerStateChecker", s_methods);
+	// ScriptObject * poModule = ScriptModule_Create("ServerStateChecker", s_methods);
+	ScriptModule_Create("ServerStateChecker", s_methods);
 }

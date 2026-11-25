@@ -30,22 +30,22 @@ BOOL gs_bEmpireLanuageEnable = TRUE;
 
 void CPythonNetworkStream::__RefreshAlignmentWindow()
 {
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshAlignment", Py_BuildValue("()"));
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshAlignment", Script_BuildValue("()"));
 }
 
 void CPythonNetworkStream::__RefreshTargetBoardByVID(DWORD dwVID)
 {
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshTargetBoardByVID", Py_BuildValue("(i)", dwVID));
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshTargetBoardByVID", Script_BuildValue("(i)", dwVID));
 }
 
 void CPythonNetworkStream::__RefreshTargetBoardByName(const char* c_szName)
 {
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshTargetBoardByName", Py_BuildValue("(s)", c_szName));
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshTargetBoardByName", Script_BuildValue("(s)", c_szName));
 }
 
 void CPythonNetworkStream::__RefreshTargetBoard()
 {
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshTargetBoard", Py_BuildValue("()"));
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshTargetBoard", Script_BuildValue("()"));
 }
 
 void CPythonNetworkStream::__RefreshGuildWindowGradePage()
@@ -648,105 +648,105 @@ void CPythonNetworkStream::GamePhase()
 	if (m_isRefreshCharacterWnd)
 	{
 		m_isRefreshCharacterWnd = false;
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshCharacter", Py_BuildValue("()"));
+		Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshCharacter", Script_BuildValue("()"));
 		s_nextRefreshTime = curTime + 300;
 	}
 
 	if (m_isRefreshEquipmentWnd)
 	{
 		m_isRefreshEquipmentWnd = false;
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshEquipment", Py_BuildValue("()"));
+		Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshEquipment", Script_BuildValue("()"));
 		s_nextRefreshTime = curTime + 300;
 	}
 
 	if (m_isRefreshInventoryWnd)
 	{
 		m_isRefreshInventoryWnd = false;
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshInventory", Py_BuildValue("()"));
+		Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshInventory", Script_BuildValue("()"));
 		s_nextRefreshTime = curTime + 300;
 	}
 
 	if (m_isRefreshExchangeWnd)
 	{
 		m_isRefreshExchangeWnd = false;
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshExchange", Py_BuildValue("()"));
+		Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshExchange", Script_BuildValue("()"));
 		s_nextRefreshTime = curTime + 300;
 	}
 
 	if (m_isRefreshSkillWnd)
 	{
 		m_isRefreshSkillWnd = false;
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshSkill", Py_BuildValue("()"));
+		Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshSkill", Script_BuildValue("()"));
 		s_nextRefreshTime = curTime + 300;
 	}
 
 	if (m_isRefreshSafeboxWnd)
 	{
 		m_isRefreshSafeboxWnd = false;
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshSafebox", Py_BuildValue("()"));
+		Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshSafebox", Script_BuildValue("()"));
 		s_nextRefreshTime = curTime + 300;
 	}
 
 	if (m_isRefreshMallWnd)
 	{
 		m_isRefreshMallWnd = false;
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshMall", Py_BuildValue("()"));
+		Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshMall", Script_BuildValue("()"));
 		s_nextRefreshTime = curTime + 300;
 	}
 
 	if (m_isRefreshStatus)
 	{
 		m_isRefreshStatus = false;
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshStatus", Py_BuildValue("()"));
+		Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshStatus", Script_BuildValue("()"));
 		s_nextRefreshTime = curTime + 300;
 	}
 
 	if (m_isRefreshMessengerWnd)
 	{
 		m_isRefreshMessengerWnd = false;
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshMessenger", Py_BuildValue("()"));
+		Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshMessenger", Script_BuildValue("()"));
 		s_nextRefreshTime = curTime + 300;
 	}
 
 	if (m_isRefreshGuildWndInfoPage)
 	{
 		m_isRefreshGuildWndInfoPage = false;
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshGuildInfoPage", Py_BuildValue("()"));
+		Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshGuildInfoPage", Script_BuildValue("()"));
 		s_nextRefreshTime = curTime + 300;
 	}
 
 	if (m_isRefreshGuildWndBoardPage)
 	{
 		m_isRefreshGuildWndBoardPage = false;
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshGuildBoardPage", Py_BuildValue("()"));
+		Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshGuildBoardPage", Script_BuildValue("()"));
 		s_nextRefreshTime = curTime + 300;
 	}
 
 	if (m_isRefreshGuildWndMemberPage)
 	{
 		m_isRefreshGuildWndMemberPage = false;
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshGuildMemberPage", Py_BuildValue("()"));
+		Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshGuildMemberPage", Script_BuildValue("()"));
 		s_nextRefreshTime = curTime + 300;
 	}
 
 	if (m_isRefreshGuildWndMemberPageGradeComboBox)
 	{
 		m_isRefreshGuildWndMemberPageGradeComboBox = false;
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshGuildMemberPageGradeComboBox", Py_BuildValue("()"));
+		Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshGuildMemberPageGradeComboBox", Script_BuildValue("()"));
 		s_nextRefreshTime = curTime + 300;
 	}
 
 	if (m_isRefreshGuildWndSkillPage)
 	{
 		m_isRefreshGuildWndSkillPage = false;
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshGuildSkillPage", Py_BuildValue("()"));
+		Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshGuildSkillPage", Script_BuildValue("()"));
 		s_nextRefreshTime = curTime + 300;
 	}
 
 	if (m_isRefreshGuildWndGradePage)
 	{
 		m_isRefreshGuildWndGradePage = false;
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshGuildGradePage", Py_BuildValue("()"));
+		Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshGuildGradePage", Script_BuildValue("()"));
 		s_nextRefreshTime = curTime + 300;
 	}
 }
@@ -802,7 +802,7 @@ void CPythonNetworkStream::Warp(LONG lGlobalX, LONG lGlobalY)
 void CPythonNetworkStream::__ShowMapName(LONG lLocalX, LONG lLocalY)
 {
 	const std::string& c_rstrMapFileName = CPythonBackground::Instance().GetWarpMapName();
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "ShowMapName", Py_BuildValue("(sii)", c_rstrMapFileName.c_str(), lLocalX, lLocalY));
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "ShowMapName", Script_BuildValue("(sii)", c_rstrMapFileName.c_str(), lLocalX, lLocalY));
 }
 
 void CPythonNetworkStream::__LeaveGamePhase()
@@ -927,7 +927,7 @@ bool CPythonNetworkStream::RecvDuelStartPacket()
 	else
 		pkInstMain->SetDuelMode(CInstanceBase::DUEL_START);
 
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "CloseTargetBoard", Py_BuildValue("()"));
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "CloseTargetBoard", Script_BuildValue("()"));
 
 	rkChrMgr.RefreshAllPCTextTail();
 
@@ -1344,11 +1344,11 @@ bool CPythonNetworkStream::RecvChatPacket()
 	{
 		if (CHAT_TYPE_NOTICE == kChat.type)
 		{
-			PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_SetTipMessage", Py_BuildValue("(s)", buf));
+			Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_SetTipMessage", Script_BuildValue("(s)", buf));
 		}
 		else if (CHAT_TYPE_BIG_NOTICE == kChat.type)
 		{
-			PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_SetBigMessage", Py_BuildValue("(s)", buf));
+			Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_SetBigMessage", Script_BuildValue("(s)", buf));
 		}
 		else if (CHAT_TYPE_SHOUT == kChat.type)
 		{
@@ -1385,15 +1385,15 @@ bool CPythonNetworkStream::RecvWhisperPacket()
 	if (CPythonChat::WHISPER_TYPE_CHAT == whisperPacket.bType || CPythonChat::WHISPER_TYPE_GM == whisperPacket.bType)
 	{
 		_snprintf(line, sizeof(line), "%s : %s", whisperPacket.szNameFrom, buf);
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OnRecvWhisper", Py_BuildValue("(iss)", (int)whisperPacket.bType, whisperPacket.szNameFrom, line));
+		Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OnRecvWhisper", Script_BuildValue("(iss)", (int)whisperPacket.bType, whisperPacket.szNameFrom, line));
 	}
 	else if (CPythonChat::WHISPER_TYPE_SYSTEM == whisperPacket.bType || CPythonChat::WHISPER_TYPE_ERROR == whisperPacket.bType)
 	{
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OnRecvWhisperSystemMessage", Py_BuildValue("(iss)", (int)whisperPacket.bType, whisperPacket.szNameFrom, buf));
+		Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OnRecvWhisperSystemMessage", Script_BuildValue("(iss)", (int)whisperPacket.bType, whisperPacket.szNameFrom, buf));
 	}
 	else
 	{
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OnRecvWhisperError", Py_BuildValue("(iss)", (int)whisperPacket.bType, whisperPacket.szNameFrom, buf));
+		Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OnRecvWhisperError", Script_BuildValue("(iss)", (int)whisperPacket.bType, whisperPacket.szNameFrom, buf));
 	}
 
 	return true;
@@ -1477,7 +1477,7 @@ bool CPythonNetworkStream::RecvPointChange()
 			{
 				if (PointChange.amount > 0)
 				{
-					PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OnPickMoney", Py_BuildValue("(i)", PointChange.amount));
+					Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OnPickMoney", Script_BuildValue("(i)", PointChange.amount));
 				}
 			}
 		}
@@ -1537,7 +1537,7 @@ bool CPythonNetworkStream::RecvDeadPacket()
 			Tracenf("Player Dead");
 			if (false == pkInstMain->GetDuelMode())
 			{
-				PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OnGameOver", Py_BuildValue("()"));
+				Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OnGameOver", Script_BuildValue("()"));
 			}
 			CPythonPlayer::Instance().NotifyDeadMainCharacter();
 		}
@@ -1643,7 +1643,7 @@ bool CPythonNetworkStream::RecvShopPacket()
 				CPythonShop::Instance().SetItemData(iItemIndex, pShopStartPacket->items[iItemIndex]);
 			}
 
-			PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "StartShop", Py_BuildValue("(i)", dwVID));
+			Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "StartShop", Script_BuildValue("(i)", dwVID));
 		}
 		break;
 
@@ -1676,44 +1676,44 @@ bool CPythonNetworkStream::RecvShopPacket()
 				}
 			}
 
-			PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "StartShop", Py_BuildValue("(i)", dwVID));
+			Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "StartShop", Script_BuildValue("(i)", dwVID));
 		}
 		break;
 
 		case SHOP_SUBHEADER_GC_END:
-			PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "EndShop", Py_BuildValue("()"));
+			Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "EndShop", Script_BuildValue("()"));
 			break;
 
 		case SHOP_SUBHEADER_GC_UPDATE_ITEM:
 		{
 			TPacketGCShopUpdateItem* pShopUpdateItemPacket = (TPacketGCShopUpdateItem*)&vecBuffer[0];
 			CPythonShop::Instance().SetItemData(pShopUpdateItemPacket->pos, pShopUpdateItemPacket->item);
-			PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshShop", Py_BuildValue("()"));
+			Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshShop", Script_BuildValue("()"));
 		}
 		break;
 
 		case SHOP_SUBHEADER_GC_UPDATE_PRICE:
-			PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "SetShopSellingPrice", Py_BuildValue("(i)", *(int*)&vecBuffer[0]));
+			Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "SetShopSellingPrice", Script_BuildValue("(i)", *(int*)&vecBuffer[0]));
 			break;
 
 		case SHOP_SUBHEADER_GC_NOT_ENOUGH_MONEY:
-			PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OnShopError", Py_BuildValue("(s)", "NOT_ENOUGH_MONEY"));
+			Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OnShopError", Script_BuildValue("(s)", "NOT_ENOUGH_MONEY"));
 			break;
 
 		case SHOP_SUBHEADER_GC_NOT_ENOUGH_MONEY_EX:
-			PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OnShopError", Py_BuildValue("(s)", "NOT_ENOUGH_MONEY_EX"));
+			Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OnShopError", Script_BuildValue("(s)", "NOT_ENOUGH_MONEY_EX"));
 			break;
 
 		case SHOP_SUBHEADER_GC_SOLDOUT:
-			PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OnShopError", Py_BuildValue("(s)", "SOLDOUT"));
+			Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OnShopError", Script_BuildValue("(s)", "SOLDOUT"));
 			break;
 
 		case SHOP_SUBHEADER_GC_INVENTORY_FULL:
-			PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OnShopError", Py_BuildValue("(s)", "INVENTORY_FULL"));
+			Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OnShopError", Script_BuildValue("(s)", "INVENTORY_FULL"));
 			break;
 
 		case SHOP_SUBHEADER_GC_INVALID_POS:
-			PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OnShopError", Py_BuildValue("(s)", "INVALID_POS"));
+			Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OnShopError", Script_BuildValue("(s)", "INVALID_POS"));
 			break;
 
 		default:
@@ -1745,7 +1745,7 @@ bool CPythonNetworkStream::RecvExchangePacket()
 					CPythonExchange::Instance().SetTargetName(pCharacterInstance->GetNameString());
 			}
 
-			PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "StartExchange", Py_BuildValue("()"));
+			Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "StartExchange", Script_BuildValue("()"));
 			break;
 
 		case EXCHANGE_SUBHEADER_GC_ITEM_ADD:
@@ -1807,7 +1807,7 @@ bool CPythonNetworkStream::RecvExchangePacket()
 			break;
 
 		case EXCHANGE_SUBHEADER_GC_END:
-			PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "EndExchange", Py_BuildValue("()"));
+			Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "EndExchange", Script_BuildValue("()"));
 			__RefreshInventoryWindow();
 			CPythonExchange::Instance().End();
 			break;
@@ -1960,7 +1960,7 @@ bool CPythonNetworkStream::RecvQuestInfoPacket()
 	}
 	// Process Start End
 
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshQuest", Py_BuildValue("()"));
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshQuest", Script_BuildValue("()"));
 	return true;
 }
 
@@ -1973,8 +1973,8 @@ bool CPythonNetworkStream::RecvQuestConfirmPacket()
 		return false;
 	}
 
-	PyObject* poArg = Py_BuildValue("(sii)", kQuestConfirmPacket.msg, kQuestConfirmPacket.timeout, kQuestConfirmPacket.requestPID);
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_OnQuestConfirm", poArg);
+	ScriptObject* poArg = Script_BuildValue("(sii)", kQuestConfirmPacket.msg, kQuestConfirmPacket.timeout, kQuestConfirmPacket.requestPID);
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_OnQuestConfirm", poArg);
 	return true;
 }
 
@@ -1987,14 +1987,14 @@ bool CPythonNetworkStream::RecvRequestMakeGuild()
 		return false;
 	}
 
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "AskGuildName", Py_BuildValue("()"));
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "AskGuildName", Script_BuildValue("()"));
 
 	return true;
 }
 
 void CPythonNetworkStream::ToggleGameDebugInfo()
 {
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "ToggleDebugInfo", Py_BuildValue("()"));
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "ToggleDebugInfo", Script_BuildValue("()"));
 }
 
 bool CPythonNetworkStream::SendExchangeStartPacket(DWORD vid)
@@ -2123,7 +2123,7 @@ bool CPythonNetworkStream::SendExchangeExitPacket()
 // PointReset 개임시
 bool CPythonNetworkStream::SendPointResetPacket()
 {
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "StartPointReset", Py_BuildValue("()"));
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "StartPointReset", Script_BuildValue("()"));
 	return true;
 }
 
@@ -2370,18 +2370,18 @@ bool CPythonNetworkStream::RecvTargetPacket()
 		if (!pInstTarget->IsDead())
 		{
 			if (pInstTarget->IsPC() || pInstTarget->IsBuilding())
-				PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "CloseTargetBoardIfDifferent", Py_BuildValue("(i)", TargetPacket.dwVID));
+				Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "CloseTargetBoardIfDifferent", Script_BuildValue("(i)", TargetPacket.dwVID));
 			else if (pInstPlayer->CanViewTargetHP(*pInstTarget))
-				PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "SetHPTargetBoard", Py_BuildValue("(ii)", TargetPacket.dwVID, TargetPacket.bHPPercent));
+				Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "SetHPTargetBoard", Script_BuildValue("(ii)", TargetPacket.dwVID, TargetPacket.bHPPercent));
 			else
-				PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "CloseTargetBoard", Py_BuildValue("()"));
+				Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "CloseTargetBoard", Script_BuildValue("()"));
 
 			m_pInstTarget = pInstTarget;
 		}
 	}
 	else
 	{
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "CloseTargetBoard", Py_BuildValue("()"));
+		Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "CloseTargetBoard", Script_BuildValue("()"));
 	}
 
 	return true;
@@ -2856,7 +2856,7 @@ bool CPythonNetworkStream::RecvPartyInvite()
 		return true;
 	}
 
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RecvPartyInviteQuestion", Py_BuildValue("(is)", kPartyInvitePacket.leader_pid, pInstance->GetNameString()));
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RecvPartyInviteQuestion", Script_BuildValue("(is)", kPartyInvitePacket.leader_pid, pInstance->GetNameString()));
 	Tracef(" >> RecvPartyInvite : %d, %s\n", kPartyInvitePacket.leader_pid, pInstance->GetNameString());
 
 	return true;
@@ -2869,7 +2869,7 @@ bool CPythonNetworkStream::RecvPartyAdd()
 		return false;
 
 	CPythonPlayer::Instance().AppendPartyMember(kPartyAddPacket.pid, kPartyAddPacket.name);
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "AddPartyMember", Py_BuildValue("(is)", kPartyAddPacket.pid, kPartyAddPacket.name));
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "AddPartyMember", Script_BuildValue("(is)", kPartyAddPacket.pid, kPartyAddPacket.name));
 	Tracef(" >> RecvPartyAdd : %d, %s\n", kPartyAddPacket.pid, kPartyAddPacket.name);
 
 	return true;
@@ -2893,7 +2893,7 @@ bool CPythonNetworkStream::RecvPartyUpdate()
 		CPythonPlayer::Instance().UpdatePartyMemberAffect(kPartyUpdatePacket.pid, i, kPartyUpdatePacket.affects[i]);
 	}
 
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "UpdatePartyMemberInfo", Py_BuildValue("(i)", kPartyUpdatePacket.pid));
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "UpdatePartyMemberInfo", Script_BuildValue("(i)", kPartyUpdatePacket.pid));
 
 	// 만약 리더가 바뀌었다면, TargetBoard 의 버튼을 업데이트 한다.
 	DWORD dwVID;
@@ -2914,7 +2914,7 @@ bool CPythonNetworkStream::RecvPartyRemove()
 	if (!Recv(sizeof(kPartyRemovePacket), &kPartyRemovePacket))
 		return false;
 
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RemovePartyMember", Py_BuildValue("(i)", kPartyRemovePacket.pid));
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RemovePartyMember", Script_BuildValue("(i)", kPartyRemovePacket.pid));
 	Tracef(" >> RecvPartyRemove : %d\n", kPartyRemovePacket.pid);
 
 	return true;
@@ -2927,7 +2927,7 @@ bool CPythonNetworkStream::RecvPartyLink()
 		return false;
 
 	CPythonPlayer::Instance().LinkPartyMember(kPartyLinkPacket.pid, kPartyLinkPacket.vid);
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "LinkPartyMember", Py_BuildValue("(ii)", kPartyLinkPacket.pid, kPartyLinkPacket.vid));
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "LinkPartyMember", Script_BuildValue("(ii)", kPartyLinkPacket.pid, kPartyLinkPacket.vid));
 	Tracef(" >> RecvPartyLink : %d, %d\n", kPartyLinkPacket.pid, kPartyLinkPacket.vid);
 
 	return true;
@@ -2943,11 +2943,11 @@ bool CPythonNetworkStream::RecvPartyUnlink()
 
 	if (CPythonPlayer::Instance().IsMainCharacterIndex(kPartyUnlinkPacket.vid))
 	{
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "UnlinkAllPartyMember", Py_BuildValue("()"));
+		Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "UnlinkAllPartyMember", Script_BuildValue("()"));
 	}
 	else
 	{
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "UnlinkPartyMember", Py_BuildValue("(i)", kPartyUnlinkPacket.pid));
+		Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "UnlinkPartyMember", Script_BuildValue("(i)", kPartyUnlinkPacket.pid));
 	}
 
 	Tracef(" >> RecvPartyUnlink : %d, %d\n", kPartyUnlinkPacket.pid, kPartyUnlinkPacket.vid);
@@ -2961,7 +2961,7 @@ bool CPythonNetworkStream::RecvPartyParameter()
 	if (!Recv(sizeof(kPartyParameterPacket), &kPartyParameterPacket))
 		return false;
 
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "ChangePartyParameter", Py_BuildValue("(i)", kPartyParameterPacket.bDistributeMode));
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "ChangePartyParameter", Script_BuildValue("(i)", kPartyParameterPacket.bDistributeMode));
 	Tracef(" >> RecvPartyParameter : %d\n", kPartyParameterPacket.bDistributeMode);
 
 	return true;
@@ -3262,7 +3262,7 @@ bool CPythonNetworkStream::RecvGuild()
 			if (CPythonGuild::Instance().IsMainPlayer(dwPID))
 			{
 				CPythonGuild::Instance().Destroy();
-				PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "DeleteGuild", Py_BuildValue("()"));
+				Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "DeleteGuild", Script_BuildValue("()"));
 				CPythonMessenger::Instance().RemoveAllGuildMember();
 				__SetGuildID(0);
 				__RefreshMessengerWindow();
@@ -3377,7 +3377,7 @@ bool CPythonNetworkStream::RecvGuild()
 				return false;
 
 			CPythonGuild::Instance().SetGradeName(byGradeNumber, szGradeName);
-			PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshGuildGrade", Py_BuildValue("()"));
+			Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshGuildGrade", Script_BuildValue("()"));
 
 			Tracef(" <Change Grade Name> %d, %s\n", byGradeNumber, szGradeName);
 			__RefreshGuildWindowGradePage();
@@ -3394,7 +3394,7 @@ bool CPythonNetworkStream::RecvGuild()
 				return false;
 
 			CPythonGuild::Instance().SetGradeAuthority(byGradeNumber, byAuthorityFlag);
-			PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshGuildGrade", Py_BuildValue("()"));
+			Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshGuildGrade", Script_BuildValue("()"));
 
 			Tracef(" <Change Grade Authority> %d, %d\n", byGradeNumber, byAuthorityFlag);
 			__RefreshGuildWindowGradePage();
@@ -3521,7 +3521,7 @@ bool CPythonNetworkStream::RecvGuild()
 
 			szGuildName[GUILD_NAME_MAX_LEN] = 0;
 
-			PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RecvGuildInviteQuestion", Py_BuildValue("(is)", dwGuildID, szGuildName));
+			Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RecvGuildInviteQuestion", Script_BuildValue("(is)", dwGuildID, szGuildName));
 			Tracef(" <Guild Invite> %d, %s\n", dwGuildID, szGuildName);
 			break;
 		}
@@ -3535,28 +3535,28 @@ bool CPythonNetworkStream::RecvGuild()
 			{
 				case GUILD_WAR_SEND_DECLARE:
 					Tracef(" >> GUILD_SUBHEADER_GC_WAR : GUILD_WAR_SEND_DECLARE\n");
-					PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME],
-										  "BINARY_GuildWar_OnSendDeclare",
-										  Py_BuildValue("(i)", kGuildWar.dwGuildOpp));
+					Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME],
+									  "BINARY_GuildWar_OnSendDeclare",
+									  Script_BuildValue("(i)", kGuildWar.dwGuildOpp));
 					break;
 				case GUILD_WAR_RECV_DECLARE:
 					Tracef(" >> GUILD_SUBHEADER_GC_WAR : GUILD_WAR_RECV_DECLARE\n");
-					PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME],
-										  "BINARY_GuildWar_OnRecvDeclare",
-										  Py_BuildValue("(ii)", kGuildWar.dwGuildOpp, kGuildWar.bType));
+					Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME],
+									  "BINARY_GuildWar_OnRecvDeclare",
+									  Script_BuildValue("(ii)", kGuildWar.dwGuildOpp, kGuildWar.bType));
 					break;
 				case GUILD_WAR_ON_WAR:
 					Tracef(" >> GUILD_SUBHEADER_GC_WAR : GUILD_WAR_ON_WAR : %d, %d\n", kGuildWar.dwGuildSelf, kGuildWar.dwGuildOpp);
-					PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME],
-										  "BINARY_GuildWar_OnStart",
-										  Py_BuildValue("(ii)", kGuildWar.dwGuildSelf, kGuildWar.dwGuildOpp));
+					Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME],
+									  "BINARY_GuildWar_OnStart",
+									  Script_BuildValue("(ii)", kGuildWar.dwGuildSelf, kGuildWar.dwGuildOpp));
 					CPythonGuild::Instance().StartGuildWar(kGuildWar.dwGuildOpp);
 					break;
 				case GUILD_WAR_END:
 					Tracef(" >> GUILD_SUBHEADER_GC_WAR : GUILD_WAR_END\n");
-					PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME],
-										  "BINARY_GuildWar_OnEnd",
-										  Py_BuildValue("(ii)", kGuildWar.dwGuildSelf, kGuildWar.dwGuildOpp));
+					Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME],
+									  "BINARY_GuildWar_OnEnd",
+									  Script_BuildValue("(ii)", kGuildWar.dwGuildSelf, kGuildWar.dwGuildOpp));
 					CPythonGuild::Instance().EndGuildWar(kGuildWar.dwGuildOpp);
 					break;
 			}
@@ -3646,9 +3646,9 @@ bool CPythonNetworkStream::RecvGuild()
 			if (!Recv(sizeof(GuildWarPoint), &GuildWarPoint))
 				return false;
 
-			PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME],
-								  "BINARY_GuildWar_OnRecvPoint",
-								  Py_BuildValue("(iii)", GuildWarPoint.dwGainGuildID, GuildWarPoint.dwOpponentGuildID, GuildWarPoint.lPoint));
+			Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME],
+							  "BINARY_GuildWar_OnRecvPoint",
+							  Script_BuildValue("(iii)", GuildWarPoint.dwGainGuildID, GuildWarPoint.dwOpponentGuildID, GuildWarPoint.lPoint));
 			break;
 		}
 		case GUILD_SUBHEADER_GC_MONEY_CHANGE:
@@ -3737,7 +3737,7 @@ bool CPythonNetworkStream::RecvFishing()
 			pFishingInstance->CatchFail();
 			if (pFishingInstance == CPythonCharacterManager::Instance().GetMainInstancePtr())
 			{
-				PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OnFishingFailure", Py_BuildValue("()"));
+				Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OnFishingFailure", Script_BuildValue("()"));
 			}
 			break;
 		case FISHING_SUBHEADER_GC_FISH:
@@ -3746,7 +3746,7 @@ bool CPythonNetworkStream::RecvFishing()
 
 			if (0 == FishingPacket.info)
 			{
-				PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OnFishingNotifyUnknown", Py_BuildValue("()"));
+				Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OnFishingNotifyUnknown", Script_BuildValue("()"));
 				return true;
 			}
 
@@ -3760,11 +3760,11 @@ bool CPythonNetworkStream::RecvFishing()
 
 			if (pMainInstance->IsFishing())
 			{
-				PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OnFishingNotify", Py_BuildValue("(is)", CItemData::ITEM_TYPE_FISH == pItemData->GetType(), pItemData->GetName()));
+				Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OnFishingNotify", Script_BuildValue("(is)", CItemData::ITEM_TYPE_FISH == pItemData->GetType(), pItemData->GetName()));
 			}
 			else
 			{
-				PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OnFishingSuccess", Py_BuildValue("(is)", CItemData::ITEM_TYPE_FISH == pItemData->GetType(), pItemData->GetName()));
+				Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OnFishingSuccess", Script_BuildValue("(is)", CItemData::ITEM_TYPE_FISH == pItemData->GetType(), pItemData->GetName()));
 			}
 			break;
 		}
@@ -3838,18 +3838,18 @@ bool CPythonNetworkStream::RecvShopSignPacket()
 
 	if (0 == strlen(p.szSign))
 	{
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME],
-							  "BINARY_PrivateShop_Disappear",
-							  Py_BuildValue("(i)", p.dwVID));
+		Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME],
+						  "BINARY_PrivateShop_Disappear",
+						  Script_BuildValue("(i)", p.dwVID));
 
 		if (rkPlayer.IsMainCharacterIndex(p.dwVID))
 			rkPlayer.ClosePrivateShop();
 	}
 	else
 	{
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME],
-							  "BINARY_PrivateShop_Appear",
-							  Py_BuildValue("(is)", p.dwVID, p.szSign));
+		Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME],
+						  "BINARY_PrivateShop_Appear",
+						  Script_BuildValue("(is)", p.dwVID, p.szSign));
 
 		if (rkPlayer.IsMainCharacterIndex(p.dwVID))
 			rkPlayer.OpenPrivateShop();
@@ -3911,7 +3911,7 @@ void CPythonNetworkStream::__TEST_SetSkillGroupFake(int iIndex)
 	m_dwMainActorSkillGroup = DWORD(iIndex);
 
 	CPythonPlayer::Instance().NEW_ClearSkillData();
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshCharacter", Py_BuildValue("()"));
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "RefreshCharacter", Script_BuildValue("()"));
 }
 
 bool CPythonNetworkStream::SendRefinePacket(BYTE byPos, BYTE byType)
@@ -3946,9 +3946,9 @@ bool CPythonNetworkStream::RecvRefineInformationPacket()
 		return false;
 
 	TRefineTable& rkRefineTable = kRefineInfoPacket.refine_table;
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME],
-						  "OpenRefineDialog",
-						  Py_BuildValue("(iiii)",
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME],
+					  "OpenRefineDialog",
+					  Script_BuildValue("(iiii)",
 										kRefineInfoPacket.pos,
 										kRefineInfoPacket.refine_table.result_vnum,
 										rkRefineTable.cost,
@@ -3956,7 +3956,7 @@ bool CPythonNetworkStream::RecvRefineInformationPacket()
 
 	for (int i = 0; i < rkRefineTable.material_count; ++i)
 	{
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "AppendMaterialToRefineDialog", Py_BuildValue("(ii)", rkRefineTable.materials[i].vnum, rkRefineTable.materials[i].count));
+		Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "AppendMaterialToRefineDialog", Script_BuildValue("(ii)", rkRefineTable.materials[i].vnum, rkRefineTable.materials[i].count));
 	}
 
 #ifdef _DEBUG
@@ -3977,9 +3977,9 @@ bool CPythonNetworkStream::RecvRefineInformationPacketNew()
 		return false;
 
 	TRefineTable& rkRefineTable = kRefineInfoPacket.refine_table;
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME],
-						  "OpenRefineDialog",
-						  Py_BuildValue("(iiiii)",
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME],
+					  "OpenRefineDialog",
+					  Script_BuildValue("(iiiii)",
 										kRefineInfoPacket.pos,
 										kRefineInfoPacket.refine_table.result_vnum,
 										rkRefineTable.cost,
@@ -3988,7 +3988,7 @@ bool CPythonNetworkStream::RecvRefineInformationPacketNew()
 
 	for (int i = 0; i < rkRefineTable.material_count; ++i)
 	{
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "AppendMaterialToRefineDialog", Py_BuildValue("(ii)", rkRefineTable.materials[i].vnum, rkRefineTable.materials[i].count));
+		Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "AppendMaterialToRefineDialog", Script_BuildValue("(ii)", rkRefineTable.materials[i].vnum, rkRefineTable.materials[i].count));
 	}
 
 #ifdef _DEBUG
@@ -4089,7 +4089,7 @@ bool CPythonNetworkStream::RecvAffectAddPacket()
 		CPythonPlayer::instance().SetStatus(POINT_ENERGY_END_TIME, CPythonApplication::Instance().GetServerTimeStamp() + rkElement.lDuration);
 		__RefreshStatus();
 	}
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_NEW_AddAffect", Py_BuildValue("(iiii)", rkElement.dwType, rkElement.bPointIdxApplyOn, rkElement.lApplyValue, rkElement.lDuration));
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_NEW_AddAffect", Script_BuildValue("(iiii)", rkElement.dwType, rkElement.bPointIdxApplyOn, rkElement.lApplyValue, rkElement.lDuration));
 
 	return true;
 }
@@ -4100,7 +4100,7 @@ bool CPythonNetworkStream::RecvAffectRemovePacket()
 	if (!Recv(sizeof(kAffectRemove), &kAffectRemove))
 		return false;
 
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_NEW_RemoveAffect", Py_BuildValue("(ii)", kAffectRemove.dwType, kAffectRemove.bApplyOn));
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_NEW_RemoveAffect", Script_BuildValue("(ii)", kAffectRemove.dwType, kAffectRemove.bApplyOn));
 
 	return true;
 }
@@ -4122,18 +4122,18 @@ bool CPythonNetworkStream::RecvViewEquipPacket()
 	if (!Recv(sizeof(kViewEquipPacket), &kViewEquipPacket))
 		return false;
 
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OpenEquipmentDialog", Py_BuildValue("(i)", kViewEquipPacket.dwVID));
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "OpenEquipmentDialog", Script_BuildValue("(i)", kViewEquipPacket.dwVID));
 
 	for (int i = 0; i < WEAR_MAX_NUM; ++i)
 	{
 		TEquipmentItemSet& rItemSet = kViewEquipPacket.equips[i];
-		PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "SetEquipmentDialogItem", Py_BuildValue("(iiii)", kViewEquipPacket.dwVID, i, rItemSet.vnum, rItemSet.count));
+		Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "SetEquipmentDialogItem", Script_BuildValue("(iiii)", kViewEquipPacket.dwVID, i, rItemSet.vnum, rItemSet.count));
 
 		for (int j = 0; j < ITEM_SOCKET_SLOT_MAX_NUM; ++j)
-			PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "SetEquipmentDialogSocket", Py_BuildValue("(iiii)", kViewEquipPacket.dwVID, i, j, rItemSet.alSockets[j]));
+			Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "SetEquipmentDialogSocket", Script_BuildValue("(iiii)", kViewEquipPacket.dwVID, i, j, rItemSet.alSockets[j]));
 
 		for (int k = 0; k < ITEM_ATTRIBUTE_SLOT_MAX_NUM; ++k)
-			PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "SetEquipmentDialogAttr", Py_BuildValue("(iiiii)", kViewEquipPacket.dwVID, i, k, rItemSet.aAttr[k].bType, rItemSet.aAttr[k].sValue));
+			Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "SetEquipmentDialogAttr", Script_BuildValue("(iiiii)", kViewEquipPacket.dwVID, i, k, rItemSet.aAttr[k].bType, rItemSet.aAttr[k].sValue));
 	}
 
 	return true;
@@ -4202,7 +4202,7 @@ bool CPythonNetworkStream::RecvTargetCreatePacket()
 	//	Tracef(" >> RecvTargetCreatePacket %d : %s\n", kTargetCreate.lID, kTargetCreate.szTargetName);
 	// #endif
 
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_OpenAtlasWindow", Py_BuildValue("()"));
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_OpenAtlasWindow", Script_BuildValue("()"));
 	return true;
 }
 
@@ -4231,7 +4231,7 @@ bool CPythonNetworkStream::RecvTargetCreatePacketNew()
 	//	Tracef(" >> RecvTargetCreatePacketNew %d : %d/%d\n", kTargetCreate.lID, kTargetCreate.byType, kTargetCreate.dwVID);
 	// #endif
 
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_OpenAtlasWindow", Py_BuildValue("()"));
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_OpenAtlasWindow", Script_BuildValue("()"));
 	return true;
 }
 
@@ -4282,7 +4282,7 @@ bool CPythonNetworkStream::RecvLoverInfoPacket()
 	if (!Recv(sizeof(kLoverInfo), &kLoverInfo))
 		return false;
 
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_LoverInfo", Py_BuildValue("(si)", kLoverInfo.szName, kLoverInfo.byLovePoint));
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_LoverInfo", Script_BuildValue("(si)", kLoverInfo.szName, kLoverInfo.byLovePoint));
 #ifdef _DEBUG
 	Tracef("RECV LOVER INFO : %s, %d\n", kLoverInfo.szName, kLoverInfo.byLovePoint);
 #endif
@@ -4295,7 +4295,7 @@ bool CPythonNetworkStream::RecvLovePointUpdatePacket()
 	if (!Recv(sizeof(kLovePointUpdate), &kLovePointUpdate))
 		return false;
 
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_UpdateLovePoint", Py_BuildValue("(i)", kLovePointUpdate.byLovePoint));
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME], "BINARY_UpdateLovePoint", Script_BuildValue("(i)", kLovePointUpdate.byLovePoint));
 #ifdef _DEBUG
 	Tracef("RECV LOVE POINT UPDATE : %d\n", kLovePointUpdate.byLovePoint);
 #endif

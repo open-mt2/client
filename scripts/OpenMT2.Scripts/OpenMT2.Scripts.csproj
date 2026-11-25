@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Game scripts for the .NET script runtime. The client loads
+       scripts/OpenMT2.Scripts.dll from the packs (or a loose file). -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <NeoeterDotNetDir Condition="'$(NeoeterDotNetDir)' == ''">$(MSBuildThisFileDirectory)../../../neoeter-dotnet</NeoeterDotNetDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Provided by the client at run time (shared with the host). -->
+    <ProjectReference Include="$(NeoeterDotNetDir)/managed/Neoeter.Scripting/Neoeter.Scripting.csproj" Private="false" ExcludeAssets="runtime" />
+  </ItemGroup>
+
+</Project>

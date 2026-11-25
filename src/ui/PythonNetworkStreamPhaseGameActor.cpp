@@ -339,9 +339,9 @@ bool CPythonNetworkStream::RecvCharacterDeletePacket()
 
 	// 캐릭터가 사라질때 개인 상점도 없애줍니다.
 	// Key Check 를 하기때문에 없어도 상관은 없습니다.
-	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_GAME],
-						  "BINARY_PrivateShop_Disappear",
-						  Py_BuildValue("(i)", chrDelPacket.dwVID));
+	Script_CallMethod(m_apoPhaseWnd[PHASE_WINDOW_GAME],
+					  "BINARY_PrivateShop_Disappear",
+					  Script_BuildValue("(i)", chrDelPacket.dwVID));
 
 	return true;
 }

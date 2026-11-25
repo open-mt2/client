@@ -240,7 +240,7 @@ void CPythonEventManager::SetRestrictedCount(int iIndex, int iCount)
 	pEventSet->iRestrictedCharacterCount = iCount;
 }
 
-void CPythonEventManager::SetEventHandler(int iIndex, PyObject* poEventHandler)
+void CPythonEventManager::SetEventHandler(int iIndex, ScriptObject* poEventHandler)
 {
 	if (!CheckEventSetIndex(iIndex))
 		return;
@@ -477,7 +477,7 @@ void CPythonEventManager::ProcessEventSet(TEventSet* pEventSet)
 		case EVENT_TYPE_DONE:
 		{
 			MakeNextButton(pEventSet, BUTTON_TYPE_DONE);
-			PyCallClassMemberFunc(pEventSet->poEventHandler, "DoneEvent", Py_BuildValue("()"));
+			Script_CallMethod(pEventSet->poEventHandler, "DoneEvent", Script_BuildValue("()"));
 			pEventSet->iAdjustLine += 2;
 			break;
 		}
@@ -496,19 +496,19 @@ void CPythonEventManager::ProcessEventSet(TEventSet* pEventSet)
 
 		case EVENT_TYPE_LEFT_IMAGE:
 		{
-			PyCallClassMemberFunc(pEventSet->poEventHandler, "OnLeftImage", Py_BuildValue("(s)", GetArgument("src", ScriptCommand.argList)));
+			Script_CallMethod(pEventSet->poEventHandler, "OnLeftImage", Script_BuildValue("(s)", GetArgument("src", ScriptCommand.argList)));
 			break;
 		}
 
 		case EVENT_TYPE_TOP_IMAGE:
 		{
-			PyCallClassMemberFunc(pEventSet->poEventHandler, "OnTopImage", Py_BuildValue("(s)", GetArgument("src", ScriptCommand.argList)));
+			Script_CallMethod(pEventSet->poEventHandler, "OnTopImage", Script_BuildValue("(s)", GetArgument("src", ScriptCommand.argList)));
 			break;
 		}
 
 		case EVENT_TYPE_BACKGROUND_IMAGE:
 		{
-			PyCallClassMemberFunc(pEventSet->poEventHandler, "OnBackgroundImage", Py_BuildValue("(s)", GetArgument("src", ScriptCommand.argList)));
+			Script_CallMethod(pEventSet->poEventHandler, "OnBackgroundImage", Script_BuildValue("(s)", GetArgument("src", ScriptCommand.argList)));
 			break;
 		}
 
@@ -518,7 +518,7 @@ void CPythonEventManager::ProcessEventSet(TEventSet* pEventSet)
 			int y = atoi(GetArgument("y", ScriptCommand.argList));
 			const char* src = GetArgument("src", ScriptCommand.argList);
 
-			PyCallClassMemberFunc(pEventSet->poEventHandler, "OnImage", Py_BuildValue("(iis)", x, y, src));
+			Script_CallMethod(pEventSet->poEventHandler, "OnImage", Script_BuildValue("(iis)", x, y, src));
 			break;
 		}
 
@@ -534,11 +534,11 @@ void CPythonEventManager::ProcessEventSet(TEventSet* pEventSet)
 			{
 				const char* imageType = GetArgument("image_type", ScriptCommand.argList);
 				int iItemIndex = atoi(GetArgument("idx", ScriptCommand.argList));
-				PyCallClassMemberFunc(pEventSet->poEventHandler, "OnInsertItemIcon", Py_BuildValue("(sissii)", imageType, iItemIndex, title, desc, index, total));
+				Script_CallMethod(pEventSet->poEventHandler, "OnInsertItemIcon", Script_BuildValue("(sissii)", imageType, iItemIndex, title, desc, index, total));
 			}
 			else
 			{
-				PyCallClassMemberFunc(pEventSet->poEventHandler, "OnInsertImage", Py_BuildValue("(ssssii)", imageFile.c_str(), title, title, desc, index, total));
+				Script_CallMethod(pEventSet->poEventHandler, "OnInsertImage", Script_BuildValue("(ssssii)", imageFile.c_str(), title, title, desc, index, total));
 			}
 			pEventSet->iAdjustLine += 2;
 			break;
@@ -563,8 +563,8 @@ void CPythonEventManager::ProcessEventSet(TEventSet* pEventSet)
 		// HIDE_QUEST_LETTER
 		case EVENT_TYPE_QUEST_BUTTON_CLOSE:
 		{
-			PyCallClassMemberFunc(m_poInterface, "BINARY_ClearQuest",
-								  Py_BuildValue("(i)", atoi(GetArgument("idx", ScriptCommand.argList))));
+			Script_CallMethod(m_poInterface, "BINARY_ClearQuest",
+							  Script_BuildValue("(i)", atoi(GetArgument("idx", ScriptCommand.argList))));
 			break;
 		}
 			// END_OF_HIDE_QUEST_LETTER
@@ -580,18 +580,18 @@ void CPythonEventManager::ProcessEventSet(TEventSet* pEventSet)
 			// 퀘스트 UI 리뉴얼이 되면 해결 되므로 일단 용혼석만 땜빵 by chrislee
 			if (!strcmp(name, "\xC1\xB6\xB0\xA2\xB3\xAD \xBF\xEB\xC8\xA5\xBC\xAE?...."))
 			{
-				PyCallClassMemberFunc(m_poInterface, "BINARY_RecvQuest", Py_BuildValue("(isss)", idx, name, "highlight", ""));
+				Script_CallMethod(m_poInterface, "BINARY_RecvQuest", Script_BuildValue("(isss)", idx, name, "highlight", ""));
 			}
 			else
 			{
 				if (c_rstFile.empty())
 				{
-					PyCallClassMemberFunc(m_poInterface, "RecvQuest", Py_BuildValue("(is)", idx, name));
+					Script_CallMethod(m_poInterface, "RecvQuest", Script_BuildValue("(is)", idx, name));
 				}
 				else
 				{
-					PyCallClassMemberFunc(m_poInterface, "BINARY_RecvQuest",
-										  Py_BuildValue("(isss)", idx, name, c_rstType.c_str(), c_rstFile.c_str()));
+					Script_CallMethod(m_poInterface, "BINARY_RecvQuest",
+									  Script_BuildValue("(isss)", idx, name, c_rstType.c_str(), c_rstFile.c_str()));
 				}
 			}
 			break;
@@ -637,25 +637,25 @@ void CPythonEventManager::ProcessEventSet(TEventSet* pEventSet)
 		case EVENT_TYPE_FADE_OUT:
 		{
 			float fSpeed = (float)atof(GetArgument("speed", ScriptCommand.argList));
-			PyCallClassMemberFunc(pEventSet->poEventHandler, "FadeOut", Py_BuildValue("(f)", fSpeed));
+			Script_CallMethod(pEventSet->poEventHandler, "FadeOut", Script_BuildValue("(f)", fSpeed));
 			pEventSet->isWaitFlag = true;
 			break;
 		}
 		case EVENT_TYPE_FADE_IN:
 		{
-			PyCallClassMemberFunc(pEventSet->poEventHandler, "FadeIn", Py_BuildValue("(f)", atof(GetArgument("speed", ScriptCommand.argList))));
+			Script_CallMethod(pEventSet->poEventHandler, "FadeIn", Script_BuildValue("(f)", atof(GetArgument("speed", ScriptCommand.argList))));
 			pEventSet->isWaitFlag = true;
 			break;
 		}
 		case EVENT_TYPE_WHITE_OUT:
 		{
-			PyCallClassMemberFunc(pEventSet->poEventHandler, "WhiteOut", Py_BuildValue("(f)", atof(GetArgument("speed", ScriptCommand.argList))));
+			Script_CallMethod(pEventSet->poEventHandler, "WhiteOut", Script_BuildValue("(f)", atof(GetArgument("speed", ScriptCommand.argList))));
 			pEventSet->isWaitFlag = true;
 			break;
 		}
 		case EVENT_TYPE_WHITE_IN:
 		{
-			PyCallClassMemberFunc(pEventSet->poEventHandler, "WhiteIn", Py_BuildValue("(f)", atof(GetArgument("speed", ScriptCommand.argList))));
+			Script_CallMethod(pEventSet->poEventHandler, "WhiteIn", Script_BuildValue("(f)", atof(GetArgument("speed", ScriptCommand.argList))));
 			pEventSet->isWaitFlag = true;
 			break;
 		}
@@ -673,7 +673,7 @@ void CPythonEventManager::ProcessEventSet(TEventSet* pEventSet)
 		}
 		case EVENT_TYPE_TITLE_IMAGE:
 		{
-			PyCallClassMemberFunc(pEventSet->poEventHandler, "OnTitleImage", Py_BuildValue("(s)", GetArgument("src", ScriptCommand.argList)));
+			Script_CallMethod(pEventSet->poEventHandler, "OnTitleImage", Script_BuildValue("(s)", GetArgument("src", ScriptCommand.argList)));
 			break;
 		}
 		case EVENT_TYPE_DUNGEON_RESULT:
@@ -688,8 +688,8 @@ void CPythonEventManager::ProcessEventSet(TEventSet* pEventSet)
 			int total_time = atoi(GetArgument("total_time", ScriptCommand.argList));
 			int bonus_exp = atoi(GetArgument("bonus_exp", ScriptCommand.argList));
 
-			PyCallClassMemberFunc(m_poInterface, "ShowDungeonResult",
-								  Py_BuildValue("(iiiiiiiii)",
+			Script_CallMethod(m_poInterface, "ShowDungeonResult",
+							  Script_BuildValue("(iiiiiiiii)",
 												killstone_count,
 												killmob_count,
 												find_hidden,
@@ -744,13 +744,13 @@ void CPythonEventManager::ProcessEventSet(TEventSet* pEventSet)
 		{
 			int iWidth = atoi(GetArgument("width", ScriptCommand.argList));
 			int iHeight = atoi(GetArgument("height", ScriptCommand.argList));
-			PyCallClassMemberFunc(pEventSet->poEventHandler, "OnSize", Py_BuildValue("(ii)", iWidth, iHeight));
+			Script_CallMethod(pEventSet->poEventHandler, "OnSize", Script_BuildValue("(ii)", iWidth, iHeight));
 			break;
 		}
 		case EVENT_TYPE_INPUT:
 		{
 			__InsertLine(*pEventSet);
-			PyCallClassMemberFunc(pEventSet->poEventHandler, "OnInput", Py_BuildValue("()"));
+			Script_CallMethod(pEventSet->poEventHandler, "OnInput", Script_BuildValue("()"));
 			break;
 		}
 		case EVENT_TYPE_CONFIRM_WAIT:
@@ -778,13 +778,13 @@ void CPythonEventManager::ProcessEventSet(TEventSet* pEventSet)
 				pSet->pConfirmTimeTextLine = NULL;
 				pSet->iConfirmEndTime = 0;
 
-				PyCallClassMemberFunc(pSet->poEventHandler, "CloseSelf", Py_BuildValue("()"));
+				Script_CallMethod(pSet->poEventHandler, "CloseSelf", Script_BuildValue("()"));
 			}
 			break;
 		}
 		case EVENT_TYPE_SELECT_ITEM:
 		{
-			PyCallClassMemberFunc(m_poInterface, "BINARY_OpenSelectItemWindow", Py_BuildValue("()"));
+			Script_CallMethod(m_poInterface, "BINARY_OpenSelectItemWindow", Script_BuildValue("()"));
 			break;
 		}
 	}
@@ -873,7 +873,7 @@ void CPythonEventManager::EndEventProcess(int iIndex)
 void CPythonEventManager::MakeNextButton(TEventSet* pEventSet, int iButtonType)
 {
 	__AddSpace(*pEventSet, c_fLine_Temp + 5);
-	PyCallClassMemberFunc(pEventSet->poEventHandler, "MakeNextButton", Py_BuildValue("(i)", iButtonType));
+	Script_CallMethod(pEventSet->poEventHandler, "MakeNextButton", Script_BuildValue("(i)", iButtonType));
 }
 
 void CPythonEventManager::MakeQuestion(TEventSet* pEventSet, script::TArgList& rArgumentList)
@@ -881,14 +881,14 @@ void CPythonEventManager::MakeQuestion(TEventSet* pEventSet, script::TArgList& r
 	if (rArgumentList.empty())
 		return;
 
-	PyCallClassMemberFunc(pEventSet->poEventHandler, "MakeQuestion", Py_BuildValue("(i)", rArgumentList.size()));
+	Script_CallMethod(pEventSet->poEventHandler, "MakeQuestion", Script_BuildValue("(i)", rArgumentList.size()));
 	pEventSet->nAnswer = rArgumentList.size();
 
 	int iIndex = 0;
 	for (script::TArgList::iterator itor = rArgumentList.begin(); itor != rArgumentList.end(); ++itor)
 	{
 		script::TArg& rArgument = *itor;
-		PyCallClassMemberFunc(pEventSet->poEventHandler, "AppendQuestion", Py_BuildValue("(si)", rArgument.strValue.c_str(), iIndex));
+		Script_CallMethod(pEventSet->poEventHandler, "AppendQuestion", Script_BuildValue("(si)", rArgument.strValue.c_str(), iIndex));
 		++iIndex;
 	}
 }
@@ -1128,7 +1128,7 @@ void CPythonEventManager::Destroy()
 	m_ScriptTextLinePool.Clear();
 }
 
-void CPythonEventManager::SetInterfaceWindow(PyObject* poInterface)
+void CPythonEventManager::SetInterfaceWindow(ScriptObject* poInterface)
 {
 	m_poInterface = poInterface;
 }
